@@ -4,3 +4,7 @@
 # File list
 !.gitignore
 !README.md
+!VOS.sln
+!VOS.vcxproj
+!VOS.vcxproj.filters
+!VOS.vcxproj.user
