@@ -1,10 +1,15 @@
-# Ignore everything
+# Ignore everything, except listed files
 *
 
-# File list
+# Global files
 !.gitignore
 !README.md
+
+# Projects files
 !VOS.sln
 !VOS.vcxproj
 !VOS.vcxproj.filters
 !VOS.vcxproj.user
+
+# Sources files
+!main.cpp
