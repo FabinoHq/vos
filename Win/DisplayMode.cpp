@@ -63,6 +63,27 @@ DisplayMode::~DisplayMode()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get current system desktop mode                                           //
+//  return : True if the desktop mode is reached, false otherwise             //
+////////////////////////////////////////////////////////////////////////////////
+bool DisplayMode::getSystemMode()
+{
+    // Get system desktop configuration
+    DEVMODE desktopMode = { 0 };
+    desktopMode.dmSize = sizeof(desktopMode);
+    desktopMode.dmDriverExtra = 0;
+    if (EnumDisplaySettings(0, ENUM_CURRENT_SETTINGS, &desktopMode))
+    {
+        m_width = desktopMode.dmPelsWidth;
+        m_height = desktopMode.dmPelsHeight;
+        m_depth = desktopMode.dmBitsPerPel;
+        return true;
+    }
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Get DisplayMode width in pixels                                           //
 //  return : Display mode width                                               //
 ////////////////////////////////////////////////////////////////////////////////
