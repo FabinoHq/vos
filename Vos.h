@@ -42,6 +42,19 @@
 #ifndef VOS_VOS_HEADER
 #define VOS_VOS_HEADER
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Operating system configuration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW32__)
+        #define VOS_WINDOWS
+    #endif // Windows
 
+    #if defined(__APPLE__)
+        #define VOS_MACOS
+    #endif // MacOS
+
+    #if defined(__linux__)
+        #define VOS_LINUX
+    #endif // Linux
 
 #endif // VOS_VOS_HEADER
