@@ -14,5 +14,6 @@
 
 # Sources files
 !main.cpp
+!Status.h
 !Vos.h
 !Vos.cpp

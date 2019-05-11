@@ -37,10 +37,12 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     vos.h : VOS Main class management                                      //
+//     Vos.h : VOS Main class management                                      //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_VOS_HEADER
 #define VOS_VOS_HEADER
+
+    #include "Status.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
