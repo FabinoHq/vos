@@ -39,6 +39,8 @@
 //    VOS : Virtual Operating System                                          //
 //     main.cpp : Main program entry point                                    //
 ////////////////////////////////////////////////////////////////////////////////
+#include "Vos.h"
+#include <exception>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,5 +51,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {
+    try
+    {
+        // Start VOS
+        Vos vos;
+    }
+    catch (std::exception&)
+    {
+        return 1;
+    }
+    catch (...)
+    {
+        return 1;
+    }
+
     return 0;
 }
