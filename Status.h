@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Status.h : VOS Main class management                                   //
+//     Status.h : VOS Main status management                                  //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_STATUS_HEADER
 #define VOS_STATUS_HEADER
@@ -46,7 +46,7 @@
     {
         STATUS_OK,
         STATUS_UNKNOWN_ERROR,
-        
+
         STATUS_THREAD_LAUNCH_ERROR,
         STATUS_THREAD_STOP_ERROR,
 
