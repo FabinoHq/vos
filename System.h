@@ -37,66 +37,11 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     System.h : VOS System management wrapper                               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
-
-    #include "System.h"
-    #include "Status.h"
+#ifndef VOS_SYSTEM_HEADER
+#define VOS_SYSTEM_HEADER
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Operating system configuration                                        //
-    ////////////////////////////////////////////////////////////////////////////
-    #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW32__)
-        #define VOS_WINDOWS
-    #endif // Windows
 
-    #if defined(__APPLE__)
-        #define VOS_MACOS
-    #endif // MacOS
-
-    #if defined(__linux__)
-        #define VOS_LINUX
-    #endif // Linux
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    class Vos
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
-            ////////////////////////////////////////////////////////////////////
-            Vos();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
-            ////////////////////////////////////////////////////////////////////
-            ~Vos();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully executed, false otherwise   //
-            ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
-            ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
-    };
-
-
-#endif // VOS_VOS_HEADER
+#endif // VOS_SYSTEM_HEADER
