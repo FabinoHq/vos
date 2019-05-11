@@ -74,10 +74,17 @@ bool DisplayMode::getSystemMode()
     desktopMode.dmDriverExtra = 0;
     if (EnumDisplaySettings(0, ENUM_CURRENT_SETTINGS, &desktopMode))
     {
-        m_width = desktopMode.dmPelsWidth;
-        m_height = desktopMode.dmPelsHeight;
-        m_depth = desktopMode.dmBitsPerPel;
-        return true;
+        // Check desktop mode validity
+        if ((desktopMode.dmPelsWidth > 0) &&
+            (desktopMode.dmPelsHeight > 0) &&
+            (desktopMode.dmBitsPerPel > 0))
+        {
+            // Copy desktop mode
+            m_width = desktopMode.dmPelsWidth;
+            m_height = desktopMode.dmPelsHeight;
+            m_depth = desktopMode.dmBitsPerPel;
+            return true;
+        }
     }
     return false;
 }
