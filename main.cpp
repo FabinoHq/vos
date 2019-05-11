@@ -55,15 +55,23 @@ int main(int argc, char* argv[])
     {
         // Start VOS
         Vos vos;
+        if (!vos.launch())
+        {
+            // VOS error occured
+            return 1;
+        }
     }
     catch (std::exception&)
     {
+        // Standard exception occured
         return 1;
     }
     catch (...)
     {
+        // Unknown exception occured
         return 1;
     }
 
+    // Program successfully executed
     return 0;
 }
