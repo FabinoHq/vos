@@ -24,6 +24,9 @@
     <ClCompile Include="Vos.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Win\DisplayMode.cpp">
+      <Filter>Fichiers sources\Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="System.h">
       <Filter>Fichiers sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Win\DisplayMode.h">
+      <Filter>Fichiers sources\Win</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -117,12 +117,14 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Vos.cpp" />
+    <ClCompile Include="Win\DisplayMode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayMode.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Vos.h" />
+    <ClInclude Include="Win\DisplayMode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

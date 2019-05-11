@@ -87,7 +87,7 @@ bool DisplayMode::getSystemMode()
 //  Get DisplayMode width in pixels                                           //
 //  return : Display mode width                                               //
 ////////////////////////////////////////////////////////////////////////////////
-int DisplayMode::getWidth()
+int DisplayMode::getWidth() const
 {
     return m_width;
 }
@@ -96,7 +96,7 @@ int DisplayMode::getWidth()
 //  Get DisplayMode height in pixels                                          //
 //  return : Display mode height                                              //
 ////////////////////////////////////////////////////////////////////////////////
-int DisplayMode::getHeight()
+int DisplayMode::getHeight() const
 {
     return m_height;
 }
@@ -105,7 +105,7 @@ int DisplayMode::getHeight()
 //  Get DisplayMode pixel depth in bits per pixel                             //
 //  return : Display mode pixel depth                                         //
 ////////////////////////////////////////////////////////////////////////////////
-int DisplayMode::getDepth()
+int DisplayMode::getDepth() const
 {
     return m_depth;
 }
