@@ -1,48 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Fichiers sources\Win">
+    <Filter Include="Win">
       <UniqueIdentifier>{76172f97-4bb3-4b2d-b5fc-e03a6e4a4c66}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Vos.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Win\DisplayMode.cpp">
-      <Filter>Fichiers sources\Win</Filter>
-    </ClCompile>
+    <ClCompile Include="Win\DisplayMode.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Vos.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Vos.h">
-      <Filter>Fichiers sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Status.h">
-      <Filter>Fichiers sources</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplayMode.h">
-      <Filter>Fichiers sources</Filter>
-    </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>Fichiers sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Win\DisplayMode.h">
-      <Filter>Fichiers sources\Win</Filter>
-    </ClInclude>
+    <ClInclude Include="Win\DisplayMode.h" />
+    <ClInclude Include="DisplayMode.h" />
+    <ClInclude Include="Status.h" />
+    <ClInclude Include="System.h" />
+    <ClInclude Include="Vos.h" />
   </ItemGroup>
 </Project>
