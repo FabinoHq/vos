@@ -20,3 +20,5 @@
 !Vos.cpp
 
 !DisplayMode.h
+!Win/DisplayMode.h
+!DisplayMode.cpp

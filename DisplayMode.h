@@ -39,4 +39,15 @@
 //    VOS : Virtual Operating System                                          //
 //     DisplayMode.h : DisplayMode management system wrapper                  //
 ////////////////////////////////////////////////////////////////////////////////
+#ifndef VOS_DISPLAYMODE_HEADER
+#define VOS_DISPLAYMODE_HEADER
 
+    #include "System.h"
+
+    
+    #ifdef VOS_WINDOWS
+        #include "Win/DisplayMode.h"
+    #endif // VOS_WINDOWS
+
+
+#endif // VOS_DISPLAYMODE_HEADER
