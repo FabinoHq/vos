@@ -118,6 +118,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Vos.cpp" />
     <ClCompile Include="Win\DisplayMode.cpp" />
+    <ClCompile Include="Win\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayMode.h" />
@@ -126,6 +127,7 @@
     <ClInclude Include="Vos.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Win\DisplayMode.h" />
+    <ClInclude Include="Win\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

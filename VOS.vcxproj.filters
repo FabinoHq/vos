@@ -11,6 +11,9 @@
     <ClCompile Include="Win\DisplayMode.cpp">
       <Filter>Win</Filter>
     </ClCompile>
+    <ClCompile Include="Win\Window.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Status.h" />
@@ -21,5 +24,8 @@
       <Filter>Win</Filter>
     </ClInclude>
     <ClInclude Include="Window.h" />
+    <ClInclude Include="Win\Window.h">
+      <Filter>Win</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
