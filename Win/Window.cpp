@@ -173,6 +173,33 @@ void Window::close()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get window event                                                          //
+//  return : True if an event occurred, false otherwise                       //
+////////////////////////////////////////////////////////////////////////////////
+bool Window::getEvent(Event& event)
+{
+    // Events processing
+    MSG msg;
+    while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    // Get event in the FIFO queue
+    event.type = EVENT_NONE;
+    if (!m_events.empty())
+    {
+        event = m_events.front();
+        m_events.pop();
+        return true;
+    }
+
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Create window context                                                     //
 //  return : True if the window context is successfully created               //
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,6 +278,72 @@ LRESULT CALLBACK Window::OnEvent(
     HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
 )
 {
-    // Default windows events
+    if (msg == WM_CREATE)
+    {
+        // Set the current window pointer as user parameter
+        LONG_PTR windowPointer =
+            (LONG_PTR)reinterpret_cast<CREATESTRUCT*>(lparam)->lpCreateParams;
+        SetWindowLongPtrW(hwnd, GWLP_USERDATA, windowPointer);
+    }
+
+    Window* window = 0;
+    if (hwnd)
+    {
+        // Get the current window pointer
+        window = reinterpret_cast<Window*>(
+            GetWindowLongPtr(hwnd, GWLP_USERDATA)
+        );
+    }
+
+    // Process event
+    if (window)
+    {
+        window->processEvent(msg, wparam, lparam);
+    }
+
+    // System destroy event
+    if (msg == WM_DESTROY)
+    {
+        PostQuitMessage(0);
+    }
+
+    // Default window events
     return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Process window events                                                     //
+////////////////////////////////////////////////////////////////////////////////
+void Window::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    if (m_handle)
+    {
+        Event event;
+        event.type = EVENT_NONE;
+
+        // Event type
+        switch (msg)
+        {
+            // Create window event
+            case WM_CREATE:
+                event.type = EVENT_CREATED;
+                break;
+
+            // Close window events
+            case WM_CLOSE:
+                event.type = EVENT_CLOSED;
+                break;
+
+            case WM_QUIT:
+                event.type = EVENT_CLOSED;
+                break;
+
+            default:
+                event.type = EVENT_NONE;
+                break;
+        }
+
+        // Add new event
+        m_events.push(event);
+    }
 }

@@ -37,77 +37,35 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.cpp : VOS Main class management                                    //
+//     Event.h : VOS Events management                                        //
 ////////////////////////////////////////////////////////////////////////////////
-#include "Vos.h"
+#ifndef VOS_EVENT_HEADER
+#define VOS_EVENT_HEADER
 
 
-////////////////////////////////////////////////////////////////////////////////
-//  Vos default constructor                                                   //
-////////////////////////////////////////////////////////////////////////////////
-Vos::Vos() :
-m_running(false),
-m_window()
-{
-
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Vos destructor                                                            //
-////////////////////////////////////////////////////////////////////////////////
-Vos::~Vos()
-{
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Launch VOS                                                                //
-//  return : True if VOS successfully started, false otherwise                //
-////////////////////////////////////////////////////////////////////////////////
-bool Vos::launch()
-{
-    // Create VOS main window
-    if (!m_window.create())
+    ////////////////////////////////////////////////////////////////////////////
+    //  EventType enumeration                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum EventType
     {
-        // Unable to create VOS main window
-        return false;
-    }
+        EVENT_NONE,
+        EVENT_CREATED,
+        EVENT_CLOSED,
+        EVENT_KEYPRESSED,
+        EVENT_KEYRELEASED,
+        EVENT_MOUSEMOVED,
+        EVENT_MOUSEPRESSED,
+        EVENT_MOUSERELEASED,
+        EVENT_MOUSEWHEEL
+    };
 
-    // Run VOS
-    run();
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Run VOS                                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void Vos::run()
-{
-    // Run VOS
-    m_running = true;
-    while (m_running)
+    ////////////////////////////////////////////////////////////////////////////
+    //  Event struct definition                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct Event
     {
-        // Get main window event
-        Event event;
-        while (m_window.getEvent(event))
-        {
-            // Process event
-            switch (event.type)
-            {
-                case EVENT_CLOSED:
-                    m_running = false;
-                    break;
+        EventType type;
+    };
+    
 
-                default:
-                    break;
-            }
-        }
-
-        // Update main window
-        m_window.update();
-    }
-
-    // Close main window
-    m_window.close();
-}
+#endif // VOS_EVENT_HEADER

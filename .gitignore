@@ -16,6 +16,7 @@
 !main.cpp
 !System.h
 !Status.h
+!Event.h
 !Vos.h
 !Vos.cpp
 

@@ -27,5 +27,6 @@
     <ClInclude Include="Win\Window.h">
       <Filter>Win</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h" />
   </ItemGroup>
 </Project>

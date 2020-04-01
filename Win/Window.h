@@ -43,8 +43,10 @@
 #define VOS_WIN_WINDOW_HEADER
 
     #include <windows.h>
+    #include <queue>
 
     #include "DisplayMode.h"
+    #include "../Event.h"
 
 
     // Window class name
@@ -84,6 +86,13 @@
             ////////////////////////////////////////////////////////////////////
             void close();
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get window event                                              //
+            //  return : True if an event occurred, false otherwise           //
+            ////////////////////////////////////////////////////////////////////
+            bool getEvent(Event& event);
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  Window private copy constructor : Not copyable                //
@@ -109,11 +118,18 @@
                 HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
             );
 
+            ////////////////////////////////////////////////////////////////////
+            //  Process window events                                         //
+            ////////////////////////////////////////////////////////////////////
+            void processEvent(UINT msg, WPARAM wparam, LPARAM lparam);
+
         private:
-            HINSTANCE   m_instance;     // Window instance
-            HWND        m_handle;       // Window handle
-            HDC         m_device;       // Window device
-            HGLRC       m_context;      // Window context
+            HINSTANCE           m_instance;     // Window instance
+            HWND                m_handle;       // Window handle
+            HDC                 m_device;       // Window device
+            HGLRC               m_context;      // Window context
+
+            std::queue<Event>   m_events;       // Events FIFO queue
     };
 
 
