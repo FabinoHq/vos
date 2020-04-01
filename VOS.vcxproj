@@ -124,6 +124,7 @@
     <ClInclude Include="Status.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Vos.h" />
+    <ClInclude Include="Window.h" />
     <ClInclude Include="Win\DisplayMode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -20,5 +20,6 @@
     <ClInclude Include="Win\DisplayMode.h">
       <Filter>Win</Filter>
     </ClInclude>
+    <ClInclude Include="Window.h" />
   </ItemGroup>
 </Project>
