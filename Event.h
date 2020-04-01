@@ -96,7 +96,7 @@
     ////////////////////////////////////////////////////////////////////////////
     struct Event
     {
-        EventType type;
+        EventType   type;
 
         union
         {

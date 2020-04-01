@@ -41,6 +41,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Window.h"
 
+Window* VOSGlobalWindow = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Window default constructor                                                //
@@ -51,7 +53,11 @@ m_handle(0),
 m_device(0),
 m_context(0)
 {
-
+    if (!VOSGlobalWindow)
+    {
+        // Set global window pointer
+        VOSGlobalWindow = this;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -278,27 +284,10 @@ LRESULT CALLBACK Window::OnEvent(
     HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
 )
 {
-    if (msg == WM_CREATE)
-    {
-        // Set the current window pointer as user parameter
-        LONG_PTR windowPointer =
-            (LONG_PTR)reinterpret_cast<CREATESTRUCT*>(lparam)->lpCreateParams;
-        SetWindowLongPtrW(hwnd, GWLP_USERDATA, windowPointer);
-    }
-
-    Window* window = 0;
-    if (hwnd)
-    {
-        // Get the current window pointer
-        window = reinterpret_cast<Window*>(
-            GetWindowLongPtr(hwnd, GWLP_USERDATA)
-        );
-    }
-
     // Process event
-    if (window)
+    if (VOSGlobalWindow)
     {
-        window->processEvent(msg, wparam, lparam);
+        VOSGlobalWindow->processEvent(msg, wparam, lparam);
     }
 
     // System destroy event
