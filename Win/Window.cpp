@@ -126,8 +126,8 @@ bool Window::create()
     SetFocus(m_handle);
     ShowWindow(m_handle, SW_SHOW);
 
-    // Window successfully created
-    return true;
+    // Create the window context
+    return createContext();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,6 +143,13 @@ void Window::udpate()
 ////////////////////////////////////////////////////////////////////////////////
 void Window::close()
 {
+    if (m_device)
+    {
+        // Release device
+        ReleaseDC(m_handle, m_device);
+        m_device = 0;
+    }
+
     if (m_handle)
     {
         // Delete the window
@@ -152,6 +159,69 @@ void Window::close()
     }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create window context                                                     //
+//  return : True if the window context is successfully created               //
+////////////////////////////////////////////////////////////////////////////////
+bool Window::createContext()
+{
+    if (!m_handle)
+    {
+        // Invalid window handle
+        return false;
+    }
+
+    // Get the device context
+    m_device = GetDC(m_handle);
+    if (!m_device)
+    {
+        // Invalid device context
+        return false;
+    }
+
+    // Set the pixel format descriptor
+    PIXELFORMATDESCRIPTOR pfd = { 0 };
+    pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+    pfd.nVersion = 1;
+    pfd.dwFlags = (PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER);
+    pfd.iPixelType = PFD_TYPE_RGBA;
+    pfd.cColorBits = 32;
+    pfd.cRedBits = 0;
+    pfd.cRedShift = 0;
+    pfd.cGreenBits = 0;
+    pfd.cGreenShift = 0;
+    pfd.cBlueBits = 0;
+    pfd.cBlueShift = 0;
+    pfd.cAlphaBits = 0;
+    pfd.cAlphaShift = 0;
+    pfd.cAccumBits = 0;
+    pfd.cAccumRedBits = 0;
+    pfd.cAccumGreenBits = 0;
+    pfd.cAccumBlueBits = 0;
+    pfd.cAccumAlphaBits = 0;
+    pfd.cDepthBits = 8;
+    pfd.cStencilBits = 24;
+    pfd.cAuxBuffers = 0;
+    pfd.bReserved = PFD_MAIN_PLANE;
+    pfd.dwVisibleMask = 0;
+
+    int pixelFormat = ChoosePixelFormat(m_device, &pfd);
+    if (!pixelFormat)
+    {
+        // Invalid pixel format
+        return false;
+    }
+
+    if (!SetPixelFormat(m_device, pixelFormat, &pfd))
+    {
+        // Unable to set the pixel format
+        return false;
+    }
+
+    // Context successfully created
+    return true;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Window static event callback function                                     //
