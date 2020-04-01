@@ -46,6 +46,7 @@
 //  Vos default constructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 Vos::Vos() :
+m_running(false),
 m_window()
 {
 
@@ -62,14 +63,35 @@ Vos::~Vos()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Launch VOS                                                                //
-//  return : True if VOS successfully executed, false otherwise               //
+//  return : True if VOS successfully started, false otherwise                //
 ////////////////////////////////////////////////////////////////////////////////
 bool Vos::launch()
 {
     // Create VOS main window
-    m_window.create();
-    
-    // VOS successfully started
+    if (!m_window.create())
+    {
+        // Unable to create VOS main window
+        return false;
+    }
+
+    // Run VOS
+    run();
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Run VOS                                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void Vos::run()
+{
+    // Run VOS
+    m_running = true;
+    while (m_running)
+    {
+        // Update main window
+        m_window.update();
+    }
+
+    // Close main window
+    m_window.close();
+}

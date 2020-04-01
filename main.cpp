@@ -44,7 +44,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  main : Standard program entry point                                       //
+//  Standard program entry point                                              //
 //  param argc : Program arguments count                                      //
 //  param argv : Program arguments vector                                     //
 //  return : Main program return code                                         //

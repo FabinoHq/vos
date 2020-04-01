@@ -66,9 +66,14 @@
 
             ////////////////////////////////////////////////////////////////////
             //  Launch VOS                                                    //
-            //  return : True if VOS successfully executed, false otherwise   //
+            //  return : True if VOS successfully started, false otherwise    //
             ////////////////////////////////////////////////////////////////////
             bool launch();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Run VOS                                                       //
+            ////////////////////////////////////////////////////////////////////
+            void run();
 
 
         private:
@@ -83,6 +88,7 @@
             Vos& operator=(const Vos&) = delete;
 
         private:
+            bool    m_running;  // VOS running state
             Window  m_window;   // VOS main window
     };
 
