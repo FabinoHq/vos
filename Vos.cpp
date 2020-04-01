@@ -104,6 +104,8 @@ void Vos::run()
                     {
                         case EVENT_KEY_ESCAPE:
                             m_running = false;
+                            break;
+                            
                         default:
                             break;
                     }
