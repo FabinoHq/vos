@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Vos.cpp" />
     <ClCompile Include="Win\DisplayMode.cpp" />
     <ClCompile Include="Win\Window.cpp" />
@@ -131,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="DisplayMode.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Vos.h" />

@@ -37,107 +37,40 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/Window.h : Window management for Windows                           //
+//     Renderer/Renderer.h : Renderer management                              //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WIN_WINDOW_HEADER
-#define VOS_WIN_WINDOW_HEADER
-
-    #include <windows.h>
-    #include <queue>
-
-    #include "DisplayMode.h"
-    #include "../Event.h"
-
-
-    // Window class name
-    const wchar_t VOSWindowClassName[] = L"VosWindow";
+#ifndef VOS_RENDERER_RENDERER_HEADER
+#define VOS_RENDERER_RENDERER_HEADER
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Window class definition                                               //
+    //  Renderer class definition                                             //
     ////////////////////////////////////////////////////////////////////////////
-    class Window
+    class Renderer
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Window default constructor                                    //
+            //  Renderer default constructor                                  //
             ////////////////////////////////////////////////////////////////////
-            Window();
+            Renderer();
 
             ////////////////////////////////////////////////////////////////////
-            //  Window destructor                                             //
+            //  Renderer destructor                                           //
             ////////////////////////////////////////////////////////////////////
-            ~Window();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create the window                                             //
-            //  return : True if the window is successfully created           //
-            ////////////////////////////////////////////////////////////////////
-            bool create();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Update the window (swap front and back buffers)               //
-            ////////////////////////////////////////////////////////////////////
-            void update();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Close the window                                              //
-            ////////////////////////////////////////////////////////////////////
-            void close();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get window event                                              //
-            //  return : True if an event occurred, false otherwise           //
-            ////////////////////////////////////////////////////////////////////
-            bool getEvent(Event& event);
+            ~Renderer();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Window private copy constructor : Not copyable                //
+            //  Renderer private copy constructor : Not copyable              //
             ////////////////////////////////////////////////////////////////////
-            Window(const Window&) = delete;
+            Renderer(const Renderer&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Window private copy operator : Not copyable                   //
+            //  Renderer private copy operator : Not copyable                 //
             ////////////////////////////////////////////////////////////////////
-            Window& operator=(const Window&) = delete;
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create window context                                         //
-            //  return : True if the window context is successfully created   //
-            ////////////////////////////////////////////////////////////////////
-            bool createContext();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Window static event callback function                         //
-            ////////////////////////////////////////////////////////////////////
-            static LRESULT CALLBACK OnEvent(
-                HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
-            );
-
-            ////////////////////////////////////////////////////////////////////
-            //  Process window events                                         //
-            ////////////////////////////////////////////////////////////////////
-            void processEvent(UINT msg, WPARAM wparam, LPARAM lparam);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Transcript key event                                          //
-            ////////////////////////////////////////////////////////////////////
-            EventKey transcriptKey(WPARAM key);
-
-
-        private:
-            HINSTANCE           m_instance;     // Window instance
-            HWND                m_handle;       // Window handle
-            HDC                 m_device;       // Window device
-            HGLRC               m_context;      // Window context
-
-            std::queue<Event>   m_events;       // Events FIFO queue
+            Renderer& operator=(const Renderer&) = delete;
     };
 
 
-#endif // VOS_WIN_WINDOW_HEADER
+#endif // VOS_RENDERER_RENDERER_HEADER

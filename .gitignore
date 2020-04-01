@@ -26,3 +26,7 @@
 !Win/DisplayMode.cpp
 !Win/Window.h
 !Win/Window.cpp
+
+!Renderer/
+!Renderer/Renderer.h
+!Renderer/Renderer.cpp

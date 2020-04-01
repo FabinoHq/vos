@@ -125,7 +125,7 @@ bool Window::create()
         return false;
     }
 
-    // Set focus to the window
+    // Enable the window
     UpdateWindow(m_handle);
     ShowCursor(TRUE);
     SetActiveWindow(m_handle);

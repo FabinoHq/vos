@@ -4,6 +4,9 @@
     <Filter Include="Win">
       <UniqueIdentifier>{76172f97-4bb3-4b2d-b5fc-e03a6e4a4c66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{940b859f-59b4-49b8-b28d-1eaf645f0ea6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -13,6 +16,9 @@
     </ClCompile>
     <ClCompile Include="Win\Window.cpp">
       <Filter>Win</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Renderer.cpp">
+      <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -28,5 +34,8 @@
       <Filter>Win</Filter>
     </ClInclude>
     <ClInclude Include="Event.h" />
+    <ClInclude Include="Renderer\Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
