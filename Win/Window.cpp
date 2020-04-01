@@ -143,6 +143,14 @@ void Window::udpate()
 ////////////////////////////////////////////////////////////////////////////////
 void Window::close()
 {
+    if (m_context)
+    {
+        // Delete context
+        wglMakeCurrent(m_device, 0);
+        wglDeleteContext(m_context);
+        m_context = 0;
+    }
+
     if (m_device)
     {
         // Release device
@@ -219,7 +227,16 @@ bool Window::createContext()
         return false;
     }
 
+    // Create the graphics context
+    m_context = wglCreateContext(m_device);
+    if (!m_context)
+    {
+        // Unable to create the graphics context
+        return false;
+    }
+
     // Context successfully created
+    wglMakeCurrent(m_device, m_context);
     return true;
 }
 
