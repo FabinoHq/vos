@@ -42,5 +42,12 @@
 #ifndef VOS_WINDOW_HEADER
 #define VOS_WINDOW_HEADER
 
+    #include "System.h"
+
+    
+    #ifdef VOS_WINDOWS
+        #include "Win/Window.h"
+    #endif // VOS_WINDOWS
+
 
 #endif // VOS_WINDOW_HEADER
