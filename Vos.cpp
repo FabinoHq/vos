@@ -47,7 +47,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 Vos::Vos() :
 m_running(false),
-m_window()
+m_window(),
+m_renderer()
 {
 
 }
@@ -74,8 +75,13 @@ bool Vos::launch()
         return false;
     }
 
+    // Init VOS renderer
+    m_renderer.init();
+
     // Run VOS
     run();
+
+    // VOS successfully terminated
     return true;
 }
 
@@ -114,6 +120,9 @@ void Vos::run()
                     break;
             }
         }
+
+        // Clear renderer frame
+        m_renderer.clear();
 
         // Update main window
         m_window.update();

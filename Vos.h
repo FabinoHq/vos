@@ -45,6 +45,7 @@
     #include "System.h"
     #include "Status.h"
     #include "Window.h"
+    #include "Renderer/Renderer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -88,8 +89,9 @@
             Vos& operator=(const Vos&) = delete;
 
         private:
-            bool    m_running;  // VOS running state
-            Window  m_window;   // VOS main window
+            bool        m_running;  // VOS running state
+            Window      m_window;   // VOS main window
+            Renderer    m_renderer; // VOS renderer
     };
 
 
