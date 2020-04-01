@@ -44,7 +44,7 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  EventType enumeration                                                 //
+    //  Event type enumeration                                                //
     ////////////////////////////////////////////////////////////////////////////
     enum EventType
     {
@@ -60,12 +60,50 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Event key enumeration                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum EventKey
+    {
+        EVENT_KEY_NONE,
+        EVENT_KEY_ESCAPE,
+        EVENT_KEY_RETURN
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Event mouse button enumeration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    enum EventMouseButton
+    {
+        EVENT_MOUSE_NONE,
+        EVENT_MOUSE_LEFT,
+        EVENT_MOUSE_RIGHT,
+        EVENT_MOUSE_MIDDLE
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Event mouse struct definition                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct EventMouse
+    {
+        EventMouseButton    button;
+        int                 x;
+        int                 y;
+        int                 wheel;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Event struct definition                                               //
     ////////////////////////////////////////////////////////////////////////////
     struct Event
     {
         EventType type;
+
+        union
+        {
+            EventKey    key;
+            EventMouse  mouse;
+        };
     };
-    
+
 
 #endif // VOS_EVENT_HEADER

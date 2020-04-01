@@ -123,6 +123,11 @@
             ////////////////////////////////////////////////////////////////////
             void processEvent(UINT msg, WPARAM wparam, LPARAM lparam);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Transcript key event                                          //
+            ////////////////////////////////////////////////////////////////////
+            EventKey transcriptKey(WPARAM key);
+
         private:
             HINSTANCE           m_instance;     // Window instance
             HWND                m_handle;       // Window handle

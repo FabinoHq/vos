@@ -338,6 +338,17 @@ void Window::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                 event.type = EVENT_CLOSED;
                 break;
 
+            // Keys events
+            case WM_KEYDOWN:
+                event.type = EVENT_KEYPRESSED;
+                event.key = transcriptKey(wparam);
+                break;
+
+            case WM_KEYUP:
+                event.type = EVENT_KEYRELEASED;
+                event.key = transcriptKey(wparam);
+                break;
+
             default:
                 event.type = EVENT_NONE;
                 break;
@@ -345,5 +356,23 @@ void Window::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 
         // Add new event
         m_events.push(event);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Transcript key event                                                      //
+////////////////////////////////////////////////////////////////////////////////
+EventKey Window::transcriptKey(WPARAM key)
+{
+    switch (key)
+    {
+        case VK_ESCAPE:
+            return EVENT_KEY_ESCAPE;
+
+        case VK_RETURN:
+            return EVENT_KEY_RETURN;
+
+        default:
+            return EVENT_KEY_NONE;
     }
 }

@@ -99,6 +99,15 @@ void Vos::run()
                     m_running = false;
                     break;
 
+                case EVENT_KEYRELEASED:
+                    switch (event.key)
+                    {
+                        case EVENT_KEY_ESCAPE:
+                            m_running = false;
+                        default:
+                            break;
+                    }
+
                 default:
                     break;
             }
