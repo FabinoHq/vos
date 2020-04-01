@@ -44,6 +44,7 @@
 
     #include "System.h"
     #include "Status.h"
+    #include "Window.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -80,6 +81,9 @@
             //  Vos private copy operator : Not copyable                      //
             ////////////////////////////////////////////////////////////////////
             Vos& operator=(const Vos&) = delete;
+
+        private:
+            Window  m_window;   // VOS main window
     };
 
 

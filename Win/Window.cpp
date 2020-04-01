@@ -41,3 +41,125 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Window.h"
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Window default constructor                                                //
+////////////////////////////////////////////////////////////////////////////////
+Window::Window() :
+m_instance(0),
+m_handle(0),
+m_device(0),
+m_context(0)
+{
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Window destructor                                                         //
+////////////////////////////////////////////////////////////////////////////////
+Window::~Window()
+{
+    // Close the window
+    close();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create the window                                                         //
+//  return : True if the window is successfully created                       //
+////////////////////////////////////////////////////////////////////////////////
+bool Window::create()
+{
+    // Get the software instance
+    m_instance = GetModuleHandle(0);
+
+    // Get the system display mode
+    DisplayMode displayMode;
+    if (!displayMode.getSystemMode())
+    {
+        // Invalid system mode
+        return false;
+    }
+
+    // Register the window class
+    WNDCLASS windowClass = { 0 };
+    windowClass.style = 0;
+    windowClass.lpfnWndProc = &Window::OnEvent;
+    windowClass.cbClsExtra = 0;
+    windowClass.cbWndExtra = 0;
+    windowClass.hInstance = m_instance;
+    windowClass.hIcon = LoadIcon(0, IDI_APPLICATION);
+    windowClass.hCursor = LoadCursor(0, IDC_ARROW);
+    windowClass.hbrBackground = 0;
+    windowClass.lpszMenuName = 0;
+    windowClass.lpszClassName = VOSWindowClassName;
+    if (!RegisterClass(&windowClass))
+    {
+        // Unable to register the window class
+        return false;
+    }
+
+    // Define the window settings
+    DWORD windowStyle = (WS_VISIBLE | WS_CAPTION | WS_SYSMENU);
+    LONG windowWidth = 1024;
+    LONG windowHeight = 768;
+
+    // Center the window
+    int centerX = (displayMode.getWidth() / 2) - (windowWidth / 2);
+    int centerY = (displayMode.getHeight() / 2) - (windowHeight / 2);
+
+    // Create the window
+    m_handle = CreateWindow(
+        VOSWindowClassName, L"VOS", windowStyle, centerX, centerY,
+        windowWidth, windowHeight, 0, 0, m_instance, this
+    );
+    if (!m_handle)
+    {
+        // Unable to create the window
+        return false;
+    }
+
+    // Set focus to the window
+    UpdateWindow(m_handle);
+    ShowCursor(TRUE);
+    SetActiveWindow(m_handle);
+    SetFocus(m_handle);
+    ShowWindow(m_handle, SW_SHOW);
+
+    // Window successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Update the window (swap front and back buffers)                           //
+////////////////////////////////////////////////////////////////////////////////
+void Window::udpate()
+{
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Close the window                                                          //
+////////////////////////////////////////////////////////////////////////////////
+void Window::close()
+{
+    if (m_handle)
+    {
+        // Delete the window
+        DestroyWindow(m_handle);
+        UnregisterClass(VOSWindowClassName, m_instance);
+        m_handle = 0;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Window static event callback function                                     //
+////////////////////////////////////////////////////////////////////////////////
+LRESULT CALLBACK Window::OnEvent(
+    HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
+)
+{
+    // Default windows events
+    return DefWindowProc(hwnd, msg, wparam, lparam);
+}
