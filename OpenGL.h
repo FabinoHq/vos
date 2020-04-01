@@ -37,42 +37,29 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Renderer.h : Renderer management                              //
+//     OpenGL.h : OpenGL management wrapper                                  //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_RENDERER_HEADER
-#define VOS_RENDERER_RENDERER_HEADER
+#ifndef VOS_OPENGL_HEADER
+#define VOS_OPENGL_HEADER
 
-    #include "../OpenGL.h"
+    #include "System.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class definition                                             //
+    //  OpenGL wrapper                                                        //
     ////////////////////////////////////////////////////////////////////////////
-    class Renderer
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer default constructor                                  //
-            ////////////////////////////////////////////////////////////////////
-            Renderer();
+    #ifdef VOS_WINDOWS
+        #include <windows.h>
+        #include <gl/GL.h>
+    #endif // VOS_WINDOWS
 
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer destructor                                           //
-            ////////////////////////////////////////////////////////////////////
-            ~Renderer();
+    #ifdef VOS_MACOS
+        #include <OpenGL/gl.h>
+    #endif // VOS_MACOS
 
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy constructor : Not copyable              //
-            ////////////////////////////////////////////////////////////////////
-            Renderer(const Renderer&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy operator : Not copyable                 //
-            ////////////////////////////////////////////////////////////////////
-            Renderer& operator=(const Renderer&) = delete;
-    };
+    #ifdef VOS_LINUX
+        #include <GL/gl.h>
+    #endif // VOS_LINUX
 
 
-#endif // VOS_RENDERER_RENDERER_HEADER
+#endif // VOS_OPENGL_HEADER

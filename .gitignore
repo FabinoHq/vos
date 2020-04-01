@@ -17,6 +17,7 @@
 !System.h
 !Status.h
 !Event.h
+!OpenGL.h
 !Vos.h
 !Vos.cpp
 
@@ -27,6 +28,5 @@
 !Win/Window.h
 !Win/Window.cpp
 
-!Renderer/
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp

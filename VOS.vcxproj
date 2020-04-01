@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="DisplayMode.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="System.h" />
