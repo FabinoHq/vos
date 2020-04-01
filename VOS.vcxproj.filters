@@ -6,15 +6,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Win\DisplayMode.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Vos.cpp" />
+    <ClCompile Include="Win\DisplayMode.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\DisplayMode.h" />
-    <ClInclude Include="DisplayMode.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Vos.h" />
+    <ClInclude Include="DisplayMode.h">
+      <Filter>Win</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
