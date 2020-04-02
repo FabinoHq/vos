@@ -54,10 +54,10 @@ PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = 0;
 void OpenGLWinInit()
 {
     // Init Swap interval EXT (vertical synchronization)
-    wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress(
+    wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)VOSGLGetProcAddress(
         "wglSwapIntervalEXT"
     );
-    wglGetSwapIntervalEXT = (PFNWGLGETSWAPINTERVALEXTPROC)wglGetProcAddress(
+    wglGetSwapIntervalEXT = (PFNWGLGETSWAPINTERVALEXTPROC)VOSGLGetProcAddress(
         "wglGetSwapIntervalEXT"
     );
 }
