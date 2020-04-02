@@ -184,6 +184,11 @@
     #undef              GL_FOG_END
     #undef              GL_FOG_MODE
     #undef              GL_FOG_COLOR
+    #undef              GL_DEPTH_RANGE
+    #undef              GL_DEPTH_TEST
+    #undef              GL_DEPTH_WRITEMASK
+    #undef              GL_DEPTH_CLEAR_VALUE
+    #undef              GL_DEPTH_FUNC
     
 
     ////////////////////////////////////////////////////////////////////////////
@@ -415,6 +420,15 @@
     #define             GL_FOG_END                          0x0B64
     #define             GL_FOG_MODE                         0x0B65
     #define             GL_FOG_COLOR                        0x0B66
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL depth constants                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_DEPTH_RANGE                      0x0B70
+    #define             GL_DEPTH_TEST                       0x0B71
+    #define             GL_DEPTH_WRITEMASK                  0x0B72
+    #define             GL_DEPTH_CLEAR_VALUE                0x0B73
+    #define             GL_DEPTH_FUNC                       0x0B74
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
