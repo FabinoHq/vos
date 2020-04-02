@@ -37,11 +37,34 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/OpenGL.h : OpenGL rendering management                        //
+//     Renderer/OpenGL/OpenGL.h : OpenGL rendering management                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_OPENGL_HEADER
-#define VOS_RENDERER_OPENGL_HEADER
+#ifndef VOS_RENDERER_OPENGL_OPENGL_HEADER
+#define VOS_RENDERER_OPENGL_OPENGL_HEADER
+
+    #include "../../OpenGL.h"
+    
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL types definitions                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef         void                GLvoid;
+    typedef         signed char         GLbyte;
+    typedef         unsigned char       GLubyte;
+    typedef         char                GLchar;
+    typedef         unsigned char       GLboolean;
+    typedef         short               GLshort;
+    typedef         unsigned short      GLushort;
+    typedef         int                 GLint;
+    typedef         unsigned int        GLuint;
+    typedef         int                 GLsizei;
+    typedef         unsigned long       GLulong;
+    typedef         unsigned int        GLenum;
+    typedef         unsigned int        GLbitfield;
+    typedef         float               GLfloat;
+    typedef         double              GLdouble;
+    typedef         float               GLclampf;
+    typedef         double              GLclampd;
 
 
-
-#endif // VOS_RENDERER_OPENGL_HEADER
+#endif // VOS_RENDERER_OPENGL_OPENGL_HEADER

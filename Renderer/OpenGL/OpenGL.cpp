@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/OpenGL.cpp : OpenGL rendering management                      //
+//     Renderer/OpenGL/OpenGL.cpp : OpenGL rendering management               //
 ////////////////////////////////////////////////////////////////////////////////
 #include "OpenGL.h"
 
