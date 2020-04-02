@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     OpenGL.h : OpenGL management wrapper                                  //
+//     OpenGL.h : OpenGL management wrapper                                   //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_OPENGL_HEADER
 #define VOS_OPENGL_HEADER
@@ -49,8 +49,7 @@
     //  OpenGL wrapper                                                        //
     ////////////////////////////////////////////////////////////////////////////
     #ifdef VOS_WINDOWS
-        #include <windows.h>
-        #include <gl/GL.h>
+        #include "Win/OpenGL.h"
     #endif // VOS_WINDOWS
 
     #ifdef VOS_MACOS

@@ -127,6 +127,7 @@
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Vos.cpp" />
     <ClCompile Include="Win\DisplayMode.cpp" />
+    <ClCompile Include="Win\OpenGL.cpp" />
     <ClCompile Include="Win\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +140,7 @@
     <ClInclude Include="Vos.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Win\DisplayMode.h" />
+    <ClInclude Include="Win\OpenGL.h" />
     <ClInclude Include="Win\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -20,6 +20,9 @@
     <ClCompile Include="Renderer\Renderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Win\OpenGL.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Status.h" />
@@ -38,5 +41,8 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="Win\OpenGL.h">
+      <Filter>Win</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

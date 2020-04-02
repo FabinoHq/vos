@@ -37,28 +37,27 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/OpenGL.h : OpenGL management for Windows                           //
+//     Win/OpenGL.cpp : OpenGL management for Windows                         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WIN_OPENGL_HEADER
-#define VOS_WIN_OPENGL_HEADER
-
-    #include <windows.h>
-    #include <gl/GL.h>
+#include "OpenGL.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Init OpenGL for Windows                                               //
-    ////////////////////////////////////////////////////////////////////////////
-    void OpenGLWinInit();
-    
-    ////////////////////////////////////////////////////////////////////////////
-    //  Swap interval EXT (vertical synchronization)                          //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef int(WINAPI* PFNWGLGETSWAPINTERVALEXTPROC)(void);
-    extern PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT;
+////////////////////////////////////////////////////////////////////////////////
+//  Swap interval EXT (vertical synchronization)                              //
+////////////////////////////////////////////////////////////////////////////////
+PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT = 0;
+PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = 0;
 
-    typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC)(int interval);
-    extern PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
-
-
-#endif // VOS_WIN_OPENGL_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL for Windows                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void OpenGLWinInit()
+{
+    // Init Swap interval EXT (vertical synchronization)
+    wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress(
+        "wglSwapIntervalEXT"
+    );
+    wglGetSwapIntervalEXT = (PFNWGLGETSWAPINTERVALEXTPROC)wglGetProcAddress(
+        "wglGetSwapIntervalEXT"
+    );
+}

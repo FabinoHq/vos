@@ -272,8 +272,13 @@ bool Window::createContext()
         return false;
     }
 
-    // Context successfully created
+    // Set current context
     wglMakeCurrent(m_device, m_context);
+
+    // Init OpenGL for Windows
+    OpenGLWinInit();
+
+    // Context successfully created
     return true;
 }
 

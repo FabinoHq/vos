@@ -17,12 +17,15 @@
 !System.h
 !Status.h
 !Event.h
-!OpenGL.h
 !Vos.h
 !Vos.cpp
 
+!OpenGL.h
 !DisplayMode.h
 !Window.h
+!Win/
+!Win/OpenGL.h
+!Win/OpenGL.cpp
 !Win/DisplayMode.h
 !Win/DisplayMode.cpp
 !Win/Window.h
