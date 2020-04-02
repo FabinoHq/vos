@@ -189,6 +189,15 @@
     #undef              GL_DEPTH_WRITEMASK
     #undef              GL_DEPTH_CLEAR_VALUE
     #undef              GL_DEPTH_FUNC
+    #undef              GL_STENCIL_TEST
+    #undef              GL_STENCIL_CLEAR_VALUE
+    #undef              GL_STENCIL_FUNC
+    #undef              GL_STENCIL_VALUE_MASK
+    #undef              GL_STENCIL_FAIL
+    #undef              GL_STENCIL_PASS_DEPTH_FAIL
+    #undef              GL_STENCIL_PASS_DEPTH_PASS
+    #undef              GL_STENCIL_REF
+    #undef              GL_STENCIL_WRITEMASK
     
 
     ////////////////////////////////////////////////////////////////////////////
@@ -429,6 +438,19 @@
     #define             GL_DEPTH_WRITEMASK                  0x0B72
     #define             GL_DEPTH_CLEAR_VALUE                0x0B73
     #define             GL_DEPTH_FUNC                       0x0B74
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL stencil constants                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_STENCIL_TEST                     0x0B90
+    #define             GL_STENCIL_CLEAR_VALUE              0x0B91
+    #define             GL_STENCIL_FUNC                     0x0B92
+    #define             GL_STENCIL_VALUE_MASK               0x0B93
+    #define             GL_STENCIL_FAIL                     0x0B94
+    #define             GL_STENCIL_PASS_DEPTH_FAIL          0x0B95
+    #define             GL_STENCIL_PASS_DEPTH_PASS          0x0B96
+    #define             GL_STENCIL_REF                      0x0B97
+    #define             GL_STENCIL_WRITEMASK                0x0B98
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
