@@ -177,6 +177,13 @@
     #undef              GL_COLOR_MATERIAL_FACE
     #undef              GL_COLOR_MATERIAL_PARAMETER
     #undef              GL_COLOR_MATERIAL
+    #undef              GL_FOG
+    #undef              GL_FOG_INDEX
+    #undef              GL_FOG_DENSITY
+    #undef              GL_FOG_START
+    #undef              GL_FOG_END
+    #undef              GL_FOG_MODE
+    #undef              GL_FOG_COLOR
     
 
     ////////////////////////////////////////////////////////////////////////////
@@ -397,6 +404,17 @@
     #define             GL_COLOR_MATERIAL_FACE              0x0B55
     #define             GL_COLOR_MATERIAL_PARAMETER         0x0B56
     #define             GL_COLOR_MATERIAL                   0x0B57
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL fog constants                                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_FOG                              0x0B60
+    #define             GL_FOG_INDEX                        0x0B61
+    #define             GL_FOG_DENSITY                      0x0B62
+    #define             GL_FOG_START                        0x0B63
+    #define             GL_FOG_END                          0x0B64
+    #define             GL_FOG_MODE                         0x0B65
+    #define             GL_FOG_COLOR                        0x0B66
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
