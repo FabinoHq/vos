@@ -91,6 +91,29 @@
     #undef              GL_FOG_BIT
     #undef              GL_DEPTH_BUFFER_BIT
     #undef              GL_ACCUM_BUFFER_BIT
+    #undef              GL_STENCIL_BUFFER_BIT
+    #undef              GL_SRC_COLOR
+    #undef              GL_ONE_MINUS_SRC_COLOR
+    #undef              GL_SRC_ALPHA
+    #undef              GL_ONE_MINUS_SRC_ALPHA
+    #undef              GL_DST_ALPHA
+    #undef              GL_ONE_MINUS_DST_ALPHA
+    #undef              GL_DST_COLOR
+    #undef              GL_ONE_MINUS_DST_COLOR
+    #undef              GL_SRC_ALPHA_SATURATE
+    #undef              GL_FRONT_LEFT
+    #undef              GL_FRONT_RIGHT
+    #undef              GL_BACK_LEFT
+    #undef              GL_BACK_RIGHT
+    #undef              GL_FRONT
+    #undef              GL_BACK
+    #undef              GL_LEFT
+    #undef              GL_RIGHT
+    #undef              GL_FRONT_AND_BACK
+    #undef              GL_AUX0
+    #undef              GL_AUX1
+    #undef              GL_AUX2
+    #undef              GL_AUX3
     
 
     ////////////////////////////////////////////////////////////////////////////
@@ -177,6 +200,37 @@
     #define             GL_FOG_BIT                          0x00000080
     #define             GL_DEPTH_BUFFER_BIT                 0x00000100
     #define             GL_ACCUM_BUFFER_BIT                 0x00000200
+    #define             GL_STENCIL_BUFFER_BIT               0x00000400
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL blending constants                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_SRC_COLOR                        0x0300
+    #define             GL_ONE_MINUS_SRC_COLOR              0x0301
+    #define             GL_SRC_ALPHA                        0x0302
+    #define             GL_ONE_MINUS_SRC_ALPHA              0x0303
+    #define             GL_DST_ALPHA                        0x0304
+    #define             GL_ONE_MINUS_DST_ALPHA              0x0305
+    #define             GL_DST_COLOR                        0x0306
+    #define             GL_ONE_MINUS_DST_COLOR              0x0307
+    #define             GL_SRC_ALPHA_SATURATE               0x0308
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL face culling constants                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_FRONT_LEFT                       0x0400
+    #define             GL_FRONT_RIGHT                      0x0401
+    #define             GL_BACK_LEFT                        0x0402
+    #define             GL_BACK_RIGHT                       0x0403
+    #define             GL_FRONT                            0x0404
+    #define             GL_BACK                             0x0405
+    #define             GL_LEFT                             0x0406
+    #define             GL_RIGHT                            0x0407
+    #define             GL_FRONT_AND_BACK                   0x0408
+    #define             GL_AUX0                             0x0409
+    #define             GL_AUX1                             0x040A
+    #define             GL_AUX2                             0x040B
+    #define             GL_AUX3                             0x040C
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
