@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/OpenGL.h : OpenGL management for Windows                           //
+//     Win/OpenGLWin.h : OpenGL management for Windows                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WIN_OPENGL_HEADER
-#define VOS_WIN_OPENGL_HEADER
+#ifndef VOS_WIN_OPENGLWIN_HEADER
+#define VOS_WIN_OPENGLWIN_HEADER
 
     #include <windows.h>
     #include <gl/GL.h>
@@ -54,7 +54,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Init OpenGL for Windows                                               //
     ////////////////////////////////////////////////////////////////////////////
-    void OpenGLWinInit();
+    void InitOpenGLWin();
     
     ////////////////////////////////////////////////////////////////////////////
     //  Swap interval EXT (vertical synchronization)                          //
@@ -66,4 +66,4 @@
     extern PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
 
 
-#endif // VOS_WIN_OPENGL_HEADER
+#endif // VOS_WIN_OPENGLWIN_HEADER

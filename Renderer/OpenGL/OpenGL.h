@@ -37,27 +37,11 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/OpenGL.cpp : OpenGL management for Windows                         //
+//     Renderer/OpenGL.h : OpenGL rendering management                        //
 ////////////////////////////////////////////////////////////////////////////////
-#include "OpenGL.h"
+#ifndef VOS_RENDERER_OPENGL_HEADER
+#define VOS_RENDERER_OPENGL_HEADER
 
 
-////////////////////////////////////////////////////////////////////////////////
-//  Swap interval EXT (vertical synchronization)                              //
-////////////////////////////////////////////////////////////////////////////////
-PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT = 0;
-PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = 0;
 
-////////////////////////////////////////////////////////////////////////////////
-//  Init OpenGL for Windows                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void OpenGLWinInit()
-{
-    // Init Swap interval EXT (vertical synchronization)
-    wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)VOSGLGetProcAddress(
-        "wglSwapIntervalEXT"
-    );
-    wglGetSwapIntervalEXT = (PFNWGLGETSWAPINTERVALEXTPROC)VOSGLGetProcAddress(
-        "wglGetSwapIntervalEXT"
-    );
-}
+#endif // VOS_RENDERER_OPENGL_HEADER

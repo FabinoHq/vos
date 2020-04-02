@@ -276,7 +276,7 @@ bool Window::createContext()
     wglMakeCurrent(m_device, m_context);
 
     // Init OpenGL for Windows
-    OpenGLWinInit();
+    InitOpenGLWin();
 
     // Context successfully created
     return true;

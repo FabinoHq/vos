@@ -43,11 +43,11 @@
 #define VOS_WIN_WINDOW_HEADER
 
     #include <windows.h>
-    #include "OpenGL.h"
     #include <queue>
 
     #include "DisplayMode.h"
     #include "../Event.h"
+    #include "OpenGLWin.h"
 
 
     // Window class name

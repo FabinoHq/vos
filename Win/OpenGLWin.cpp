@@ -37,29 +37,27 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     OpenGL.h : OpenGL management wrapper                                   //
+//     Win/OpenGLWin.cpp : OpenGL management for Windows                      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_OPENGL_HEADER
-#define VOS_OPENGL_HEADER
-
-    #include "System.h"
+#include "OpenGLWin.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  OpenGL wrapper                                                        //
-    ////////////////////////////////////////////////////////////////////////////
-    #ifdef VOS_WINDOWS
-        #include "Win/OpenGLWin.h"
-        #include "Renderer/OpenGL/OpenGL.h"
-    #endif // VOS_WINDOWS
+////////////////////////////////////////////////////////////////////////////////
+//  Swap interval EXT (vertical synchronization)                              //
+////////////////////////////////////////////////////////////////////////////////
+PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT = 0;
+PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = 0;
 
-    #ifdef VOS_MACOS
-        #include <OpenGL/gl.h>
-    #endif // VOS_MACOS
-
-    #ifdef VOS_LINUX
-        #include <GL/gl.h>
-    #endif // VOS_LINUX
-
-
-#endif // VOS_OPENGL_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL for Windows                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void InitOpenGLWin()
+{
+    // Init Swap interval EXT (vertical synchronization)
+    wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)VOSGLGetProcAddress(
+        "wglSwapIntervalEXT"
+    );
+    wglGetSwapIntervalEXT = (PFNWGLGETSWAPINTERVALEXTPROC)VOSGLGetProcAddress(
+        "wglGetSwapIntervalEXT"
+    );
+}

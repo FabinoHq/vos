@@ -124,23 +124,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Renderer\OpenGL\OpenGL.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Vos.cpp" />
     <ClCompile Include="Win\DisplayMode.cpp" />
-    <ClCompile Include="Win\OpenGL.cpp" />
+    <ClCompile Include="Win\OpenGLWin.cpp" />
     <ClCompile Include="Win\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayMode.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="Renderer\OpenGL\OpenGL.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Vos.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Win\DisplayMode.h" />
-    <ClInclude Include="Win\OpenGL.h" />
+    <ClInclude Include="Win\OpenGLWin.h" />
     <ClInclude Include="Win\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
