@@ -114,6 +114,69 @@
     #undef              GL_AUX1
     #undef              GL_AUX2
     #undef              GL_AUX3
+    #undef              GL_INVALID_ENUM
+    #undef              GL_INVALID_VALUE
+    #undef              GL_INVALID_OPERATION
+    #undef              GL_STACK_OVERFLOW
+    #undef              GL_STACK_UNDERFLOW
+    #undef              GL_OUT_OF_MEMORY
+    #undef              GL_2D
+    #undef              GL_3D
+    #undef              GL_3D_COLOR
+    #undef              GL_3D_COLOR_TEXTURE
+    #undef              GL_4D_COLOR_TEXTURE
+    #undef              GL_PASS_THROUGH_TOKEN
+    #undef              GL_POINT_TOKEN
+    #undef              GL_LINE_TOKEN
+    #undef              GL_POLYGON_TOKEN
+    #undef              GL_BITMAP_TOKEN
+    #undef              GL_DRAW_PIXEL_TOKEN
+    #undef              GL_COPY_PIXEL_TOKEN
+    #undef              GL_LINE_RESET_TOKEN
+    #undef              GL_EXP
+    #undef              GL_EXP2
+    #undef              GL_CW
+    #undef              GL_CCW
+    #undef              GL_CURRENT_COLOR
+    #undef              GL_CURRENT_INDEX
+    #undef              GL_CURRENT_NORMAL
+    #undef              GL_CURRENT_TEXTURE_COORDS
+    #undef              GL_CURRENT_RASTER_COLOR
+    #undef              GL_CURRENT_RASTER_INDEX
+    #undef              GL_CURRENT_RASTER_TEXTURE_COORDS
+    #undef              GL_CURRENT_RASTER_POSITION
+    #undef              GL_CURRENT_RASTER_POSITION_VALID
+    #undef              GL_CURRENT_RASTER_DISTANCE
+    #undef              GL_POINT_SMOOTH
+    #undef              GL_POINT_SIZE
+    #undef              GL_POINT_SIZE_RANGE
+    #undef              GL_POINT_SIZE_GRANULARITY
+    #undef              GL_LINE_SMOOTH
+    #undef              GL_LINE_WIDTH
+    #undef              GL_LINE_WIDTH_RANGE
+    #undef              GL_LINE_WIDTH_GRANULARITY
+    #undef              GL_LINE_STIPPLE
+    #undef              GL_LINE_STIPPLE_PATTERN
+    #undef              GL_LINE_STIPPLE_REPEAT
+    #undef              GL_LIST_MODE
+    #undef              GL_MAX_LIST_NESTING
+    #undef              GL_LIST_BASE
+    #undef              GL_LIST_INDEX
+    #undef              GL_POLYGON_MODE
+    #undef              GL_POLYGON_SMOOTH
+    #undef              GL_POLYGON_STIPPLE
+    #undef              GL_EDGE_FLAG
+    #undef              GL_CULL_FACE
+    #undef              GL_CULL_FACE_MODE
+    #undef              GL_FRONT_FACE
+    #undef              GL_LIGHTING
+    #undef              GL_LIGHT_MODEL_LOCAL_VIEWER
+    #undef              GL_LIGHT_MODEL_TWO_SIDE
+    #undef              GL_LIGHT_MODEL_AMBIENT
+    #undef              GL_SHADE_MODEL
+    #undef              GL_COLOR_MATERIAL_FACE
+    #undef              GL_COLOR_MATERIAL_PARAMETER
+    #undef              GL_COLOR_MATERIAL
     
 
     ////////////////////////////////////////////////////////////////////////////
@@ -231,6 +294,109 @@
     #define             GL_AUX1                             0x040A
     #define             GL_AUX2                             0x040B
     #define             GL_AUX3                             0x040C
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL errors constants                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_INVALID_ENUM                     0x0500
+    #define             GL_INVALID_VALUE                    0x0501
+    #define             GL_INVALID_OPERATION                0x0502
+    #define             GL_STACK_OVERFLOW                   0x0503
+    #define             GL_STACK_UNDERFLOW                  0x0504
+    #define             GL_OUT_OF_MEMORY                    0x0505
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL dimensional constants                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_2D                               0x0600
+    #define             GL_3D                               0x0601
+    #define             GL_3D_COLOR                         0x0602
+    #define             GL_3D_COLOR_TEXTURE                 0x0603
+    #define             GL_4D_COLOR_TEXTURE                 0x0604
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL tokens constants                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_PASS_THROUGH_TOKEN               0x0700
+    #define             GL_POINT_TOKEN                      0x0701
+    #define             GL_LINE_TOKEN                       0x0702
+    #define             GL_POLYGON_TOKEN                    0x0703
+    #define             GL_BITMAP_TOKEN                     0x0704
+    #define             GL_DRAW_PIXEL_TOKEN                 0x0705
+    #define             GL_COPY_PIXEL_TOKEN                 0x0706
+    #define             GL_LINE_RESET_TOKEN                 0x0707
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL expressions constants                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_EXP                              0x0800
+    #define             GL_EXP2                             0x0801
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL ordering constants                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_CW                               0x0900
+    #define             GL_CCW                              0x0901
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL current constants                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_CURRENT_COLOR                    0x0B00
+    #define             GL_CURRENT_INDEX                    0x0B01
+    #define             GL_CURRENT_NORMAL                   0x0B02
+    #define             GL_CURRENT_TEXTURE_COORDS           0x0B03
+    #define             GL_CURRENT_RASTER_COLOR             0x0B04
+    #define             GL_CURRENT_RASTER_INDEX             0x0B05
+    #define             GL_CURRENT_RASTER_TEXTURE_COORDS    0x0B06
+    #define             GL_CURRENT_RASTER_POSITION          0x0B07
+    #define             GL_CURRENT_RASTER_POSITION_VALID    0x0B08
+    #define             GL_CURRENT_RASTER_DISTANCE          0x0B09
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL points and lines constants                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_POINT_SMOOTH                     0x0B10
+    #define             GL_POINT_SIZE                       0x0B11
+    #define             GL_POINT_SIZE_RANGE                 0x0B12
+    #define             GL_POINT_SIZE_GRANULARITY           0x0B13
+    #define             GL_LINE_SMOOTH                      0x0B20
+    #define             GL_LINE_WIDTH                       0x0B21
+    #define             GL_LINE_WIDTH_RANGE                 0x0B22
+    #define             GL_LINE_WIDTH_GRANULARITY           0x0B23
+    #define             GL_LINE_STIPPLE                     0x0B24
+    #define             GL_LINE_STIPPLE_PATTERN             0x0B25
+    #define             GL_LINE_STIPPLE_REPEAT              0x0B26
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL lists constants                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_LIST_MODE                        0x0B30
+    #define             GL_MAX_LIST_NESTING                 0x0B31
+    #define             GL_LIST_BASE                        0x0B32
+    #define             GL_LIST_INDEX                       0x0B33
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL polygons constants                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_POLYGON_MODE                     0x0B40
+    #define             GL_POLYGON_SMOOTH                   0x0B41
+    #define             GL_POLYGON_STIPPLE                  0x0B42
+    #define             GL_EDGE_FLAG                        0x0B43
+    #define             GL_CULL_FACE                        0x0B44
+    #define             GL_CULL_FACE_MODE                   0x0B45
+    #define             GL_FRONT_FACE                       0x0B46
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL lighting constants                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_LIGHTING                         0x0B50
+    #define             GL_LIGHT_MODEL_LOCAL_VIEWER         0x0B51
+    #define             GL_LIGHT_MODEL_TWO_SIDE             0x0B52
+    #define             GL_LIGHT_MODEL_AMBIENT              0x0B53
+    #define             GL_SHADE_MODEL                      0x0B54
+    #define             GL_COLOR_MATERIAL_FACE              0x0B55
+    #define             GL_COLOR_MATERIAL_PARAMETER         0x0B56
+    #define             GL_COLOR_MATERIAL                   0x0B57
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
