@@ -198,6 +198,15 @@
     #undef              GL_STENCIL_PASS_DEPTH_PASS
     #undef              GL_STENCIL_REF
     #undef              GL_STENCIL_WRITEMASK
+    #undef              GL_MATRIX_MODE
+    #undef              GL_NORMALIZE
+    #undef              GL_VIEWPORT
+    #undef              GL_MODELVIEW_STACK_DEPTH
+    #undef              GL_PROJECTION_STACK_DEPTH
+    #undef              GL_TEXTURE_STACK_DEPTH
+    #undef              GL_MODELVIEW_MATRIX
+    #undef              GL_PROJECTION_MATRIX
+    #undef              GL_TEXTURE_MATRIX
     
 
     ////////////////////////////////////////////////////////////////////////////
@@ -300,7 +309,7 @@
     #define             GL_SRC_ALPHA_SATURATE               0x0308
 
     ////////////////////////////////////////////////////////////////////////////
-    //  OpenGL face culling constants                                         //
+    //  OpenGL faces constants                                                //
     ////////////////////////////////////////////////////////////////////////////
     #define             GL_FRONT_LEFT                       0x0400
     #define             GL_FRONT_RIGHT                      0x0401
@@ -451,6 +460,19 @@
     #define             GL_STENCIL_PASS_DEPTH_PASS          0x0B96
     #define             GL_STENCIL_REF                      0x0B97
     #define             GL_STENCIL_WRITEMASK                0x0B98
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL matrices constants                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_MATRIX_MODE                      0x0BA0
+    #define             GL_NORMALIZE                        0x0BA1
+    #define             GL_VIEWPORT                         0x0BA2
+    #define             GL_MODELVIEW_STACK_DEPTH            0x0BA3
+    #define             GL_PROJECTION_STACK_DEPTH           0x0BA4
+    #define             GL_TEXTURE_STACK_DEPTH              0x0BA5
+    #define             GL_MODELVIEW_MATRIX                 0x0BA6
+    #define             GL_PROJECTION_MATRIX                0x0BA7
+    #define             GL_TEXTURE_MATRIX                   0x0BA8
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
