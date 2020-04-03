@@ -1291,11 +1291,20 @@
     VOSGLApi VOSGLEntry void glPushName(GLuint name);
     VOSGLApi VOSGLEntry void glPopName();
     VOSGLApi VOSGLEntry void glPointSize(GLfloat size);
+    VOSGLApi VOSGLEntry void glLoadName(GLuint name);
+    VOSGLApi VOSGLEntry void glLogicOp(GLenum opcode);
+    VOSGLApi VOSGLEntry void glHint(GLenum target, GLenum mode);
+    VOSGLApi VOSGLEntry GLboolean glIsEnabled(GLenum cap);
+    VOSGLApi VOSGLEntry GLboolean glIsList(GLuint list);
+    VOSGLApi VOSGLEntry GLboolean glIsTexture(GLuint texture);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL matrices functions                                             //
     ////////////////////////////////////////////////////////////////////////////
     VOSGLApi VOSGLEntry void glMatrixMode(GLenum mode);
+    VOSGLApi VOSGLEntry void glLoadIdentity();
+    VOSGLApi VOSGLEntry void glLoadMatrixd(const GLdouble* m);
+    VOSGLApi VOSGLEntry void glLoadMatrixf(const GLfloat* m);
     VOSGLApi VOSGLEntry void glMultMatrixd(const GLdouble* m);
     VOSGLApi VOSGLEntry void glMultMatrixf(const GLfloat* m);
     VOSGLApi VOSGLEntry void glTranslated(GLdouble x, GLdouble y, GLdouble z);
@@ -1355,6 +1364,24 @@
         GLshort x, GLshort y, GLshort z, GLshort w
     );
     VOSGLApi VOSGLEntry void glRasterPos4sv(const GLshort* v);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL indices functions                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glIndexMask(GLuint mask);
+    VOSGLApi VOSGLEntry void glIndexPointer(
+        GLenum type, GLsizei stride, const void* pointer
+    );
+    VOSGLApi VOSGLEntry void glIndexd(GLdouble c);
+    VOSGLApi VOSGLEntry void glIndexdv(const GLdouble* c);
+    VOSGLApi VOSGLEntry void glIndexf(GLfloat c);
+    VOSGLApi VOSGLEntry void glIndexfv(const GLfloat* c);
+    VOSGLApi VOSGLEntry void glIndexi(GLint c);
+    VOSGLApi VOSGLEntry void glIndexiv(const GLint* c);
+    VOSGLApi VOSGLEntry void glIndexs(GLshort c);
+    VOSGLApi VOSGLEntry void glIndexsv(const GLshort* c);
+    VOSGLApi VOSGLEntry void glIndexub(GLubyte c);
+    VOSGLApi VOSGLEntry void glIndexubv(const GLubyte* c);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL vertices functions                                             //
@@ -1682,6 +1709,32 @@
     VOSGLApi VOSGLEntry void glPixelTransferf(GLenum pname, GLfloat param);
     VOSGLApi VOSGLEntry void glPixelTransferi(GLenum pname, GLint param);
     VOSGLApi VOSGLEntry void glPixelZoom(GLfloat xfactor, GLfloat yfactor);
+    VOSGLApi VOSGLEntry void glMap1d(
+        GLenum target, GLdouble u1, GLdouble u2,
+        GLint stride, GLint order, const GLdouble* points
+    );
+    VOSGLApi VOSGLEntry void glMap1f(
+        GLenum target, GLfloat u1, GLfloat u2,
+        GLint stride, GLint order, const GLfloat* points
+    );
+    VOSGLApi VOSGLEntry void glMap2d(
+        GLenum target, GLdouble u1, GLdouble u2,
+        GLint ustride, GLint uorder, GLdouble v1, GLdouble v2,
+        GLint vstride, GLint vorder, const GLdouble* points
+    );
+    VOSGLApi VOSGLEntry void glMap2f(
+        GLenum target, GLfloat u1, GLfloat u2,
+        GLint ustride, GLint uorder, GLfloat v1, GLfloat v2,
+        GLint vstride, GLint vorder, const GLfloat* points
+    );
+    VOSGLApi VOSGLEntry void glMapGrid1d(GLint un, GLdouble u1, GLdouble u2);
+    VOSGLApi VOSGLEntry void glMapGrid1f(GLint un, GLfloat u1, GLfloat u2);
+    VOSGLApi VOSGLEntry void glMapGrid2d(
+        GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2
+    );
+    VOSGLApi VOSGLEntry void glMapGrid2f(
+        GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2
+    );
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL arrays functions                                               //
@@ -1698,6 +1751,9 @@
         GLenum format, GLenum type, const void* pixels
     );
     VOSGLApi VOSGLEntry void glArrayElement(GLint i);
+    VOSGLApi VOSGLEntry void glInterleavedArrays(
+        GLenum format, GLsizei stride, const void* pointer
+    );
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL buffers functions                                              //
