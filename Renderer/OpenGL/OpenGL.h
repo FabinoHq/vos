@@ -1282,9 +1282,51 @@
     VOSGLApi VOSGLEntry void glDisableClientState(GLenum array);
     VOSGLApi VOSGLEntry void glFinish(void);
     VOSGLApi VOSGLEntry void glFlush(void);
+    VOSGLApi VOSGLEntry void glViewport(
+        GLint x, GLint y, GLsizei width, GLsizei height
+    );
     VOSGLApi VOSGLEntry void glFrustum(
         GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
         GLdouble zNear, GLdouble zFar
+    );
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL vertices functions                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glVertex2d(GLdouble x, GLdouble y);
+    VOSGLApi VOSGLEntry void glVertex2dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glVertex2f(GLfloat x, GLfloat y);
+    VOSGLApi VOSGLEntry void glVertex2fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glVertex2i(GLint x, GLint y);
+    VOSGLApi VOSGLEntry void glVertex2iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glVertex2s(GLshort x, GLshort y);
+    VOSGLApi VOSGLEntry void glVertex2sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glVertex3d(GLdouble x, GLdouble y, GLdouble z);
+    VOSGLApi VOSGLEntry void glVertex3dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glVertex3f(GLfloat x, GLfloat y, GLfloat z);
+    VOSGLApi VOSGLEntry void glVertex3fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glVertex3i(GLint x, GLint y, GLint z);
+    VOSGLApi VOSGLEntry void glVertex3iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glVertex3s(GLshort x, GLshort y, GLshort z);
+    VOSGLApi VOSGLEntry void glVertex3sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glVertex4d(
+        GLdouble x, GLdouble y, GLdouble z, GLdouble w
+    );
+    VOSGLApi VOSGLEntry void glVertex4dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glVertex4f(
+        GLfloat x, GLfloat y, GLfloat z, GLfloat w
+    );
+    VOSGLApi VOSGLEntry void glVertex4fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glVertex4i(
+        GLint x, GLint y, GLint z, GLint w
+    );
+    VOSGLApi VOSGLEntry void glVertex4iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glVertex4s(
+        GLshort x, GLshort y, GLshort z, GLshort w
+    );
+    VOSGLApi VOSGLEntry void glVertex4sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glVertexPointer(
+        GLint size, GLenum type, GLsizei stride, const void* pointer
     );
 
     ////////////////////////////////////////////////////////////////////////////
