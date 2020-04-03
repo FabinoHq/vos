@@ -1274,6 +1274,7 @@
     VOSGLApi VOSGLEntry void glCallLists(
         GLsizei n, GLenum type, const void* lists
     );
+    VOSGLApi VOSGLEntry GLint glRenderMode(GLenum mode);
     VOSGLApi VOSGLEntry void glBegin(GLenum mode);
     VOSGLApi VOSGLEntry void glEnd(void);
     VOSGLApi VOSGLEntry void glEnable(GLenum cap);
@@ -1289,6 +1290,16 @@
         GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
         GLdouble zNear, GLdouble zFar
     );
+    VOSGLApi VOSGLEntry void glTranslated(GLdouble x, GLdouble y, GLdouble z);
+    VOSGLApi VOSGLEntry void glTranslatef(GLfloat x, GLfloat y, GLfloat z);
+    VOSGLApi VOSGLEntry void glRotated(
+        GLdouble angle, GLdouble x, GLdouble y, GLdouble z
+    );
+    VOSGLApi VOSGLEntry void glRotatef(
+        GLfloat angle, GLfloat x, GLfloat y, GLfloat z
+    );
+    VOSGLApi VOSGLEntry void glScaled(GLdouble x, GLdouble y, GLdouble z);
+    VOSGLApi VOSGLEntry void glScalef(GLfloat x, GLfloat y, GLfloat z);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL vertices functions                                             //
@@ -1431,6 +1442,27 @@
     VOSGLApi VOSGLEntry void glClipPlane(
         GLenum plane, const GLdouble* equation
     );
+    VOSGLApi VOSGLEntry void glScissor(
+        GLint x, GLint y, GLsizei width, GLsizei height
+    );
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL rects functions                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glRectd(
+        GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2
+    );
+    VOSGLApi VOSGLEntry void glRectdv(const GLdouble* v1, const GLdouble* v2);
+    VOSGLApi VOSGLEntry void glRectf(
+        GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2
+    );
+    VOSGLApi VOSGLEntry void glRectfv(const GLfloat* v1, const GLfloat* v2);
+    VOSGLApi VOSGLEntry void glRecti(GLint x1, GLint y1, GLint x2, GLint y2);
+    VOSGLApi VOSGLEntry void glRectiv(const GLint* v1, const GLint* v2);
+    VOSGLApi VOSGLEntry void glRects(
+        GLshort x1, GLshort y1, GLshort x2, GLshort y2
+    );
+    VOSGLApi VOSGLEntry void glRectsv(const GLshort* v1, const GLshort* v2);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL textures functions                                             //
@@ -1595,6 +1627,21 @@
     VOSGLApi VOSGLEntry void glArrayElement(GLint i);
 
     ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL buffers functions                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glSelectBuffer(GLsizei size, GLuint* buffer);
+    VOSGLApi VOSGLEntry void glReadBuffer(GLenum mode);
+    VOSGLApi VOSGLEntry void glReadPixels(
+        GLint x, GLint y, GLsizei width, GLsizei height,
+        GLenum format, GLenum type, void* pixels
+    );
+    VOSGLApi VOSGLEntry void glStencilFunc(GLenum func, GLint ref, GLuint mask);
+    VOSGLApi VOSGLEntry void glStencilMask(GLuint mask);
+    VOSGLApi VOSGLEntry void glStencilOp(
+        GLenum fail, GLenum zfail, GLenum zpass
+    );
+
+    ////////////////////////////////////////////////////////////////////////////
     //  OpenGL lighting functions                                             //
     ////////////////////////////////////////////////////////////////////////////
     VOSGLApi VOSGLEntry void glLightModelf(GLenum pname, GLfloat param);
@@ -1613,6 +1660,11 @@
     VOSGLApi VOSGLEntry void glLightiv(
         GLenum light, GLenum pname, const GLint* params
     );
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL programs functions                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glShadeModel(GLenum mode);
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
