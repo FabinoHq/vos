@@ -1309,6 +1309,15 @@
     );
 
     ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL blending and depths functions                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glAlphaFunc(GLenum func, GLclampf ref);
+    VOSGLApi VOSGLEntry void glBlendFunc(GLenum sfactor, GLenum dfactor);
+    VOSGLApi VOSGLEntry void glDepthFunc(GLenum func);
+    VOSGLApi VOSGLEntry void glDepthMask(GLboolean flag);
+    VOSGLApi VOSGLEntry void glDepthRange(GLclampd zNear, GLclampd zFar);
+
+    ////////////////////////////////////////////////////////////////////////////
     //  OpenGL matrices functions                                             //
     ////////////////////////////////////////////////////////////////////////////
     VOSGLApi VOSGLEntry void glMatrixMode(GLenum mode);
