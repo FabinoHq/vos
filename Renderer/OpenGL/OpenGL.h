@@ -1347,5 +1347,28 @@
         GLint size, GLenum type, GLsizei stride, const void *pointer
     );
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL copy functions                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glCopyPixels(
+        GLint x, GLint y, GLsizei width, GLsizei height, GLenum type
+    );
+    VOSGLApi VOSGLEntry void glCopyTexImage1D(
+        GLenum target, GLint level, GLenum internalFormat,
+        GLint x, GLint y, GLsizei width, GLint border
+    );
+    VOSGLApi VOSGLEntry void glCopyTexImage2D(
+        GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y,
+        GLsizei width, GLsizei height, GLint border
+    );
+    VOSGLApi VOSGLEntry void glCopyTexSubImage1D(
+        GLenum target, GLint level, GLint xoffset,
+        GLint x, GLint y, GLsizei width
+    );
+    VOSGLApi VOSGLEntry void glCopyTexSubImage2D(
+        GLenum target, GLint level, GLint xoffset, GLint yoffset,
+        GLint x, GLint y, GLsizei width, GLsizei height
+    );
+
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
