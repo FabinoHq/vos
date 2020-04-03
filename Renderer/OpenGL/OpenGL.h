@@ -81,7 +81,6 @@
     #undef              GL_QUADS
     #undef              GL_QUAD_STRIP
     #undef              GL_POLYGON
-    #undef              GL_TEXTURE_COMPONENTS
     #undef              GL_CURRENT_BIT
     #undef              GL_CLIENT_PIXEL_STORE_BIT
     #undef              GL_POINT_BIT
@@ -239,7 +238,60 @@
     #undef              GL_LINE_SMOOTH_HINT
     #undef              GL_POLYGON_SMOOTH_HINT
     #undef              GL_FOG_HINT
-    
+    #undef              GL_TEXTURE_COMPONENTS
+    #undef              GL_TEXTURE_GEN_S
+    #undef              GL_TEXTURE_GEN_T
+    #undef              GL_TEXTURE_GEN_R
+    #undef              GL_TEXTURE_GEN_Q
+    #undef              GL_PIXEL_MAP_I_TO_I
+    #undef              GL_PIXEL_MAP_S_TO_S
+    #undef              GL_PIXEL_MAP_I_TO_R
+    #undef              GL_PIXEL_MAP_I_TO_G
+    #undef              GL_PIXEL_MAP_I_TO_B
+    #undef              GL_PIXEL_MAP_I_TO_A
+    #undef              GL_PIXEL_MAP_R_TO_R
+    #undef              GL_PIXEL_MAP_G_TO_G
+    #undef              GL_PIXEL_MAP_B_TO_B
+    #undef              GL_PIXEL_MAP_A_TO_A
+    #undef              GL_PIXEL_MAP_I_TO_I_SIZE
+    #undef              GL_PIXEL_MAP_S_TO_S_SIZE
+    #undef              GL_PIXEL_MAP_I_TO_R_SIZE
+    #undef              GL_PIXEL_MAP_I_TO_G_SIZE
+    #undef              GL_PIXEL_MAP_I_TO_B_SIZE
+    #undef              GL_PIXEL_MAP_I_TO_A_SIZE
+    #undef              GL_PIXEL_MAP_R_TO_R_SIZE
+    #undef              GL_PIXEL_MAP_G_TO_G_SIZE
+    #undef              GL_PIXEL_MAP_B_TO_B_SIZE
+    #undef              GL_PIXEL_MAP_A_TO_A_SIZE
+    #undef              GL_UNPACK_SWAP_BYTES
+    #undef              GL_UNPACK_LSB_FIRST
+    #undef              GL_UNPACK_ROW_LENGTH
+    #undef              GL_UNPACK_SKIP_ROWS
+    #undef              GL_UNPACK_SKIP_PIXELS
+    #undef              GL_UNPACK_ALIGNMENT
+    #undef              GL_PACK_SWAP_BYTES
+    #undef              GL_PACK_LSB_FIRST
+    #undef              GL_PACK_ROW_LENGTH
+    #undef              GL_PACK_SKIP_ROWS
+    #undef              GL_PACK_SKIP_PIXELS
+    #undef              GL_PACK_ALIGNMENT
+    #undef              GL_MAP_COLOR
+    #undef              GL_MAP_STENCIL
+    #undef              GL_INDEX_SHIFT
+    #undef              GL_INDEX_OFFSET
+    #undef              GL_RED_SCALE
+    #undef              GL_RED_BIAS
+    #undef              GL_ZOOM_X
+    #undef              GL_ZOOM_Y
+    #undef              GL_GREEN_SCALE
+    #undef              GL_GREEN_BIAS
+    #undef              GL_BLUE_SCALE
+    #undef              GL_BLUE_BIAS
+    #undef              GL_ALPHA_SCALE
+    #undef              GL_ALPHA_BIAS
+    #undef              GL_DEPTH_SCALE
+    #undef              GL_DEPTH_BIAS
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL types definitions                                              //
@@ -315,7 +367,6 @@
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL flags constants                                                //
     ////////////////////////////////////////////////////////////////////////////
-    #define             GL_TEXTURE_COMPONENTS               0x1003
     #define             GL_CURRENT_BIT                      0x00000001
     #define             GL_CLIENT_PIXEL_STORE_BIT           0x00000001
     #define             GL_POINT_BIT                        0x00000002
@@ -553,6 +604,63 @@
     #define             GL_LINE_SMOOTH_HINT                 0x0C52
     #define             GL_POLYGON_SMOOTH_HINT              0x0C53
     #define             GL_FOG_HINT                         0x0C54
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL textures constants                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_TEXTURE_COMPONENTS               0x1003
+    #define             GL_TEXTURE_GEN_S                    0x0C60
+    #define             GL_TEXTURE_GEN_T                    0x0C61
+    #define             GL_TEXTURE_GEN_R                    0x0C62
+    #define             GL_TEXTURE_GEN_Q                    0x0C63
+    #define             GL_PIXEL_MAP_I_TO_I                 0x0C70
+    #define             GL_PIXEL_MAP_S_TO_S                 0x0C71
+    #define             GL_PIXEL_MAP_I_TO_R                 0x0C72
+    #define             GL_PIXEL_MAP_I_TO_G                 0x0C73
+    #define             GL_PIXEL_MAP_I_TO_B                 0x0C74
+    #define             GL_PIXEL_MAP_I_TO_A                 0x0C75
+    #define             GL_PIXEL_MAP_R_TO_R                 0x0C76
+    #define             GL_PIXEL_MAP_G_TO_G                 0x0C77
+    #define             GL_PIXEL_MAP_B_TO_B                 0x0C78
+    #define             GL_PIXEL_MAP_A_TO_A                 0x0C79
+    #define             GL_PIXEL_MAP_I_TO_I_SIZE            0x0CB0
+    #define             GL_PIXEL_MAP_S_TO_S_SIZE            0x0CB1
+    #define             GL_PIXEL_MAP_I_TO_R_SIZE            0x0CB2
+    #define             GL_PIXEL_MAP_I_TO_G_SIZE            0x0CB3
+    #define             GL_PIXEL_MAP_I_TO_B_SIZE            0x0CB4
+    #define             GL_PIXEL_MAP_I_TO_A_SIZE            0x0CB5
+    #define             GL_PIXEL_MAP_R_TO_R_SIZE            0x0CB6
+    #define             GL_PIXEL_MAP_G_TO_G_SIZE            0x0CB7
+    #define             GL_PIXEL_MAP_B_TO_B_SIZE            0x0CB8
+    #define             GL_PIXEL_MAP_A_TO_A_SIZE            0x0CB9
+    #define             GL_UNPACK_SWAP_BYTES                0x0CF0
+    #define             GL_UNPACK_LSB_FIRST                 0x0CF1
+    #define             GL_UNPACK_ROW_LENGTH                0x0CF2
+    #define             GL_UNPACK_SKIP_ROWS                 0x0CF3
+    #define             GL_UNPACK_SKIP_PIXELS               0x0CF4
+    #define             GL_UNPACK_ALIGNMENT                 0x0CF5
+    #define             GL_PACK_SWAP_BYTES                  0x0D00
+    #define             GL_PACK_LSB_FIRST                   0x0D01
+    #define             GL_PACK_ROW_LENGTH                  0x0D02
+    #define             GL_PACK_SKIP_ROWS                   0x0D03
+    #define             GL_PACK_SKIP_PIXELS                 0x0D04
+    #define             GL_PACK_ALIGNMENT                   0x0D05
+    #define             GL_MAP_COLOR                        0x0D10
+    #define             GL_MAP_STENCIL                      0x0D11
+    #define             GL_INDEX_SHIFT                      0x0D12
+    #define             GL_INDEX_OFFSET                     0x0D13
+    #define             GL_RED_SCALE                        0x0D14
+    #define             GL_RED_BIAS                         0x0D15
+    #define             GL_ZOOM_X                           0x0D16
+    #define             GL_ZOOM_Y                           0x0D17
+    #define             GL_GREEN_SCALE                      0x0D18
+    #define             GL_GREEN_BIAS                       0x0D19
+    #define             GL_BLUE_SCALE                       0x0D1A
+    #define             GL_BLUE_BIAS                        0x0D1B
+    #define             GL_ALPHA_SCALE                      0x0D1C
+    #define             GL_ALPHA_BIAS                       0x0D1D
+    #define             GL_DEPTH_SCALE                      0x0D1E
+    #define             GL_DEPTH_BIAS                       0x0D1F
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
