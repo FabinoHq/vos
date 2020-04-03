@@ -55,6 +55,9 @@
     #undef              GL_FALSE
     #undef              GL_NO_ERROR
     #undef              GL_LOGIC_OP
+    #undef              GL_LOGIC_OP_MODE
+    #undef              GL_INDEX_LOGIC_OP
+    #undef              GL_COLOR_LOGIC_OP
     #undef              GL_NEVER
     #undef              GL_LESS
     #undef              GL_EQUAL
@@ -177,6 +180,11 @@
     #undef              GL_CULL_FACE
     #undef              GL_CULL_FACE_MODE
     #undef              GL_FRONT_FACE
+    #undef              GL_SCISSOR_BOX
+    #undef              GL_SCISSOR_TEST
+    #undef              GL_AUX_BUFFERS
+    #undef              GL_DRAW_BUFFER
+    #undef              GL_READ_BUFFER
     #undef              GL_LIGHTING
     #undef              GL_LIGHT_MODEL_LOCAL_VIEWER
     #undef              GL_LIGHT_MODEL_TWO_SIDE
@@ -255,6 +263,9 @@
     //  OpenGL logic constants                                                //
     ////////////////////////////////////////////////////////////////////////////
     #define             GL_LOGIC_OP                         0x0BF1
+    #define             GL_LOGIC_OP_MODE                    0x0BF0
+    #define             GL_INDEX_LOGIC_OP                   0x0BF1
+    #define             GL_COLOR_LOGIC_OP                   0x0BF2
     #define             GL_NEVER                            0x0200
     #define             GL_LESS                             0x0201
     #define             GL_EQUAL                            0x0202
@@ -433,6 +444,15 @@
     #define             GL_CULL_FACE                        0x0B44
     #define             GL_CULL_FACE_MODE                   0x0B45
     #define             GL_FRONT_FACE                       0x0B46
+    #define             GL_SCISSOR_BOX                      0x0C10
+    #define             GL_SCISSOR_TEST                     0x0C11
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL buffers constants                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_AUX_BUFFERS                      0x0C00
+    #define             GL_DRAW_BUFFER                      0x0C01
+    #define             GL_READ_BUFFER                      0x0C02
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL lighting constants                                             //
