@@ -291,6 +291,18 @@
     #undef              GL_ALPHA_BIAS
     #undef              GL_DEPTH_SCALE
     #undef              GL_DEPTH_BIAS
+    #undef              GL_MAX_EVAL_ORDER
+    #undef              GL_MAX_LIGHTS
+    #undef              GL_MAX_CLIP_PLANES
+    #undef              GL_MAX_TEXTURE_SIZE
+    #undef              GL_MAX_PIXEL_MAP_TABLE
+    #undef              GL_MAX_ATTRIB_STACK_DEPTH
+    #undef              GL_MAX_MODELVIEW_STACK_DEPTH
+    #undef              GL_MAX_NAME_STACK_DEPTH
+    #undef              GL_MAX_PROJECTION_STACK_DEPTH
+    #undef              GL_MAX_TEXTURE_STACK_DEPTH
+    #undef              GL_MAX_VIEWPORT_DIMS
+    #undef              GL_MAX_CLIENT_ATTRIB_STACK_DEPTH
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -661,6 +673,22 @@
     #define             GL_ALPHA_BIAS                       0x0D1D
     #define             GL_DEPTH_SCALE                      0x0D1E
     #define             GL_DEPTH_BIAS                       0x0D1F
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL max constants                                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_MAX_EVAL_ORDER                   0x0D30
+    #define             GL_MAX_LIGHTS                       0x0D31
+    #define             GL_MAX_CLIP_PLANES                  0x0D32
+    #define             GL_MAX_TEXTURE_SIZE                 0x0D33
+    #define             GL_MAX_PIXEL_MAP_TABLE              0x0D34
+    #define             GL_MAX_ATTRIB_STACK_DEPTH           0x0D35
+    #define             GL_MAX_MODELVIEW_STACK_DEPTH        0x0D36
+    #define             GL_MAX_NAME_STACK_DEPTH             0x0D37
+    #define             GL_MAX_PROJECTION_STACK_DEPTH       0x0D38
+    #define             GL_MAX_TEXTURE_STACK_DEPTH          0x0D39
+    #define             GL_MAX_VIEWPORT_DIMS                0x0D3A
+    #define             GL_MAX_CLIENT_ATTRIB_STACK_DEPTH    0x0D3B
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
