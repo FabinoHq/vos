@@ -1283,8 +1283,13 @@
     VOSGLApi VOSGLEntry void glDisableClientState(GLenum array);
     VOSGLApi VOSGLEntry void glFinish();
     VOSGLApi VOSGLEntry void glFlush();
+    VOSGLApi VOSGLEntry void glPassThrough(GLfloat token);
     VOSGLApi VOSGLEntry void glViewport(
         GLint x, GLint y, GLsizei width, GLsizei height
+    );
+    VOSGLApi VOSGLEntry void glOrtho(
+        GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
+        GLdouble zNear, GLdouble zFar
     );
     VOSGLApi VOSGLEntry void glFrustum(
         GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
@@ -1308,6 +1313,7 @@
     VOSGLApi VOSGLEntry void glPopClientAttrib();
     VOSGLApi VOSGLEntry void glPushName(GLuint name);
     VOSGLApi VOSGLEntry void glPopName();
+    VOSGLApi VOSGLEntry void glPointSize(GLfloat size);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL rasterizer functions                                           //
@@ -1454,6 +1460,23 @@
     );
 
     ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL normals functions                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glNormal3b(GLbyte nx, GLbyte ny, GLbyte nz);
+    VOSGLApi VOSGLEntry void glNormal3bv(const GLbyte* v);
+    VOSGLApi VOSGLEntry void glNormal3d(GLdouble nx, GLdouble ny, GLdouble nz);
+    VOSGLApi VOSGLEntry void glNormal3dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glNormal3f(GLfloat nx, GLfloat ny, GLfloat nz);
+    VOSGLApi VOSGLEntry void glNormal3fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glNormal3i(GLint nx, GLint ny, GLint nz);
+    VOSGLApi VOSGLEntry void glNormal3iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glNormal3s(GLshort nx, GLshort ny, GLshort nz);
+    VOSGLApi VOSGLEntry void glNormal3sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glNormalPointer(
+        GLenum type, GLsizei stride, const void* pointer
+    );
+
+    ////////////////////////////////////////////////////////////////////////////
     //  OpenGL rects functions                                                //
     ////////////////////////////////////////////////////////////////////////////
     VOSGLApi VOSGLEntry void glRectd(
@@ -1482,6 +1505,13 @@
     VOSGLApi VOSGLEntry void glScissor(
         GLint x, GLint y, GLsizei width, GLsizei height
     );
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL polygons functions                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glPolygonMode(GLenum face, GLenum mode);
+    VOSGLApi VOSGLEntry void glPolygonOffset(GLfloat factor, GLfloat units);
+    VOSGLApi VOSGLEntry void glPolygonStipple(const GLubyte* mask);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL textures functions                                             //
@@ -1631,6 +1661,20 @@
     VOSGLApi VOSGLEntry void glPrioritizeTextures(
         GLsizei n, const GLuint* textures, const GLclampf* priorities
     );
+    VOSGLApi VOSGLEntry void glPixelMapfv(
+        GLenum map, GLsizei mapsize, const GLfloat* values
+    );
+    VOSGLApi VOSGLEntry void glPixelMapuiv(
+        GLenum map, GLsizei mapsize, const GLuint* values
+    );
+    VOSGLApi VOSGLEntry void glPixelMapusv(
+        GLenum map, GLsizei mapsize, const GLushort* values
+    );
+    VOSGLApi VOSGLEntry void glPixelStoref(GLenum pname, GLfloat param);
+    VOSGLApi VOSGLEntry void glPixelStorei(GLenum pname, GLint param);
+    VOSGLApi VOSGLEntry void glPixelTransferf(GLenum pname, GLfloat param);
+    VOSGLApi VOSGLEntry void glPixelTransferi(GLenum pname, GLint param);
+    VOSGLApi VOSGLEntry void glPixelZoom(GLfloat xfactor, GLfloat yfactor);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL arrays functions                                               //
