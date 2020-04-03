@@ -1284,17 +1284,20 @@
     VOSGLApi VOSGLEntry void glFinish();
     VOSGLApi VOSGLEntry void glFlush();
     VOSGLApi VOSGLEntry void glPassThrough(GLfloat token);
-    VOSGLApi VOSGLEntry void glViewport(
-        GLint x, GLint y, GLsizei width, GLsizei height
-    );
-    VOSGLApi VOSGLEntry void glOrtho(
-        GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
-        GLdouble zNear, GLdouble zFar
-    );
-    VOSGLApi VOSGLEntry void glFrustum(
-        GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
-        GLdouble zNear, GLdouble zFar
-    );
+    VOSGLApi VOSGLEntry void glPushAttrib(GLbitfield mask);
+    VOSGLApi VOSGLEntry void glPopAttrib();
+    VOSGLApi VOSGLEntry void glPushClientAttrib(GLbitfield mask);
+    VOSGLApi VOSGLEntry void glPopClientAttrib();
+    VOSGLApi VOSGLEntry void glPushName(GLuint name);
+    VOSGLApi VOSGLEntry void glPopName();
+    VOSGLApi VOSGLEntry void glPointSize(GLfloat size);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL matrices functions                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glMatrixMode(GLenum mode);
+    VOSGLApi VOSGLEntry void glMultMatrixd(const GLdouble* m);
+    VOSGLApi VOSGLEntry void glMultMatrixf(const GLfloat* m);
     VOSGLApi VOSGLEntry void glTranslated(GLdouble x, GLdouble y, GLdouble z);
     VOSGLApi VOSGLEntry void glTranslatef(GLfloat x, GLfloat y, GLfloat z);
     VOSGLApi VOSGLEntry void glRotated(
@@ -1307,13 +1310,17 @@
     VOSGLApi VOSGLEntry void glScalef(GLfloat x, GLfloat y, GLfloat z);
     VOSGLApi VOSGLEntry void glPushMatrix();
     VOSGLApi VOSGLEntry void glPopMatrix();
-    VOSGLApi VOSGLEntry void glPushAttrib(GLbitfield mask);
-    VOSGLApi VOSGLEntry void glPopAttrib();
-    VOSGLApi VOSGLEntry void glPushClientAttrib(GLbitfield mask);
-    VOSGLApi VOSGLEntry void glPopClientAttrib();
-    VOSGLApi VOSGLEntry void glPushName(GLuint name);
-    VOSGLApi VOSGLEntry void glPopName();
-    VOSGLApi VOSGLEntry void glPointSize(GLfloat size);
+        VOSGLApi VOSGLEntry void glViewport(
+        GLint x, GLint y, GLsizei width, GLsizei height
+    );
+    VOSGLApi VOSGLEntry void glOrtho(
+        GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
+        GLdouble zNear, GLdouble zFar
+    );
+    VOSGLApi VOSGLEntry void glFrustum(
+        GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
+        GLdouble zNear, GLdouble zFar
+    );
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL rasterizer functions                                           //
