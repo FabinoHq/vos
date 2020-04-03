@@ -1294,8 +1294,6 @@
     VOSGLApi VOSGLEntry void glLogicOp(GLenum opcode);
     VOSGLApi VOSGLEntry void glHint(GLenum target, GLenum mode);
     VOSGLApi VOSGLEntry GLboolean glIsEnabled(GLenum cap);
-    VOSGLApi VOSGLEntry GLboolean glIsList(GLuint list);
-    VOSGLApi VOSGLEntry GLboolean glIsTexture(GLuint texture);
     VOSGLApi VOSGLEntry void glAccum(GLenum op, GLfloat value);
     VOSGLApi VOSGLEntry GLenum glGetError();
     VOSGLApi VOSGLEntry void glGetPointerv(GLenum pname, void** params);
@@ -1317,6 +1315,8 @@
     VOSGLApi VOSGLEntry void glCallLists(
         GLsizei n, GLenum type, const void* lists
     );
+    VOSGLApi VOSGLEntry void glEndList();
+    VOSGLApi VOSGLEntry GLboolean glIsList(GLuint list);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL blending and depths functions                                  //
@@ -1393,6 +1393,24 @@
         GLshort x, GLshort y, GLshort z, GLshort w
     );
     VOSGLApi VOSGLEntry void glRasterPos4sv(const GLshort* v);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL eval functions                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glEvalCoord1d(GLdouble u);
+    VOSGLApi VOSGLEntry void glEvalCoord1dv(const GLdouble* u);
+    VOSGLApi VOSGLEntry void glEvalCoord1f(GLfloat u);
+    VOSGLApi VOSGLEntry void glEvalCoord1fv(const GLfloat* u);
+    VOSGLApi VOSGLEntry void glEvalCoord2d(GLdouble u, GLdouble v);
+    VOSGLApi VOSGLEntry void glEvalCoord2dv(const GLdouble* u);
+    VOSGLApi VOSGLEntry void glEvalCoord2f(GLfloat u, GLfloat v);
+    VOSGLApi VOSGLEntry void glEvalCoord2fv(const GLfloat* u);
+    VOSGLApi VOSGLEntry void glEvalMesh1(GLenum mode, GLint i1, GLint i2);
+    VOSGLApi VOSGLEntry void glEvalMesh2(
+        GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2
+    );
+    VOSGLApi VOSGLEntry void glEvalPoint1(GLint i);
+    VOSGLApi VOSGLEntry void glEvalPoint2(GLint i, GLint j);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL indices functions                                              //
@@ -1538,6 +1556,15 @@
     VOSGLApi VOSGLEntry void glNormalPointer(
         GLenum type, GLsizei stride, const void* pointer
     );
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL edges functions                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glEdgeFlag(GLboolean flag);
+    VOSGLApi VOSGLEntry void glEdgeFlagPointer(
+        GLsizei stride, const void* pointer
+    );
+    VOSGLApi VOSGLEntry void glEdgeFlagv(const GLboolean* flag);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL rects functions                                                //
@@ -1775,6 +1802,7 @@
     VOSGLApi VOSGLEntry void glMapGrid2f(
         GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2
     );
+    VOSGLApi VOSGLEntry GLboolean glIsTexture(GLuint texture);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL materials functions                                            //
@@ -1784,6 +1812,18 @@
     );
     VOSGLApi VOSGLEntry void glGetMaterialiv(
         GLenum face, GLenum pname, GLint* params
+    );
+    VOSGLApi VOSGLEntry void glMaterialf(
+        GLenum face, GLenum pname, GLfloat param
+    );
+    VOSGLApi VOSGLEntry void glMaterialfv(
+        GLenum face, GLenum pname, const GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glMateriali(
+        GLenum face, GLenum pname, GLint param
+    );
+    VOSGLApi VOSGLEntry void glMaterialiv(
+        GLenum face, GLenum pname, const GLint* params
     );
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1810,6 +1850,9 @@
     ////////////////////////////////////////////////////////////////////////////
     VOSGLApi VOSGLEntry void glSelectBuffer(GLsizei size, GLuint* buffer);
     VOSGLApi VOSGLEntry void glReadBuffer(GLenum mode);
+    VOSGLApi VOSGLEntry void glFeedbackBuffer(
+        GLsizei size, GLenum type, GLfloat* buffer
+    );
     VOSGLApi VOSGLEntry void glReadPixels(
         GLint x, GLint y, GLsizei width, GLsizei height,
         GLenum format, GLenum type, void* pixels
@@ -1868,6 +1911,14 @@
     VOSGLApi VOSGLEntry void glGetLightiv(
         GLenum light, GLenum pname, GLint* params
     );
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL fog functions                                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glFogf(GLenum pname, GLfloat param);
+    VOSGLApi VOSGLEntry void glFogfv(GLenum pname, const GLfloat* params);
+    VOSGLApi VOSGLEntry void glFogi(GLenum pname, GLint param);
+    VOSGLApi VOSGLEntry void glFogiv(GLenum pname, const GLint* params);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL programs functions                                             //
