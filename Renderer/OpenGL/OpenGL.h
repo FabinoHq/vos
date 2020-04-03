@@ -1288,6 +1288,8 @@
     VOSGLApi VOSGLEntry void glPushName(GLuint name);
     VOSGLApi VOSGLEntry void glPopName();
     VOSGLApi VOSGLEntry void glPointSize(GLfloat size);
+    VOSGLApi VOSGLEntry void glLineWidth(GLfloat width);
+    VOSGLApi VOSGLEntry void glLineStipple(GLint factor, GLushort pattern);
     VOSGLApi VOSGLEntry void glLoadName(GLuint name);
     VOSGLApi VOSGLEntry void glLogicOp(GLenum opcode);
     VOSGLApi VOSGLEntry void glHint(GLenum target, GLenum mode);
@@ -1295,6 +1297,14 @@
     VOSGLApi VOSGLEntry GLboolean glIsList(GLuint list);
     VOSGLApi VOSGLEntry GLboolean glIsTexture(GLuint texture);
     VOSGLApi VOSGLEntry void glAccum(GLenum op, GLfloat value);
+    VOSGLApi VOSGLEntry GLenum glGetError();
+    VOSGLApi VOSGLEntry void glGetPointerv(GLenum pname, void** params);
+    VOSGLApi VOSGLEntry void glGetBooleanv(GLenum pname, GLboolean* params);
+    VOSGLApi VOSGLEntry void glGetDoublev(GLenum pname, GLdouble* params);
+    VOSGLApi VOSGLEntry void glGetFloatv(GLenum pname, GLfloat* params);
+    VOSGLApi VOSGLEntry void glGetIntegerv(GLenum pname, GLint* params);
+    VOSGLApi VOSGLEntry void glGetClipPlane(GLenum plane, GLdouble* equation);
+    VOSGLApi VOSGLEntry const GLubyte* glGetString(GLenum name);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL lists functions                                                //
@@ -1565,6 +1575,7 @@
     VOSGLApi VOSGLEntry void glPolygonMode(GLenum face, GLenum mode);
     VOSGLApi VOSGLEntry void glPolygonOffset(GLfloat factor, GLfloat units);
     VOSGLApi VOSGLEntry void glPolygonStipple(const GLubyte* mask);
+    VOSGLApi VOSGLEntry void glGetPolygonStipple(GLubyte* mask);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL textures functions                                             //
@@ -1728,6 +1739,16 @@
     VOSGLApi VOSGLEntry void glPixelTransferf(GLenum pname, GLfloat param);
     VOSGLApi VOSGLEntry void glPixelTransferi(GLenum pname, GLint param);
     VOSGLApi VOSGLEntry void glPixelZoom(GLfloat xfactor, GLfloat yfactor);
+    VOSGLApi VOSGLEntry void glGetPixelMapfv(GLenum map, GLfloat* values);
+    VOSGLApi VOSGLEntry void glGetPixelMapuiv(GLenum map, GLuint* values);
+    VOSGLApi VOSGLEntry void glGetPixelMapusv(GLenum map, GLushort* values);
+    VOSGLApi VOSGLEntry void glGetMapdv(
+        GLenum target, GLenum query, GLdouble* v
+    );
+    VOSGLApi VOSGLEntry void glGetMapfv(
+        GLenum target, GLenum query, GLfloat* v
+    );
+    VOSGLApi VOSGLEntry void glGetMapiv(GLenum target, GLenum query, GLint* v);
     VOSGLApi VOSGLEntry void glMap1d(
         GLenum target, GLdouble u1, GLdouble u2,
         GLint stride, GLint order, const GLdouble* points
@@ -1753,6 +1774,16 @@
     );
     VOSGLApi VOSGLEntry void glMapGrid2f(
         GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2
+    );
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL materials functions                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glGetMaterialfv(
+        GLenum face, GLenum pname, GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glGetMaterialiv(
+        GLenum face, GLenum pname, GLint* params
     );
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1830,6 +1861,12 @@
     VOSGLApi VOSGLEntry void glLighti(GLenum light, GLenum pname, GLint param);
     VOSGLApi VOSGLEntry void glLightiv(
         GLenum light, GLenum pname, const GLint* params
+    );
+    VOSGLApi VOSGLEntry void glGetLightfv(
+        GLenum light, GLenum pname, GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glGetLightiv(
+        GLenum light, GLenum pname, GLint* params
     );
 
     ////////////////////////////////////////////////////////////////////////////
