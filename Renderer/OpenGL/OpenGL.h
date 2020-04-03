@@ -96,6 +96,11 @@
     #undef              GL_ACCUM_BUFFER_BIT
     #undef              GL_STENCIL_BUFFER_BIT
     #undef              GL_VIEWPORT_BIT
+    #undef              GL_INDEX_CLEAR_VALUE
+    #undef              GL_INDEX_WRITEMASK
+    #undef              GL_COLOR_CLEAR_VALUE
+    #undef              GL_COLOR_WRITEMASK
+    #undef              GL_STEREO
     #undef              GL_SRC_COLOR
     #undef              GL_ONE_MINUS_SRC_COLOR
     #undef              GL_SRC_ALPHA
@@ -185,6 +190,7 @@
     #undef              GL_AUX_BUFFERS
     #undef              GL_DRAW_BUFFER
     #undef              GL_READ_BUFFER
+    #undef              GL_DOUBLEBUFFER
     #undef              GL_LIGHTING
     #undef              GL_LIGHT_MODEL_LOCAL_VIEWER
     #undef              GL_LIGHT_MODEL_TWO_SIDE
@@ -225,6 +231,14 @@
     #undef              GL_TEXTURE_MATRIX
     #undef              GL_ATTRIB_STACK_DEPTH
     #undef              GL_CLIENT_ATTRIB_STACK_DEPTH
+    #undef              GL_INDEX_MODE
+    #undef              GL_RGBA_MODE
+    #undef              GL_RENDER_MODE
+    #undef              GL_PERSPECTIVE_CORRECTION_HINT
+    #undef              GL_POINT_SMOOTH_HINT
+    #undef              GL_LINE_SMOOTH_HINT
+    #undef              GL_POLYGON_SMOOTH_HINT
+    #undef              GL_FOG_HINT
     
 
     ////////////////////////////////////////////////////////////////////////////
@@ -316,6 +330,11 @@
     #define             GL_ACCUM_BUFFER_BIT                 0x00000200
     #define             GL_STENCIL_BUFFER_BIT               0x00000400
     #define             GL_VIEWPORT_BIT                     0x00000800
+    #define             GL_INDEX_CLEAR_VALUE                0x0C20
+    #define             GL_INDEX_WRITEMASK                  0x0C21
+    #define             GL_COLOR_CLEAR_VALUE                0x0C22
+    #define             GL_COLOR_WRITEMASK                  0x0C23
+    #define             GL_STEREO                           0x0C33
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL alpha blending constants                                       //
@@ -453,6 +472,7 @@
     #define             GL_AUX_BUFFERS                      0x0C00
     #define             GL_DRAW_BUFFER                      0x0C01
     #define             GL_READ_BUFFER                      0x0C02
+    #define             GL_DOUBLEBUFFER                     0x0C32
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL lighting constants                                             //
@@ -517,6 +537,22 @@
     ////////////////////////////////////////////////////////////////////////////
     #define             GL_ATTRIB_STACK_DEPTH               0x0BB0
     #define             GL_CLIENT_ATTRIB_STACK_DEPTH        0x0BB1
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL modes constants                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_INDEX_MODE                       0x0C30
+    #define             GL_RGBA_MODE                        0x0C31
+    #define             GL_RENDER_MODE                      0x0C40
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL hints constants                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_PERSPECTIVE_CORRECTION_HINT      0x0C50
+    #define             GL_POINT_SMOOTH_HINT                0x0C51
+    #define             GL_LINE_SMOOTH_HINT                 0x0C52
+    #define             GL_POLYGON_SMOOTH_HINT              0x0C53
+    #define             GL_FOG_HINT                         0x0C54
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
