@@ -1276,13 +1276,13 @@
     );
     VOSGLApi VOSGLEntry GLint glRenderMode(GLenum mode);
     VOSGLApi VOSGLEntry void glBegin(GLenum mode);
-    VOSGLApi VOSGLEntry void glEnd(void);
+    VOSGLApi VOSGLEntry void glEnd();
     VOSGLApi VOSGLEntry void glEnable(GLenum cap);
     VOSGLApi VOSGLEntry void glDisable(GLenum cap);
     VOSGLApi VOSGLEntry void glEnableClientState(GLenum array);
     VOSGLApi VOSGLEntry void glDisableClientState(GLenum array);
-    VOSGLApi VOSGLEntry void glFinish(void);
-    VOSGLApi VOSGLEntry void glFlush(void);
+    VOSGLApi VOSGLEntry void glFinish();
+    VOSGLApi VOSGLEntry void glFlush();
     VOSGLApi VOSGLEntry void glViewport(
         GLint x, GLint y, GLsizei width, GLsizei height
     );
@@ -1300,6 +1300,48 @@
     );
     VOSGLApi VOSGLEntry void glScaled(GLdouble x, GLdouble y, GLdouble z);
     VOSGLApi VOSGLEntry void glScalef(GLfloat x, GLfloat y, GLfloat z);
+    VOSGLApi VOSGLEntry void glPushMatrix();
+    VOSGLApi VOSGLEntry void glPopMatrix();
+    VOSGLApi VOSGLEntry void glPushAttrib(GLbitfield mask);
+    VOSGLApi VOSGLEntry void glPopAttrib();
+    VOSGLApi VOSGLEntry void glPushClientAttrib(GLbitfield mask);
+    VOSGLApi VOSGLEntry void glPopClientAttrib();
+    VOSGLApi VOSGLEntry void glPushName(GLuint name);
+    VOSGLApi VOSGLEntry void glPopName();
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL rasterizer functions                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glRasterPos2d(GLdouble x, GLdouble y);
+    VOSGLApi VOSGLEntry void glRasterPos2dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glRasterPos2f(GLfloat x, GLfloat y);
+    VOSGLApi VOSGLEntry void glRasterPos2fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glRasterPos2i(GLint x, GLint y);
+    VOSGLApi VOSGLEntry void glRasterPos2iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glRasterPos2s(GLshort x, GLshort y);
+    VOSGLApi VOSGLEntry void glRasterPos2sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glRasterPos3d(GLdouble x, GLdouble y, GLdouble z);
+    VOSGLApi VOSGLEntry void glRasterPos3dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glRasterPos3f(GLfloat x, GLfloat y, GLfloat z);
+    VOSGLApi VOSGLEntry void glRasterPos3fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glRasterPos3i(GLint x, GLint y, GLint z);
+    VOSGLApi VOSGLEntry void glRasterPos3iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glRasterPos3s(GLshort x, GLshort y, GLshort z);
+    VOSGLApi VOSGLEntry void glRasterPos3sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glRasterPos4d(
+        GLdouble x, GLdouble y, GLdouble z, GLdouble w
+    );
+    VOSGLApi VOSGLEntry void glRasterPos4dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glRasterPos4f(
+        GLfloat x, GLfloat y, GLfloat z, GLfloat w
+    );
+    VOSGLApi VOSGLEntry void glRasterPos4fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glRasterPos4i(GLint x, GLint y, GLint z, GLint w);
+    VOSGLApi VOSGLEntry void glRasterPos4iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glRasterPos4s(
+        GLshort x, GLshort y, GLshort z, GLshort w
+    );
+    VOSGLApi VOSGLEntry void glRasterPos4sv(const GLshort* v);
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL vertices functions                                             //
@@ -1412,41 +1454,6 @@
     );
 
     ////////////////////////////////////////////////////////////////////////////
-    //  OpenGL copy functions                                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    VOSGLApi VOSGLEntry void glCopyPixels(
-        GLint x, GLint y, GLsizei width, GLsizei height, GLenum type
-    );
-    VOSGLApi VOSGLEntry void glCopyTexImage1D(
-        GLenum target, GLint level, GLenum internalFormat,
-        GLint x, GLint y, GLsizei width, GLint border
-    );
-    VOSGLApi VOSGLEntry void glCopyTexImage2D(
-        GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y,
-        GLsizei width, GLsizei height, GLint border
-    );
-    VOSGLApi VOSGLEntry void glCopyTexSubImage1D(
-        GLenum target, GLint level, GLint xoffset,
-        GLint x, GLint y, GLsizei width
-    );
-    VOSGLApi VOSGLEntry void glCopyTexSubImage2D(
-        GLenum target, GLint level, GLint xoffset, GLint yoffset,
-        GLint x, GLint y, GLsizei width, GLsizei height
-    );
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  OpenGL faces functions                                                //
-    ////////////////////////////////////////////////////////////////////////////
-    VOSGLApi VOSGLEntry void glFrontFace(GLenum mode);
-    VOSGLApi VOSGLEntry void glCullFace(GLenum mode);
-    VOSGLApi VOSGLEntry void glClipPlane(
-        GLenum plane, const GLdouble* equation
-    );
-    VOSGLApi VOSGLEntry void glScissor(
-        GLint x, GLint y, GLsizei width, GLsizei height
-    );
-
-    ////////////////////////////////////////////////////////////////////////////
     //  OpenGL rects functions                                                //
     ////////////////////////////////////////////////////////////////////////////
     VOSGLApi VOSGLEntry void glRectd(
@@ -1463,6 +1470,18 @@
         GLshort x1, GLshort y1, GLshort x2, GLshort y2
     );
     VOSGLApi VOSGLEntry void glRectsv(const GLshort* v1, const GLshort* v2);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL faces functions                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glFrontFace(GLenum mode);
+    VOSGLApi VOSGLEntry void glCullFace(GLenum mode);
+    VOSGLApi VOSGLEntry void glClipPlane(
+        GLenum plane, const GLdouble* equation
+    );
+    VOSGLApi VOSGLEntry void glScissor(
+        GLint x, GLint y, GLsizei width, GLsizei height
+    );
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL textures functions                                             //
@@ -1609,6 +1628,9 @@
         GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
         GLsizei height, GLenum format, GLenum type, const void* pixels
     );
+    VOSGLApi VOSGLEntry void glPrioritizeTextures(
+        GLsizei n, const GLuint* textures, const GLclampf* priorities
+    );
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL arrays functions                                               //
@@ -1639,6 +1661,29 @@
     VOSGLApi VOSGLEntry void glStencilMask(GLuint mask);
     VOSGLApi VOSGLEntry void glStencilOp(
         GLenum fail, GLenum zfail, GLenum zpass
+    );
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL copy functions                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glCopyPixels(
+        GLint x, GLint y, GLsizei width, GLsizei height, GLenum type
+    );
+    VOSGLApi VOSGLEntry void glCopyTexImage1D(
+        GLenum target, GLint level, GLenum internalFormat,
+        GLint x, GLint y, GLsizei width, GLint border
+    );
+    VOSGLApi VOSGLEntry void glCopyTexImage2D(
+        GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y,
+        GLsizei width, GLsizei height, GLint border
+    );
+    VOSGLApi VOSGLEntry void glCopyTexSubImage1D(
+        GLenum target, GLint level, GLint xoffset,
+        GLint x, GLint y, GLsizei width
+    );
+    VOSGLApi VOSGLEntry void glCopyTexSubImage2D(
+        GLenum target, GLint level, GLint xoffset, GLint yoffset,
+        GLint x, GLint y, GLsizei width, GLsizei height
     );
 
     ////////////////////////////////////////////////////////////////////////////
