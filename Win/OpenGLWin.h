@@ -47,9 +47,11 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS OpenGL get proc address                                           //
+    //  VOS OpenGL functions wrapper                                          //
     ////////////////////////////////////////////////////////////////////////////
-    #define VOSGLGetProcAddress(func) wglGetProcAddress(func);
+    #define VOSGLApi __declspec(dllimport)
+    #define VOSGLEntry extern
+    #define VOSGLGetProcAddress(func) wglGetProcAddress(func)
 
     ////////////////////////////////////////////////////////////////////////////
     //  Init OpenGL for Windows                                               //

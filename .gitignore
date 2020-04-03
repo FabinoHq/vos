@@ -23,8 +23,6 @@
 !OpenGL.h
 !DisplayMode.h
 !Window.h
-!Win/OpenGL.h
-!Win/OpenGL.cpp
 !Win/OpenGLWin.h
 !Win/OpenGLWin.cpp
 !Win/DisplayMode.h

@@ -1257,4 +1257,24 @@
     #define             GL_COMPILE_AND_EXECUTE              0x1301
 
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL rendering functions                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glClear(GLbitfield mask);
+    VOSGLApi VOSGLEntry void glClearAccum(
+        GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha
+    );
+    VOSGLApi VOSGLEntry void glClearColor(
+        GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha
+    );
+    VOSGLApi VOSGLEntry void glClearDepth(GLclampd depth);
+    VOSGLApi VOSGLEntry void glClearIndex(GLfloat c);
+    VOSGLApi VOSGLEntry void glClearStencil(GLint s);
+    VOSGLApi VOSGLEntry void glCallList(GLuint list);
+    VOSGLApi VOSGLEntry void glCallLists(
+        GLsizei n, GLenum type, const void *lists
+    );
+    VOSGLApi VOSGLEntry void glBegin(GLenum mode);
+
+
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
