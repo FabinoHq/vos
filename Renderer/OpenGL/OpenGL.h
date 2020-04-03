@@ -1282,6 +1282,10 @@
     VOSGLApi VOSGLEntry void glDisableClientState(GLenum array);
     VOSGLApi VOSGLEntry void glFinish(void);
     VOSGLApi VOSGLEntry void glFlush(void);
+    VOSGLApi VOSGLEntry void glFrustum(
+        GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
+        GLdouble zNear, GLdouble zFar
+    );
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL colors functions                                               //
@@ -1389,6 +1393,10 @@
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL textures functions                                             //
     ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glGenTextures(GLsizei n, GLuint* textures);
+    VOSGLApi VOSGLEntry void glDeleteTextures(
+        GLsizei n, const GLuint* textures
+    );
     VOSGLApi VOSGLEntry void glBindTexture(GLenum target, GLuint texture);
     VOSGLApi VOSGLEntry void glBitmap(
         GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig,
@@ -1397,8 +1405,135 @@
     VOSGLApi VOSGLEntry GLboolean glAreTexturesResident(
         GLsizei n, const GLuint* textures, GLboolean* residences
     );
-    VOSGLApi VOSGLEntry void glDeleteTextures(
-        GLsizei n, const GLuint* textures
+    VOSGLApi VOSGLEntry void glGetTexEnvfv(
+        GLenum target, GLenum pname, GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glGetTexEnviv(
+        GLenum target, GLenum pname, GLint* params
+    );
+    VOSGLApi VOSGLEntry void glGetTexGendv(
+        GLenum coord, GLenum pname, GLdouble* params
+    );
+    VOSGLApi VOSGLEntry void glGetTexGenfv(
+        GLenum coord, GLenum pname, GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glGetTexGeniv(
+        GLenum coord, GLenum pname, GLint* params
+    );
+    VOSGLApi VOSGLEntry void glGetTexImage(
+        GLenum target, GLint level, GLenum format, GLenum type, void* pixels
+    );
+    VOSGLApi VOSGLEntry void glGetTexLevelParameterfv(
+        GLenum target, GLint level, GLenum pname, GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glGetTexLevelParameteriv(
+        GLenum target, GLint level, GLenum pname, GLint* params
+    );
+    VOSGLApi VOSGLEntry void glGetTexParameterfv(
+        GLenum target, GLenum pname, GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glGetTexParameteriv(
+        GLenum target, GLenum pname, GLint* params
+    );
+    VOSGLApi VOSGLEntry void glTexCoord1d(GLdouble s);
+    VOSGLApi VOSGLEntry void glTexCoord1dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glTexCoord1f(GLfloat s);
+    VOSGLApi VOSGLEntry void glTexCoord1fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glTexCoord1i(GLint s);
+    VOSGLApi VOSGLEntry void glTexCoord1iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glTexCoord1s(GLshort s);
+    VOSGLApi VOSGLEntry void glTexCoord1sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glTexCoord2d(GLdouble s, GLdouble t);
+    VOSGLApi VOSGLEntry void glTexCoord2dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glTexCoord2f(GLfloat s, GLfloat t);
+    VOSGLApi VOSGLEntry void glTexCoord2fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glTexCoord2i(GLint s, GLint t);
+    VOSGLApi VOSGLEntry void glTexCoord2iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glTexCoord2s(GLshort s, GLshort t);
+    VOSGLApi VOSGLEntry void glTexCoord2sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glTexCoord3d(GLdouble s, GLdouble t, GLdouble r);
+    VOSGLApi VOSGLEntry void glTexCoord3dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glTexCoord3f(GLfloat s, GLfloat t, GLfloat r);
+    VOSGLApi VOSGLEntry void glTexCoord3fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glTexCoord3i(GLint s, GLint t, GLint r);
+    VOSGLApi VOSGLEntry void glTexCoord3iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glTexCoord3s(GLshort s, GLshort t, GLshort r);
+    VOSGLApi VOSGLEntry void glTexCoord3sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glTexCoord4d(
+        GLdouble s, GLdouble t, GLdouble r, GLdouble q
+    );
+    VOSGLApi VOSGLEntry void glTexCoord4dv(const GLdouble* v);
+    VOSGLApi VOSGLEntry void glTexCoord4f(
+        GLfloat s, GLfloat t, GLfloat r, GLfloat q
+    );
+    VOSGLApi VOSGLEntry void glTexCoord4fv(const GLfloat* v);
+    VOSGLApi VOSGLEntry void glTexCoord4i(GLint s, GLint t, GLint r, GLint q);
+    VOSGLApi VOSGLEntry void glTexCoord4iv(const GLint* v);
+    VOSGLApi VOSGLEntry void glTexCoord4s(
+        GLshort s, GLshort t, GLshort r, GLshort q
+    );
+    VOSGLApi VOSGLEntry void glTexCoord4sv(const GLshort* v);
+    VOSGLApi VOSGLEntry void glTexCoordPointer(
+        GLint size, GLenum type, GLsizei stride, const void* pointer
+    );
+    VOSGLApi VOSGLEntry void glTexEnvf(
+        GLenum target, GLenum pname, GLfloat param
+    );
+    VOSGLApi VOSGLEntry void glTexEnvfv(
+        GLenum target, GLenum pname, const GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glTexEnvi(
+        GLenum target, GLenum pname, GLint param
+    );
+    VOSGLApi VOSGLEntry void glTexEnviv(
+        GLenum target, GLenum pname, const GLint* params
+    );
+    VOSGLApi VOSGLEntry void glTexGend(
+        GLenum coord, GLenum pname, GLdouble param
+    );
+    VOSGLApi VOSGLEntry void glTexGendv(
+        GLenum coord, GLenum pname, const GLdouble* params
+    );
+    VOSGLApi VOSGLEntry void glTexGenf(
+        GLenum coord, GLenum pname, GLfloat param
+    );
+    VOSGLApi VOSGLEntry void glTexGenfv(
+        GLenum coord, GLenum pname, const GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glTexGeni(
+        GLenum coord, GLenum pname, GLint param
+    );
+    VOSGLApi VOSGLEntry void glTexGeniv(
+        GLenum coord, GLenum pname, const GLint* params
+    );
+    VOSGLApi VOSGLEntry void glTexImage1D(
+        GLenum target, GLint level, GLint internalformat, GLsizei width,
+        GLint border, GLenum format, GLenum type, const void* pixels
+    );
+    VOSGLApi VOSGLEntry void glTexImage2D(
+        GLenum target, GLint level, GLint internalformat,
+        GLsizei width, GLsizei height, GLint border,
+        GLenum format, GLenum type, const void* pixels
+    );
+    VOSGLApi VOSGLEntry void glTexParameterf(
+        GLenum target, GLenum pname, GLfloat param
+    );
+    VOSGLApi VOSGLEntry void glTexParameterfv(
+        GLenum target, GLenum pname, const GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glTexParameteri(
+        GLenum target, GLenum pname, GLint param
+    );
+    VOSGLApi VOSGLEntry void glTexParameteriv(
+        GLenum target, GLenum pname, const GLint* params
+    );
+    VOSGLApi VOSGLEntry void glTexSubImage1D(
+        GLenum target, GLint level, GLint xoffset, GLsizei width,
+        GLenum format, GLenum type, const void* pixels
+    );
+    VOSGLApi VOSGLEntry void glTexSubImage2D(
+        GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
+        GLsizei height, GLenum format, GLenum type, const void* pixels
     );
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1416,6 +1551,26 @@
         GLenum format, GLenum type, const void* pixels
     );
     VOSGLApi VOSGLEntry void glArrayElement(GLint i);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL lighting functions                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glLightModelf(GLenum pname, GLfloat param);
+    VOSGLApi VOSGLEntry void glLightModelfv(
+        GLenum pname, const GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glLightModeli(GLenum pname, GLint param);
+    VOSGLApi VOSGLEntry void glLightModeliv(GLenum pname, const GLint* params);
+    VOSGLApi VOSGLEntry void glLightf(
+        GLenum light, GLenum pname, GLfloat param
+    );
+    VOSGLApi VOSGLEntry void glLightfv(
+        GLenum light, GLenum pname, const GLfloat* params
+    );
+    VOSGLApi VOSGLEntry void glLighti(GLenum light, GLenum pname, GLint param);
+    VOSGLApi VOSGLEntry void glLightiv(
+        GLenum light, GLenum pname, const GLint* params
+    );
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
