@@ -1270,10 +1270,6 @@
     VOSGLApi VOSGLEntry void glClearDepth(GLclampd depth);
     VOSGLApi VOSGLEntry void glClearIndex(GLfloat c);
     VOSGLApi VOSGLEntry void glClearStencil(GLint s);
-    VOSGLApi VOSGLEntry void glCallList(GLuint list);
-    VOSGLApi VOSGLEntry void glCallLists(
-        GLsizei n, GLenum type, const void* lists
-    );
     VOSGLApi VOSGLEntry GLint glRenderMode(GLenum mode);
     VOSGLApi VOSGLEntry void glBegin(GLenum mode);
     VOSGLApi VOSGLEntry void glEnd();
@@ -1288,6 +1284,7 @@
     VOSGLApi VOSGLEntry void glPopAttrib();
     VOSGLApi VOSGLEntry void glPushClientAttrib(GLbitfield mask);
     VOSGLApi VOSGLEntry void glPopClientAttrib();
+    VOSGLApi VOSGLEntry void glInitNames();
     VOSGLApi VOSGLEntry void glPushName(GLuint name);
     VOSGLApi VOSGLEntry void glPopName();
     VOSGLApi VOSGLEntry void glPointSize(GLfloat size);
@@ -1297,6 +1294,19 @@
     VOSGLApi VOSGLEntry GLboolean glIsEnabled(GLenum cap);
     VOSGLApi VOSGLEntry GLboolean glIsList(GLuint list);
     VOSGLApi VOSGLEntry GLboolean glIsTexture(GLuint texture);
+    VOSGLApi VOSGLEntry void glAccum(GLenum op, GLfloat value);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL lists functions                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry GLuint glGenLists(GLsizei range);
+    VOSGLApi VOSGLEntry void glListBase(GLuint base);
+    VOSGLApi VOSGLEntry void glNewList(GLuint list, GLenum mode);
+    VOSGLApi VOSGLEntry void glDeleteLists(GLuint list, GLsizei range);
+    VOSGLApi VOSGLEntry void glCallList(GLuint list);
+    VOSGLApi VOSGLEntry void glCallLists(
+        GLsizei n, GLenum type, const void* lists
+    );
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL matrices functions                                             //
