@@ -92,6 +92,7 @@
     #undef              GL_DEPTH_BUFFER_BIT
     #undef              GL_ACCUM_BUFFER_BIT
     #undef              GL_STENCIL_BUFFER_BIT
+    #undef              GL_VIEWPORT_BIT
     #undef              GL_SRC_COLOR
     #undef              GL_ONE_MINUS_SRC_COLOR
     #undef              GL_SRC_ALPHA
@@ -101,6 +102,13 @@
     #undef              GL_DST_COLOR
     #undef              GL_ONE_MINUS_DST_COLOR
     #undef              GL_SRC_ALPHA_SATURATE
+    #undef              GL_ALPHA_TEST
+    #undef              GL_ALPHA_TEST_FUNC
+    #undef              GL_ALPHA_TEST_REF
+    #undef              GL_DITHER
+    #undef              GL_BLEND_DST
+    #undef              GL_BLEND_SRC
+    #undef              GL_BLEND
     #undef              GL_FRONT_LEFT
     #undef              GL_FRONT_RIGHT
     #undef              GL_BACK_LEFT
@@ -207,6 +215,8 @@
     #undef              GL_MODELVIEW_MATRIX
     #undef              GL_PROJECTION_MATRIX
     #undef              GL_TEXTURE_MATRIX
+    #undef              GL_ATTRIB_STACK_DEPTH
+    #undef              GL_CLIENT_ATTRIB_STACK_DEPTH
     
 
     ////////////////////////////////////////////////////////////////////////////
@@ -278,7 +288,7 @@
     #define             GL_POLYGON                          0x0009
 
     ////////////////////////////////////////////////////////////////////////////
-    //  OpenGL buffers constants                                              //
+    //  OpenGL flags constants                                                //
     ////////////////////////////////////////////////////////////////////////////
     #define             GL_TEXTURE_COMPONENTS               0x1003
     #define             GL_CURRENT_BIT                      0x00000001
@@ -294,9 +304,10 @@
     #define             GL_DEPTH_BUFFER_BIT                 0x00000100
     #define             GL_ACCUM_BUFFER_BIT                 0x00000200
     #define             GL_STENCIL_BUFFER_BIT               0x00000400
+    #define             GL_VIEWPORT_BIT                     0x00000800
 
     ////////////////////////////////////////////////////////////////////////////
-    //  OpenGL blending constants                                             //
+    //  OpenGL alpha blending constants                                       //
     ////////////////////////////////////////////////////////////////////////////
     #define             GL_SRC_COLOR                        0x0300
     #define             GL_ONE_MINUS_SRC_COLOR              0x0301
@@ -307,6 +318,13 @@
     #define             GL_DST_COLOR                        0x0306
     #define             GL_ONE_MINUS_DST_COLOR              0x0307
     #define             GL_SRC_ALPHA_SATURATE               0x0308
+    #define             GL_ALPHA_TEST                       0x0BC0
+    #define             GL_ALPHA_TEST_FUNC                  0x0BC1
+    #define             GL_ALPHA_TEST_REF                   0x0BC2
+    #define             GL_DITHER                           0x0BD0
+    #define             GL_BLEND_DST                        0x0BE0
+    #define             GL_BLEND_SRC                        0x0BE1
+    #define             GL_BLEND                            0x0BE2
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL faces constants                                                //
@@ -473,6 +491,12 @@
     #define             GL_MODELVIEW_MATRIX                 0x0BA6
     #define             GL_PROJECTION_MATRIX                0x0BA7
     #define             GL_TEXTURE_MATRIX                   0x0BA8
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL stack constants                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    #define             GL_ATTRIB_STACK_DEPTH               0x0BB0
+    #define             GL_CLIENT_ATTRIB_STACK_DEPTH        0x0BB1
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
