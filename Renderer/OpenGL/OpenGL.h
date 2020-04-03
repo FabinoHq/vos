@@ -54,6 +54,74 @@
     #undef              GL_TRUE
     #undef              GL_FALSE
     #undef              GL_NO_ERROR
+    #undef              GL_COEFF
+    #undef              GL_ORDER
+    #undef              GL_DOMAIN
+    #undef              GL_BYTE
+    #undef              GL_UNSIGNED_BYTE
+    #undef              GL_SHORT
+    #undef              GL_UNSIGNED_SHORT
+    #undef              GL_INT
+    #undef              GL_UNSIGNED_INT
+    #undef              GL_FLOAT
+    #undef              GL_2_BYTES
+    #undef              GL_3_BYTES
+    #undef              GL_4_BYTES
+    #undef              GL_DOUBLE
+    #undef              GL_CLEAR
+    #undef              GL_AND
+    #undef              GL_AND_REVERSE
+    #undef              GL_COPY
+    #undef              GL_AND_INVERTED
+    #undef              GL_NOOP
+    #undef              GL_XOR
+    #undef              GL_OR
+    #undef              GL_NOR
+    #undef              GL_EQUIV
+    #undef              GL_INVERT
+    #undef              GL_OR_REVERSE
+    #undef              GL_COPY_INVERTED
+    #undef              GL_OR_INVERTED
+    #undef              GL_NAND
+    #undef              GL_SET
+    #undef              GL_EMISSION
+    #undef              GL_SHININESS
+    #undef              GL_AMBIENT_AND_DIFFUSE
+    #undef              GL_COLOR_INDEXES
+    #undef              GL_MODELVIEW
+    #undef              GL_PROJECTION
+    #undef              GL_TEXTURE
+    #undef              GL_COLOR
+    #undef              GL_DEPTH
+    #undef              GL_STENCIL
+    #undef              GL_COLOR_INDEX
+    #undef              GL_STENCIL_INDEX
+    #undef              GL_DEPTH_COMPONENT
+    #undef              GL_RED
+    #undef              GL_GREEN
+    #undef              GL_BLUE
+    #undef              GL_ALPHA
+    #undef              GL_RGB
+    #undef              GL_RGBA
+    #undef              GL_LUMINANCE
+    #undef              GL_LUMINANCE_ALPHA
+    #undef              GL_BITMAP
+    #undef              GL_POINT
+    #undef              GL_LINE
+    #undef              GL_FILL
+    #undef              GL_RENDER
+    #undef              GL_FEEDBACK
+    #undef              GL_SELECT
+    #undef              GL_FLAT
+    #undef              GL_SMOOTH
+    #undef              GL_KEEP
+    #undef              GL_REPLACE
+    #undef              GL_INCR
+    #undef              GL_DECR
+    #undef              GL_VENDOR
+    #undef              GL_RENDERER
+    #undef              GL_VERSION
+    #undef              GL_EXTENSIONS
     #undef              GL_LOGIC_OP
     #undef              GL_LOGIC_OP_MODE
     #undef              GL_INDEX_LOGIC_OP
@@ -109,6 +177,8 @@
     #undef              GL_STENCIL_BUFFER_BIT
     #undef              GL_VIEWPORT_BIT
     #undef              GL_TRANSFORM_BIT
+    #undef              GL_ENABLE_BIT
+    #undef              GL_COLOR_BUFFER_BIT
     #undef              GL_HINT_BIT
     #undef              GL_EVAL_BIT
     #undef              GL_LIST_BIT
@@ -204,6 +274,15 @@
     #undef              GL_SCISSOR_TEST
     #undef              GL_POLYGON_OFFSET_FILL
     #undef              GL_POLYGON_OFFSET_FACTOR
+    #undef              GL_CLIP_PLANE0
+    #undef              GL_CLIP_PLANE1
+    #undef              GL_CLIP_PLANE2
+    #undef              GL_CLIP_PLANE3
+    #undef              GL_CLIP_PLANE4
+    #undef              GL_CLIP_PLANE5
+    #undef              GL_POLYGON_OFFSET_UNITS
+    #undef              GL_POLYGON_OFFSET_POINT
+    #undef              GL_POLYGON_OFFSET_LINE
     #undef              GL_AUX_BUFFERS
     #undef              GL_DRAW_BUFFER
     #undef              GL_READ_BUFFER
@@ -216,6 +295,7 @@
     #undef              GL_COLOR_MATERIAL_FACE
     #undef              GL_COLOR_MATERIAL_PARAMETER
     #undef              GL_COLOR_MATERIAL
+    #undef              GL_LIGHT0
     #undef              GL_LIGHT1
     #undef              GL_LIGHT2
     #undef              GL_LIGHT3
@@ -333,6 +413,7 @@
     #undef              GL_ACCUM_GREEN_BITS
     #undef              GL_ACCUM_BLUE_BITS
     #undef              GL_ACCUM_ALPHA_BITS
+    #undef              GL_ACCUM_CLEAR_VALUE
     #undef              GL_NAME_STACK_DEPTH
     #undef              GL_AUTO_NORMAL
     #undef              GL_MAP1_COLOR_4
@@ -419,6 +500,33 @@
     #undef              GL_COLOR_INDEX8_EXT
     #undef              GL_COLOR_INDEX12_EXT
     #undef              GL_COLOR_INDEX16_EXT
+    #undef              GL_S
+    #undef              GL_T
+    #undef              GL_R
+    #undef              GL_Q
+    #undef              GL_MODULATE
+    #undef              GL_DECAL
+    #undef              GL_TEXTURE_ENV_MODE
+    #undef              GL_TEXTURE_ENV_COLOR
+    #undef              GL_TEXTURE_ENV
+    #undef              GL_EYE_LINEAR
+    #undef              GL_OBJECT_LINEAR
+    #undef              GL_SPHERE_MAP
+    #undef              GL_TEXTURE_GEN_MODE
+    #undef              GL_OBJECT_PLANE
+    #undef              GL_EYE_PLANE
+    #undef              GL_NEAREST
+    #undef              GL_LINEAR
+    #undef              GL_NEAREST_MIPMAP_NEAREST
+    #undef              GL_LINEAR_MIPMAP_NEAREST
+    #undef              GL_NEAREST_MIPMAP_LINEAR
+    #undef              GL_LINEAR_MIPMAP_LINEAR
+    #undef              GL_TEXTURE_MAG_FILTER
+    #undef              GL_TEXTURE_MIN_FILTER
+    #undef              GL_TEXTURE_WRAP_S
+    #undef              GL_TEXTURE_WRAP_T
+    #undef              GL_CLAMP
+    #undef              GL_REPEAT
     #undef              GL_MAX_EVAL_ORDER
     #undef              GL_MAX_LIGHTS
     #undef              GL_MAX_CLIP_PLANES
@@ -457,6 +565,21 @@
     #undef              GL_INDEX_ARRAY_POINTER
     #undef              GL_TEXTURE_COORD_ARRAY_POINTER
     #undef              GL_EDGE_FLAG_ARRAY_POINTER
+    #undef              GL_R3_G3_B2
+    #undef              GL_V2F
+    #undef              GL_V3F
+    #undef              GL_C4UB_V2F
+    #undef              GL_C4UB_V3F
+    #undef              GL_C3F_V3F
+    #undef              GL_N3F_V3F
+    #undef              GL_C4F_N3F_V3F
+    #undef              GL_T2F_V3F
+    #undef              GL_T4F_V4F
+    #undef              GL_T2F_C4UB_V3F
+    #undef              GL_T2F_C3F_V3F
+    #undef              GL_T2F_N3F_V3F
+    #undef              GL_T2F_C4F_N3F_V3F
+    #undef              GL_T4F_C4F_N3F_V4F
     #undef              GL_COMPILE
     #undef              GL_COMPILE_AND_EXECUTE
 
@@ -492,6 +615,74 @@
     #define             GL_TRUE                             1
     #define             GL_FALSE                            0
     #define             GL_NO_ERROR                         0
+    #define             GL_COEFF                            0x0A00
+    #define             GL_ORDER                            0x0A01
+    #define             GL_DOMAIN                           0x0A02
+    #define             GL_BYTE                             0x1400
+    #define             GL_UNSIGNED_BYTE                    0x1401
+    #define             GL_SHORT                            0x1402
+    #define             GL_UNSIGNED_SHORT                   0x1403
+    #define             GL_INT                              0x1404
+    #define             GL_UNSIGNED_INT                     0x1405
+    #define             GL_FLOAT                            0x1406
+    #define             GL_2_BYTES                          0x1407
+    #define             GL_3_BYTES                          0x1408
+    #define             GL_4_BYTES                          0x1409
+    #define             GL_DOUBLE                           0x140A
+    #define             GL_CLEAR                            0x1500
+    #define             GL_AND                              0x1501
+    #define             GL_AND_REVERSE                      0x1502
+    #define             GL_COPY                             0x1503
+    #define             GL_AND_INVERTED                     0x1504
+    #define             GL_NOOP                             0x1505
+    #define             GL_XOR                              0x1506
+    #define             GL_OR                               0x1507
+    #define             GL_NOR                              0x1508
+    #define             GL_EQUIV                            0x1509
+    #define             GL_INVERT                           0x150A
+    #define             GL_OR_REVERSE                       0x150B
+    #define             GL_COPY_INVERTED                    0x150C
+    #define             GL_OR_INVERTED                      0x150D
+    #define             GL_NAND                             0x150E
+    #define             GL_SET                              0x150F
+    #define             GL_EMISSION                         0x1600
+    #define             GL_SHININESS                        0x1601
+    #define             GL_AMBIENT_AND_DIFFUSE              0x1602
+    #define             GL_COLOR_INDEXES                    0x1603
+    #define             GL_MODELVIEW                        0x1700
+    #define             GL_PROJECTION                       0x1701
+    #define             GL_TEXTURE                          0x1702
+    #define             GL_COLOR                            0x1800
+    #define             GL_DEPTH                            0x1801
+    #define             GL_STENCIL                          0x1802
+    #define             GL_COLOR_INDEX                      0x1900
+    #define             GL_STENCIL_INDEX                    0x1901
+    #define             GL_DEPTH_COMPONENT                  0x1902
+    #define             GL_RED                              0x1903
+    #define             GL_GREEN                            0x1904
+    #define             GL_BLUE                             0x1905
+    #define             GL_ALPHA                            0x1906
+    #define             GL_RGB                              0x1907
+    #define             GL_RGBA                             0x1908
+    #define             GL_LUMINANCE                        0x1909
+    #define             GL_LUMINANCE_ALPHA                  0x190A
+    #define             GL_BITMAP                           0x1A00
+    #define             GL_POINT                            0x1B00
+    #define             GL_LINE                             0x1B01
+    #define             GL_FILL                             0x1B02
+    #define             GL_RENDER                           0x1C00
+    #define             GL_FEEDBACK                         0x1C01
+    #define             GL_SELECT                           0x1C02
+    #define             GL_FLAT                             0x1D00
+    #define             GL_SMOOTH                           0x1D01
+    #define             GL_KEEP                             0x1E00
+    #define             GL_REPLACE                          0x1E01
+    #define             GL_INCR                             0x1E02
+    #define             GL_DECR                             0x1E03
+    #define             GL_VENDOR                           0x1F00
+    #define             GL_RENDERER                         0x1F01
+    #define             GL_VERSION                          0x1F02
+    #define             GL_EXTENSIONS                       0x1F03
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL logic constants                                                //
@@ -563,6 +754,8 @@
     #define             GL_STENCIL_BUFFER_BIT               0x00000400
     #define             GL_VIEWPORT_BIT                     0x00000800
     #define             GL_TRANSFORM_BIT                    0x00001000
+    #define             GL_ENABLE_BIT                       0x00002000
+    #define             GL_COLOR_BUFFER_BIT                 0x00004000
     #define             GL_HINT_BIT                         0x00008000
     #define             GL_EVAL_BIT                         0x00010000
     #define             GL_LIST_BIT                         0x00020000
@@ -702,6 +895,15 @@
     #define             GL_SCISSOR_TEST                     0x0C11
     #define             GL_POLYGON_OFFSET_FILL              0x8037
     #define             GL_POLYGON_OFFSET_FACTOR            0x8038
+    #define             GL_CLIP_PLANE0                      0x3000
+    #define             GL_CLIP_PLANE1                      0x3001
+    #define             GL_CLIP_PLANE2                      0x3002
+    #define             GL_CLIP_PLANE3                      0x3003
+    #define             GL_CLIP_PLANE4                      0x3004
+    #define             GL_CLIP_PLANE5                      0x3005
+    #define             GL_POLYGON_OFFSET_UNITS             0x2A00
+    #define             GL_POLYGON_OFFSET_POINT             0x2A01
+    #define             GL_POLYGON_OFFSET_LINE              0x2A02
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL buffers constants                                              //
@@ -722,6 +924,7 @@
     #define             GL_COLOR_MATERIAL_FACE              0x0B55
     #define             GL_COLOR_MATERIAL_PARAMETER         0x0B56
     #define             GL_COLOR_MATERIAL                   0x0B57
+    #define             GL_LIGHT0                           0x4000
     #define             GL_LIGHT1                           0x4001
     #define             GL_LIGHT2                           0x4002
     #define             GL_LIGHT3                           0x4003
@@ -871,6 +1074,7 @@
     #define             GL_ACCUM_GREEN_BITS                 0x0D59
     #define             GL_ACCUM_BLUE_BITS                  0x0D5A
     #define             GL_ACCUM_ALPHA_BITS                 0x0D5B
+    #define             GL_ACCUM_CLEAR_VALUE                0x0B80
     #define             GL_NAME_STACK_DEPTH                 0x0D70
     #define             GL_AUTO_NORMAL                      0x0D80
     #define             GL_MAP1_COLOR_4                     0x0D90
@@ -957,6 +1161,33 @@
     #define             GL_COLOR_INDEX8_EXT                 0x80E5
     #define             GL_COLOR_INDEX12_EXT                0x80E6
     #define             GL_COLOR_INDEX16_EXT                0x80E7
+    #define             GL_S                                0x2000
+    #define             GL_T                                0x2001
+    #define             GL_R                                0x2002
+    #define             GL_Q                                0x2003
+    #define             GL_MODULATE                         0x2100
+    #define             GL_DECAL                            0x2101
+    #define             GL_TEXTURE_ENV_MODE                 0x2200
+    #define             GL_TEXTURE_ENV_COLOR                0x2201
+    #define             GL_TEXTURE_ENV                      0x2300
+    #define             GL_EYE_LINEAR                       0x2400
+    #define             GL_OBJECT_LINEAR                    0x2401
+    #define             GL_SPHERE_MAP                       0x2402
+    #define             GL_TEXTURE_GEN_MODE                 0x2500
+    #define             GL_OBJECT_PLANE                     0x2501
+    #define             GL_EYE_PLANE                        0x2502
+    #define             GL_NEAREST                          0x2600
+    #define             GL_LINEAR                           0x2601
+    #define             GL_NEAREST_MIPMAP_NEAREST           0x2700
+    #define             GL_LINEAR_MIPMAP_NEAREST            0x2701
+    #define             GL_NEAREST_MIPMAP_LINEAR            0x2702
+    #define             GL_LINEAR_MIPMAP_LINEAR             0x2703
+    #define             GL_TEXTURE_MAG_FILTER               0x2800
+    #define             GL_TEXTURE_MIN_FILTER               0x2801
+    #define             GL_TEXTURE_WRAP_S                   0x2802
+    #define             GL_TEXTURE_WRAP_T                   0x2803
+    #define             GL_CLAMP                            0x2900
+    #define             GL_REPEAT                           0x2901
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL max constants                                                  //
@@ -1003,6 +1234,21 @@
     #define             GL_INDEX_ARRAY_POINTER              0x8091
     #define             GL_TEXTURE_COORD_ARRAY_POINTER      0x8092
     #define             GL_EDGE_FLAG_ARRAY_POINTER          0x8093
+    #define             GL_R3_G3_B2                         0x2A10
+    #define             GL_V2F                              0x2A20
+    #define             GL_V3F                              0x2A21
+    #define             GL_C4UB_V2F                         0x2A22
+    #define             GL_C4UB_V3F                         0x2A23
+    #define             GL_C3F_V3F                          0x2A24
+    #define             GL_N3F_V3F                          0x2A25
+    #define             GL_C4F_N3F_V3F                      0x2A26
+    #define             GL_T2F_V3F                          0x2A27
+    #define             GL_T4F_V4F                          0x2A28
+    #define             GL_T2F_C4UB_V3F                     0x2A29
+    #define             GL_T2F_C3F_V3F                      0x2A2A
+    #define             GL_T2F_N3F_V3F                      0x2A2B
+    #define             GL_T2F_C4F_N3F_V3F                  0x2A2C
+    #define             GL_T4F_C4F_N3F_V4F                  0x2A2D
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL programs constants                                             //
