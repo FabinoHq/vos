@@ -1370,5 +1370,11 @@
         GLint x, GLint y, GLsizei width, GLsizei height
     );
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL faces functions                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glFrontFace(GLenum mode);
+    VOSGLApi VOSGLEntry void glCullFace(GLenum mode);
+
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
