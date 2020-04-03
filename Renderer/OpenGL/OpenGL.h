@@ -1276,5 +1276,76 @@
     );
     VOSGLApi VOSGLEntry void glBegin(GLenum mode);
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL colors functions                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    VOSGLApi VOSGLEntry void glColor3b(GLbyte red, GLbyte green, GLbyte blue);
+    VOSGLApi VOSGLEntry void glColor3bv(const GLbyte *v);
+    VOSGLApi VOSGLEntry void glColor3d(
+        GLdouble red, GLdouble green, GLdouble blue
+    );
+    VOSGLApi VOSGLEntry void glColor3dv(const GLdouble *v);
+    VOSGLApi VOSGLEntry void glColor3f(
+        GLfloat red, GLfloat green, GLfloat blue
+    );
+    VOSGLApi VOSGLEntry void glColor3fv(const GLfloat *v);
+    VOSGLApi VOSGLEntry void glColor3i(GLint red, GLint green, GLint blue);
+    VOSGLApi VOSGLEntry void glColor3iv(const GLint *v);
+    VOSGLApi VOSGLEntry void glColor3s(
+        GLshort red, GLshort green, GLshort blue
+    );
+    VOSGLApi VOSGLEntry void glColor3sv(const GLshort *v);
+    VOSGLApi VOSGLEntry void glColor3ub(
+        GLubyte red, GLubyte green, GLubyte blue
+    );
+    VOSGLApi VOSGLEntry void glColor3ubv(const GLubyte *v);
+    VOSGLApi VOSGLEntry void glColor3ui(
+        GLuint red, GLuint green, GLuint blue
+    );
+    VOSGLApi VOSGLEntry void glColor3uiv(const GLuint *v);
+    VOSGLApi VOSGLEntry void glColor3us(
+        GLushort red, GLushort green, GLushort blue
+    );
+    VOSGLApi VOSGLEntry void glColor3usv(const GLushort *v);
+    VOSGLApi VOSGLEntry void glColor4b(
+        GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha
+    );
+    VOSGLApi VOSGLEntry void glColor4bv(const GLbyte *v);
+    VOSGLApi VOSGLEntry void glColor4d(
+        GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha
+    );
+    VOSGLApi VOSGLEntry void glColor4dv(const GLdouble *v);
+    VOSGLApi VOSGLEntry void glColor4f(
+        GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha
+    );
+    VOSGLApi VOSGLEntry void glColor4fv(const GLfloat *v);
+    VOSGLApi VOSGLEntry void glColor4i(
+        GLint red, GLint green, GLint blue, GLint alpha
+    );
+    VOSGLApi VOSGLEntry void glColor4iv(const GLint *v);
+    VOSGLApi VOSGLEntry void glColor4s(
+        GLshort red, GLshort green, GLshort blue, GLshort alpha
+    );
+    VOSGLApi VOSGLEntry void glColor4sv(const GLshort *v);
+    VOSGLApi VOSGLEntry void glColor4ub(
+        GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha
+    );
+    VOSGLApi VOSGLEntry void glColor4ubv(const GLubyte *v);
+    VOSGLApi VOSGLEntry void glColor4ui(
+        GLuint red, GLuint green, GLuint blue, GLuint alpha
+    );
+    VOSGLApi VOSGLEntry void glColor4uiv(const GLuint *v);
+    VOSGLApi VOSGLEntry void glColor4us(
+        GLushort red, GLushort green, GLushort blue, GLushort alpha
+    );
+    VOSGLApi VOSGLEntry void glColor4usv(const GLushort *v);
+    VOSGLApi VOSGLEntry void glColorMask(
+        GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha
+    );
+    VOSGLApi VOSGLEntry void glColorMaterial(GLenum face, GLenum mode);
+    VOSGLApi VOSGLEntry void glColorPointer(
+        GLint size, GLenum type, GLsizei stride, const void *pointer
+    );
+
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
