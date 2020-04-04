@@ -1639,6 +1639,15 @@
         GLdouble zNear, GLdouble zFar
     );
 
+    typedef void (*PFNGLLOADTRANSPOSEMATRIXDPROC)(const GLdouble m[16]);
+    VOSGLEntry PFNGLLOADTRANSPOSEMATRIXDPROC glLoadTransposeMatrixd;
+    typedef void (*PFNGLLOADTRANSPOSEMATRIXFPROC)(const GLfloat m[16]);
+    VOSGLEntry PFNGLLOADTRANSPOSEMATRIXFPROC glLoadTransposeMatrixf;
+    typedef void (*PFNGLMULTTRANSPOSEMATRIXDPROC)(const GLdouble m[16]);
+    VOSGLEntry PFNGLMULTTRANSPOSEMATRIXDPROC glMultTransposeMatrixd;
+    typedef void (*PFNGLMULTTRANSPOSEMATRIXFPROC)(const GLfloat m[16]);
+    VOSGLEntry PFNGLMULTTRANSPOSEMATRIXFPROC glMultTransposeMatrixf;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL rasterizer functions                                           //
     ////////////////////////////////////////////////////////////////////////////
@@ -2100,6 +2109,135 @@
         GLenum format, GLenum type, const void* pixels
     );
     VOSGLEntry PFNGLTEXSUBIMAGE3DPROC glTexSubImage3D;
+
+    typedef void (*PFNGLACTIVETEXTUREPROC)(GLenum texture);
+    VOSGLEntry PFNGLACTIVETEXTUREPROC glActiveTexture;
+    typedef void (*PFNGLCLIENTACTIVETEXTUREPROC)(GLenum texture);
+    VOSGLEntry PFNGLCLIENTACTIVETEXTUREPROC glClientActiveTexture;
+    typedef void (*PFNGLCOMPRESSEDTEXIMAGE1DPROC)(
+        GLenum target, GLint level, GLenum internalformat, GLsizei width,
+        GLint border, GLsizei imageSize, const void* data
+    );
+    VOSGLEntry PFNGLCOMPRESSEDTEXIMAGE1DPROC glCompressedTexImage1D;
+    typedef void (*PFNGLCOMPRESSEDTEXIMAGE2DPROC)(
+        GLenum target, GLint level, GLenum internalformat, GLsizei width,
+        GLsizei height, GLint border, GLsizei imageSize, const void* data
+    );
+    VOSGLEntry PFNGLCOMPRESSEDTEXIMAGE2DPROC glCompressedTexImage2D;
+    typedef void (*PFNGLCOMPRESSEDTEXIMAGE3DPROC)(
+        GLenum target, GLint level, GLenum internalformat, GLsizei width,
+        GLsizei height, GLsizei depth, GLint border,
+        GLsizei imageSize, const void* data
+    );
+    VOSGLEntry PFNGLCOMPRESSEDTEXIMAGE3DPROC glCompressedTexImage3D;
+    typedef void (*PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC)(
+        GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format,
+        GLsizei imageSize, const void *data
+    );
+    VOSGLEntry PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC glCompressedTexSubImage1D;
+    typedef void (*PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC)(
+        GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
+        GLsizei height, GLenum format, GLsizei imageSize, const void* data
+    );
+    VOSGLEntry PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC glCompressedTexSubImage2D;
+    typedef void (*PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC)(
+        GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+        GLsizei width, GLsizei height, GLsizei depth, GLenum format,
+        GLsizei imageSize, const void* data
+    );
+    VOSGLEntry PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC glCompressedTexSubImage3D;
+    typedef void (*PFNGLGETCOMPRESSEDTEXIMAGEPROC)(
+        GLenum target, GLint lod, void* img
+    );
+    VOSGLEntry PFNGLGETCOMPRESSEDTEXIMAGEPROC glGetCompressedTexImage;
+    typedef void (*PFNGLMULTITEXCOORD1DPROC)(GLenum target, GLdouble s);
+    VOSGLEntry PFNGLMULTITEXCOORD1DPROC glMultiTexCoord1d;
+    typedef void (*PFNGLMULTITEXCOORD1DVPROC)(GLenum target, const GLdouble* v);
+    VOSGLEntry PFNGLMULTITEXCOORD1DVPROC glMultiTexCoord1dv;
+    typedef void (*PFNGLMULTITEXCOORD1FPROC)(GLenum target, GLfloat s);
+    VOSGLEntry PFNGLMULTITEXCOORD1FPROC glMultiTexCoord1f;
+    typedef void (*PFNGLMULTITEXCOORD1FVPROC)(GLenum target, const GLfloat* v);
+    VOSGLEntry PFNGLMULTITEXCOORD1FVPROC glMultiTexCoord1fv;
+    typedef void (*PFNGLMULTITEXCOORD1IPROC)(GLenum target, GLint s);
+    VOSGLEntry PFNGLMULTITEXCOORD1IPROC glMultiTexCoord1i;
+    typedef void (*PFNGLMULTITEXCOORD1IVPROC)(GLenum target, const GLint* v);
+    VOSGLEntry PFNGLMULTITEXCOORD1IVPROC glMultiTexCoord1iv;
+    typedef void (*PFNGLMULTITEXCOORD1SPROC)(GLenum target, GLshort s);
+    VOSGLEntry PFNGLMULTITEXCOORD1SPROC glMultiTexCoord1s;
+    typedef void (*PFNGLMULTITEXCOORD1SVPROC)(GLenum target, const GLshort* v);
+    VOSGLEntry PFNGLMULTITEXCOORD1SVPROC glMultiTexCoord1sv;
+    typedef void (*PFNGLMULTITEXCOORD2DPROC)(
+        GLenum target, GLdouble s, GLdouble t
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD2DPROC glMultiTexCoord2d;
+    typedef void (*PFNGLMULTITEXCOORD2DVPROC)(GLenum target, const GLdouble* v);
+    VOSGLEntry PFNGLMULTITEXCOORD2DVPROC glMultiTexCoord2dv;
+    typedef void (*PFNGLMULTITEXCOORD2FPROC)(
+        GLenum target, GLfloat s, GLfloat t
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD2FPROC glMultiTexCoord2f;
+    typedef void (*PFNGLMULTITEXCOORD2FVPROC)(GLenum target, const GLfloat* v);
+    VOSGLEntry PFNGLMULTITEXCOORD2FVPROC glMultiTexCoord2fv;
+    typedef void (*PFNGLMULTITEXCOORD2IPROC)(GLenum target, GLint s, GLint t);
+    VOSGLEntry PFNGLMULTITEXCOORD2IPROC glMultiTexCoord2i;
+    typedef void (*PFNGLMULTITEXCOORD2IVPROC)(GLenum target, const GLint* v);
+    VOSGLEntry PFNGLMULTITEXCOORD2IVPROC glMultiTexCoord2iv;
+    typedef void (*PFNGLMULTITEXCOORD2SPROC)(
+        GLenum target, GLshort s, GLshort t
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD2SPROC glMultiTexCoord2s;
+    typedef void (*PFNGLMULTITEXCOORD2SVPROC)(GLenum target, const GLshort* v);
+    VOSGLEntry PFNGLMULTITEXCOORD2SVPROC glMultiTexCoord2sv;
+    typedef void (*PFNGLMULTITEXCOORD3DPROC)(
+        GLenum target, GLdouble s, GLdouble t, GLdouble r
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD3DPROC glMultiTexCoord3d;
+    typedef void (*PFNGLMULTITEXCOORD3DVPROC)(GLenum target, const GLdouble* v);
+    VOSGLEntry PFNGLMULTITEXCOORD3DVPROC glMultiTexCoord3dv;
+    typedef void (*PFNGLMULTITEXCOORD3FPROC)(
+        GLenum target, GLfloat s, GLfloat t, GLfloat r
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD3FPROC glMultiTexCoord3f;
+    typedef void (*PFNGLMULTITEXCOORD3FVPROC)(GLenum target, const GLfloat* v);
+    VOSGLEntry PFNGLMULTITEXCOORD3FVPROC glMultiTexCoord3fv;
+    typedef void (*PFNGLMULTITEXCOORD3IPROC)(
+        GLenum target, GLint s, GLint t, GLint r
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD3IPROC glMultiTexCoord3i;
+    typedef void (*PFNGLMULTITEXCOORD3IVPROC)(GLenum target, const GLint* v);
+    VOSGLEntry PFNGLMULTITEXCOORD3IVPROC glMultiTexCoord3iv;
+    typedef void (*PFNGLMULTITEXCOORD3SPROC)(
+        GLenum target, GLshort s, GLshort t, GLshort r
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD3SPROC glMultiTexCoord3s;
+    typedef void (*PFNGLMULTITEXCOORD3SVPROC)(GLenum target, const GLshort* v);
+    VOSGLEntry PFNGLMULTITEXCOORD3SVPROC glMultiTexCoord3sv;
+    typedef void (*PFNGLMULTITEXCOORD4DPROC)(
+        GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD4DPROC glMultiTexCoord4d;
+    typedef void (*PFNGLMULTITEXCOORD4DVPROC)(GLenum target, const GLdouble* v);
+    VOSGLEntry PFNGLMULTITEXCOORD4DVPROC glMultiTexCoord4dv;
+    typedef void (*PFNGLMULTITEXCOORD4FPROC)(
+        GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD4FPROC glMultiTexCoord4f;
+    typedef void (*PFNGLMULTITEXCOORD4FVPROC)(GLenum target, const GLfloat* v);
+    VOSGLEntry PFNGLMULTITEXCOORD4FVPROC glMultiTexCoord4fv;
+    typedef void (*PFNGLMULTITEXCOORD4IPROC)(
+        GLenum target, GLint s, GLint t, GLint r, GLint q
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD4IPROC glMultiTexCoord4i;
+    typedef void (*PFNGLMULTITEXCOORD4IVPROC)(GLenum target, const GLint* v);
+    VOSGLEntry PFNGLMULTITEXCOORD4IVPROC glMultiTexCoord4iv;
+    typedef void (*PFNGLMULTITEXCOORD4SPROC)(
+        GLenum target, GLshort s, GLshort t, GLshort r, GLshort q
+    );
+    VOSGLEntry PFNGLMULTITEXCOORD4SPROC glMultiTexCoord4s;
+    typedef void (*PFNGLMULTITEXCOORD4SVPROC)(GLenum target, const GLshort* v);
+    VOSGLEntry PFNGLMULTITEXCOORD4SVPROC glMultiTexCoord4sv;
+    typedef void (*PFNGLSAMPLECOVERAGEPROC)(GLclampf value, GLboolean invert);
+    VOSGLEntry PFNGLSAMPLECOVERAGEPROC glSampleCoverage;
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL materials functions                                            //
