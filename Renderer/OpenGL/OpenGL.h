@@ -68,6 +68,17 @@
     #undef              GL_3_BYTES
     #undef              GL_4_BYTES
     #undef              GL_DOUBLE
+    #undef              GL_UNSIGNED_BYTE_3_3_2
+    #undef              GL_UNSIGNED_SHORT_4_4_4_4
+    #undef              GL_UNSIGNED_SHORT_5_5_5_1
+    #undef              GL_UNSIGNED_INT_8_8_8_8
+    #undef              GL_UNSIGNED_INT_10_10_10_2
+    #undef              GL_UNSIGNED_BYTE_2_3_3_REV
+    #undef              GL_UNSIGNED_SHORT_5_6_5
+    #undef              GL_UNSIGNED_SHORT_5_6_5_REV
+    #undef              GL_UNSIGNED_SHORT_4_4_4_4_REV
+    #undef              GL_UNSIGNED_SHORT_1_5_5_5_REV
+    #undef              GL_UNSIGNED_INT_8_8_8_8_REV
     #undef              GL_CLEAR
     #undef              GL_AND
     #undef              GL_AND_REVERSE
@@ -259,6 +270,12 @@
     #undef              GL_LINE_STIPPLE
     #undef              GL_LINE_STIPPLE_PATTERN
     #undef              GL_LINE_STIPPLE_REPEAT
+    #undef              GL_SMOOTH_POINT_SIZE_RANGE
+    #undef              GL_SMOOTH_POINT_SIZE_GRANULARITY
+    #undef              GL_SMOOTH_LINE_WIDTH_RANGE
+    #undef              GL_SMOOTH_LINE_WIDTH_GRANULARITY
+    #undef              GL_ALIASED_POINT_SIZE_RANGE
+    #undef              GL_ALIASED_LINE_WIDTH_RANGE
     #undef              GL_LIST_MODE
     #undef              GL_MAX_LIST_NESTING
     #undef              GL_LIST_BASE
@@ -303,6 +320,9 @@
     #undef              GL_LIGHT5
     #undef              GL_LIGHT6
     #undef              GL_LIGHT7
+    #undef              GL_LIGHT_MODEL_COLOR_CONTROL
+    #undef              GL_SINGLE_COLOR
+    #undef              GL_SEPARATE_SPECULAR_COLOR
     #undef              GL_FOG
     #undef              GL_FOG_INDEX
     #undef              GL_FOG_DENSITY
@@ -527,6 +547,24 @@
     #undef              GL_TEXTURE_WRAP_T
     #undef              GL_CLAMP
     #undef              GL_REPEAT
+    #undef              GL_MAX_3D_TEXTURE_SIZE
+    #undef              GL_BGR
+    #undef              GL_BGRA
+    #undef              GL_CLAMP_TO_EDGE
+    #undef              GL_TEXTURE_MIN_LOD
+    #undef              GL_TEXTURE_MAX_LOD
+    #undef              GL_TEXTURE_BASE_LEVEL
+    #undef              GL_TEXTURE_MAX_LEVEL
+    #undef              GL_RESCALE_NORMAL
+    #undef              GL_TEXTURE_BINDING_3D
+    #undef              GL_PACK_SKIP_IMAGES
+    #undef              GL_PACK_IMAGE_HEIGHT
+    #undef              GL_UNPACK_SKIP_IMAGES
+    #undef              GL_UNPACK_IMAGE_HEIGHT
+    #undef              GL_TEXTURE_3D
+    #undef              GL_PROXY_TEXTURE_3D
+    #undef              GL_TEXTURE_DEPTH
+    #undef              GL_TEXTURE_WRAP_R
     #undef              GL_MAX_EVAL_ORDER
     #undef              GL_MAX_LIGHTS
     #undef              GL_MAX_CLIP_PLANES
@@ -539,6 +577,8 @@
     #undef              GL_MAX_TEXTURE_STACK_DEPTH
     #undef              GL_MAX_VIEWPORT_DIMS
     #undef              GL_MAX_CLIENT_ATTRIB_STACK_DEPTH
+    #undef              GL_MAX_ELEMENTS_VERTICES
+    #undef              GL_MAX_ELEMENTS_INDICES
     #undef              GL_VERTEX_ARRAY
     #undef              GL_NORMAL_ARRAY
     #undef              GL_COLOR_ARRAY
@@ -629,6 +669,17 @@
     #define             GL_3_BYTES                          0x1408
     #define             GL_4_BYTES                          0x1409
     #define             GL_DOUBLE                           0x140A
+    #define             GL_UNSIGNED_BYTE_3_3_2              0x8032
+    #define             GL_UNSIGNED_SHORT_4_4_4_4           0x8033
+    #define             GL_UNSIGNED_SHORT_5_5_5_1           0x8034
+    #define             GL_UNSIGNED_INT_8_8_8_8             0x8035
+    #define             GL_UNSIGNED_INT_10_10_10_2          0x8036
+    #define             GL_UNSIGNED_BYTE_2_3_3_REV          0x8362
+    #define             GL_UNSIGNED_SHORT_5_6_5             0x8363
+    #define             GL_UNSIGNED_SHORT_5_6_5_REV         0x8364
+    #define             GL_UNSIGNED_SHORT_4_4_4_4_REV       0x8365
+    #define             GL_UNSIGNED_SHORT_1_5_5_5_REV       0x8366
+    #define             GL_UNSIGNED_INT_8_8_8_8_REV         0x8367
     #define             GL_CLEAR                            0x1500
     #define             GL_AND                              0x1501
     #define             GL_AND_REVERSE                      0x1502
@@ -872,6 +923,12 @@
     #define             GL_LINE_STIPPLE                     0x0B24
     #define             GL_LINE_STIPPLE_PATTERN             0x0B25
     #define             GL_LINE_STIPPLE_REPEAT              0x0B26
+    #define             GL_SMOOTH_POINT_SIZE_RANGE          0x0B12
+    #define             GL_SMOOTH_POINT_SIZE_GRANULARITY    0x0B13
+    #define             GL_SMOOTH_LINE_WIDTH_RANGE          0x0B22
+    #define             GL_SMOOTH_LINE_WIDTH_GRANULARITY    0x0B23
+    #define             GL_ALIASED_POINT_SIZE_RANGE         0x846D
+    #define             GL_ALIASED_LINE_WIDTH_RANGE         0x846E
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL lists constants                                                //
@@ -932,6 +989,9 @@
     #define             GL_LIGHT5                           0x4005
     #define             GL_LIGHT6                           0x4006
     #define             GL_LIGHT7                           0x4007
+    #define             GL_LIGHT_MODEL_COLOR_CONTROL        0x81F8
+    #define             GL_SINGLE_COLOR                     0x81F9
+    #define             GL_SEPARATE_SPECULAR_COLOR          0x81FA
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL fog constants                                                  //
@@ -1188,6 +1248,24 @@
     #define             GL_TEXTURE_WRAP_T                   0x2803
     #define             GL_CLAMP                            0x2900
     #define             GL_REPEAT                           0x2901
+    #define             GL_MAX_3D_TEXTURE_SIZE              0x8073
+    #define             GL_BGR                              0x80E0
+    #define             GL_BGRA                             0x80E1
+    #define             GL_CLAMP_TO_EDGE                    0x812F
+    #define             GL_TEXTURE_MIN_LOD                  0x813A
+    #define             GL_TEXTURE_MAX_LOD                  0x813B
+    #define             GL_TEXTURE_BASE_LEVEL               0x813C
+    #define             GL_TEXTURE_MAX_LEVEL                0x813D
+    #define             GL_RESCALE_NORMAL                   0x803A
+    #define             GL_TEXTURE_BINDING_3D               0x806A
+    #define             GL_PACK_SKIP_IMAGES                 0x806B
+    #define             GL_PACK_IMAGE_HEIGHT                0x806C
+    #define             GL_UNPACK_SKIP_IMAGES               0x806D
+    #define             GL_UNPACK_IMAGE_HEIGHT              0x806E
+    #define             GL_TEXTURE_3D                       0x806F
+    #define             GL_PROXY_TEXTURE_3D                 0x8070
+    #define             GL_TEXTURE_DEPTH                    0x8071
+    #define             GL_TEXTURE_WRAP_R                   0x8072
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL max constants                                                  //
@@ -1204,6 +1282,8 @@
     #define             GL_MAX_TEXTURE_STACK_DEPTH          0x0D39
     #define             GL_MAX_VIEWPORT_DIMS                0x0D3A
     #define             GL_MAX_CLIENT_ATTRIB_STACK_DEPTH    0x0D3B
+    #define             GL_MAX_ELEMENTS_VERTICES            0x80E8
+    #define             GL_MAX_ELEMENTS_INDICES             0x80E9
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL arrays constants                                               //
