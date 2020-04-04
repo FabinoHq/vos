@@ -1884,6 +1884,24 @@
     );
     VOSGLApi VOSGLEntry GLboolean glIsTexture(GLuint texture);
 
+    typedef void (*PFNGLCOPYTEXSUBIMAGE3DPROC)(
+        GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+        GLint x, GLint y, GLsizei width, GLsizei height
+    );
+    VOSGLEntry PFNGLCOPYTEXSUBIMAGE3DPROC glCopyTexSubImage3D;
+    typedef void (*PFNGLTEXIMAGE3DPROC)(
+        GLenum target, GLint level, GLint internalFormat,
+        GLsizei width, GLsizei height, GLsizei depth, GLint border,
+        GLenum format, GLenum type, const void* pixels
+    );
+    VOSGLEntry PFNGLTEXIMAGE3DPROC glTexImage3D;
+    typedef void (*PFNGLTEXSUBIMAGE3DPROC)(
+        GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+        GLsizei width, GLsizei height, GLsizei depth,
+        GLenum format, GLenum type, const void* pixels
+    );
+    VOSGLEntry PFNGLTEXSUBIMAGE3DPROC glTexSubImage3D;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL materials functions                                            //
     ////////////////////////////////////////////////////////////////////////////
@@ -1924,6 +1942,12 @@
     VOSGLApi VOSGLEntry void glInterleavedArrays(
         GLenum format, GLsizei stride, const void* pointer
     );
+    
+    typedef void(*PFNGLDRAWRANGEELEMENTSPROC)(
+        GLenum mode, GLuint start, GLuint end, GLsizei count,
+        GLenum type, const void* indices
+    );
+    VOSGLEntry PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL buffers functions                                              //

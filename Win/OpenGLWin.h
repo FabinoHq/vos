@@ -61,10 +61,10 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Swap interval EXT (vertical synchronization)                          //
     ////////////////////////////////////////////////////////////////////////////
-    typedef int(WINAPI* PFNWGLGETSWAPINTERVALEXTPROC)(void);
+    typedef int (WINAPI* PFNWGLGETSWAPINTERVALEXTPROC)(void);
     extern PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT;
 
-    typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC)(int interval);
+    typedef BOOL (WINAPI* PFNWGLSWAPINTERVALEXTPROC)(int interval);
     extern PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
 
 
