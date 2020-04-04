@@ -2039,8 +2039,15 @@
 
     ////////////////////////////////////////////////////////////////////////////
     //  Init OpenGL                                                           //
+    //  return : True if OpenGL is successfully loaded                        //
     ////////////////////////////////////////////////////////////////////////////
-    void InitOpenGL();
+    bool InitOpenGL();
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Init OpenGL 1.2                                                       //
+    //  return : True if OpenGL 1.2 is successfully loaded, false otherwise   //
+    ////////////////////////////////////////////////////////////////////////////
+    bool InitOpenGL_1_2();
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER

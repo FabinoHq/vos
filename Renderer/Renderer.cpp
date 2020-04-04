@@ -61,15 +61,23 @@ Renderer::~Renderer()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Init renderer                                                             //
+//  return : True if the renderer is successfully loaded                      //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::init()
+bool Renderer::init()
 {
     // Init OpenGL
-    InitOpenGL();
+    if (!InitOpenGL())
+    {
+        // Unable to load OpenGL
+        return false;
+    }
 
     // OpenGL settings
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    // OpenGL successfully loaded
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -60,36 +60,55 @@ PFNGLTEXSUBIMAGE3DPROC glTexSubImage3D = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Init OpenGL                                                               //
+//  return : True if OpenGL is successfully loaded                            //
 ////////////////////////////////////////////////////////////////////////////////
-void InitOpenGL()
+bool InitOpenGL()
 {
     // Init OpenGL 1.1
     VOSOpenGLMajorVersion = 1;
     VOSOpenGLMinorVersion = 1;
 
     // Init OpenGL 1.2
-    bool openGL_1_2 = true;
-    glDrawRangeElements = (PFNGLDRAWRANGEELEMENTSPROC)VOSGLGetProcAddress(
-        "glDrawRangeElements"
-    );
-    if (!glDrawRangeElements) openGL_1_2 = false;
-    glCopyTexSubImage3D = (PFNGLCOPYTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
-        "glCopyTexSubImage3D"
-    );
-    if (!glCopyTexSubImage3D) openGL_1_2 = false;
-    glTexImage3D = (PFNGLTEXIMAGE3DPROC)VOSGLGetProcAddress(
-        "glTexImage3D"
-    );
-    if (!glTexImage3D) openGL_1_2 = false;
-    glTexSubImage3D = (PFNGLTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
-        "glTexSubImage3D"
-    );
-    if (!glTexSubImage3D) openGL_1_2 = false;
-
-    if (openGL_1_2)
+    if (InitOpenGL_1_2())
     {
         // OpenGL 1.2 ready
         VOSOpenGLMajorVersion = 1;
         VOSOpenGLMinorVersion = 2;
     }
+    else
+    {
+        // Could not init OpenGL 1.2
+        return false;
+    }
+
+    // OpenGL successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL 1.2                                                           //
+//  return : True if OpenGL 1.2 is successfully loaded, false otherwise       //
+////////////////////////////////////////////////////////////////////////////////
+bool InitOpenGL_1_2()
+{
+    // Init OpenGL 1.2
+    glDrawRangeElements = (PFNGLDRAWRANGEELEMENTSPROC)VOSGLGetProcAddress(
+        "glDrawRangeElements"
+    );
+    if (!glDrawRangeElements) return false;
+    glCopyTexSubImage3D = (PFNGLCOPYTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
+        "glCopyTexSubImage3D"
+    );
+    if (!glCopyTexSubImage3D) return false;
+    glTexImage3D = (PFNGLTEXIMAGE3DPROC)VOSGLGetProcAddress(
+        "glTexImage3D"
+    );
+    if (!glTexImage3D) return false;
+    glTexSubImage3D = (PFNGLTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
+        "glTexSubImage3D"
+    );
+    if (!glTexSubImage3D) return false;
+
+    // OpenGL 1.2 successfully loaded
+    return true;
 }
