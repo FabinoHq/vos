@@ -65,6 +65,9 @@ Renderer::~Renderer()
 void Renderer::init()
 {
     // Init OpenGL
+    InitOpenGL();
+
+    // OpenGL settings
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

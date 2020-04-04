@@ -46,6 +46,13 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VOS OpenGL version                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    extern int VOSOpenGLMajorVersion;
+    extern int VOSOpenGLMinorVersion;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Clear all OpenGL constants                                            //
     ////////////////////////////////////////////////////////////////////////////
     #undef              GL_NONE
@@ -1942,8 +1949,8 @@
     VOSGLApi VOSGLEntry void glInterleavedArrays(
         GLenum format, GLsizei stride, const void* pointer
     );
-    
-    typedef void(*PFNGLDRAWRANGEELEMENTSPROC)(
+
+    typedef void (*PFNGLDRAWRANGEELEMENTSPROC)(
         GLenum mode, GLuint start, GLuint end, GLsizei count,
         GLenum type, const void* indices
     );
@@ -2028,6 +2035,12 @@
     //  OpenGL programs functions                                             //
     ////////////////////////////////////////////////////////////////////////////
     VOSGLApi VOSGLEntry void glShadeModel(GLenum mode);
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Init OpenGL                                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    void InitOpenGL();
 
 
 #endif // VOS_RENDERER_OPENGL_OPENGL_HEADER
