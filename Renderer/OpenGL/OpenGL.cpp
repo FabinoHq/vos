@@ -57,6 +57,53 @@ PFNGLCOPYTEXSUBIMAGE3DPROC glCopyTexSubImage3D = 0;
 PFNGLTEXIMAGE3DPROC glTexImage3D = 0;
 PFNGLTEXSUBIMAGE3DPROC glTexSubImage3D = 0;
 
+PFNGLLOADTRANSPOSEMATRIXDPROC glLoadTransposeMatrixd = 0;
+PFNGLLOADTRANSPOSEMATRIXFPROC glLoadTransposeMatrixf = 0;
+PFNGLMULTTRANSPOSEMATRIXDPROC glMultTransposeMatrixd = 0;
+PFNGLMULTTRANSPOSEMATRIXFPROC glMultTransposeMatrixf = 0;
+PFNGLACTIVETEXTUREPROC glActiveTexture = 0;
+PFNGLCLIENTACTIVETEXTUREPROC glClientActiveTexture = 0;
+PFNGLCOMPRESSEDTEXIMAGE1DPROC glCompressedTexImage1D = 0;
+PFNGLCOMPRESSEDTEXIMAGE2DPROC glCompressedTexImage2D = 0;
+PFNGLCOMPRESSEDTEXIMAGE3DPROC glCompressedTexImage3D = 0;
+PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC glCompressedTexSubImage1D = 0;
+PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC glCompressedTexSubImage2D = 0;
+PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC glCompressedTexSubImage3D = 0;
+PFNGLGETCOMPRESSEDTEXIMAGEPROC glGetCompressedTexImage = 0;
+PFNGLMULTITEXCOORD1DPROC glMultiTexCoord1d = 0;
+PFNGLMULTITEXCOORD1DVPROC glMultiTexCoord1dv = 0;
+PFNGLMULTITEXCOORD1FPROC glMultiTexCoord1f = 0;
+PFNGLMULTITEXCOORD1FVPROC glMultiTexCoord1fv = 0;
+PFNGLMULTITEXCOORD1IPROC glMultiTexCoord1i = 0;
+PFNGLMULTITEXCOORD1IVPROC glMultiTexCoord1iv = 0;
+PFNGLMULTITEXCOORD1SPROC glMultiTexCoord1s = 0;
+PFNGLMULTITEXCOORD1SVPROC glMultiTexCoord1sv = 0;
+PFNGLMULTITEXCOORD2DPROC glMultiTexCoord2d = 0;
+PFNGLMULTITEXCOORD2DVPROC glMultiTexCoord2dv = 0;
+PFNGLMULTITEXCOORD2FPROC glMultiTexCoord2f = 0;
+PFNGLMULTITEXCOORD2FVPROC glMultiTexCoord2fv = 0;
+PFNGLMULTITEXCOORD2IPROC glMultiTexCoord2i = 0;
+PFNGLMULTITEXCOORD2IVPROC glMultiTexCoord2iv = 0;
+PFNGLMULTITEXCOORD2SPROC glMultiTexCoord2s = 0;
+PFNGLMULTITEXCOORD2SVPROC glMultiTexCoord2sv = 0;
+PFNGLMULTITEXCOORD3DPROC glMultiTexCoord3d = 0;
+PFNGLMULTITEXCOORD3DVPROC glMultiTexCoord3dv = 0;
+PFNGLMULTITEXCOORD3FPROC glMultiTexCoord3f = 0;
+PFNGLMULTITEXCOORD3FVPROC glMultiTexCoord3fv = 0;
+PFNGLMULTITEXCOORD3IPROC glMultiTexCoord3i = 0;
+PFNGLMULTITEXCOORD3IVPROC glMultiTexCoord3iv = 0;
+PFNGLMULTITEXCOORD3SPROC glMultiTexCoord3s = 0;
+PFNGLMULTITEXCOORD3SVPROC glMultiTexCoord3sv = 0;
+PFNGLMULTITEXCOORD4DPROC glMultiTexCoord4d = 0;
+PFNGLMULTITEXCOORD4DVPROC glMultiTexCoord4dv = 0;
+PFNGLMULTITEXCOORD4FPROC glMultiTexCoord4f = 0;
+PFNGLMULTITEXCOORD4FVPROC glMultiTexCoord4fv = 0;
+PFNGLMULTITEXCOORD4IPROC glMultiTexCoord4i = 0;
+PFNGLMULTITEXCOORD4IVPROC glMultiTexCoord4iv = 0;
+PFNGLMULTITEXCOORD4SPROC glMultiTexCoord4s = 0;
+PFNGLMULTITEXCOORD4SVPROC glMultiTexCoord4sv = 0;
+PFNGLSAMPLECOVERAGEPROC glSampleCoverage = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Init OpenGL                                                               //
@@ -81,6 +128,19 @@ bool InitOpenGL()
         return false;
     }
 
+    // Init OpenGL 1.3
+    if (InitOpenGL_1_3())
+    {
+        // OpenGL 1.3 ready
+        VOSOpenGLMajorVersion = 1;
+        VOSOpenGLMinorVersion = 3;
+    }
+    else
+    {
+        // Could not init OpenGL 1.3
+        return false;
+    }
+
     // OpenGL successfully loaded
     return true;
 }
@@ -92,23 +152,270 @@ bool InitOpenGL()
 bool InitOpenGL_1_2()
 {
     // Init OpenGL 1.2
-    glDrawRangeElements = (PFNGLDRAWRANGEELEMENTSPROC)VOSGLGetProcAddress(
+    glDrawRangeElements =
+        (PFNGLDRAWRANGEELEMENTSPROC)VOSGLGetProcAddress(
         "glDrawRangeElements"
     );
     if (!glDrawRangeElements) return false;
-    glCopyTexSubImage3D = (PFNGLCOPYTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
+    glCopyTexSubImage3D =
+        (PFNGLCOPYTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
         "glCopyTexSubImage3D"
     );
     if (!glCopyTexSubImage3D) return false;
-    glTexImage3D = (PFNGLTEXIMAGE3DPROC)VOSGLGetProcAddress(
+    glTexImage3D =
+        (PFNGLTEXIMAGE3DPROC)VOSGLGetProcAddress(
         "glTexImage3D"
     );
     if (!glTexImage3D) return false;
-    glTexSubImage3D = (PFNGLTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
+    glTexSubImage3D =
+        (PFNGLTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
         "glTexSubImage3D"
     );
     if (!glTexSubImage3D) return false;
 
     // OpenGL 1.2 successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL 1.3                                                           //
+//  return : True if OpenGL 1.3 is successfully loaded, false otherwise       //
+////////////////////////////////////////////////////////////////////////////////
+bool InitOpenGL_1_3()
+{
+    // Init OpenGL 1.3
+    glLoadTransposeMatrixd =
+        (PFNGLLOADTRANSPOSEMATRIXDPROC)VOSGLGetProcAddress(
+        "glLoadTransposeMatrixd"
+    );
+    if (!glLoadTransposeMatrixd) return false;
+    glLoadTransposeMatrixf =
+        (PFNGLLOADTRANSPOSEMATRIXFPROC)VOSGLGetProcAddress(
+        "glLoadTransposeMatrixf"
+    );
+    if (!glLoadTransposeMatrixf) return false;
+    glMultTransposeMatrixd =
+        (PFNGLMULTTRANSPOSEMATRIXDPROC)VOSGLGetProcAddress(
+        "glMultTransposeMatrixd"
+    );
+    if (!glMultTransposeMatrixd) return false;
+    glMultTransposeMatrixf =
+        (PFNGLMULTTRANSPOSEMATRIXFPROC)VOSGLGetProcAddress(
+        "glMultTransposeMatrixf"
+    );
+    if (!glMultTransposeMatrixf) return false;
+
+    glActiveTexture =
+        (PFNGLACTIVETEXTUREPROC)VOSGLGetProcAddress(
+        "glActiveTexture"
+    );
+    if (!glActiveTexture) return false;
+    glClientActiveTexture =
+        (PFNGLCLIENTACTIVETEXTUREPROC)VOSGLGetProcAddress(
+        "glClientActiveTexture"
+    );
+    if (!glClientActiveTexture) return false;
+    glCompressedTexImage1D =
+        (PFNGLCOMPRESSEDTEXIMAGE1DPROC)VOSGLGetProcAddress(
+        "glCompressedTexImage1D"
+    );
+    if (!glCompressedTexImage1D) return false;
+    glCompressedTexImage2D =
+        (PFNGLCOMPRESSEDTEXIMAGE2DPROC)VOSGLGetProcAddress(
+        "glCompressedTexImage2D"
+    );
+    if (!glCompressedTexImage2D) return false;
+    glCompressedTexImage3D =
+        (PFNGLCOMPRESSEDTEXIMAGE3DPROC)VOSGLGetProcAddress(
+        "glCompressedTexImage3D"
+    );
+    if (!glCompressedTexImage3D) return false;
+    glCompressedTexSubImage1D =
+        (PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC)VOSGLGetProcAddress(
+        "glCompressedTexSubImage1D"
+    );
+    if (!glCompressedTexSubImage1D) return false;
+    glCompressedTexSubImage2D =
+        (PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC)VOSGLGetProcAddress(
+        "glCompressedTexSubImage2D"
+    );
+    if (!glCompressedTexSubImage2D) return false;
+    glCompressedTexSubImage3D =
+        (PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC)VOSGLGetProcAddress(
+        "glCompressedTexSubImage3D"
+    );
+    if (!glCompressedTexSubImage3D) return false;
+    glGetCompressedTexImage =
+        (PFNGLGETCOMPRESSEDTEXIMAGEPROC)VOSGLGetProcAddress(
+        "glGetCompressedTexImage"
+    );
+    if (!glGetCompressedTexImage) return false;
+    glMultiTexCoord1d =
+        (PFNGLMULTITEXCOORD1DPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord1d"
+    );
+    if (!glMultiTexCoord1d) return false;
+    glMultiTexCoord1dv =
+        (PFNGLMULTITEXCOORD1DVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord1dv"
+    );
+    if (!glMultiTexCoord1dv) return false;
+    glMultiTexCoord1f =
+        (PFNGLMULTITEXCOORD1FPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord1f"
+    );
+    if (!glMultiTexCoord1f) return false;
+    glMultiTexCoord1fv =
+        (PFNGLMULTITEXCOORD1FVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord1fv"
+    );
+    if (!glMultiTexCoord1fv) return false;
+    glMultiTexCoord1i =
+        (PFNGLMULTITEXCOORD1IPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord1i"
+    );
+    if (!glMultiTexCoord1i) return false;
+    glMultiTexCoord1iv =
+        (PFNGLMULTITEXCOORD1IVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord1iv"
+    );
+    if (!glMultiTexCoord1iv) return false;
+    glMultiTexCoord1s =
+        (PFNGLMULTITEXCOORD1SPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord1s"
+    );
+    if (!glMultiTexCoord1s) return false;
+    glMultiTexCoord1sv =
+        (PFNGLMULTITEXCOORD1SVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord1sv"
+    );
+    if (!glMultiTexCoord1sv) return false;
+    glMultiTexCoord2d =
+        (PFNGLMULTITEXCOORD2DPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord2d"
+    );
+    if (!glMultiTexCoord2d) return false;
+    glMultiTexCoord2dv =
+        (PFNGLMULTITEXCOORD2DVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord2dv"
+    );
+    if (!glMultiTexCoord2dv) return false;
+    glMultiTexCoord2f =
+        (PFNGLMULTITEXCOORD2FPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord2f"
+    );
+    if (!glMultiTexCoord2f) return false;
+    glMultiTexCoord2fv =
+        (PFNGLMULTITEXCOORD2FVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord2fv"
+    );
+    if (!glMultiTexCoord2fv) return false;
+    glMultiTexCoord2i =
+        (PFNGLMULTITEXCOORD2IPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord2i"
+    );
+    if (!glMultiTexCoord2i) return false;
+    glMultiTexCoord2iv =
+        (PFNGLMULTITEXCOORD2IVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord2iv"
+    );
+    if (!glMultiTexCoord2iv) return false;
+    glMultiTexCoord2s =
+        (PFNGLMULTITEXCOORD2SPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord2s"
+    );
+    if (!glMultiTexCoord2s) return false;
+    glMultiTexCoord2sv =
+        (PFNGLMULTITEXCOORD2SVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord2sv"
+    );
+    if (!glMultiTexCoord2sv) return false;
+    glMultiTexCoord3d =
+        (PFNGLMULTITEXCOORD3DPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord3d"
+    );
+    if (!glMultiTexCoord3d) return false;
+    glMultiTexCoord3dv =
+        (PFNGLMULTITEXCOORD3DVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord3dv"
+    );
+    if (!glMultiTexCoord3dv) return false;
+    glMultiTexCoord3f =
+        (PFNGLMULTITEXCOORD3FPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord3f"
+    );
+    if (!glMultiTexCoord3f) return false;
+    glMultiTexCoord3fv =
+        (PFNGLMULTITEXCOORD3FVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord3fv"
+    );
+    if (!glMultiTexCoord3fv) return false;
+    glMultiTexCoord3i =
+        (PFNGLMULTITEXCOORD3IPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord3i"
+    );
+    if (!glMultiTexCoord3i) return false;
+    glMultiTexCoord3iv =
+        (PFNGLMULTITEXCOORD3IVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord3iv"
+    );
+    if (!glMultiTexCoord3iv) return false;
+    glMultiTexCoord3s =
+        (PFNGLMULTITEXCOORD3SPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord3s"
+    );
+    if (!glMultiTexCoord3s) return false;
+    glMultiTexCoord3sv =
+        (PFNGLMULTITEXCOORD3SVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord3sv"
+    );
+    if (!glMultiTexCoord3sv) return false;
+    glMultiTexCoord4d =
+        (PFNGLMULTITEXCOORD4DPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord4d"
+    );
+    if (!glMultiTexCoord4d) return false;
+    glMultiTexCoord4dv =
+        (PFNGLMULTITEXCOORD4DVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord4dv"
+    );
+    if (!glMultiTexCoord4dv) return false;
+    glMultiTexCoord4f =
+        (PFNGLMULTITEXCOORD4FPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord4f"
+    );
+    if (!glMultiTexCoord4f) return false;
+    glMultiTexCoord4fv =
+        (PFNGLMULTITEXCOORD4FVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord4fv"
+    );
+    if (!glMultiTexCoord4fv) return false;
+    glMultiTexCoord4i =
+        (PFNGLMULTITEXCOORD4IPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord4i"
+    );
+    if (!glMultiTexCoord4i) return false;
+    glMultiTexCoord4iv =
+        (PFNGLMULTITEXCOORD4IVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord4iv"
+    );
+    if (!glMultiTexCoord4iv) return false;
+    glMultiTexCoord4s =
+        (PFNGLMULTITEXCOORD4SPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord4s"
+    );
+    if (!glMultiTexCoord4s) return false;
+    glMultiTexCoord4sv =
+        (PFNGLMULTITEXCOORD4SVPROC)VOSGLGetProcAddress(
+        "glMultiTexCoord4sv"
+    );
+    if (!glMultiTexCoord4sv) return false;
+    glSampleCoverage =
+        (PFNGLSAMPLECOVERAGEPROC)VOSGLGetProcAddress(
+        "glSampleCoverage"
+    );
+    if (!glSampleCoverage) return false;
+
+    // OpenGL 1.3 successfully loaded
     return true;
 }
