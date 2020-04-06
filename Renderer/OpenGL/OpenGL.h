@@ -222,6 +222,10 @@
     #undef              GL_BLEND_DST
     #undef              GL_BLEND_SRC
     #undef              GL_BLEND
+    #undef              GL_BLEND_DST_RGB
+    #undef              GL_BLEND_SRC_RGB
+    #undef              GL_BLEND_DST_ALPHA
+    #undef              GL_BLEND_SRC_ALPHA
     #undef              GL_FRONT_LEFT
     #undef              GL_FRONT_RIGHT
     #undef              GL_BACK_LEFT
@@ -285,6 +289,10 @@
     #undef              GL_SMOOTH_LINE_WIDTH_GRANULARITY
     #undef              GL_ALIASED_POINT_SIZE_RANGE
     #undef              GL_ALIASED_LINE_WIDTH_RANGE
+    #undef              GL_POINT_SIZE_MIN
+    #undef              GL_POINT_SIZE_MAX
+    #undef              GL_POINT_FADE_THRESHOLD_SIZE
+    #undef              GL_POINT_DISTANCE_ATTENUATION
     #undef              GL_LIST_MODE
     #undef              GL_MAX_LIST_NESTING
     #undef              GL_LIST_BASE
@@ -339,6 +347,14 @@
     #undef              GL_FOG_END
     #undef              GL_FOG_MODE
     #undef              GL_FOG_COLOR
+    #undef              GL_FOG_COORDINATE_SOURCE
+    #undef              GL_FOG_COORDINATE
+    #undef              GL_FRAGMENT_DEPTH
+    #undef              GL_CURRENT_FOG_COORDINATE
+    #undef              GL_FOG_COORDINATE_ARRAY_TYPE
+    #undef              GL_FOG_COORDINATE_ARRAY_STRIDE
+    #undef              GL_FOG_COORDINATE_ARRAY_POINTER
+    #undef              GL_FOG_COORDINATE_ARRAY
     #undef              GL_DEPTH_RANGE
     #undef              GL_DEPTH_TEST
     #undef              GL_DEPTH_WRITEMASK
@@ -667,6 +683,28 @@
     #undef              GL_COMPRESSED_TEXTURE_FORMATS
     #undef              GL_DOT3_RGB
     #undef              GL_DOT3_RGBA
+    #undef              GL_GENERATE_MIPMAP
+    #undef              GL_GENERATE_MIPMAP_HINT
+    #undef              GL_DEPTH_COMPONENT16
+    #undef              GL_DEPTH_COMPONENT24
+    #undef              GL_DEPTH_COMPONENT32
+    #undef              GL_MIRRORED_REPEAT
+    #undef              GL_COLOR_SUM
+    #undef              GL_CURRENT_SECONDARY_COLOR
+    #undef              GL_SECONDARY_COLOR_ARRAY_SIZE
+    #undef              GL_SECONDARY_COLOR_ARRAY_TYPE
+    #undef              GL_SECONDARY_COLOR_ARRAY_STRIDE
+    #undef              GL_SECONDARY_COLOR_ARRAY_POINTER
+    #undef              GL_SECONDARY_COLOR_ARRAY
+    #undef              GL_TEXTURE_FILTER_CONTROL
+    #undef              GL_TEXTURE_LOD_BIAS
+    #undef              GL_INCR_WRAP
+    #undef              GL_DECR_WRAP
+    #undef              GL_TEXTURE_DEPTH_SIZE
+    #undef              GL_DEPTH_TEXTURE_MODE
+    #undef              GL_TEXTURE_COMPARE_MODE
+    #undef              GL_TEXTURE_COMPARE_FUNC
+    #undef              GL_COMPARE_R_TO_TEXTURE
     #undef              GL_MAX_EVAL_ORDER
     #undef              GL_MAX_LIGHTS
     #undef              GL_MAX_CLIP_PLANES
@@ -682,6 +720,7 @@
     #undef              GL_MAX_ELEMENTS_VERTICES
     #undef              GL_MAX_ELEMENTS_INDICES
     #undef              GL_MAX_TEXTURE_UNITS
+    #undef              GL_MAX_TEXTURE_LOD_BIAS
     #undef              GL_VERTEX_ARRAY
     #undef              GL_NORMAL_ARRAY
     #undef              GL_COLOR_ARRAY
@@ -939,6 +978,10 @@
     #define             GL_BLEND_DST                        0x0BE0
     #define             GL_BLEND_SRC                        0x0BE1
     #define             GL_BLEND                            0x0BE2
+    #define             GL_BLEND_DST_RGB                    0x80C8
+    #define             GL_BLEND_SRC_RGB                    0x80C9
+    #define             GL_BLEND_DST_ALPHA                  0x80CA
+    #define             GL_BLEND_SRC_ALPHA                  0x80CB
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL faces constants                                                //
@@ -1034,6 +1077,10 @@
     #define             GL_SMOOTH_LINE_WIDTH_GRANULARITY    0x0B23
     #define             GL_ALIASED_POINT_SIZE_RANGE         0x846D
     #define             GL_ALIASED_LINE_WIDTH_RANGE         0x846E
+    #define             GL_POINT_SIZE_MIN                   0x8126
+    #define             GL_POINT_SIZE_MAX                   0x8127
+    #define             GL_POINT_FADE_THRESHOLD_SIZE        0x8128
+    #define             GL_POINT_DISTANCE_ATTENUATION       0x8129
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL lists constants                                                //
@@ -1108,6 +1155,14 @@
     #define             GL_FOG_END                          0x0B64
     #define             GL_FOG_MODE                         0x0B65
     #define             GL_FOG_COLOR                        0x0B66
+    #define             GL_FOG_COORDINATE_SOURCE            0x8450
+    #define             GL_FOG_COORDINATE                   0x8451
+    #define             GL_FRAGMENT_DEPTH                   0x8452
+    #define             GL_CURRENT_FOG_COORDINATE           0x8453
+    #define             GL_FOG_COORDINATE_ARRAY_TYPE        0x8454
+    #define             GL_FOG_COORDINATE_ARRAY_STRIDE      0x8455
+    #define             GL_FOG_COORDINATE_ARRAY_POINTER     0x8456
+    #define             GL_FOG_COORDINATE_ARRAY             0x8457
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL depth constants                                                //
@@ -1464,6 +1519,28 @@
     #define             GL_COMPRESSED_TEXTURE_FORMATS       0x86A3
     #define             GL_DOT3_RGB                         0x86AE
     #define             GL_DOT3_RGBA                        0x86AF
+    #define             GL_GENERATE_MIPMAP                  0x8191
+    #define             GL_GENERATE_MIPMAP_HINT             0x8192
+    #define             GL_DEPTH_COMPONENT16                0x81A5
+    #define             GL_DEPTH_COMPONENT24                0x81A6
+    #define             GL_DEPTH_COMPONENT32                0x81A7
+    #define             GL_MIRRORED_REPEAT                  0x8370
+    #define             GL_COLOR_SUM                        0x8458
+    #define             GL_CURRENT_SECONDARY_COLOR          0x8459
+    #define             GL_SECONDARY_COLOR_ARRAY_SIZE       0x845A
+    #define             GL_SECONDARY_COLOR_ARRAY_TYPE       0x845B
+    #define             GL_SECONDARY_COLOR_ARRAY_STRIDE     0x845C
+    #define             GL_SECONDARY_COLOR_ARRAY_POINTER    0x845D
+    #define             GL_SECONDARY_COLOR_ARRAY            0x845E
+    #define             GL_TEXTURE_FILTER_CONTROL           0x8500
+    #define             GL_TEXTURE_LOD_BIAS                 0x8501
+    #define             GL_INCR_WRAP                        0x8507
+    #define             GL_DECR_WRAP                        0x8508
+    #define             GL_TEXTURE_DEPTH_SIZE               0x884A
+    #define             GL_DEPTH_TEXTURE_MODE               0x884B
+    #define             GL_TEXTURE_COMPARE_MODE             0x884C
+    #define             GL_TEXTURE_COMPARE_FUNC             0x884D
+    #define             GL_COMPARE_R_TO_TEXTURE             0x884E
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL max constants                                                  //
@@ -1483,6 +1560,7 @@
     #define             GL_MAX_ELEMENTS_VERTICES            0x80E8
     #define             GL_MAX_ELEMENTS_INDICES             0x80E9
     #define             GL_MAX_TEXTURE_UNITS                0x84E2
+    #define             GL_MAX_TEXTURE_LOD_BIAS             0x84FD
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL arrays constants                                               //
