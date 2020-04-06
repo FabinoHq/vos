@@ -1684,6 +1684,18 @@
     VOSGLApi VOSGLEntry void glDepthMask(GLboolean flag);
     VOSGLApi VOSGLEntry void glDepthRange(GLclampd zNear, GLclampd zFar);
 
+    typedef void (*PFNGLBLENDCOLORPROC)(
+        GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha
+    );
+    VOSGLEntry PFNGLBLENDCOLORPROC glBlendColor;
+    typedef void (*PFNGLBLENDEQUATIONPROC)(GLenum mode);
+    VOSGLEntry PFNGLBLENDEQUATIONPROC glBlendEquation;
+    typedef void (*PFNGLBLENDFUNCSEPARATEPROC)(
+        GLenum sfactorRGB, GLenum dfactorRGB,
+        GLenum sfactorAlpha, GLenum dfactorAlpha
+    );
+    VOSGLEntry PFNGLBLENDFUNCSEPARATEPROC glBlendFuncSeparate;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL matrices functions                                             //
     ////////////////////////////////////////////////////////////////////////////
@@ -1760,6 +1772,39 @@
     );
     VOSGLApi VOSGLEntry void glRasterPos4sv(const GLshort* v);
 
+    typedef void (*PFNGLWINDOWPOS2DPROC)(GLdouble x, GLdouble y);
+    VOSGLEntry PFNGLWINDOWPOS2DPROC glWindowPos2d;
+    typedef void (*PFNGLWINDOWPOS2DVPROC)(const GLdouble* p);
+    VOSGLEntry PFNGLWINDOWPOS2DVPROC glWindowPos2dv;
+    typedef void (*PFNGLWINDOWPOS2FPROC)(GLfloat x, GLfloat y);
+    VOSGLEntry PFNGLWINDOWPOS2FPROC glWindowPos2f;
+    typedef void (*PFNGLWINDOWPOS2FVPROC)(const GLfloat* p);
+    VOSGLEntry PFNGLWINDOWPOS2FVPROC glWindowPos2fv;
+    typedef void (*PFNGLWINDOWPOS2IPROC)(GLint x, GLint y);
+    VOSGLEntry PFNGLWINDOWPOS2IPROC glWindowPos2i;
+    typedef void (*PFNGLWINDOWPOS2IVPROC)(const GLint* p);
+    VOSGLEntry PFNGLWINDOWPOS2IVPROC glWindowPos2iv;
+    typedef void (*PFNGLWINDOWPOS2SPROC)(GLshort x, GLshort y);
+    VOSGLEntry PFNGLWINDOWPOS2SPROC glWindowPos2s;
+    typedef void (*PFNGLWINDOWPOS2SVPROC)(const GLshort* p);
+    VOSGLEntry PFNGLWINDOWPOS2SVPROC glWindowPos2sv;
+    typedef void (*PFNGLWINDOWPOS3DPROC)(GLdouble x, GLdouble y, GLdouble z);
+    VOSGLEntry PFNGLWINDOWPOS3DPROC glWindowPos3d;
+    typedef void (*PFNGLWINDOWPOS3DVPROC)(const GLdouble* p);
+    VOSGLEntry PFNGLWINDOWPOS3DVPROC glWindowPos3dv;
+    typedef void (*PFNGLWINDOWPOS3FPROC)(GLfloat x, GLfloat y, GLfloat z);
+    VOSGLEntry PFNGLWINDOWPOS3FPROC glWindowPos3f;
+    typedef void (*PFNGLWINDOWPOS3FVPROC)(const GLfloat* p);
+    VOSGLEntry PFNGLWINDOWPOS3FVPROC glWindowPos3fv;
+    typedef void (*PFNGLWINDOWPOS3IPROC)(GLint x, GLint y, GLint z);
+    VOSGLEntry PFNGLWINDOWPOS3IPROC glWindowPos3i;
+    typedef void (*PFNGLWINDOWPOS3IVPROC)(const GLint* p);
+    VOSGLEntry PFNGLWINDOWPOS3IVPROC glWindowPos3iv;
+    typedef void (*PFNGLWINDOWPOS3SPROC) (GLshort x, GLshort y, GLshort z);
+    VOSGLEntry PFNGLWINDOWPOS3SPROC glWindowPos3s;
+    typedef void (*PFNGLWINDOWPOS3SVPROC)(const GLshort* p);
+    VOSGLEntry PFNGLWINDOWPOS3SVPROC glWindowPos3sv;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL eval functions                                                 //
     ////////////////////////////////////////////////////////////////////////////
@@ -1777,6 +1822,22 @@
     );
     VOSGLApi VOSGLEntry void glEvalPoint1(GLint i);
     VOSGLApi VOSGLEntry void glEvalPoint2(GLint i, GLint j);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL points and lines functions                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (*PFNGLPOINTPARAMETERFPROC)(GLenum pname, GLfloat param);
+    VOSGLEntry PFNGLPOINTPARAMETERFPROC glPointParameterf;
+    typedef void (*PFNGLPOINTPARAMETERFVPROC)(
+        GLenum pname, const GLfloat* params
+    );
+    VOSGLEntry PFNGLPOINTPARAMETERFVPROC glPointParameterfv;
+    typedef void (*PFNGLPOINTPARAMETERIPROC)(GLenum pname, GLint param);
+    VOSGLEntry PFNGLPOINTPARAMETERIPROC glPointParameteri;
+    typedef void (*PFNGLPOINTPARAMETERIVPROC)(
+        GLenum pname, const GLint* params
+    );
+    VOSGLEntry PFNGLPOINTPARAMETERIVPROC glPointParameteriv;
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL indices functions                                              //
@@ -1905,6 +1966,59 @@
     VOSGLApi VOSGLEntry void glColorPointer(
         GLint size, GLenum type, GLsizei stride, const void* pointer
     );
+
+    typedef void (*PFNGLSECONDARYCOLOR3BPROC)(
+        GLbyte red, GLbyte green, GLbyte blue
+    );
+    VOSGLEntry PFNGLSECONDARYCOLOR3BPROC glSecondaryColor3b;
+    typedef void (*PFNGLSECONDARYCOLOR3BVPROC)(const GLbyte* v);
+    VOSGLEntry PFNGLSECONDARYCOLOR3BVPROC glSecondaryColor3bv;
+    typedef void (*PFNGLSECONDARYCOLOR3DPROC)(
+        GLdouble red, GLdouble green, GLdouble blue
+    );
+    VOSGLEntry PFNGLSECONDARYCOLOR3DPROC glSecondaryColor3d;
+    typedef void (*PFNGLSECONDARYCOLOR3DVPROC)(const GLdouble* v);
+    VOSGLEntry PFNGLSECONDARYCOLOR3DVPROC glSecondaryColor3dv;
+    typedef void (*PFNGLSECONDARYCOLOR3FPROC)(
+        GLfloat red, GLfloat green, GLfloat blue
+    );
+    VOSGLEntry PFNGLSECONDARYCOLOR3FPROC glSecondaryColor3f;
+    typedef void (*PFNGLSECONDARYCOLOR3FVPROC)(const GLfloat* v);
+    VOSGLEntry PFNGLSECONDARYCOLOR3FVPROC glSecondaryColor3fv;
+    typedef void (*PFNGLSECONDARYCOLOR3IPROC)(
+        GLint red, GLint green, GLint blue
+    );
+    VOSGLEntry PFNGLSECONDARYCOLOR3IPROC glSecondaryColor3i;
+    typedef void (*PFNGLSECONDARYCOLOR3IVPROC)(const GLint* v);
+    VOSGLEntry PFNGLSECONDARYCOLOR3IVPROC glSecondaryColor3iv;
+    typedef void (*PFNGLSECONDARYCOLOR3SPROC)(
+        GLshort red, GLshort green, GLshort blue
+    );
+    VOSGLEntry PFNGLSECONDARYCOLOR3SPROC glSecondaryColor3s;
+    typedef void (*PFNGLSECONDARYCOLOR3SVPROC)(const GLshort* v);
+    VOSGLEntry PFNGLSECONDARYCOLOR3SVPROC glSecondaryColor3sv;
+    typedef void (*PFNGLSECONDARYCOLOR3UBPROC)(
+        GLubyte red, GLubyte green, GLubyte blue
+    );
+    VOSGLEntry PFNGLSECONDARYCOLOR3UBPROC glSecondaryColor3ub;
+    typedef void (*PFNGLSECONDARYCOLOR3UBVPROC)(const GLubyte* v);
+    VOSGLEntry PFNGLSECONDARYCOLOR3UBVPROC glSecondaryColor3ubv;
+    typedef void (*PFNGLSECONDARYCOLOR3UIPROC)(
+        GLuint red, GLuint green, GLuint blue
+    );
+    VOSGLEntry PFNGLSECONDARYCOLOR3UIPROC glSecondaryColor3ui;
+    typedef void (*PFNGLSECONDARYCOLOR3UIVPROC)(const GLuint* v);
+    VOSGLEntry PFNGLSECONDARYCOLOR3UIVPROC glSecondaryColor3uiv;
+    typedef void (*PFNGLSECONDARYCOLOR3USPROC)(
+        GLushort red, GLushort green, GLushort blue
+    );
+    VOSGLEntry PFNGLSECONDARYCOLOR3USPROC glSecondaryColor3us;
+    typedef void (*PFNGLSECONDARYCOLOR3USVPROC)(const GLushort* v);
+    VOSGLEntry PFNGLSECONDARYCOLOR3USVPROC glSecondaryColor3usv;
+    typedef void (*PFNGLSECONDARYCOLORPOINTERPROC)(
+        GLint size, GLenum type, GLsizei stride, const void* pointer
+    );
+    VOSGLEntry PFNGLSECONDARYCOLORPOINTERPROC glSecondaryColorPointer;
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL normals functions                                              //
@@ -2364,6 +2478,17 @@
     );
     VOSGLEntry PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
 
+    typedef void (*PFNGLMULTIDRAWARRAYSPROC)(
+        GLenum mode, const GLint* first,
+        const GLsizei* count, GLsizei drawcount
+    );
+    VOSGLEntry PFNGLMULTIDRAWARRAYSPROC glMultiDrawArrays;
+    typedef void (*PFNGLMULTIDRAWELEMENTSPROC)(
+        GLenum mode, const GLsizei* count, GLenum type,
+        const void* const* indices, GLsizei drawcount
+    );
+    VOSGLEntry PFNGLMULTIDRAWELEMENTSPROC glMultiDrawElements;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL buffers functions                                              //
     ////////////////////////////////////////////////////////////////////////////
@@ -2438,6 +2563,19 @@
     VOSGLApi VOSGLEntry void glFogfv(GLenum pname, const GLfloat* params);
     VOSGLApi VOSGLEntry void glFogi(GLenum pname, GLint param);
     VOSGLApi VOSGLEntry void glFogiv(GLenum pname, const GLint* params);
+
+    typedef void (*PFNGLFOGCOORDPOINTERPROC)(
+        GLenum type, GLsizei stride, const void* pointer
+    );
+    VOSGLEntry PFNGLFOGCOORDPOINTERPROC glFogCoordPointer;
+    typedef void (*PFNGLFOGCOORDDPROC)(GLdouble coord);
+    VOSGLEntry PFNGLFOGCOORDDPROC glFogCoordd;
+    typedef void (*PFNGLFOGCOORDDVPROC)(const GLdouble* coord);
+    VOSGLEntry PFNGLFOGCOORDDVPROC glFogCoorddv;
+    typedef void (*PFNGLFOGCOORDFPROC)(GLfloat coord);
+    VOSGLEntry PFNGLFOGCOORDFPROC glFogCoordf;
+    typedef void (*PFNGLFOGCOORDFVPROC)(const GLfloat* coord);
+    VOSGLEntry PFNGLFOGCOORDFVPROC glFogCoordfv;
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL programs functions                                             //
