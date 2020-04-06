@@ -50,7 +50,7 @@ int VOSOpenGLMinorVersion = 0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init OpenGL functions pointers                                            //
+//  VOS OpenGL functions pointers                                             //
 ////////////////////////////////////////////////////////////////////////////////
 PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements = 0;
 PFNGLCOPYTEXSUBIMAGE3DPROC glCopyTexSubImage3D = 0;
@@ -104,6 +104,54 @@ PFNGLMULTITEXCOORD4SPROC glMultiTexCoord4s = 0;
 PFNGLMULTITEXCOORD4SVPROC glMultiTexCoord4sv = 0;
 PFNGLSAMPLECOVERAGEPROC glSampleCoverage = 0;
 
+PFNGLBLENDCOLORPROC glBlendColor = 0;
+PFNGLBLENDEQUATIONPROC glBlendEquation = 0;
+PFNGLBLENDFUNCSEPARATEPROC glBlendFuncSeparate = 0;
+PFNGLWINDOWPOS2DPROC glWindowPos2d = 0;
+PFNGLWINDOWPOS2DVPROC glWindowPos2dv = 0;
+PFNGLWINDOWPOS2FPROC glWindowPos2f = 0;
+PFNGLWINDOWPOS2FVPROC glWindowPos2fv = 0;
+PFNGLWINDOWPOS2IPROC glWindowPos2i = 0;
+PFNGLWINDOWPOS2IVPROC glWindowPos2iv = 0;
+PFNGLWINDOWPOS2SPROC glWindowPos2s = 0;
+PFNGLWINDOWPOS2SVPROC glWindowPos2sv = 0;
+PFNGLWINDOWPOS3DPROC glWindowPos3d = 0;
+PFNGLWINDOWPOS3DVPROC glWindowPos3dv = 0;
+PFNGLWINDOWPOS3FPROC glWindowPos3f = 0;
+PFNGLWINDOWPOS3FVPROC glWindowPos3fv = 0;
+PFNGLWINDOWPOS3IPROC glWindowPos3i = 0;
+PFNGLWINDOWPOS3IVPROC glWindowPos3iv = 0;
+PFNGLWINDOWPOS3SPROC glWindowPos3s = 0;
+PFNGLWINDOWPOS3SVPROC glWindowPos3sv = 0;
+PFNGLPOINTPARAMETERFPROC glPointParameterf = 0;
+PFNGLPOINTPARAMETERFVPROC glPointParameterfv = 0;
+PFNGLPOINTPARAMETERIPROC glPointParameteri = 0;
+PFNGLPOINTPARAMETERIVPROC glPointParameteriv = 0;
+PFNGLSECONDARYCOLOR3BPROC glSecondaryColor3b = 0;
+PFNGLSECONDARYCOLOR3BVPROC glSecondaryColor3bv = 0;
+PFNGLSECONDARYCOLOR3DPROC glSecondaryColor3d = 0;
+PFNGLSECONDARYCOLOR3DVPROC glSecondaryColor3dv = 0;
+PFNGLSECONDARYCOLOR3FPROC glSecondaryColor3f = 0;
+PFNGLSECONDARYCOLOR3FVPROC glSecondaryColor3fv = 0;
+PFNGLSECONDARYCOLOR3IPROC glSecondaryColor3i = 0;
+PFNGLSECONDARYCOLOR3IVPROC glSecondaryColor3iv = 0;
+PFNGLSECONDARYCOLOR3SPROC glSecondaryColor3s = 0;
+PFNGLSECONDARYCOLOR3SVPROC glSecondaryColor3sv = 0;
+PFNGLSECONDARYCOLOR3UBPROC glSecondaryColor3ub = 0;
+PFNGLSECONDARYCOLOR3UBVPROC glSecondaryColor3ubv = 0;
+PFNGLSECONDARYCOLOR3UIPROC glSecondaryColor3ui = 0;
+PFNGLSECONDARYCOLOR3UIVPROC glSecondaryColor3uiv = 0;
+PFNGLSECONDARYCOLOR3USPROC glSecondaryColor3us = 0;
+PFNGLSECONDARYCOLOR3USVPROC glSecondaryColor3usv = 0;
+PFNGLSECONDARYCOLORPOINTERPROC glSecondaryColorPointer = 0;
+PFNGLMULTIDRAWARRAYSPROC glMultiDrawArrays = 0;
+PFNGLMULTIDRAWELEMENTSPROC glMultiDrawElements = 0;
+PFNGLFOGCOORDPOINTERPROC glFogCoordPointer = 0;
+PFNGLFOGCOORDDPROC glFogCoordd = 0;
+PFNGLFOGCOORDDVPROC glFogCoorddv = 0;
+PFNGLFOGCOORDFPROC glFogCoordf = 0;
+PFNGLFOGCOORDFVPROC glFogCoordfv = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Init OpenGL                                                               //
@@ -138,6 +186,19 @@ bool InitOpenGL()
     else
     {
         // Could not init OpenGL 1.3
+        return false;
+    }
+
+    // Init OpenGL 1.4
+    if (InitOpenGL_1_4())
+    {
+        // OpenGL 1.4 ready
+        VOSOpenGLMajorVersion = 1;
+        VOSOpenGLMinorVersion = 4;
+    }
+    else
+    {
+        // Could not init OpenGL 1.4
         return false;
     }
 
@@ -417,5 +478,257 @@ bool InitOpenGL_1_3()
     if (!glSampleCoverage) return false;
 
     // OpenGL 1.3 successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL 1.4                                                           //
+//  return : True if OpenGL 1.4 is successfully loaded, false otherwise       //
+////////////////////////////////////////////////////////////////////////////////
+bool InitOpenGL_1_4()
+{
+    // Init OpenGL 1.4
+    glBlendColor =
+        (PFNGLBLENDCOLORPROC)VOSGLGetProcAddress(
+        "glBlendColor"
+    );
+    if (!glBlendColor) return false;
+    glBlendEquation =
+        (PFNGLBLENDEQUATIONPROC)VOSGLGetProcAddress(
+        "glBlendEquation"
+    );
+    if (!glBlendEquation) return false;
+    glBlendFuncSeparate =
+        (PFNGLBLENDFUNCSEPARATEPROC)VOSGLGetProcAddress(
+        "glBlendFuncSeparate"
+    );
+    if (!glBlendFuncSeparate) return false;
+
+    glWindowPos2d =
+        (PFNGLWINDOWPOS2DPROC)VOSGLGetProcAddress(
+        "glWindowPos2d"
+    );
+    if (!glWindowPos2d) return false;
+    glWindowPos2dv =
+        (PFNGLWINDOWPOS2DVPROC)VOSGLGetProcAddress(
+        "glWindowPos2dv"
+    );
+    if (!glWindowPos2dv) return false;
+    glWindowPos2f =
+        (PFNGLWINDOWPOS2FPROC)VOSGLGetProcAddress(
+        "glWindowPos2f"
+    );
+    if (!glWindowPos2f) return false;
+    glWindowPos2fv =
+        (PFNGLWINDOWPOS2FVPROC)VOSGLGetProcAddress(
+        "glWindowPos2fv"
+    );
+    if (!glWindowPos2fv) return false;
+    glWindowPos2i =
+        (PFNGLWINDOWPOS2IPROC)VOSGLGetProcAddress(
+        "glWindowPos2i"
+    );
+    if (!glWindowPos2i) return false;
+    glWindowPos2iv =
+        (PFNGLWINDOWPOS2IVPROC)VOSGLGetProcAddress(
+        "glWindowPos2iv"
+    );
+    if (!glWindowPos2iv) return false;
+    glWindowPos2s =
+        (PFNGLWINDOWPOS2SPROC)VOSGLGetProcAddress(
+        "glWindowPos2s"
+    );
+    if (!glWindowPos2s) return false;
+    glWindowPos2sv =
+        (PFNGLWINDOWPOS2SVPROC)VOSGLGetProcAddress(
+        "glWindowPos2sv"
+    );
+    if (!glWindowPos2sv) return false;
+    glWindowPos3d =
+        (PFNGLWINDOWPOS3DPROC)VOSGLGetProcAddress(
+        "glWindowPos3d"
+    );
+    if (!glWindowPos3d) return false;
+    glWindowPos3dv =
+        (PFNGLWINDOWPOS3DVPROC)VOSGLGetProcAddress(
+        "glWindowPos3dv"
+    );
+    if (!glWindowPos3dv) return false;
+    glWindowPos3f =
+        (PFNGLWINDOWPOS3FPROC)VOSGLGetProcAddress(
+        "glWindowPos3f"
+    );
+    if (!glWindowPos3f) return false;
+    glWindowPos3fv =
+        (PFNGLWINDOWPOS3FVPROC)VOSGLGetProcAddress(
+        "glWindowPos3fv"
+    );
+    if (!glWindowPos3fv) return false;
+    glWindowPos3i =
+        (PFNGLWINDOWPOS3IPROC)VOSGLGetProcAddress(
+        "glWindowPos3i"
+    );
+    if (!glWindowPos3i) return false;
+    glWindowPos3iv =
+        (PFNGLWINDOWPOS3IVPROC)VOSGLGetProcAddress(
+        "glWindowPos3iv"
+    );
+    if (!glWindowPos3iv) return false;
+    glWindowPos3s =
+        (PFNGLWINDOWPOS3SPROC)VOSGLGetProcAddress(
+        "glWindowPos3s"
+    );
+    if (!glWindowPos3s) return false;
+    glWindowPos3sv =
+        (PFNGLWINDOWPOS3SVPROC)VOSGLGetProcAddress(
+        "glWindowPos3sv"
+    );
+    if (!glWindowPos3sv) return false;
+
+    glPointParameterf =
+        (PFNGLPOINTPARAMETERFPROC)VOSGLGetProcAddress(
+        "glPointParameterf"
+    );
+    if (!glPointParameterf) return false;
+    glPointParameterfv =
+        (PFNGLPOINTPARAMETERFVPROC)VOSGLGetProcAddress(
+        "glPointParameterfv"
+    );
+    if (!glPointParameterfv) return false;
+    glPointParameteri =
+        (PFNGLPOINTPARAMETERIPROC)VOSGLGetProcAddress(
+        "glPointParameteri"
+    );
+    if (!glPointParameteri) return false;
+    glPointParameteriv =
+        (PFNGLPOINTPARAMETERIVPROC)VOSGLGetProcAddress(
+        "glPointParameteriv"
+    );
+    if (!glPointParameteriv) return false;
+
+    glSecondaryColor3b =
+        (PFNGLSECONDARYCOLOR3BPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3b"
+    );
+    if (!glSecondaryColor3b) return false;
+    glSecondaryColor3bv =
+        (PFNGLSECONDARYCOLOR3BVPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3bv"
+    );
+    if (!glSecondaryColor3bv) return false;
+    glSecondaryColor3d =
+        (PFNGLSECONDARYCOLOR3DPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3d"
+    );
+    if (!glSecondaryColor3d) return false;
+    glSecondaryColor3dv =
+        (PFNGLSECONDARYCOLOR3DVPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3dv"
+    );
+    if (!glSecondaryColor3dv) return false;
+    glSecondaryColor3f =
+        (PFNGLSECONDARYCOLOR3FPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3f"
+    );
+    if (!glSecondaryColor3f) return false;
+    glSecondaryColor3fv =
+        (PFNGLSECONDARYCOLOR3FVPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3fv"
+    );
+    if (!glSecondaryColor3fv) return false;
+    glSecondaryColor3i =
+        (PFNGLSECONDARYCOLOR3IPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3i"
+    );
+    if (!glSecondaryColor3i) return false;
+    glSecondaryColor3iv =
+        (PFNGLSECONDARYCOLOR3IVPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3iv"
+    );
+    if (!glSecondaryColor3iv) return false;
+    glSecondaryColor3s =
+        (PFNGLSECONDARYCOLOR3SPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3s"
+    );
+    if (!glSecondaryColor3s) return false;
+    glSecondaryColor3sv =
+        (PFNGLSECONDARYCOLOR3SVPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3sv"
+    );
+    if (!glSecondaryColor3sv) return false;
+    glSecondaryColor3ub =
+        (PFNGLSECONDARYCOLOR3UBPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3ub"
+    );
+    if (!glSecondaryColor3ub) return false;
+    glSecondaryColor3ubv =
+        (PFNGLSECONDARYCOLOR3UBVPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3ubv"
+    );
+    if (!glSecondaryColor3ubv) return false;
+    glSecondaryColor3ui =
+        (PFNGLSECONDARYCOLOR3UIPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3ui"
+    );
+    if (!glSecondaryColor3ui) return false;
+    glSecondaryColor3uiv =
+        (PFNGLSECONDARYCOLOR3UIVPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3uiv"
+    );
+    if (!glSecondaryColor3uiv) return false;
+    glSecondaryColor3us =
+        (PFNGLSECONDARYCOLOR3USPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3us"
+    );
+    if (!glSecondaryColor3us) return false;
+    glSecondaryColor3usv =
+        (PFNGLSECONDARYCOLOR3USVPROC)VOSGLGetProcAddress(
+        "glSecondaryColor3usv"
+    );
+    if (!glSecondaryColor3usv) return false;
+    glSecondaryColorPointer =
+        (PFNGLSECONDARYCOLORPOINTERPROC)VOSGLGetProcAddress(
+        "glSecondaryColorPointer"
+    );
+    if (!glSecondaryColorPointer) return false;
+
+    glMultiDrawArrays =
+        (PFNGLMULTIDRAWARRAYSPROC)VOSGLGetProcAddress(
+        "glMultiDrawArrays"
+    );
+    if (!glMultiDrawArrays) return false;
+    glMultiDrawElements =
+        (PFNGLMULTIDRAWELEMENTSPROC)VOSGLGetProcAddress(
+        "glMultiDrawElements"
+    );
+    if (!glMultiDrawElements) return false;
+
+    glFogCoordPointer =
+        (PFNGLFOGCOORDPOINTERPROC)VOSGLGetProcAddress(
+        "glFogCoordPointer"
+    );
+    if (!glFogCoordPointer) return false;
+    glFogCoordd =
+        (PFNGLFOGCOORDDPROC)VOSGLGetProcAddress(
+        "glFogCoordd"
+    );
+    if (!glFogCoordd) return false;
+    glFogCoorddv =
+        (PFNGLFOGCOORDDVPROC)VOSGLGetProcAddress(
+        "glFogCoorddv"
+    );
+    if (!glFogCoorddv) return false;
+    glFogCoordf =
+        (PFNGLFOGCOORDFPROC)VOSGLGetProcAddress(
+        "glFogCoordf"
+    );
+    if (!glFogCoordf) return false;
+    glFogCoordfv =
+        (PFNGLFOGCOORDFVPROC)VOSGLGetProcAddress(
+        "glFogCoordfv"
+    );
+    if (!glFogCoordfv) return false;
+
+    // OpenGL 1.4 successfully loaded
     return true;
 }
