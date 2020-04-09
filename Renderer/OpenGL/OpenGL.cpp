@@ -152,6 +152,26 @@ PFNGLFOGCOORDDVPROC glFogCoorddv = 0;
 PFNGLFOGCOORDFPROC glFogCoordf = 0;
 PFNGLFOGCOORDFVPROC glFogCoordfv = 0;
 
+PFNGLBEGINQUERYPROC glBeginQuery = 0;
+PFNGLBINDBUFFERPROC glBindBuffer = 0;
+PFNGLBUFFERDATAPROC glBufferData = 0;
+PFNGLBUFFERSUBDATAPROC glBufferSubData = 0;
+PFNGLDELETEBUFFERSPROC glDeleteBuffers = 0;
+PFNGLDELETEQUERIESPROC glDeleteQueries = 0;
+PFNGLENDQUERYPROC glEndQuery = 0;
+PFNGLGENBUFFERSPROC glGenBuffers = 0;
+PFNGLGENQUERIESPROC glGenQueries = 0;
+PFNGLGETBUFFERPARAMETERIVPROC glGetBufferParameteriv = 0;
+PFNGLGETBUFFERPOINTERVPROC glGetBufferPointerv = 0;
+PFNGLGETBUFFERSUBDATAPROC glGetBufferSubData = 0;
+PFNGLGETQUERYOBJECTIVPROC glGetQueryObjectiv = 0;
+PFNGLGETQUERYOBJECTUIVPROC glGetQueryObjectuiv = 0;
+PFNGLGETQUERYIVPROC glGetQueryiv = 0;
+PFNGLISBUFFERPROC glIsBuffer = 0;
+PFNGLISQUERYPROC glIsQuery = 0;
+PFNGLMAPBUFFERPROC glMapBuffer = 0;
+PFNGLUNMAPBUFFERPROC glUnmapBuffer = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Init OpenGL                                                               //
@@ -199,6 +219,19 @@ bool InitOpenGL()
     else
     {
         // Could not init OpenGL 1.4
+        return false;
+    }
+
+    // Init OpenGL 1.5
+    if (InitOpenGL_1_5())
+    {
+        // OpenGL 1.5 ready
+        VOSOpenGLMajorVersion = 1;
+        VOSOpenGLMinorVersion = 5;
+    }
+    else
+    {
+        // Could not init OpenGL 1.5
         return false;
     }
 
@@ -730,5 +763,112 @@ bool InitOpenGL_1_4()
     if (!glFogCoordfv) return false;
 
     // OpenGL 1.4 successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL 1.5                                                           //
+//  return : True if OpenGL 1.5 is successfully loaded, false otherwise       //
+////////////////////////////////////////////////////////////////////////////////
+bool InitOpenGL_1_5()
+{
+    // Init OpenGL 1.5
+    glBeginQuery =
+        (PFNGLBEGINQUERYPROC)VOSGLGetProcAddress(
+        "glBeginQuery"
+    );
+    if (!glBeginQuery) return false;
+    glBindBuffer =
+        (PFNGLBINDBUFFERPROC)VOSGLGetProcAddress(
+        "glBindBuffer"
+    );
+    if (!glBindBuffer) return false;
+    glBufferData =
+        (PFNGLBUFFERDATAPROC)VOSGLGetProcAddress(
+        "glBufferData"
+    );
+    if (!glBufferData) return false;
+    glBufferSubData =
+        (PFNGLBUFFERSUBDATAPROC)VOSGLGetProcAddress(
+        "glBufferSubData"
+    );
+    if (!glBufferSubData) return false;
+    glDeleteBuffers =
+        (PFNGLDELETEBUFFERSPROC)VOSGLGetProcAddress(
+        "glDeleteBuffers"
+    );
+    if (!glDeleteBuffers) return false;
+    glDeleteQueries =
+        (PFNGLDELETEQUERIESPROC)VOSGLGetProcAddress(
+        "glDeleteQueries"
+    );
+    if (!glDeleteQueries) return false;
+    glEndQuery =
+        (PFNGLENDQUERYPROC)VOSGLGetProcAddress(
+        "glEndQuery"
+    );
+    if (!glEndQuery) return false;
+    glGenBuffers =
+        (PFNGLGENBUFFERSPROC)VOSGLGetProcAddress(
+        "glGenBuffers"
+    );
+    if (!glGenBuffers) return false;
+    glGenQueries =
+        (PFNGLGENQUERIESPROC)VOSGLGetProcAddress(
+        "glGenQueries"
+    );
+    if (!glGenQueries) return false;
+    glGetBufferParameteriv =
+        (PFNGLGETBUFFERPARAMETERIVPROC)VOSGLGetProcAddress(
+        "glGetBufferParameteriv"
+    );
+    if (!glGetBufferParameteriv) return false;
+    glGetBufferPointerv =
+        (PFNGLGETBUFFERPOINTERVPROC)VOSGLGetProcAddress(
+        "glGetBufferPointerv"
+    );
+    if (!glGetBufferPointerv) return false;
+    glGetBufferSubData =
+        (PFNGLGETBUFFERSUBDATAPROC)VOSGLGetProcAddress(
+        "glGetBufferSubData"
+    );
+    if (!glGetBufferSubData) return false;
+    glGetQueryObjectiv =
+        (PFNGLGETQUERYOBJECTIVPROC)VOSGLGetProcAddress(
+        "glGetQueryObjectiv"
+    );
+    if (!glGetQueryObjectiv) return false;
+    glGetQueryObjectuiv =
+        (PFNGLGETQUERYOBJECTUIVPROC)VOSGLGetProcAddress(
+        "glGetQueryObjectuiv"
+    );
+    if (!glGetQueryObjectuiv) return false;
+    glGetQueryiv =
+        (PFNGLGETQUERYIVPROC)VOSGLGetProcAddress(
+        "glGetQueryiv"
+    );
+    if (!glGetQueryiv) return false;
+    glIsBuffer =
+        (PFNGLISBUFFERPROC)VOSGLGetProcAddress(
+        "glIsBuffer"
+    );
+    if (!glIsBuffer) return false;
+    glIsQuery =
+        (PFNGLISQUERYPROC)VOSGLGetProcAddress(
+        "glIsQuery"
+    );
+    if (!glIsQuery) return false;
+    glMapBuffer =
+        (PFNGLMAPBUFFERPROC)VOSGLGetProcAddress(
+        "glMapBuffer"
+    );
+    if (!glMapBuffer) return false;
+    glUnmapBuffer =
+        (PFNGLUNMAPBUFFERPROC)VOSGLGetProcAddress(
+        "glUnmapBuffer"
+    );
+    if (!glUnmapBuffer) return false;
+
+    // OpenGL 1.5 successfully loaded
     return true;
 }
