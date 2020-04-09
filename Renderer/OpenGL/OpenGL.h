@@ -836,6 +836,8 @@
     typedef         double                                      GLdouble;
     typedef         float                                       GLclampf;
     typedef         double                                      GLclampd;
+    typedef         ptrdiff_t                                   GLintptr;
+    typedef         ptrdiff_t                                   GLsizeiptr;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -2606,6 +2608,61 @@
     VOSGLApi VOSGLEntry void glStencilOp(
         GLenum fail, GLenum zfail, GLenum zpass
     );
+
+    typedef void (*PFNGLBEGINQUERYPROC)(GLenum target, GLuint id);
+    VOSGLEntry PFNGLBEGINQUERYPROC glBeginQuery;
+    typedef void (*PFNGLBINDBUFFERPROC)(GLenum target, GLuint buffer);
+    VOSGLEntry PFNGLBINDBUFFERPROC glBindBuffer;
+    typedef void (*PFNGLBUFFERDATAPROC)(
+        GLenum target, GLsizeiptr size, const void* data, GLenum usage
+    );
+    VOSGLEntry PFNGLBUFFERDATAPROC glBufferData;
+    typedef void (*PFNGLBUFFERSUBDATAPROC)(
+        GLenum target, GLintptr offset, GLsizeiptr size, const void* data
+    );
+    VOSGLEntry PFNGLBUFFERSUBDATAPROC glBufferSubData;
+    typedef void (*PFNGLDELETEBUFFERSPROC)(GLsizei n, const GLuint* buffers);
+    VOSGLEntry PFNGLDELETEBUFFERSPROC glDeleteBuffers;
+    typedef void (*PFNGLDELETEQUERIESPROC)(GLsizei n, const GLuint* ids);
+    VOSGLEntry PFNGLDELETEQUERIESPROC glDeleteQueries;
+    typedef void (*PFNGLENDQUERYPROC)(GLenum target);
+    VOSGLEntry PFNGLENDQUERYPROC glEndQuery;
+    typedef void (*PFNGLGENBUFFERSPROC)(GLsizei n, GLuint* buffers);
+    VOSGLEntry PFNGLGENBUFFERSPROC glGenBuffers;
+    typedef void (*PFNGLGENQUERIESPROC)(GLsizei n, GLuint* ids);
+    VOSGLEntry PFNGLGENQUERIESPROC glGenQueries;
+    typedef void (*PFNGLGETBUFFERPARAMETERIVPROC)(
+        GLenum target, GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETBUFFERPARAMETERIVPROC glGetBufferParameteriv;
+    typedef void (*PFNGLGETBUFFERPOINTERVPROC)(
+        GLenum target, GLenum pname, void** params
+    );
+    VOSGLEntry PFNGLGETBUFFERPOINTERVPROC glGetBufferPointerv;
+    typedef void (*PFNGLGETBUFFERSUBDATAPROC)(
+        GLenum target, GLintptr offset, GLsizeiptr size, void* data
+    );
+    VOSGLEntry PFNGLGETBUFFERSUBDATAPROC glGetBufferSubData;
+    typedef void (*PFNGLGETQUERYOBJECTIVPROC)(
+        GLuint id, GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETQUERYOBJECTIVPROC glGetQueryObjectiv;
+    typedef void (*PFNGLGETQUERYOBJECTUIVPROC)(
+        GLuint id, GLenum pname, GLuint* params
+    );
+    VOSGLEntry PFNGLGETQUERYOBJECTUIVPROC glGetQueryObjectuiv;
+    typedef void (*PFNGLGETQUERYIVPROC)(
+        GLenum target, GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETQUERYIVPROC glGetQueryiv;
+    typedef GLboolean (*PFNGLISBUFFERPROC)(GLuint buffer);
+    VOSGLEntry PFNGLISBUFFERPROC glIsBuffer;
+    typedef GLboolean (*PFNGLISQUERYPROC)(GLuint id);
+    VOSGLEntry PFNGLISQUERYPROC glIsQuery;
+    typedef void* (*PFNGLMAPBUFFERPROC)(GLenum target, GLenum access);
+    VOSGLEntry PFNGLMAPBUFFERPROC glMapBuffer;
+    typedef GLboolean (*PFNGLUNMAPBUFFERPROC)(GLenum target);
+    VOSGLEntry PFNGLUNMAPBUFFERPROC glUnmapBuffer;
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL copy functions                                                 //
