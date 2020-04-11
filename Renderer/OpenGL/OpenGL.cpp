@@ -172,6 +172,100 @@ PFNGLISQUERYPROC glIsQuery = 0;
 PFNGLMAPBUFFERPROC glMapBuffer = 0;
 PFNGLUNMAPBUFFERPROC glUnmapBuffer = 0;
 
+PFNGLBLENDEQUATIONSEPARATEPROC glBlendEquationSeparate = 0;
+PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray = 0;
+PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray = 0;
+PFNGLDRAWBUFFERSPROC glDrawBuffers = 0;
+PFNGLVERTEXATTRIB1DPROC glVertexAttrib1d = 0;
+PFNGLVERTEXATTRIB1DVPROC glVertexAttrib1dv = 0;
+PFNGLVERTEXATTRIB1FPROC glVertexAttrib1f = 0;
+PFNGLVERTEXATTRIB1FVPROC glVertexAttrib1fv = 0;
+PFNGLVERTEXATTRIB1SPROC glVertexAttrib1s = 0;
+PFNGLVERTEXATTRIB1SVPROC glVertexAttrib1sv = 0;
+PFNGLVERTEXATTRIB2DPROC glVertexAttrib2d = 0;
+PFNGLVERTEXATTRIB2DVPROC glVertexAttrib2dv = 0;
+PFNGLVERTEXATTRIB2FPROC glVertexAttrib2f = 0;
+PFNGLVERTEXATTRIB2FVPROC glVertexAttrib2fv = 0;
+PFNGLVERTEXATTRIB2SPROC glVertexAttrib2s = 0;
+PFNGLVERTEXATTRIB2SVPROC glVertexAttrib2sv = 0;
+PFNGLVERTEXATTRIB3DPROC glVertexAttrib3d = 0;
+PFNGLVERTEXATTRIB3DVPROC glVertexAttrib3dv = 0;
+PFNGLVERTEXATTRIB3FPROC glVertexAttrib3f = 0;
+PFNGLVERTEXATTRIB3FVPROC glVertexAttrib3fv = 0;
+PFNGLVERTEXATTRIB3SPROC glVertexAttrib3s = 0;
+PFNGLVERTEXATTRIB3SVPROC glVertexAttrib3sv = 0;
+PFNGLVERTEXATTRIB4NBVPROC glVertexAttrib4Nbv = 0;
+PFNGLVERTEXATTRIB4NIVPROC glVertexAttrib4Niv = 0;
+PFNGLVERTEXATTRIB4NSVPROC glVertexAttrib4Nsv = 0;
+PFNGLVERTEXATTRIB4NUBPROC glVertexAttrib4Nub = 0;
+PFNGLVERTEXATTRIB4NUBVPROC glVertexAttrib4Nubv = 0;
+PFNGLVERTEXATTRIB4NUIVPROC glVertexAttrib4Nuiv = 0;
+PFNGLVERTEXATTRIB4NUSVPROC glVertexAttrib4Nusv = 0;
+PFNGLVERTEXATTRIB4BVPROC glVertexAttrib4bv = 0;
+PFNGLVERTEXATTRIB4DPROC glVertexAttrib4d = 0;
+PFNGLVERTEXATTRIB4DVPROC glVertexAttrib4dv = 0;
+PFNGLVERTEXATTRIB4FPROC glVertexAttrib4f = 0;
+PFNGLVERTEXATTRIB4FVPROC glVertexAttrib4fv = 0;
+PFNGLVERTEXATTRIB4IVPROC glVertexAttrib4iv = 0;
+PFNGLVERTEXATTRIB4SPROC glVertexAttrib4s = 0;
+PFNGLVERTEXATTRIB4SVPROC glVertexAttrib4sv = 0;
+PFNGLVERTEXATTRIB4UBVPROC glVertexAttrib4ubv = 0;
+PFNGLVERTEXATTRIB4UIVPROC glVertexAttrib4uiv = 0;
+PFNGLVERTEXATTRIB4USVPROC glVertexAttrib4usv = 0;
+PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer = 0;
+PFNGLGETVERTEXATTRIBPOINTERVPROC glGetVertexAttribPointerv = 0;
+PFNGLGETVERTEXATTRIBDVPROC glGetVertexAttribdv = 0;
+PFNGLGETVERTEXATTRIBFVPROC glGetVertexAttribfv = 0;
+PFNGLGETVERTEXATTRIBIVPROC glGetVertexAttribiv = 0;
+PFNGLSTENCILFUNCSEPARATEPROC glStencilFuncSeparate = 0;
+PFNGLSTENCILMASKSEPARATEPROC glStencilMaskSeparate = 0;
+PFNGLSTENCILOPSEPARATEPROC glStencilOpSeparate = 0;
+PFNGLATTACHSHADERPROC glAttachShader = 0;
+PFNGLCOMPILESHADERPROC glCompileShader = 0;
+PFNGLCREATEPROGRAMPROC glCreateProgram = 0;
+PFNGLCREATESHADERPROC glCreateShader = 0;
+PFNGLDELETEPROGRAMPROC glDeleteProgram = 0;
+PFNGLDELETESHADERPROC glDeleteShader = 0;
+PFNGLDETACHSHADERPROC glDetachShader = 0;
+PFNGLBINDATTRIBLOCATIONPROC glBindAttribLocation = 0;
+PFNGLGETACTIVEATTRIBPROC glGetActiveAttrib = 0;
+PFNGLGETACTIVEUNIFORMPROC glGetActiveUniform = 0;
+PFNGLGETATTACHEDSHADERSPROC glGetAttachedShaders = 0;
+PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation = 0;
+PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog = 0;
+PFNGLGETPROGRAMIVPROC glGetProgramiv = 0;
+PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog = 0;
+PFNGLGETSHADERSOURCEPROC glGetShaderSource = 0;
+PFNGLGETSHADERIVPROC glGetShaderiv = 0;
+PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation = 0;
+PFNGLGETUNIFORMFVPROC glGetUniformfv = 0;
+PFNGLGETUNIFORMIVPROC glGetUniformiv = 0;
+PFNGLISPROGRAMPROC glIsProgram = 0;
+PFNGLISSHADERPROC glIsShader = 0;
+PFNGLLINKPROGRAMPROC glLinkProgram = 0;
+PFNGLSHADERSOURCEPROC glShaderSource = 0;
+PFNGLUSEPROGRAMPROC glUseProgram = 0;
+PFNGLVALIDATEPROGRAMPROC glValidateProgram = 0;
+PFNGLUNIFORM1FPROC glUniform1f = 0;
+PFNGLUNIFORM1FVPROC glUniform1fv = 0;
+PFNGLUNIFORM1IPROC glUniform1i = 0;
+PFNGLUNIFORM1IVPROC glUniform1iv = 0;
+PFNGLUNIFORM2FPROC glUniform2f = 0;
+PFNGLUNIFORM2FVPROC glUniform2fv = 0;
+PFNGLUNIFORM2IPROC glUniform2i = 0;
+PFNGLUNIFORM2IVPROC glUniform2iv = 0;
+PFNGLUNIFORM3FPROC glUniform3f = 0;
+PFNGLUNIFORM3FVPROC glUniform3fv = 0;
+PFNGLUNIFORM3IPROC glUniform3i = 0;
+PFNGLUNIFORM3IVPROC glUniform3iv = 0;
+PFNGLUNIFORM4FPROC glUniform4f = 0;
+PFNGLUNIFORM4FVPROC glUniform4fv = 0;
+PFNGLUNIFORM4IPROC glUniform4i = 0;
+PFNGLUNIFORM4IVPROC glUniform4iv = 0;
+PFNGLUNIFORMMATRIX2FVPROC glUniformMatrix2fv = 0;
+PFNGLUNIFORMMATRIX3FVPROC glUniformMatrix3fv = 0;
+PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Init OpenGL                                                               //
@@ -232,6 +326,19 @@ bool InitOpenGL()
     else
     {
         // Could not init OpenGL 1.5
+        return false;
+    }
+
+    // Init OpenGL 2.0
+    if (InitOpenGL_2_0())
+    {
+        // OpenGL 2.0 ready
+        VOSOpenGLMajorVersion = 2;
+        VOSOpenGLMinorVersion = 0;
+    }
+    else
+    {
+        // Could not init OpenGL 2.0
         return false;
     }
 
@@ -870,5 +977,485 @@ bool InitOpenGL_1_5()
     if (!glUnmapBuffer) return false;
 
     // OpenGL 1.5 successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL 2.0                                                           //
+//  return : True if OpenGL 2.0 is successfully loaded, false otherwise       //
+////////////////////////////////////////////////////////////////////////////////
+bool InitOpenGL_2_0()
+{
+    // Init OpenGL 2.0
+    glBlendEquationSeparate =
+        (PFNGLBLENDEQUATIONSEPARATEPROC)VOSGLGetProcAddress(
+        "glBlendEquationSeparate"
+    );
+    if (!glBlendEquationSeparate) return false;
+
+    glEnableVertexAttribArray =
+        (PFNGLENABLEVERTEXATTRIBARRAYPROC)VOSGLGetProcAddress(
+        "glEnableVertexAttribArray"
+    );
+    if (!glEnableVertexAttribArray) return false;
+    glDisableVertexAttribArray =
+        (PFNGLDISABLEVERTEXATTRIBARRAYPROC)VOSGLGetProcAddress(
+        "glDisableVertexAttribArray"
+    );
+    if (!glDisableVertexAttribArray) return false;
+    glDrawBuffers =
+        (PFNGLDRAWBUFFERSPROC)VOSGLGetProcAddress(
+        "glDrawBuffers"
+    );
+    if (!glDrawBuffers) return false;
+    glVertexAttrib1d =
+        (PFNGLVERTEXATTRIB1DPROC)VOSGLGetProcAddress(
+        "glVertexAttrib1d"
+    );
+    if (!glVertexAttrib1d) return false;
+    glVertexAttrib1dv =
+        (PFNGLVERTEXATTRIB1DVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib1dv"
+    );
+    if (!glVertexAttrib1dv) return false;
+    glVertexAttrib1f =
+        (PFNGLVERTEXATTRIB1FPROC)VOSGLGetProcAddress(
+        "glVertexAttrib1f"
+    );
+    if (!glVertexAttrib1f) return false;
+    glVertexAttrib1fv =
+        (PFNGLVERTEXATTRIB1FVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib1fv"
+    );
+    if (!glVertexAttrib1fv) return false;
+    glVertexAttrib1s =
+        (PFNGLVERTEXATTRIB1SPROC)VOSGLGetProcAddress(
+        "glVertexAttrib1s"
+    );
+    if (!glVertexAttrib1s) return false;
+    glVertexAttrib1sv =
+        (PFNGLVERTEXATTRIB1SVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib1sv"
+    );
+    if (!glVertexAttrib1sv) return false;
+    glVertexAttrib2d =
+        (PFNGLVERTEXATTRIB2DPROC)VOSGLGetProcAddress(
+        "glVertexAttrib2d"
+    );
+    if (!glVertexAttrib2d) return false;
+    glVertexAttrib2dv =
+        (PFNGLVERTEXATTRIB2DVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib2dv"
+    );
+    if (!glVertexAttrib2dv) return false;
+    glVertexAttrib2f =
+        (PFNGLVERTEXATTRIB2FPROC)VOSGLGetProcAddress(
+        "glVertexAttrib2f"
+    );
+    if (!glVertexAttrib2f) return false;
+    glVertexAttrib2fv =
+        (PFNGLVERTEXATTRIB2FVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib2fv"
+    );
+    if (!glVertexAttrib2fv) return false;
+    glVertexAttrib2s =
+        (PFNGLVERTEXATTRIB2SPROC)VOSGLGetProcAddress(
+        "glVertexAttrib2s"
+    );
+    if (!glVertexAttrib2s) return false;
+    glVertexAttrib2sv =
+        (PFNGLVERTEXATTRIB2SVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib2sv"
+    );
+    if (!glVertexAttrib2sv) return false;
+    glVertexAttrib3d =
+        (PFNGLVERTEXATTRIB3DPROC)VOSGLGetProcAddress(
+        "glVertexAttrib3d"
+    );
+    if (!glVertexAttrib3d) return false;
+    glVertexAttrib3dv =
+        (PFNGLVERTEXATTRIB3DVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib3dv"
+    );
+    if (!glVertexAttrib3dv) return false;
+    glVertexAttrib3f =
+        (PFNGLVERTEXATTRIB3FPROC)VOSGLGetProcAddress(
+        "glVertexAttrib3f"
+    );
+    if (!glVertexAttrib3f) return false;
+    glVertexAttrib3fv =
+        (PFNGLVERTEXATTRIB3FVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib3fv"
+    );
+    if (!glVertexAttrib3fv) return false;
+    glVertexAttrib3s =
+        (PFNGLVERTEXATTRIB3SPROC)VOSGLGetProcAddress(
+        "glVertexAttrib3s"
+    );
+    if (!glVertexAttrib3s) return false;
+    glVertexAttrib3sv =
+        (PFNGLVERTEXATTRIB3SVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib3sv"
+    );
+    if (!glVertexAttrib3sv) return false;
+    glVertexAttrib4Nbv =
+        (PFNGLVERTEXATTRIB4NBVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4Nbv"
+    );
+    if (!glVertexAttrib4Nbv) return false;
+    glVertexAttrib4Niv =
+        (PFNGLVERTEXATTRIB4NIVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4Niv"
+    );
+    if (!glVertexAttrib4Niv) return false;
+    glVertexAttrib4Nsv =
+        (PFNGLVERTEXATTRIB4NSVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4Nsv"
+    );
+    if (!glVertexAttrib4Nsv) return false;
+    glVertexAttrib4Nub =
+        (PFNGLVERTEXATTRIB4NUBPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4Nub"
+    );
+    if (!glVertexAttrib4Nub) return false;
+    glVertexAttrib4Nubv =
+        (PFNGLVERTEXATTRIB4NUBVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4Nubv"
+    );
+    if (!glVertexAttrib4Nubv) return false;
+    glVertexAttrib4Nuiv =
+        (PFNGLVERTEXATTRIB4NUIVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4Nuiv"
+    );
+    if (!glVertexAttrib4Nuiv) return false;
+    glVertexAttrib4Nusv =
+        (PFNGLVERTEXATTRIB4NUSVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4Nusv"
+    );
+    if (!glVertexAttrib4Nusv) return false;
+    glVertexAttrib4bv =
+        (PFNGLVERTEXATTRIB4BVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4bv"
+    );
+    if (!glVertexAttrib4bv) return false;
+    glVertexAttrib4d =
+        (PFNGLVERTEXATTRIB4DPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4d"
+    );
+    if (!glVertexAttrib4d) return false;
+    glVertexAttrib4dv =
+        (PFNGLVERTEXATTRIB4DVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4dv"
+    );
+    if (!glVertexAttrib4dv) return false;
+    glVertexAttrib4f =
+        (PFNGLVERTEXATTRIB4FPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4f"
+    );
+    if (!glVertexAttrib4f) return false;
+    glVertexAttrib4fv =
+        (PFNGLVERTEXATTRIB4FVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4fv"
+    );
+    if (!glVertexAttrib4fv) return false;
+    glVertexAttrib4iv =
+        (PFNGLVERTEXATTRIB4IVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4iv"
+    );
+    if (!glVertexAttrib4iv) return false;
+    glVertexAttrib4s =
+        (PFNGLVERTEXATTRIB4SPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4s"
+    );
+    if (!glVertexAttrib4s) return false;
+    glVertexAttrib4sv =
+        (PFNGLVERTEXATTRIB4SVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4sv"
+    );
+    if (!glVertexAttrib4sv) return false;
+    glVertexAttrib4ubv =
+        (PFNGLVERTEXATTRIB4UBVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4ubv"
+    );
+    if (!glVertexAttrib4ubv) return false;
+    glVertexAttrib4uiv =
+        (PFNGLVERTEXATTRIB4UIVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4uiv"
+    );
+    if (!glVertexAttrib4uiv) return false;
+    glVertexAttrib4usv =
+        (PFNGLVERTEXATTRIB4USVPROC)VOSGLGetProcAddress(
+        "glVertexAttrib4usv"
+    );
+    if (!glVertexAttrib4usv) return false;
+    glVertexAttribPointer =
+        (PFNGLVERTEXATTRIBPOINTERPROC)VOSGLGetProcAddress(
+        "glVertexAttribPointer"
+    );
+    if (!glVertexAttribPointer) return false;
+    glGetVertexAttribPointerv =
+        (PFNGLGETVERTEXATTRIBPOINTERVPROC)VOSGLGetProcAddress(
+        "glGetVertexAttribPointerv"
+    );
+    if (!glGetVertexAttribPointerv) return false;
+    glGetVertexAttribdv =
+        (PFNGLGETVERTEXATTRIBDVPROC)VOSGLGetProcAddress(
+        "glGetVertexAttribdv"
+    );
+    if (!glGetVertexAttribdv) return false;
+    glGetVertexAttribfv =
+        (PFNGLGETVERTEXATTRIBFVPROC)VOSGLGetProcAddress(
+        "glGetVertexAttribfv"
+    );
+    if (!glGetVertexAttribfv) return false;
+    glGetVertexAttribiv =
+        (PFNGLGETVERTEXATTRIBIVPROC)VOSGLGetProcAddress(
+        "glGetVertexAttribiv"
+    );
+    if (!glGetVertexAttribiv) return false;
+
+    glStencilFuncSeparate =
+        (PFNGLSTENCILFUNCSEPARATEPROC)VOSGLGetProcAddress(
+        "glStencilFuncSeparate"
+    );
+    if (!glStencilFuncSeparate) return false;
+    glStencilMaskSeparate =
+        (PFNGLSTENCILMASKSEPARATEPROC)VOSGLGetProcAddress(
+        "glStencilMaskSeparate"
+    );
+    if (!glStencilMaskSeparate) return false;
+    glStencilOpSeparate =
+        (PFNGLSTENCILOPSEPARATEPROC)VOSGLGetProcAddress(
+        "glStencilOpSeparate"
+    );
+    if (!glStencilOpSeparate) return false;
+
+    glAttachShader =
+        (PFNGLATTACHSHADERPROC)VOSGLGetProcAddress(
+        "glAttachShader"
+    );
+    if (!glAttachShader) return false;
+    glCompileShader =
+        (PFNGLCOMPILESHADERPROC)VOSGLGetProcAddress(
+        "glCompileShader"
+    );
+    if (!glCompileShader) return false;
+    glCreateProgram =
+        (PFNGLCREATEPROGRAMPROC)VOSGLGetProcAddress(
+        "glCreateProgram"
+    );
+    if (!glCreateProgram) return false;
+    glCreateShader =
+        (PFNGLCREATESHADERPROC)VOSGLGetProcAddress(
+        "glCreateShader"
+    );
+    if (!glCreateShader) return false;
+    glDeleteProgram =
+        (PFNGLDELETEPROGRAMPROC)VOSGLGetProcAddress(
+        "glDeleteProgram"
+    );
+    if (!glDeleteProgram) return false;
+    glDeleteShader =
+        (PFNGLDELETESHADERPROC)VOSGLGetProcAddress(
+        "glDeleteShader"
+    );
+    if (!glDeleteShader) return false;
+    glDetachShader =
+        (PFNGLDETACHSHADERPROC)VOSGLGetProcAddress(
+        "glDetachShader"
+    );
+    if (!glDetachShader) return false;
+    glBindAttribLocation =
+        (PFNGLBINDATTRIBLOCATIONPROC)VOSGLGetProcAddress(
+        "glBindAttribLocation"
+    );
+    if (!glBindAttribLocation) return false;
+    glGetActiveAttrib =
+        (PFNGLGETACTIVEATTRIBPROC)VOSGLGetProcAddress(
+        "glGetActiveAttrib"
+    );
+    if (!glGetActiveAttrib) return false;
+    glGetActiveUniform =
+        (PFNGLGETACTIVEUNIFORMPROC)VOSGLGetProcAddress(
+        "glGetActiveUniform"
+    );
+    if (!glGetActiveUniform) return false;
+    glGetAttachedShaders =
+        (PFNGLGETATTACHEDSHADERSPROC)VOSGLGetProcAddress(
+        "glGetAttachedShaders"
+    );
+    if (!glGetAttachedShaders) return false;
+    glGetAttribLocation =
+        (PFNGLGETATTRIBLOCATIONPROC)VOSGLGetProcAddress(
+        "glGetAttribLocation"
+    );
+    if (!glGetAttachedShaders) return false;
+    glGetProgramInfoLog =
+        (PFNGLGETPROGRAMINFOLOGPROC)VOSGLGetProcAddress(
+        "glGetProgramInfoLog"
+    );
+    if (!glGetProgramInfoLog) return false;
+    glGetProgramiv =
+        (PFNGLGETPROGRAMIVPROC)VOSGLGetProcAddress(
+        "glGetProgramiv"
+    );
+    if (!glGetProgramiv) return false;
+    glGetShaderInfoLog =
+        (PFNGLGETSHADERINFOLOGPROC)VOSGLGetProcAddress(
+        "glGetShaderInfoLog"
+    );
+    if (!glGetShaderInfoLog) return false;
+    glGetShaderSource =
+        (PFNGLGETSHADERSOURCEPROC)VOSGLGetProcAddress(
+        "glGetShaderSource"
+    );
+    if (!glGetShaderSource) return false;
+    glGetShaderiv =
+        (PFNGLGETSHADERIVPROC)VOSGLGetProcAddress(
+        "glGetShaderiv"
+    );
+    if (!glGetShaderiv) return false;
+    glGetUniformLocation =
+        (PFNGLGETUNIFORMLOCATIONPROC)VOSGLGetProcAddress(
+        "glGetUniformLocation"
+    );
+    if (!glGetUniformLocation) return false;
+    glGetUniformfv =
+        (PFNGLGETUNIFORMFVPROC)VOSGLGetProcAddress(
+        "glGetUniformfv"
+    );
+    if (!glGetUniformfv) return false;
+    glGetUniformiv =
+        (PFNGLGETUNIFORMIVPROC)VOSGLGetProcAddress(
+        "glGetUniformiv"
+    );
+    if (!glGetUniformiv) return false;
+    glIsProgram =
+        (PFNGLISPROGRAMPROC)VOSGLGetProcAddress(
+        "glIsProgram"
+    );
+    if (!glIsProgram) return false;
+    glIsShader =
+        (PFNGLISSHADERPROC)VOSGLGetProcAddress(
+        "glIsShader"
+    );
+    if (!glIsShader) return false;
+    glLinkProgram =
+        (PFNGLLINKPROGRAMPROC)VOSGLGetProcAddress(
+        "glLinkProgram"
+    );
+    if (!glLinkProgram) return false;
+    glShaderSource =
+        (PFNGLSHADERSOURCEPROC)VOSGLGetProcAddress(
+        "glShaderSource"
+    );
+    if (!glShaderSource) return false;
+    glUseProgram =
+        (PFNGLUSEPROGRAMPROC)VOSGLGetProcAddress(
+        "glUseProgram"
+    );
+    if (!glUseProgram) return false;
+    glValidateProgram =
+        (PFNGLVALIDATEPROGRAMPROC)VOSGLGetProcAddress(
+        "glValidateProgram"
+    );
+    if (!glValidateProgram) return false;
+    glUniform1f =
+        (PFNGLUNIFORM1FPROC)VOSGLGetProcAddress(
+        "glUniform1f"
+    );
+    if (!glUniform1f) return false;
+    glUniform1fv =
+        (PFNGLUNIFORM1FVPROC)VOSGLGetProcAddress(
+        "glUniform1fv"
+    );
+    if (!glUniform1fv) return false;
+    glUniform1i =
+        (PFNGLUNIFORM1IPROC)VOSGLGetProcAddress(
+        "glUniform1i"
+    );
+    if (!glUniform1i) return false;
+    glUniform1iv =
+        (PFNGLUNIFORM1IVPROC)VOSGLGetProcAddress(
+        "glUniform1iv"
+    );
+    if (!glUniform1iv) return false;
+    glUniform2f =
+        (PFNGLUNIFORM2FPROC)VOSGLGetProcAddress(
+        "glUniform2f"
+    );
+    if (!glUniform2f) return false;
+    glUniform2fv =
+        (PFNGLUNIFORM2FVPROC)VOSGLGetProcAddress(
+        "glUniform2fv"
+    );
+    if (!glUniform2fv) return false;
+    glUniform2i =
+        (PFNGLUNIFORM2IPROC)VOSGLGetProcAddress(
+        "glUniform2i"
+    );
+    if (!glUniform2i) return false;
+    glUniform2iv =
+        (PFNGLUNIFORM2IVPROC)VOSGLGetProcAddress(
+        "glUniform2iv"
+    );
+    if (!glUniform2iv) return false;
+    glUniform3f =
+        (PFNGLUNIFORM3FPROC)VOSGLGetProcAddress(
+        "glUniform3f"
+    );
+    if (!glUniform3f) return false;
+    glUniform3fv =
+        (PFNGLUNIFORM3FVPROC)VOSGLGetProcAddress(
+        "glUniform3fv"
+    );
+    if (!glUniform3fv) return false;
+    glUniform3i =
+        (PFNGLUNIFORM3IPROC)VOSGLGetProcAddress(
+        "glUniform3i"
+    );
+    if (!glUniform3i) return false;
+    glUniform3iv =
+        (PFNGLUNIFORM3IVPROC)VOSGLGetProcAddress(
+        "glUniform3iv"
+    );
+    if (!glUniform3iv) return false;
+    glUniform4f =
+        (PFNGLUNIFORM4FPROC)VOSGLGetProcAddress(
+        "glUniform4f"
+    );
+    if (!glUniform4f) return false;
+    glUniform4fv =
+        (PFNGLUNIFORM4FVPROC)VOSGLGetProcAddress(
+        "glUniform4fv"
+    );
+    if (!glUniform4fv) return false;
+    glUniform4i =
+        (PFNGLUNIFORM4IPROC)VOSGLGetProcAddress(
+        "glUniform4i"
+    );
+    if (!glUniform4i) return false;
+    glUniform4iv =
+        (PFNGLUNIFORM4IVPROC)VOSGLGetProcAddress(
+        "glUniform4iv"
+    );
+    if (!glUniform4iv) return false;
+    glUniformMatrix2fv =
+        (PFNGLUNIFORMMATRIX2FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix2fv"
+    );
+    if (!glUniformMatrix2fv) return false;
+    glUniformMatrix3fv =
+        (PFNGLUNIFORMMATRIX3FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix3fv"
+    );
+    if (!glUniformMatrix3fv) return false;
+    glUniformMatrix4fv =
+        (PFNGLUNIFORMMATRIX4FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix4fv"
+    );
+    if (!glUniformMatrix4fv) return false;
+
+    // OpenGL 2.0 successfully loaded
     return true;
 }
