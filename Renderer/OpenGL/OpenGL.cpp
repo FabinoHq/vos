@@ -266,6 +266,13 @@ PFNGLUNIFORMMATRIX2FVPROC glUniformMatrix2fv = 0;
 PFNGLUNIFORMMATRIX3FVPROC glUniformMatrix3fv = 0;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv = 0;
 
+PFNGLUNIFORMMATRIX2X3FVPROC glUniformMatrix2x3fv = 0;
+PFNGLUNIFORMMATRIX2X4FVPROC glUniformMatrix2x4fv = 0;
+PFNGLUNIFORMMATRIX3X2FVPROC glUniformMatrix3x2fv = 0;
+PFNGLUNIFORMMATRIX3X4FVPROC glUniformMatrix3x4fv = 0;
+PFNGLUNIFORMMATRIX4X2FVPROC glUniformMatrix4x2fv = 0;
+PFNGLUNIFORMMATRIX4X3FVPROC glUniformMatrix4x3fv = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Init OpenGL                                                               //
@@ -339,6 +346,19 @@ bool InitOpenGL()
     else
     {
         // Could not init OpenGL 2.0
+        return false;
+    }
+
+    // Init OpenGL 2.1
+    if (InitOpenGL_2_1())
+    {
+        // OpenGL 2.1 ready
+        VOSOpenGLMajorVersion = 2;
+        VOSOpenGLMinorVersion = 1;
+    }
+    else
+    {
+        // Could not init OpenGL 2.1
         return false;
     }
 
@@ -1457,5 +1477,47 @@ bool InitOpenGL_2_0()
     if (!glUniformMatrix4fv) return false;
 
     // OpenGL 2.0 successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL 2.1                                                           //
+//  return : True if OpenGL 2.1 is successfully loaded, false otherwise       //
+////////////////////////////////////////////////////////////////////////////////
+bool InitOpenGL_2_1()
+{
+    // Init OpenGL 2.1
+    glUniformMatrix2x3fv =
+        (PFNGLUNIFORMMATRIX2X3FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix2x3fv"
+    );
+    if (!glUniformMatrix2x3fv) return false;
+    glUniformMatrix2x4fv =
+        (PFNGLUNIFORMMATRIX2X4FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix2x4fv"
+    );
+    if (!glUniformMatrix2x4fv) return false;
+    glUniformMatrix3x2fv =
+        (PFNGLUNIFORMMATRIX3X2FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix3x2fv"
+    );
+    if (!glUniformMatrix3x2fv) return false;
+    glUniformMatrix3x4fv =
+        (PFNGLUNIFORMMATRIX3X4FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix3x4fv"
+    );
+    if (!glUniformMatrix3x4fv) return false;
+    glUniformMatrix4x2fv =
+        (PFNGLUNIFORMMATRIX4X2FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix4x2fv"
+    );
+    if (!glUniformMatrix4x2fv) return false;
+    glUniformMatrix4x3fv =
+        (PFNGLUNIFORMMATRIX4X3FVPROC)VOSGLGetProcAddress(
+        "glUniformMatrix4x3fv"
+    );
+    if (!glUniformMatrix4x3fv) return false;
+
+    // OpenGL 2.1 successfully loaded
     return true;
 }
