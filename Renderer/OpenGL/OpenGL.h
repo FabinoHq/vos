@@ -2059,6 +2059,31 @@
     typedef void (*PFNGLMULTTRANSPOSEMATRIXFPROC)(const GLfloat m[16]);
     VOSGLEntry PFNGLMULTTRANSPOSEMATRIXFPROC glMultTransposeMatrixf;
 
+    typedef void (*PFNGLUNIFORMMATRIX2X3FVPROC)(
+        GLint location, GLsizei count, GLboolean transpose, const GLfloat* value
+    );
+    VOSGLEntry PFNGLUNIFORMMATRIX2X3FVPROC glUniformMatrix2x3fv;
+    typedef void (*PFNGLUNIFORMMATRIX2X4FVPROC)(
+        GLint location, GLsizei count, GLboolean transpose, const GLfloat* value
+    );
+    VOSGLEntry PFNGLUNIFORMMATRIX2X4FVPROC glUniformMatrix2x4fv;
+    typedef void (*PFNGLUNIFORMMATRIX3X2FVPROC)(
+        GLint location, GLsizei count, GLboolean transpose, const GLfloat* value
+    );
+    VOSGLEntry PFNGLUNIFORMMATRIX3X2FVPROC glUniformMatrix3x2fv;
+    typedef void (*PFNGLUNIFORMMATRIX3X4FVPROC)(
+        GLint location, GLsizei count, GLboolean transpose, const GLfloat* value
+    );
+    VOSGLEntry PFNGLUNIFORMMATRIX3X4FVPROC glUniformMatrix3x4fv;
+    typedef void (*PFNGLUNIFORMMATRIX4X2FVPROC)(
+        GLint location, GLsizei count, GLboolean transpose, const GLfloat* value
+    );
+    VOSGLEntry PFNGLUNIFORMMATRIX4X2FVPROC glUniformMatrix4x2fv;
+    typedef void (*PFNGLUNIFORMMATRIX4X3FVPROC)(
+        GLint location, GLsizei count, GLboolean transpose, const GLfloat* value
+    );
+    VOSGLEntry PFNGLUNIFORMMATRIX4X3FVPROC glUniformMatrix4x3fv;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL rasterizer functions                                           //
     ////////////////////////////////////////////////////////////////////////////
