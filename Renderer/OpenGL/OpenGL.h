@@ -1011,6 +1011,7 @@
     #undef  GL_T2F_N3F_V3F
     #undef  GL_T2F_C4F_N3F_V3F
     #undef  GL_T4F_C4F_N3F_V4F
+    #undef  GL_VERTEX_ARRAY_BINDING
     #undef  GL_COMPILE
     #undef  GL_COMPILE_AND_EXECUTE
     #undef  GL_FRAGMENT_SHADER
@@ -2212,6 +2213,7 @@
     #define GL_T2F_N3F_V3F                                          0x2A2B
     #define GL_T2F_C4F_N3F_V3F                                      0x2A2C
     #define GL_T4F_C4F_N3F_V4F                                      0x2A2D
+    #define GL_VERTEX_ARRAY_BINDING                                 0x85B5
 
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL programs constants                                             //
