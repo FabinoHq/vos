@@ -1100,6 +1100,12 @@
     #undef  GL_RENDERBUFFER_DEPTH_SIZE
     #undef  GL_RENDERBUFFER_STENCIL_SIZE
     #undef  GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE
+    #undef  GL_MAP_READ_BIT
+    #undef  GL_MAP_WRITE_BIT
+    #undef  GL_MAP_INVALIDATE_RANGE_BIT
+    #undef  GL_MAP_INVALIDATE_BUFFER_BIT
+    #undef  GL_MAP_FLUSH_EXPLICIT_BIT
+    #undef  GL_MAP_UNSYNCHRONIZED_BIT
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -2270,6 +2276,16 @@
     #define GL_RENDERBUFFER_DEPTH_SIZE                              0x8D54
     #define GL_RENDERBUFFER_STENCIL_SIZE                            0x8D55
     #define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE                   0x8D56
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL map buffer constants                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    #define GL_MAP_READ_BIT                                         0x0001
+    #define GL_MAP_WRITE_BIT                                        0x0002
+    #define GL_MAP_INVALIDATE_RANGE_BIT                             0x0004
+    #define GL_MAP_INVALIDATE_BUFFER_BIT                            0x0008
+    #define GL_MAP_FLUSH_EXPLICIT_BIT                               0x0010
+    #define GL_MAP_UNSYNCHRONIZED_BIT                               0x0020
 
 
     ////////////////////////////////////////////////////////////////////////////
