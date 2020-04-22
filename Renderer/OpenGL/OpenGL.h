@@ -3521,6 +3521,15 @@
     );
     VOSGLEntry PFNGLCLEARBUFFERUIVPROC glClearBufferuiv;
 
+    typedef void (*PFNGLFLUSHMAPPEDBUFFERRANGEPROC)(
+        GLenum target, GLintptr offset, GLsizeiptr length
+    );
+    VOSGLEntry PFNGLFLUSHMAPPEDBUFFERRANGEPROC glFlushMappedBufferRange;
+    typedef void* (*PFNGLMAPBUFFERRANGEPROC)(
+        GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access
+    );
+    VOSGLEntry PFNGLMAPBUFFERRANGEPROC glMapBufferRange;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL copy functions                                                 //
     ////////////////////////////////////////////////////////////////////////////
