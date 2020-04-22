@@ -273,6 +273,62 @@ PFNGLUNIFORMMATRIX3X4FVPROC glUniformMatrix3x4fv = 0;
 PFNGLUNIFORMMATRIX4X2FVPROC glUniformMatrix4x2fv = 0;
 PFNGLUNIFORMMATRIX4X3FVPROC glUniformMatrix4x3fv = 0;
 
+PFNGLDISABLEIPROC glDisablei = 0;
+PFNGLENABLEIPROC glEnablei = 0;
+PFNGLISENABLEDIPROC glIsEnabledi = 0;
+PFNGLGETBOOLEANI_VPROC glGetBooleani_v = 0;
+PFNGLGETSTRINGIPROC glGetStringi = 0;
+PFNGLCLAMPCOLORPROC glClampColor = 0;
+PFNGLCOLORMASKIPROC glColorMaski = 0;
+PFNGLTEXPARAMETERIIVPROC glTexParameterIiv = 0;
+PFNGLTEXPARAMETERIUIVPROC glTexParameterIuiv = 0;
+PFNGLGETTEXPARAMETERIIVPROC glGetTexParameterIiv = 0;
+PFNGLGETTEXPARAMETERIUIVPROC glGetTexParameterIuiv = 0;
+PFNGLCLEARBUFFERFIPROC glClearBufferfi = 0;
+PFNGLCLEARBUFFERFVPROC glClearBufferfv = 0;
+PFNGLCLEARBUFFERIVPROC glClearBufferiv = 0;
+PFNGLCLEARBUFFERUIVPROC glClearBufferuiv = 0;
+PFNGLBEGINCONDITIONALRENDERPROC glBeginConditionalRender = 0;
+PFNGLBEGINTRANSFORMFEEDBACKPROC glBeginTransformFeedback = 0;
+PFNGLBINDFRAGDATALOCATIONPROC glBindFragDataLocation = 0;
+PFNGLENDCONDITIONALRENDERPROC glEndConditionalRender = 0;
+PFNGLENDTRANSFORMFEEDBACKPROC glEndTransformFeedback = 0;
+PFNGLGETFRAGDATALOCATIONPROC glGetFragDataLocation = 0;
+PFNGLGETTRANSFORMFEEDBACKVARYINGPROC glGetTransformFeedbackVarying = 0;
+PFNGLGETUNIFORMUIVPROC glGetUniformuiv = 0;
+PFNGLGETVERTEXATTRIBIIVPROC glGetVertexAttribIiv = 0;
+PFNGLGETVERTEXATTRIBIUIVPROC glGetVertexAttribIuiv = 0;
+PFNGLTRANSFORMFEEDBACKVARYINGSPROC glTransformFeedbackVaryings = 0;
+PFNGLUNIFORM1UIPROC glUniform1ui = 0;
+PFNGLUNIFORM1UIVPROC glUniform1uiv = 0;
+PFNGLUNIFORM2UIPROC glUniform2ui = 0;
+PFNGLUNIFORM2UIVPROC glUniform2uiv = 0;
+PFNGLUNIFORM3UIPROC glUniform3ui = 0;
+PFNGLUNIFORM3UIVPROC glUniform3uiv = 0;
+PFNGLUNIFORM4UIPROC glUniform4ui = 0;
+PFNGLUNIFORM4UIVPROC glUniform4uiv = 0;
+PFNGLVERTEXATTRIBI1IPROC glVertexAttribI1i = 0;
+PFNGLVERTEXATTRIBI1IVPROC glVertexAttribI1iv = 0;
+PFNGLVERTEXATTRIBI1UIPROC glVertexAttribI1ui = 0;
+PFNGLVERTEXATTRIBI1UIVPROC glVertexAttribI1uiv = 0;
+PFNGLVERTEXATTRIBI2IPROC glVertexAttribI2i = 0;
+PFNGLVERTEXATTRIBI2IVPROC glVertexAttribI2iv = 0;
+PFNGLVERTEXATTRIBI2UIPROC glVertexAttribI2ui = 0;
+PFNGLVERTEXATTRIBI2UIVPROC glVertexAttribI2uiv = 0;
+PFNGLVERTEXATTRIBI3IPROC glVertexAttribI3i = 0;
+PFNGLVERTEXATTRIBI3IVPROC glVertexAttribI3iv = 0;
+PFNGLVERTEXATTRIBI3UIPROC glVertexAttribI3ui = 0;
+PFNGLVERTEXATTRIBI3UIVPROC glVertexAttribI3uiv = 0;
+PFNGLVERTEXATTRIBI4BVPROC glVertexAttribI4bv = 0;
+PFNGLVERTEXATTRIBI4IPROC glVertexAttribI4i = 0;
+PFNGLVERTEXATTRIBI4IVPROC glVertexAttribI4iv = 0;
+PFNGLVERTEXATTRIBI4SVPROC glVertexAttribI4sv = 0;
+PFNGLVERTEXATTRIBI4UBVPROC glVertexAttribI4ubv = 0;
+PFNGLVERTEXATTRIBI4UIPROC glVertexAttribI4ui = 0;
+PFNGLVERTEXATTRIBI4UIVPROC glVertexAttribI4uiv = 0;
+PFNGLVERTEXATTRIBI4USVPROC glVertexAttribI4usv = 0;
+PFNGLVERTEXATTRIBIPOINTERPROC glVertexAttribIPointer = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Init OpenGL                                                               //
@@ -359,6 +415,19 @@ bool InitOpenGL()
     else
     {
         // Could not init OpenGL 2.1
+        return false;
+    }
+
+    // Init OpenGL 3.0
+    if (InitOpenGL_3_0())
+    {
+        // OpenGL 3.0 ready
+        VOSOpenGLMajorVersion = 3;
+        VOSOpenGLMinorVersion = 0;
+    }
+    else
+    {
+        // Could not init OpenGL 3.0
         return false;
     }
 
@@ -1519,5 +1588,295 @@ bool InitOpenGL_2_1()
     if (!glUniformMatrix4x3fv) return false;
 
     // OpenGL 2.1 successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init OpenGL 3.0                                                           //
+//  return : True if OpenGL 3.0 is successfully loaded, false otherwise       //
+////////////////////////////////////////////////////////////////////////////////
+bool InitOpenGL_3_0()
+{
+    // Init OpenGL 3.0
+    glDisablei =
+        (PFNGLDISABLEIPROC)VOSGLGetProcAddress(
+        "glDisablei"
+    );
+    if (!glDisablei) return false;
+    glEnablei =
+        (PFNGLENABLEIPROC)VOSGLGetProcAddress(
+        "glEnablei"
+    );
+    if (!glEnablei) return false;
+    glIsEnabledi =
+        (PFNGLISENABLEDIPROC)VOSGLGetProcAddress(
+        "glIsEnabledi"
+    );
+    if (!glIsEnabledi) return false;
+    glGetBooleani_v =
+        (PFNGLGETBOOLEANI_VPROC)VOSGLGetProcAddress(
+        "glGetBooleani_v"
+    );
+    if (!glGetBooleani_v) return false;
+    glGetStringi =
+        (PFNGLGETSTRINGIPROC)VOSGLGetProcAddress(
+        "glGetStringi"
+    );
+    if (!glGetStringi) return false;
+    glClampColor =
+        (PFNGLCLAMPCOLORPROC)VOSGLGetProcAddress(
+        "glClampColor"
+    );
+    if (!glClampColor) return false;
+    glColorMaski =
+        (PFNGLCOLORMASKIPROC)VOSGLGetProcAddress(
+        "glColorMaski"
+    );
+    if (!glColorMaski) return false;
+
+    glTexParameterIiv =
+        (PFNGLTEXPARAMETERIIVPROC)VOSGLGetProcAddress(
+        "glTexParameterIiv"
+    );
+    if (!glTexParameterIiv) return false;
+    glTexParameterIuiv =
+        (PFNGLTEXPARAMETERIUIVPROC)VOSGLGetProcAddress(
+        "glTexParameterIuiv"
+    );
+    if (!glTexParameterIuiv) return false;
+    glGetTexParameterIiv =
+        (PFNGLGETTEXPARAMETERIIVPROC)VOSGLGetProcAddress(
+        "glGetTexParameterIiv"
+    );
+    if (!glGetTexParameterIiv) return false;
+    glGetTexParameterIuiv =
+        (PFNGLGETTEXPARAMETERIUIVPROC)VOSGLGetProcAddress(
+        "glGetTexParameterIuiv"
+    );
+    if (!glGetTexParameterIuiv) return false;
+
+    glClearBufferfi =
+        (PFNGLCLEARBUFFERFIPROC)VOSGLGetProcAddress(
+        "glClearBufferfi"
+    );
+    if (!glClearBufferfi) return false;
+    glClearBufferfv =
+        (PFNGLCLEARBUFFERFVPROC)VOSGLGetProcAddress(
+        "glClearBufferfv"
+    );
+    if (!glClearBufferfv) return false;
+    glClearBufferiv =
+        (PFNGLCLEARBUFFERIVPROC)VOSGLGetProcAddress(
+        "glClearBufferiv"
+    );
+    if (!glClearBufferiv) return false;
+    glClearBufferuiv =
+        (PFNGLCLEARBUFFERUIVPROC)VOSGLGetProcAddress(
+        "glClearBufferuiv"
+    );
+    if (!glClearBufferuiv) return false;
+
+    glBeginConditionalRender =
+        (PFNGLBEGINCONDITIONALRENDERPROC)VOSGLGetProcAddress(
+        "glBeginConditionalRender"
+    );
+    if (!glBeginConditionalRender) return false;
+    glBeginTransformFeedback =
+        (PFNGLBEGINTRANSFORMFEEDBACKPROC)VOSGLGetProcAddress(
+        "glBeginTransformFeedback"
+    );
+    if (!glBeginTransformFeedback) return false;
+    glBindFragDataLocation =
+        (PFNGLBINDFRAGDATALOCATIONPROC)VOSGLGetProcAddress(
+        "glBindFragDataLocation"
+    );
+    if (!glBindFragDataLocation) return false;
+    glEndConditionalRender =
+        (PFNGLENDCONDITIONALRENDERPROC)VOSGLGetProcAddress(
+        "glEndConditionalRender"
+    );
+    if (!glEndConditionalRender) return false;
+    glEndTransformFeedback =
+        (PFNGLENDTRANSFORMFEEDBACKPROC)VOSGLGetProcAddress(
+        "glEndTransformFeedback"
+    );
+    if (!glEndTransformFeedback) return false;
+    glGetFragDataLocation =
+        (PFNGLGETFRAGDATALOCATIONPROC)VOSGLGetProcAddress(
+        "glGetFragDataLocation"
+    );
+    if (!glGetFragDataLocation) return false;
+    glGetTransformFeedbackVarying =
+        (PFNGLGETTRANSFORMFEEDBACKVARYINGPROC)VOSGLGetProcAddress(
+        "glGetTransformFeedbackVarying"
+    );
+    if (!glGetTransformFeedbackVarying) return false;
+    glGetUniformuiv =
+        (PFNGLGETUNIFORMUIVPROC)VOSGLGetProcAddress(
+        "glGetUniformuiv"
+    );
+    if (!glGetUniformuiv) return false;
+    glGetVertexAttribIiv =
+        (PFNGLGETVERTEXATTRIBIIVPROC)VOSGLGetProcAddress(
+        "glGetVertexAttribIiv"
+    );
+    if (!glGetVertexAttribIiv) return false;
+    glGetVertexAttribIuiv =
+        (PFNGLGETVERTEXATTRIBIUIVPROC)VOSGLGetProcAddress(
+        "glGetVertexAttribIuiv"
+    );
+    if (!glGetVertexAttribIuiv) return false;
+    glTransformFeedbackVaryings =
+        (PFNGLTRANSFORMFEEDBACKVARYINGSPROC)VOSGLGetProcAddress(
+        "glTransformFeedbackVaryings"
+    );
+    if (!glTransformFeedbackVaryings) return false;
+    glUniform1ui =
+        (PFNGLUNIFORM1UIPROC)VOSGLGetProcAddress(
+        "glUniform1ui"
+    );
+    if (!glUniform1ui) return false;
+    glUniform1uiv =
+        (PFNGLUNIFORM1UIVPROC)VOSGLGetProcAddress(
+        "glUniform1uiv"
+    );
+    if (!glUniform1uiv) return false;
+    glUniform2ui =
+        (PFNGLUNIFORM2UIPROC)VOSGLGetProcAddress(
+        "glUniform2ui"
+    );
+    if (!glUniform2ui) return false;
+    glUniform2uiv =
+        (PFNGLUNIFORM2UIVPROC)VOSGLGetProcAddress(
+        "glUniform2uiv"
+    );
+    if (!glUniform2uiv) return false;
+    glUniform3ui =
+        (PFNGLUNIFORM3UIPROC)VOSGLGetProcAddress(
+        "glUniform3ui"
+    );
+    if (!glUniform3ui) return false;
+    glUniform3uiv =
+        (PFNGLUNIFORM3UIVPROC)VOSGLGetProcAddress(
+        "glUniform3uiv"
+    );
+    if (!glUniform3uiv) return false;
+    glUniform4ui =
+        (PFNGLUNIFORM4UIPROC)VOSGLGetProcAddress(
+        "glUniform4ui"
+    );
+    if (!glUniform4ui) return false;
+    glUniform4uiv =
+        (PFNGLUNIFORM4UIVPROC)VOSGLGetProcAddress(
+        "glUniform4uiv"
+    );
+    if (!glUniform4uiv) return false;
+    glVertexAttribI1i =
+        (PFNGLVERTEXATTRIBI1IPROC)VOSGLGetProcAddress(
+        "glVertexAttribI1i"
+    );
+    if (!glVertexAttribI1i) return false;
+    glVertexAttribI1iv =
+        (PFNGLVERTEXATTRIBI1IVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI1iv"
+    );
+    if (!glVertexAttribI1iv) return false;
+    glVertexAttribI1ui =
+        (PFNGLVERTEXATTRIBI1UIPROC)VOSGLGetProcAddress(
+        "glVertexAttribI1ui"
+    );
+    if (!glVertexAttribI1ui) return false;
+    glVertexAttribI1uiv =
+        (PFNGLVERTEXATTRIBI1UIVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI1uiv"
+    );
+    if (!glVertexAttribI1uiv) return false;
+    glVertexAttribI2i =
+        (PFNGLVERTEXATTRIBI2IPROC)VOSGLGetProcAddress(
+        "glVertexAttribI2i"
+    );
+    if (!glVertexAttribI2i) return false;
+    glVertexAttribI2iv =
+        (PFNGLVERTEXATTRIBI2IVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI2iv"
+    );
+    if (!glVertexAttribI2iv) return false;
+    glVertexAttribI2ui =
+        (PFNGLVERTEXATTRIBI2UIPROC)VOSGLGetProcAddress(
+        "glVertexAttribI2ui"
+    );
+    if (!glVertexAttribI2ui) return false;
+    glVertexAttribI2uiv =
+        (PFNGLVERTEXATTRIBI2UIVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI2uiv"
+    );
+    if (!glVertexAttribI2uiv) return false;
+    glVertexAttribI3i =
+        (PFNGLVERTEXATTRIBI3IPROC)VOSGLGetProcAddress(
+        "glVertexAttribI3i"
+    );
+    if (!glVertexAttribI3i) return false;
+    glVertexAttribI3iv =
+        (PFNGLVERTEXATTRIBI3IVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI3iv"
+    );
+    if (!glVertexAttribI3iv) return false;
+    glVertexAttribI3ui =
+        (PFNGLVERTEXATTRIBI3UIPROC)VOSGLGetProcAddress(
+        "glVertexAttribI3ui"
+    );
+    if (!glVertexAttribI3ui) return false;
+    glVertexAttribI3uiv =
+        (PFNGLVERTEXATTRIBI3UIVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI3uiv"
+    );
+    if (!glVertexAttribI3uiv) return false;
+    glVertexAttribI4bv =
+        (PFNGLVERTEXATTRIBI4BVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI4bv"
+    );
+    if (!glVertexAttribI4bv) return false;
+    glVertexAttribI4i =
+        (PFNGLVERTEXATTRIBI4IPROC)VOSGLGetProcAddress(
+        "glVertexAttribI4i"
+    );
+    if (!glVertexAttribI4i) return false;
+    glVertexAttribI4iv =
+        (PFNGLVERTEXATTRIBI4IVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI4iv"
+    );
+    if (!glVertexAttribI4iv) return false;
+    glVertexAttribI4sv =
+        (PFNGLVERTEXATTRIBI4SVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI4sv"
+    );
+    if (!glVertexAttribI4sv) return false;
+    glVertexAttribI4ubv =
+        (PFNGLVERTEXATTRIBI4UBVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI4ubv"
+    );
+    if (!glVertexAttribI4ubv) return false;
+    glVertexAttribI4ui =
+        (PFNGLVERTEXATTRIBI4UIPROC)VOSGLGetProcAddress(
+        "glVertexAttribI4ui"
+    );
+    if (!glVertexAttribI4ui) return false;
+    glVertexAttribI4uiv =
+        (PFNGLVERTEXATTRIBI4UIVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI4uiv"
+    );
+    if (!glVertexAttribI4uiv) return false;
+    glVertexAttribI4usv =
+        (PFNGLVERTEXATTRIBI4USVPROC)VOSGLGetProcAddress(
+        "glVertexAttribI4usv"
+    );
+    if (!glVertexAttribI4usv) return false;
+    glVertexAttribIPointer =
+        (PFNGLVERTEXATTRIBIPOINTERPROC)VOSGLGetProcAddress(
+        "glVertexAttribIPointer"
+    );
+    if (!glVertexAttribIPointer) return false;
+
+    // OpenGL 3.0 successfully loaded
     return true;
 }
