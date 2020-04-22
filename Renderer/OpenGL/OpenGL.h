@@ -2407,6 +2407,25 @@
     VOSGLApi VOSGLEntry void glGetClipPlane(GLenum plane, GLdouble* equation);
     VOSGLApi VOSGLEntry const GLubyte* glGetString(GLenum name);
 
+    typedef void (*PFNGLDISABLEIPROC)(GLenum cap, GLuint index);
+    VOSGLEntry PFNGLDISABLEIPROC glDisablei;
+    typedef void (*PFNGLENABLEIPROC)(GLenum cap, GLuint index);
+    VOSGLEntry PFNGLENABLEIPROC glEnablei;
+    typedef GLboolean (*PFNGLISENABLEDIPROC)(GLenum cap, GLuint index);
+    VOSGLEntry PFNGLISENABLEDIPROC glIsEnabledi;
+    typedef void (*PFNGLGETBOOLEANI_VPROC)(
+        GLenum pname, GLuint index, GLboolean* data
+    );
+    VOSGLEntry PFNGLGETBOOLEANI_VPROC glGetBooleani_v;
+    typedef const GLubyte* (*PFNGLGETSTRINGIPROC)(GLenum name, GLuint index);
+    VOSGLEntry PFNGLGETSTRINGIPROC glGetStringi;
+    typedef void (*PFNGLCLAMPCOLORPROC)(GLenum target, GLenum clamp);
+    VOSGLEntry PFNGLCLAMPCOLORPROC glClampColor;
+    typedef void (*PFNGLCOLORMASKIPROC)(
+        GLuint buf, GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha
+    );
+    VOSGLEntry PFNGLCOLORMASKIPROC glColorMaski;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL lists functions                                                //
     ////////////////////////////////////////////////////////////////////////////
@@ -3207,6 +3226,23 @@
     typedef void (*PFNGLSAMPLECOVERAGEPROC)(GLclampf value, GLboolean invert);
     VOSGLEntry PFNGLSAMPLECOVERAGEPROC glSampleCoverage;
 
+    typedef void (*PFNGLTEXPARAMETERIIVPROC)(
+        GLenum target, GLenum pname, const GLint* params
+    );
+    VOSGLEntry PFNGLTEXPARAMETERIIVPROC glTexParameterIiv;
+    typedef void (*PFNGLTEXPARAMETERIUIVPROC)(
+        GLenum target, GLenum pname, const GLuint* params
+    );
+    VOSGLEntry PFNGLTEXPARAMETERIUIVPROC glTexParameterIuiv;
+    typedef void (*PFNGLGETTEXPARAMETERIIVPROC)(
+        GLenum target, GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETTEXPARAMETERIIVPROC glGetTexParameterIiv;
+    typedef void (*PFNGLGETTEXPARAMETERIUIVPROC)(
+        GLenum target, GLenum pname, GLuint* params
+    );
+    VOSGLEntry PFNGLGETTEXPARAMETERIUIVPROC glGetTexParameterIuiv;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL materials functions                                            //
     ////////////////////////////////////////////////////////////////////////////
@@ -3465,6 +3501,23 @@
     );
     VOSGLEntry PFNGLSTENCILOPSEPARATEPROC glStencilOpSeparate;
 
+    typedef void (*PFNGLCLEARBUFFERFIPROC)(
+        GLenum buffer, GLint drawBuffer, GLfloat depth, GLint stencil
+    );
+    VOSGLEntry PFNGLCLEARBUFFERFIPROC glClearBufferfi;
+    typedef void (*PFNGLCLEARBUFFERFVPROC)(
+        GLenum buffer, GLint drawBuffer, const GLfloat* value
+    );
+    VOSGLEntry PFNGLCLEARBUFFERFVPROC glClearBufferfv;
+    typedef void (*PFNGLCLEARBUFFERIVPROC)(
+        GLenum buffer, GLint drawBuffer, const GLint* value
+    );
+    VOSGLEntry PFNGLCLEARBUFFERIVPROC glClearBufferiv;
+    typedef void (*PFNGLCLEARBUFFERUIVPROC)(
+        GLenum buffer, GLint drawBuffer, const GLuint* value
+    );
+    VOSGLEntry PFNGLCLEARBUFFERUIVPROC glClearBufferuiv;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL copy functions                                                 //
     ////////////////////////////////////////////////////////////////////////////
@@ -3691,6 +3744,131 @@
         GLint location, GLsizei count, GLboolean transpose, const GLfloat* value
     );
     VOSGLEntry PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
+
+    typedef void (*PFNGLBEGINCONDITIONALRENDERPROC)(GLuint id, GLenum mode);
+    VOSGLEntry PFNGLBEGINCONDITIONALRENDERPROC glBeginConditionalRender;
+    typedef void (*PFNGLBEGINTRANSFORMFEEDBACKPROC)(GLenum primitiveMode);
+    VOSGLEntry PFNGLBEGINTRANSFORMFEEDBACKPROC glBeginTransformFeedback;
+    typedef void (*PFNGLBINDFRAGDATALOCATIONPROC)(
+        GLuint program, GLuint colorNumber, const GLchar* name
+    );
+    VOSGLEntry PFNGLBINDFRAGDATALOCATIONPROC glBindFragDataLocation;
+    typedef void (*PFNGLENDCONDITIONALRENDERPROC)();
+    VOSGLEntry PFNGLENDCONDITIONALRENDERPROC glEndConditionalRender;
+    typedef void (*PFNGLENDTRANSFORMFEEDBACKPROC)();
+    VOSGLEntry PFNGLENDTRANSFORMFEEDBACKPROC glEndTransformFeedback;
+    typedef GLint (*PFNGLGETFRAGDATALOCATIONPROC)(
+        GLuint program, const GLchar* name
+    );
+    VOSGLEntry PFNGLGETFRAGDATALOCATIONPROC glGetFragDataLocation;
+    typedef void (*PFNGLGETTRANSFORMFEEDBACKVARYINGPROC)(
+        GLuint program, GLuint index, GLsizei bufSize,
+        GLsizei* length, GLsizei* size, GLenum* type, GLchar* name
+    );
+    VOSGLEntry PFNGLGETTRANSFORMFEEDBACKVARYINGPROC
+        glGetTransformFeedbackVarying;
+    typedef void (*PFNGLGETUNIFORMUIVPROC)(
+        GLuint program, GLint location, GLuint* params
+    );
+    VOSGLEntry PFNGLGETUNIFORMUIVPROC glGetUniformuiv;
+    typedef void (*PFNGLGETVERTEXATTRIBIIVPROC)(
+        GLuint index, GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETVERTEXATTRIBIIVPROC glGetVertexAttribIiv;
+    typedef void (*PFNGLGETVERTEXATTRIBIUIVPROC)(
+        GLuint index, GLenum pname, GLuint* params
+    );
+    VOSGLEntry PFNGLGETVERTEXATTRIBIUIVPROC glGetVertexAttribIuiv;
+    typedef void (*PFNGLTRANSFORMFEEDBACKVARYINGSPROC)(
+        GLuint program, GLsizei count,
+        const GLchar* const* varyings, GLenum bufferMode
+    );
+    VOSGLEntry PFNGLTRANSFORMFEEDBACKVARYINGSPROC glTransformFeedbackVaryings;
+    typedef void (*PFNGLUNIFORM1UIPROC)(GLint location, GLuint v0);
+    VOSGLEntry PFNGLUNIFORM1UIPROC glUniform1ui;
+    typedef void (*PFNGLUNIFORM1UIVPROC)(
+        GLint location, GLsizei count, const GLuint* value
+    );
+    VOSGLEntry PFNGLUNIFORM1UIVPROC glUniform1uiv;
+    typedef void (*PFNGLUNIFORM2UIPROC)(GLint location, GLuint v0, GLuint v1);
+    VOSGLEntry PFNGLUNIFORM2UIPROC glUniform2ui;
+    typedef void (*PFNGLUNIFORM2UIVPROC)(
+        GLint location, GLsizei count, const GLuint* value
+    );
+    VOSGLEntry PFNGLUNIFORM2UIVPROC glUniform2uiv;
+    typedef void (*PFNGLUNIFORM3UIPROC)(
+        GLint location, GLuint v0, GLuint v1, GLuint v2
+    );
+    VOSGLEntry PFNGLUNIFORM3UIPROC glUniform3ui;
+    typedef void (*PFNGLUNIFORM3UIVPROC)(
+        GLint location, GLsizei count, const GLuint* value
+    );
+    VOSGLEntry PFNGLUNIFORM3UIVPROC glUniform3uiv;
+    typedef void (*PFNGLUNIFORM4UIPROC)(
+        GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3
+    );
+    VOSGLEntry PFNGLUNIFORM4UIPROC glUniform4ui;
+    typedef void (*PFNGLUNIFORM4UIVPROC)(
+        GLint location, GLsizei count, const GLuint* value
+    );
+    VOSGLEntry PFNGLUNIFORM4UIVPROC glUniform4uiv;
+    typedef void (*PFNGLVERTEXATTRIBI1IPROC)(GLuint index, GLint v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI1IPROC glVertexAttribI1i;
+    typedef void (*PFNGLVERTEXATTRIBI1IVPROC)(GLuint index, const GLint* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI1IVPROC glVertexAttribI1iv;
+    typedef void (*PFNGLVERTEXATTRIBI1UIPROC)(GLuint index, GLuint v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI1UIPROC glVertexAttribI1ui;
+    typedef void (*PFNGLVERTEXATTRIBI1UIVPROC)(GLuint index, const GLuint* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI1UIVPROC glVertexAttribI1uiv;
+    typedef void (*PFNGLVERTEXATTRIBI2IPROC)(GLuint index, GLint v0, GLint v1);
+    VOSGLEntry PFNGLVERTEXATTRIBI2IPROC glVertexAttribI2i;
+    typedef void (*PFNGLVERTEXATTRIBI2IVPROC)(GLuint index, const GLint* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI2IVPROC glVertexAttribI2iv;
+    typedef void (*PFNGLVERTEXATTRIBI2UIPROC)(
+        GLuint index, GLuint v0, GLuint v1
+    );
+    VOSGLEntry PFNGLVERTEXATTRIBI2UIPROC glVertexAttribI2ui;
+    typedef void (*PFNGLVERTEXATTRIBI2UIVPROC)(GLuint index, const GLuint* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI2UIVPROC glVertexAttribI2uiv;
+    typedef void (*PFNGLVERTEXATTRIBI3IPROC)(
+        GLuint index, GLint v0, GLint v1, GLint v2
+    );
+    VOSGLEntry PFNGLVERTEXATTRIBI3IPROC glVertexAttribI3i;
+    typedef void (*PFNGLVERTEXATTRIBI3IVPROC)(GLuint index, const GLint* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI3IVPROC glVertexAttribI3iv;
+    typedef void (*PFNGLVERTEXATTRIBI3UIPROC)(
+        GLuint index, GLuint v0, GLuint v1, GLuint v2
+    );
+    VOSGLEntry PFNGLVERTEXATTRIBI3UIPROC glVertexAttribI3ui;
+    typedef void (*PFNGLVERTEXATTRIBI3UIVPROC)(GLuint index, const GLuint* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI3UIVPROC glVertexAttribI3uiv;
+    typedef void (*PFNGLVERTEXATTRIBI4BVPROC)(GLuint index, const GLbyte* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI4BVPROC glVertexAttribI4bv;
+    typedef void (*PFNGLVERTEXATTRIBI4IPROC)(
+        GLuint index, GLint v0, GLint v1, GLint v2, GLint v3
+    );
+    VOSGLEntry PFNGLVERTEXATTRIBI4IPROC glVertexAttribI4i;
+    typedef void (*PFNGLVERTEXATTRIBI4IVPROC)(GLuint index, const GLint* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI4IVPROC glVertexAttribI4iv;
+    typedef void (*PFNGLVERTEXATTRIBI4SVPROC)(GLuint index, const GLshort* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI4SVPROC glVertexAttribI4sv;
+    typedef void (*PFNGLVERTEXATTRIBI4UBVPROC)(GLuint index, const GLubyte* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI4UBVPROC glVertexAttribI4ubv;
+    typedef void (*PFNGLVERTEXATTRIBI4UIPROC)(
+        GLuint index, GLuint v0, GLuint v1, GLuint v2, GLuint v3
+    );
+    VOSGLEntry PFNGLVERTEXATTRIBI4UIPROC glVertexAttribI4ui;
+    typedef void (*PFNGLVERTEXATTRIBI4UIVPROC)(GLuint index, const GLuint* v0);
+    VOSGLEntry PFNGLVERTEXATTRIBI4UIVPROC glVertexAttribI4uiv;
+    typedef void (*PFNGLVERTEXATTRIBI4USVPROC)(
+        GLuint index, const GLushort* v0
+    );
+    VOSGLEntry PFNGLVERTEXATTRIBI4USVPROC glVertexAttribI4usv;
+    typedef void (*PFNGLVERTEXATTRIBIPOINTERPROC)(
+        GLuint index, GLint size, GLenum type,
+        GLsizei stride, const void* pointer
+    );
+    VOSGLEntry PFNGLVERTEXATTRIBIPOINTERPROC glVertexAttribIPointer;
 
 
     ////////////////////////////////////////////////////////////////////////////
