@@ -3530,6 +3530,16 @@
     );
     VOSGLEntry PFNGLMAPBUFFERRANGEPROC glMapBufferRange;
 
+    typedef void (*PFNGLBINDBUFFERBASEPROC)(
+        GLenum target, GLuint index, GLuint buffer
+    );
+    VOSGLEntry PFNGLBINDBUFFERBASEPROC glBindBufferBase;
+    typedef void (*PFNGLBINDBUFFERRANGEPROC)(
+        GLenum target, GLuint index, GLuint buffer,
+        GLintptr offset, GLsizeiptr size
+    );
+    VOSGLEntry PFNGLBINDBUFFERRANGEPROC glBindBufferRange;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL copy functions                                                 //
     ////////////////////////////////////////////////////////////////////////////
@@ -3958,6 +3968,43 @@
     );
     VOSGLEntry PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC
         glRenderbufferStorageMultisample;
+
+    typedef void (*PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC)(
+        GLuint program, GLuint uniformBlockIndex, GLsizei bufSize,
+        GLsizei* length, GLchar* uniformBlockName
+    );
+    VOSGLEntry PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC glGetActiveUniformBlockName;
+    typedef void (*PFNGLGETACTIVEUNIFORMBLOCKIVPROC)(
+        GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETACTIVEUNIFORMBLOCKIVPROC glGetActiveUniformBlockiv;
+    typedef void (*PFNGLGETACTIVEUNIFORMNAMEPROC)(
+        GLuint program, GLuint uniformIndex, GLsizei bufSize,
+        GLsizei* length, GLchar* uniformName
+    );
+    VOSGLEntry PFNGLGETACTIVEUNIFORMNAMEPROC glGetActiveUniformName;
+    typedef void (*PFNGLGETACTIVEUNIFORMSIVPROC)(
+        GLuint program, GLsizei uniformCount, const GLuint* uniformIndices,
+        GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETACTIVEUNIFORMSIVPROC glGetActiveUniformsiv;
+    typedef void (*PFNGLGETINTEGERI_VPROC)(
+        GLenum target, GLuint index, GLint* data
+    );
+    VOSGLEntry PFNGLGETINTEGERI_VPROC glGetIntegeri_v;
+    typedef GLuint (*PFNGLGETUNIFORMBLOCKINDEXPROC)(
+        GLuint program, const GLchar* uniformBlockName
+    );
+    VOSGLEntry PFNGLGETUNIFORMBLOCKINDEXPROC glGetUniformBlockIndex;
+    typedef void (*PFNGLGETUNIFORMINDICESPROC)(
+        GLuint program, GLsizei uniformCount,
+        const GLchar* const* uniformNames, GLuint* uniformIndices
+    );
+    VOSGLEntry PFNGLGETUNIFORMINDICESPROC glGetUniformIndices;
+    typedef void (*PFNGLUNIFORMBLOCKBINDINGPROC)(
+        GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding
+    );
+    VOSGLEntry PFNGLUNIFORMBLOCKBINDINGPROC glUniformBlockBinding;
 
 
     ////////////////////////////////////////////////////////////////////////////
