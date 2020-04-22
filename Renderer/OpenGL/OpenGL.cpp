@@ -349,6 +349,8 @@ PFNGLISFRAMEBUFFERPROC glIsFramebuffer = 0;
 PFNGLISRENDERBUFFERPROC glIsRenderbuffer = 0;
 PFNGLRENDERBUFFERSTORAGEPROC glRenderbufferStorage = 0;
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glRenderbufferStorageMultisample = 0;
+PFNGLFLUSHMAPPEDBUFFERRANGEPROC glFlushMappedBufferRange = 0;
+PFNGLMAPBUFFERRANGEPROC glMapBufferRange = 0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1999,6 +2001,17 @@ bool InitOpenGL_3_0()
         "glRenderbufferStorageMultisample"
     );
     if (!glRenderbufferStorageMultisample) return false;
+
+    glFlushMappedBufferRange =
+        (PFNGLFLUSHMAPPEDBUFFERRANGEPROC)VOSGLGetProcAddress(
+        "glFlushMappedBufferRange"
+    );
+    if (!glFlushMappedBufferRange) return false;
+    glMapBufferRange =
+        (PFNGLMAPBUFFERRANGEPROC)VOSGLGetProcAddress(
+        "glMapBufferRange"
+    );
+    if (!glMapBufferRange) return false;
 
     // OpenGL 3.0 successfully loaded
     return true;
