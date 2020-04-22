@@ -351,6 +351,16 @@ PFNGLRENDERBUFFERSTORAGEPROC glRenderbufferStorage = 0;
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glRenderbufferStorageMultisample = 0;
 PFNGLFLUSHMAPPEDBUFFERRANGEPROC glFlushMappedBufferRange = 0;
 PFNGLMAPBUFFERRANGEPROC glMapBufferRange = 0;
+PFNGLBINDBUFFERBASEPROC glBindBufferBase = 0;
+PFNGLBINDBUFFERRANGEPROC glBindBufferRange = 0;
+PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC glGetActiveUniformBlockName = 0;
+PFNGLGETACTIVEUNIFORMBLOCKIVPROC glGetActiveUniformBlockiv = 0;
+PFNGLGETACTIVEUNIFORMNAMEPROC glGetActiveUniformName = 0;
+PFNGLGETACTIVEUNIFORMSIVPROC glGetActiveUniformsiv = 0;
+PFNGLGETINTEGERI_VPROC glGetIntegeri_v = 0;
+PFNGLGETUNIFORMBLOCKINDEXPROC glGetUniformBlockIndex = 0;
+PFNGLGETUNIFORMINDICESPROC glGetUniformIndices = 0;
+PFNGLUNIFORMBLOCKBINDINGPROC glUniformBlockBinding = 0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2012,6 +2022,58 @@ bool InitOpenGL_3_0()
         "glMapBufferRange"
     );
     if (!glMapBufferRange) return false;
+
+    glBindBufferBase =
+        (PFNGLBINDBUFFERBASEPROC)VOSGLGetProcAddress(
+        "glBindBufferBase"
+    );
+    if (!glBindBufferBase) return false;
+    glBindBufferRange =
+        (PFNGLBINDBUFFERRANGEPROC)VOSGLGetProcAddress(
+        "glBindBufferRange"
+    );
+    if (!glBindBufferRange) return false;
+
+    glGetActiveUniformBlockName =
+        (PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC)VOSGLGetProcAddress(
+        "glGetActiveUniformBlockName"
+    );
+    if (!glGetActiveUniformBlockName) return false;
+    glGetActiveUniformBlockiv =
+        (PFNGLGETACTIVEUNIFORMBLOCKIVPROC)VOSGLGetProcAddress(
+        "glGetActiveUniformBlockiv"
+    );
+    if (!glGetActiveUniformBlockiv) return false;
+    glGetActiveUniformName =
+        (PFNGLGETACTIVEUNIFORMNAMEPROC)VOSGLGetProcAddress(
+        "glGetActiveUniformName"
+    );
+    if (!glGetActiveUniformName) return false;
+    glGetActiveUniformsiv =
+        (PFNGLGETACTIVEUNIFORMSIVPROC)VOSGLGetProcAddress(
+        "glGetActiveUniformsiv"
+    );
+    if (!glGetActiveUniformsiv) return false;
+    glGetIntegeri_v =
+        (PFNGLGETINTEGERI_VPROC)VOSGLGetProcAddress(
+        "glGetIntegeri_v"
+    );
+    if (!glGetIntegeri_v) return false;
+    glGetUniformBlockIndex =
+        (PFNGLGETUNIFORMBLOCKINDEXPROC)VOSGLGetProcAddress(
+        "glGetUniformBlockIndex"
+    );
+    if (!glGetUniformBlockIndex) return false;
+    glGetUniformIndices =
+        (PFNGLGETUNIFORMINDICESPROC)VOSGLGetProcAddress(
+        "glGetUniformIndices"
+    );
+    if (!glGetUniformIndices) return false;
+    glUniformBlockBinding =
+        (PFNGLUNIFORMBLOCKBINDINGPROC)VOSGLGetProcAddress(
+        "glUniformBlockBinding"
+    );
+    if (!glUniformBlockBinding) return false;
 
     // OpenGL 3.0 successfully loaded
     return true;
