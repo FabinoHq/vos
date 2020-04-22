@@ -361,6 +361,10 @@ PFNGLGETINTEGERI_VPROC glGetIntegeri_v = 0;
 PFNGLGETUNIFORMBLOCKINDEXPROC glGetUniformBlockIndex = 0;
 PFNGLGETUNIFORMINDICESPROC glGetUniformIndices = 0;
 PFNGLUNIFORMBLOCKBINDINGPROC glUniformBlockBinding = 0;
+PFNGLBINDVERTEXARRAYPROC glBindVertexArray = 0;
+PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays = 0;
+PFNGLGENVERTEXARRAYSPROC glGenVertexArrays = 0;
+PFNGLISVERTEXARRAYPROC glIsVertexArray = 0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2074,6 +2078,27 @@ bool InitOpenGL_3_0()
         "glUniformBlockBinding"
     );
     if (!glUniformBlockBinding) return false;
+
+    glBindVertexArray =
+        (PFNGLBINDVERTEXARRAYPROC)VOSGLGetProcAddress(
+        "glBindVertexArray"
+    );
+    if (!glBindVertexArray) return false;
+    glDeleteVertexArrays =
+        (PFNGLDELETEVERTEXARRAYSPROC)VOSGLGetProcAddress(
+        "glDeleteVertexArrays"
+    );
+    if (!glDeleteVertexArrays) return false;
+    glGenVertexArrays =
+        (PFNGLGENVERTEXARRAYSPROC)VOSGLGetProcAddress(
+        "glGenVertexArrays"
+    );
+    if (!glGenVertexArrays) return false;
+    glIsVertexArray =
+        (PFNGLISVERTEXARRAYPROC)VOSGLGetProcAddress(
+        "glIsVertexArray"
+    );
+    if (!glIsVertexArray) return false;
 
     // OpenGL 3.0 successfully loaded
     return true;
