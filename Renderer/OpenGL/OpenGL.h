@@ -3243,6 +3243,9 @@
     );
     VOSGLEntry PFNGLGETTEXPARAMETERIUIVPROC glGetTexParameterIuiv;
 
+    typedef void (*PFNGLGENERATEMIPMAPPROC)(GLenum target);
+    VOSGLEntry PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL materials functions                                            //
     ////////////////////////////////////////////////////////////////////////////
@@ -3869,6 +3872,83 @@
         GLsizei stride, const void* pointer
     );
     VOSGLEntry PFNGLVERTEXATTRIBIPOINTERPROC glVertexAttribIPointer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OpenGL framebuffer functions                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (*PFNGLBINDFRAMEBUFFERPROC)(GLenum target, GLuint framebuffer);
+    VOSGLEntry PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer;
+    typedef void (*PFNGLBINDRENDERBUFFERPROC)(
+        GLenum target, GLuint renderbuffer
+    );
+    VOSGLEntry PFNGLBINDRENDERBUFFERPROC glBindRenderbuffer;
+    typedef void (*PFNGLBLITFRAMEBUFFERPROC)(
+        GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0,
+        GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter
+    );
+    VOSGLEntry PFNGLBLITFRAMEBUFFERPROC glBlitFramebuffer;
+    typedef GLenum (*PFNGLCHECKFRAMEBUFFERSTATUSPROC)(GLenum target);
+    VOSGLEntry PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus;
+    typedef void (*PFNGLDELETEFRAMEBUFFERSPROC)(
+        GLsizei n, const GLuint* framebuffers
+    );
+    VOSGLEntry PFNGLDELETEFRAMEBUFFERSPROC glDeleteFramebuffers;
+    typedef void (*PFNGLDELETERENDERBUFFERSPROC)(
+        GLsizei n, const GLuint* renderbuffers
+    );
+    VOSGLEntry PFNGLDELETERENDERBUFFERSPROC glDeleteRenderbuffers;
+    typedef void (*PFNGLFRAMEBUFFERRENDERBUFFERPROC)(
+        GLenum target, GLenum attachment,
+        GLenum renderbuffertarget, GLuint renderbuffer
+    );
+    VOSGLEntry PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer;
+    typedef void (*PFNGLFRAMEBUFFERTEXTURE1DPROC)(
+        GLenum target, GLenum attachment, GLenum textarget,
+        GLuint texture, GLint level
+    );
+    VOSGLEntry PFNGLFRAMEBUFFERTEXTURE1DPROC glFramebufferTexture1D;
+    typedef void (*PFNGLFRAMEBUFFERTEXTURE2DPROC)(
+        GLenum target, GLenum attachment, GLenum textarget,
+        GLuint texture, GLint level
+    );
+    VOSGLEntry PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D;
+    typedef void (*PFNGLFRAMEBUFFERTEXTURE3DPROC)(
+        GLenum target, GLenum attachment, GLenum textarget,
+        GLuint texture, GLint level, GLint layer
+    );
+    VOSGLEntry PFNGLFRAMEBUFFERTEXTURE3DPROC glFramebufferTexture3D;
+    typedef void (*PFNGLFRAMEBUFFERTEXTURELAYERPROC)(
+        GLenum target, GLenum attachment, GLuint texture,
+        GLint level, GLint layer
+    );
+    VOSGLEntry PFNGLFRAMEBUFFERTEXTURELAYERPROC glFramebufferTextureLayer;
+    typedef void (*PFNGLGENFRAMEBUFFERSPROC)(GLsizei n, GLuint* framebuffers);
+    VOSGLEntry PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers;
+    typedef void (*PFNGLGENRENDERBUFFERSPROC)(GLsizei n, GLuint* renderbuffers);
+    VOSGLEntry PFNGLGENRENDERBUFFERSPROC glGenRenderbuffers;
+    typedef void (*PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC)(
+        GLenum target, GLenum attachment, GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC
+        glGetFramebufferAttachmentParameteriv;
+    typedef void (*PFNGLGETRENDERBUFFERPARAMETERIVPROC)(
+        GLenum target, GLenum pname, GLint* params
+    );
+    VOSGLEntry PFNGLGETRENDERBUFFERPARAMETERIVPROC glGetRenderbufferParameteriv;
+    typedef GLboolean (*PFNGLISFRAMEBUFFERPROC)(GLuint framebuffer);
+    VOSGLEntry PFNGLISFRAMEBUFFERPROC glIsFramebuffer;
+    typedef GLboolean (*PFNGLISRENDERBUFFERPROC)(GLuint renderbuffer);
+    VOSGLEntry PFNGLISRENDERBUFFERPROC glIsRenderbuffer;
+    typedef void (*PFNGLRENDERBUFFERSTORAGEPROC)(
+        GLenum target, GLenum internalformat, GLsizei width, GLsizei height
+    );
+    VOSGLEntry PFNGLRENDERBUFFERSTORAGEPROC glRenderbufferStorage;
+    typedef void (*PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC)(
+        GLenum target, GLsizei samples, GLenum internalformat,
+        GLsizei width, GLsizei height
+    );
+    VOSGLEntry PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC
+        glRenderbufferStorageMultisample;
 
 
     ////////////////////////////////////////////////////////////////////////////
