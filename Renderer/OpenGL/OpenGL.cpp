@@ -328,6 +328,27 @@ PFNGLVERTEXATTRIBI4UIPROC glVertexAttribI4ui = 0;
 PFNGLVERTEXATTRIBI4UIVPROC glVertexAttribI4uiv = 0;
 PFNGLVERTEXATTRIBI4USVPROC glVertexAttribI4usv = 0;
 PFNGLVERTEXATTRIBIPOINTERPROC glVertexAttribIPointer = 0;
+PFNGLGENERATEMIPMAPPROC glGenerateMipmap = 0;
+PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer = 0;
+PFNGLBINDRENDERBUFFERPROC glBindRenderbuffer = 0;
+PFNGLBLITFRAMEBUFFERPROC glBlitFramebuffer = 0;
+PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus = 0;
+PFNGLDELETEFRAMEBUFFERSPROC glDeleteFramebuffers = 0;
+PFNGLDELETERENDERBUFFERSPROC glDeleteRenderbuffers = 0;
+PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer = 0;
+PFNGLFRAMEBUFFERTEXTURE1DPROC glFramebufferTexture1D = 0;
+PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D = 0;
+PFNGLFRAMEBUFFERTEXTURE3DPROC glFramebufferTexture3D = 0;
+PFNGLFRAMEBUFFERTEXTURELAYERPROC glFramebufferTextureLayer = 0;
+PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers = 0;
+PFNGLGENRENDERBUFFERSPROC glGenRenderbuffers = 0;
+PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC
+    glGetFramebufferAttachmentParameteriv = 0;
+PFNGLGETRENDERBUFFERPARAMETERIVPROC glGetRenderbufferParameteriv = 0;
+PFNGLISFRAMEBUFFERPROC glIsFramebuffer = 0;
+PFNGLISRENDERBUFFERPROC glIsRenderbuffer = 0;
+PFNGLRENDERBUFFERSTORAGEPROC glRenderbufferStorage = 0;
+PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glRenderbufferStorageMultisample = 0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1876,6 +1897,108 @@ bool InitOpenGL_3_0()
         "glVertexAttribIPointer"
     );
     if (!glVertexAttribIPointer) return false;
+
+    glGenerateMipmap =
+        (PFNGLGENERATEMIPMAPPROC)VOSGLGetProcAddress(
+        "glGenerateMipmap"
+    );
+    if (!glGenerateMipmap) return false;
+
+    glBindFramebuffer =
+        (PFNGLBINDFRAMEBUFFERPROC)VOSGLGetProcAddress(
+        "glBindFramebuffer"
+    );
+    if (!glBindFramebuffer) return false;
+    glBindRenderbuffer =
+        (PFNGLBINDRENDERBUFFERPROC)VOSGLGetProcAddress(
+        "glBindRenderbuffer"
+    );
+    if (!glBindRenderbuffer) return false;
+    glBlitFramebuffer =
+        (PFNGLBLITFRAMEBUFFERPROC)VOSGLGetProcAddress(
+        "glBlitFramebuffer"
+    );
+    if (!glBlitFramebuffer) return false;
+    glCheckFramebufferStatus =
+        (PFNGLCHECKFRAMEBUFFERSTATUSPROC)VOSGLGetProcAddress(
+        "glCheckFramebufferStatus"
+    );
+    if (!glCheckFramebufferStatus) return false;
+    glDeleteFramebuffers =
+        (PFNGLDELETEFRAMEBUFFERSPROC)VOSGLGetProcAddress(
+        "glDeleteFramebuffers"
+    );
+    if (!glDeleteFramebuffers) return false;
+    glDeleteRenderbuffers =
+        (PFNGLDELETERENDERBUFFERSPROC)VOSGLGetProcAddress(
+        "glDeleteRenderbuffers"
+    );
+    if (!glDeleteRenderbuffers) return false;
+    glFramebufferRenderbuffer =
+        (PFNGLFRAMEBUFFERRENDERBUFFERPROC)VOSGLGetProcAddress(
+        "glFramebufferRenderbuffer"
+    );
+    if (!glFramebufferRenderbuffer) return false;
+    glFramebufferTexture1D =
+        (PFNGLFRAMEBUFFERTEXTURE1DPROC)VOSGLGetProcAddress(
+        "glFramebufferTexture1D"
+    );
+    if (!glFramebufferTexture1D) return false;
+    glFramebufferTexture2D =
+        (PFNGLFRAMEBUFFERTEXTURE2DPROC)VOSGLGetProcAddress(
+        "glFramebufferTexture2D"
+    );
+    if (!glFramebufferTexture2D) return false;
+    glFramebufferTexture3D =
+        (PFNGLFRAMEBUFFERTEXTURE3DPROC)VOSGLGetProcAddress(
+        "glFramebufferTexture3D"
+    );
+    if (!glFramebufferTexture3D) return false;
+    glFramebufferTextureLayer =
+        (PFNGLFRAMEBUFFERTEXTURELAYERPROC)VOSGLGetProcAddress(
+        "glFramebufferTextureLayer"
+    );
+    if (!glFramebufferTextureLayer) return false;
+    glGenFramebuffers =
+        (PFNGLGENFRAMEBUFFERSPROC)VOSGLGetProcAddress(
+        "glGenFramebuffers"
+    );
+    if (!glGenFramebuffers) return false;
+    glGenRenderbuffers =
+        (PFNGLGENRENDERBUFFERSPROC)VOSGLGetProcAddress(
+        "glGenRenderbuffers"
+    );
+    if (!glGenRenderbuffers) return false;
+    glGetFramebufferAttachmentParameteriv =
+        (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC)VOSGLGetProcAddress(
+        "glGetFramebufferAttachmentParameteriv"
+    );
+    if (!glGetFramebufferAttachmentParameteriv) return false;
+    glGetRenderbufferParameteriv =
+        (PFNGLGETRENDERBUFFERPARAMETERIVPROC)VOSGLGetProcAddress(
+        "glGetRenderbufferParameteriv"
+    );
+    if (!glGetRenderbufferParameteriv) return false;
+    glIsFramebuffer =
+        (PFNGLISFRAMEBUFFERPROC)VOSGLGetProcAddress(
+        "glIsFramebuffer"
+    );
+    if (!glIsFramebuffer) return false;
+    glIsRenderbuffer =
+        (PFNGLISRENDERBUFFERPROC)VOSGLGetProcAddress(
+        "glIsRenderbuffer"
+    );
+    if (!glIsRenderbuffer) return false;
+    glRenderbufferStorage =
+        (PFNGLRENDERBUFFERSTORAGEPROC)VOSGLGetProcAddress(
+        "glRenderbufferStorage"
+    );
+    if (!glRenderbufferStorage) return false;
+    glRenderbufferStorageMultisample =
+        (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC)VOSGLGetProcAddress(
+        "glRenderbufferStorageMultisample"
+    );
+    if (!glRenderbufferStorageMultisample) return false;
 
     // OpenGL 3.0 successfully loaded
     return true;
