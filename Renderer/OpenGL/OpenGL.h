@@ -3420,6 +3420,17 @@
     );
     VOSGLEntry PFNGLGETVERTEXATTRIBIVPROC glGetVertexAttribiv;
 
+    typedef void (*PFNGLBINDVERTEXARRAYPROC)(GLuint array);
+    VOSGLEntry PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
+    typedef void (*PFNGLDELETEVERTEXARRAYSPROC)(
+        GLsizei n, const GLuint* arrays
+    );
+    VOSGLEntry PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
+    typedef void (*PFNGLGENVERTEXARRAYSPROC)(GLsizei n, GLuint* arrays);
+    VOSGLEntry PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
+    typedef GLboolean (*PFNGLISVERTEXARRAYPROC)(GLuint array);
+    VOSGLEntry PFNGLISVERTEXARRAYPROC glIsVertexArray;
+
     ////////////////////////////////////////////////////////////////////////////
     //  OpenGL buffers functions                                              //
     ////////////////////////////////////////////////////////////////////////////
