@@ -7,9 +7,6 @@
     <Filter Include="Renderer">
       <UniqueIdentifier>{940b859f-59b4-49b8-b28d-1eaf645f0ea6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\OpenGL">
-      <UniqueIdentifier>{a6dbe31a-1f91-44ea-a350-eee001e317ee}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -22,12 +19,6 @@
     </ClCompile>
     <ClCompile Include="Renderer\Renderer.cpp">
       <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\OpenGL\OpenGL.cpp">
-      <Filter>Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Win\OpenGLWin.cpp">
-      <Filter>Win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,12 +37,5 @@
     <ClInclude Include="Renderer\Renderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\OpenGL\OpenGL.h">
-      <Filter>Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Win\OpenGLWin.h">
-      <Filter>Win</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGL.h" />
   </ItemGroup>
 </Project>

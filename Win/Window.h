@@ -47,7 +47,6 @@
 
     #include "DisplayMode.h"
     #include "../Event.h"
-    #include "OpenGLWin.h"
 
 
     // Window class name

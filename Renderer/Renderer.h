@@ -42,8 +42,6 @@
 #ifndef VOS_RENDERER_RENDERER_HEADER
 #define VOS_RENDERER_RENDERER_HEADER
 
-    #include "../OpenGL.h"
-
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
