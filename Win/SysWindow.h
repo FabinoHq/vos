@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/Window.h : Window management for Windows                           //
+//     Win/SysWindow.h : Window management for Windows                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WIN_WINDOW_HEADER
-#define VOS_WIN_WINDOW_HEADER
+#ifndef VOS_WIN_SYSWINDOW_HEADER
+#define VOS_WIN_SYSWINDOW_HEADER
 
     #include <windows.h>
     #include <queue>
@@ -56,18 +56,18 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Window class definition                                               //
     ////////////////////////////////////////////////////////////////////////////
-    class Window
+    class SysWindow
     {
         public:
             ////////////////////////////////////////////////////////////////////
             //  Window default constructor                                    //
             ////////////////////////////////////////////////////////////////////
-            Window();
+            SysWindow();
 
             ////////////////////////////////////////////////////////////////////
             //  Window destructor                                             //
             ////////////////////////////////////////////////////////////////////
-            ~Window();
+            ~SysWindow();
 
 
             ////////////////////////////////////////////////////////////////////
@@ -98,12 +98,12 @@
             ////////////////////////////////////////////////////////////////////
             //  Window private copy constructor : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            Window(const Window&) = delete;
+            SysWindow(const SysWindow&) = delete;
 
             ////////////////////////////////////////////////////////////////////
             //  Window private copy operator : Not copyable                   //
             ////////////////////////////////////////////////////////////////////
-            Window& operator=(const Window&) = delete;
+            SysWindow& operator=(const SysWindow&) = delete;
 
 
             ////////////////////////////////////////////////////////////////////
@@ -140,4 +140,4 @@
     };
 
 
-#endif // VOS_WIN_WINDOW_HEADER
+#endif // VOS_WIN_SYSWINDOW_HEADER

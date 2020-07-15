@@ -44,7 +44,7 @@
 
     #include "System.h"
     #include "Status.h"
-    #include "Window.h"
+    #include "SysWindow.h"
     #include "Renderer/Renderer.h"
 
 
@@ -90,7 +90,7 @@
 
         private:
             bool        m_running;  // VOS running state
-            Window      m_window;   // VOS main window
+            SysWindow   m_window;   // VOS main window
             Renderer    m_renderer; // VOS renderer
     };
 

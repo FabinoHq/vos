@@ -39,15 +39,15 @@
 //    VOS : Virtual Operating System                                          //
 //     Win/Window.cpp : Window management for Windows                         //
 ////////////////////////////////////////////////////////////////////////////////
-#include "Window.h"
+#include "SysWindow.h"
 
-Window* VOSGlobalWindow = 0;
+SysWindow* VOSGlobalWindow = 0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Window default constructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
-Window::Window() :
+SysWindow::SysWindow() :
 m_instance(0),
 m_handle(0),
 m_device(0),
@@ -63,7 +63,7 @@ m_context(0)
 ////////////////////////////////////////////////////////////////////////////////
 //  Window destructor                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-Window::~Window()
+SysWindow::~SysWindow()
 {
     // Close the window
     close();
@@ -74,7 +74,7 @@ Window::~Window()
 //  Create the window                                                         //
 //  return : True if the window is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool Window::create()
+bool SysWindow::create()
 {
     // Get the software instance
     m_instance = GetModuleHandle(0);
@@ -90,7 +90,7 @@ bool Window::create()
     // Register the window class
     WNDCLASS windowClass = { 0 };
     windowClass.style = 0;
-    windowClass.lpfnWndProc = &Window::OnEvent;
+    windowClass.lpfnWndProc = &SysWindow::OnEvent;
     windowClass.cbClsExtra = 0;
     windowClass.cbWndExtra = 0;
     windowClass.hInstance = m_instance;
@@ -139,7 +139,7 @@ bool Window::create()
 ////////////////////////////////////////////////////////////////////////////////
 //  Update the window (swap front and back buffers)                           //
 ////////////////////////////////////////////////////////////////////////////////
-void Window::update()
+void SysWindow::update()
 {
     if (m_device)
     {
@@ -151,7 +151,7 @@ void Window::update()
 ////////////////////////////////////////////////////////////////////////////////
 //  Close the window                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void Window::close()
+void SysWindow::close()
 {
     if (m_device)
     {
@@ -174,7 +174,7 @@ void Window::close()
 //  Get window event                                                          //
 //  return : True if an event occurred, false otherwise                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool Window::getEvent(Event& event)
+bool SysWindow::getEvent(Event& event)
 {
     // Events processing
     MSG msg;
@@ -201,7 +201,7 @@ bool Window::getEvent(Event& event)
 //  Create window context                                                     //
 //  return : True if the window context is successfully created               //
 ////////////////////////////////////////////////////////////////////////////////
-bool Window::createContext()
+bool SysWindow::createContext()
 {
     if (!m_handle)
     {
@@ -263,7 +263,7 @@ bool Window::createContext()
 ////////////////////////////////////////////////////////////////////////////////
 //  Window static event callback function                                     //
 ////////////////////////////////////////////////////////////////////////////////
-LRESULT CALLBACK Window::OnEvent(
+LRESULT CALLBACK SysWindow::OnEvent(
     HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
 )
 {
@@ -286,7 +286,7 @@ LRESULT CALLBACK Window::OnEvent(
 ////////////////////////////////////////////////////////////////////////////////
 //  Process window events                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void Window::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
+void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (m_handle)
     {
@@ -334,7 +334,7 @@ void Window::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 ////////////////////////////////////////////////////////////////////////////////
 //  Transcript key event                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-EventKey Window::transcriptKey(WPARAM key)
+EventKey SysWindow::transcriptKey(WPARAM key)
 {
     switch (key)
     {

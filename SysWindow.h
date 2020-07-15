@@ -46,7 +46,7 @@
 
     
     #ifdef VOS_WINDOWS
-        #include "Win/Window.h"
+        #include "Win/SysWindow.h"
     #endif // VOS_WINDOWS
 
 	#ifdef VOS_LINUX

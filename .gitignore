@@ -22,15 +22,16 @@
 !Vos.cpp
 
 !DisplayMode.h
-!Window.h
+!SysWindow.h
 !Lin/DisplayMode.h
 !Lin/DisplayMode.cpp
 !Lin/Window.h
 !Lin/Window.cpp
+!Win/
 !Win/DisplayMode.h
 !Win/DisplayMode.cpp
-!Win/Window.h
-!Win/Window.cpp
+!Win/SysWindow.h
+!Win/SysWindow.cpp
 
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
