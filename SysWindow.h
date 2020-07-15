@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Window.h : VOS Window management wrapper                               //
+//     SysWindow.h : VOS Window management wrapper                            //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WINDOW_HEADER
-#define VOS_WINDOW_HEADER
+#ifndef VOS_SYSWINDOW_HEADER
+#define VOS_SYSWINDOW_HEADER
 
     #include "System.h"
 
@@ -54,4 +54,4 @@
     #endif // VOS_LINUX
 
 
-#endif // VOS_WINDOW_HEADER
+#endif // VOS_SYSWINDOW_HEADER
