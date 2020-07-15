@@ -37,21 +37,60 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Window.h : VOS Window management wrapper                               //
+//     Lin/DisplayMode.h : DisplayMode management for Linux                   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WINDOW_HEADER
-#define VOS_WINDOW_HEADER
-
-    #include "System.h"
-
-    
-    #ifdef VOS_WINDOWS
-        #include "Win/Window.h"
-    #endif // VOS_WINDOWS
-
-	#ifdef VOS_LINUX
-        #include "Lin/Window.h"
-    #endif // VOS_LINUX
+#ifndef VOS_LIN_DISPLAYMODE_HEADER
+#define VOS_LIN_DISPLAYMODE_HEADER
 
 
-#endif // VOS_WINDOW_HEADER
+    ////////////////////////////////////////////////////////////////////////////
+    //  DisplayMode class definition                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    class DisplayMode
+    {
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  DisplayMode default constructor                               //
+            ////////////////////////////////////////////////////////////////////
+            DisplayMode();
+
+            ////////////////////////////////////////////////////////////////////
+            //  DisplayMode destructor                                        //
+            ////////////////////////////////////////////////////////////////////
+            ~DisplayMode();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get current system desktop mode                               //
+            //  return : True if the desktop mode is reached, false otherwise //
+            ////////////////////////////////////////////////////////////////////
+            bool getSystemMode();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get DisplayMode width in pixels                               //
+            //  return : Display mode width                                   //
+            ////////////////////////////////////////////////////////////////////
+            int getWidth() const;
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get DisplayMode height in pixels                              //
+            //  return : Display mode height                                  //
+            ////////////////////////////////////////////////////////////////////
+            int getHeight() const;
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get DisplayMode pixel depth in bits per pixel                 //
+            //  return : Display mode pixel depth                             //
+            ////////////////////////////////////////////////////////////////////
+            int getDepth() const;
+
+
+        private:
+            int m_width;    // Width of the display mode
+            int m_height;   // Height of the display mode
+            int m_depth;    // Pixel depth of the display mode
+    };
+
+
+#endif // VOS_LIN_DISPLAYMODE_HEADER

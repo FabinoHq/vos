@@ -37,21 +37,73 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Window.h : VOS Window management wrapper                               //
+//     Lin/Window.h : Window management for Linux                             //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WINDOW_HEADER
-#define VOS_WINDOW_HEADER
+#ifndef VOS_LIN_WINDOW_HEADER
+#define VOS_LIN_WINDOW_HEADER
 
-    #include "System.h"
+    #include <queue>
 
-    
-    #ifdef VOS_WINDOWS
-        #include "Win/Window.h"
-    #endif // VOS_WINDOWS
-
-	#ifdef VOS_LINUX
-        #include "Lin/Window.h"
-    #endif // VOS_LINUX
+    #include "DisplayMode.h"
+    #include "../Event.h"
 
 
-#endif // VOS_WINDOW_HEADER
+    ////////////////////////////////////////////////////////////////////////////
+    //  Window class definition                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    class Window
+    {
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  Window default constructor                                    //
+            ////////////////////////////////////////////////////////////////////
+            Window();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Window destructor                                             //
+            ////////////////////////////////////////////////////////////////////
+            ~Window();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create the window                                             //
+            //  return : True if the window is successfully created           //
+            ////////////////////////////////////////////////////////////////////
+            bool create();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update the window (swap front and back buffers)               //
+            ////////////////////////////////////////////////////////////////////
+            void update();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Close the window                                              //
+            ////////////////////////////////////////////////////////////////////
+            void close();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get window event                                              //
+            //  return : True if an event occurred, false otherwise           //
+            ////////////////////////////////////////////////////////////////////
+            bool getEvent(Event& event);
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  Window private copy constructor : Not copyable                //
+            ////////////////////////////////////////////////////////////////////
+            Window(const Window&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  Window private copy operator : Not copyable                   //
+            ////////////////////////////////////////////////////////////////////
+            Window& operator=(const Window&) = delete;
+
+
+        private:
+            std::queue<Event>   m_events;       // Events FIFO queue
+    };
+
+
+#endif // VOS_LIN_WINDOW_HEADER

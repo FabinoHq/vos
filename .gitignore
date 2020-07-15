@@ -7,6 +7,7 @@
 !LICENSE
 
 # Projects files
+!Makefile
 !VOS.sln
 !VOS.vcxproj
 !VOS.vcxproj.filters
@@ -22,6 +23,11 @@
 
 !DisplayMode.h
 !Window.h
+!Lin/
+!Lin/DisplayMode.h
+!Lin/DisplayMode.cpp
+!Lin/Window.h
+!Lin/Window.cpp
 !Win/DisplayMode.h
 !Win/DisplayMode.cpp
 !Win/Window.h
