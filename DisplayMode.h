@@ -49,5 +49,9 @@
         #include "Win/DisplayMode.h"
     #endif // VOS_WINDOWS
 
+	#ifdef VOS_LINUX
+        #include "Lin/DisplayMode.h"
+    #endif // VOS_LINUX
+
 
 #endif // VOS_DISPLAYMODE_HEADER
