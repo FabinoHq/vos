@@ -13,6 +13,11 @@
 !VOS.vcxproj.filters
 !VOS.vcxproj.user
 
+# Batch files
+!batch/
+!batch/VOS.bat
+!batch/VOS_mem.bat
+
 # Sources files
 !main.cpp
 !System.h
