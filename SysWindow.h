@@ -49,7 +49,7 @@
         #include "Win/SysWindow.h"
     #endif // VOS_WINDOWS
 
-	#ifdef VOS_LINUX
+    #ifdef VOS_LINUX
         #include "Lin/SysWindow.h"
     #endif // VOS_LINUX
 

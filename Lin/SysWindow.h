@@ -109,12 +109,18 @@
             ////////////////////////////////////////////////////////////////////
             bool createContext();
 
+            ////////////////////////////////////////////////////////////////////
+            //  Process window events                                         //
+            ////////////////////////////////////////////////////////////////////
+            void processEvent(XEvent msg);
+
 
         private:
             Display             *m_display;     // Display handle
             Window              m_handle;       // Window handle
             int                 m_screen;       // Window handle
             GC                  m_context;      // Window context
+            Atom                m_closeMsg;     // Close message
 
             std::queue<Event>   m_events;       // Events FIFO queue
     };

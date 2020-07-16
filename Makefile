@@ -46,36 +46,36 @@ LDFLAGS=-std=c++11 -lX11
 all: VOS
 
 VOS: main.o \
-	Vos.o \
-	Lin/DisplayMode.o Lin/SysWindow.o \
-	Renderer/Renderer.o
-	
-	$(CC) -o VOS \
-	Vos.o \
-	Lin/DisplayMode.o Lin/SysWindow.o \
-	Renderer/Renderer.o \
-	main.o $(LDFLAGS)
+    Vos.o \
+    Lin/DisplayMode.o Lin/SysWindow.o \
+    Renderer/Renderer.o
+    
+    $(CC) -o VOS \
+    Vos.o \
+    Lin/DisplayMode.o Lin/SysWindow.o \
+    Renderer/Renderer.o \
+    main.o $(LDFLAGS)
 
 main.o: main.cpp
-	$(CC) -o main.o -c main.cpp $(CFLAGS)
+    $(CC) -o main.o -c main.cpp $(CFLAGS)
 
 Vos.o: Vos.cpp
-	$(CC) -o Vos.o -c Vos.cpp $(CFLAGS)
+    $(CC) -o Vos.o -c Vos.cpp $(CFLAGS)
 
 Lin/DisplayMode.o: Lin/DisplayMode.cpp
-	$(CC) -o Lin/DisplayMode.o -c Lin/DisplayMode.cpp $(CFLAGS)
+    $(CC) -o Lin/DisplayMode.o -c Lin/DisplayMode.cpp $(CFLAGS)
 
 Lin/SysWindow.o: Lin/SysWindow.cpp
-	$(CC) -o Lin/SysWindow.o -c Lin/SysWindow.cpp $(CFLAGS)
+    $(CC) -o Lin/SysWindow.o -c Lin/SysWindow.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
-	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
+    $(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
 
 clean:
-	rm -rf *.o
-	rm -rf Lin/*.o
-	rm -rf Renderer/*.o
+    rm -rf *.o
+    rm -rf Lin/*.o
+    rm -rf Renderer/*.o
 
 mrproper: clean 
-	rm -rf VOS
+    rm -rf VOS
 

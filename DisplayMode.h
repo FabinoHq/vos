@@ -49,7 +49,7 @@
         #include "Win/DisplayMode.h"
     #endif // VOS_WINDOWS
 
-	#ifdef VOS_LINUX
+    #ifdef VOS_LINUX
         #include "Lin/DisplayMode.h"
     #endif // VOS_LINUX
 
