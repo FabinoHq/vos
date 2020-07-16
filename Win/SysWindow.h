@@ -49,23 +49,23 @@
     #include "../Event.h"
 
 
-    // Window class name
+    // SysWindow class name
     const wchar_t VOSWindowClassName[] = L"VosWindow";
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Window class definition                                               //
+    //  SysWindow class definition                                            //
     ////////////////////////////////////////////////////////////////////////////
     class SysWindow
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Window default constructor                                    //
+            //  SysWindow default constructor                                 //
             ////////////////////////////////////////////////////////////////////
             SysWindow();
 
             ////////////////////////////////////////////////////////////////////
-            //  Window destructor                                             //
+            //  SysWindow destructor                                          //
             ////////////////////////////////////////////////////////////////////
             ~SysWindow();
 
@@ -96,12 +96,12 @@
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Window private copy constructor : Not copyable                //
+            //  SysWindow private copy constructor : Not copyable             //
             ////////////////////////////////////////////////////////////////////
             SysWindow(const SysWindow&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Window private copy operator : Not copyable                   //
+            //  SysWindow private copy operator : Not copyable                //
             ////////////////////////////////////////////////////////////////////
             SysWindow& operator=(const SysWindow&) = delete;
 

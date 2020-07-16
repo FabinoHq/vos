@@ -50,7 +50,7 @@
     #endif // VOS_WINDOWS
 
 	#ifdef VOS_LINUX
-        #include "Lin/Window.h"
+        #include "Lin/SysWindow.h"
     #endif // VOS_LINUX
 
 

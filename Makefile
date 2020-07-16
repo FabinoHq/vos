@@ -47,12 +47,12 @@ all: VOS
 
 VOS: main.o \
 	Vos.o \
-	Lin/DisplayMode.o Lin/Window.o \
+	Lin/DisplayMode.o Lin/SysWindow.o \
 	Renderer/Renderer.o
 	
 	$(CC) -o VOS \
 	Vos.o \
-	Lin/DisplayMode.o Lin/Window.o \
+	Lin/DisplayMode.o Lin/SysWindow.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -65,8 +65,8 @@ Vos.o: Vos.cpp
 Lin/DisplayMode.o: Lin/DisplayMode.cpp
 	$(CC) -o Lin/DisplayMode.o -c Lin/DisplayMode.cpp $(CFLAGS)
 
-Lin/Window.o: Lin/Window.cpp
-	$(CC) -o Lin/Window.o -c Lin/Window.cpp $(CFLAGS)
+Lin/SysWindow.o: Lin/SysWindow.cpp
+	$(CC) -o Lin/SysWindow.o -c Lin/SysWindow.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

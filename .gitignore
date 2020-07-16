@@ -23,11 +23,11 @@
 
 !DisplayMode.h
 !SysWindow.h
+!Lin/
 !Lin/DisplayMode.h
 !Lin/DisplayMode.cpp
-!Lin/Window.h
-!Lin/Window.cpp
-!Win/
+!Lin/SysWindow.h
+!Lin/SysWindow.cpp
 !Win/DisplayMode.h
 !Win/DisplayMode.cpp
 !Win/SysWindow.h
