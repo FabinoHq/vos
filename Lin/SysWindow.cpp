@@ -71,6 +71,9 @@ SysWindow::~SysWindow()
 ////////////////////////////////////////////////////////////////////////////////
 bool SysWindow::create()
 {
+    // Window close message
+    Atom wmCloseMsg = 0;
+
     // Window default colors
     unsigned long black = 0;
     unsigned long white = 0;
@@ -102,7 +105,7 @@ bool SysWindow::create()
     }
 
     // Get window delete message
-    m_closeMsg = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
+    wmCloseMsg = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
 
     // Set window properties
     XSetStandardProperties(m_display, m_handle, "VOS", "VOS", None, 0, 0, 0);
@@ -113,7 +116,8 @@ bool SysWindow::create()
     );
 
     // Set window delete message
-    XSetWMProtocols(m_display, m_handle, &m_closeMsg, 1);
+    XSetWMProtocols(m_display, m_handle, &wmCloseMsg, 1);
+    m_closeMsg = static_cast<long int>(wmCloseMsg);
 
     // Enable the window
     XClearWindow(m_display, m_handle);

@@ -120,7 +120,7 @@
             Window              m_handle;       // Window handle
             int                 m_screen;       // Window handle
             GC                  m_context;      // Window context
-            Atom                m_closeMsg;     // Close message
+            long int            m_closeMsg;     // Close message
 
             std::queue<Event>   m_events;       // Events FIFO queue
     };
