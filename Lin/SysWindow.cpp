@@ -45,7 +45,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  SysWindow default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
-SysWindow::SysWindow()
+SysWindow::SysWindow() :
+m_display(0),
+m_handle(),
+m_screen(0),
+m_context()
 {
 
 }
@@ -66,7 +70,51 @@ SysWindow::~SysWindow()
 ////////////////////////////////////////////////////////////////////////////////
 bool SysWindow::create()
 {
-    return false;
+	// Window default colors
+	unsigned long black = 0;
+	unsigned long white = 0;
+
+	// Get the system display
+	m_display = XOpenDisplay((char*)0);
+	if (!m_display)
+	{
+		// Unable to open the display
+		return false;
+	}
+
+	// Get the default screen
+	m_screen = DefaultScreen(m_display);
+
+	// Get the default colors
+	black = BlackPixel(m_display, m_screen);
+	white = WhitePixel(m_display, m_screen);
+
+	// Create the window
+	m_handle = XCreateSimpleWindow(
+		m_display, DefaultRootWindow(m_display),
+		0, 0, 1024, 768, 5, white, black
+	);
+	if (!m_handle)
+	{
+		// Unable to create the window
+		return false;
+	}
+
+	// Set window properties
+	XSetStandardProperties(m_display, m_handle, "VOS", "VOS", None, 0, 0, 0);
+
+	// Select window inputs
+	XSelectInput(
+		m_display, m_handle, ExposureMask|ButtonPressMask|KeyPressMask
+	);
+
+	// Enable the window
+	XClearWindow(m_display, m_handle);
+	XMapRaised(m_display, m_handle);
+	XFlush(m_display);
+
+	// Window successfully created
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +130,19 @@ void SysWindow::update()
 ////////////////////////////////////////////////////////////////////////////////
 void SysWindow::close()
 {
+	if (m_handle)
+	{
+		// Delete the window
+		XDestroyWindow(m_display, m_handle);
+		m_handle = 0;
+	}
 
+	if (m_display)
+	{
+		// Release the display
+		XCloseDisplay(m_display);
+		m_display = 0;
+	}
 }
 
 

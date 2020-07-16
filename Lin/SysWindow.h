@@ -42,6 +42,8 @@
 #ifndef VOS_LIN_SYSWINDOW_HEADER
 #define VOS_LIN_SYSWINDOW_HEADER
 
+    #include <X11/Xlib.h>
+    #include <X11/Xutil.h>
     #include <queue>
 
     #include "DisplayMode.h"
@@ -102,6 +104,11 @@
 
 
         private:
+            Display             *m_display;     // Display handle
+            Window              m_handle;       // Window handle
+            int                 m_screen;       // Window handle
+            GC                  m_context;      // Window context
+
             std::queue<Event>   m_events;       // Events FIFO queue
     };
 
