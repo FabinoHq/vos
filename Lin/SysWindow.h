@@ -103,6 +103,13 @@
             SysWindow& operator=(const SysWindow&) = delete;
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Create window context                                         //
+            //  return : True if the window context is successfully created   //
+            ////////////////////////////////////////////////////////////////////
+            bool createContext();
+
+
         private:
             Display             *m_display;     // Display handle
             Window              m_handle;       // Window handle
