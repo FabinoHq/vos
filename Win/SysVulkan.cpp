@@ -48,6 +48,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 bool LoadVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
 {
+    // Load Vulkan library
     vulkanLibHandle = LoadLibrary(L"vulkan-1.dll");
     return vulkanLibHandle;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Vulkan library unloader for Windows                                       //
+////////////////////////////////////////////////////////////////////////////////
+void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
+{
+    if (vulkanLibHandle)
+    {
+        // Free Vulkan library
+        FreeLibrary(vulkanLibHandle);
+    }
 }

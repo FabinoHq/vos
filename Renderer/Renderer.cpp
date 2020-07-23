@@ -45,7 +45,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Renderer default constructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
-Renderer::Renderer()
+Renderer::Renderer() :
+m_vulkanLibHandle(0)
 {
 
 }
@@ -55,7 +56,8 @@ Renderer::Renderer()
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
-
+	// Free Vulkan library
+	FreeVulkanLibrary(m_vulkanLibHandle);
 }
 
 
@@ -66,8 +68,7 @@ Renderer::~Renderer()
 bool Renderer::init()
 {
 	// Load Vulkan library
-	VulkanLibHandle vulkanLibHandle = 0;
-	if (!LoadVulkanLibrary(vulkanLibHandle))
+	if (!LoadVulkanLibrary(m_vulkanLibHandle))
 	{
 		// Could not load Vulkan library
 		return false;

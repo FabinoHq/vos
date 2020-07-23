@@ -84,6 +84,10 @@
             //  Renderer private copy operator : Not copyable                 //
             ////////////////////////////////////////////////////////////////////
             Renderer& operator=(const Renderer&) = delete;
+
+
+        private:
+            VulkanLibHandle     m_vulkanLibHandle;
     };
 
 
