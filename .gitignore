@@ -41,6 +41,8 @@
 !Win/SysWindow.h
 !Win/SysWindow.cpp
 !Win/Vulkan.h
+!Win/SysVulkan.h
+!Win/SysVulkan.cpp
 
 !Renderer/
 !Renderer/Vulkan.h

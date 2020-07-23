@@ -65,6 +65,15 @@ Renderer::~Renderer()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::init()
 {
+	// Load Vulkan library
+	VulkanLibHandle vulkanLibHandle = 0;
+	if (!LoadVulkanLibrary(vulkanLibHandle))
+	{
+		// Could not load Vulkan library
+		return false;
+	}
+
+	// Renderer successfully loaded
     return true;
 }
 

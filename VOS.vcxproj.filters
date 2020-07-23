@@ -20,6 +20,9 @@
     <ClCompile Include="Win\SysWindow.cpp">
       <Filter>Win</Filter>
     </ClCompile>
+    <ClCompile Include="Win\SysVulkan.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Status.h" />
@@ -37,5 +40,12 @@
       <Filter>Win</Filter>
     </ClInclude>
     <ClInclude Include="SysWindow.h" />
+    <ClInclude Include="Vulkan.h" />
+    <ClInclude Include="Renderer\Vulkan.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Win\SysVulkan.h">
+      <Filter>Win</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

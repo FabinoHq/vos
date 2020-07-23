@@ -37,20 +37,22 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vulkan.h : Vulkan management wrapper                                   //
+//     Win/SysVulkan.h : Vulkan management for Windows                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VULKAN_HEADER
-#define VOS_VULKAN_HEADER
+#ifndef VOS_WIN_SYSVULKAN_HEADER
+#define VOS_WIN_SYSVULKAN_HEADER
 
-    #include "System.h"
-
-    
-    #ifdef VOS_WINDOWS
-        #include "Win/SysVulkan.h"
-    #endif // VOS_WINDOWS
+    #include <Windows.h>
 
 
-    #include "Renderer/Vulkan.h"
+    // Vulkan library handle for Windows
+    typedef HMODULE VulkanLibHandle;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Vulkan library loader for Windows                                     //
+    //  return : True if Vulkan library is successfully loaded                //
+    ////////////////////////////////////////////////////////////////////////////
+    bool LoadVulkanLibrary(VulkanLibHandle& vulkanLibHandle);
 
 
-#endif // VOS_VULKAN_HEADER
+#endif // VOS_WIN_SYSVULKAN_HEADER

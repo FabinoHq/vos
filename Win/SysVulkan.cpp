@@ -37,11 +37,17 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/Vulkan.h : Vulkan management for Windows                           //
+//     Win/SysVulkan.cpp : Vulkan management for Windows                      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WIN_VULKAN_HEADER
-#define VOS_WIN_VULKAN_HEADER
+#include "SysVulkan.h"
 
 
-
-#endif // VOS_WIN_VULKAN_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Vulkan library loader for Windows                                         //
+//  return : True if Vulkan library is successfully loaded                    //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
+{
+    vulkanLibHandle = LoadLibrary(L"vulkan-1.dll");
+    return vulkanLibHandle;
+}
