@@ -30,14 +30,19 @@
 
 !DisplayMode.h
 !SysWindow.h
+!Vulkan.h
 !Lin/DisplayMode.h
 !Lin/DisplayMode.cpp
 !Lin/SysWindow.h
 !Lin/SysWindow.cpp
+!Win/
 !Win/DisplayMode.h
 !Win/DisplayMode.cpp
 !Win/SysWindow.h
 !Win/SysWindow.cpp
+!Win/Vulkan.h
 
+!Renderer/
+!Renderer/Vulkan.h
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
