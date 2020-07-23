@@ -41,18 +41,18 @@
 ################################################################################
 CC=g++
 CFLAGS=-W -Wall
-LDFLAGS=-std=c++11 -lX11
+LDFLAGS=-std=c++17 -lX11 -ldl
 
 all: VOS
 
 VOS: main.o \
 	Vos.o \
-	Lin/DisplayMode.o Lin/SysWindow.o \
+	Lin/DisplayMode.o Lin/SysWindow.o Lin/SysVulkan.o \
 	Renderer/Renderer.o
 	
 	$(CC) -o VOS \
 	Vos.o \
-	Lin/DisplayMode.o Lin/SysWindow.o \
+	Lin/DisplayMode.o Lin/SysWindow.o Lin/SysVulkan.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -67,6 +67,9 @@ Lin/DisplayMode.o: Lin/DisplayMode.cpp
 
 Lin/SysWindow.o: Lin/SysWindow.cpp
 	$(CC) -o Lin/SysWindow.o -c Lin/SysWindow.cpp $(CFLAGS)
+
+Lin/SysVulkan.o: Lin/SysVulkan.cpp
+	$(CC) -o Lin/SysVulkan.o -c Lin/SysVulkan.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

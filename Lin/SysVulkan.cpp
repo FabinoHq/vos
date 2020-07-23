@@ -37,24 +37,30 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vulkan.h : Vulkan management wrapper                                   //
+//     Lin/SysVulkan.cpp : Vulkan management for Linux                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VULKAN_HEADER
-#define VOS_VULKAN_HEADER
-
-    #include "System.h"
-
-    
-    #ifdef VOS_WINDOWS
-        #include "Win/SysVulkan.h"
-    #endif // VOS_WINDOWS
-
-	#ifdef VOS_LINUX
-		#include "Lin/SysVulkan.h"
-	#endif // VOS_LINUX
+#include "SysVulkan.h"
 
 
-    #include "Renderer/Vulkan.h"
+////////////////////////////////////////////////////////////////////////////////
+//  Vulkan library loader for Linux                                           //
+//  return : True if Vulkan library is successfully loaded                    //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
+{
+    // Load Vulkan library
+    vulkanLibHandle = dlopen("libvulkan.so.1", RTLD_NOW);
+    return vulkanLibHandle;
+}
 
-
-#endif // VOS_VULKAN_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Vulkan library unloader for Linux                                         //
+////////////////////////////////////////////////////////////////////////////////
+void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
+{
+    if (vulkanLibHandle)
+    {
+        // Free Vulkan library
+        dlclose(vulkanLibHandle);
+    }
+}
