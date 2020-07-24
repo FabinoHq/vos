@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="Renderer\Vulkan.cpp" />
     <ClCompile Include="Vos.cpp" />
     <ClCompile Include="Win\DisplayMode.cpp" />
     <ClCompile Include="Win\SysVulkan.cpp" />

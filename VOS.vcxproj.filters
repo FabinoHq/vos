@@ -23,6 +23,9 @@
     <ClCompile Include="Win\SysVulkan.cpp">
       <Filter>Win</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Vulkan.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Status.h" />

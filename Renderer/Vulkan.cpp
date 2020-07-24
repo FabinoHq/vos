@@ -37,30 +37,25 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/SysVulkan.cpp : Vulkan management for Windows                      //
+//     Renderer/Vulkan.cpp : Vulkan management                                //
 ////////////////////////////////////////////////////////////////////////////////
-#include "SysVulkan.h"
+#include "Vulkan.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Vulkan library loader for Windows                                         //
-//  return : True if Vulkan library is successfully loaded                    //
+//  vkGetInstanceProcAddr function pointer                                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool LoadVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
+PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = 0;
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load Vulkan GetInstance function                                          //
+//  return : True if Vulkan GetInstance function is successfully loaded       //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle)
 {
-    // Load Vulkan library
-    vulkanLibHandle = LoadLibrary(L"vulkan-1.dll");
-    return vulkanLibHandle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Vulkan library unloader for Windows                                       //
-////////////////////////////////////////////////////////////////////////////////
-void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
-{
-    if (vulkanLibHandle)
-    {
-        // Free Vulkan library
-        FreeLibrary(vulkanLibHandle);
-    }
+    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)GetProcAddress(
+        vulkanLibHandle, "vkGetInstanceProcAddr"
+    );
+    return vkGetInstanceProcAddr;
 }

@@ -42,6 +42,27 @@
 #ifndef VOS_RENDERER_VULKAN_HEADER
 #define VOS_RENDERER_VULKAN_HEADER
 
+    #include "../Vulkan.h"
+
+
+    // Vulkan instance type
+    typedef struct VkInstance_T* VkInstance;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetInstanceProcAddr function pointer                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkVoidFunction)(void);
+    typedef PFN_vkVoidFunction (VOSVK_PTR *PFN_vkGetInstanceProcAddr)
+        (VkInstance instance, const char* pName);
+    extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Load Vulkan GetInstance function                                      //
+    //  return : True if Vulkan GetInstance function is successfully loaded   //
+    ////////////////////////////////////////////////////////////////////////////
+    bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle);
 
 
 #endif // VOS_RENDERER_VULKAN_HEADER

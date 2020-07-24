@@ -49,5 +49,6 @@
 
 !Renderer/
 !Renderer/Vulkan.h
+!Renderer/Vulkan.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
