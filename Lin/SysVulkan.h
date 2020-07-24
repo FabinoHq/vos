@@ -44,6 +44,7 @@
 
     #include <dlfcn.h>
     #include <cstdint>
+    #include <cstring>
     #include <vector>
 
 
