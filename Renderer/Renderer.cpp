@@ -74,6 +74,12 @@ bool Renderer::init()
 		return false;
 	}
 
+	if (!LoadVulkanGetInstance(m_vulkanLibHandle))
+	{
+		// Could not load Vulkan GetInstance function
+		return false;
+	}
+
 	// Renderer successfully loaded
     return true;
 }

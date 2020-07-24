@@ -43,6 +43,12 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  vkGetInstanceProcAddr function pointer                                    //
+////////////////////////////////////////////////////////////////////////////////
+PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = 0;
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Vulkan library loader for Windows                                         //
 //  return : True if Vulkan library is successfully loaded                    //
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,3 +70,16 @@ void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
         FreeLibrary(vulkanLibHandle);
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load Vulkan GetInstance function                                          //
+//  return : True if Vulkan GetInstance function is successfully loaded       //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle)
+{
+    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)GetProcAddress(
+        vulkanLibHandle, "vkGetInstanceProcAddr"
+    );
+    return vkGetInstanceProcAddr;
+}
+

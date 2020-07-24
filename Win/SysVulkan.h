@@ -45,8 +45,27 @@
     #include <Windows.h>
 
 
+	////////////////////////////////////////////////////////////////////////////
+    //  Vulkan API for Windows                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    #define	VOSVK_ATTR
+    #define VOSVK_CALL	__stdcall
+    #define VOSVK_PTR	__stdcall
+
     // Vulkan library handle for Windows
     typedef HMODULE VulkanLibHandle;
+
+    // Vulkan Windows instance type
+	typedef struct VkInstance_T* VkInstance;
+
+	////////////////////////////////////////////////////////////////////////////
+    //  vkGetInstanceProcAddr function pointer                                //
+    ////////////////////////////////////////////////////////////////////////////
+	typedef void (VOSVK_PTR *PFN_vkVoidFunction)(void);
+    typedef PFN_vkVoidFunction (VOSVK_PTR *PFN_vkGetInstanceProcAddr)
+    	(VkInstance instance, const char* pName);
+    extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan library loader for Windows                                     //
@@ -58,6 +77,12 @@
     //  Vulkan library unloader for Windows                                   //
     ////////////////////////////////////////////////////////////////////////////
     void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Load Vulkan GetInstance function                                      //
+    //  return : True if Vulkan GetInstance function is successfully loaded   //
+    ////////////////////////////////////////////////////////////////////////////
+    bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle);
 
 
 #endif // VOS_WIN_SYSVULKAN_HEADER
