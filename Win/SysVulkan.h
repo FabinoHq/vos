@@ -68,8 +68,9 @@
     //  vkGetInstanceProcAddr function                                        //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkVoidFunction)(void);
-    typedef PFN_vkVoidFunction (VOSVK_PTR *PFN_vkGetInstanceProcAddr)
-        (VkInstance instance, const char* pName);
+    typedef PFN_vkVoidFunction (VOSVK_PTR *PFN_vkGetInstanceProcAddr)(
+    	VkInstance instance, const char* pName
+    );
     extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
 

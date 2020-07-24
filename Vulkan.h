@@ -44,7 +44,7 @@
 
     #include "System.h"
 
-    
+
     #ifdef VOS_WINDOWS
         #include "Win/SysVulkan.h"
     #endif // VOS_WINDOWS

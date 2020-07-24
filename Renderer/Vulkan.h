@@ -46,6 +46,25 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Vulkan constants definitions                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    #define VK_LOD_CLAMP_NONE                 1000.0f
+    #define VK_REMAINING_MIP_LEVELS           (~0U)
+    #define VK_REMAINING_ARRAY_LAYERS         (~0U)
+    #define VK_WHOLE_SIZE                     (~0ULL)
+    #define VK_ATTACHMENT_UNUSED              (~0U)
+    #define VK_TRUE                           1
+    #define VK_FALSE                          0
+    #define VK_QUEUE_FAMILY_IGNORED           (~0U)
+    #define VK_SUBPASS_EXTERNAL               (~0U)
+    #define VK_MAX_PHYSICAL_DEVICE_NAME_SIZE  256
+    #define VK_UUID_SIZE                      16
+    #define VK_MAX_MEMORY_TYPES               32
+    #define VK_MAX_MEMORY_HEAPS               16
+    #define VK_MAX_EXTENSION_NAME_SIZE        256
+    #define VK_MAX_DESCRIPTION_SIZE           256
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Vulkan types definitions                                              //
     ////////////////////////////////////////////////////////////////////////////
     typedef uint32_t    VkFlags;
@@ -274,6 +293,15 @@
         PFN_vkInternalFreeNotification          pfnInternalFree;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExtensionProperties data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExtensionProperties
+    {
+        char        extensionName[VK_MAX_EXTENSION_NAME_SIZE];
+        uint32_t    specVersion;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -283,6 +311,16 @@
         const VkAllocationCallbacks* pAllocator, VkInstance* pInstance
     );
     extern PFN_vkCreateInstance vkCreateInstance;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkEnumerateInstanceExtensionProperties function                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkEnumerateInstanceExtensionProperties)(
+        const char* pLayerName, uint32_t* pPropertyCount,
+        VkExtensionProperties* pProperties
+    );
+    extern PFN_vkEnumerateInstanceExtensionProperties
+        vkEnumerateInstanceExtensionProperties;
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -47,6 +47,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 PFN_vkCreateInstance vkCreateInstance = 0;
 
+////////////////////////////////////////////////////////////////////////////////
+//  vkEnumerateInstanceExtensionProperties function                           //
+////////////////////////////////////////////////////////////////////////////////
+PFN_vkEnumerateInstanceExtensionProperties
+	vkEnumerateInstanceExtensionProperties = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -61,6 +67,17 @@ bool LoadVulkanGlobalFunctions()
 	if (!vkCreateInstance)
 	{
 		// Could not load vkCreateInstance
+		return false;
+	}
+
+	// Load vkEnumerateInstanceExtensionProperties
+	vkEnumerateInstanceExtensionProperties =
+		(PFN_vkEnumerateInstanceExtensionProperties)vkGetInstanceProcAddr(
+		0, "vkEnumerateInstanceExtensionProperties"
+	);
+	if (!vkEnumerateInstanceExtensionProperties)
+	{
+		// Could not load vkEnumerateInstanceExtensionProperties
 		return false;
 	}
 
