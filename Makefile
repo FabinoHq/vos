@@ -48,12 +48,12 @@ all: VOS
 VOS: main.o \
 	Vos.o \
 	Lin/DisplayMode.o Lin/SysWindow.o Lin/SysVulkan.o \
-	Renderer/Renderer.o
+	Renderer/Vulkan.o Renderer/Renderer.o
 	
 	$(CC) -o VOS \
 	Vos.o \
 	Lin/DisplayMode.o Lin/SysWindow.o Lin/SysVulkan.o \
-	Renderer/Renderer.o \
+	Renderer/Vulkan.o Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
 main.o: main.cpp
@@ -71,6 +71,9 @@ Lin/SysWindow.o: Lin/SysWindow.cpp
 Lin/SysVulkan.o: Lin/SysVulkan.cpp
 	$(CC) -o Lin/SysVulkan.o -c Lin/SysVulkan.cpp $(CFLAGS)
 
+Renderer/Vulkan.o: Renderer/Vulkan.cpp
+	$(CC) -o Renderer/Vulkan.o -c Renderer/Vulkan.cpp $(CFLAGS)
+
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
 
@@ -81,4 +84,3 @@ clean:
 
 mrproper: clean 
 	rm -rf VOS
-
