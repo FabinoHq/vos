@@ -74,9 +74,17 @@ bool Renderer::init()
 		return false;
 	}
 
+	// Load Vulkan GetInstance function
 	if (!LoadVulkanGetInstance(m_vulkanLibHandle))
 	{
 		// Could not load Vulkan GetInstance function
+		return false;
+	}
+
+	// Load Vulkan global functions
+	if (!LoadVulkanGlobalFunctions())
+	{
+		// Could not load Vulkan global functions
 		return false;
 	}
 

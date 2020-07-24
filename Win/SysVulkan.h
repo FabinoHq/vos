@@ -43,6 +43,7 @@
 #define VOS_WIN_SYSVULKAN_HEADER
 
     #include <Windows.h>
+	#include <cstdint>
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -64,7 +65,7 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  vkGetInstanceProcAddr function pointer                                //
+    //  vkGetInstanceProcAddr function                                        //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkVoidFunction)(void);
     typedef PFN_vkVoidFunction (VOSVK_PTR *PFN_vkGetInstanceProcAddr)

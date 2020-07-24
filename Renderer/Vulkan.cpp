@@ -40,3 +40,30 @@
 //     Renderer/Vulkan.cpp : Vulkan management                                //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Vulkan.h"
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  vkCreateInstance function                                                 //
+////////////////////////////////////////////////////////////////////////////////
+PFN_vkCreateInstance vkCreateInstance = 0;
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load Vulkan global functions                                              //
+//  return : True if Vulkan global functions are successfully loaded          //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanGlobalFunctions()
+{
+	// Load vkCreateInstance
+	vkCreateInstance = (PFN_vkCreateInstance)vkGetInstanceProcAddr(
+		0, "vkCreateInstance"
+	);
+	if (!vkCreateInstance)
+	{
+		// Could not load vkCreateInstance
+		return false;
+	}
+
+	// Vulkan global functions successfully loaded
+    return true;
+}
