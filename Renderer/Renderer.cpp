@@ -88,6 +88,13 @@ bool Renderer::init()
 		return false;
 	}
 
+	// Create Vulkan instance
+	if (!CreateVulkanInstance())
+	{
+		// Could not create Vulkan instance
+		return false;
+	}
+
 	// Renderer successfully loaded
     return true;
 }
