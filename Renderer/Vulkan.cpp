@@ -63,6 +63,9 @@ PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices = 0;
 // vkGetPhysicalDeviceProperties function
 PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties = 0;
 
+// vkGetPhysicalDeviceFeatures function
+PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -117,7 +120,7 @@ bool CreateVulkanInstance(VkInstance& vulkanInstance)
     }
     if (extcount == 0)
     {
-        // No Vulkan extension properties
+        // No Vulkan extension properties found
         return false;
     }
 
@@ -152,7 +155,7 @@ bool CreateVulkanInstance(VkInstance& vulkanInstance)
     }
     if (!allExtFound)
     {
-        // One or more extension is unavailable
+        // One or more Vulkan extension is unavailable
         return false;
     }
 
@@ -239,6 +242,16 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
         return false;
     }
 
+    // Load vkGetPhysicalDeviceFeatures
+    vkGetPhysicalDeviceFeatures = (PFN_vkGetPhysicalDeviceFeatures)
+        vkGetInstanceProcAddr(vulkanInstance, "vkGetPhysicalDeviceFeatures"
+    );
+    if (!vkGetPhysicalDeviceFeatures)
+    {
+        // Could not load vkGetPhysicalDeviceFeatures
+        return false;
+    }
+
     // Vulkan instance functions successfully loaded
     return true;
 }
@@ -250,6 +263,7 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 {
     if (vulkanInstance && vkDestroyInstance)
     {
+        // Destroy Vulkan instance
         vkDestroyInstance(vulkanInstance, 0);
         vulkanInstance = 0;
     }
@@ -261,6 +275,7 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkGetPhysicalDeviceFeatures = 0;
     vkGetPhysicalDeviceProperties = 0;
     vkEnumeratePhysicalDevices = 0;
     vkDestroyInstance = 0;
