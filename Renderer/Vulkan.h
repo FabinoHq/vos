@@ -80,6 +80,7 @@
     typedef uint32_t                    VkSampleMask;
 
     typedef struct VkPhysicalDevice_T*  VkPhysicalDevice;
+    typedef struct VkDevice_T*          VkDevice;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -109,6 +110,15 @@
         VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008,
     };
     typedef VkFlags VkQueueFlags;
+
+    // VkMemoryHeapFlagBits
+    enum VkMemoryHeapFlagBits
+    {
+        VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001,
+    };
+    typedef VkFlags VkMemoryHeapFlags;
+    typedef VkFlags VkDeviceCreateFlags;
+    typedef VkFlags VkDeviceQueueCreateFlags;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -579,6 +589,36 @@
         VkExtent3D      minImageTransferGranularity;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceQueueCreateInfo data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceQueueCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkDeviceQueueCreateFlags    flags;
+        uint32_t                    queueFamilyIndex;
+        uint32_t                    queueCount;
+        const float*                pQueuePriorities;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceCreateInfo data structure                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceCreateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkDeviceCreateFlags                 flags;
+        uint32_t                            queueCreateInfoCount;
+        const VkDeviceQueueCreateInfo*      pQueueCreateInfos;
+        uint32_t                            enabledLayerCount;
+        const char* const*                  ppEnabledLayerNames;
+        uint32_t                            enabledExtensionCount;
+        const char* const*                  ppEnabledExtensionNames;
+        const VkPhysicalDeviceFeatures*     pEnabledFeatures;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -642,6 +682,15 @@
     );
     extern PFN_vkGetPhysicalDeviceQueueFamilyProperties
         vkGetPhysicalDeviceQueueFamilyProperties;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateDevice function                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateDevice)(
+        VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkDevice* pDevice
+    );
+    extern PFN_vkCreateDevice vkCreateDevice;
 
 
     ////////////////////////////////////////////////////////////////////////////

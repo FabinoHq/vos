@@ -70,6 +70,9 @@ PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures = 0;
 PFN_vkGetPhysicalDeviceQueueFamilyProperties
     vkGetPhysicalDeviceQueueFamilyProperties = 0;
 
+// vkCreateDevice function
+PFN_vkCreateDevice vkCreateDevice = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -267,6 +270,16 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
         return false;
     }
 
+    // Load vkCreateDevice
+    vkCreateDevice = (PFN_vkCreateDevice)
+        vkGetInstanceProcAddr(vulkanInstance, "vkCreateDevice"
+    );
+    if (!vkCreateDevice)
+    {
+        // Could not load vkCreateDevice
+        return false;
+    }
+
     // Vulkan instance functions successfully loaded
     return true;
 }
@@ -290,6 +303,7 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkCreateDevice = 0;
     vkGetPhysicalDeviceQueueFamilyProperties = 0;
     vkGetPhysicalDeviceFeatures = 0;
     vkGetPhysicalDeviceProperties = 0;
