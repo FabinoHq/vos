@@ -700,6 +700,16 @@
     );
     extern PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkEnumerateDeviceExtensionProperties function                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkEnumerateDeviceExtensionProperties)(
+        VkPhysicalDevice physicalDevice, const char* pLayerName,
+        uint32_t* pPropertyCount, VkExtensionProperties* pProperties
+    );
+    extern PFN_vkEnumerateDeviceExtensionProperties
+        vkEnumerateDeviceExtensionProperties;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //

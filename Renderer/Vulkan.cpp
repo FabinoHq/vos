@@ -76,6 +76,10 @@ PFN_vkCreateDevice vkCreateDevice = 0;
 // vkGetDeviceProcAddr function
 PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr = 0;
 
+// vkEnumerateDeviceExtensionProperties function
+PFN_vkEnumerateDeviceExtensionProperties
+    vkEnumerateDeviceExtensionProperties = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -293,6 +297,17 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
         return false;
     }
 
+    // Load vkEnumerateDeviceExtensionProperties
+    vkEnumerateDeviceExtensionProperties =
+        (PFN_vkEnumerateDeviceExtensionProperties)vkGetInstanceProcAddr(
+        vulkanInstance, "vkEnumerateDeviceExtensionProperties"
+    );
+    if (!vkEnumerateDeviceExtensionProperties)
+    {
+        // Could not load vkEnumerateDeviceExtensionProperties
+        return false;
+    }
+
     // Vulkan instance functions successfully loaded
     return true;
 }
@@ -316,6 +331,7 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkEnumerateDeviceExtensionProperties = 0;
     vkGetDeviceProcAddr = 0;
     vkCreateDevice = 0;
     vkGetPhysicalDeviceQueueFamilyProperties = 0;
