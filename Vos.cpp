@@ -76,7 +76,7 @@ bool Vos::launch()
     }
 
     // Init VOS renderer
-    if (!m_renderer.init())
+    if (!m_renderer.init(&m_window))
     {
         // Unable to init VOS renderer
         return false;

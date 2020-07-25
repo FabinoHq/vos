@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_RENDERER_HEADER
 #define VOS_RENDERER_RENDERER_HEADER
 
+    #include "../SysWindow.h"
     #include "../Vulkan.h"
 
 
@@ -66,7 +67,7 @@
             //  Init renderer                                                 //
             //  return : True if the renderer is successfully loaded          //
             ////////////////////////////////////////////////////////////////////
-            bool init();
+            bool init(SysWindow* sysWindow);
 
             ////////////////////////////////////////////////////////////////////
             //  Clear renderer frame                                          //
@@ -87,11 +88,10 @@
 
 
         private:
-            ////////////////////////////////////////////////////////////////////
-            //  Vulkan handlers                                               //
-            ////////////////////////////////////////////////////////////////////
-            VulkanLibHandle     m_vulkanLibHandle;
-            VkInstance          m_vulkanInstance;
+            SysWindow*          m_sysWindow;            // SysWindow pointer
+            VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
+            VkInstance          m_vulkanInstance;       // Vulkan instance
+            VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
     };
 
 

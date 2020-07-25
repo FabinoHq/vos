@@ -42,7 +42,7 @@
 #ifndef VOS_WIN_SYSVULKAN_HEADER
 #define VOS_WIN_SYSVULKAN_HEADER
 
-    #include <Windows.h>
+    #include "../SysWindow.h"
     #include <cstdint>
     #include <cstring>
     #include <vector>
@@ -332,6 +332,16 @@
     //  return : True if Vulkan CreateSystemSurface function is loaded        //
     ////////////////////////////////////////////////////////////////////////////
     bool LoadVulkanCreateSystemSurface(VkInstance& vulkanInstance);
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Create Vulkan SystemSurface                                           //
+    //  return : True if Vulkan SystemSurface is successfully created         //
+    ////////////////////////////////////////////////////////////////////////////
+    bool CreateVulkanSystemSurface(
+        VkInstance& vulkanInstance, SysWindow& sysWindow,
+        VkSurfaceKHR& vulkanSurface
+    );
 
 
 #endif // VOS_WIN_SYSVULKAN_HEADER

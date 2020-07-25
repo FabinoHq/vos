@@ -46,8 +46,10 @@
 //  Renderer default constructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::Renderer() :
+m_sysWindow(0),
 m_vulkanLibHandle(0),
-m_vulkanInstance(0)
+m_vulkanInstance(0),
+m_vulkanSurface(0)
 {
 
 }
@@ -72,8 +74,16 @@ Renderer::~Renderer()
 //  Init renderer                                                             //
 //  return : True if the renderer is successfully loaded                      //
 ////////////////////////////////////////////////////////////////////////////////
-bool Renderer::init()
+bool Renderer::init(SysWindow* sysWindow)
 {
+	// Check SysWindow pointer
+	if (!sysWindow)
+	{
+		// Invalid SysWindow pointer
+		return false;
+	}
+	m_sysWindow = sysWindow;
+
 	// Load Vulkan library
 	if (!LoadVulkanLibrary(m_vulkanLibHandle))
 	{
@@ -106,6 +116,14 @@ bool Renderer::init()
 	if (!LoadVulkanCreateSystemSurface(m_vulkanInstance))
 	{
 		// Could not load Vulkan CreateSystemSurface function
+		return false;
+	}
+
+	// Create Vulkan SystemSurface
+	if (!CreateVulkanSystemSurface(
+		m_vulkanInstance, *m_sysWindow, m_vulkanSurface))
+	{
+		// Could not create Vulkan SystemSurface
 		return false;
 	}
 

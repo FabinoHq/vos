@@ -105,3 +105,28 @@ bool LoadVulkanCreateSystemSurface(VkInstance& vulkanInstance)
     );
     return vkCreateWin32SurfaceKHR;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create Vulkan SystemSurface                                               //
+//  return : True if Vulkan SystemSurface is successfully created             //
+////////////////////////////////////////////////////////////////////////////////
+bool CreateVulkanSystemSurface(
+    VkInstance& vulkanInstance, SysWindow& sysWindow,
+    VkSurfaceKHR& vulkanSurface)
+{
+    VkWin32SurfaceCreateInfoKHR surfaceInfo;
+    surfaceInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+    surfaceInfo.pNext = 0;
+    surfaceInfo.flags = 0;
+    surfaceInfo.hinstance = sysWindow.getInstance();
+    surfaceInfo.hwnd = sysWindow.getHandle();
+
+    if (vkCreateWin32SurfaceKHR(
+        vulkanInstance, &surfaceInfo, 0, &vulkanSurface) != VK_SUCCESS)
+    {
+        return false;
+    }
+
+    return true;
+}

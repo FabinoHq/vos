@@ -91,6 +91,19 @@
             bool getEvent(Event& event);
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get window display                                            //
+            //  return : Pointer to the window display                        //
+            ////////////////////////////////////////////////////////////////////
+            Display* getDisplay();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get window handle                                             //
+            //  return : Reference to the window handle                       //
+            ////////////////////////////////////////////////////////////////////
+            Window& getHandle();
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  SysWindow private copy constructor : Not copyable             //
@@ -116,9 +129,9 @@
 
 
         private:
-            Display             *m_display;     // Display handle
+            Display*            m_display;      // Display handle
             Window              m_handle;       // Window handle
-            int                 m_screen;       // Window handle
+            int                 m_screen;       // Screen handle
             GC                  m_context;      // Window context
             long int            m_closeMsg;     // Close message
 

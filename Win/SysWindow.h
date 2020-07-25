@@ -94,6 +94,19 @@
             bool getEvent(Event& event);
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get window instance                                           //
+            //  return : Reference to the window instance                     //
+            ////////////////////////////////////////////////////////////////////
+            HINSTANCE& getInstance();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get window handle                                             //
+            //  return : Reference to the window handle                       //
+            ////////////////////////////////////////////////////////////////////
+            HWND& getHandle();
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  SysWindow private copy constructor : Not copyable             //
