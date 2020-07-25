@@ -81,11 +81,13 @@
 
     typedef struct VkPhysicalDevice_T*  VkPhysicalDevice;
 
+
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkFlags VkInstanceCreateFlags;
 
+    // VkSampleCountFlagBits
     enum VkSampleCountFlagBits
     {
         VK_SAMPLE_COUNT_1_BIT = 0x00000001,
@@ -97,6 +99,16 @@
         VK_SAMPLE_COUNT_64_BIT = 0x00000040,
     };
     typedef VkFlags VkSampleCountFlags;
+
+    // VkQueueFlagBits
+    enum VkQueueFlagBits
+    {
+        VK_QUEUE_GRAPHICS_BIT = 0x00000001,
+        VK_QUEUE_COMPUTE_BIT = 0x00000002,
+        VK_QUEUE_TRANSFER_BIT = 0x00000004,
+        VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008,
+    };
+    typedef VkFlags VkQueueFlags;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -546,6 +558,27 @@
         VkBool32    inheritedQueries;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExtent3D data structure                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExtent3D
+    {
+        uint32_t    width;
+        uint32_t    height;
+        uint32_t    depth;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkQueueFamilyProperties data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkQueueFamilyProperties
+    {
+        VkQueueFlags    queueFlags;
+        uint32_t        queueCount;
+        uint32_t        timestampValidBits;
+        VkExtent3D      minImageTransferGranularity;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -599,6 +632,16 @@
         VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures* pFeatures
     );
     extern PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceQueueFamilyProperties function                     //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceQueueFamilyProperties)(
+        VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount,
+        VkQueueFamilyProperties* pQueueFamilyProperties
+    );
+    extern PFN_vkGetPhysicalDeviceQueueFamilyProperties
+        vkGetPhysicalDeviceQueueFamilyProperties;
 
 
     ////////////////////////////////////////////////////////////////////////////
