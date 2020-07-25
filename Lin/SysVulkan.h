@@ -42,6 +42,7 @@
 #ifndef VOS_LIN_SYSVULKAN_HEADER
 #define VOS_LIN_SYSVULKAN_HEADER
 
+    #include <X11/Xlib.h>
     #include <dlfcn.h>
     #include <cstdint>
     #include <cstring>
@@ -84,7 +85,7 @@
     typedef struct VkPhysicalDevice_T*  VkPhysicalDevice;
     typedef struct VkDevice_T*          VkDevice;
     typedef struct VkSurfaceKHR_T*      VkSurfaceKHR;
-    typedef VkFlags                     VkWin32SurfaceCreateFlagsKHR;
+    typedef VkFlags                     VkXlibSurfaceCreateFlagsKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -277,6 +278,18 @@
         PFN_vkInternalFreeNotification          pfnInternalFree;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkXlibSurfaceCreateInfoKHR data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkXlibSurfaceCreateInfoKHR
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkXlibSurfaceCreateFlagsKHR     flags;
+        Display*                        dpy;
+        Window                          window;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkGetInstanceProcAddr function                                        //
@@ -286,6 +299,15 @@
         VkInstance instance, const char* pName
     );
     extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateXlibSurfaceKHR function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateXlibSurfaceKHR)(
+        VkInstance instance, const VkXlibSurfaceCreateInfoKHR* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface
+    );
+    extern PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -305,6 +327,12 @@
     //  return : True if Vulkan GetInstance function is successfully loaded   //
     ////////////////////////////////////////////////////////////////////////////
     bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Load Vulkan CreateSystemSurface function                              //
+    //  return : True if Vulkan CreateSystemSurface function is loaded        //
+    ////////////////////////////////////////////////////////////////////////////
+    bool LoadVulkanCreateSystemSurface(VkInstance& vulkanInstance);
 
 
 #endif // VOS_LIN_SYSVULKAN_HEADER

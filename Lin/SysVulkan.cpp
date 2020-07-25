@@ -47,6 +47,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = 0;
 
+////////////////////////////////////////////////////////////////////////////////
+//  vkCreateXlibSurfaceKHR function                                           //
+////////////////////////////////////////////////////////////////////////////////
+PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Vulkan library loader for Linux                                           //
@@ -68,6 +73,9 @@ void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
     {
         // Free Vulkan library
         dlclose(vulkanLibHandle);
+        vulkanLibHandle = 0;
+        vkCreateXlibSurfaceKHR = 0;
+        vkGetInstanceProcAddr = 0;
     }
 }
 
@@ -82,4 +90,17 @@ bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle)
         vulkanLibHandle, "vkGetInstanceProcAddr"
     );
     return vkGetInstanceProcAddr;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load Vulkan CreateSystemSurface function                                  //
+//  return : True if Vulkan CreateSystemSurface function is loaded            //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanCreateSystemSurface(VkInstance& vulkanInstance)
+{
+    // Load vkCreateXlibSurfaceKHR
+    vkCreateXlibSurfaceKHR = (PFN_vkCreateXlibSurfaceKHR)
+        vkGetInstanceProcAddr(vulkanInstance, "vkCreateXlibSurfaceKHR"
+    );
+    return vkCreateXlibSurfaceKHR;
 }
