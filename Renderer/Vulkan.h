@@ -692,6 +692,14 @@
     );
     extern PFN_vkCreateDevice vkCreateDevice;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDeviceProcAddr function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef PFN_vkVoidFunction (VOSVK_PTR *PFN_vkGetDeviceProcAddr)(
+        VkDevice device, const char* pName
+    );
+    extern PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
