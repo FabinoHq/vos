@@ -56,6 +56,12 @@ m_vulkanLibHandle(0)
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
+	// Destroy Vulkan instance
+	DestroyVulkanInstance();
+
+	// Free Vulkan functions
+	FreeVulkanFunctions();
+
 	// Free Vulkan library
 	FreeVulkanLibrary(m_vulkanLibHandle);
 }
@@ -92,6 +98,13 @@ bool Renderer::init()
 	if (!CreateVulkanInstance())
 	{
 		// Could not create Vulkan instance
+		return false;
+	}
+
+	// Load Vulkan instance functions
+	if (!LoadVulkanInstanceFunctions())
+	{
+		// Could not load Vulkan instance functions
 		return false;
 	}
 

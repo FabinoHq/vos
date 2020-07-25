@@ -60,6 +60,12 @@ PFN_vkEnumerateInstanceExtensionProperties
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  vkDestroyInstance function                                                //
+////////////////////////////////////////////////////////////////////////////////
+PFN_vkDestroyInstance vkDestroyInstance = 0;
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
 //  return : True if Vulkan global functions are successfully loaded          //
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +102,13 @@ bool LoadVulkanGlobalFunctions()
 ////////////////////////////////////////////////////////////////////////////////
 bool CreateVulkanInstance()
 {
+    // Check current Vulkan instance
+    if (VulkanInstance)
+    {
+        // Vulkan instance allready created
+        return false;
+    }
+
     // Enumerate Vulkan extension properties
     uint32_t extcount = 0;
     if (vkEnumerateInstanceExtensionProperties(0, &extcount, 0) != VK_SUCCESS)
@@ -177,4 +190,54 @@ bool CreateVulkanInstance()
 
     // Vulkan instance successfully created
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load Vulkan instance functions                                            //
+//  return : True if Vulkan instance functions are successfully loaded        //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanInstanceFunctions()
+{
+    // Check Vulkan instance
+    if (!VulkanInstance)
+    {
+        // Vulkan instance has not been created
+        return false;
+    }
+
+    // Load vkDestroyInstance
+    vkDestroyInstance = (PFN_vkDestroyInstance)vkGetInstanceProcAddr(
+        VulkanInstance, "vkDestroyInstance"
+    );
+    if (!vkDestroyInstance)
+    {
+        // Could not load vkDestroyInstance
+        return false;
+    }
+
+    // Vulkan instance functions successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy Vulkan instance                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void DestroyVulkanInstance()
+{
+    if (VulkanInstance && vkDestroyInstance)
+    {
+        vkDestroyInstance(VulkanInstance, 0);
+        VulkanInstance = 0;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Free Vulkan functions                                                     //
+////////////////////////////////////////////////////////////////////////////////
+void FreeVulkanFunctions()
+{
+    // Free all Vulkan functions
+    vkDestroyInstance = 0;
+    vkEnumerateInstanceExtensionProperties = 0;
+    vkCreateInstance = 0;
 }
