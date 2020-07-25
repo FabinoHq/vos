@@ -87,7 +87,11 @@
 
 
         private:
+            ////////////////////////////////////////////////////////////////////
+            //  Vulkan handlers                                               //
+            ////////////////////////////////////////////////////////////////////
             VulkanLibHandle     m_vulkanLibHandle;
+            VkInstance          m_vulkanInstance;
     };
 
 

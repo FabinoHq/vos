@@ -79,12 +79,6 @@
     typedef uint64_t    VkDeviceSize;
     typedef uint32_t    VkSampleMask;
     typedef VkFlags     VkInstanceCreateFlags;
-    
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Vulkan instance                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    extern VkInstance VulkanInstance;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -355,18 +349,18 @@
     //  Create Vulkan instance                                                //
     //  return : True if Vulkan instance is successfully created              //
     ////////////////////////////////////////////////////////////////////////////
-    bool CreateVulkanInstance();
+    bool CreateVulkanInstance(VkInstance& vulkanInstance);
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan instance functions                                        //
     //  return : True if Vulkan instance functions are successfully loaded    //
     ////////////////////////////////////////////////////////////////////////////
-    bool LoadVulkanInstanceFunctions();
+    bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance);
 
     ////////////////////////////////////////////////////////////////////////////
     //  Destroy Vulkan instance                                               //
     ////////////////////////////////////////////////////////////////////////////
-    void DestroyVulkanInstance();
+    void DestroyVulkanInstance(VkInstance& vulkanInstance);
 
     ////////////////////////////////////////////////////////////////////////////
     //  Free Vulkan functions                                                 //

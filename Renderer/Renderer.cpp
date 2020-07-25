@@ -46,7 +46,8 @@
 //  Renderer default constructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::Renderer() :
-m_vulkanLibHandle(0)
+m_vulkanLibHandle(0),
+m_vulkanInstance(0)
 {
 
 }
@@ -57,7 +58,7 @@ m_vulkanLibHandle(0)
 Renderer::~Renderer()
 {
 	// Destroy Vulkan instance
-	DestroyVulkanInstance();
+	DestroyVulkanInstance(m_vulkanInstance);
 
 	// Free Vulkan functions
 	FreeVulkanFunctions();
@@ -95,14 +96,14 @@ bool Renderer::init()
 	}
 
 	// Create Vulkan instance
-	if (!CreateVulkanInstance())
+	if (!CreateVulkanInstance(m_vulkanInstance))
 	{
 		// Could not create Vulkan instance
 		return false;
 	}
 
 	// Load Vulkan instance functions
-	if (!LoadVulkanInstanceFunctions())
+	if (!LoadVulkanInstanceFunctions(m_vulkanInstance))
 	{
 		// Could not load Vulkan instance functions
 		return false;

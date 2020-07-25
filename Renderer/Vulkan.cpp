@@ -43,11 +43,6 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Vulkan instance                                                           //
-////////////////////////////////////////////////////////////////////////////////
-VkInstance VulkanInstance = 0;
-
-////////////////////////////////////////////////////////////////////////////////
 //  vkCreateInstance function                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 PFN_vkCreateInstance vkCreateInstance = 0;
@@ -100,10 +95,10 @@ bool LoadVulkanGlobalFunctions()
 //  Create Vulkan instance                                                    //
 //  return : True if Vulkan instance is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool CreateVulkanInstance()
+bool CreateVulkanInstance(VkInstance& vulkanInstance)
 {
     // Check current Vulkan instance
-    if (VulkanInstance)
+    if (vulkanInstance)
     {
         // Vulkan instance allready created
         return false;
@@ -181,8 +176,13 @@ bool CreateVulkanInstance()
     createInfos.ppEnabledExtensionNames = VulkanExtensions.data();
 
     // Create Vulkan instance
-    VulkanInstance = 0;
-    if (vkCreateInstance(&createInfos, 0, &VulkanInstance) != VK_SUCCESS)
+    vulkanInstance = 0;
+    if (vkCreateInstance(&createInfos, 0, &vulkanInstance) != VK_SUCCESS)
+    {
+        // Could not create Vulkan instance
+        return false;
+    }
+    if (!vulkanInstance)
     {
         // Could not create Vulkan instance
         return false;
@@ -196,10 +196,10 @@ bool CreateVulkanInstance()
 //  Load Vulkan instance functions                                            //
 //  return : True if Vulkan instance functions are successfully loaded        //
 ////////////////////////////////////////////////////////////////////////////////
-bool LoadVulkanInstanceFunctions()
+bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 {
     // Check Vulkan instance
-    if (!VulkanInstance)
+    if (!vulkanInstance)
     {
         // Vulkan instance has not been created
         return false;
@@ -207,7 +207,7 @@ bool LoadVulkanInstanceFunctions()
 
     // Load vkDestroyInstance
     vkDestroyInstance = (PFN_vkDestroyInstance)vkGetInstanceProcAddr(
-        VulkanInstance, "vkDestroyInstance"
+        vulkanInstance, "vkDestroyInstance"
     );
     if (!vkDestroyInstance)
     {
@@ -222,12 +222,12 @@ bool LoadVulkanInstanceFunctions()
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vulkan instance                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void DestroyVulkanInstance()
+void DestroyVulkanInstance(VkInstance& vulkanInstance)
 {
-    if (VulkanInstance && vkDestroyInstance)
+    if (vulkanInstance && vkDestroyInstance)
     {
-        vkDestroyInstance(VulkanInstance, 0);
-        VulkanInstance = 0;
+        vkDestroyInstance(vulkanInstance, 0);
+        vulkanInstance = 0;
     }
 }
 
