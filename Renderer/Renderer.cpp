@@ -102,6 +102,13 @@ bool Renderer::init()
 		return false;
 	}
 
+	// Load Vulkan CreateSystemSurface
+	if (!LoadVulkanCreateSystemSurface(m_vulkanInstance))
+	{
+		// Could not load Vulkan CreateSystemSurface function
+		return false;
+	}
+
 	// Load Vulkan instance functions
 	if (!LoadVulkanInstanceFunctions(m_vulkanInstance))
 	{

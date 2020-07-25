@@ -47,6 +47,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = 0;
 
+////////////////////////////////////////////////////////////////////////////////
+//  vkCreateWin32SurfaceKHR function                                          //
+////////////////////////////////////////////////////////////////////////////////
+PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Vulkan library loader for Windows                                         //
@@ -68,6 +73,9 @@ void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
     {
         // Free Vulkan library
         FreeLibrary(vulkanLibHandle);
+        vulkanLibHandle = 0;
+        vkCreateWin32SurfaceKHR = 0;
+        vkGetInstanceProcAddr = 0;
     }
 }
 
@@ -78,8 +86,22 @@ void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
 ////////////////////////////////////////////////////////////////////////////////
 bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle)
 {
+    // Load vkGetInstanceProcAddr
     vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)GetProcAddress(
         vulkanLibHandle, "vkGetInstanceProcAddr"
     );
     return vkGetInstanceProcAddr;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load Vulkan CreateSystemSurface function                                  //
+//  return : True if Vulkan CreateSystemSurface function is loaded            //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanCreateSystemSurface(VkInstance& vulkanInstance)
+{
+    // Load vkCreateWin32SurfaceKHR
+    vkCreateWin32SurfaceKHR = (PFN_vkCreateWin32SurfaceKHR)
+        vkGetInstanceProcAddr(vulkanInstance, "vkCreateWin32SurfaceKHR"
+    );
+    return vkCreateWin32SurfaceKHR;
 }
