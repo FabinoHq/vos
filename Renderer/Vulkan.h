@@ -88,7 +88,7 @@
     ////////////////////////////////////////////////////////////////////////////
     typedef VkFlags VkInstanceCreateFlags;
 
-    // VkSampleCountFlagBits
+    // VkSampleCountFlags
     enum VkSampleCountFlagBits
     {
         VK_SAMPLE_COUNT_1_BIT = 0x00000001,
@@ -101,7 +101,7 @@
     };
     typedef VkFlags VkSampleCountFlags;
 
-    // VkQueueFlagBits
+    // VkQueueFlags
     enum VkQueueFlagBits
     {
         VK_QUEUE_GRAPHICS_BIT = 0x00000001,
@@ -111,7 +111,7 @@
     };
     typedef VkFlags VkQueueFlags;
 
-    // VkMemoryHeapFlagBits
+    // VkMemoryHeapFlags
     enum VkMemoryHeapFlagBits
     {
         VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001,
@@ -119,6 +119,17 @@
     typedef VkFlags VkMemoryHeapFlags;
     typedef VkFlags VkDeviceCreateFlags;
     typedef VkFlags VkDeviceQueueCreateFlags;
+
+    // VkMemoryPropertyFlags
+    enum VkMemoryPropertyFlagBits
+    {
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002,
+        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004,
+        VK_MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008,
+        VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010,
+    };
+    typedef VkFlags VkMemoryPropertyFlags;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -619,6 +630,35 @@
         const VkPhysicalDeviceFeatures*     pEnabledFeatures;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryType data structure                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryType
+    {
+        VkMemoryPropertyFlags   propertyFlags;
+        uint32_t                heapIndex;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryHeap data structure                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryHeap
+    {
+        VkDeviceSize        size;
+        VkMemoryHeapFlags   flags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceMemoryProperties data structure                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceMemoryProperties
+    {
+        uint32_t        memoryTypeCount;
+        VkMemoryType    memoryTypes[VK_MAX_MEMORY_TYPES];
+        uint32_t        memoryHeapCount;
+        VkMemoryHeap    memoryHeaps[VK_MAX_MEMORY_HEAPS];
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -709,6 +749,16 @@
     );
     extern PFN_vkEnumerateDeviceExtensionProperties
         vkEnumerateDeviceExtensionProperties;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceMemoryProperties function                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceMemoryProperties)(
+        VkPhysicalDevice physicalDevice,
+        VkPhysicalDeviceMemoryProperties* pMemoryProperties
+    );
+    extern PFN_vkGetPhysicalDeviceMemoryProperties
+        vkGetPhysicalDeviceMemoryProperties;
 
 
     ////////////////////////////////////////////////////////////////////////////
