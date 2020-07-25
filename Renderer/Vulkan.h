@@ -55,30 +55,32 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan constants definitions                                          //
     ////////////////////////////////////////////////////////////////////////////
-    #define VK_LOD_CLAMP_NONE                 1000.0f
-    #define VK_REMAINING_MIP_LEVELS           (~0U)
-    #define VK_REMAINING_ARRAY_LAYERS         (~0U)
-    #define VK_WHOLE_SIZE                     (~0ULL)
-    #define VK_ATTACHMENT_UNUSED              (~0U)
-    #define VK_TRUE                           1
-    #define VK_FALSE                          0
-    #define VK_QUEUE_FAMILY_IGNORED           (~0U)
-    #define VK_SUBPASS_EXTERNAL               (~0U)
-    #define VK_MAX_PHYSICAL_DEVICE_NAME_SIZE  256
-    #define VK_UUID_SIZE                      16
-    #define VK_MAX_MEMORY_TYPES               32
-    #define VK_MAX_MEMORY_HEAPS               16
-    #define VK_MAX_EXTENSION_NAME_SIZE        256
-    #define VK_MAX_DESCRIPTION_SIZE           256
+    #define VK_LOD_CLAMP_NONE                   1000.0f
+    #define VK_REMAINING_MIP_LEVELS             (~0U)
+    #define VK_REMAINING_ARRAY_LAYERS           (~0U)
+    #define VK_WHOLE_SIZE                       (~0ULL)
+    #define VK_ATTACHMENT_UNUSED                (~0U)
+    #define VK_TRUE                             1
+    #define VK_FALSE                            0
+    #define VK_QUEUE_FAMILY_IGNORED             (~0U)
+    #define VK_SUBPASS_EXTERNAL                 (~0U)
+    #define VK_MAX_PHYSICAL_DEVICE_NAME_SIZE    256
+    #define VK_UUID_SIZE                        16
+    #define VK_MAX_MEMORY_TYPES                 32
+    #define VK_MAX_MEMORY_HEAPS                 16
+    #define VK_MAX_EXTENSION_NAME_SIZE          256
+    #define VK_MAX_DESCRIPTION_SIZE             256
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan types definitions                                              //
     ////////////////////////////////////////////////////////////////////////////
-    typedef uint32_t    VkFlags;
-    typedef uint32_t    VkBool32;
-    typedef uint64_t    VkDeviceSize;
-    typedef uint32_t    VkSampleMask;
-    typedef VkFlags     VkInstanceCreateFlags;
+    typedef uint32_t                            VkFlags;
+    typedef uint32_t                            VkBool32;
+    typedef uint64_t                            VkDeviceSize;
+    typedef uint32_t                            VkSampleMask;
+    typedef VkFlags                             VkInstanceCreateFlags;
+
+    typedef struct VkPhysicalDevice_T*          VkPhysicalDevice;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -337,6 +339,15 @@
         VkInstance instance, const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyInstance vkDestroyInstance;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkEnumeratePhysicalDevices function                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkEnumeratePhysicalDevices)(
+        VkInstance instance, uint32_t* pPhysicalDeviceCount,
+        VkPhysicalDevice* pPhysicalDevices
+    );
+    extern PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
 
 
     ////////////////////////////////////////////////////////////////////////////

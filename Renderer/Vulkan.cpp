@@ -59,6 +59,11 @@ PFN_vkEnumerateInstanceExtensionProperties
 ////////////////////////////////////////////////////////////////////////////////
 PFN_vkDestroyInstance vkDestroyInstance = 0;
 
+////////////////////////////////////////////////////////////////////////////////
+//  vkEnumeratePhysicalDevices function                                       //
+////////////////////////////////////////////////////////////////////////////////
+PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -206,12 +211,22 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     }
 
     // Load vkDestroyInstance
-    vkDestroyInstance = (PFN_vkDestroyInstance)vkGetInstanceProcAddr(
-        vulkanInstance, "vkDestroyInstance"
+    vkDestroyInstance = (PFN_vkDestroyInstance)
+        vkGetInstanceProcAddr(vulkanInstance, "vkDestroyInstance"
     );
     if (!vkDestroyInstance)
     {
         // Could not load vkDestroyInstance
+        return false;
+    }
+
+    // Load vkEnumeratePhysicalDevices
+    vkEnumeratePhysicalDevices = (PFN_vkEnumeratePhysicalDevices)
+        vkGetInstanceProcAddr(vulkanInstance, "vkEnumeratePhysicalDevices"
+    );
+    if (!vkEnumeratePhysicalDevices)
+    {
+        // Could not load vkEnumeratePhysicalDevices
         return false;
     }
 
@@ -237,6 +252,7 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkEnumeratePhysicalDevices = 0;
     vkDestroyInstance = 0;
     vkEnumerateInstanceExtensionProperties = 0;
     vkCreateInstance = 0;
