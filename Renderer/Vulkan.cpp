@@ -417,6 +417,23 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
             // Vulkan version is not supported by the device
             return false;
         }
+
+        // Get device queue families
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(
+            physicalDevices[i], &queueFamilyCount, 0
+        );
+        if (queueFamilyCount <= 0)
+        {
+            // No device queue families found
+            return false;
+        }
+
+        // Get device queue families list
+        std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(
+            physicalDevices[i], &queueFamilyCount, queueFamilies.data()
+        );
     }
 
     // Vulkan device successfully selected
