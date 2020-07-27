@@ -363,7 +363,7 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
         // Get device extensions count
         uint32_t extCount = 0;
         if (vkEnumerateDeviceExtensionProperties(
-            physicalDevices[0], 0, &extCount, 0) != VK_SUCCESS)
+            physicalDevices[i], 0, &extCount, 0) != VK_SUCCESS)
         {
             // Could not enumerate device extensions properties
             return false;
@@ -371,7 +371,7 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
 
         // Get device extensions list
         std::vector<VkExtensionProperties> extProperties(extCount);
-        if (vkEnumerateDeviceExtensionProperties(physicalDevices[0], 0,
+        if (vkEnumerateDeviceExtensionProperties(physicalDevices[i], 0,
             &extCount, extProperties.data()) != VK_SUCCESS)
         {
             // Could not get extensions properties list
@@ -407,22 +407,14 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
         // Get physical device properties and features
         VkPhysicalDeviceProperties deviceProperties;
         VkPhysicalDeviceFeatures deviceFeatures;
-        vkGetPhysicalDeviceProperties(physicalDevices[0], &deviceProperties);
-        vkGetPhysicalDeviceFeatures(physicalDevices[0], &deviceFeatures);
+        vkGetPhysicalDeviceProperties(physicalDevices[i], &deviceProperties);
+        vkGetPhysicalDeviceFeatures(physicalDevices[i], &deviceFeatures);
 
-        // Check device Vulkan version
+        // Check Vulkan version of the device
         if (VK_VERSION_MAJOR(deviceProperties.apiVersion) <
             VK_VERSION_MAJOR(VK_API_VERSION))
         {
             // Vulkan version is not supported by the device
-            return false;
-        }
-
-        // Check device properties
-        if (deviceProperties.limits.maxImageDimension2D <
-            VOSVK_REQUIRED_TEXTURE_SIZE)
-        {
-            // Device does not support required texture size
             return false;
         }
     }
