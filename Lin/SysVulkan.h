@@ -73,6 +73,13 @@
         "VK_KHR_surface", "VK_KHR_xlib_surface"
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Vulkan device extensions for Linux                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    const std::vector<const char*> VulkanDeviceExtensions = {
+        "VK_KHR_swapchain"
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan types definitions                                              //

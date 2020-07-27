@@ -40,6 +40,7 @@
 //     Renderer/Vulkan.cpp : Vulkan management                                //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Vulkan.h"
+#include <iostream>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,23 +129,18 @@ bool CreateVulkanInstance(VkInstance& vulkanInstance)
         return false;
     }
 
-    // Enumerate Vulkan extension properties
-    uint32_t extcount = 0;
-    if (vkEnumerateInstanceExtensionProperties(0, &extcount, 0) != VK_SUCCESS)
+    // Enumerate Vulkan extensions properties
+    uint32_t extCount = 0;
+    if (vkEnumerateInstanceExtensionProperties(0, &extCount, 0) != VK_SUCCESS)
     {
-        // Could not enumerate Vulkan extension properties
-        return false;
-    }
-    if (extcount == 0)
-    {
-        // No Vulkan extension properties found
+        // Could not enumerate Vulkan extensions properties
         return false;
     }
 
     // Get Vulkan extensions properties
-    std::vector<VkExtensionProperties> extproperties(extcount);
+    std::vector<VkExtensionProperties> extProperties(extCount);
     if (vkEnumerateInstanceExtensionProperties(
-        0, &extcount, extproperties.data()) != VK_SUCCESS)
+        0, &extCount, extProperties.data()) != VK_SUCCESS)
     {
         // Could not get Vulkan extensions properties
         return false;
@@ -155,10 +151,10 @@ bool CreateVulkanInstance(VkInstance& vulkanInstance)
     for (size_t i = 0; i < VulkanExtensions.size(); ++i)
     {
         bool extFound = false;
-        for (size_t j = 0; j < extproperties.size(); ++j)
+        for (size_t j = 0; j < extProperties.size(); ++j)
         {
             if (strcmp(VulkanExtensions[i],
-                extproperties[j].extensionName) == 0)
+                extProperties[j].extensionName) == 0)
             {
                 extFound = true;
                 break;
@@ -341,8 +337,8 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
 
     // List devices
     uint32_t devicesCounts = 0;
-    if (vkEnumeratePhysicalDevices(vulkanInstance,
-        &devicesCounts, 0) != VK_SUCCESS)
+    if (vkEnumeratePhysicalDevices(
+        vulkanInstance, &devicesCounts, 0) != VK_SUCCESS)
     {
         // Could not enumerate physcal devices
         return false;
@@ -355,14 +351,62 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
 
     // Get physical devices list
     std::vector<VkPhysicalDevice> physicalDevices(devicesCounts);
-    if (vkEnumeratePhysicalDevices(vulkanInstance,
-        &devicesCounts, physicalDevices.data()) != VK_SUCCESS)
+    if (vkEnumeratePhysicalDevices(
+        vulkanInstance, &devicesCounts, physicalDevices.data()) != VK_SUCCESS)
     {
         // Could not get physical devices list
         return false;
     }
 
-    // Vulkan device successfully created
+    // Select a physical device with matching extensions properties
+    for (uint32_t i = 0; i < devicesCounts; ++i)
+    {
+        // Get device extensions count
+        uint32_t extCount = 0;
+        if (vkEnumerateDeviceExtensionProperties(
+            physicalDevices[0], 0, &extCount, 0) != VK_SUCCESS)
+        {
+            // Could not enumerate device extensions properties
+            return false;
+        }
+
+        // Get device extensions list
+        std::vector<VkExtensionProperties> extProperties(extCount);
+        if (vkEnumerateDeviceExtensionProperties(physicalDevices[0], 0,
+            &extCount, extProperties.data()) != VK_SUCCESS)
+        {
+            // Could not get extensions properties list
+            return false;
+        }
+
+        // Check device extensions properties
+        bool allExtFound = true;
+        for (size_t j = 0; j < VulkanDeviceExtensions.size(); ++j)
+        {
+            bool extFound = false;
+            for (size_t k = 0; k < extProperties.size(); ++k)
+            {
+                if (strcmp(VulkanDeviceExtensions[j],
+                    extProperties[k].extensionName) == 0)
+                {
+                    extFound = true;
+                    break;
+                }
+            }
+            if (!extFound)
+            {
+                allExtFound = false;
+                break;
+            }
+        }
+        if (!allExtFound)
+        {
+            // One or more device extension is unavailable
+            return false;
+        }
+    }
+
+    // Vulkan device successfully selected
     return true;
 }
 

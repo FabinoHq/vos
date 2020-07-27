@@ -72,6 +72,13 @@
         "VK_KHR_surface", "VK_KHR_win32_surface"
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Vulkan device extensions for Windows                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    const std::vector<const char*> VulkanDeviceExtensions = {
+        "VK_KHR_swapchain"
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan types definitions                                              //
