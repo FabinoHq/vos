@@ -134,6 +134,13 @@ bool Renderer::init(SysWindow* sysWindow)
 		return false;
 	}
 
+	// Select Vulkan device
+	if (!SelectVulkanDevice(m_vulkanInstance))
+	{
+		// Could not select Vulkan device
+		return false;
+	}
+
 	// Renderer successfully loaded
     return true;
 }

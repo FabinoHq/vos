@@ -225,7 +225,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Check Vulkan instance
     if (!vulkanInstance)
     {
-        // Vulkan instance has not been created
+        // Vulkan instance is invalid
         return false;
     }
 
@@ -325,6 +325,47 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Vulkan instance functions successfully loaded
     return true;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//  Select Vulkan device                                                      //
+//  return : True if Vulkan device is successfully selected                   //
+////////////////////////////////////////////////////////////////////////////////
+bool SelectVulkanDevice(VkInstance& vulkanInstance)
+{
+    // Check Vulkan instance
+    if (!vulkanInstance)
+    {
+        // Vulkan instance is invalid
+        return false;
+    }
+
+    // List devices
+    uint32_t devicesCounts = 0;
+    if (vkEnumeratePhysicalDevices(vulkanInstance,
+        &devicesCounts, 0) != VK_SUCCESS)
+    {
+        // Could not enumerate physcal devices
+        return false;
+    }
+    if (devicesCounts <= 0)
+    {
+        // No physical device found
+        return false;
+    }
+
+    // Get physical devices list
+    std::vector<VkPhysicalDevice> physicalDevices(devicesCounts);
+    if (vkEnumeratePhysicalDevices(vulkanInstance,
+        &devicesCounts, physicalDevices.data()) != VK_SUCCESS)
+    {
+        // Could not get physical devices list
+        return false;
+    }
+
+    // Vulkan device successfully created
+    return true;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vulkan instance                                                   //
