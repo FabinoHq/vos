@@ -40,7 +40,6 @@
 //     Renderer/Vulkan.cpp : Vulkan management                                //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Vulkan.h"
-#include <iostream>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -402,6 +401,28 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
         if (!allExtFound)
         {
             // One or more device extension is unavailable
+            return false;
+        }
+
+        // Get physical device properties and features
+        VkPhysicalDeviceProperties deviceProperties;
+        VkPhysicalDeviceFeatures deviceFeatures;
+        vkGetPhysicalDeviceProperties(physicalDevices[0], &deviceProperties);
+        vkGetPhysicalDeviceFeatures(physicalDevices[0], &deviceFeatures);
+
+        // Check device Vulkan version
+        if (VK_VERSION_MAJOR(deviceProperties.apiVersion) <
+            VK_VERSION_MAJOR(VK_API_VERSION))
+        {
+            // Vulkan version is not supported by the device
+            return false;
+        }
+
+        // Check device properties
+        if (deviceProperties.limits.maxImageDimension2D <
+            VOSVK_REQUIRED_TEXTURE_SIZE)
+        {
+            // Device does not support required texture size
             return false;
         }
     }
