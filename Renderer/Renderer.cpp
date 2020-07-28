@@ -49,7 +49,8 @@ Renderer::Renderer() :
 m_sysWindow(0),
 m_vulkanLibHandle(0),
 m_vulkanInstance(0),
-m_vulkanSurface(0)
+m_vulkanSurface(0),
+m_physicalDevice(0)
 {
 
 }
@@ -138,7 +139,8 @@ bool Renderer::init(SysWindow* sysWindow)
 	}
 
 	// Select Vulkan device
-	if (!SelectVulkanDevice(m_vulkanInstance))
+	if (!SelectVulkanDevice(
+		m_vulkanInstance, m_vulkanSurface, m_physicalDevice))
 	{
 		// Could not select Vulkan device
 		return false;

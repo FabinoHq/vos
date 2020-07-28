@@ -92,6 +92,7 @@
             VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
             VkInstance          m_vulkanInstance;       // Vulkan instance
             VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
+            VkPhysicalDevice    m_physicalDevice;       // Physical device
     };
 
 

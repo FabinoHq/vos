@@ -964,7 +964,10 @@
     //  Select Vulkan device                                                  //
     //  return : True if Vulkan device is successfully selected               //
     ////////////////////////////////////////////////////////////////////////////
-    bool SelectVulkanDevice(VkInstance& vulkanInstance);
+    bool SelectVulkanDevice(
+        VkInstance& vulkanInstance, VkSurfaceKHR& vulkanSurface,
+        VkPhysicalDevice& physicalDevice
+    );
 
 
     ////////////////////////////////////////////////////////////////////////////

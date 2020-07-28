@@ -401,7 +401,9 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 //  Select Vulkan device                                                      //
 //  return : True if Vulkan device is successfully selected                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool SelectVulkanDevice(VkInstance& vulkanInstance)
+bool SelectVulkanDevice(
+    VkInstance& vulkanInstance, VkSurfaceKHR& vulkanSurface,
+    VkPhysicalDevice& physicalDevice)
 {
     // Check Vulkan instance
     if (!vulkanInstance)
@@ -434,6 +436,12 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
     }
 
     // Select a physical device with matching extensions properties
+    bool deviceFound = false;
+    uint32_t deviceIndex = 0;
+    bool graphicsQueueFound = false;
+    uint32_t graphicsQueueIndex = 0;
+    bool surfaceQueueFound = false;
+    uint32_t surfaceQueueIndex = 0;
     for (uint32_t i = 0; i < devicesCounts; ++i)
     {
         // Get device extensions count
@@ -442,7 +450,7 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
             physicalDevices[i], 0, &extCount, 0) != VK_SUCCESS)
         {
             // Could not enumerate device extensions properties
-            return false;
+            continue;
         }
 
         // Get device extensions list
@@ -451,7 +459,7 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
             &extCount, extProperties.data()) != VK_SUCCESS)
         {
             // Could not get extensions properties list
-            return false;
+            continue;
         }
 
         // Check device extensions properties
@@ -477,7 +485,7 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
         if (!allExtFound)
         {
             // One or more device extension is unavailable
-            return false;
+            continue;
         }
 
         // Get physical device properties and features
@@ -491,7 +499,7 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
             VK_VERSION_MAJOR(VK_API_VERSION))
         {
             // Vulkan version is not supported by the device
-            return false;
+            continue;
         }
 
         // Get device queue families
@@ -502,14 +510,84 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
         if (queueFamilyCount <= 0)
         {
             // No device queue families found
-            return false;
+            continue;
         }
 
         // Get device queue families list
         std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        std::vector<VkBool32> queueSurfaceSupport(queueFamilyCount);
         vkGetPhysicalDeviceQueueFamilyProperties(
             physicalDevices[i], &queueFamilyCount, queueFamilies.data()
         );
+        for (uint32_t j = 0; j < queueFamilyCount; ++j)
+        {
+            if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevices[i], j,
+                vulkanSurface, &queueSurfaceSupport[j]) != VK_SUCCESS)
+            {
+                // Could not get physical device surface support
+                continue;
+            }
+
+            if (queueFamilies[j].queueCount > 0)
+            {
+                // Check if current queue supports graphics
+                if (queueFamilies[j].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+                {
+                    // Check if current queue supports present surface
+                    if (queueSurfaceSupport[j])
+                    {
+                        // Current queue supports both graphics and surface
+                        graphicsQueueIndex = j;
+                        graphicsQueueFound = true;
+                        surfaceQueueIndex = j;
+                        surfaceQueueFound = true;
+                        break;
+                    }
+                    else
+                    {
+                        // Current queue supports only graphics
+                        if (!graphicsQueueFound)
+                        {
+                            graphicsQueueIndex = j;
+                            graphicsQueueFound = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (queueSurfaceSupport[j])
+                    {
+                        // Current queue supports only surface
+                        if (!surfaceQueueFound)
+                        {
+                            surfaceQueueIndex = j;
+                            surfaceQueueFound = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Current device supports graphics and surface queues
+        if (graphicsQueueFound && surfaceQueueFound)
+        {
+            deviceIndex = i;
+            deviceFound = true;
+            break;
+        }
+    }
+
+    if (!deviceFound)
+    {
+        // Could not find a device with both graphics and surface queues
+        return false;
+    }
+
+    physicalDevice = physicalDevices[deviceIndex];
+    if (!physicalDevice)
+    {
+        // Invalid physical device pointer
+        return false;
     }
 
     // Vulkan device successfully selected
