@@ -61,6 +61,9 @@ m_vulkanDevice(0)
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
+	// Destroy Vulkan device
+	DestroyVulkanDevice(m_vulkanDevice);
+	
 	// Destroy Vulkan surface
 	DestroyVulkanSurface(m_vulkanInstance, m_vulkanSurface);
 

@@ -103,6 +103,9 @@ PFN_vkGetPhysicalDeviceSurfaceFormatsKHR
 PFN_vkGetPhysicalDeviceSurfacePresentModesKHR
     vkGetPhysicalDeviceSurfacePresentModesKHR = 0;
 
+// vkDestroyDevice function
+PFN_vkDestroyDevice vkDestroyDevice = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -678,16 +681,38 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkDestroyDevice
+    vkDestroyDevice = (PFN_vkDestroyDevice)vkGetDeviceProcAddr(
+        vulkanDevice, "vkDestroyDevice"
+    );
+    if (!vkDestroyDevice)
+    {
+        // Could not load vkDestroyDevice
+        return false;
+    }
+
     // Vulkan device functions successfully loaded
     return true;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Destroy Vulkan device                                                     //
+////////////////////////////////////////////////////////////////////////////////
+void DestroyVulkanDevice(VkDevice& vulkanDevice)
+{
+    if (vulkanDevice && vkDestroyDevice)
+    {
+        vkDestroyDevice(vulkanDevice, 0);
+        vulkanDevice = 0;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vulkan surface                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 void DestroyVulkanSurface(
-    VkInstance& vulkanInstance,VkSurfaceKHR& vulkanSurface)
+    VkInstance& vulkanInstance, VkSurfaceKHR& vulkanSurface)
 {
     if (vulkanInstance && vulkanSurface && vkDestroySurfaceKHR)
     {
@@ -716,6 +741,8 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkDestroyDevice = 0;
+
     vkGetPhysicalDeviceSurfacePresentModesKHR = 0;
     vkGetPhysicalDeviceSurfaceFormatsKHR = 0;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR = 0;
