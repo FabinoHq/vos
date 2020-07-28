@@ -69,7 +69,11 @@ Renderer::~Renderer()
     }
 	
 	// Destroy Vulkan surface
-	DestroyVulkanSurface(m_vulkanInstance, m_vulkanSurface);
+	if (m_vulkanInstance && m_vulkanSurface && vkDestroySurfaceKHR)
+    {
+        vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
+        m_vulkanSurface = 0;
+    }
 
 	// Destroy Vulkan instance
 	if (m_vulkanInstance && vkDestroyInstance)
