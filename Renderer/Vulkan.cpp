@@ -95,6 +95,10 @@ PFN_vkGetPhysicalDeviceSurfaceSupportKHR
 PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR = 0;
 
+// vkGetPhysicalDeviceSurfaceFormatsKHR function
+PFN_vkGetPhysicalDeviceSurfaceFormatsKHR
+    vkGetPhysicalDeviceSurfaceFormatsKHR = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -351,6 +355,28 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
         return false;
     }
 
+    // Load vkGetPhysicalDeviceSurfaceCapabilitiesKHR
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR =
+        (PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR)vkGetInstanceProcAddr(
+        vulkanInstance, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR"
+    );
+    if (!vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
+    {
+        // Could not load vkGetPhysicalDeviceSurfaceCapabilitiesKHR
+        return false;
+    }
+
+    // Load vkGetPhysicalDeviceSurfaceFormatsKHR
+    vkGetPhysicalDeviceSurfaceFormatsKHR =
+        (PFN_vkGetPhysicalDeviceSurfaceFormatsKHR)vkGetInstanceProcAddr(
+        vulkanInstance, "vkGetPhysicalDeviceSurfaceFormatsKHR"
+    );
+    if (!vkGetPhysicalDeviceSurfaceFormatsKHR)
+    {
+        // Could not load vkGetPhysicalDeviceSurfaceFormatsKHR
+        return false;
+    }
+
 
     // Vulkan instance functions successfully loaded
     return true;
@@ -509,6 +535,7 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkGetPhysicalDeviceSurfaceFormatsKHR = 0;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR = 0;
     vkGetPhysicalDeviceSurfaceSupportKHR = 0;
     vkDestroySurfaceKHR = 0;
