@@ -665,6 +665,23 @@ bool SelectVulkanDevice(
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Load Vulkan device functions                                              //
+//  return : True if Vulkan device functions are successfully loaded         //
+////////////////////////////////////////////////////////////////////////////////
+bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
+{
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Vulkan device is invalid
+        return false;
+    }
+
+    // Vulkan device functions successfully loaded
+    return true;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vulkan surface                                                    //

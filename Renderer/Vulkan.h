@@ -969,6 +969,12 @@
         VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice
     );
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Load Vulkan device functions                                          //
+    //  return : True if Vulkan device functions are successfully loaded      //
+    ////////////////////////////////////////////////////////////////////////////
+    bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice);
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Destroy Vulkan surface                                                //

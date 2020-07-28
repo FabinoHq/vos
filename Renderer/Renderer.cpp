@@ -147,6 +147,13 @@ bool Renderer::init(SysWindow* sysWindow)
 		return false;
 	}
 
+	// Load Vulkan device functions
+	if (!LoadVulkanDeviceFunctions(m_vulkanDevice))
+	{
+		// Could not load Vulkan device functions
+		return false;
+	}
+
 	// Renderer successfully loaded
     return true;
 }
