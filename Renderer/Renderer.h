@@ -93,6 +93,7 @@
             VkInstance          m_vulkanInstance;       // Vulkan instance
             VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
             VkPhysicalDevice    m_physicalDevice;       // Physical device
+            VkDevice            m_vulkanDevice;         // Vulkan device
     };
 
 

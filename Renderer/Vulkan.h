@@ -966,7 +966,7 @@
     ////////////////////////////////////////////////////////////////////////////
     bool SelectVulkanDevice(
         VkInstance& vulkanInstance, VkSurfaceKHR& vulkanSurface,
-        VkPhysicalDevice& physicalDevice
+        VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice
     );
 
 

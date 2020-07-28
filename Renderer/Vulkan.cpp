@@ -403,12 +403,26 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 ////////////////////////////////////////////////////////////////////////////////
 bool SelectVulkanDevice(
     VkInstance& vulkanInstance, VkSurfaceKHR& vulkanSurface,
-    VkPhysicalDevice& physicalDevice)
+    VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice)
 {
     // Check Vulkan instance
     if (!vulkanInstance)
     {
         // Vulkan instance is invalid
+        return false;
+    }
+
+    // Check physical device
+    if (physicalDevice)
+    {
+        // Physical device already selected
+        return false;
+    }
+
+    // Check Vulkan device
+    if (vulkanDevice)
+    {
+        // Vulkan device already created
         return false;
     }
 
@@ -587,6 +601,63 @@ bool SelectVulkanDevice(
     if (!physicalDevice)
     {
         // Invalid physical device pointer
+        return false;
+    }
+
+    // Set queue priorities
+    std::vector<float> queuePriorities;
+    queuePriorities.push_back(1.0f);
+
+    // Set queue create infos
+    std::vector<VkDeviceQueueCreateInfo> queueInfos;
+    queueInfos.push_back(VkDeviceQueueCreateInfo());
+    queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queueInfos.back().pNext = 0;
+    queueInfos.back().flags = 0;
+    queueInfos.back().queueFamilyIndex = graphicsQueueIndex;
+    queueInfos.back().queueCount = static_cast<uint32_t>(
+        queuePriorities.size()
+    );
+    queueInfos.back().pQueuePriorities = queuePriorities.data();
+
+    // Add another queue if the surface queue is different
+    if (surfaceQueueIndex != graphicsQueueIndex)
+    {
+        queueInfos.push_back(VkDeviceQueueCreateInfo());
+        queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueInfos.back().pNext = 0;
+        queueInfos.back().flags = 0;
+        queueInfos.back().queueFamilyIndex = surfaceQueueIndex;
+        queueInfos.back().queueCount = static_cast<uint32_t>(
+            queuePriorities.size()
+        );
+        queueInfos.back().pQueuePriorities = queuePriorities.data();
+    }
+
+    // Create Vulkan device
+    VkDeviceCreateInfo deviceInfos;
+    deviceInfos.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    deviceInfos.pNext = 0;
+    deviceInfos.flags = 0;
+    deviceInfos.queueCreateInfoCount = static_cast<uint32_t>(queueInfos.size());
+    deviceInfos.pQueueCreateInfos = queueInfos.data();
+    deviceInfos.enabledLayerCount = 0;
+    deviceInfos.ppEnabledLayerNames = 0;
+    deviceInfos.enabledExtensionCount = static_cast<uint32_t>(
+        VulkanDeviceExtensions.size()
+    );
+    deviceInfos.ppEnabledExtensionNames = VulkanDeviceExtensions.data();
+    deviceInfos.pEnabledFeatures = 0;
+
+    if (vkCreateDevice(
+        physicalDevice, &deviceInfos, 0, &vulkanDevice) != VK_SUCCESS)
+    {
+        // Could not create Vulkan device
+        return false;
+    }
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device pointer
         return false;
     }
 
