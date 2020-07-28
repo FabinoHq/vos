@@ -573,6 +573,16 @@
     );
     extern PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceSurfaceSupportKHR function                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetPhysicalDeviceSurfaceSupportKHR)(
+        VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex,
+        VkSurfaceKHR surface, VkBool32* pSupported
+    );
+    extern PFN_vkGetPhysicalDeviceSurfaceSupportKHR
+        vkGetPhysicalDeviceSurfaceSupportKHR;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
