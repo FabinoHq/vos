@@ -93,6 +93,12 @@
             ////////////////////////////////////////////////////////////////////
             bool createVulkanInstance();
 
+            ////////////////////////////////////////////////////////////////////
+            //  Select Vulkan device                                          //
+            //  return : True if Vulkan device is successfully selected       //
+            ////////////////////////////////////////////////////////////////////
+            bool selectVulkanDevice();
+
 
         private:
             SysWindow*          m_sysWindow;            // SysWindow pointer

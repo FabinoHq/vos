@@ -1041,15 +1041,6 @@
     bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance);
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Select Vulkan device                                                  //
-    //  return : True if Vulkan device is successfully selected               //
-    ////////////////////////////////////////////////////////////////////////////
-    bool SelectVulkanDevice(
-        VkInstance& vulkanInstance, VkSurfaceKHR& vulkanSurface,
-        VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice
-    );
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan device functions                                          //
     //  return : True if Vulkan device functions are successfully loaded      //
     ////////////////////////////////////////////////////////////////////////////
