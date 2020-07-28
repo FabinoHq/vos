@@ -62,13 +62,21 @@ m_vulkanDevice(0)
 Renderer::~Renderer()
 {
 	// Destroy Vulkan device
-	DestroyVulkanDevice(m_vulkanDevice);
+	if (m_vulkanDevice && vkDestroyDevice)
+    {
+        vkDestroyDevice(m_vulkanDevice, 0);
+        m_vulkanDevice = 0;
+    }
 	
 	// Destroy Vulkan surface
 	DestroyVulkanSurface(m_vulkanInstance, m_vulkanSurface);
 
 	// Destroy Vulkan instance
-	DestroyVulkanInstance(m_vulkanInstance);
+	if (m_vulkanInstance && vkDestroyInstance)
+    {
+        vkDestroyInstance(m_vulkanInstance, 0);
+        m_vulkanInstance = 0;
+    }
 
 	// Free Vulkan functions
 	FreeVulkanFunctions();

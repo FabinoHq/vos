@@ -386,18 +386,6 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy Vulkan device                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void DestroyVulkanDevice(VkDevice& vulkanDevice)
-{
-    if (vulkanDevice && vkDestroyDevice)
-    {
-        vkDestroyDevice(vulkanDevice, 0);
-        vulkanDevice = 0;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vulkan surface                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 void DestroyVulkanSurface(
@@ -408,19 +396,6 @@ void DestroyVulkanSurface(
         // Destroy Vulkan surface
         vkDestroySurfaceKHR(vulkanInstance, vulkanSurface, 0);
         vulkanSurface = 0;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy Vulkan instance                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void DestroyVulkanInstance(VkInstance& vulkanInstance)
-{
-    if (vulkanInstance && vkDestroyInstance)
-    {
-        // Destroy Vulkan instance
-        vkDestroyInstance(vulkanInstance, 0);
-        vulkanInstance = 0;
     }
 }
 
