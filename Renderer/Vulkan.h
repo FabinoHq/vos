@@ -992,6 +992,12 @@
     extern PFN_vkDestroyDevice vkDestroyDevice;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDeviceWaitIdle function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkDeviceWaitIdle)(VkDevice device);
+    extern PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkGetDeviceQueue function                                             //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkGetDeviceQueue)(
@@ -999,12 +1005,6 @@
         uint32_t queueIndex, VkQueue* pQueue
     );
     extern PFN_vkGetDeviceQueue vkGetDeviceQueue;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkDeviceWaitIdle function                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkDeviceWaitIdle)(VkDevice device);
-    extern PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkQueueSubmit function                                                //
