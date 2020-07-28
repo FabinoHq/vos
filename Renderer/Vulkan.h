@@ -1009,6 +1009,12 @@
     );
     extern PFN_vkQueueSubmit vkQueueSubmit;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkQueueWaitIdle function                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkQueueWaitIdle)(VkQueue queue);
+    extern PFN_vkQueueWaitIdle vkQueueWaitIdle;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
