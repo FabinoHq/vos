@@ -91,6 +91,10 @@ PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR = 0;
 PFN_vkGetPhysicalDeviceSurfaceSupportKHR
     vkGetPhysicalDeviceSurfaceSupportKHR = 0;
 
+// vkGetPhysicalDeviceSurfaceCapabilitiesKHR function
+PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -505,6 +509,7 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR = 0;
     vkGetPhysicalDeviceSurfaceSupportKHR = 0;
     vkDestroySurfaceKHR = 0;
 
