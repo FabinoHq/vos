@@ -84,6 +84,10 @@ PFN_vkEnumerateDeviceExtensionProperties
 PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties = 0;
 
 
+// vkDestroySurfaceKHR function
+PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR = 0;
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
 //  return : True if Vulkan global functions are successfully loaded          //
@@ -317,6 +321,18 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
         return false;
     }
 
+
+    // Load vkDestroySurfaceKHR
+    vkDestroySurfaceKHR = (PFN_vkDestroySurfaceKHR)vkGetInstanceProcAddr(
+        vulkanInstance, "vkDestroySurfaceKHR"
+    );
+    if (!vkDestroySurfaceKHR)
+    {
+        // Could not load vkDestroySurfaceKHR
+        return false;
+    }
+
+
     // Vulkan instance functions successfully loaded
     return true;
 }
@@ -339,7 +355,7 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
     if (vkEnumeratePhysicalDevices(
         vulkanInstance, &devicesCounts, 0) != VK_SUCCESS)
     {
-        // Could not enumerate physcal devices
+        // Could not enumerate physical devices
         return false;
     }
     if (devicesCounts <= 0)
@@ -442,6 +458,20 @@ bool SelectVulkanDevice(VkInstance& vulkanInstance)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Destroy Vulkan surface                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void DestroyVulkanSurface(
+    VkInstance& vulkanInstance,VkSurfaceKHR& vulkanSurface)
+{
+    if (vulkanInstance && vulkanSurface && vkDestroySurfaceKHR)
+    {
+        // Destroy Vulkan surface
+        vkDestroySurfaceKHR(vulkanInstance, vulkanSurface, 0);
+        vulkanSurface = 0;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vulkan instance                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 void DestroyVulkanInstance(VkInstance& vulkanInstance)
@@ -460,6 +490,8 @@ void DestroyVulkanInstance(VkInstance& vulkanInstance)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkDestroySurfaceKHR = 0;
+
     vkGetPhysicalDeviceMemoryProperties = 0;
     vkEnumerateDeviceExtensionProperties = 0;
     vkGetDeviceProcAddr = 0;

@@ -59,6 +59,9 @@ m_vulkanSurface(0)
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
+	// Destroy Vulkan surface
+	DestroyVulkanSurface(m_vulkanInstance, m_vulkanSurface);
+
 	// Destroy Vulkan instance
 	DestroyVulkanInstance(m_vulkanInstance);
 
