@@ -87,6 +87,13 @@
             Renderer& operator=(const Renderer&) = delete;
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Create Vulkan instance                                        //
+            //  return : True if Vulkan instance is successfully created      //
+            ////////////////////////////////////////////////////////////////////
+            bool createVulkanInstance();
+
+
         private:
             SysWindow*          m_sysWindow;            // SysWindow pointer
             VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
