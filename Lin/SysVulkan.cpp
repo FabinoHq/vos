@@ -73,10 +73,10 @@ void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
     {
         // Free Vulkan library
         dlclose(vulkanLibHandle);
-        vulkanLibHandle = 0;
-        vkCreateXlibSurfaceKHR = 0;
-        vkGetInstanceProcAddr = 0;
     }
+    vulkanLibHandle = 0;
+    vkCreateXlibSurfaceKHR = 0;
+    vkGetInstanceProcAddr = 0;
 }
 
 
