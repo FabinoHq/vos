@@ -950,6 +950,15 @@
     );
     extern PFN_vkDestroyDevice vkDestroyDevice;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDeviceQueue function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetDeviceQueue)(
+        VkDevice device, uint32_t queueFamilyIndex,
+        uint32_t queueIndex, VkQueue* pQueue
+    );
+    extern PFN_vkGetDeviceQueue vkGetDeviceQueue;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //

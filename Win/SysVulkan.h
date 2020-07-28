@@ -92,6 +92,7 @@
     typedef struct VkDevice_T*          VkDevice;
     typedef struct VkSurfaceKHR_T*      VkSurfaceKHR;
     typedef VkFlags                     VkWin32SurfaceCreateFlagsKHR;
+    typedef struct VkQueue_T*           VkQueue;
 
 
     ////////////////////////////////////////////////////////////////////////////
