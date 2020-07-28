@@ -283,6 +283,21 @@
         VK_COLORSPACE_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPresentModeKHR enum                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkPresentModeKHR
+    {
+        VK_PRESENT_MODE_IMMEDIATE_KHR = 0,
+        VK_PRESENT_MODE_MAILBOX_KHR = 1,
+        VK_PRESENT_MODE_FIFO_KHR = 2,
+        VK_PRESENT_MODE_FIFO_RELAXED_KHR = 3,
+        VK_PRESENT_MODE_BEGIN_RANGE = 0,
+        VK_PRESENT_MODE_END_RANGE = 3,
+        VK_PRESENT_MODE_RANGE_SIZE = 4,
+        VK_PRESENT_MODE_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
@@ -915,6 +930,16 @@
     );
     extern PFN_vkGetPhysicalDeviceSurfaceFormatsKHR
         vkGetPhysicalDeviceSurfaceFormatsKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceSurfacePresentModesKHR function                    //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)(
+        VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
+        uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes
+    );
+    extern PFN_vkGetPhysicalDeviceSurfacePresentModesKHR
+        vkGetPhysicalDeviceSurfacePresentModesKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
