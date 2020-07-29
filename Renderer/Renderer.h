@@ -99,6 +99,12 @@
             ////////////////////////////////////////////////////////////////////
             bool selectVulkanDevice();
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vulkan queues handles                                     //
+            //  return : True if queues handles are valid                     //
+            ////////////////////////////////////////////////////////////////////
+            bool getQueuesHandles();
+
 
         private:
             SysWindow*          m_sysWindow;            // SysWindow pointer
@@ -107,6 +113,11 @@
             VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
             VkPhysicalDevice    m_physicalDevice;       // Physical device
             VkDevice            m_vulkanDevice;         // Vulkan device
+
+            uint32_t            m_graphicsQueueIndex;   // Graphics queue index
+            VkQueue             m_graphicsQueueHandle;  // Graphics queue handle
+            uint32_t            m_surfaceQueueIndex;    // Surface queue index
+            VkQueue             m_surfaceQueueHandle;   // Surface queue handle
     };
 
 

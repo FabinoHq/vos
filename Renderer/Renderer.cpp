@@ -51,7 +51,11 @@ m_vulkanLibHandle(0),
 m_vulkanInstance(0),
 m_vulkanSurface(0),
 m_physicalDevice(0),
-m_vulkanDevice(0)
+m_vulkanDevice(0),
+m_graphicsQueueIndex(0),
+m_graphicsQueueHandle(0),
+m_surfaceQueueIndex(0),
+m_surfaceQueueHandle(0)
 {
 
 }
@@ -165,6 +169,13 @@ bool Renderer::init(SysWindow* sysWindow)
 	if (!LoadVulkanDeviceFunctions(m_vulkanDevice))
 	{
 		// Could not load Vulkan device functions
+		return false;
+	}
+
+	// Get Vulkan queues handles
+	if (!getQueuesHandles())
+	{
+		// Could not get Vulkan queues handles
 		return false;
 	}
 
@@ -469,6 +480,8 @@ bool Renderer::selectVulkanDevice()
         // Current device supports graphics and surface queues
         if (graphicsQueueFound && surfaceQueueFound)
         {
+        	m_graphicsQueueIndex = graphicsQueueIndex;
+        	m_surfaceQueueIndex = surfaceQueueIndex;
             deviceIndex = i;
             deviceFound = true;
             break;
@@ -547,4 +560,41 @@ bool Renderer::selectVulkanDevice()
 
     // Vulkan device successfully selected
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get Vulkan queues handles                                                 //
+//  return : True if queues handles are valid                                 //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::getQueuesHandles()
+{
+	// Check Vulkan device
+	if (!m_vulkanDevice)
+	{
+		// Vulkan device is invalid
+		return false;
+	}
+
+	// Get graphics queue handle
+	vkGetDeviceQueue(
+		m_vulkanDevice, m_graphicsQueueIndex, 0, &m_graphicsQueueHandle
+	);
+	if (!m_graphicsQueueHandle)
+	{
+		// Could not get graphics queue handle
+		return false;
+	}
+
+	// Get surface queue handle
+	vkGetDeviceQueue(
+		m_vulkanDevice, m_surfaceQueueIndex, 0, &m_surfaceQueueHandle
+	);
+	if (!m_surfaceQueueHandle)
+	{
+		// Could not get surface queue handle
+		return false;
+	}
+
+	// Vulkan queues handles are valid
+	return true;
 }
