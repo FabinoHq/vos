@@ -99,6 +99,7 @@
     typedef struct VkSemaphore_T*       VkSemaphore;
     typedef struct VkFence_T*           VkFence;
     typedef struct VkCommandBuffer_T*   VkCommandBuffer;
+    typedef struct VkImage_T*           VkImage;
 
 
     ////////////////////////////////////////////////////////////////////////////

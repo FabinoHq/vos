@@ -1039,6 +1039,15 @@
     );
     extern PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetSwapchainImagesKHR function                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetSwapchainImagesKHR)(
+        VkDevice device, VkSwapchainKHR swapchain,
+        uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages
+    );
+    extern PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroyDevice function                                              //

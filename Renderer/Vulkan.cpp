@@ -110,6 +110,9 @@ PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR = 0;
 // vkDestroySwapchainKHR function
 PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR = 0;
 
+// vkGetSwapchainImagesKHR function
+PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR = 0;
+
 
 // vkDestroyDevice function
 PFN_vkDestroyDevice vkDestroyDevice = 0;
@@ -358,6 +361,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkGetSwapchainImagesKHR
+    vkGetSwapchainImagesKHR = (PFN_vkGetSwapchainImagesKHR)vkGetDeviceProcAddr(
+        vulkanDevice, "vkGetSwapchainImagesKHR"
+    );
+    if (!vkGetSwapchainImagesKHR)
+    {
+        // Could not load vkGetSwapchainImagesKHR
+        return false;
+    }
+
 
     // Load vkDestroyDevice
     vkDestroyDevice = (PFN_vkDestroyDevice)vkGetDeviceProcAddr(
@@ -426,6 +439,7 @@ void FreeVulkanFunctions()
     vkDeviceWaitIdle = 0;
     vkDestroyDevice = 0;
 
+    vkGetSwapchainImagesKHR = 0;
     vkDestroySwapchainKHR = 0;
     vkCreateSwapchainKHR = 0;
 
