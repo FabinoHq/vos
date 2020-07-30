@@ -852,6 +852,20 @@
         VkSwapchainKHR                  oldSwapchain;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPresentInfoKHR data structure                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPresentInfoKHR
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        uint32_t                waitSemaphoreCount;
+        const VkSemaphore*      pWaitSemaphores;
+        uint32_t                swapchainCount;
+        const VkSwapchainKHR*   pSwapchains;
+        const uint32_t*         pImageIndices;
+        VkResult*               pResults;
+    };
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkSubmitInfo data structure                                           //
@@ -1056,6 +1070,14 @@
         VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex
     );
     extern PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkQueuePresentKHR function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkQueuePresentKHR)(
+        VkQueue queue, const VkPresentInfoKHR* pPresentInfo
+    );
+    extern PFN_vkQueuePresentKHR vkQueuePresentKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
