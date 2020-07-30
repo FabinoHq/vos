@@ -1048,6 +1048,15 @@
     );
     extern PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkAcquireNextImageKHR function                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkAcquireNextImageKHR)(
+        VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout,
+        VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex
+    );
+    extern PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroyDevice function                                              //
