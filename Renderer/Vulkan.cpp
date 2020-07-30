@@ -104,6 +104,13 @@ PFN_vkGetPhysicalDeviceSurfacePresentModesKHR
     vkGetPhysicalDeviceSurfacePresentModesKHR = 0;
 
 
+// vkCreateSwapchainKHR function
+PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR = 0;
+
+// vkDestroySwapchainKHR function
+PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR = 0;
+
+
 // vkDestroyDevice function
 PFN_vkDestroyDevice vkDestroyDevice = 0;
 
@@ -118,9 +125,6 @@ PFN_vkQueueSubmit vkQueueSubmit = 0;
 
 // vkQueueWaitIdle function
 PFN_vkQueueWaitIdle vkQueueWaitIdle = 0;
-
-// vkCreateSwapchainKHR function
-PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR = 0;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -344,6 +348,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkDestroySwapchainKHR
+    vkDestroySwapchainKHR = (PFN_vkDestroySwapchainKHR)vkGetDeviceProcAddr(
+        vulkanDevice, "vkDestroySwapchainKHR"
+    );
+    if (!vkDestroySwapchainKHR)
+    {
+        // Could not load vkDestroySwapchainKHR
+        return false;
+    }
+
 
     // Load vkDestroyDevice
     vkDestroyDevice = (PFN_vkDestroyDevice)vkGetDeviceProcAddr(
@@ -412,6 +426,7 @@ void FreeVulkanFunctions()
     vkDeviceWaitIdle = 0;
     vkDestroyDevice = 0;
 
+    vkDestroySwapchainKHR = 0;
     vkCreateSwapchainKHR = 0;
 
     vkGetPhysicalDeviceSurfacePresentModesKHR = 0;

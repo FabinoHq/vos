@@ -1030,6 +1030,15 @@
     );
     extern PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroySwapchainKHR function                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroySwapchainKHR)(
+        VkDevice device, VkSwapchainKHR swapchain,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroyDevice function                                              //
