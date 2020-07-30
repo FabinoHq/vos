@@ -427,6 +427,19 @@
         VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSharingMode enum                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSharingMode
+    {
+        VK_SHARING_MODE_EXCLUSIVE = 0,
+        VK_SHARING_MODE_CONCURRENT = 1,
+        VK_SHARING_MODE_BEGIN_RANGE = 0,
+        VK_SHARING_MODE_END_RANGE = 1,
+        VK_SHARING_MODE_RANGE_SIZE = 2,
+        VK_SHARING_MODE_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
@@ -814,6 +827,31 @@
         VkColorSpaceKHR    colorSpace;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSwapchainCreateInfoKHR data structure                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSwapchainCreateInfoKHR
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkSwapchainCreateFlagsKHR       flags;
+        VkSurfaceKHR                    surface;
+        uint32_t                        minImageCount;
+        VkFormat                        imageFormat;
+        VkColorSpaceKHR                 imageColorSpace;
+        VkExtent2D                      imageExtent;
+        uint32_t                        imageArrayLayers;
+        VkImageUsageFlags               imageUsage;
+        VkSharingMode                   imageSharingMode;
+        uint32_t                        queueFamilyIndexCount;
+        const uint32_t*                 pQueueFamilyIndices;
+        VkSurfaceTransformFlagBitsKHR   preTransform;
+        VkCompositeAlphaFlagBitsKHR     compositeAlpha;
+        VkPresentModeKHR                presentMode;
+        VkBool32                        clipped;
+        VkSwapchainKHR                  oldSwapchain;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkSubmitInfo data structure                                           //
@@ -981,6 +1019,16 @@
     );
     extern PFN_vkGetPhysicalDeviceSurfacePresentModesKHR
         vkGetPhysicalDeviceSurfacePresentModesKHR;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateSwapchainKHR function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateSwapchainKHR)(
+        VkDevice device, const VkSwapchainCreateInfoKHR* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain
+    );
+    extern PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
