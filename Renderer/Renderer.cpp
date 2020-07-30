@@ -65,32 +65,32 @@ m_surfaceQueueHandle(0)
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
-	// Destroy Vulkan device
-	if (m_vulkanDevice && vkDestroyDevice)
+    // Destroy Vulkan device
+    if (m_vulkanDevice && vkDestroyDevice)
     {
         vkDestroyDevice(m_vulkanDevice, 0);
     }
     m_vulkanDevice = 0;
-	
-	// Destroy Vulkan surface
-	if (m_vulkanInstance && m_vulkanSurface && vkDestroySurfaceKHR)
+    
+    // Destroy Vulkan surface
+    if (m_vulkanInstance && m_vulkanSurface && vkDestroySurfaceKHR)
     {
         vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
     }
     m_vulkanSurface = 0;
 
-	// Destroy Vulkan instance
-	if (m_vulkanInstance && vkDestroyInstance)
+    // Destroy Vulkan instance
+    if (m_vulkanInstance && vkDestroyInstance)
     {
         vkDestroyInstance(m_vulkanInstance, 0);
     }
     m_vulkanInstance = 0;
 
-	// Free Vulkan functions
-	FreeVulkanFunctions();
+    // Free Vulkan functions
+    FreeVulkanFunctions();
 
-	// Free Vulkan library
-	FreeVulkanLibrary(m_vulkanLibHandle);
+    // Free Vulkan library
+    FreeVulkanLibrary(m_vulkanLibHandle);
 }
 
 
@@ -100,86 +100,86 @@ Renderer::~Renderer()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::init(SysWindow* sysWindow)
 {
-	// Check SysWindow pointer
-	if (!sysWindow)
-	{
-		// Invalid SysWindow pointer
-		return false;
-	}
-	m_sysWindow = sysWindow;
+    // Check SysWindow pointer
+    if (!sysWindow)
+    {
+        // Invalid SysWindow pointer
+        return false;
+    }
+    m_sysWindow = sysWindow;
 
-	// Load Vulkan library
-	if (!LoadVulkanLibrary(m_vulkanLibHandle))
-	{
-		// Could not load Vulkan library
-		return false;
-	}
+    // Load Vulkan library
+    if (!LoadVulkanLibrary(m_vulkanLibHandle))
+    {
+        // Could not load Vulkan library
+        return false;
+    }
 
-	// Load Vulkan GetInstance function
-	if (!LoadVulkanGetInstance(m_vulkanLibHandle))
-	{
-		// Could not load Vulkan GetInstance function
-		return false;
-	}
+    // Load Vulkan GetInstance function
+    if (!LoadVulkanGetInstance(m_vulkanLibHandle))
+    {
+        // Could not load Vulkan GetInstance function
+        return false;
+    }
 
-	// Load Vulkan global functions
-	if (!LoadVulkanGlobalFunctions())
-	{
-		// Could not load Vulkan global functions
-		return false;
-	}
+    // Load Vulkan global functions
+    if (!LoadVulkanGlobalFunctions())
+    {
+        // Could not load Vulkan global functions
+        return false;
+    }
 
-	// Create Vulkan instance
-	if (!createVulkanInstance())
-	{
-		// Could not create Vulkan instance
-		return false;
-	}
+    // Create Vulkan instance
+    if (!createVulkanInstance())
+    {
+        // Could not create Vulkan instance
+        return false;
+    }
 
-	// Load Vulkan CreateSystemSurface
-	if (!LoadVulkanCreateSystemSurface(m_vulkanInstance))
-	{
-		// Could not load Vulkan CreateSystemSurface function
-		return false;
-	}
+    // Load Vulkan CreateSystemSurface
+    if (!LoadVulkanCreateSystemSurface(m_vulkanInstance))
+    {
+        // Could not load Vulkan CreateSystemSurface function
+        return false;
+    }
 
-	// Create Vulkan SystemSurface
-	if (!CreateVulkanSystemSurface(
-		m_vulkanInstance, *m_sysWindow, m_vulkanSurface))
-	{
-		// Could not create Vulkan SystemSurface
-		return false;
-	}
+    // Create Vulkan SystemSurface
+    if (!CreateVulkanSystemSurface(
+        m_vulkanInstance, *m_sysWindow, m_vulkanSurface))
+    {
+        // Could not create Vulkan SystemSurface
+        return false;
+    }
 
-	// Load Vulkan instance functions
-	if (!LoadVulkanInstanceFunctions(m_vulkanInstance))
-	{
-		// Could not load Vulkan instance functions
-		return false;
-	}
+    // Load Vulkan instance functions
+    if (!LoadVulkanInstanceFunctions(m_vulkanInstance))
+    {
+        // Could not load Vulkan instance functions
+        return false;
+    }
 
-	// Select Vulkan device
-	if (!selectVulkanDevice())
-	{
-		// Could not select Vulkan device
-		return false;
-	}
+    // Select Vulkan device
+    if (!selectVulkanDevice())
+    {
+        // Could not select Vulkan device
+        return false;
+    }
 
-	// Load Vulkan device functions
-	if (!LoadVulkanDeviceFunctions(m_vulkanDevice))
-	{
-		// Could not load Vulkan device functions
-		return false;
-	}
+    // Load Vulkan device functions
+    if (!LoadVulkanDeviceFunctions(m_vulkanDevice))
+    {
+        // Could not load Vulkan device functions
+        return false;
+    }
 
-	// Get Vulkan queues handles
-	if (!getQueuesHandles())
-	{
-		// Could not get Vulkan queues handles
-		return false;
-	}
+    // Get Vulkan queues handles
+    if (!getQueuesHandles())
+    {
+        // Could not get Vulkan queues handles
+        return false;
+    }
 
-	// Renderer successfully loaded
+    // Renderer successfully loaded
     return true;
 }
 
@@ -303,8 +303,8 @@ bool Renderer::selectVulkanDevice()
     // Check Vulkan surface
     if (!m_vulkanSurface)
     {
-    	// Vulkan surface is invalid
-    	return false;
+        // Vulkan surface is invalid
+        return false;
     }
 
     // Check physical device
@@ -480,8 +480,8 @@ bool Renderer::selectVulkanDevice()
         // Current device supports graphics and surface queues
         if (graphicsQueueFound && surfaceQueueFound)
         {
-        	m_graphicsQueueIndex = graphicsQueueIndex;
-        	m_surfaceQueueIndex = surfaceQueueIndex;
+            m_graphicsQueueIndex = graphicsQueueIndex;
+            m_surfaceQueueIndex = surfaceQueueIndex;
             deviceIndex = i;
             deviceFound = true;
             break;
@@ -568,33 +568,33 @@ bool Renderer::selectVulkanDevice()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::getQueuesHandles()
 {
-	// Check Vulkan device
-	if (!m_vulkanDevice)
-	{
-		// Vulkan device is invalid
-		return false;
-	}
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Vulkan device is invalid
+        return false;
+    }
 
-	// Get graphics queue handle
-	vkGetDeviceQueue(
-		m_vulkanDevice, m_graphicsQueueIndex, 0, &m_graphicsQueueHandle
-	);
-	if (!m_graphicsQueueHandle)
-	{
-		// Could not get graphics queue handle
-		return false;
-	}
+    // Get graphics queue handle
+    vkGetDeviceQueue(
+        m_vulkanDevice, m_graphicsQueueIndex, 0, &m_graphicsQueueHandle
+    );
+    if (!m_graphicsQueueHandle)
+    {
+        // Could not get graphics queue handle
+        return false;
+    }
 
-	// Get surface queue handle
-	vkGetDeviceQueue(
-		m_vulkanDevice, m_surfaceQueueIndex, 0, &m_surfaceQueueHandle
-	);
-	if (!m_surfaceQueueHandle)
-	{
-		// Could not get surface queue handle
-		return false;
-	}
+    // Get surface queue handle
+    vkGetDeviceQueue(
+        m_vulkanDevice, m_surfaceQueueIndex, 0, &m_surfaceQueueHandle
+    );
+    if (!m_surfaceQueueHandle)
+    {
+        // Could not get surface queue handle
+        return false;
+    }
 
-	// Vulkan queues handles are valid
-	return true;
+    // Vulkan queues handles are valid
+    return true;
 }

@@ -49,9 +49,9 @@
         #include "Win/SysVulkan.h"
     #endif // VOS_WINDOWS
 
-	#ifdef VOS_LINUX
-		#include "Lin/SysVulkan.h"
-	#endif // VOS_LINUX
+    #ifdef VOS_LINUX
+        #include "Lin/SysVulkan.h"
+    #endif // VOS_LINUX
 
 
     #include "Renderer/Vulkan.h"
