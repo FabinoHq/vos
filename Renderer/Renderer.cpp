@@ -627,6 +627,13 @@ bool Renderer::createVulkanSwapchain()
         return false;
     }
 
+    // Check Vulkan surface
+    if (!m_vulkanSurface)
+    {
+        // Invalid Vulkan surface
+        return false;
+    }
+
     // Wait for device idle
     if (vkDeviceWaitIdle(m_vulkanDevice) != VK_SUCCESS)
     {
@@ -645,6 +652,7 @@ bool Renderer::createVulkanSwapchain()
         }
     }
     m_swapchain.images.clear();
+
 
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
@@ -695,6 +703,173 @@ bool Renderer::createVulkanSwapchain()
         m_vulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
     {
         // Could not get present modes
+        return false;
+    }
+
+
+    // Set swapchain images count
+    uint32_t imagesCount = surfaceCapabilities.minImageCount + 2;
+    if (surfaceCapabilities.maxImageCount <= 0)
+    {
+        // Invalid swapchain max images count
+        return false;
+    }
+    if (imagesCount >= surfaceCapabilities.maxImageCount)
+    {
+        imagesCount = surfaceCapabilities.maxImageCount;
+    }
+
+    // Set swapchain surface format
+    VkSurfaceFormatKHR format;
+    if (surfaceFormats.size() <= 0)
+    {
+        // Invalid surface formats count
+        return false;
+    }
+
+    // Select best surface format
+    if (surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
+    {
+        format.format = VK_FORMAT_R8G8B8A8_UNORM;
+        format.colorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+    }
+    else
+    {
+        bool formatFound = false;
+        for (size_t i = 0; i < surfaceFormats.size(); ++i)
+        {
+            if (surfaceFormats[i].format == VK_FORMAT_R8G8B8A8_UNORM)
+            {
+                // Surface format found
+                format.format = surfaceFormats[i].format;
+                format.colorSpace = surfaceFormats[i].colorSpace;
+                formatFound = true;
+                break;
+            }
+        }
+        if (!formatFound)
+        {
+            // Select first surface format
+            format.format = surfaceFormats[0].format;
+            format.colorSpace = surfaceFormats[0].colorSpace;
+        }
+    }
+
+    // Set swapchain extent
+    VkExtent2D extent;
+    extent.width = surfaceCapabilities.currentExtent.width;
+    extent.height = surfaceCapabilities.currentExtent.height;
+
+    // Clamp swapchain extent
+    if (extent.width < surfaceCapabilities.minImageExtent.width)
+    {
+        extent.width = surfaceCapabilities.minImageExtent.width;
+    }
+    if (extent.height < surfaceCapabilities.minImageExtent.height)
+    {
+        extent.height = surfaceCapabilities.minImageExtent.height;
+    }
+    if (extent.width > surfaceCapabilities.maxImageExtent.width)
+    {
+        extent.width = surfaceCapabilities.maxImageExtent.width;
+    }
+    if (extent.height > surfaceCapabilities.maxImageExtent.height)
+    {
+        extent.height = surfaceCapabilities.maxImageExtent.height;
+    }
+
+    if ((extent.width <= 0) || (extent.height <= 0))
+    {
+        // Invalid swapchain extent
+        return false;
+    }
+
+    // Set swapchain image usage
+    VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    if (!(surfaceCapabilities.supportedUsageFlags &
+        VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT))
+    {
+        // Color attachment flag is not supported
+        return false;
+    }
+
+    // Set surface transform flags
+    VkSurfaceTransformFlagBitsKHR transformFlags =
+        VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+    if (!(surfaceCapabilities.supportedTransforms &
+        VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR))
+    {
+        transformFlags = surfaceCapabilities.currentTransform;
+    }
+
+    // Set present mode
+    VkPresentModeKHR present = VK_PRESENT_MODE_IMMEDIATE_KHR;
+    bool immediateModeFound = false;
+    bool mailboxModeFound = false;
+    bool fifoModeFound = false;
+    for (size_t i = 0; i < presentModes.size(); ++i)
+    {
+        if (presentModes[i] == VK_PRESENT_MODE_IMMEDIATE_KHR)
+        {
+            immediateModeFound = true;
+        }
+        if (presentModes[i] == VK_PRESENT_MODE_MAILBOX_KHR)
+        {
+            mailboxModeFound = true;
+        }
+        if (presentModes[i] == VK_PRESENT_MODE_FIFO_KHR)
+        {
+            fifoModeFound = true;
+        }
+    }
+    if (!immediateModeFound)
+    {
+        if (mailboxModeFound)
+        {
+            present = VK_PRESENT_MODE_MAILBOX_KHR;
+        }
+        else
+        {
+            if (fifoModeFound)
+            {
+                present = VK_PRESENT_MODE_FIFO_KHR;
+            }
+            else
+            {
+                // No present mode is supported
+                return false;
+            }
+        }
+    }
+
+    // Set old swapchain
+    VkSwapchainKHR oldSwapchain = m_swapchain.handle;
+
+    // Create swapchain
+    VkSwapchainCreateInfoKHR swapchainInfos;
+    swapchainInfos.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    swapchainInfos.pNext = 0;
+    swapchainInfos.flags = 0;
+    swapchainInfos.surface = m_vulkanSurface;
+    swapchainInfos.minImageCount = imagesCount;
+    swapchainInfos.imageFormat = format.format;
+    swapchainInfos.imageColorSpace = format.colorSpace;
+    swapchainInfos.imageExtent = extent;
+    swapchainInfos.imageArrayLayers = 1;
+    swapchainInfos.imageUsage = imageUsage;
+    swapchainInfos.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    swapchainInfos.queueFamilyIndexCount = 0;
+    swapchainInfos.pQueueFamilyIndices = 0;
+    swapchainInfos.preTransform = transformFlags;
+    swapchainInfos.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    swapchainInfos.presentMode = present;
+    swapchainInfos.clipped = VK_TRUE;
+    swapchainInfos.oldSwapchain = oldSwapchain;
+
+    if (vkCreateSwapchainKHR(
+        m_vulkanDevice, &swapchainInfos, 0, &m_swapchain.handle) != VK_SUCCESS)
+    {
+        // Could not create Vulkan swapchain
         return false;
     }
 
