@@ -677,6 +677,27 @@ bool Renderer::createVulkanSwapchain()
         return false;
     }
 
+    // Get present modes
+    uint32_t presentModesCnt = 0;
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(
+        m_physicalDevice, m_vulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
+    {
+        // Could not get present modes count
+        return false;
+    }
+    if (presentModesCnt <= 0)
+    {
+        // No present modes found
+        return false;
+    }
+    std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(m_physicalDevice,
+        m_vulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
+    {
+        // Could not get present modes
+        return false;
+    }
+
     // Vulkan swapchain successfully created
     return true;
 }
