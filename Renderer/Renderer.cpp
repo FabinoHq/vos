@@ -69,11 +69,44 @@ Renderer::~Renderer()
 {
     m_rendererReady = false;
 
-    // Destroy Vulkan device
-    if (m_vulkanDevice && vkDestroyDevice)
+    // Destroy swapchain and device
+    if (m_vulkanDevice)
     {
-        vkDestroyDevice(m_vulkanDevice, 0);
+        // Wait for device idle
+        if (vkDeviceWaitIdle)
+        {
+            vkDeviceWaitIdle(m_vulkanDevice);
+
+            // Destroy swapchain images views
+            if (vkDestroyImageView)
+            {
+                for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+                {
+                    if (m_swapchain.images[i].view)
+                    {
+                        // Destroy image view
+                        vkDestroyImageView(
+                            m_vulkanDevice, m_swapchain.images[i].view, 0
+                        );
+                        m_swapchain.images[i].view = 0;
+                    }
+                }
+            }
+
+            // Destroy Vulkan swapchain
+            if (m_swapchain.handle && vkDestroySwapchainKHR)
+            {
+                vkDestroySwapchainKHR(m_vulkanDevice, m_swapchain.handle, 0);
+            }
+        }
+
+        // Destroy Vulkan device
+        if (vkDestroyDevice)
+        {
+            vkDestroyDevice(m_vulkanDevice, 0);
+        }
     }
+    m_swapchain.handle = 0;
     m_vulkanDevice = 0;
     
     // Destroy Vulkan surface
@@ -871,6 +904,12 @@ bool Renderer::createVulkanSwapchain()
     {
         // Could not create Vulkan swapchain
         return false;
+    }
+
+    // Destroy old swapchain
+    if (oldSwapchain)
+    {
+        vkDestroySwapchainKHR(m_vulkanDevice, oldSwapchain, 0);
     }
 
     // Vulkan swapchain successfully created
