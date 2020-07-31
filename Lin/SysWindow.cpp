@@ -49,7 +49,6 @@ SysWindow::SysWindow() :
 m_display(0),
 m_handle(0),
 m_screen(0),
-m_context(0),
 m_closeMsg(0)
 {
 
@@ -124,14 +123,6 @@ bool SysWindow::create()
     XMapRaised(m_display, m_handle);
     XFlush(m_display);
 
-    // Create the graphics context
-    m_context = XCreateGC(m_display, m_handle, 0, 0);
-    if (!m_context)
-    {
-        // Unable to create the graphics context
-        return false;
-    }
-
     // System window successfully created
     return true;
 }
@@ -141,13 +132,6 @@ bool SysWindow::create()
 ////////////////////////////////////////////////////////////////////////////////
 void SysWindow::close()
 {
-    if (m_context)
-    {
-        // Release the context
-        XFreeGC(m_display, m_context);
-        m_context = 0;
-    }
-
     if (m_handle)
     {
         // Delete the window
