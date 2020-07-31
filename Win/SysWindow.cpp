@@ -49,9 +49,7 @@ SysWindow* VOSGlobalWindow = 0;
 ////////////////////////////////////////////////////////////////////////////////
 SysWindow::SysWindow() :
 m_instance(0),
-m_handle(0),
-m_device(0),
-m_context(0)
+m_handle(0)
 {
     if (!VOSGlobalWindow)
     {
@@ -121,7 +119,7 @@ bool SysWindow::create()
     );
     if (!m_handle)
     {
-        // Unable to create the window
+        // Unable to create the system window
         return false;
     }
 
@@ -132,20 +130,8 @@ bool SysWindow::create()
     SetFocus(m_handle);
     ShowWindow(m_handle, SW_SHOW);
 
-    // Create the window context
-    return createContext();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Update the window (swap front and back buffers)                           //
-////////////////////////////////////////////////////////////////////////////////
-void SysWindow::update()
-{
-    if (m_device)
-    {
-        // Swap front and back buffers
-        SwapBuffers(m_device);
-    }
+    // System window successfully created
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,13 +139,6 @@ void SysWindow::update()
 ////////////////////////////////////////////////////////////////////////////////
 void SysWindow::close()
 {
-    if (m_device)
-    {
-        // Release device
-        ReleaseDC(m_handle, m_device);
-        m_device = 0;
-    }
-
     if (m_handle)
     {
         // Delete the window
@@ -215,69 +194,6 @@ HWND& SysWindow::getHandle()
     return m_handle;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create window context                                                     //
-//  return : True if the window context is successfully created               //
-////////////////////////////////////////////////////////////////////////////////
-bool SysWindow::createContext()
-{
-    if (!m_handle)
-    {
-        // Invalid window handle
-        return false;
-    }
-
-    // Get the device context
-    m_device = GetDC(m_handle);
-    if (!m_device)
-    {
-        // Invalid device context
-        return false;
-    }
-
-    // Set the pixel format descriptor
-    PIXELFORMATDESCRIPTOR pfd = { 0 };
-    pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-    pfd.nVersion = 1;
-    pfd.dwFlags = (PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER);
-    pfd.iPixelType = PFD_TYPE_RGBA;
-    pfd.cColorBits = 32;
-    pfd.cRedBits = 0;
-    pfd.cRedShift = 0;
-    pfd.cGreenBits = 0;
-    pfd.cGreenShift = 0;
-    pfd.cBlueBits = 0;
-    pfd.cBlueShift = 0;
-    pfd.cAlphaBits = 0;
-    pfd.cAlphaShift = 0;
-    pfd.cAccumBits = 0;
-    pfd.cAccumRedBits = 0;
-    pfd.cAccumGreenBits = 0;
-    pfd.cAccumBlueBits = 0;
-    pfd.cAccumAlphaBits = 0;
-    pfd.cDepthBits = 8;
-    pfd.cStencilBits = 24;
-    pfd.cAuxBuffers = 0;
-    pfd.bReserved = PFD_MAIN_PLANE;
-    pfd.dwVisibleMask = 0;
-
-    int pixelFormat = ChoosePixelFormat(m_device, &pfd);
-    if (!pixelFormat)
-    {
-        // Invalid pixel format
-        return false;
-    }
-
-    if (!SetPixelFormat(m_device, pixelFormat, &pfd))
-    {
-        // Unable to set the pixel format
-        return false;
-    }
-
-    // Context successfully created
-    return true;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Window static event callback function                                     //

@@ -77,11 +77,6 @@
             bool create();
 
             ////////////////////////////////////////////////////////////////////
-            //  Update the window (swap front and back buffers)               //
-            ////////////////////////////////////////////////////////////////////
-            void update();
-
-            ////////////////////////////////////////////////////////////////////
             //  Close the window                                              //
             ////////////////////////////////////////////////////////////////////
             void close();
@@ -120,12 +115,6 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create window context                                         //
-            //  return : True if the window context is successfully created   //
-            ////////////////////////////////////////////////////////////////////
-            bool createContext();
-
-            ////////////////////////////////////////////////////////////////////
             //  Window static event callback function                         //
             ////////////////////////////////////////////////////////////////////
             static LRESULT CALLBACK OnEvent(
@@ -146,8 +135,6 @@
         private:
             HINSTANCE           m_instance;     // Window instance
             HWND                m_handle;       // Window handle
-            HDC                 m_device;       // Window device
-            HGLRC               m_context;      // Window context
 
             std::queue<Event>   m_events;       // Events FIFO queue
     };

@@ -124,16 +124,16 @@ bool SysWindow::create()
     XMapRaised(m_display, m_handle);
     XFlush(m_display);
 
-    // Create the window context
-    return createContext();
-}
+    // Create the graphics context
+    m_context = XCreateGC(m_display, m_handle, 0, 0);
+    if (!m_context)
+    {
+        // Unable to create the graphics context
+        return false;
+    }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Update the window (swap front and back buffers)                           //
-////////////////////////////////////////////////////////////////////////////////
-void SysWindow::update()
-{
-
+    // System window successfully created
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,36 +209,6 @@ Window& SysWindow::getHandle()
     return m_handle;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create window context                                                     //
-//  return : True if the window context is successfully created               //
-////////////////////////////////////////////////////////////////////////////////
-bool SysWindow::createContext()
-{
-    if (!m_display)
-    {
-        // Invalid display
-        return false;
-    }
-
-    if (!m_handle)
-    {
-        // Invalid window handle
-        return false;
-    }
-
-    // Create the graphics context
-    m_context = XCreateGC(m_display, m_handle, 0, 0);
-    if (!m_context)
-    {
-        // Unable to create the graphics context
-        return false;
-    }
-
-    // Context successfully created
-    return true;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Process window events                                                     //
