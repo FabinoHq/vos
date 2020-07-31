@@ -646,6 +646,37 @@ bool Renderer::createVulkanSwapchain()
     }
     m_swapchain.images.clear();
 
+    // Get device surface capabilities
+    VkSurfaceCapabilitiesKHR surfaceCapabilities;
+    if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+        m_physicalDevice, m_vulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
+    {
+        // Could not get device surface capabilities
+        return false;
+    }
+
+    // Get surface formats
+    uint32_t formatsCnt = 0;
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(
+        m_physicalDevice, m_vulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
+    {
+        // Could not get surface formats count
+        return false;
+    }
+    if (formatsCnt <= 0)
+    {
+        // No surface formats found
+        return false;
+    }
+
+    std::vector<VkSurfaceFormatKHR> surfaceFormats(formatsCnt);
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(m_physicalDevice,
+        m_vulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
+    {
+        // Could not get surface formats
+        return false;
+    }
+
     // Vulkan swapchain successfully created
     return true;
 }
