@@ -150,7 +150,7 @@
             //  Create Vulkan swapchain                                       //
             //  return : True if Vulkan swapchain is successfully created     //
             ////////////////////////////////////////////////////////////////////
-            bool createVulkanSwapChain();
+            bool createVulkanSwapchain();
 
 
         private:

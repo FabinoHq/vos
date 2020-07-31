@@ -1120,6 +1120,16 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyImageView function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyImageView)(
+        VkDevice device, VkImageView imageView,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyImageView vkDestroyImageView;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
     //  return : True if Vulkan global functions are successfully loaded      //
     ////////////////////////////////////////////////////////////////////////////

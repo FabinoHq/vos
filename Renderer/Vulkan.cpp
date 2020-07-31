@@ -136,6 +136,10 @@ PFN_vkQueueSubmit vkQueueSubmit = 0;
 PFN_vkQueueWaitIdle vkQueueWaitIdle = 0;
 
 
+// vkDestroyImageView function
+PFN_vkDestroyImageView vkDestroyImageView = 0;
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
 //  return : True if Vulkan global functions are successfully loaded          //
@@ -448,6 +452,17 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+
+    // Load vkDestroyImageView
+    vkDestroyImageView = (PFN_vkDestroyImageView)vkGetDeviceProcAddr(
+        vulkanDevice, "vkDestroyImageView"
+    );
+    if (!vkDestroyImageView)
+    {
+        // Could not load vkDestroyImageView
+        return false;
+    }
+
     // Vulkan device functions successfully loaded
     return true;
 }
@@ -459,6 +474,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkDestroyImageView = 0;
+
     vkQueueWaitIdle = 0;
     vkQueueSubmit = 0;
     vkGetDeviceQueue = 0;

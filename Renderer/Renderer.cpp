@@ -186,7 +186,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create Vulkan swapchain
-    if (!createVulkanSwapChain())
+    if (!createVulkanSwapchain())
     {
         // Could not create Vulkan swapchain
         return false;
@@ -616,7 +616,7 @@ bool Renderer::getQueuesHandles()
 //  Create Vulkan swapchain                                                   //
 //  return : True if Vulkan swapchain is successfully created                 //
 ////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createVulkanSwapChain()
+bool Renderer::createVulkanSwapchain()
 {
     m_rendererReady = false;
 
@@ -633,6 +633,18 @@ bool Renderer::createVulkanSwapChain()
         // Could not get the device ready
         return false;
     }
+
+    // Cleanup swapchain images views
+    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+    {
+        if (m_swapchain.images[i].view)
+        {
+            // Destroy image view
+            vkDestroyImageView(m_vulkanDevice, m_swapchain.images[i].view, 0);
+            m_swapchain.images[i].view = 0;
+        }
+    }
+    m_swapchain.images.clear();
 
     // Vulkan swapchain successfully created
     return true;
