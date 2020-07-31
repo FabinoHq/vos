@@ -944,6 +944,42 @@ bool Renderer::createVulkanSwapchain()
     m_swapchain.extent.width = extent.width;
     m_swapchain.extent.height = extent.height;
 
+    // Create swapchain images views
+    VkComponentMapping components;
+    components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    VkImageSubresourceRange subresource;
+    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresource.baseMipLevel = 0;
+    subresource.levelCount = 1;
+    subresource.baseArrayLayer = 0;
+    subresource.layerCount = 1;
+
+    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+    {
+        // Create image view
+        VkImageViewCreateInfo imageView;
+        imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        imageView.pNext = 0;
+        imageView.flags = 0;
+        imageView.image = m_swapchain.images[i].handle;
+        imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        imageView.format = m_swapchain.format;
+        imageView.components = components;
+        imageView.subresourceRange = subresource;
+
+        if (vkCreateImageView(m_vulkanDevice,
+            &imageView, 0, &m_swapchain.images[i].view) != VK_SUCCESS)
+        {
+            // Could not create swapchain image view
+            return false;
+        }
+    }
+
     // Vulkan swapchain successfully created
+    m_rendererReady = true;
     return true;
 }

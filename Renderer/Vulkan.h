@@ -298,6 +298,71 @@
         VK_PRESENT_MODE_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceType enum                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkPhysicalDeviceType
+    {
+        VK_PHYSICAL_DEVICE_TYPE_OTHER = 0,
+        VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = 1,
+        VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = 2,
+        VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = 3,
+        VK_PHYSICAL_DEVICE_TYPE_CPU = 4,
+        VK_PHYSICAL_DEVICE_TYPE_BEGIN_RANGE = 0,
+        VK_PHYSICAL_DEVICE_TYPE_END_RANGE = 4,
+        VK_PHYSICAL_DEVICE_TYPE_RANGE_SIZE = 5,
+        VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSharingMode enum                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSharingMode
+    {
+        VK_SHARING_MODE_EXCLUSIVE = 0,
+        VK_SHARING_MODE_CONCURRENT = 1,
+        VK_SHARING_MODE_BEGIN_RANGE = 0,
+        VK_SHARING_MODE_END_RANGE = 1,
+        VK_SHARING_MODE_RANGE_SIZE = 2,
+        VK_SHARING_MODE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageViewType enum                                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkImageViewType
+    {
+        VK_IMAGE_VIEW_TYPE_1D = 0,
+        VK_IMAGE_VIEW_TYPE_2D = 1,
+        VK_IMAGE_VIEW_TYPE_3D = 2,
+        VK_IMAGE_VIEW_TYPE_CUBE = 3,
+        VK_IMAGE_VIEW_TYPE_1D_ARRAY = 4,
+        VK_IMAGE_VIEW_TYPE_2D_ARRAY = 5,
+        VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = 6,
+        VK_IMAGE_VIEW_TYPE_BEGIN_RANGE = 0,
+        VK_IMAGE_VIEW_TYPE_END_RANGE = 6,
+        VK_IMAGE_VIEW_TYPE_RANGE_SIZE = 7,
+        VK_IMAGE_VIEW_TYPE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkComponentSwizzle enum                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkComponentSwizzle
+    {
+        VK_COMPONENT_SWIZZLE_IDENTITY = 0,
+        VK_COMPONENT_SWIZZLE_ZERO = 1,
+        VK_COMPONENT_SWIZZLE_ONE = 2,
+        VK_COMPONENT_SWIZZLE_R = 3,
+        VK_COMPONENT_SWIZZLE_G = 4,
+        VK_COMPONENT_SWIZZLE_B = 5,
+        VK_COMPONENT_SWIZZLE_A = 6,
+        VK_COMPONENT_SWIZZLE_BEGIN_RANGE = 0,
+        VK_COMPONENT_SWIZZLE_END_RANGE = 6,
+        VK_COMPONENT_SWIZZLE_RANGE_SIZE = 7,
+        VK_COMPONENT_SWIZZLE_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
@@ -385,6 +450,16 @@
     };
     typedef VkFlags VkImageUsageFlags;
 
+    // VkImageAspectFlags
+    enum VkImageAspectFlagBits
+    {
+        VK_IMAGE_ASPECT_COLOR_BIT = 0x00000001,
+        VK_IMAGE_ASPECT_DEPTH_BIT = 0x00000002,
+        VK_IMAGE_ASPECT_STENCIL_BIT = 0x00000004,
+        VK_IMAGE_ASPECT_METADATA_BIT = 0x00000008,
+    };
+    typedef VkFlags VkImageAspectFlags;
+
     // VkSurfaceTransformFlagsKHR
     enum VkSurfaceTransformFlagBitsKHR
     {
@@ -410,35 +485,24 @@
     };
     typedef VkFlags VkCompositeAlphaFlagsKHR;
 
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkPhysicalDeviceType enum                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    enum VkPhysicalDeviceType
+    // VkBufferUsageFlags
+    enum VkBufferUsageFlagBits
     {
-        VK_PHYSICAL_DEVICE_TYPE_OTHER = 0,
-        VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = 1,
-        VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = 2,
-        VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = 3,
-        VK_PHYSICAL_DEVICE_TYPE_CPU = 4,
-        VK_PHYSICAL_DEVICE_TYPE_BEGIN_RANGE = 0,
-        VK_PHYSICAL_DEVICE_TYPE_END_RANGE = 4,
-        VK_PHYSICAL_DEVICE_TYPE_RANGE_SIZE = 5,
-        VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM = 0x7FFFFFFF
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001,
+        VK_BUFFER_USAGE_TRANSFER_DST_BIT = 0x00000002,
+        VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000004,
+        VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = 0x00000008,
+        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = 0x00000010,
+        VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = 0x00000020,
+        VK_BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040,
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080,
+        VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100,
     };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkSharingMode enum                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-    enum VkSharingMode
-    {
-        VK_SHARING_MODE_EXCLUSIVE = 0,
-        VK_SHARING_MODE_CONCURRENT = 1,
-        VK_SHARING_MODE_BEGIN_RANGE = 0,
-        VK_SHARING_MODE_END_RANGE = 1,
-        VK_SHARING_MODE_RANGE_SIZE = 2,
-        VK_SHARING_MODE_MAX_ENUM = 0x7FFFFFFF
-    };
+    typedef VkFlags VkBufferUsageFlags;
+    typedef VkFlags VkBufferViewCreateFlags;
+    typedef VkFlags VkImageViewCreateFlags;
+    typedef VkFlags VkShaderModuleCreateFlags;
+    typedef VkFlags VkPipelineCacheCreateFlags;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -883,6 +947,44 @@
         const VkSemaphore*              pSignalSemaphores;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkComponentMapping data structure                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkComponentMapping
+    {
+        VkComponentSwizzle  r;
+        VkComponentSwizzle  g;
+        VkComponentSwizzle  b;
+        VkComponentSwizzle  a;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageSubresourceRange data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageSubresourceRange
+    {
+        VkImageAspectFlags  aspectMask;
+        uint32_t            baseMipLevel;
+        uint32_t            levelCount;
+        uint32_t            baseArrayLayer;
+        uint32_t            layerCount;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageViewCreateInfo data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageViewCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkImageViewCreateFlags      flags;
+        VkImage                     image;
+        VkImageViewType             viewType;
+        VkFormat                    format;
+        VkComponentMapping          components;
+        VkImageSubresourceRange     subresourceRange;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -1118,6 +1220,15 @@
     typedef VkResult (VOSVK_PTR *PFN_vkQueueWaitIdle)(VkQueue queue);
     extern PFN_vkQueueWaitIdle vkQueueWaitIdle;
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateImageView function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateImageView)(
+        VkDevice device, const VkImageViewCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkImageView* pView
+    );
+    extern PFN_vkCreateImageView vkCreateImageView;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroyImageView function                                           //
