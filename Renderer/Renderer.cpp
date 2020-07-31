@@ -46,6 +46,7 @@
 //  Renderer default constructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::Renderer() :
+m_rendererReady(false),
 m_sysWindow(0),
 m_vulkanLibHandle(0),
 m_vulkanInstance(0),
@@ -65,6 +66,8 @@ m_surfaceQueueHandle(0)
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
+    m_rendererReady = false;
+
     // Destroy Vulkan device
     if (m_vulkanDevice && vkDestroyDevice)
     {
@@ -100,6 +103,8 @@ Renderer::~Renderer()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::init(SysWindow* sysWindow)
 {
+    m_rendererReady = false;
+
     // Check SysWindow pointer
     if (!sysWindow)
     {
@@ -176,6 +181,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!getQueuesHandles())
     {
         // Could not get Vulkan queues handles
+        return false;
+    }
+
+    // Create Vulkan swapchain
+    if (!createVulkanSwapChain())
+    {
+        // Could not create Vulkan swapchain
         return false;
     }
 
@@ -596,5 +608,17 @@ bool Renderer::getQueuesHandles()
     }
 
     // Vulkan queues handles are valid
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create Vulkan swapchain                                                   //
+//  return : True if Vulkan swapchain is successfully created                 //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createVulkanSwapChain()
+{
+    m_rendererReady = false;
+
+    // Vulkan swapchain successfully created
     return true;
 }

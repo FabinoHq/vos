@@ -105,8 +105,15 @@
             ////////////////////////////////////////////////////////////////////
             bool getQueuesHandles();
 
+            ////////////////////////////////////////////////////////////////////
+            //  Create Vulkan swapchain                                       //
+            //  return : True if Vulkan swapchain is successfully created     //
+            ////////////////////////////////////////////////////////////////////
+            bool createVulkanSwapChain();
+
 
         private:
+            bool                m_rendererReady;        // Renderer ready state
             SysWindow*          m_sysWindow;            // SysWindow pointer
             VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
             VkInstance          m_vulkanInstance;       // Vulkan instance
