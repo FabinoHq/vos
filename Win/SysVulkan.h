@@ -99,6 +99,9 @@
     typedef struct VkFence_T*           VkFence;
     typedef struct VkCommandBuffer_T*   VkCommandBuffer;
     typedef struct VkImage_T*           VkImage;
+    typedef struct VkImageView_T*       VkImageView;
+    typedef struct VkSampler_T*         VkSampler;
+    typedef struct VkDeviceMemory_T*    VkDeviceMemory;
 
 
     ////////////////////////////////////////////////////////////////////////////

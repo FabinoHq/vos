@@ -56,7 +56,8 @@ m_vulkanDevice(0),
 m_graphicsQueueIndex(0),
 m_graphicsQueueHandle(0),
 m_surfaceQueueIndex(0),
-m_surfaceQueueHandle(0)
+m_surfaceQueueHandle(0),
+m_swapchain()
 {
 
 }
@@ -618,6 +619,20 @@ bool Renderer::getQueuesHandles()
 bool Renderer::createVulkanSwapChain()
 {
     m_rendererReady = false;
+
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Wait for device idle
+    if (vkDeviceWaitIdle(m_vulkanDevice) != VK_SUCCESS)
+    {
+        // Could not get the device ready
+        return false;
+    }
 
     // Vulkan swapchain successfully created
     return true;

@@ -45,6 +45,47 @@
     #include "../SysWindow.h"
     #include "../Vulkan.h"
 
+    #include <vector>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanImage data structure                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VulkanImage
+    {
+        VulkanImage()
+        {
+            handle = 0;
+            view = 0;
+            sampler = 0;
+            memory = 0;
+        }
+
+        VkImage         handle;     // Image handle
+        VkImageView     view;       // Image view
+        VkSampler       sampler;    // Image sampler
+        VkDeviceMemory  memory;     // Image memory
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanSwapchain data structure                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VulkanSwapchain
+    {
+        VulkanSwapchain()
+        {
+            handle = 0;
+            format = VK_FORMAT_UNDEFINED;
+            extent.width = 0;
+            extent.height = 0;
+        }
+
+        VkSwapchainKHR              handle;     // Swapchain handle
+        VkFormat                    format;     // Swapchain format
+        VkExtent2D                  extent;     // Swapchain extent
+        std::vector<VulkanImage>    images;     // Swapchain images
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
@@ -125,6 +166,8 @@
             VkQueue             m_graphicsQueueHandle;  // Graphics queue handle
             uint32_t            m_surfaceQueueIndex;    // Surface queue index
             VkQueue             m_surfaceQueueHandle;   // Surface queue handle
+
+            VulkanSwapchain     m_swapchain;            // Vulkan swapchain
     };
 
 
