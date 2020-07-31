@@ -912,6 +912,38 @@ bool Renderer::createVulkanSwapchain()
         vkDestroySwapchainKHR(m_vulkanDevice, oldSwapchain, 0);
     }
 
+    // Set swapchain format
+    m_swapchain.format = format.format;
+
+    // Get swapchain images count
+    uint32_t swapchainImagesCount = 0;
+    if (vkGetSwapchainImagesKHR(m_vulkanDevice,
+        m_swapchain.handle, &swapchainImagesCount, 0) != VK_SUCCESS)
+    {
+        // Could not get swapchain images count
+        return false;
+    }
+
+    // Get current swapchain images
+    std::vector<VkImage> images(swapchainImagesCount);
+    if (vkGetSwapchainImagesKHR(m_vulkanDevice,
+        m_swapchain.handle, &swapchainImagesCount, images.data()) != VK_SUCCESS)
+    {
+        // Could not get swapchain images count
+        return false;
+    }
+
+    // Set swapchain images
+    m_swapchain.images.resize(swapchainImagesCount);
+    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+    {
+        m_swapchain.images[i].handle = images[i];
+    }
+
+    // Set swapchain extent
+    m_swapchain.extent.width = extent.width;
+    m_swapchain.extent.height = extent.height;
+
     // Vulkan swapchain successfully created
     return true;
 }
