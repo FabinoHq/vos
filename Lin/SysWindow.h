@@ -121,7 +121,6 @@
             Display*            m_display;      // Display handle
             Window              m_handle;       // Window handle
             int                 m_screen;       // Screen handle
-            GC                  m_context;      // Window context
             long int            m_closeMsg;     // Close message
 
             std::queue<Event>   m_events;       // Events FIFO queue
