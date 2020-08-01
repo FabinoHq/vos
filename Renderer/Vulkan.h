@@ -363,6 +363,19 @@
         VK_COMPONENT_SWIZZLE_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandBufferLevel enum                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkCommandBufferLevel
+    {
+        VK_COMMAND_BUFFER_LEVEL_PRIMARY = 0,
+        VK_COMMAND_BUFFER_LEVEL_SECONDARY = 1,
+        VK_COMMAND_BUFFER_LEVEL_BEGIN_RANGE = 0,
+        VK_COMMAND_BUFFER_LEVEL_END_RANGE = 1,
+        VK_COMMAND_BUFFER_LEVEL_RANGE_SIZE = 2,
+        VK_COMMAND_BUFFER_LEVEL_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
@@ -1020,6 +1033,18 @@
         uint32_t                    queueFamilyIndex;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandBufferAllocateInfo data structure                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkCommandBufferAllocateInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkCommandPool           commandPool;
+        VkCommandBufferLevel    level;
+        uint32_t                commandBufferCount;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -1301,6 +1326,15 @@
         VkCommandPoolResetFlags flags
     );
     extern PFN_vkResetCommandPool vkResetCommandPool;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkAllocateCommandBuffers function                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkAllocateCommandBuffers)(
+        VkDevice device, const VkCommandBufferAllocateInfo* pAllocateInfo,
+        VkCommandBuffer* pCommandBuffers
+    );
+    extern PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
 
 
     ////////////////////////////////////////////////////////////////////////////
