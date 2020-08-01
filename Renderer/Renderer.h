@@ -78,12 +78,28 @@
             format = VK_FORMAT_UNDEFINED;
             extent.width = 0;
             extent.height = 0;
+            imagesCnt = 0;
         }
 
         VkSwapchainKHR              handle;     // Swapchain handle
         VkFormat                    format;     // Swapchain format
         VkExtent2D                  extent;     // Swapchain extent
+        uint32_t                    imagesCnt;  // Swapchain images count
         std::vector<VulkanImage>    images;     // Swapchain images
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanCommands data structure                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VulkanCommands
+    {
+        VulkanCommands()
+        {
+            pool = 0;
+        }
+
+        VkCommandPool                   pool;       // Commands pool
+        std::vector<VkCommandBuffer>    buffers;    // Commands buffers
     };
 
 
@@ -152,6 +168,12 @@
             ////////////////////////////////////////////////////////////////////
             bool createVulkanSwapchain();
 
+            ////////////////////////////////////////////////////////////////////
+            //  Create command buffers                                        //
+            //  return : True if command buffers are successfully created     //
+            ////////////////////////////////////////////////////////////////////
+            bool createCommandBuffers();
+
 
         private:
             bool                m_rendererReady;        // Renderer ready state
@@ -168,6 +190,7 @@
             VkQueue             m_surfaceQueueHandle;   // Surface queue handle
 
             VulkanSwapchain     m_swapchain;            // Vulkan swapchain
+            VulkanCommands      m_commands;             // Vulkan commands
     };
 
 

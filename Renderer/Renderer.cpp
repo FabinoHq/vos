@@ -57,7 +57,8 @@ m_graphicsQueueIndex(0),
 m_graphicsQueueHandle(0),
 m_surfaceQueueIndex(0),
 m_surfaceQueueHandle(0),
-m_swapchain()
+m_swapchain(),
+m_commands()
 {
 
 }
@@ -222,6 +223,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createVulkanSwapchain())
     {
         // Could not create Vulkan swapchain
+        return false;
+    }
+
+    // Create command buffers
+    if (!createCommandBuffers())
+    {
+        // Could not create command buffers
         return false;
     }
 
@@ -934,6 +942,7 @@ bool Renderer::createVulkanSwapchain()
     }
 
     // Set swapchain images
+    m_swapchain.imagesCnt = swapchainImagesCount;
     m_swapchain.images.resize(swapchainImagesCount);
     for (size_t i = 0; i < m_swapchain.images.size(); ++i)
     {
@@ -981,5 +990,51 @@ bool Renderer::createVulkanSwapchain()
 
     // Vulkan swapchain successfully created
     m_rendererReady = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create command buffers                                                    //
+//  return : True if command buffers are successfully created                 //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createCommandBuffers()
+{
+    // Create commands pool
+    VkCommandPoolCreateInfo commandPool;
+    commandPool.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPool.pNext = 0;
+    commandPool.flags = 0;
+    commandPool.queueFamilyIndex = m_surfaceQueueIndex;
+
+    if (vkCreateCommandPool(
+        m_vulkanDevice, &commandPool, 0, &m_commands.pool) != VK_SUCCESS)
+    {
+        // Could not create commands pool
+        return false;
+    }
+    if (!m_commands.pool)
+    {
+        // Invalid commands pool
+        return false;
+    }
+
+    // Allocate command buffers
+    m_commands.buffers.resize(m_swapchain.imagesCnt);
+
+    VkCommandBufferAllocateInfo commandBuffer;
+    commandBuffer.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    commandBuffer.pNext = 0;
+    commandBuffer.commandPool = m_commands.pool;
+    commandBuffer.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    commandBuffer.commandBufferCount = m_swapchain.imagesCnt;
+
+    if (vkAllocateCommandBuffers(m_vulkanDevice,
+        &commandBuffer, m_commands.buffers.data()) != VK_SUCCESS)
+    {
+        // Could not allocate command buffers
+        return false;
+    }
+
+    // Command buffers successfully created
     return true;
 }
