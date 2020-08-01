@@ -1035,6 +1035,84 @@ bool Renderer::createCommandBuffers()
         return false;
     }
 
+    // Command buffer begin
+    VkCommandBufferBeginInfo commandBegin;
+    commandBegin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    commandBegin.pNext = 0;
+    commandBegin.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+    commandBegin.pInheritanceInfo = 0;
+
+    // Vulkan clear color
+    VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 0.0f};
+
+    // Image subresource
+    VkImageSubresourceRange subresource;
+    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresource.baseMipLevel = 0;
+    subresource.levelCount = 1;
+    subresource.baseArrayLayer = 0;
+    subresource.layerCount = 1;
+
+    // Record command buffers
+    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
+    {
+        VkImageMemoryBarrier presentToClear;
+        presentToClear.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        presentToClear.pNext = 0;
+        presentToClear.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+        presentToClear.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        presentToClear.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        presentToClear.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        presentToClear.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        presentToClear.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        presentToClear.image = m_swapchain.images[i].handle;
+        presentToClear.subresourceRange = subresource;
+
+        VkImageMemoryBarrier clearToPresent;
+        clearToPresent.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        clearToPresent.pNext = 0;
+        clearToPresent.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        clearToPresent.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+        clearToPresent.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        clearToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        clearToPresent.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        clearToPresent.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        clearToPresent.image = m_swapchain.images[i].handle;
+        clearToPresent.subresourceRange = subresource;
+
+        // Begin command buffer
+        if (vkBeginCommandBuffer(
+            m_commands.buffers[i], &commandBegin) != VK_SUCCESS)
+        {
+            // Could not begin command buffer
+            return false;
+        }
+        
+        vkCmdPipelineBarrier(
+            m_commands.buffers[i], VK_PIPELINE_STAGE_TRANSFER_BIT,
+            VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, 0, 0, 0, 1,
+            &presentToClear
+        );
+
+        vkCmdClearColorImage(
+            m_commands.buffers[i], m_swapchain.images[i].handle,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clearColor, 1, &subresource
+        );
+
+        vkCmdPipelineBarrier(
+            m_commands.buffers[i], VK_PIPELINE_STAGE_TRANSFER_BIT,
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, 0, 0, 0, 1,
+            &clearToPresent
+        );
+
+        // End command buffer
+        if (vkEndCommandBuffer(m_commands.buffers[i]) != VK_SUCCESS)
+        {
+            // Could not end command buffer
+            return false;
+        }
+    }
+
     // Command buffers successfully created
     return true;
 }

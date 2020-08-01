@@ -167,6 +167,12 @@ PFN_vkEndCommandBuffer vkEndCommandBuffer = 0;
 // vkResetCommandBuffer function
 PFN_vkResetCommandBuffer vkResetCommandBuffer = 0;
 
+// vkCmdClearColorImage function
+PFN_vkCmdClearColorImage vkCmdClearColorImage = 0;
+
+// vkCmdPipelineBarrier function
+PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -582,6 +588,26 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdClearColorImage
+    vkCmdClearColorImage = (PFN_vkCmdClearColorImage)
+        vkGetDeviceProcAddr(vulkanDevice, "vkCmdClearColorImage"
+    );
+    if (!vkCmdClearColorImage)
+    {
+        // Could not load vkCmdClearColorImage
+        return false;
+    }
+
+    // Load vkCmdPipelineBarrier
+    vkCmdPipelineBarrier = (PFN_vkCmdPipelineBarrier)
+        vkGetDeviceProcAddr(vulkanDevice, "vkCmdPipelineBarrier"
+    );
+    if (!vkCmdPipelineBarrier)
+    {
+        // Could not load vkCmdPipelineBarrier
+        return false;
+    }
+
     // Vulkan device functions successfully loaded
     return true;
 }
@@ -593,6 +619,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkCmdPipelineBarrier = 0;
+    vkCmdClearColorImage = 0;
     vkResetCommandBuffer = 0;
     vkEndCommandBuffer = 0;
     vkBeginCommandBuffer = 0;

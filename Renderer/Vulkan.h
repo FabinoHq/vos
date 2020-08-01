@@ -342,6 +342,27 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkImageLayout enum                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkImageLayout
+    {
+        VK_IMAGE_LAYOUT_UNDEFINED = 0,
+        VK_IMAGE_LAYOUT_GENERAL = 1,
+        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = 2,
+        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = 3,
+        VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = 4,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = 5,
+        VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = 6,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = 7,
+        VK_IMAGE_LAYOUT_PREINITIALIZED = 8,
+        VK_IMAGE_LAYOUT_PRESENT_SRC_KHR = 1000001002,
+        VK_IMAGE_LAYOUT_BEGIN_RANGE = 0,
+        VK_IMAGE_LAYOUT_END_RANGE = 8,
+        VK_IMAGE_LAYOUT_RANGE_SIZE = 9,
+        VK_IMAGE_LAYOUT_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkImageViewType enum                                                  //
     ////////////////////////////////////////////////////////////////////////////
     enum VkImageViewType
@@ -584,6 +605,36 @@
     typedef VkFlags VkImageViewCreateFlags;
     typedef VkFlags VkShaderModuleCreateFlags;
     typedef VkFlags VkPipelineCacheCreateFlags;
+
+    // VkAccessFlags
+    enum VkAccessFlagBits
+    {
+        VK_ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001,
+        VK_ACCESS_INDEX_READ_BIT = 0x00000002,
+        VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004,
+        VK_ACCESS_UNIFORM_READ_BIT = 0x00000008,
+        VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = 0x00000010,
+        VK_ACCESS_SHADER_READ_BIT = 0x00000020,
+        VK_ACCESS_SHADER_WRITE_BIT = 0x00000040,
+        VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = 0x00000080,
+        VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = 0x00000100,
+        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = 0x00000200,
+        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = 0x00000400,
+        VK_ACCESS_TRANSFER_READ_BIT = 0x00000800,
+        VK_ACCESS_TRANSFER_WRITE_BIT = 0x00001000,
+        VK_ACCESS_HOST_READ_BIT = 0x00002000,
+        VK_ACCESS_HOST_WRITE_BIT = 0x00004000,
+        VK_ACCESS_MEMORY_READ_BIT = 0x00008000,
+        VK_ACCESS_MEMORY_WRITE_BIT = 0x00010000
+    };
+    typedef VkFlags VkAccessFlags;
+
+    // VkDependencyFlags
+    enum VkDependencyFlagBits
+    {
+        VK_DEPENDENCY_BY_REGION_BIT = 0x00000001
+    };
+    typedef VkFlags VkDependencyFlags;
 
     // VkCommandPoolCreateFlags
     enum VkCommandPoolCreateFlagBits
@@ -1176,6 +1227,98 @@
         VkDeviceSize    size;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkClearColorValue data structure                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    union VkClearColorValue
+    {
+        float       float32[4];
+        int32_t     int32[4];
+        uint32_t    uint32[4];
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkClearDepthStencilValue data structure                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkClearDepthStencilValue
+    {
+        float       depth;
+        uint32_t    stencil;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkClearValue data structure                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    union VkClearValue
+    {
+        VkClearColorValue           color;
+        VkClearDepthStencilValue    depthStencil;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkClearAttachment data structure                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkClearAttachment
+    {
+        VkImageAspectFlags  aspectMask;
+        uint32_t            colorAttachment;
+        VkClearValue        clearValue;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkClearRect data structure                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkClearRect
+    {
+        VkRect2D    rect;
+        uint32_t    baseArrayLayer;
+        uint32_t    layerCount;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryBarrier data structure                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryBarrier
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkAccessFlags       srcAccessMask;
+        VkAccessFlags       dstAccessMask;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBufferMemoryBarrier data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBufferMemoryBarrier
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkAccessFlags       srcAccessMask;
+        VkAccessFlags       dstAccessMask;
+        uint32_t            srcQueueFamilyIndex;
+        uint32_t            dstQueueFamilyIndex;
+        VkBuffer            buffer;
+        VkDeviceSize        offset;
+        VkDeviceSize        size;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageMemoryBarrier data structure                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageMemoryBarrier
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkAccessFlags               srcAccessMask;
+        VkAccessFlags               dstAccessMask;
+        VkImageLayout               oldLayout;
+        VkImageLayout               newLayout;
+        uint32_t                    srcQueueFamilyIndex;
+        uint32_t                    dstQueueFamilyIndex;
+        VkImage                     image;
+        VkImageSubresourceRange     subresourceRange;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -1500,6 +1643,30 @@
         VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags
     );
     extern PFN_vkResetCommandBuffer vkResetCommandBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdClearColorImage function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdClearColorImage)(
+        VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout,
+        const VkClearColorValue* pColor, uint32_t rangeCount,
+        const VkImageSubresourceRange* pRanges
+    );
+    extern PFN_vkCmdClearColorImage vkCmdClearColorImage;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdPipelineBarrier function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdPipelineBarrier)(
+        VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask,
+        VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags,
+        uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers,
+        uint32_t bufferMemoryBarrierCount,
+        const VkBufferMemoryBarrier* pBufferMemoryBarriers,
+        uint32_t imageMemoryBarrierCount,
+        const VkImageMemoryBarrier* pImageMemoryBarriers
+    );
+    extern PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
 
 
     ////////////////////////////////////////////////////////////////////////////
