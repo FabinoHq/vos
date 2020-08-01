@@ -7,6 +7,9 @@
     <Filter Include="Renderer">
       <UniqueIdentifier>{940b859f-59b4-49b8-b28d-1eaf645f0ea6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{7c39d277-acd0-4ccd-876b-eca0fb71729b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -25,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="Renderer\Vulkan.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Clock.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="Win\SysVulkan.h">
       <Filter>Win</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Clock.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

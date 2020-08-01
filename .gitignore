@@ -28,6 +28,10 @@
 !Vos.h
 !Vos.cpp
 
+!System/
+!System/Clock.h
+!System/Clock.cpp
+
 !DisplayMode.h
 !SysWindow.h
 !Vulkan.h

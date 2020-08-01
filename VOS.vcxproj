@@ -130,6 +130,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\Vulkan.cpp" />
+    <ClCompile Include="System\Clock.cpp" />
     <ClCompile Include="Vos.cpp" />
     <ClCompile Include="Win\DisplayMode.cpp" />
     <ClCompile Include="Win\SysVulkan.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Renderer\Vulkan.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="System\Clock.h" />
     <ClInclude Include="Vos.h" />
     <ClInclude Include="SysWindow.h" />
     <ClInclude Include="Vulkan.h" />
