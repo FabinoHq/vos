@@ -78,6 +78,33 @@ Renderer::~Renderer()
         {
             vkDeviceWaitIdle(m_vulkanDevice);
 
+            // Destroy command buffers
+            if (m_commands.buffers.size() > 0)
+            {
+                bool validBuffers = true;
+                for (size_t i = 0; i < m_commands.buffers.size(); ++i)
+                {
+                    if (!m_commands.buffers[i])
+                    {
+                        validBuffers = false;
+                        break;
+                    }
+                }
+                if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
+                {
+                    vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
+                        static_cast<uint32_t>(m_commands.buffers.size()),
+                        m_commands.buffers.data()
+                    );
+                }
+            }
+
+            // Destroy commands pool
+            if (m_commands.pool && vkDestroyCommandPool)
+            {
+                vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
+            }
+
             // Destroy swapchain images views
             if (vkDestroyImageView)
             {
