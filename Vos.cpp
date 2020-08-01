@@ -125,8 +125,8 @@ void Vos::run()
             }
         }
 
-        // Clear renderer frame
-        m_renderer.clear();
+        // Render frame
+        m_renderer.render();
     }
 
     // Close main window

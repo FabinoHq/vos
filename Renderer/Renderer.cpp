@@ -58,7 +58,8 @@ m_graphicsQueueHandle(0),
 m_surfaceQueueIndex(0),
 m_surfaceQueueHandle(0),
 m_swapchain(),
-m_commands()
+m_commands(),
+m_semaphores()
 {
 
 }
@@ -77,6 +78,23 @@ Renderer::~Renderer()
         if (vkDeviceWaitIdle)
         {
             vkDeviceWaitIdle(m_vulkanDevice);
+
+            // Destroy semaphores
+            if (vkDestroySemaphore)
+            {
+                if (m_semaphores.renderFinished)
+                {
+                    vkDestroySemaphore(
+                        m_vulkanDevice, m_semaphores.renderFinished, 0
+                    );
+                }
+                if (m_semaphores.imageAvailable)
+                {
+                    vkDestroySemaphore(
+                        m_vulkanDevice, m_semaphores.imageAvailable, 0
+                    );
+                }
+            }
 
             // Destroy command buffers
             if (m_commands.buffers.size() > 0)
@@ -134,6 +152,9 @@ Renderer::~Renderer()
             vkDestroyDevice(m_vulkanDevice, 0);
         }
     }
+    m_semaphores.renderFinished = 0;
+    m_semaphores.imageAvailable = 0;
+    m_commands.pool = 0;
     m_swapchain.handle = 0;
     m_vulkanDevice = 0;
     
@@ -260,16 +281,67 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create semaphores
+    if (!createSemaphores())
+    {
+        // Could not create semaphores
+        return false;
+    }
+
     // Renderer successfully loaded
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Clear renderer frame                                                      //
+//  Render frame                                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::clear()
+void Renderer::render()
 {
+    // Check renderer state
+    if (!m_rendererReady)
+    {
+        return;
+    }
 
+    // Acquire next image
+    uint32_t imageIndex = 0;
+    if (vkAcquireNextImageKHR(m_vulkanDevice, m_swapchain.handle, UINT64_MAX,
+        m_semaphores.imageAvailable, 0, &imageIndex) != VK_SUCCESS)
+    {
+        return;
+    }
+
+    VkPipelineStageFlags waitDstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = &m_semaphores.imageAvailable;
+    submitInfo.pWaitDstStageMask = &waitDstStage;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &m_commands.buffers[imageIndex];
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = &m_semaphores.renderFinished;
+
+    if (!vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    {
+        return;
+    }
+
+    VkPresentInfoKHR present;
+    present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    present.pNext = 0;
+    present.waitSemaphoreCount = 1;
+    present.pWaitSemaphores = &m_semaphores.renderFinished;;
+    present.swapchainCount = 1;
+    present.pSwapchains = &m_swapchain.handle;
+    present.pImageIndices = &imageIndex;
+    present.pResults = 0;
+
+    if (!vkQueuePresentKHR(m_surfaceQueueHandle, &present) != VK_SUCCESS)
+    {
+        return;
+    }
 }
 
 
@@ -1141,5 +1213,43 @@ bool Renderer::createCommandBuffers()
     }
 
     // Command buffers successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create semaphores                                                         //
+//  return : True if semaphores are successfully created                      //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createSemaphores()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Vulkan device is invalid
+        return false;
+    }
+
+    VkSemaphoreCreateInfo semaphoreInfo;
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    semaphoreInfo.pNext = 0;
+    semaphoreInfo.flags = 0;
+
+    // Create image available semaphore
+    if (vkCreateSemaphore(m_vulkanDevice,
+        &semaphoreInfo, 0, &m_semaphores.imageAvailable) != VK_SUCCESS)
+    {
+        // Could not create image available semaphore
+        return false;
+    }
+
+    // Create render finished semaphore
+    if (vkCreateSemaphore(m_vulkanDevice,
+        &semaphoreInfo, 0, &m_semaphores.renderFinished) != VK_SUCCESS)
+    {
+        // Could not create render finished semaphore
+        return false;
+    }
+
+    // Semaphores successfully created
     return true;
 }

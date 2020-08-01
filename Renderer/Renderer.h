@@ -102,6 +102,21 @@
         std::vector<VkCommandBuffer>    buffers;    // Commands buffers
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanSemaphores data structure                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VulkanSemaphores
+    {
+        VulkanSemaphores()
+        {
+            imageAvailable = 0;
+            renderFinished = 0;
+        }
+
+        VkSemaphore     imageAvailable;
+        VkSemaphore     renderFinished;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
@@ -127,9 +142,9 @@
             bool init(SysWindow* sysWindow);
 
             ////////////////////////////////////////////////////////////////////
-            //  Clear renderer frame                                          //
+            //  Render frame                                                  //
             ////////////////////////////////////////////////////////////////////
-            void clear();
+            void render();
 
 
         private:
@@ -174,6 +189,12 @@
             ////////////////////////////////////////////////////////////////////
             bool createCommandBuffers();
 
+            ////////////////////////////////////////////////////////////////////
+            //  Create semaphores                                             //
+            //  return : True if semaphores are successfully created          //
+            ////////////////////////////////////////////////////////////////////
+            bool createSemaphores();
+
 
         private:
             bool                m_rendererReady;        // Renderer ready state
@@ -191,6 +212,7 @@
 
             VulkanSwapchain     m_swapchain;            // Vulkan swapchain
             VulkanCommands      m_commands;             // Vulkan commands
+            VulkanSemaphores    m_semaphores;           // Vulkan semaphores
     };
 
 

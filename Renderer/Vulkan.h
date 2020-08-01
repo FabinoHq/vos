@@ -1129,6 +1129,16 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkSemaphoreCreateInfo data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSemaphoreCreateInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkSemaphoreCreateFlags  flags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkImageSubresourceRange data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkImageSubresourceRange
@@ -1573,6 +1583,24 @@
     );
     extern PFN_vkDestroyImageView vkDestroyImageView;
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateSemaphore function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateSemaphore)(
+        VkDevice device, const VkSemaphoreCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore
+    );
+    extern PFN_vkCreateSemaphore vkCreateSemaphore;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroySemaphore function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroySemaphore)(
+        VkDevice device, VkSemaphore semaphore,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroySemaphore vkDestroySemaphore;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
