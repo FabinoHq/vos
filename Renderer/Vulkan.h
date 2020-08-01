@@ -1284,6 +1284,15 @@
     );
     extern PFN_vkCreateCommandPool vkCreateCommandPool;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyCommandPool function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyCommandPool)(
+        VkDevice device, VkCommandPool commandPool,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyCommandPool vkDestroyCommandPool;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //

@@ -146,6 +146,9 @@ PFN_vkDestroyImageView vkDestroyImageView = 0;
 // vkCreateCommandPool function
 PFN_vkCreateCommandPool vkCreateCommandPool = 0;
 
+// vkDestroyCommandPool function
+PFN_vkDestroyCommandPool vkDestroyCommandPool = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -491,6 +494,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkDestroyCommandPool
+    vkDestroyCommandPool = (PFN_vkDestroyCommandPool)vkGetDeviceProcAddr(
+        vulkanDevice, "vkDestroyCommandPool"
+    );
+    if (!vkDestroyCommandPool)
+    {
+        // Could not load vkDestroyCommandPool
+        return false;
+    }
+
     // Vulkan device functions successfully loaded
     return true;
 }
@@ -502,6 +515,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkDestroyCommandPool = 0;
     vkCreateCommandPool = 0;
 
     vkDestroyImageView = 0;
