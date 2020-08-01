@@ -102,6 +102,7 @@
     typedef struct VkImageView_T*       VkImageView;
     typedef struct VkSampler_T*         VkSampler;
     typedef struct VkDeviceMemory_T*    VkDeviceMemory;
+    typedef struct VkCommandPool_T*     VkCommandPool;
 
 
     ////////////////////////////////////////////////////////////////////////////

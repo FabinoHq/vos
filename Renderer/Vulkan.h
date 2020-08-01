@@ -504,6 +504,30 @@
     typedef VkFlags VkShaderModuleCreateFlags;
     typedef VkFlags VkPipelineCacheCreateFlags;
 
+    // VkCommandPoolCreateFlags
+    enum VkCommandPoolCreateFlagBits
+    {
+        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001,
+        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002,
+    };
+    typedef VkFlags VkCommandPoolCreateFlags;
+
+    // VkCommandPoolResetFlags
+    enum VkCommandPoolResetFlagBits
+    {
+        VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001,
+    };
+    typedef VkFlags VkCommandPoolResetFlags;
+
+    // VkCommandBufferUsageFlags
+    enum VkCommandBufferUsageFlagBits
+    {
+        VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = 0x00000001,
+        VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = 0x00000002,
+        VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = 0x00000004,
+    };
+    typedef VkFlags VkCommandBufferUsageFlags;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
@@ -985,6 +1009,17 @@
         VkImageSubresourceRange     subresourceRange;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandPoolCreateInfo data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkCommandPoolCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkCommandPoolCreateFlags    flags;
+        uint32_t                    queueFamilyIndex;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -1238,6 +1273,16 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyImageView vkDestroyImageView;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateCommandPool function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
+        VkDevice device, const VkCommandPoolCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool
+    );
+    extern PFN_vkCreateCommandPool vkCreateCommandPool;
 
 
     ////////////////////////////////////////////////////////////////////////////
