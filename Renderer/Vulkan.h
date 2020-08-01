@@ -1293,6 +1293,15 @@
     );
     extern PFN_vkDestroyCommandPool vkDestroyCommandPool;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkResetCommandPool function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkResetCommandPool)(
+        VkDevice device, VkCommandPool commandPool,
+        VkCommandPoolResetFlags flags
+    );
+    extern PFN_vkResetCommandPool vkResetCommandPool;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
