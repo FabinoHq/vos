@@ -103,6 +103,8 @@
     typedef struct VkSampler_T*         VkSampler;
     typedef struct VkDeviceMemory_T*    VkDeviceMemory;
     typedef struct VkCommandPool_T*     VkCommandPool;
+    typedef struct VkRenderPass_T*      VkRenderPass;
+    typedef struct VkFramebuffer_T*     VkFramebuffer;
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -158,6 +158,9 @@ PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers = 0;
 // vkFreeCommandBuffers function
 PFN_vkFreeCommandBuffers vkFreeCommandBuffers = 0;
 
+// vkBeginCommandBuffer function
+PFN_vkBeginCommandBuffer vkBeginCommandBuffer = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -543,6 +546,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkBeginCommandBuffer
+    vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)
+        vkGetDeviceProcAddr(vulkanDevice, "vkBeginCommandBuffer"
+    );
+    if (!vkBeginCommandBuffer)
+    {
+        // Could not load vkBeginCommandBuffer
+        return false;
+    }
+
     // Vulkan device functions successfully loaded
     return true;
 }
@@ -554,6 +567,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkBeginCommandBuffer = 0;
     vkFreeCommandBuffers = 0;
     vkAllocateCommandBuffers = 0;
     vkResetCommandPool = 0;

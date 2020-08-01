@@ -315,6 +315,20 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkQueryType enum                                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkQueryType
+    {
+        VK_QUERY_TYPE_OCCLUSION = 0,
+        VK_QUERY_TYPE_PIPELINE_STATISTICS = 1,
+        VK_QUERY_TYPE_TIMESTAMP = 2,
+        VK_QUERY_TYPE_BEGIN_RANGE = 0,
+        VK_QUERY_TYPE_END_RANGE = 2,
+        VK_QUERY_TYPE_RANGE_SIZE = 3,
+        VK_QUERY_TYPE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSharingMode enum                                                    //
     ////////////////////////////////////////////////////////////////////////////
     enum VkSharingMode
@@ -391,7 +405,7 @@
         VK_SAMPLE_COUNT_8_BIT = 0x00000008,
         VK_SAMPLE_COUNT_16_BIT = 0x00000010,
         VK_SAMPLE_COUNT_32_BIT = 0x00000020,
-        VK_SAMPLE_COUNT_64_BIT = 0x00000040,
+        VK_SAMPLE_COUNT_64_BIT = 0x00000040
     };
     typedef VkFlags VkSampleCountFlags;
 
@@ -401,14 +415,14 @@
         VK_QUEUE_GRAPHICS_BIT = 0x00000001,
         VK_QUEUE_COMPUTE_BIT = 0x00000002,
         VK_QUEUE_TRANSFER_BIT = 0x00000004,
-        VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008,
+        VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008
     };
     typedef VkFlags VkQueueFlags;
 
     // VkMemoryHeapFlags
     enum VkMemoryHeapFlagBits
     {
-        VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001,
+        VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001
     };
     typedef VkFlags VkMemoryHeapFlags;
     typedef VkFlags VkDeviceCreateFlags;
@@ -433,7 +447,7 @@
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = 0x00002000,
         VK_PIPELINE_STAGE_HOST_BIT = 0x00004000,
         VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = 0x00008000,
-        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = 0x00010000,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = 0x00010000
     };
     typedef VkFlags VkPipelineStageFlags;
     typedef VkFlags VkMemoryMapFlags;
@@ -445,7 +459,7 @@
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002,
         VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004,
         VK_MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008,
-        VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010,
+        VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010
     };
     typedef VkFlags VkMemoryPropertyFlags;
 
@@ -459,7 +473,7 @@
         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = 0x00000010,
         VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000020,
         VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 0x00000040,
-        VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080,
+        VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080
     };
     typedef VkFlags VkImageUsageFlags;
 
@@ -469,7 +483,7 @@
         VK_IMAGE_ASPECT_COLOR_BIT = 0x00000001,
         VK_IMAGE_ASPECT_DEPTH_BIT = 0x00000002,
         VK_IMAGE_ASPECT_STENCIL_BIT = 0x00000004,
-        VK_IMAGE_ASPECT_METADATA_BIT = 0x00000008,
+        VK_IMAGE_ASPECT_METADATA_BIT = 0x00000008
     };
     typedef VkFlags VkImageAspectFlags;
 
@@ -484,7 +498,7 @@
         VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = 0x00000020,
         VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = 0x00000040,
         VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = 0x00000080,
-        VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = 0x00000100,
+        VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = 0x00000100
     };
     typedef VkFlags VkSurfaceTransformFlagsKHR;
 
@@ -494,9 +508,63 @@
         VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = 0x00000001,
         VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = 0x00000002,
         VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = 0x00000004,
-        VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008,
+        VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008
     };
     typedef VkFlags VkCompositeAlphaFlagsKHR;
+
+    // VkFenceCreateFlags
+    enum VkFenceCreateFlagBits
+    {
+        VK_FENCE_CREATE_SIGNALED_BIT = 0x00000001
+    };
+    typedef VkFlags VkFenceCreateFlags;
+    typedef VkFlags VkSemaphoreCreateFlags;
+    typedef VkFlags VkEventCreateFlags;
+    typedef VkFlags VkQueryPoolCreateFlags;
+
+    // VkQueryPipelineStatisticFlags
+    enum VkQueryPipelineStatisticFlagBits {
+    VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT =
+        0x00000001,
+    VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT =
+        0x00000002,
+    VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT =
+        0x00000004,
+    VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT =
+        0x00000008,
+    VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT =
+        0x00000010,
+    VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT =
+        0x00000020,
+    VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT =
+        0x00000040,
+    VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT =
+        0x00000080,
+    VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT =
+        0x00000100,
+    VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT =
+        0x00000200,
+    VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT =
+        0x00000400
+    };
+    typedef VkFlags VkQueryPipelineStatisticFlags;
+
+    // VkQueryResultFlags
+    enum VkQueryResultFlagBits {
+        VK_QUERY_RESULT_64_BIT = 0x00000001,
+        VK_QUERY_RESULT_WAIT_BIT = 0x00000002,
+        VK_QUERY_RESULT_WITH_AVAILABILITY_BIT = 0x00000004,
+        VK_QUERY_RESULT_PARTIAL_BIT = 0x00000008
+    };
+    typedef VkFlags VkQueryResultFlags;
+
+    // VkBufferCreateFlags
+    enum VkBufferCreateFlagBits {
+        VK_BUFFER_CREATE_SPARSE_BINDING_BIT = 0x00000001,
+        VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002,
+        VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = 0x00000004
+    };
+    typedef VkFlags VkBufferCreateFlags;
 
     // VkBufferUsageFlags
     enum VkBufferUsageFlagBits
@@ -509,7 +577,7 @@
         VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = 0x00000020,
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040,
         VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080,
-        VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100,
+        VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100
     };
     typedef VkFlags VkBufferUsageFlags;
     typedef VkFlags VkBufferViewCreateFlags;
@@ -521,14 +589,14 @@
     enum VkCommandPoolCreateFlagBits
     {
         VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001,
-        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002,
+        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002
     };
     typedef VkFlags VkCommandPoolCreateFlags;
 
     // VkCommandPoolResetFlags
     enum VkCommandPoolResetFlagBits
     {
-        VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001,
+        VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001
     };
     typedef VkFlags VkCommandPoolResetFlags;
 
@@ -537,9 +605,23 @@
     {
         VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = 0x00000001,
         VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = 0x00000002,
-        VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = 0x00000004,
+        VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = 0x00000004
     };
     typedef VkFlags VkCommandBufferUsageFlags;
+
+    // VkQueryControlFlags
+    enum VkQueryControlFlagBits
+    {
+        VK_QUERY_CONTROL_PRECISE_BIT = 0x00000001
+    };
+    typedef VkFlags VkQueryControlFlags;
+
+    // VkCommandBufferResetFlags
+    enum VkCommandBufferResetFlagBits
+    {
+        VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = 0x00000001
+    };
+    typedef VkFlags VkCommandBufferResetFlags;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1023,6 +1105,19 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkQueryPoolCreateInfo data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkQueryPoolCreateInfo
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkQueryPoolCreateFlags          flags;
+        VkQueryType                     queryType;
+        uint32_t                        queryCount;
+        VkQueryPipelineStatisticFlags   pipelineStatistics;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkCommandPoolCreateInfo data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkCommandPoolCreateInfo
@@ -1043,6 +1138,42 @@
         VkCommandPool           commandPool;
         VkCommandBufferLevel    level;
         uint32_t                commandBufferCount;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandBufferInheritanceInfo data structure                         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkCommandBufferInheritanceInfo
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkRenderPass                    renderPass;
+        uint32_t                        subpass;
+        VkFramebuffer                   framebuffer;
+        VkBool32                        occlusionQueryEnable;
+        VkQueryControlFlags             queryFlags;
+        VkQueryPipelineStatisticFlags   pipelineStatistics;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandBufferBeginInfo data structure                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkCommandBufferBeginInfo
+    {
+        VkStructureType                         sType;
+        const void*                             pNext;
+        VkCommandBufferUsageFlags               flags;
+        const VkCommandBufferInheritanceInfo*   pInheritanceInfo;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBufferCopy data structure                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBufferCopy
+    {
+        VkDeviceSize    srcOffset;
+        VkDeviceSize    dstOffset;
+        VkDeviceSize    size;
     };
 
 
@@ -1344,6 +1475,15 @@
         uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers
     );
     extern PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkBeginCommandBuffer function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkBeginCommandBuffer)(
+        VkCommandBuffer commandBuffer,
+        const VkCommandBufferBeginInfo* pBeginInfo
+    );
+    extern PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
 
 
     ////////////////////////////////////////////////////////////////////////////
