@@ -323,7 +323,7 @@ void Renderer::render()
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = &m_semaphores.renderFinished;
 
-    if (!vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
         return;
     }
@@ -1142,7 +1142,7 @@ bool Renderer::createCommandBuffers()
     commandBegin.pInheritanceInfo = 0;
 
     // Vulkan clear color
-    VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 0.0f};
+    VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
 
     // Image subresource
     VkImageSubresourceRange subresource;
