@@ -1336,6 +1336,15 @@
     );
     extern PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkFreeCommandBuffers function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkFreeCommandBuffers)(
+        VkDevice device, VkCommandPool commandPool,
+        uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers
+    );
+    extern PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
