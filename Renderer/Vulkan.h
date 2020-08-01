@@ -1493,6 +1493,14 @@
     );
     extern PFN_vkEndCommandBuffer vkEndCommandBuffer;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkResetCommandBuffer function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkResetCommandBuffer)(
+        VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags
+    );
+    extern PFN_vkResetCommandBuffer vkResetCommandBuffer;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
