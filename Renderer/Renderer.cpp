@@ -1144,9 +1144,6 @@ bool Renderer::createCommandBuffers()
     commandBegin.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
     commandBegin.pInheritanceInfo = 0;
 
-    // Vulkan clear color
-    VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
-
     // Image subresource
     VkImageSubresourceRange subresource;
     subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1198,7 +1195,8 @@ bool Renderer::createCommandBuffers()
 
         vkCmdClearColorImage(
             m_commands.buffers[i], m_swapchain.images[i].handle,
-            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clearColor, 1, &subresource
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            &RendererClearColor, 1, &subresource
         );
 
         vkCmdPipelineBarrier(
