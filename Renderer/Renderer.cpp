@@ -70,6 +70,19 @@ m_semaphores()
 Renderer::~Renderer()
 {
     close();
+
+    // Destroy Vulkan instance
+    if (m_vulkanInstance && vkDestroyInstance)
+    {
+        vkDestroyInstance(m_vulkanInstance, 0);
+    }
+    m_vulkanInstance = 0;
+
+    // Free Vulkan functions
+    FreeVulkanFunctions();
+
+    // Free Vulkan library
+    FreeVulkanLibrary(m_vulkanLibHandle);
 }
 
 
@@ -328,31 +341,19 @@ void Renderer::close()
             vkDestroyDevice(m_vulkanDevice, 0);
         }
     }
-    m_semaphores.renderFinished = 0;
-    m_semaphores.imageAvailable = 0;
-    m_commands.pool = 0;
-    m_swapchain.handle = 0;
-    m_vulkanDevice = 0;
-    
+
     // Destroy Vulkan surface
     if (m_vulkanInstance && m_vulkanSurface && vkDestroySurfaceKHR)
     {
         vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
     }
+
+    m_semaphores.renderFinished = 0;
+    m_semaphores.imageAvailable = 0;
+    m_commands.pool = 0;
+    m_swapchain.handle = 0;
+    m_vulkanDevice = 0;
     m_vulkanSurface = 0;
-
-    // Destroy Vulkan instance
-    if (m_vulkanInstance && vkDestroyInstance)
-    {
-        vkDestroyInstance(m_vulkanInstance, 0);
-    }
-    m_vulkanInstance = 0;
-
-    // Free Vulkan functions
-    FreeVulkanFunctions();
-
-    // Free Vulkan library
-    FreeVulkanLibrary(m_vulkanLibHandle);
 }
 
 
