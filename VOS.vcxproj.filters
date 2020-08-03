@@ -34,7 +34,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Status.h" />
     <ClInclude Include="Vos.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Renderer\Renderer.h">

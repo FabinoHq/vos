@@ -140,7 +140,6 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\Vulkan.h" />
-    <ClInclude Include="Status.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\DisplayMode.h" />
     <ClInclude Include="System\System.h" />
