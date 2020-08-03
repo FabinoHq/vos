@@ -47,7 +47,7 @@
     #include <queue>
 
     #include "DisplayMode.h"
-    #include "../Event.h"
+    #include "../../Event.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

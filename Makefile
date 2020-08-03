@@ -47,12 +47,14 @@ all: VOS
 
 VOS: main.o \
 	Vos.o \
-	Lin/DisplayMode.o Lin/SysWindow.o Lin/SysVulkan.o \
+	System/SysClock.o \
+	System/Lin/DisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/Renderer.o
 	
 	$(CC) -o VOS \
 	Vos.o \
-	Lin/DisplayMode.o Lin/SysWindow.o Lin/SysVulkan.o \
+	System/SysClock.o \
+	System/Lin/DisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -62,14 +64,17 @@ main.o: main.cpp
 Vos.o: Vos.cpp
 	$(CC) -o Vos.o -c Vos.cpp $(CFLAGS)
 
-Lin/DisplayMode.o: Lin/DisplayMode.cpp
-	$(CC) -o Lin/DisplayMode.o -c Lin/DisplayMode.cpp $(CFLAGS)
+System/SysClock.o: System/SysClock.cpp
+	$(CC) -o System/SysClock.o -c System/SysClock.cpp $(CFLAGS)
 
-Lin/SysWindow.o: Lin/SysWindow.cpp
-	$(CC) -o Lin/SysWindow.o -c Lin/SysWindow.cpp $(CFLAGS)
+System/Lin/DisplayMode.o: System/Lin/DisplayMode.cpp
+	$(CC) -o System/Lin/DisplayMode.o -c System/Lin/DisplayMode.cpp $(CFLAGS)
 
-Lin/SysVulkan.o: Lin/SysVulkan.cpp
-	$(CC) -o Lin/SysVulkan.o -c Lin/SysVulkan.cpp $(CFLAGS)
+System/Lin/SysWindow.o: System/Lin/SysWindow.cpp
+	$(CC) -o System/Lin/SysWindow.o -c System/Lin/SysWindow.cpp $(CFLAGS)
+
+System/Lin/SysVulkan.o: System/Lin/SysVulkan.cpp
+	$(CC) -o System/Lin/SysVulkan.o -c System/Lin/SysVulkan.cpp $(CFLAGS)
 
 Renderer/Vulkan.o: Renderer/Vulkan.cpp
 	$(CC) -o Renderer/Vulkan.o -c Renderer/Vulkan.cpp $(CFLAGS)
