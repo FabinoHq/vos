@@ -45,7 +45,7 @@
     #include <windows.h>
     #include <queue>
 
-    #include "DisplayMode.h"
+    #include "SysDisplayMode.h"
     #include "../../Event.h"
 
 

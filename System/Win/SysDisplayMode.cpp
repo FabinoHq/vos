@@ -37,15 +37,15 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/Win/DisplayMode.cpp : DisplayMode management for Windows        //
+//     System/Win/SysDisplayMode.cpp : DisplayMode management for Windows     //
 ////////////////////////////////////////////////////////////////////////////////
-#include "DisplayMode.h"
+#include "SysDisplayMode.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  DisplayMode default constructor                                           //
+//  SysDisplayMode default constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
-DisplayMode::DisplayMode() :
+SysDisplayMode::SysDisplayMode() :
 m_width(0),
 m_height(0),
 m_depth(0)
@@ -54,9 +54,9 @@ m_depth(0)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  DisplayMode destructor                                                    //
+//  SysDisplayMode destructor                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-DisplayMode::~DisplayMode()
+SysDisplayMode::~SysDisplayMode()
 {
 
 }
@@ -66,7 +66,7 @@ DisplayMode::~DisplayMode()
 //  Get current system desktop mode                                           //
 //  return : True if the desktop mode is reached, false otherwise             //
 ////////////////////////////////////////////////////////////////////////////////
-bool DisplayMode::getSystemMode()
+bool SysDisplayMode::getSystemMode()
 {
     // Get system desktop configuration
     DEVMODE desktopMode = { 0 };
@@ -94,7 +94,7 @@ bool DisplayMode::getSystemMode()
 //  Get DisplayMode width in pixels                                           //
 //  return : Display mode width                                               //
 ////////////////////////////////////////////////////////////////////////////////
-int DisplayMode::getWidth() const
+int SysDisplayMode::getWidth() const
 {
     return m_width;
 }
@@ -103,7 +103,7 @@ int DisplayMode::getWidth() const
 //  Get DisplayMode height in pixels                                          //
 //  return : Display mode height                                              //
 ////////////////////////////////////////////////////////////////////////////////
-int DisplayMode::getHeight() const
+int SysDisplayMode::getHeight() const
 {
     return m_height;
 }
@@ -112,7 +112,7 @@ int DisplayMode::getHeight() const
 //  Get DisplayMode pixel depth in bits per pixel                             //
 //  return : Display mode pixel depth                                         //
 ////////////////////////////////////////////////////////////////////////////////
-int DisplayMode::getDepth() const
+int SysDisplayMode::getDepth() const
 {
     return m_depth;
 }

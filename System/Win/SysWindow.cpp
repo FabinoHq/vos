@@ -78,7 +78,7 @@ bool SysWindow::create()
     m_instance = GetModuleHandle(0);
 
     // Get the system display mode
-    DisplayMode displayMode;
+    SysDisplayMode displayMode;
     if (!displayMode.getSystemMode())
     {
         // Invalid system mode

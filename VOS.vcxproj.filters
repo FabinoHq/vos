@@ -23,13 +23,13 @@
     <ClCompile Include="System\SysClock.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="System\Win\DisplayMode.cpp">
-      <Filter>System\Win</Filter>
-    </ClCompile>
     <ClCompile Include="System\Win\SysVulkan.cpp">
       <Filter>System\Win</Filter>
     </ClCompile>
     <ClCompile Include="System\Win\SysWindow.cpp">
+      <Filter>System\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Win\SysDisplayMode.cpp">
       <Filter>System\Win</Filter>
     </ClCompile>
   </ItemGroup>
@@ -45,26 +45,26 @@
     <ClInclude Include="System\SysWindow.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="System\Vulkan.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="System\System.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\DisplayMode.h">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="System\SysClock.h">
       <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Win\DisplayMode.h">
-      <Filter>System\Win</Filter>
     </ClInclude>
     <ClInclude Include="System\Win\SysVulkan.h">
       <Filter>System\Win</Filter>
     </ClInclude>
     <ClInclude Include="System\Win\SysWindow.h">
       <Filter>System\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysDisplayMode.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Win\SysDisplayMode.h">
+      <Filter>System\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysVulkan.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

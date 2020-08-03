@@ -37,62 +37,21 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/Win/DisplayMode.h : DisplayMode management for Windows          //
+//     System/SysVulkan.h : Vulkan system management wrapper                  //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SYSTEM_WIN_DISPLAYMODE_HEADER
-#define VOS_SYSTEM_WIN_DISPLAYMODE_HEADER
+#ifndef VOS_SYSTEM_SYSVULKAN_HEADER
+#define VOS_SYSTEM_SYSVULKAN_HEADER
 
-    #include <windows.h>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  DisplayMode class definition                                          //
-    ////////////////////////////////////////////////////////////////////////////
-    class DisplayMode
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  DisplayMode default constructor                               //
-            ////////////////////////////////////////////////////////////////////
-            DisplayMode();
-
-            ////////////////////////////////////////////////////////////////////
-            //  DisplayMode destructor                                        //
-            ////////////////////////////////////////////////////////////////////
-            ~DisplayMode();
+    #include "System.h"
 
 
-            ////////////////////////////////////////////////////////////////////
-            //  Get current system desktop mode                               //
-            //  return : True if the desktop mode is reached, false otherwise //
-            ////////////////////////////////////////////////////////////////////
-            bool getSystemMode();
+    #ifdef VOS_WINDOWS
+        #include "Win/SysVulkan.h"
+    #endif // VOS_WINDOWS
+
+    #ifdef VOS_LINUX
+        #include "Lin/SysVulkan.h"
+    #endif // VOS_LINUX
 
 
-            ////////////////////////////////////////////////////////////////////
-            //  Get DisplayMode width in pixels                               //
-            //  return : Display mode width                                   //
-            ////////////////////////////////////////////////////////////////////
-            int getWidth() const;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get DisplayMode height in pixels                              //
-            //  return : Display mode height                                  //
-            ////////////////////////////////////////////////////////////////////
-            int getHeight() const;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get DisplayMode pixel depth in bits per pixel                 //
-            //  return : Display mode pixel depth                             //
-            ////////////////////////////////////////////////////////////////////
-            int getDepth() const;
-
-
-        private:
-            int m_width;    // Width of the display mode
-            int m_height;   // Height of the display mode
-            int m_depth;    // Pixel depth of the display mode
-    };
-
-
-#endif // VOS_SYSTEM_WIN_DISPLAYMODE_HEADER
+#endif // VOS_SYSTEM_SYSVULKAN_HEADER

@@ -37,24 +37,65 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/Vulkan.h : Vulkan management wrapper                            //
+//     System/Lin/SysDisplayMode.cpp : DisplayMode management for Linux       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SYSTEM_VULKAN_HEADER
-#define VOS_SYSTEM_VULKAN_HEADER
-
-    #include "System.h"
+#include "SysDisplayMode.h"
 
 
-    #ifdef VOS_WINDOWS
-        #include "Win/SysVulkan.h"
-    #endif // VOS_WINDOWS
+////////////////////////////////////////////////////////////////////////////////
+//  SysDisplayMode default constructor                                        //
+////////////////////////////////////////////////////////////////////////////////
+SysDisplayMode::SysDisplayMode() :
+m_width(0),
+m_height(0),
+m_depth(0)
+{
+    
+}
 
-    #ifdef VOS_LINUX
-        #include "Lin/SysVulkan.h"
-    #endif // VOS_LINUX
+////////////////////////////////////////////////////////////////////////////////
+//  SysDisplayMode destructor                                                 //
+////////////////////////////////////////////////////////////////////////////////
+SysDisplayMode::~SysDisplayMode()
+{
+    
+}
 
 
-    #include "../Renderer/Vulkan.h"
+////////////////////////////////////////////////////////////////////////////////
+//  Get current system desktop mode                                           //
+//  return : True if the desktop mode is reached, false otherwise             //
+////////////////////////////////////////////////////////////////////////////////
+bool SysDisplayMode::getSystemMode()
+{
+    // Get system desktop configuration
+    return false;
+}
 
 
-#endif // VOS_SYSTEM_VULKAN_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Get DisplayMode width in pixels                                           //
+//  return : Display mode width                                               //
+////////////////////////////////////////////////////////////////////////////////
+int SysDisplayMode::getWidth() const
+{
+    return m_width;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get DisplayMode height in pixels                                          //
+//  return : Display mode height                                              //
+////////////////////////////////////////////////////////////////////////////////
+int SysDisplayMode::getHeight() const
+{
+    return m_height;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get DisplayMode pixel depth in bits per pixel                             //
+//  return : Display mode pixel depth                                         //
+////////////////////////////////////////////////////////////////////////////////
+int SysDisplayMode::getDepth() const
+{
+    return m_depth;
+}
