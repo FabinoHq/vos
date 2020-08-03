@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/SysWindow.h : Window management for Windows                        //
+//     System/Win/SysWindow.h : Window management for Windows                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_WIN_SYSWINDOW_HEADER
-#define VOS_WIN_SYSWINDOW_HEADER
+#ifndef VOS_SYSTEM_WIN_SYSWINDOW_HEADER
+#define VOS_SYSTEM_WIN_SYSWINDOW_HEADER
 
     #include <windows.h>
     #include <queue>
@@ -140,4 +140,4 @@
     };
 
 
-#endif // VOS_WIN_SYSWINDOW_HEADER
+#endif // VOS_SYSTEM_WIN_SYSWINDOW_HEADER

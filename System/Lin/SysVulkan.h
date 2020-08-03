@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Lin/SysVulkan.h : Vulkan management for Linux                          //
+//     System/Lin/SysVulkan.h : Vulkan management for Linux                   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_LIN_SYSVULKAN_HEADER
-#define VOS_LIN_SYSVULKAN_HEADER
+#ifndef VOS_SYSTEM_LIN_SYSVULKAN_HEADER
+#define VOS_SYSTEM_LIN_SYSVULKAN_HEADER
 
     #include "../System.h"
     #include "../SysWindow.h"
@@ -384,4 +384,4 @@
     );
 
 
-#endif // VOS_LIN_SYSVULKAN_HEADER
+#endif // VOS_SYSTEM_LIN_SYSVULKAN_HEADER

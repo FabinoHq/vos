@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Lin/DisplayMode.h : DisplayMode management for Linux                   //
+//     System/Lin/DisplayMode.h : DisplayMode management for Linux            //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_LIN_DISPLAYMODE_HEADER
-#define VOS_LIN_DISPLAYMODE_HEADER
+#ifndef VOS_SYSTEM_LIN_DISPLAYMODE_HEADER
+#define VOS_SYSTEM_LIN_DISPLAYMODE_HEADER
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -93,4 +93,4 @@
     };
 
 
-#endif // VOS_LIN_DISPLAYMODE_HEADER
+#endif // VOS_SYSTEM_LIN_DISPLAYMODE_HEADER

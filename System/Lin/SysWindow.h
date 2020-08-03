@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Lin/SysWindow.h : Window management for Linux                          //
+//     System/Lin/SysWindow.h : Window management for Linux                   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_LIN_SYSWINDOW_HEADER
-#define VOS_LIN_SYSWINDOW_HEADER
+#ifndef VOS_SYSTEM_LIN_SYSWINDOW_HEADER
+#define VOS_SYSTEM_LIN_SYSWINDOW_HEADER
 
     #include <X11/Xlib.h>
     #include <X11/Xutil.h>
@@ -127,4 +127,4 @@
     };
 
 
-#endif // VOS_LIN_SYSWINDOW_HEADER
+#endif // VOS_SYSTEM_LIN_SYSWINDOW_HEADER

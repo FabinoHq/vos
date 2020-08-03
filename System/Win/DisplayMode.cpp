@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/DisplayMode.cpp : DisplayMode management for Windows               //
+//     System/Win/DisplayMode.cpp : DisplayMode management for Windows        //
 ////////////////////////////////////////////////////////////////////////////////
 #include "DisplayMode.h"
 

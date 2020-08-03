@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Lin/SysVulkan.cpp : Vulkan management for Linux                        //
+//     System/Lin/SysVulkan.cpp : Vulkan management for Linux                 //
 ////////////////////////////////////////////////////////////////////////////////
 #include "SysVulkan.h"
 
@@ -130,4 +130,3 @@ bool CreateVulkanSystemSurface(
 
     return true;
 }
-

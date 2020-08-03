@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Lin/DisplayMode.cpp : DisplayMode management for Linux                 //
+//     System/Lin/DisplayMode.cpp : DisplayMode management for Linux          //
 ////////////////////////////////////////////////////////////////////////////////
 #include "DisplayMode.h"
 

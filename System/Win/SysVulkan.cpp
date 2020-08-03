@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/SysVulkan.cpp : Vulkan management for Windows                      //
+//     System/Win/SysVulkan.cpp : Vulkan management for Windows               //
 ////////////////////////////////////////////////////////////////////////////////
 #include "SysVulkan.h"
 

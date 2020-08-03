@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Win/SysWindow.cpp : Window management for Windows                      //
+//     System/Win/SysWindow.cpp : Window management for Windows               //
 ////////////////////////////////////////////////////////////////////////////////
 #include "SysWindow.h"
 
