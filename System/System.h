@@ -59,4 +59,16 @@
     #endif // Linux
 
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  64bits or 32bits configuration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    #if defined(__x86_64__) || defined(_WIN64) || defined(__LP64__) || \
+        defined(__ia64) || defined(_M_X64) || defined(_M_IA64) || \
+        defined(__aarch64__) || defined(__powerpc64__)
+        #define VOS_64BITS
+    #else
+        #define VOS_32BITS
+    #endif
+
+
 #endif // VOS_SYSTEM_SYSTEM_HEADER

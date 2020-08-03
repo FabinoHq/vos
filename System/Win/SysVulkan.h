@@ -42,6 +42,7 @@
 #ifndef VOS_WIN_SYSVULKAN_HEADER
 #define VOS_WIN_SYSVULKAN_HEADER
 
+    #include "../System.h"
     #include "../SysWindow.h"
     #include <cstdint>
     #include <cstring>
@@ -90,22 +91,39 @@
 
     typedef struct VkPhysicalDevice_T*  VkPhysicalDevice;
     typedef struct VkDevice_T*          VkDevice;
-    typedef struct VkSurfaceKHR_T*      VkSurfaceKHR;
+    typedef struct VkQueue_T*           VkQueue;
+    typedef struct VkCommandBuffer_T*   VkCommandBuffer;
+
     typedef VkFlags                     VkWin32SurfaceCreateFlagsKHR;
     typedef VkFlags                     VkSwapchainCreateFlagsKHR;
-    typedef struct VkSwapchainKHR_T*    VkSwapchainKHR;
-    typedef struct VkQueue_T*           VkQueue;
-    typedef struct VkSemaphore_T*       VkSemaphore;
-    typedef struct VkFence_T*           VkFence;
-    typedef struct VkCommandBuffer_T*   VkCommandBuffer;
-    typedef struct VkBuffer_T*          VkBuffer;
-    typedef struct VkImage_T*           VkImage;
-    typedef struct VkImageView_T*       VkImageView;
-    typedef struct VkSampler_T*         VkSampler;
-    typedef struct VkDeviceMemory_T*    VkDeviceMemory;
-    typedef struct VkCommandPool_T*     VkCommandPool;
-    typedef struct VkRenderPass_T*      VkRenderPass;
-    typedef struct VkFramebuffer_T*     VkFramebuffer;
+
+    #ifdef VOS_64BITS
+        typedef struct VkSurfaceKHR_T*      VkSurfaceKHR;
+        typedef struct VkSwapchainKHR_T*    VkSwapchainKHR;
+        typedef struct VkSemaphore_T*       VkSemaphore;
+        typedef struct VkFence_T*           VkFence;
+        typedef struct VkBuffer_T*          VkBuffer;
+        typedef struct VkImage_T*           VkImage;
+        typedef struct VkImageView_T*       VkImageView;
+        typedef struct VkSampler_T*         VkSampler;
+        typedef struct VkDeviceMemory_T*    VkDeviceMemory;
+        typedef struct VkCommandPool_T*     VkCommandPool;
+        typedef struct VkRenderPass_T*      VkRenderPass;
+        typedef struct VkFramebuffer_T*     VkFramebuffer;
+    #else
+        typedef uint64_t                    VkSurfaceKHR;
+        typedef uint64_t                    VkSwapchainKHR;
+        typedef uint64_t                    VkSemaphore;
+        typedef uint64_t                    VkFence;
+        typedef uint64_t                    VkBuffer;
+        typedef uint64_t                    VkImage;
+        typedef uint64_t                    VkImageView;
+        typedef uint64_t                    VkSampler;
+        typedef uint64_t                    VkDeviceMemory;
+        typedef uint64_t                    VkCommandPool;
+        typedef uint64_t                    VkRenderPass;
+        typedef uint64_t                    VkFramebuffer;
+    #endif
 
 
     ////////////////////////////////////////////////////////////////////////////
