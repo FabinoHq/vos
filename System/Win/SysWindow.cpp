@@ -144,8 +144,10 @@ void SysWindow::close()
         // Delete the window
         DestroyWindow(m_handle);
         UnregisterClass(VOSWindowClassName, m_instance);
-        m_handle = 0;
     }
+    
+    m_instance = 0;
+    m_handle = 0;
 }
 
 

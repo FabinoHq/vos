@@ -136,15 +136,16 @@ void SysWindow::close()
     {
         // Delete the window
         XDestroyWindow(m_display, m_handle);
-        m_handle = 0;
     }
 
     if (m_display)
     {
         // Release the display
         XCloseDisplay(m_display);
-        m_display = 0;
     }
+
+    m_handle = 0;
+    m_display = 0;
 }
 
 
