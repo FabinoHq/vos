@@ -131,6 +131,10 @@
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\Vulkan.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
+    <ClCompile Include="System\SysMutex.cpp" />
+    <ClCompile Include="System\SysMutexLocker.cpp" />
+    <ClCompile Include="System\SysSleep.cpp" />
+    <ClCompile Include="System\SysThread.cpp" />
     <ClCompile Include="System\Win\SysDisplayMode.cpp" />
     <ClCompile Include="System\Win\SysVulkan.cpp" />
     <ClCompile Include="System\Win\SysWindow.cpp" />
@@ -142,7 +146,11 @@
     <ClInclude Include="Renderer\Vulkan.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysDisplayMode.h" />
+    <ClInclude Include="System\SysMutex.h" />
+    <ClInclude Include="System\SysMutexLocker.h" />
+    <ClInclude Include="System\SysSleep.h" />
     <ClInclude Include="System\System.h" />
+    <ClInclude Include="System\SysThread.h" />
     <ClInclude Include="System\SysWindow.h" />
     <ClInclude Include="System\SysVulkan.h" />
     <ClInclude Include="System\Win\SysDisplayMode.h" />

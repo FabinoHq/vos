@@ -42,11 +42,12 @@
 #ifndef VOS_SYSTEM_WIN_SYSVULKAN_HEADER
 #define VOS_SYSTEM_WIN_SYSVULKAN_HEADER
 
-    #include "../System.h"
-    #include "../SysWindow.h"
     #include <cstdint>
     #include <cstring>
     #include <vector>
+
+    #include "../System.h"
+    #include "../SysWindow.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

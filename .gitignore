@@ -25,7 +25,16 @@
 !Vos.h
 !Vos.cpp
 
+!System/
 !System/System.h
+!System/SysSleep.h
+!System/SysSleep.cpp
+!System/SysThread.h
+!System/SysThread.cpp
+!System/SysMutex.h
+!System/SysMutex.cpp
+!System/SysMutexLocker.h
+!System/SysMutexLocker.cpp
 !System/SysDisplayMode.h
 !System/SysWindow.h
 !System/SysVulkan.h

@@ -32,6 +32,18 @@
     <ClCompile Include="System\Win\SysDisplayMode.cpp">
       <Filter>System\Win</Filter>
     </ClCompile>
+    <ClCompile Include="System\SysMutex.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\SysMutexLocker.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\SysThread.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\SysSleep.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -64,6 +76,18 @@
       <Filter>System\Win</Filter>
     </ClInclude>
     <ClInclude Include="System\SysVulkan.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysMutex.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysMutexLocker.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysThread.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysSleep.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>

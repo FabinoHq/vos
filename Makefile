@@ -47,13 +47,15 @@ all: VOS
 
 VOS: main.o \
 	Vos.o \
-	System/SysClock.o \
+	System/SysSleep.o System/SysThread.o \
+	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/Renderer.o
 	
 	$(CC) -o VOS \
 	Vos.o \
-	System/SysClock.o \
+	System/SysSleep.o System/SysThread.o \
+	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/Renderer.o \
 	main.o $(LDFLAGS)
@@ -63,6 +65,18 @@ main.o: main.cpp
 
 Vos.o: Vos.cpp
 	$(CC) -o Vos.o -c Vos.cpp $(CFLAGS)
+
+System/SysSleep.o: System/SysSleep.cpp
+	$(CC) -o System/SysSleep.o -c System/SysSleep.cpp $(CFLAGS)
+
+System/SysThread.o: System/SysThread.cpp
+	$(CC) -o System/SysThread.o -c System/SysThread.cpp $(CFLAGS)
+
+System/SysMutex.o: System/SysMutex.cpp
+	$(CC) -o System/SysMutex.o -c System/SysMutex.cpp $(CFLAGS)
+
+System/SysMutexLocker.o: System/SysMutexLocker.cpp
+	$(CC) -o System/SysMutexLocker.o -c System/SysMutexLocker.cpp $(CFLAGS)
 
 System/SysClock.o: System/SysClock.cpp
 	$(CC) -o System/SysClock.o -c System/SysClock.cpp $(CFLAGS)
