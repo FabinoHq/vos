@@ -25,7 +25,6 @@
 !Vos.h
 !Vos.cpp
 
-!System/
 !System/System.h
 !System/SysSleep.h
 !System/SysSleep.cpp

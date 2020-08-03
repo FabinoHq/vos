@@ -41,7 +41,7 @@
 ################################################################################
 CC=g++
 CFLAGS=-W -Wall
-LDFLAGS=-std=c++17 -lX11 -ldl
+LDFLAGS=-std=c++17 -pthread -lX11 -ldl
 
 all: VOS
 
