@@ -42,7 +42,7 @@
 #ifndef VOS_RENDERER_VULKAN_HEADER
 #define VOS_RENDERER_VULKAN_HEADER
 
-    #include "../Vulkan.h"
+    #include "../System/Vulkan.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

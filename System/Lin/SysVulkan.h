@@ -42,7 +42,7 @@
 #ifndef VOS_LIN_SYSVULKAN_HEADER
 #define VOS_LIN_SYSVULKAN_HEADER
 
-    #include "../SysWindow.h"
+    #include "../System/SysWindow.h"
     #include <dlfcn.h>
     #include <cstdint>
     #include <cstring>

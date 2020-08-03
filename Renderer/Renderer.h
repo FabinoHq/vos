@@ -42,8 +42,8 @@
 #ifndef VOS_RENDERER_RENDERER_HEADER
 #define VOS_RENDERER_RENDERER_HEADER
 
-    #include "../SysWindow.h"
-    #include "../Vulkan.h"
+    #include "../System/SysWindow.h"
+    #include "../System/Vulkan.h"
 
     #include <vector>
 

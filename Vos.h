@@ -42,10 +42,10 @@
 #ifndef VOS_VOS_HEADER
 #define VOS_VOS_HEADER
 
-    #include "System.h"
-    #include "Status.h"
-    #include "SysWindow.h"
+    #include "System/System.h"
+    #include "System/SysWindow.h"
     #include "Renderer/Renderer.h"
+    #include "Status.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

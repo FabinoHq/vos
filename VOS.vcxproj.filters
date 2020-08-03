@@ -1,63 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Win">
-      <UniqueIdentifier>{76172f97-4bb3-4b2d-b5fc-e03a6e4a4c66}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{940b859f-59b4-49b8-b28d-1eaf645f0ea6}</UniqueIdentifier>
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{7c39d277-acd0-4ccd-876b-eca0fb71729b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System\Win">
+      <UniqueIdentifier>{41fa50ff-8406-426a-b709-8597c59598fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Vos.cpp" />
-    <ClCompile Include="Win\DisplayMode.cpp">
-      <Filter>Win</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Renderer.cpp">
       <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Win\SysWindow.cpp">
-      <Filter>Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Win\SysVulkan.cpp">
-      <Filter>Win</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\Vulkan.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="System\Clock.cpp">
+    <ClCompile Include="System\SysClock.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Win\DisplayMode.cpp">
+      <Filter>System\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Win\SysVulkan.cpp">
+      <Filter>System\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Win\SysWindow.cpp">
+      <Filter>System\Win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Status.h" />
-    <ClInclude Include="System.h" />
     <ClInclude Include="Vos.h" />
-    <ClInclude Include="DisplayMode.h" />
-    <ClInclude Include="Win\DisplayMode.h">
-      <Filter>Win</Filter>
-    </ClInclude>
     <ClInclude Include="Event.h" />
     <ClInclude Include="Renderer\Renderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Win\SysWindow.h">
-      <Filter>Win</Filter>
-    </ClInclude>
-    <ClInclude Include="SysWindow.h" />
-    <ClInclude Include="Vulkan.h" />
     <ClInclude Include="Renderer\Vulkan.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Win\SysVulkan.h">
-      <Filter>Win</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Clock.h">
+    <ClInclude Include="System\SysWindow.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Vulkan.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\System.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\DisplayMode.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysClock.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Win\DisplayMode.h">
+      <Filter>System\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Win\SysVulkan.h">
+      <Filter>System\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Win\SysWindow.h">
+      <Filter>System\Win</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

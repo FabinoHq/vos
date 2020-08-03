@@ -37,26 +37,54 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System.h : VOS System management wrapper                               //
+//     System/SysClock.cpp : System Clock management                          //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SYSTEM_HEADER
-#define VOS_SYSTEM_HEADER
+#include "SysClock.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Operating system configuration                                        //
-    ////////////////////////////////////////////////////////////////////////////
-    #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW32__)
-        #define VOS_WINDOWS
-    #endif // Windows
+////////////////////////////////////////////////////////////////////////////////
+//  SysClock default constructor                                              //
+////////////////////////////////////////////////////////////////////////////////
+SysClock::SysClock() :
+m_start(std::chrono::steady_clock::now())
+{
+    
+}
 
-    #if defined(__APPLE__)
-        #define VOS_MACOS
-    #endif // MacOS
+////////////////////////////////////////////////////////////////////////////////
+//  SysClock destructor                                                       //
+////////////////////////////////////////////////////////////////////////////////
+SysClock::~SysClock()
+{
 
-    #if defined(__linux__)
-        #define VOS_LINUX
-    #endif // Linux
+}
 
 
-#endif // VOS_SYSTEM_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Reset the clock                                                           //
+////////////////////////////////////////////////////////////////////////////////
+void SysClock::reset()
+{
+    m_start = std::chrono::steady_clock::now();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get elapsed time since last reset in seconds                              //
+////////////////////////////////////////////////////////////////////////////////
+double SysClock::getElapsedTime()
+{
+    double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>
+        (std::chrono::steady_clock::now()-m_start).count()*0.000000001;
+    return elapsedTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get elapsed time in seconds and reset the clock                           //
+////////////////////////////////////////////////////////////////////////////////
+double SysClock::getAndReset()
+{
+    double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>
+        (std::chrono::steady_clock::now() - m_start).count()*0.000000001;
+    m_start = std::chrono::steady_clock::now();
+    return elapsedTime;
+}

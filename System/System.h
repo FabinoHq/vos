@@ -37,24 +37,26 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vulkan.h : Vulkan management wrapper                                   //
+//     System/System.h : VOS System management wrapper                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VULKAN_HEADER
-#define VOS_VULKAN_HEADER
-
-    #include "System.h"
+#ifndef VOS_SYSTEM_SYSTEM_HEADER
+#define VOS_SYSTEM_SYSTEM_HEADER
 
 
-    #ifdef VOS_WINDOWS
-        #include "Win/SysVulkan.h"
-    #endif // VOS_WINDOWS
+    ////////////////////////////////////////////////////////////////////////////
+    //  Operating system configuration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW32__)
+        #define VOS_WINDOWS
+    #endif // Windows
 
-    #ifdef VOS_LINUX
-        #include "Lin/SysVulkan.h"
-    #endif // VOS_LINUX
+    #if defined(__APPLE__)
+        #define VOS_MACOS
+    #endif // MacOS
+
+    #if defined(__linux__)
+        #define VOS_LINUX
+    #endif // Linux
 
 
-    #include "Renderer/Vulkan.h"
-
-
-#endif // VOS_VULKAN_HEADER
+#endif // VOS_SYSTEM_SYSTEM_HEADER

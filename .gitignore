@@ -29,8 +29,14 @@
 !Vos.cpp
 
 !System/
+!System/System.h
+!System/DisplayMode.h
+!System/SysWindow.h
+!System/Vulkan.h
 !System/Clock.h
 !System/Clock.cpp
+!System/SysClock.h
+!System/SysClock.cpp
 
 !DisplayMode.h
 !SysWindow.h
@@ -50,6 +56,22 @@
 !Win/Vulkan.h
 !Win/SysVulkan.h
 !Win/SysVulkan.cpp
+
+!System/Lin/
+!System/Lin/DisplayMode.h
+!System/Lin/DisplayMode.cpp
+!System/Lin/SysWindow.h
+!System/Lin/SysWindow.cpp
+!System/Lin/SysVulkan.h
+!System/Lin/SysVulkan.cpp
+!System/Win/
+!System/Win/DisplayMode.h
+!System/Win/DisplayMode.cpp
+!System/Win/SysWindow.h
+!System/Win/SysWindow.cpp
+!System/Win/Vulkan.h
+!System/Win/SysVulkan.h
+!System/Win/SysVulkan.cpp
 
 !Renderer/
 !Renderer/Vulkan.h

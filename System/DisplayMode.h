@@ -37,21 +37,21 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     DisplayMode.h : DisplayMode management system wrapper                  //
+//     System/DisplayMode.h : DisplayMode management system wrapper           //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_DISPLAYMODE_HEADER
-#define VOS_DISPLAYMODE_HEADER
+#ifndef VOS_SYSTEM_DISPLAYMODE_HEADER
+#define VOS_SYSTEM_DISPLAYMODE_HEADER
 
     #include "System.h"
 
-    
+
     #ifdef VOS_WINDOWS
-        #include "Win/DisplayMode.h"
+        #include "../Win/DisplayMode.h"
     #endif // VOS_WINDOWS
 
     #ifdef VOS_LINUX
-        #include "Lin/DisplayMode.h"
+        #include "../Lin/DisplayMode.h"
     #endif // VOS_LINUX
 
 
-#endif // VOS_DISPLAYMODE_HEADER
+#endif // VOS_SYSTEM_DISPLAYMODE_HEADER

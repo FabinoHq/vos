@@ -130,26 +130,26 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\Vulkan.cpp" />
-    <ClCompile Include="System\Clock.cpp" />
+    <ClCompile Include="System\SysClock.cpp" />
+    <ClCompile Include="System\Win\DisplayMode.cpp" />
+    <ClCompile Include="System\Win\SysVulkan.cpp" />
+    <ClCompile Include="System\Win\SysWindow.cpp" />
     <ClCompile Include="Vos.cpp" />
-    <ClCompile Include="Win\DisplayMode.cpp" />
-    <ClCompile Include="Win\SysVulkan.cpp" />
-    <ClCompile Include="Win\SysWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DisplayMode.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\Vulkan.h" />
     <ClInclude Include="Status.h" />
-    <ClInclude Include="System.h" />
-    <ClInclude Include="System\Clock.h" />
+    <ClInclude Include="System\SysClock.h" />
+    <ClInclude Include="System\DisplayMode.h" />
+    <ClInclude Include="System\System.h" />
+    <ClInclude Include="System\SysWindow.h" />
+    <ClInclude Include="System\Vulkan.h" />
+    <ClInclude Include="System\Win\DisplayMode.h" />
+    <ClInclude Include="System\Win\SysVulkan.h" />
+    <ClInclude Include="System\Win\SysWindow.h" />
     <ClInclude Include="Vos.h" />
-    <ClInclude Include="SysWindow.h" />
-    <ClInclude Include="Vulkan.h" />
-    <ClInclude Include="Win\DisplayMode.h" />
-    <ClInclude Include="Win\SysVulkan.h" />
-    <ClInclude Include="Win\SysWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

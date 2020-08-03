@@ -37,61 +37,21 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/Clock.h : System Clock management                               //
+//     System/SysWindow.h : VOS System Window management wrapper              //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_CLOCK_HEADER
-#define VOS_CLOCK_HEADER
+#ifndef VOS_SYSTEM_SYSWINDOW_HEADER
+#define VOS_SYSTEM_SYSWINDOW_HEADER
 
-    #include <chrono>
+    #include "System.h"
 
+    
+    #ifdef VOS_WINDOWS
+        #include "Win/SysWindow.h"
+    #endif // VOS_WINDOWS
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Clock class definition                                                //
-    ////////////////////////////////////////////////////////////////////////////
-    class Clock
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Default Clock constructor                                     //
-            ////////////////////////////////////////////////////////////////////
-            Clock();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Clock destructor                                              //
-            ////////////////////////////////////////////////////////////////////
-            ~Clock();
+    #ifdef VOS_LINUX
+        #include "Lin/SysWindow.h"
+    #endif // VOS_LINUX
 
 
-            ////////////////////////////////////////////////////////////////////
-            //  Reset the clock                                               //
-            ////////////////////////////////////////////////////////////////////
-            void reset();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get elapsed time since last reset in seconds                  //
-            ////////////////////////////////////////////////////////////////////
-            double getElapsedTime();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get elapsed time in seconds and reset the clock               //
-            ////////////////////////////////////////////////////////////////////
-            double getAndReset();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Private copy constructor : Not copyable                       //
-            ////////////////////////////////////////////////////////////////////
-            Clock(const Clock&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Private affectation operator : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Clock& operator=(const Clock&) = delete;
-
-
-        private:
-            std::chrono::time_point<std::chrono::steady_clock>  m_start;
-    };
-
-#endif // VOS_CLOCK_HEADER
+#endif // VOS_SYSTEM_SYSWINDOW_HEADER
