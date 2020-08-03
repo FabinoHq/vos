@@ -48,13 +48,13 @@ all: VOS
 VOS: main.o \
 	Vos.o \
 	System/SysClock.o \
-	System/Lin/DisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
+	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/Renderer.o
 	
 	$(CC) -o VOS \
 	Vos.o \
 	System/SysClock.o \
-	System/Lin/DisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
+	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -67,8 +67,9 @@ Vos.o: Vos.cpp
 System/SysClock.o: System/SysClock.cpp
 	$(CC) -o System/SysClock.o -c System/SysClock.cpp $(CFLAGS)
 
-System/Lin/DisplayMode.o: System/Lin/DisplayMode.cpp
-	$(CC) -o System/Lin/DisplayMode.o -c System/Lin/DisplayMode.cpp $(CFLAGS)
+System/Lin/SysDisplayMode.o: System/Lin/SysDisplayMode.cpp
+	$(CC) -o System/Lin/SysDisplayMode.o -c \
+	System/Lin/SysDisplayMode.cpp $(CFLAGS)
 
 System/Lin/SysWindow.o: System/Lin/SysWindow.cpp
 	$(CC) -o System/Lin/SysWindow.o -c System/Lin/SysWindow.cpp $(CFLAGS)
@@ -84,7 +85,8 @@ Renderer/Renderer.o: Renderer/Renderer.cpp
 
 clean:
 	rm -rf *.o
-	rm -rf Lin/*.o
+	rm -rf System/*.o
+	rm -rf System/Lin/*.o
 	rm -rf Renderer/*.o
 
 mrproper: clean 
