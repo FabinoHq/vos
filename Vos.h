@@ -45,6 +45,7 @@
     #include "System/System.h"
     #include "System/SysWindow.h"
     #include "Renderer/Renderer.h"
+    #include "Event.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
