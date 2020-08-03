@@ -14,7 +14,6 @@
 !VOS.vcxproj.user
 
 # Batch files
-!batch/
 !batch/vos_mem.sh
 !batch/vos_thr.sh
 !batch/VOS.bat
@@ -22,7 +21,6 @@
 
 # Sources files
 !main.cpp
-!Status.h
 !Event.h
 !Vos.h
 !Vos.cpp
@@ -47,7 +45,6 @@
 !System/Win/SysVulkan.h
 !System/Win/SysVulkan.cpp
 
-!Renderer/
 !Renderer/Vulkan.h
 !Renderer/Vulkan.cpp
 !Renderer/Renderer.h
