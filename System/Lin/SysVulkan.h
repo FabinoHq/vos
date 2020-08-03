@@ -95,7 +95,7 @@
     typedef struct VkQueue_T*           VkQueue;
     typedef struct VkCommandBuffer_T*   VkCommandBuffer;
 
-    typedef VkFlags                     VkWin32SurfaceCreateFlagsKHR;
+    typedef VkFlags                     VkXlibSurfaceCreateFlagsKHR;
     typedef VkFlags                     VkSwapchainCreateFlagsKHR;
 
     #ifdef VOS_64BITS
