@@ -69,117 +69,7 @@ m_semaphores()
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
-    m_rendererReady = false;
-
-    // Destroy swapchain and device
-    if (m_vulkanDevice)
-    {
-        // Wait for device idle
-        if (vkDeviceWaitIdle)
-        {
-            if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
-            {
-                // Destroy semaphores
-                if (vkDestroySemaphore)
-                {
-                    if (m_semaphores.renderFinished)
-                    {
-                        vkDestroySemaphore(
-                            m_vulkanDevice, m_semaphores.renderFinished, 0
-                        );
-                    }
-                    if (m_semaphores.imageAvailable)
-                    {
-                        vkDestroySemaphore(
-                            m_vulkanDevice, m_semaphores.imageAvailable, 0
-                        );
-                    }
-                }
-
-                // Destroy command buffers
-                if (m_commands.buffers.size() > 0)
-                {
-                    bool validBuffers = true;
-                    for (size_t i = 0; i < m_commands.buffers.size(); ++i)
-                    {
-                        if (!m_commands.buffers[i])
-                        {
-                            validBuffers = false;
-                            break;
-                        }
-                    }
-                    if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
-                    {
-                        vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
-                            static_cast<uint32_t>(m_commands.buffers.size()),
-                            m_commands.buffers.data()
-                        );
-                    }
-                }
-
-                // Destroy commands pool
-                if (m_commands.pool && vkDestroyCommandPool)
-                {
-                    vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
-                }
-
-                // Destroy swapchain images views
-                if (vkDestroyImageView)
-                {
-                    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
-                    {
-                        if (m_swapchain.images[i].view)
-                        {
-                            // Destroy image view
-                            vkDestroyImageView(
-                                m_vulkanDevice, m_swapchain.images[i].view, 0
-                            );
-                            m_swapchain.images[i].view = 0;
-                        }
-                    }
-                }
-
-                // Destroy Vulkan swapchain
-                if (m_swapchain.handle && vkDestroySwapchainKHR)
-                {
-                    vkDestroySwapchainKHR(
-                        m_vulkanDevice, m_swapchain.handle, 0
-                    );
-                }
-            }
-        }
-
-        // Destroy Vulkan device
-        if (vkDestroyDevice)
-        {
-            vkDestroyDevice(m_vulkanDevice, 0);
-        }
-    }
-    m_semaphores.renderFinished = 0;
-    m_semaphores.imageAvailable = 0;
-    m_commands.pool = 0;
-    m_swapchain.handle = 0;
-    m_vulkanDevice = 0;
-    
-    // Destroy Vulkan surface
-    if (m_vulkanInstance && m_vulkanSurface && vkDestroySurfaceKHR)
-    {
-        vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
-    }
-    m_vulkanSurface = 0;
-
-    // Destroy Vulkan instance
-    if (m_vulkanInstance && vkDestroyInstance)
-    {
-        vkDestroyInstance(m_vulkanInstance, 0);
-    }
-    m_vulkanInstance = 0;
-
-    // Free Vulkan functions
-    FreeVulkanFunctions();
-
-    // Free Vulkan library
-    FreeVulkanLibrary(m_vulkanLibHandle);
+    close();
 }
 
 
@@ -345,6 +235,124 @@ void Renderer::render()
     {
         return;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Close renderer                                                            //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::close()
+{
+    m_rendererReady = false;
+
+    // Destroy swapchain and device
+    if (m_vulkanDevice)
+    {
+        // Wait for device idle
+        if (vkDeviceWaitIdle)
+        {
+            if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+            {
+                // Destroy semaphores
+                if (vkDestroySemaphore)
+                {
+                    if (m_semaphores.renderFinished)
+                    {
+                        vkDestroySemaphore(
+                            m_vulkanDevice, m_semaphores.renderFinished, 0
+                        );
+                    }
+                    if (m_semaphores.imageAvailable)
+                    {
+                        vkDestroySemaphore(
+                            m_vulkanDevice, m_semaphores.imageAvailable, 0
+                        );
+                    }
+                }
+
+                // Destroy command buffers
+                if (m_commands.buffers.size() > 0)
+                {
+                    bool validBuffers = true;
+                    for (size_t i = 0; i < m_commands.buffers.size(); ++i)
+                    {
+                        if (!m_commands.buffers[i])
+                        {
+                            validBuffers = false;
+                            break;
+                        }
+                    }
+                    if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
+                    {
+                        vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
+                            static_cast<uint32_t>(m_commands.buffers.size()),
+                            m_commands.buffers.data()
+                        );
+                    }
+                }
+
+                // Destroy commands pool
+                if (m_commands.pool && vkDestroyCommandPool)
+                {
+                    vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
+                }
+
+                // Destroy swapchain images views
+                if (vkDestroyImageView)
+                {
+                    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+                    {
+                        if (m_swapchain.images[i].view)
+                        {
+                            // Destroy image view
+                            vkDestroyImageView(
+                                m_vulkanDevice, m_swapchain.images[i].view, 0
+                            );
+                            m_swapchain.images[i].view = 0;
+                        }
+                    }
+                }
+
+                // Destroy Vulkan swapchain
+                if (m_swapchain.handle && vkDestroySwapchainKHR)
+                {
+                    vkDestroySwapchainKHR(
+                        m_vulkanDevice, m_swapchain.handle, 0
+                    );
+                }
+            }
+        }
+
+        // Destroy Vulkan device
+        if (vkDestroyDevice)
+        {
+            vkDestroyDevice(m_vulkanDevice, 0);
+        }
+    }
+    m_semaphores.renderFinished = 0;
+    m_semaphores.imageAvailable = 0;
+    m_commands.pool = 0;
+    m_swapchain.handle = 0;
+    m_vulkanDevice = 0;
+    
+    // Destroy Vulkan surface
+    if (m_vulkanInstance && m_vulkanSurface && vkDestroySurfaceKHR)
+    {
+        vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
+    }
+    m_vulkanSurface = 0;
+
+    // Destroy Vulkan instance
+    if (m_vulkanInstance && vkDestroyInstance)
+    {
+        vkDestroyInstance(m_vulkanInstance, 0);
+    }
+    m_vulkanInstance = 0;
+
+    // Free Vulkan functions
+    FreeVulkanFunctions();
+
+    // Free Vulkan library
+    FreeVulkanLibrary(m_vulkanLibHandle);
 }
 
 

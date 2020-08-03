@@ -129,6 +129,7 @@ void Vos::run()
         m_renderer.render();
     }
 
-    // Close main window
+    // Close VOS
+    m_renderer.close();
     m_window.close();
 }
