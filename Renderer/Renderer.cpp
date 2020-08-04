@@ -199,6 +199,28 @@ bool Renderer::init(SysWindow* sysWindow)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Resize renderer frame                                                     //
+//  return : True if the renderer is successfully resized                    //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::resize()
+{
+    // Recreate Vulkan swapchain
+    if (!createVulkanSwapchain())
+    {
+        return false;
+    }
+
+    // Recreate Vulkan command buffers
+    if (!createCommandBuffers())
+    {
+        return false;
+    }
+
+    // Renderer successfully resized
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render frame                                                              //
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::render()
@@ -217,6 +239,7 @@ void Renderer::render()
         return;
     }
 
+    // Submit next image
     VkPipelineStageFlags waitDstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
     VkSubmitInfo submitInfo;
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -234,6 +257,7 @@ void Renderer::render()
         return;
     }
 
+    // Update surface
     VkPresentInfoKHR present;
     present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     present.pNext = 0;
@@ -244,7 +268,7 @@ void Renderer::render()
     present.pImageIndices = &imageIndex;
     present.pResults = 0;
 
-    if (!vkQueuePresentKHR(m_surfaceQueueHandle, &present) != VK_SUCCESS)
+    if (vkQueuePresentKHR(m_surfaceQueueHandle, &present) != VK_SUCCESS)
     {
         return;
     }
@@ -1097,6 +1121,13 @@ bool Renderer::createVulkanSwapchain()
             // Could not create swapchain image view
             return false;
         }
+    }
+
+    // Wait for device idle
+    if (vkDeviceWaitIdle(m_vulkanDevice) != VK_SUCCESS)
+    {
+        // Could not get the device ready
+        return false;
     }
 
     // Vulkan swapchain successfully created

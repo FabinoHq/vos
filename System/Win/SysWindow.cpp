@@ -104,7 +104,7 @@ bool SysWindow::create()
     }
 
     // Define the window settings
-    DWORD windowStyle = (WS_VISIBLE | WS_CAPTION | WS_SYSMENU);
+    DWORD windowStyle = (WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX);
     LONG windowWidth = 1024;
     LONG windowHeight = 768;
 
@@ -236,35 +236,42 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
             // Create window event
             case WM_CREATE:
                 event.type = EVENT_CREATED;
+                m_events.push(event);
                 break;
 
             // Close window events
             case WM_CLOSE:
                 event.type = EVENT_CLOSED;
+                m_events.push(event);
                 break;
 
             case WM_QUIT:
                 event.type = EVENT_CLOSED;
+                m_events.push(event);
+                break;
+
+            // Resize window event
+            case WM_SIZE:
+                event.type = EVENT_RESIZED;
+                m_events.push(event);
                 break;
 
             // Keys events
             case WM_KEYDOWN:
                 event.type = EVENT_KEYPRESSED;
                 event.key = transcriptKey(wparam);
+                m_events.push(event);
                 break;
 
             case WM_KEYUP:
                 event.type = EVENT_KEYRELEASED;
                 event.key = transcriptKey(wparam);
+                m_events.push(event);
                 break;
 
             default:
-                event.type = EVENT_NONE;
                 break;
         }
-
-        // Add new event
-        m_events.push(event);
     }
 }
 

@@ -212,16 +212,13 @@ void SysWindow::processEvent(XEvent msg)
                 if (msg.xclient.data.l[0] == m_closeMsg)
                 {
                     event.type = EVENT_CLOSED;
+                    m_events.push(event);
                 }
                 break;
 
             default:
-                event.type = EVENT_NONE;
                 break;
         }
-
-        // Add new event
-        m_events.push(event);
     }
 }
 

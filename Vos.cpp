@@ -109,6 +109,10 @@ void Vos::run()
                     m_running = false;
                     break;
 
+                case EVENT_RESIZED:
+                    m_renderer.resize();
+                    break;
+
                 case EVENT_KEYRELEASED:
                     switch (event.key)
                     {
