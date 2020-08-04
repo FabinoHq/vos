@@ -234,6 +234,8 @@ void SysWindow::processEvent(XEvent msg)
                 if ((msg.xconfigure.width != m_width) ||
                     (msg.xconfigure.height != m_height))
                 {
+                    m_width = msg.xconfigure.width;
+                    m_height = msg.xconfigure.height;
                     event.type = EVENT_RESIZED;
                     m_events.push(event);
                 }

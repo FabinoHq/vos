@@ -136,6 +136,9 @@
             HINSTANCE           m_instance;     // Window instance
             HWND                m_handle;       // Window handle
 
+            int                 m_width;        // Window width
+            int                 m_height;       // Window height
+
             std::queue<Event>   m_events;       // Events FIFO queue
     };
 

@@ -49,7 +49,9 @@ SysWindow* VOSGlobalWindow = 0;
 ////////////////////////////////////////////////////////////////////////////////
 SysWindow::SysWindow() :
 m_instance(0),
-m_handle(0)
+m_handle(0),
+m_width(0),
+m_height(0)
 {
     if (!VOSGlobalWindow)
     {
@@ -103,10 +105,14 @@ bool SysWindow::create()
         return false;
     }
 
+    // Window size
+    m_width = 1024;
+    m_height = 768;
+
     // Define the window settings
-    DWORD windowStyle = (WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX);
-    LONG windowWidth = 1024;
-    LONG windowHeight = 768;
+    DWORD windowStyle = (WS_VISIBLE | WS_POPUP | WS_BORDER);
+    LONG windowWidth = m_width;
+    LONG windowHeight = m_height;
 
     // Center the window
     int centerX = (displayMode.getWidth() / 2) - (windowWidth / 2);
@@ -216,6 +222,15 @@ LRESULT CALLBACK SysWindow::OnEvent(
         PostQuitMessage(0);
     }
 
+    // Don't forward window resize and move
+    if (msg == WM_SYSCOMMAND)
+    {
+        if ((wparam >= SC_SIZE) && (wparam < SC_MINIMIZE))
+        {
+            return 0;
+        }
+    }
+
     // Default window events
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }
@@ -247,12 +262,6 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 
             case WM_QUIT:
                 event.type = EVENT_CLOSED;
-                m_events.push(event);
-                break;
-
-            // Resize window event
-            case WM_SIZE:
-                event.type = EVENT_RESIZED;
                 m_events.push(event);
                 break;
 
