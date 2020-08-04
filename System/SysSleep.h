@@ -47,13 +47,11 @@
     #include <chrono>
 
 
-    namespace System
-    {
-        ////////////////////////////////////////////////////////////////////////
-        //  Put current thread to sleep for given time in seconds             //
-        //  return : True if the thread has slept, false otherwise            //
-        ////////////////////////////////////////////////////////////////////////
-        bool sleep(double seconds);
-    };
+    ////////////////////////////////////////////////////////////////////////////
+    //  Put current thread to sleep for given time in seconds                 //
+    //  return : True if the thread has slept, false otherwise                //
+    ////////////////////////////////////////////////////////////////////////////
+    bool SysSleep(double seconds);
+
 
 #endif // VOS_SYSTEM_SYSSLEEP_HEADER

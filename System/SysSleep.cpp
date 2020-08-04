@@ -46,7 +46,7 @@
 //  Put current thread to sleep for given time in seconds                     //
 //  return : True if the thread has slept, false otherwise                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool System::sleep(double seconds)
+bool SysSleep(double seconds)
 {
     try
     {

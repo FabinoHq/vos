@@ -150,7 +150,7 @@ void SysThread::standby(bool standbyMode)
 void SysThread::process()
 {
     // Default process : Standby thread
-    System::sleep(SysThreadStandbySleepTime);
+    SysSleep(SysThreadStandbySleepTime);
 }
 
 
@@ -182,7 +182,7 @@ void SysThread::run()
         if (standby)
         {
             // Thread standby mode
-            System::sleep(SysThreadStandbySleepTime);
+            SysSleep(SysThreadStandbySleepTime);
         }
         else
         {
