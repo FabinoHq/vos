@@ -49,7 +49,6 @@
 !System/Win/SysDisplayMode.cpp
 !System/Win/SysWindow.h
 !System/Win/SysWindow.cpp
-!System/Win/Vulkan.h
 !System/Win/SysVulkan.h
 !System/Win/SysVulkan.cpp
 
