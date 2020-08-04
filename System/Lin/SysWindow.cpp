@@ -49,7 +49,9 @@ SysWindow::SysWindow() :
 m_display(0),
 m_handle(0),
 m_screen(0),
-m_closeMsg(0)
+m_closeMsg(0),
+m_width(0),
+m_height(0)
 {
 
 }
@@ -92,10 +94,14 @@ bool SysWindow::create()
     black = BlackPixel(m_display, m_screen);
     white = WhitePixel(m_display, m_screen);
 
+    // Window size
+    m_width = 1024;
+    m_height = 768;
+
     // Create the window
     m_handle = XCreateSimpleWindow(
         m_display, DefaultRootWindow(m_display),
-        0, 0, 1024, 768, 5, white, black
+        0, 0, m_width, m_height, 5, white, black
     );
     if (!m_handle)
     {
@@ -111,7 +117,8 @@ bool SysWindow::create()
 
     // Select window inputs
     XSelectInput(
-        m_display, m_handle, ExposureMask|ButtonPressMask|KeyPressMask
+        m_display, m_handle,
+        ExposureMask|ButtonPressMask|KeyPressMask|StructureNotifyMask
     );
 
     // Set window delete message
@@ -208,10 +215,26 @@ void SysWindow::processEvent(XEvent msg)
         // Event type
         switch (msg.type)
         {
+            // Close window events
             case ClientMessage:
                 if (msg.xclient.data.l[0] == m_closeMsg)
                 {
                     event.type = EVENT_CLOSED;
+                    m_events.push(event);
+                }
+                break;
+
+            case DestroyNotify:
+                event.type = EVENT_CLOSED;
+                m_events.push(event);
+                break;
+
+            // Resize window event
+            case ConfigureNotify:
+                if ((msg.xconfigure.width != m_width) ||
+                    (msg.xconfigure.height != m_height))
+                {
+                    event.type = EVENT_RESIZED;
                     m_events.push(event);
                 }
                 break;

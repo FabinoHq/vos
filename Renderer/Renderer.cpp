@@ -237,6 +237,8 @@ bool Renderer::resize()
             }
         }
     }
+    m_commands.buffers.clear();
+    m_commands.pool = 0;
 
     // Recreate Vulkan swapchain
     if (!createVulkanSwapchain())
@@ -408,6 +410,7 @@ void Renderer::close()
 
     m_semaphores.renderFinished = 0;
     m_semaphores.imageAvailable = 0;
+    m_commands.buffers.clear();
     m_commands.pool = 0;
     m_swapchain.handle = 0;
     m_vulkanDevice = 0;
