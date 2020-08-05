@@ -110,7 +110,10 @@ bool SysWindow::create()
     m_height = 768;
 
     // Define the window settings
-    DWORD windowStyle = (WS_VISIBLE | WS_POPUP | WS_BORDER);
+    DWORD windowStyle = (
+        WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_OVERLAPPED | WS_CAPTION |
+        WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX
+    );
     LONG windowWidth = m_width;
     LONG windowHeight = m_height;
 
@@ -220,15 +223,6 @@ LRESULT CALLBACK SysWindow::OnEvent(
     if (msg == WM_DESTROY)
     {
         PostQuitMessage(0);
-    }
-
-    // Don't forward window resize and move
-    if (msg == WM_SYSCOMMAND)
-    {
-        if ((wparam >= SC_SIZE) && (wparam < SC_MINIMIZE))
-        {
-            return 0;
-        }
     }
 
     // Default window events
