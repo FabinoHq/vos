@@ -199,64 +199,6 @@ bool Renderer::init(SysWindow* sysWindow)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Resize renderer frame                                                     //
-//  return : True if the renderer is successfully resized                    //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::resize()
-{
-    // Cleanup renderer
-    if (m_vulkanDevice && vkDeviceWaitIdle)
-    {
-        if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
-        {
-            // Destroy command buffers
-            if (m_commands.buffers.size() > 0)
-            {
-                bool validBuffers = true;
-                for (size_t i = 0; i < m_commands.buffers.size(); ++i)
-                {
-                    if (!m_commands.buffers[i])
-                    {
-                        validBuffers = false;
-                        break;
-                    }
-                }
-                if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
-                {
-                    vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
-                        static_cast<uint32_t>(m_commands.buffers.size()),
-                        m_commands.buffers.data()
-                    );
-                }
-            }
-
-            // Destroy commands pool
-            if (m_commands.pool && vkDestroyCommandPool)
-            {
-                vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
-            }
-        }
-    }
-    m_commands.buffers.clear();
-    m_commands.pool = 0;
-
-    // Recreate Vulkan swapchain
-    if (!createVulkanSwapchain())
-    {
-        return false;
-    }
-
-    // Recreate Vulkan command buffers
-    if (!createCommandBuffers())
-    {
-        return false;
-    }
-
-    // Renderer successfully resized
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Render frame                                                              //
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::render()
@@ -264,6 +206,12 @@ void Renderer::render()
     // Check renderer state
     if (!m_rendererReady)
     {
+        // Resize renderer
+        if (!resize())
+        {
+            // Could not resize renderer
+            return;
+        }
         return;
     }
 
@@ -272,6 +220,7 @@ void Renderer::render()
     if (vkAcquireNextImageKHR(m_vulkanDevice, m_swapchain.handle, UINT64_MAX,
         m_semaphores.imageAvailable, 0, &imageIndex) != VK_SUCCESS)
     {
+        m_rendererReady = false;
         return;
     }
 
@@ -290,6 +239,7 @@ void Renderer::render()
 
     if (vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
+        m_rendererReady = false;
         return;
     }
 
@@ -306,6 +256,7 @@ void Renderer::render()
 
     if (vkQueuePresentKHR(m_surfaceQueueHandle, &present) != VK_SUCCESS)
     {
+        m_rendererReady = false;
         return;
     }
 }
@@ -1329,5 +1280,63 @@ bool Renderer::createSemaphores()
     }
 
     // Semaphores successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Resize renderer frame                                                     //
+//  return : True if the renderer is successfully resized                    //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::resize()
+{
+    // Cleanup renderer
+    if (m_vulkanDevice && vkDeviceWaitIdle)
+    {
+        if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+        {
+            // Destroy command buffers
+            if (m_commands.buffers.size() > 0)
+            {
+                bool validBuffers = true;
+                for (size_t i = 0; i < m_commands.buffers.size(); ++i)
+                {
+                    if (!m_commands.buffers[i])
+                    {
+                        validBuffers = false;
+                        break;
+                    }
+                }
+                if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
+                {
+                    vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
+                        static_cast<uint32_t>(m_commands.buffers.size()),
+                        m_commands.buffers.data()
+                    );
+                }
+            }
+
+            // Destroy commands pool
+            if (m_commands.pool && vkDestroyCommandPool)
+            {
+                vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
+            }
+        }
+    }
+    m_commands.buffers.clear();
+    m_commands.pool = 0;
+
+    // Recreate Vulkan swapchain
+    if (!createVulkanSwapchain())
+    {
+        return false;
+    }
+
+    // Recreate Vulkan command buffers
+    if (!createCommandBuffers())
+    {
+        return false;
+    }
+
+    // Renderer successfully resized
     return true;
 }

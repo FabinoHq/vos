@@ -51,7 +51,6 @@
         EVENT_NONE,
         EVENT_CREATED,
         EVENT_CLOSED,
-        EVENT_RESIZED,
         EVENT_KEYPRESSED,
         EVENT_KEYRELEASED,
         EVENT_MOUSEMOVED,

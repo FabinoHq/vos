@@ -149,12 +149,6 @@
             bool init(SysWindow* sysWindow);
 
             ////////////////////////////////////////////////////////////////////
-            //  Resize renderer frame                                         //
-            //  return : True if the renderer is successfully resized         //
-            ////////////////////////////////////////////////////////////////////
-            bool resize();
-
-            ////////////////////////////////////////////////////////////////////
             //  Render frame                                                  //
             ////////////////////////////////////////////////////////////////////
             void render();
@@ -212,6 +206,12 @@
             //  return : True if semaphores are successfully created          //
             ////////////////////////////////////////////////////////////////////
             bool createSemaphores();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Resize renderer frame                                         //
+            //  return : True if the renderer is successfully resized         //
+            ////////////////////////////////////////////////////////////////////
+            bool resize();
 
 
         private:

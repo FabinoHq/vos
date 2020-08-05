@@ -236,8 +236,6 @@ void SysWindow::processEvent(XEvent msg)
                 {
                     m_width = msg.xconfigure.width;
                     m_height = msg.xconfigure.height;
-                    event.type = EVENT_RESIZED;
-                    m_events.push(event);
                 }
                 break;
 
