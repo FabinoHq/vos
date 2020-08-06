@@ -136,12 +136,14 @@ PFN_vkQueueSubmit vkQueueSubmit = 0;
 PFN_vkQueueWaitIdle vkQueueWaitIdle = 0;
 
 
+// vkCreateRenderPass function
+PFN_vkCreateRenderPass vkCreateRenderPass = 0;
+
 // vkCreateImageView function 
 PFN_vkCreateImageView vkCreateImageView = 0;
 
 // vkDestroyImageView function
 PFN_vkDestroyImageView vkDestroyImageView = 0;
-
 
 // vkCreateSemaphore function
 PFN_vkCreateSemaphore vkCreateSemaphore = 0;
@@ -493,6 +495,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
 
+    // Load vkCreateRenderPass
+    vkCreateRenderPass = (PFN_vkCreateRenderPass)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCreateRenderPass"
+    );
+    if (!vkCreateRenderPass)
+    {
+        // Could not load vkCreateRenderPass
+        return false;
+    }
+
     // Load vkCreateImageView
     vkCreateImageView = (PFN_vkCreateImageView)vkGetDeviceProcAddr(
         vulkanDevice, "vkCreateImageView"
@@ -512,7 +524,6 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         // Could not load vkDestroyImageView
         return false;
     }
-
 
     // Load vkCreateSemaphore
     vkCreateSemaphore = (PFN_vkCreateSemaphore)vkGetDeviceProcAddr(
@@ -657,9 +668,9 @@ void FreeVulkanFunctions()
     vkCreateCommandPool = 0;
     vkDestroySemaphore = 0;
     vkCreateSemaphore = 0;
-
     vkDestroyImageView = 0;
     vkCreateImageView = 0;
+    vkCreateRenderPass = 0;
 
     vkQueueWaitIdle = 0;
     vkQueueSubmit = 0;

@@ -399,6 +399,46 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkAttachmentLoadOp enum                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkAttachmentLoadOp
+    {
+        VK_ATTACHMENT_LOAD_OP_LOAD = 0,
+        VK_ATTACHMENT_LOAD_OP_CLEAR = 1,
+        VK_ATTACHMENT_LOAD_OP_DONT_CARE = 2,
+        VK_ATTACHMENT_LOAD_OP_BEGIN_RANGE = 0,
+        VK_ATTACHMENT_LOAD_OP_END_RANGE = 2,
+        VK_ATTACHMENT_LOAD_OP_RANGE_SIZE = 3,
+        VK_ATTACHMENT_LOAD_OP_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkAttachmentStoreOp enum                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkAttachmentStoreOp
+    {
+        VK_ATTACHMENT_STORE_OP_STORE = 0,
+        VK_ATTACHMENT_STORE_OP_DONT_CARE = 1,
+        VK_ATTACHMENT_STORE_OP_BEGIN_RANGE = 0,
+        VK_ATTACHMENT_STORE_OP_END_RANGE = 1,
+        VK_ATTACHMENT_STORE_OP_RANGE_SIZE = 2,
+        VK_ATTACHMENT_STORE_OP_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineBindPoint enum                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkPipelineBindPoint
+    {
+        VK_PIPELINE_BIND_POINT_GRAPHICS = 0,
+        VK_PIPELINE_BIND_POINT_COMPUTE = 1,
+        VK_PIPELINE_BIND_POINT_BEGIN_RANGE = 0,
+        VK_PIPELINE_BIND_POINT_END_RANGE = 1,
+        VK_PIPELINE_BIND_POINT_RANGE_SIZE = 2,
+        VK_PIPELINE_BIND_POINT_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkCommandBufferLevel enum                                             //
     ////////////////////////////////////////////////////////////////////////////
     enum VkCommandBufferLevel
@@ -417,7 +457,9 @@
     ////////////////////////////////////////////////////////////////////////////
     typedef VkFlags VkInstanceCreateFlags;
 
-    // VkSampleCountFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSampleCountFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkSampleCountFlagBits
     {
         VK_SAMPLE_COUNT_1_BIT = 0x00000001,
@@ -430,7 +472,9 @@
     };
     typedef VkFlags VkSampleCountFlags;
 
-    // VkQueueFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkQueueFlags                                                          //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkQueueFlagBits
     {
         VK_QUEUE_GRAPHICS_BIT = 0x00000001,
@@ -440,7 +484,9 @@
     };
     typedef VkFlags VkQueueFlags;
 
-    // VkMemoryHeapFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryHeapFlags                                                     //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkMemoryHeapFlagBits
     {
         VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001
@@ -449,7 +495,9 @@
     typedef VkFlags VkDeviceCreateFlags;
     typedef VkFlags VkDeviceQueueCreateFlags;
 
-    // VkPipelineStageFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineStageFlags                                                  //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkPipelineStageFlagBits
     {
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = 0x00000001,
@@ -473,7 +521,9 @@
     typedef VkFlags VkPipelineStageFlags;
     typedef VkFlags VkMemoryMapFlags;
 
-    // VkMemoryPropertyFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryPropertyFlags                                                 //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkMemoryPropertyFlagBits
     {
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001,
@@ -484,7 +534,9 @@
     };
     typedef VkFlags VkMemoryPropertyFlags;
 
-    // VkImageUsageFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageUsageFlags                                                     //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkImageUsageFlagBits
     {
         VK_IMAGE_USAGE_TRANSFER_SRC_BIT = 0x00000001,
@@ -498,7 +550,9 @@
     };
     typedef VkFlags VkImageUsageFlags;
 
-    // VkImageAspectFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageAspectFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkImageAspectFlagBits
     {
         VK_IMAGE_ASPECT_COLOR_BIT = 0x00000001,
@@ -508,7 +562,9 @@
     };
     typedef VkFlags VkImageAspectFlags;
 
-    // VkSurfaceTransformFlagsKHR
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSurfaceTransformFlagsKHR                                            //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkSurfaceTransformFlagBitsKHR
     {
         VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = 0x00000001,
@@ -523,7 +579,9 @@
     };
     typedef VkFlags VkSurfaceTransformFlagsKHR;
 
-    // VkCompositeAlphaFlagsKHR
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCompositeAlphaFlagsKHR                                              //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkCompositeAlphaFlagBitsKHR
     {
         VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = 0x00000001,
@@ -533,7 +591,9 @@
     };
     typedef VkFlags VkCompositeAlphaFlagsKHR;
 
-    // VkFenceCreateFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkFenceCreateFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkFenceCreateFlagBits
     {
         VK_FENCE_CREATE_SIGNALED_BIT = 0x00000001
@@ -543,7 +603,9 @@
     typedef VkFlags VkEventCreateFlags;
     typedef VkFlags VkQueryPoolCreateFlags;
 
-    // VkQueryPipelineStatisticFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkQueryPipelineStatisticFlags                                         //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkQueryPipelineStatisticFlagBits {
     VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT =
         0x00000001,
@@ -570,7 +632,9 @@
     };
     typedef VkFlags VkQueryPipelineStatisticFlags;
 
-    // VkQueryResultFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkQueryResultFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkQueryResultFlagBits {
         VK_QUERY_RESULT_64_BIT = 0x00000001,
         VK_QUERY_RESULT_WAIT_BIT = 0x00000002,
@@ -579,7 +643,9 @@
     };
     typedef VkFlags VkQueryResultFlags;
 
-    // VkBufferCreateFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBufferCreateFlags                                                   //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkBufferCreateFlagBits {
         VK_BUFFER_CREATE_SPARSE_BINDING_BIT = 0x00000001,
         VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002,
@@ -587,7 +653,9 @@
     };
     typedef VkFlags VkBufferCreateFlags;
 
-    // VkBufferUsageFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBufferUsageFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkBufferUsageFlagBits
     {
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001,
@@ -606,7 +674,31 @@
     typedef VkFlags VkShaderModuleCreateFlags;
     typedef VkFlags VkPipelineCacheCreateFlags;
 
-    // VkAccessFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorPoolCreateFlags                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkDescriptorPoolCreateFlagBits
+    {
+        VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001
+    };
+    typedef VkFlags VkDescriptorPoolCreateFlags;
+    typedef VkFlags VkDescriptorPoolResetFlags;
+    typedef VkFlags VkFramebufferCreateFlags;
+    typedef VkFlags VkRenderPassCreateFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkAttachmentDescriptionFlags                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkAttachmentDescriptionFlagBits
+    {
+        VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = 0x00000001
+    };
+    typedef VkFlags VkAttachmentDescriptionFlags;
+    typedef VkFlags VkSubpassDescriptionFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkAccessFlags                                                         //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkAccessFlagBits
     {
         VK_ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001,
@@ -629,14 +721,18 @@
     };
     typedef VkFlags VkAccessFlags;
 
-    // VkDependencyFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDependencyFlags                                                     //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkDependencyFlagBits
     {
         VK_DEPENDENCY_BY_REGION_BIT = 0x00000001
     };
     typedef VkFlags VkDependencyFlags;
 
-    // VkCommandPoolCreateFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandPoolCreateFlags                                              //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkCommandPoolCreateFlagBits
     {
         VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001,
@@ -644,14 +740,18 @@
     };
     typedef VkFlags VkCommandPoolCreateFlags;
 
-    // VkCommandPoolResetFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandPoolResetFlags                                               //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkCommandPoolResetFlagBits
     {
         VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = 0x00000001
     };
     typedef VkFlags VkCommandPoolResetFlags;
 
-    // VkCommandBufferUsageFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandBufferUsageFlags                                             //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkCommandBufferUsageFlagBits
     {
         VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = 0x00000001,
@@ -660,14 +760,18 @@
     };
     typedef VkFlags VkCommandBufferUsageFlags;
 
-    // VkQueryControlFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkQueryControlFlags                                                   //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkQueryControlFlagBits
     {
         VK_QUERY_CONTROL_PRECISE_BIT = 0x00000001
     };
     typedef VkFlags VkQueryControlFlags;
 
-    // VkCommandBufferResetFlags
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCommandBufferResetFlags                                             //
+    ////////////////////////////////////////////////////////////////////////////
     enum VkCommandBufferResetFlagBits
     {
         VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = 0x00000001
@@ -1139,6 +1243,78 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkAttachmentDescription data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkAttachmentDescription
+    {
+        VkAttachmentDescriptionFlags    flags;
+        VkFormat                        format;
+        VkSampleCountFlagBits           samples;
+        VkAttachmentLoadOp              loadOp;
+        VkAttachmentStoreOp             storeOp;
+        VkAttachmentLoadOp              stencilLoadOp;
+        VkAttachmentStoreOp             stencilStoreOp;
+        VkImageLayout                   initialLayout;
+        VkImageLayout                   finalLayout;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkAttachmentReference data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkAttachmentReference
+    {
+        uint32_t        attachment;
+        VkImageLayout   layout;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSubpassDescription data structure                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSubpassDescription
+    {
+        VkSubpassDescriptionFlags       flags;
+        VkPipelineBindPoint             pipelineBindPoint;
+        uint32_t                        inputAttachmentCount;
+        const VkAttachmentReference*    pInputAttachments;
+        uint32_t                        colorAttachmentCount;
+        const VkAttachmentReference*    pColorAttachments;
+        const VkAttachmentReference*    pResolveAttachments;
+        const VkAttachmentReference*    pDepthStencilAttachment;
+        uint32_t                        preserveAttachmentCount;
+        const uint32_t*                 pPreserveAttachments;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSubpassDependency data structure                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSubpassDependency
+    {
+        uint32_t                srcSubpass;
+        uint32_t                dstSubpass;
+        VkPipelineStageFlags    srcStageMask;
+        VkPipelineStageFlags    dstStageMask;
+        VkAccessFlags           srcAccessMask;
+        VkAccessFlags           dstAccessMask;
+        VkDependencyFlags       dependencyFlags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkRenderPassCreateInfo data structure                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkRenderPassCreateInfo
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkRenderPassCreateFlags         flags;
+        uint32_t                        attachmentCount;
+        const VkAttachmentDescription*  pAttachments;
+        uint32_t                        subpassCount;
+        const VkSubpassDescription*     pSubpasses;
+        uint32_t                        dependencyCount;
+        const VkSubpassDependency*      pDependencies;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkImageSubresourceRange data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkImageSubresourceRange
@@ -1566,6 +1742,15 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateRenderPass function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateRenderPass)(
+        VkDevice device, const VkRenderPassCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass
+    );
+    extern PFN_vkCreateRenderPass vkCreateRenderPass;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateImageView function                                            //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateImageView)(
@@ -1582,7 +1767,6 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyImageView vkDestroyImageView;
-
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSemaphore function                                            //
