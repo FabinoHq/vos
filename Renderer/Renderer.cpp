@@ -58,6 +58,7 @@ m_graphicsQueueHandle(0),
 m_surfaceQueueIndex(0),
 m_surfaceQueueHandle(0),
 m_swapchain(),
+m_renderPass(0),
 m_commands(),
 m_semaphores()
 {
@@ -180,6 +181,13 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create render pass
+    if (!createRenderPass())
+    {
+        // Could not create render pass
+        return false;
+    }
+
     // Create command buffers
     if (!createCommandBuffers())
     {
@@ -195,6 +203,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Renderer successfully loaded
+    m_rendererReady = true;
     return true;
 }
 
@@ -320,6 +329,12 @@ void Renderer::close()
                     vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
                 }
 
+                // Destroy render pass
+                if (m_renderPass && vkDestroyRenderPass)
+                {
+                    vkDestroyRenderPass(m_vulkanDevice, m_renderPass, 0);
+                }
+
                 // Destroy swapchain images views
                 if (vkDestroyImageView)
                 {
@@ -363,6 +378,7 @@ void Renderer::close()
     m_semaphores.imageAvailable = 0;
     m_commands.buffers.clear();
     m_commands.pool = 0;
+    m_renderPass = 0;
     m_swapchain.handle = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
@@ -1119,7 +1135,74 @@ bool Renderer::createVulkanSwapchain()
     }
 
     // Vulkan swapchain successfully created
-    m_rendererReady = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create render pass                                                        //
+//  return : True if render pass is successfully created                      //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createRenderPass()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Create render pass
+    VkAttachmentDescription attachmentDescription;
+    attachmentDescription.flags = 0;
+    attachmentDescription.format = m_swapchain.format;
+    attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
+    attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentReference attachmentReference;
+    attachmentReference.attachment = 0;
+    attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpassDescription;
+    subpassDescription.flags = 0;
+    subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpassDescription.inputAttachmentCount = 0;
+    subpassDescription.pInputAttachments = 0;
+    subpassDescription.colorAttachmentCount = 1;
+    subpassDescription.pColorAttachments = &attachmentReference;
+    subpassDescription.pResolveAttachments = 0;
+    subpassDescription.pDepthStencilAttachment = 0;
+    subpassDescription.preserveAttachmentCount = 0;
+    subpassDescription.pPreserveAttachments = 0;
+
+    VkRenderPassCreateInfo renderPassInfo;
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.pNext = 0;
+    renderPassInfo.flags = 0;
+    renderPassInfo.attachmentCount = 1;
+    renderPassInfo.pAttachments = &attachmentDescription;
+    renderPassInfo.subpassCount = 1;
+    renderPassInfo.pSubpasses = &subpassDescription;
+    renderPassInfo.dependencyCount = 0;
+    renderPassInfo.pDependencies = 0;
+
+    if (vkCreateRenderPass(
+        m_vulkanDevice, &renderPassInfo, 0, &m_renderPass) != VK_SUCCESS)
+    {
+        // Could not create render pass
+        return false;
+    }
+    if (!m_renderPass)
+    {
+        // Invalid render pass
+        return false;
+    }
+
+    // Render pass successfully created
     return true;
 }
 

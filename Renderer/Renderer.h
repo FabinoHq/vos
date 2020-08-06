@@ -196,6 +196,12 @@
             bool createVulkanSwapchain();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create render pass                                            //
+            //  return : True if render pass is successfully created          //
+            ////////////////////////////////////////////////////////////////////
+            bool createRenderPass();
+
+            ////////////////////////////////////////////////////////////////////
             //  Create command buffers                                        //
             //  return : True if command buffers are successfully created     //
             ////////////////////////////////////////////////////////////////////
@@ -229,8 +235,9 @@
             VkQueue             m_surfaceQueueHandle;   // Surface queue handle
 
             VulkanSwapchain     m_swapchain;            // Vulkan swapchain
-            VulkanCommands      m_commands;             // Vulkan commands
-            VulkanSemaphores    m_semaphores;           // Vulkan semaphores
+            VkRenderPass        m_renderPass;           // Render pass
+            VulkanCommands      m_commands;             // Commands
+            VulkanSemaphores    m_semaphores;           // Semaphores
     };
 
 
