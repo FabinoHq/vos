@@ -1751,6 +1751,15 @@
     extern PFN_vkCreateRenderPass vkCreateRenderPass;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyRenderPass function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyRenderPass)(
+        VkDevice device, VkRenderPass renderPass,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyRenderPass vkDestroyRenderPass;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateImageView function                                            //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateImageView)(
