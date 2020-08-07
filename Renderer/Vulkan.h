@@ -399,6 +399,199 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkVertexInputRate enum                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkVertexInputRate
+    {
+        VK_VERTEX_INPUT_RATE_VERTEX = 0,
+        VK_VERTEX_INPUT_RATE_INSTANCE = 1,
+        VK_VERTEX_INPUT_RATE_BEGIN_RANGE = 0,
+        VK_VERTEX_INPUT_RATE_END_RANGE = 1,
+        VK_VERTEX_INPUT_RATE_RANGE_SIZE = 2,
+        VK_VERTEX_INPUT_RATE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPrimitiveTopology enum                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkPrimitiveTopology
+    {
+        VK_PRIMITIVE_TOPOLOGY_POINT_LIST = 0,
+        VK_PRIMITIVE_TOPOLOGY_LINE_LIST = 1,
+        VK_PRIMITIVE_TOPOLOGY_LINE_STRIP = 2,
+        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = 3,
+        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = 4,
+        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN = 5,
+        VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY = 6,
+        VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY = 7,
+        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = 8,
+        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = 9,
+        VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = 10,
+        VK_PRIMITIVE_TOPOLOGY_BEGIN_RANGE = 0,
+        VK_PRIMITIVE_TOPOLOGY_END_RANGE = 10,
+        VK_PRIMITIVE_TOPOLOGY_RANGE_SIZE = 11,
+        VK_PRIMITIVE_TOPOLOGY_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPolygonMode enum                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkPolygonMode
+    {
+        VK_POLYGON_MODE_FILL = 0,
+        VK_POLYGON_MODE_LINE = 1,
+        VK_POLYGON_MODE_POINT = 2,
+        VK_POLYGON_MODE_BEGIN_RANGE = 0,
+        VK_POLYGON_MODE_END_RANGE = 2,
+        VK_POLYGON_MODE_RANGE_SIZE = 3,
+        VK_POLYGON_MODE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkFrontFace enum                                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkFrontFace
+    {
+        VK_FRONT_FACE_COUNTER_CLOCKWISE = 0,
+        VK_FRONT_FACE_CLOCKWISE = 1,
+        VK_FRONT_FACE_BEGIN_RANGE = 0,
+        VK_FRONT_FACE_END_RANGE = 1,
+        VK_FRONT_FACE_RANGE_SIZE = 2,
+        VK_FRONT_FACE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCompareOp enum                                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkCompareOp
+    {
+        VK_COMPARE_OP_NEVER = 0,
+        VK_COMPARE_OP_LESS = 1,
+        VK_COMPARE_OP_EQUAL = 2,
+        VK_COMPARE_OP_LESS_OR_EQUAL = 3,
+        VK_COMPARE_OP_GREATER = 4,
+        VK_COMPARE_OP_NOT_EQUAL = 5,
+        VK_COMPARE_OP_GREATER_OR_EQUAL = 6,
+        VK_COMPARE_OP_ALWAYS = 7,
+        VK_COMPARE_OP_BEGIN_RANGE = 0,
+        VK_COMPARE_OP_END_RANGE = 7,
+        VK_COMPARE_OP_RANGE_SIZE = 8,
+        VK_COMPARE_OP_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkStencilOp enum                                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkStencilOp
+    {
+        VK_STENCIL_OP_KEEP = 0,
+        VK_STENCIL_OP_ZERO = 1,
+        VK_STENCIL_OP_REPLACE = 2,
+        VK_STENCIL_OP_INCREMENT_AND_CLAMP = 3,
+        VK_STENCIL_OP_DECREMENT_AND_CLAMP = 4,
+        VK_STENCIL_OP_INVERT = 5,
+        VK_STENCIL_OP_INCREMENT_AND_WRAP = 6,
+        VK_STENCIL_OP_DECREMENT_AND_WRAP = 7,
+        VK_STENCIL_OP_BEGIN_RANGE = 0,
+        VK_STENCIL_OP_END_RANGE = 7,
+        VK_STENCIL_OP_RANGE_SIZE = 8,
+        VK_STENCIL_OP_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkLogicOp enum                                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkLogicOp
+    {
+        VK_LOGIC_OP_CLEAR = 0,
+        VK_LOGIC_OP_AND = 1,
+        VK_LOGIC_OP_AND_REVERSE = 2,
+        VK_LOGIC_OP_COPY = 3,
+        VK_LOGIC_OP_AND_INVERTED = 4,
+        VK_LOGIC_OP_NO_OP = 5,
+        VK_LOGIC_OP_XOR = 6,
+        VK_LOGIC_OP_OR = 7,
+        VK_LOGIC_OP_NOR = 8,
+        VK_LOGIC_OP_EQUIVALENT = 9,
+        VK_LOGIC_OP_INVERT = 10,
+        VK_LOGIC_OP_OR_REVERSE = 11,
+        VK_LOGIC_OP_COPY_INVERTED = 12,
+        VK_LOGIC_OP_OR_INVERTED = 13,
+        VK_LOGIC_OP_NAND = 14,
+        VK_LOGIC_OP_SET = 15,
+        VK_LOGIC_OP_BEGIN_RANGE = 0,
+        VK_LOGIC_OP_END_RANGE = 15,
+        VK_LOGIC_OP_RANGE_SIZE = 16,
+        VK_LOGIC_OP_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBlendFactor enum                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkBlendFactor
+    {
+        VK_BLEND_FACTOR_ZERO = 0,
+        VK_BLEND_FACTOR_ONE = 1,
+        VK_BLEND_FACTOR_SRC_COLOR = 2,
+        VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR = 3,
+        VK_BLEND_FACTOR_DST_COLOR = 4,
+        VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR = 5,
+        VK_BLEND_FACTOR_SRC_ALPHA = 6,
+        VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA = 7,
+        VK_BLEND_FACTOR_DST_ALPHA = 8,
+        VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA = 9,
+        VK_BLEND_FACTOR_CONSTANT_COLOR = 10,
+        VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR = 11,
+        VK_BLEND_FACTOR_CONSTANT_ALPHA = 12,
+        VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA = 13,
+        VK_BLEND_FACTOR_SRC_ALPHA_SATURATE = 14,
+        VK_BLEND_FACTOR_SRC1_COLOR = 15,
+        VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = 16,
+        VK_BLEND_FACTOR_SRC1_ALPHA = 17,
+        VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = 18,
+        VK_BLEND_FACTOR_BEGIN_RANGE = 0,
+        VK_BLEND_FACTOR_END_RANGE = 18,
+        VK_BLEND_FACTOR_RANGE_SIZE = 19,
+        VK_BLEND_FACTOR_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBlendOp enum                                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkBlendOp
+    {
+        VK_BLEND_OP_ADD = 0,
+        VK_BLEND_OP_SUBTRACT = 1,
+        VK_BLEND_OP_REVERSE_SUBTRACT = 2,
+        VK_BLEND_OP_MIN = 3,
+        VK_BLEND_OP_MAX = 4,
+        VK_BLEND_OP_BEGIN_RANGE = 0,
+        VK_BLEND_OP_END_RANGE = 4,
+        VK_BLEND_OP_RANGE_SIZE = 5,
+        VK_BLEND_OP_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDynamicState enum                                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkDynamicState
+    {
+        VK_DYNAMIC_STATE_VIEWPORT = 0,
+        VK_DYNAMIC_STATE_SCISSOR = 1,
+        VK_DYNAMIC_STATE_LINE_WIDTH = 2,
+        VK_DYNAMIC_STATE_DEPTH_BIAS = 3,
+        VK_DYNAMIC_STATE_BLEND_CONSTANTS = 4,
+        VK_DYNAMIC_STATE_DEPTH_BOUNDS = 5,
+        VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = 6,
+        VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = 7,
+        VK_DYNAMIC_STATE_STENCIL_REFERENCE = 8,
+        VK_DYNAMIC_STATE_BEGIN_RANGE = 0,
+        VK_DYNAMIC_STATE_END_RANGE = 8,
+        VK_DYNAMIC_STATE_RANGE_SIZE = 9,
+        VK_DYNAMIC_STATE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkAttachmentLoadOp enum                                               //
     ////////////////////////////////////////////////////////////////////////////
     enum VkAttachmentLoadOp
@@ -673,6 +866,53 @@
     typedef VkFlags VkImageViewCreateFlags;
     typedef VkFlags VkShaderModuleCreateFlags;
     typedef VkFlags VkPipelineCacheCreateFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineCreateFlags                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkPipelineCreateFlagBits
+    {
+        VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = 0x00000001,
+        VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x00000002,
+        VK_PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004
+    };
+    typedef VkFlags VkPipelineCreateFlags;
+    typedef VkFlags VkPipelineShaderStageCreateFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkShaderStageFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkShaderStageFlagBits
+    {
+        VK_SHADER_STAGE_VERTEX_BIT = 0x00000001,
+        VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = 0x00000002,
+        VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = 0x00000004,
+        VK_SHADER_STAGE_GEOMETRY_BIT = 0x00000008,
+        VK_SHADER_STAGE_FRAGMENT_BIT = 0x00000010,
+        VK_SHADER_STAGE_COMPUTE_BIT = 0x00000020,
+        VK_SHADER_STAGE_ALL_GRAPHICS = 0x1F,
+        VK_SHADER_STAGE_ALL = 0x7FFFFFFF
+    };
+    typedef VkFlags VkPipelineVertexInputStateCreateFlags;
+    typedef VkFlags VkPipelineInputAssemblyStateCreateFlags;
+    typedef VkFlags VkPipelineTessellationStateCreateFlags;
+    typedef VkFlags VkPipelineViewportStateCreateFlags;
+    typedef VkFlags VkPipelineRasterizationStateCreateFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCullModeFlags                                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkCullModeFlagBits
+    {
+        VK_CULL_MODE_NONE = 0,
+        VK_CULL_MODE_FRONT_BIT = 0x00000001,
+        VK_CULL_MODE_BACK_BIT = 0x00000002,
+        VK_CULL_MODE_FRONT_AND_BACK = 0x3
+    };
+    typedef VkFlags VkCullModeFlags;
+    typedef VkFlags VkPipelineMultisampleStateCreateFlags;
+    typedef VkFlags VkPipelineDepthStencilStateCreateFlags;
+    typedef VkFlags VkPipelineColorBlendStateCreateFlags;
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkColorComponentFlags                                                 //
@@ -1118,6 +1358,99 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkSpecializationMapEntry data structure                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSpecializationMapEntry
+    {
+        uint32_t    constantID;
+        uint32_t    offset;
+        size_t      size;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSpecializationInfo data structure                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSpecializationInfo
+    {
+        uint32_t                            mapEntryCount;
+        const VkSpecializationMapEntry*     pMapEntries;
+        size_t                              dataSize;
+        const void*                         pData;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineShaderStageCreateInfo data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineShaderStageCreateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkPipelineShaderStageCreateFlags    flags;
+        VkShaderStageFlagBits               stage;
+        VkShaderModule                      module;
+        const char*                         pName;
+        const VkSpecializationInfo*         pSpecializationInfo;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkVertexInputBindingDescription data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkVertexInputBindingDescription
+    {
+        uint32_t            binding;
+        uint32_t            stride;
+        VkVertexInputRate   inputRate;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkVertexInputAttributeDescription data structure                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkVertexInputAttributeDescription
+    {
+        uint32_t    location;
+        uint32_t    binding;
+        VkFormat    format;
+        uint32_t    offset;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineVertexInputStateCreateInfo data structure                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineVertexInputStateCreateInfo
+    {
+        VkStructureType                         sType;
+        const void*                             pNext;
+        VkPipelineVertexInputStateCreateFlags   flags;
+        uint32_t                                vertexBindingDescriptionCount;
+        const VkVertexInputBindingDescription*  pVertexBindingDescriptions;
+        uint32_t                                vertexAttributeDescriptionCount;
+        const VkVertexInputAttributeDescription* pVertexAttributeDescriptions;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineInputAssemblyStateCreateInfo data structure                 //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineInputAssemblyStateCreateInfo
+    {
+        VkStructureType                             sType;
+        const void*                                 pNext;
+        VkPipelineInputAssemblyStateCreateFlags     flags;
+        VkPrimitiveTopology                         topology;
+        VkBool32                                    primitiveRestartEnable;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineTessellationStateCreateInfo data structure                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineTessellationStateCreateInfo
+    {
+        VkStructureType                         sType;
+        const void*                             pNext;
+        VkPipelineTessellationStateCreateFlags  flags;
+        uint32_t                                patchControlPoints;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkViewport data structure                                             //
     ////////////////////////////////////////////////////////////////////////////
     struct VkViewport
@@ -1155,6 +1488,131 @@
     {
         VkOffset2D  offset;
         VkExtent2D  extent;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineViewportStateCreateInfo data structure                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineViewportStateCreateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkPipelineViewportStateCreateFlags  flags;
+        uint32_t                            viewportCount;
+        const VkViewport*                   pViewports;
+        uint32_t                            scissorCount;
+        const VkRect2D*                     pScissors;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineRasterizationStateCreateInfo data structure                 //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineRasterizationStateCreateInfo
+    {
+        VkStructureType                             sType;
+        const void*                                 pNext;
+        VkPipelineRasterizationStateCreateFlags     flags;
+        VkBool32                                    depthClampEnable;
+        VkBool32                                    rasterizerDiscardEnable;
+        VkPolygonMode                               polygonMode;
+        VkCullModeFlags                             cullMode;
+        VkFrontFace                                 frontFace;
+        VkBool32                                    depthBiasEnable;
+        float                                       depthBiasConstantFactor;
+        float                                       depthBiasClamp;
+        float                                       depthBiasSlopeFactor;
+        float                                       lineWidth;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineMultisampleStateCreateInfo data structure                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineMultisampleStateCreateInfo
+    {
+        VkStructureType                         sType;
+        const void*                             pNext;
+        VkPipelineMultisampleStateCreateFlags   flags;
+        VkSampleCountFlagBits                   rasterizationSamples;
+        VkBool32                                sampleShadingEnable;
+        float                                   minSampleShading;
+        const VkSampleMask*                     pSampleMask;
+        VkBool32                                alphaToCoverageEnable;
+        VkBool32                                alphaToOneEnable;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkStencilOpState data structure                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkStencilOpState
+    {
+        VkStencilOp     failOp;
+        VkStencilOp     passOp;
+        VkStencilOp     depthFailOp;
+        VkCompareOp     compareOp;
+        uint32_t        compareMask;
+        uint32_t        writeMask;
+        uint32_t        reference;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineDepthStencilStateCreateInfo data structure                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineDepthStencilStateCreateInfo
+    {
+        VkStructureType                         sType;
+        const void*                             pNext;
+        VkPipelineDepthStencilStateCreateFlags  flags;
+        VkBool32                                depthTestEnable;
+        VkBool32                                depthWriteEnable;
+        VkCompareOp                             depthCompareOp;
+        VkBool32                                depthBoundsTestEnable;
+        VkBool32                                stencilTestEnable;
+        VkStencilOpState                        front;
+        VkStencilOpState                        back;
+        float                                   minDepthBounds;
+        float                                   maxDepthBounds;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineColorBlendAttachmentState data structure                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineColorBlendAttachmentState
+    {
+        VkBool32                blendEnable;
+        VkBlendFactor           srcColorBlendFactor;
+        VkBlendFactor           dstColorBlendFactor;
+        VkBlendOp               colorBlendOp;
+        VkBlendFactor           srcAlphaBlendFactor;
+        VkBlendFactor           dstAlphaBlendFactor;
+        VkBlendOp               alphaBlendOp;
+        VkColorComponentFlags   colorWriteMask;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineColorBlendStateCreateInfo data structure                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineColorBlendStateCreateInfo
+    {
+        VkStructureType                             sType;
+        const void*                                 pNext;
+        VkPipelineColorBlendStateCreateFlags        flags;
+        VkBool32                                    logicOpEnable;
+        VkLogicOp                                   logicOp;
+        uint32_t                                    attachmentCount;
+        const VkPipelineColorBlendAttachmentState*  pAttachments;
+        float                                       blendConstants[4];
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineDynamicStateCreateInfo data structure                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineDynamicStateCreateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkPipelineDynamicStateCreateFlags   flags;
+        uint32_t                            dynamicStateCount;
+        const VkDynamicState*               pDynamicStates;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1263,6 +1721,32 @@
         uint32_t                    width;
         uint32_t                    height;
         uint32_t                    layers;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkGraphicsPipelineCreateInfo data structure                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkGraphicsPipelineCreateInfo
+    {
+        VkStructureType                                 sType;
+        const void*                                     pNext;
+        VkPipelineCreateFlags                           flags;
+        uint32_t                                        stageCount;
+        const VkPipelineShaderStageCreateInfo*          pStages;
+        const VkPipelineVertexInputStateCreateInfo*     pVertexInputState;
+        const VkPipelineInputAssemblyStateCreateInfo*   pInputAssemblyState;
+        const VkPipelineTessellationStateCreateInfo*    pTessellationState;
+        const VkPipelineViewportStateCreateInfo*        pViewportState;
+        const VkPipelineRasterizationStateCreateInfo*   pRasterizationState;
+        const VkPipelineMultisampleStateCreateInfo*     pMultisampleState;
+        const VkPipelineDepthStencilStateCreateInfo*    pDepthStencilState;
+        const VkPipelineColorBlendStateCreateInfo*      pColorBlendState;
+        const VkPipelineDynamicStateCreateInfo*         pDynamicState;
+        VkPipelineLayout                                layout;
+        VkRenderPass                                    renderPass;
+        uint32_t                                        subpass;
+        VkPipeline                                      basePipelineHandle;
+        int32_t                                         basePipelineIndex;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1900,6 +2384,17 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateGraphicsPipelines function                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateGraphicsPipelines)(
+        VkDevice device, VkPipelineCache pipelineCache,
+        uint32_t createInfoCount,
+        const VkGraphicsPipelineCreateInfo* pCreateInfos,
+        const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines
+    );
+    extern PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSemaphore function                                            //

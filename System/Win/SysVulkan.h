@@ -107,11 +107,13 @@
         typedef struct VkImage_T*               VkImage;
         typedef struct VkImageView_T*           VkImageView;
         typedef struct VkShaderModule_T*        VkShaderModule;
+        typedef struct VkPipelineCache_T*       VkPipelineCache;
         typedef struct VkPipelineLayout_T*      VkPipelineLayout;
         typedef struct VkSampler_T*             VkSampler;
         typedef struct VkDeviceMemory_T*        VkDeviceMemory;
         typedef struct VkCommandPool_T*         VkCommandPool;
         typedef struct VkRenderPass_T*          VkRenderPass;
+        typedef struct VkPipeline_T*            VkPipeline;
         typedef struct VkDescriptorSetLayout_T* VkDescriptorSetLayout;
         typedef struct VkFramebuffer_T*         VkFramebuffer;
     #else
@@ -123,11 +125,13 @@
         typedef uint64_t                        VkImage;
         typedef uint64_t                        VkImageView;
         typedef uint64_t                        VkShaderModule;
+        typedef uint64_t                        VkPipelineCache;
         typedef uint64_t                        VkPipelineLayout;
         typedef uint64_t                        VkSampler;
         typedef uint64_t                        VkDeviceMemory;
         typedef uint64_t                        VkCommandPool;
         typedef uint64_t                        VkRenderPass;
+        typedef uint64_t                        VkPipeline;
         typedef uint64_t                        VkDescriptorSetLayout;
         typedef uint64_t                        VkFramebuffer;
     #endif
