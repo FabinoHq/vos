@@ -188,6 +188,13 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create framebuffers
+    if (!createFramebuffers())
+    {
+        // Could not create framebuffers
+        return false;
+    }
+
     // Create command buffers
     if (!createCommandBuffers())
     {
@@ -1205,6 +1212,65 @@ bool Renderer::createRenderPass()
     }
 
     // Render pass successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create framebuffers                                                       //
+//  return : True if framebuffers are successfully created                    //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createFramebuffers()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Check render pass
+    if (!m_renderPass)
+    {
+        // Invalid render pass
+        return false;
+    }
+
+    // Check swapchain images count
+    if (m_swapchain.images.size() <= 0)
+    {
+        // No swapchain images
+        return false;
+    }
+
+    // Create framebuffers
+    m_framebuffers.resize(m_swapchain.images.size());
+    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+    {
+        VkFramebufferCreateInfo framebufferInfo;
+        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferInfo.pNext = 0;
+        framebufferInfo.flags = 0;
+        framebufferInfo.renderPass = m_renderPass;
+        framebufferInfo.attachmentCount = 1;
+        framebufferInfo.pAttachments = &m_swapchain.images[i].view;
+        framebufferInfo.width = m_swapchain.extent.width;
+        framebufferInfo.height = m_swapchain.extent.height;
+        framebufferInfo.layers = 1;
+
+        if (vkCreateFramebuffer(m_vulkanDevice,
+            &framebufferInfo, 0, &m_framebuffers[i]) != VK_SUCCESS)
+        {
+            // Could not create framebuffer
+            return false;
+        }
+        if (!m_framebuffers[i])
+        {
+            // Invalid framebuffer
+            return false;
+        }
+    }
+
+    // Framebuffers successfully created
     return true;
 }
 

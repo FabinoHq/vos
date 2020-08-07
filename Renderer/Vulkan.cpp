@@ -136,17 +136,17 @@ PFN_vkQueueSubmit vkQueueSubmit = 0;
 PFN_vkQueueWaitIdle vkQueueWaitIdle = 0;
 
 
-// vkCreateFramebuffer function
-PFN_vkCreateFramebuffer vkCreateFramebuffer = 0;
-
-// vkDestroyFramebuffer function
-PFN_vkDestroyFramebuffer vkDestroyFramebuffer = 0;
-
 // vkCreateRenderPass function
 PFN_vkCreateRenderPass vkCreateRenderPass = 0;
 
 // vkDestroyRenderPass function
 PFN_vkDestroyRenderPass vkDestroyRenderPass = 0;
+
+// vkCreateFramebuffer function
+PFN_vkCreateFramebuffer vkCreateFramebuffer = 0;
+
+// vkDestroyFramebuffer function
+PFN_vkDestroyFramebuffer vkDestroyFramebuffer = 0;
 
 // vkCreateImageView function 
 PFN_vkCreateImageView vkCreateImageView = 0;
@@ -504,26 +504,6 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
 
-    // Load vkCreateFramebuffer
-    vkCreateFramebuffer = (PFN_vkCreateFramebuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateFramebuffer"
-    );
-    if (!vkCreateFramebuffer)
-    {
-        // Could not load vkCreateFramebuffer
-        return false;
-    }
-
-    // Load vkDestroyFramebuffer
-    vkDestroyFramebuffer = (PFN_vkDestroyFramebuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyFramebuffer"
-    );
-    if (!vkDestroyFramebuffer)
-    {
-        // Could not load vkDestroyFramebuffer
-        return false;
-    }
-
     // Load vkCreateRenderPass
     vkCreateRenderPass = (PFN_vkCreateRenderPass)vkGetDeviceProcAddr(
         vulkanDevice, "vkCreateRenderPass"
@@ -541,6 +521,26 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     if (!vkDestroyRenderPass)
     {
         // Could not load vkDestroyRenderPass
+        return false;
+    }
+
+    // Load vkCreateFramebuffer
+    vkCreateFramebuffer = (PFN_vkCreateFramebuffer)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCreateFramebuffer"
+    );
+    if (!vkCreateFramebuffer)
+    {
+        // Could not load vkCreateFramebuffer
+        return false;
+    }
+
+    // Load vkDestroyFramebuffer
+    vkDestroyFramebuffer = (PFN_vkDestroyFramebuffer)vkGetDeviceProcAddr(
+        vulkanDevice, "vkDestroyFramebuffer"
+    );
+    if (!vkDestroyFramebuffer)
+    {
+        // Could not load vkDestroyFramebuffer
         return false;
     }
 
@@ -709,10 +709,10 @@ void FreeVulkanFunctions()
     vkCreateSemaphore = 0;
     vkDestroyImageView = 0;
     vkCreateImageView = 0;
-    vkDestroyRenderPass = 0;
-    vkCreateRenderPass = 0;
     vkDestroyFramebuffer = 0;
     vkCreateFramebuffer = 0;
+    vkDestroyRenderPass = 0;
+    vkCreateRenderPass = 0;
 
     vkQueueWaitIdle = 0;
     vkQueueSubmit = 0;

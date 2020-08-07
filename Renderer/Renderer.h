@@ -202,6 +202,12 @@
             bool createRenderPass();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create framebuffers                                           //
+            //  return : True if framebuffers are successfully created        //
+            ////////////////////////////////////////////////////////////////////
+            bool createFramebuffers();
+
+            ////////////////////////////////////////////////////////////////////
             //  Create command buffers                                        //
             //  return : True if command buffers are successfully created     //
             ////////////////////////////////////////////////////////////////////
@@ -236,6 +242,7 @@
 
             VulkanSwapchain     m_swapchain;            // Vulkan swapchain
             VkRenderPass        m_renderPass;           // Render pass
+            std::vector<VkFramebuffer>  m_framebuffers; // Framebuffers
             VulkanCommands      m_commands;             // Commands
             VulkanSemaphores    m_semaphores;           // Semaphores
     };

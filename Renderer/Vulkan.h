@@ -1758,24 +1758,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  vkCreateFramebuffer function                                          //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkCreateFramebuffer)(
-        VkDevice device, const VkFramebufferCreateInfo* pCreateInfo,
-        const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer
-    );
-    extern PFN_vkCreateFramebuffer vkCreateFramebuffer;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkDestroyFramebuffer function                                         //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef void (VOSVK_PTR *PFN_vkDestroyFramebuffer)(
-        VkDevice device, VkFramebuffer framebuffer,
-        const VkAllocationCallbacks* pAllocator
-    );
-    extern PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
-
-    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateRenderPass function                                           //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateRenderPass)(
@@ -1792,6 +1774,24 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyRenderPass vkDestroyRenderPass;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateFramebuffer function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateFramebuffer)(
+        VkDevice device, const VkFramebufferCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer
+    );
+    extern PFN_vkCreateFramebuffer vkCreateFramebuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyFramebuffer function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyFramebuffer)(
+        VkDevice device, VkFramebuffer framebuffer,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateImageView function                                            //
