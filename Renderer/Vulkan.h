@@ -1358,6 +1358,18 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkShaderModuleCreateInfo data structure                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkShaderModuleCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkShaderModuleCreateFlags   flags;
+        size_t                      codeSize;
+        const uint32_t*             pCode;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkQueryPoolCreateInfo data structure                                  //
     ////////////////////////////////////////////////////////////////////////////
     struct VkQueryPoolCreateInfo
@@ -1810,6 +1822,15 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyImageView vkDestroyImageView;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateShaderModule function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateShaderModule)(
+        VkDevice device, const VkShaderModuleCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule
+    );
+    extern PFN_vkCreateShaderModule vkCreateShaderModule;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSemaphore function                                            //

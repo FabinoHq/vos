@@ -106,6 +106,7 @@
         typedef struct VkBuffer_T*          VkBuffer;
         typedef struct VkImage_T*           VkImage;
         typedef struct VkImageView_T*       VkImageView;
+        typedef struct VkShaderModule_T*    VkShaderModule;
         typedef struct VkSampler_T*         VkSampler;
         typedef struct VkDeviceMemory_T*    VkDeviceMemory;
         typedef struct VkCommandPool_T*     VkCommandPool;
@@ -119,6 +120,7 @@
         typedef uint64_t                    VkBuffer;
         typedef uint64_t                    VkImage;
         typedef uint64_t                    VkImageView;
+        typedef uint64_t                    VkShaderModule;
         typedef uint64_t                    VkSampler;
         typedef uint64_t                    VkDeviceMemory;
         typedef uint64_t                    VkCommandPool;
