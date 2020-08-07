@@ -309,6 +309,12 @@
             bool createDefaultShaders();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create pipeline layout                                        //
+            //  return : True if pipeline layout successfully created         //
+            ////////////////////////////////////////////////////////////////////
+            bool createPipelineLayout();
+
+            ////////////////////////////////////////////////////////////////////
             //  Create command buffers                                        //
             //  return : True if command buffers are successfully created     //
             ////////////////////////////////////////////////////////////////////
@@ -346,6 +352,7 @@
             std::vector<VkFramebuffer>  m_framebuffers; // Framebuffers
             VkShaderModule      m_vertexShader;         // Vertex shader
             VkShaderModule      m_fragmentShader;       // Fragment shader
+            VkPipelineLayout    m_pipelineLayout;       // Pipeline layout
             VulkanCommands      m_commands;             // Commands
             VulkanSemaphores    m_semaphores;           // Semaphores
     };

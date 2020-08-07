@@ -61,6 +61,7 @@ m_swapchain(),
 m_renderPass(0),
 m_vertexShader(0),
 m_fragmentShader(0),
+m_pipelineLayout(0),
 m_commands(),
 m_semaphores()
 {
@@ -201,6 +202,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createDefaultShaders())
     {
         // Could not create default shaders
+        return false;
+    }
+
+    // Create pipeline layout
+    if (!createPipelineLayout())
+    {
+        // Could not create pipeline layout
         return false;
     }
 
@@ -345,6 +353,14 @@ void Renderer::close()
                     vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
                 }
 
+                // Destroy pipeline layout
+                if (m_pipelineLayout && vkDestroyPipelineLayout)
+                {
+                    vkDestroyPipelineLayout(
+                        m_vulkanDevice, m_pipelineLayout, 0
+                    );
+                }
+
                 // Destroy default shaders
                 if (vkDestroyShaderModule)
                 {
@@ -426,6 +442,7 @@ void Renderer::close()
     m_semaphores.imageAvailable = 0;
     m_commands.buffers.clear();
     m_commands.pool = 0;
+    m_pipelineLayout = 0;
     m_fragmentShader = 0;
     m_vertexShader = 0;
     m_framebuffers.clear();
@@ -1374,6 +1391,45 @@ bool Renderer::createDefaultShaders()
     }
 
     // Default shaders successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create pipeline layout                                                    //
+//  return : True if pipeline layout successfully created                     //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createPipelineLayout()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Create pipeline layout
+    VkPipelineLayoutCreateInfo pipelineInfo;
+    pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipelineInfo.pNext = 0;
+    pipelineInfo.flags = 0;
+    pipelineInfo.setLayoutCount = 0;
+    pipelineInfo.pSetLayouts = 0;
+    pipelineInfo.pushConstantRangeCount = 0;
+    pipelineInfo.pPushConstantRanges = 0;
+
+    if (vkCreatePipelineLayout(
+        m_vulkanDevice, &pipelineInfo, 0, &m_pipelineLayout) != VK_SUCCESS)
+    {
+        // Could not create pipeline layout
+        return false;
+    }
+    if (!m_pipelineLayout)
+    {
+        // Invalid pipeline layout
+        return false;
+    }
+
+    // Pipeline layout successfully created
     return true;
 }
 
