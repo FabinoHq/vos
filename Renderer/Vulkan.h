@@ -1893,6 +1893,15 @@
     extern PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyPipelineLayout function                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyPipelineLayout)(
+        VkDevice device, VkPipelineLayout pipelineLayout,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSemaphore function                                            //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateSemaphore)(
