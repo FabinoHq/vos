@@ -1243,6 +1243,22 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkFramebufferCreateInfo data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkFramebufferCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkFramebufferCreateFlags    flags;
+        VkRenderPass                renderPass;
+        uint32_t                    attachmentCount;
+        const VkImageView*          pAttachments;
+        uint32_t                    width;
+        uint32_t                    height;
+        uint32_t                    layers;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkAttachmentDescription data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkAttachmentDescription
@@ -1740,6 +1756,15 @@
     typedef VkResult (VOSVK_PTR *PFN_vkQueueWaitIdle)(VkQueue queue);
     extern PFN_vkQueueWaitIdle vkQueueWaitIdle;
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateFramebuffer function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateFramebuffer)(
+        VkDevice device, const VkFramebufferCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer
+    );
+    extern PFN_vkCreateFramebuffer vkCreateFramebuffer;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateRenderPass function                                           //

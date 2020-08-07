@@ -901,6 +901,8 @@ bool Renderer::createVulkanSwapchain()
 
     // Set swapchain surface format
     VkSurfaceFormatKHR format;
+    format.format = VK_FORMAT_UNDEFINED;
+    format.colorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
     if (surfaceFormats.size() <= 0)
     {
         // Invalid surface formats count
