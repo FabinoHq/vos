@@ -1767,6 +1767,15 @@
     extern PFN_vkCreateFramebuffer vkCreateFramebuffer;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyFramebuffer function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyFramebuffer)(
+        VkDevice device, VkFramebuffer framebuffer,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateRenderPass function                                           //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateRenderPass)(
