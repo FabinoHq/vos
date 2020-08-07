@@ -59,6 +59,8 @@ m_surfaceQueueIndex(0),
 m_surfaceQueueHandle(0),
 m_swapchain(),
 m_renderPass(0),
+m_vertexShader(0),
+m_fragmentShader(0),
 m_commands(),
 m_semaphores()
 {
@@ -192,6 +194,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createFramebuffers())
     {
         // Could not create framebuffers
+        return false;
+    }
+
+    // Create default shaders
+    if (!createDefaultShaders())
+    {
+        // Could not create default shaders
         return false;
     }
 
@@ -336,6 +345,38 @@ void Renderer::close()
                     vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
                 }
 
+                // Destroy default shaders
+                if (vkDestroyShaderModule)
+                {
+                    if (m_fragmentShader)
+                    {
+                        vkDestroyShaderModule(
+                            m_vulkanDevice, m_fragmentShader, 0
+                        );
+                    }
+                    if (m_vertexShader)
+                    {
+                        vkDestroyShaderModule(
+                            m_vulkanDevice, m_vertexShader, 0
+                        );
+                    }
+                }
+
+                // Destroy framebuffers
+                if (vkDestroyFramebuffer)
+                {
+                    for (size_t i = 0; i < m_framebuffers.size(); ++i)
+                    {
+                        if (m_framebuffers[i])
+                        {
+                            vkDestroyFramebuffer(
+                                m_vulkanDevice, m_framebuffers[i], 0
+                            );
+                        }
+                        m_framebuffers[i] = 0;
+                    }
+                }
+
                 // Destroy render pass
                 if (m_renderPass && vkDestroyRenderPass)
                 {
@@ -385,7 +426,11 @@ void Renderer::close()
     m_semaphores.imageAvailable = 0;
     m_commands.buffers.clear();
     m_commands.pool = 0;
+    m_fragmentShader = 0;
+    m_vertexShader = 0;
+    m_framebuffers.clear();
     m_renderPass = 0;
+    m_swapchain.images.clear();
     m_swapchain.handle = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
@@ -1271,6 +1316,64 @@ bool Renderer::createFramebuffers()
     }
 
     // Framebuffers successfully created
+    return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create default shaders                                                    //
+//  return : True if default shaders are successfully created                 //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createDefaultShaders()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Create default vertex shader
+    VkShaderModuleCreateInfo vertexShaderInfo;
+    vertexShaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    vertexShaderInfo.pNext = 0;
+    vertexShaderInfo.flags = 0;
+    vertexShaderInfo.codeSize = DefaultVertexShaderSize;
+    vertexShaderInfo.pCode = DefaultVertexShader;
+
+    if (vkCreateShaderModule(m_vulkanDevice,
+        &vertexShaderInfo, 0, &m_vertexShader) != VK_SUCCESS)
+    {
+        // Could not create default vertex shader
+        return false;
+    }
+    if (!m_vertexShader)
+    {
+        // Invalid default vertex shader
+        return false;
+    }
+
+    // Create default fragment shader
+    VkShaderModuleCreateInfo fragmentShaderInfo;
+    fragmentShaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    fragmentShaderInfo.pNext = 0;
+    fragmentShaderInfo.flags = 0;
+    fragmentShaderInfo.codeSize = DefaultFragmentShaderSize;
+    fragmentShaderInfo.pCode = DefaultFragmentShader;
+
+    if (vkCreateShaderModule(m_vulkanDevice,
+        &fragmentShaderInfo, 0, &m_fragmentShader) != VK_SUCCESS)
+    {
+        // Could not create default fragment shader
+        return false;
+    }
+    if (!m_fragmentShader)
+    {
+        // Invalid default fragment shader
+        return false;
+    }
+
+    // Default shaders successfully created
     return true;
 }
 
