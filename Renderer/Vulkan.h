@@ -1833,6 +1833,15 @@
     extern PFN_vkCreateShaderModule vkCreateShaderModule;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyShaderModule function                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyShaderModule)(
+        VkDevice device, VkShaderModule shaderModule,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyShaderModule vkDestroyShaderModule;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSemaphore function                                            //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateSemaphore)(
