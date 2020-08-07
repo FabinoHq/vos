@@ -675,6 +675,23 @@
     typedef VkFlags VkPipelineCacheCreateFlags;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkColorComponentFlags                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkColorComponentFlagBits
+    {
+        VK_COLOR_COMPONENT_R_BIT = 0x00000001,
+        VK_COLOR_COMPONENT_G_BIT = 0x00000002,
+        VK_COLOR_COMPONENT_B_BIT = 0x00000004,
+        VK_COLOR_COMPONENT_A_BIT = 0x00000008
+    };
+    typedef VkFlags VkColorComponentFlags;
+    typedef VkFlags VkPipelineDynamicStateCreateFlags;
+    typedef VkFlags VkPipelineLayoutCreateFlags;
+    typedef VkFlags VkShaderStageFlags;
+    typedef VkFlags VkSamplerCreateFlags;
+    typedef VkFlags VkDescriptorSetLayoutCreateFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkDescriptorPoolCreateFlags                                           //
     ////////////////////////////////////////////////////////////////////////////
     enum VkDescriptorPoolCreateFlagBits
@@ -1233,16 +1250,6 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VkSemaphoreCreateInfo data structure                                  //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VkSemaphoreCreateInfo
-    {
-        VkStructureType         sType;
-        const void*             pNext;
-        VkSemaphoreCreateFlags  flags;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
     //  VkFramebufferCreateInfo data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkFramebufferCreateInfo
@@ -1256,6 +1263,40 @@
         uint32_t                    width;
         uint32_t                    height;
         uint32_t                    layers;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPushConstantRange data structure                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPushConstantRange
+    {
+        VkShaderStageFlags  stageFlags;
+        uint32_t            offset;
+        uint32_t            size;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineLayoutCreateInfo data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineLayoutCreateInfo
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkPipelineLayoutCreateFlags     flags;
+        uint32_t                        setLayoutCount;
+        const VkDescriptorSetLayout*    pSetLayouts;
+        uint32_t                        pushConstantRangeCount;
+        const VkPushConstantRange*      pPushConstantRanges;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSemaphoreCreateInfo data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSemaphoreCreateInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkSemaphoreCreateFlags  flags;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1840,6 +1881,16 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyShaderModule vkDestroyShaderModule;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreatePipelineLayout function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreatePipelineLayout)(
+        VkDevice device, const VkPipelineLayoutCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator,
+        VkPipelineLayout* pPipelineLayout
+    );
+    extern PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSemaphore function                                            //

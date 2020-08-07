@@ -160,6 +160,9 @@ PFN_vkCreateShaderModule vkCreateShaderModule = 0;
 // vkDestroyShaderModule function
 PFN_vkDestroyShaderModule vkDestroyShaderModule = 0;
 
+// vkCreatePipelineLayout function
+PFN_vkCreatePipelineLayout vkCreatePipelineLayout = 0;
+
 // vkCreateSemaphore function
 PFN_vkCreateSemaphore vkCreateSemaphore = 0;
 
@@ -590,6 +593,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCreatePipelineLayout
+    vkCreatePipelineLayout = (PFN_vkCreatePipelineLayout)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCreatePipelineLayout"
+    );
+    if (!vkCreatePipelineLayout)
+    {
+        // Could not load vkCreatePipelineLayout
+        return false;
+    }
+
     // Load vkCreateSemaphore
     vkCreateSemaphore = (PFN_vkCreateSemaphore)vkGetDeviceProcAddr(
         vulkanDevice, "vkCreateSemaphore"
@@ -733,6 +746,7 @@ void FreeVulkanFunctions()
     vkCreateCommandPool = 0;
     vkDestroySemaphore = 0;
     vkCreateSemaphore = 0;
+    vkCreatePipelineLayout = 0;
     vkDestroyShaderModule = 0;
     vkCreateShaderModule = 0;
     vkDestroyImageView = 0;
