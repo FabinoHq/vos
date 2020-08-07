@@ -2397,6 +2397,15 @@
     extern PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyPipeline function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyPipeline)(
+        VkDevice device, VkPipeline pipeline,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyPipeline vkDestroyPipeline;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSemaphore function                                            //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateSemaphore)(
