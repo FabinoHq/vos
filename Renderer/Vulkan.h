@@ -644,6 +644,19 @@
         VK_COMMAND_BUFFER_LEVEL_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSubpassContents enum                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSubpassContents
+    {
+        VK_SUBPASS_CONTENTS_INLINE = 0,
+        VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = 1,
+        VK_SUBPASS_CONTENTS_BEGIN_RANGE = 0,
+        VK_SUBPASS_CONTENTS_END_RANGE = 1,
+        VK_SUBPASS_CONTENTS_RANGE_SIZE = 2,
+        VK_SUBPASS_CONTENTS_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
@@ -2058,6 +2071,20 @@
         VkImageSubresourceRange     subresourceRange;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkRenderPassBeginInfo data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkRenderPassBeginInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkRenderPass            renderPass;
+        VkFramebuffer           framebuffer;
+        VkRect2D                renderArea;
+        uint32_t                clearValueCount;
+        const VkClearValue*     pClearValues;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
@@ -2516,6 +2543,16 @@
         const VkImageMemoryBarrier* pImageMemoryBarriers
     );
     extern PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdBeginRenderPass function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdBeginRenderPass)(
+        VkCommandBuffer commandBuffer,
+        const VkRenderPassBeginInfo* pRenderPassBegin,
+        VkSubpassContents contents
+    );
+    extern PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
 
 
     ////////////////////////////////////////////////////////////////////////////
