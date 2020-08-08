@@ -74,7 +74,8 @@ m_semaphores()
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
-    close();
+    // Cleanup renderer
+    cleanup();
 
     // Destroy Vulkan instance
     if (m_vulkanInstance && vkDestroyInstance)
@@ -303,9 +304,9 @@ void Renderer::render()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Close renderer                                                            //
+//  Cleanup renderer                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::close()
+void Renderer::cleanup()
 {
     m_rendererReady = false;
 
@@ -1832,54 +1833,208 @@ bool Renderer::createSemaphores()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::resize()
 {
+    m_rendererReady = false;
+
     // Cleanup renderer
     if (m_vulkanDevice && vkDeviceWaitIdle)
     {
-        if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+        // Wait for device idle
+        if (vkDeviceWaitIdle)
         {
-            // Destroy command buffers
-            if (m_commands.buffers.size() > 0)
+            if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
             {
-                bool validBuffers = true;
-                for (size_t i = 0; i < m_commands.buffers.size(); ++i)
+                // Destroy semaphores
+                if (vkDestroySemaphore)
                 {
-                    if (!m_commands.buffers[i])
+                    if (m_semaphores.renderFinished)
                     {
-                        validBuffers = false;
-                        break;
+                        vkDestroySemaphore(
+                            m_vulkanDevice, m_semaphores.renderFinished, 0
+                        );
+                    }
+                    if (m_semaphores.imageAvailable)
+                    {
+                        vkDestroySemaphore(
+                            m_vulkanDevice, m_semaphores.imageAvailable, 0
+                        );
                     }
                 }
-                if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
+
+                // Destroy command buffers
+                if (m_commands.buffers.size() > 0)
                 {
-                    vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
-                        static_cast<uint32_t>(m_commands.buffers.size()),
-                        m_commands.buffers.data()
+                    bool validBuffers = true;
+                    for (size_t i = 0; i < m_commands.buffers.size(); ++i)
+                    {
+                        if (!m_commands.buffers[i])
+                        {
+                            validBuffers = false;
+                            break;
+                        }
+                    }
+                    if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
+                    {
+                        vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
+                            static_cast<uint32_t>(m_commands.buffers.size()),
+                            m_commands.buffers.data()
+                        );
+                    }
+                }
+
+                // Destroy commands pool
+                if (m_commands.pool && vkDestroyCommandPool)
+                {
+                    vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
+                }
+
+                // Destroy graphics pipeline
+                if (m_pipeline && vkDestroyPipeline)
+                {
+                    vkDestroyPipeline(m_vulkanDevice, m_pipeline, 0);
+                }
+
+                // Destroy pipeline layout
+                if (m_pipelineLayout && vkDestroyPipelineLayout)
+                {
+                    vkDestroyPipelineLayout(
+                        m_vulkanDevice, m_pipelineLayout, 0
+                    );
+                }
+
+                // Destroy default shaders
+                if (vkDestroyShaderModule)
+                {
+                    if (m_fragmentShader)
+                    {
+                        vkDestroyShaderModule(
+                            m_vulkanDevice, m_fragmentShader, 0
+                        );
+                    }
+                    if (m_vertexShader)
+                    {
+                        vkDestroyShaderModule(
+                            m_vulkanDevice, m_vertexShader, 0
+                        );
+                    }
+                }
+
+                // Destroy framebuffers
+                if (vkDestroyFramebuffer)
+                {
+                    for (size_t i = 0; i < m_framebuffers.size(); ++i)
+                    {
+                        if (m_framebuffers[i])
+                        {
+                            vkDestroyFramebuffer(
+                                m_vulkanDevice, m_framebuffers[i], 0
+                            );
+                        }
+                        m_framebuffers[i] = 0;
+                    }
+                }
+
+                // Destroy render pass
+                if (m_renderPass && vkDestroyRenderPass)
+                {
+                    vkDestroyRenderPass(m_vulkanDevice, m_renderPass, 0);
+                }
+
+                // Destroy swapchain images views
+                if (vkDestroyImageView)
+                {
+                    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+                    {
+                        if (m_swapchain.images[i].view)
+                        {
+                            // Destroy image view
+                            vkDestroyImageView(
+                                m_vulkanDevice, m_swapchain.images[i].view, 0
+                            );
+                            m_swapchain.images[i].view = 0;
+                        }
+                    }
+                }
+
+                // Destroy Vulkan swapchain
+                if (m_swapchain.handle && vkDestroySwapchainKHR)
+                {
+                    vkDestroySwapchainKHR(
+                        m_vulkanDevice, m_swapchain.handle, 0
                     );
                 }
             }
-
-            // Destroy commands pool
-            if (m_commands.pool && vkDestroyCommandPool)
-            {
-                vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
-            }
         }
     }
+    m_semaphores.renderFinished = 0;
+    m_semaphores.imageAvailable = 0;
     m_commands.buffers.clear();
     m_commands.pool = 0;
+    m_pipeline = 0;
+    m_pipelineLayout = 0;
+    m_fragmentShader = 0;
+    m_vertexShader = 0;
+    m_framebuffers.clear();
+    m_renderPass = 0;
+    m_swapchain.images.clear();
+    m_swapchain.handle = 0;
 
-    // Recreate Vulkan swapchain
+    // Create Vulkan swapchain
     if (!createVulkanSwapchain())
     {
+        // Could not create Vulkan swapchain
         return false;
     }
 
-    // Recreate Vulkan command buffers
+    // Create render pass
+    if (!createRenderPass())
+    {
+        // Could not create render pass
+        return false;
+    }
+
+    // Create framebuffers
+    if (!createFramebuffers())
+    {
+        // Could not create framebuffers
+        return false;
+    }
+
+    // Create default shaders
+    if (!createDefaultShaders())
+    {
+        // Could not create default shaders
+        return false;
+    }
+
+    // Create pipeline layout
+    if (!createPipelineLayout())
+    {
+        // Could not create pipeline layout
+        return false;
+    }
+
+    // Create pipeline
+    if (!createPipeline())
+    {
+        // Could not create pipeline
+        return false;
+    }
+
+    // Create command buffers
     if (!createCommandBuffers())
     {
+        // Could not create command buffers
+        return false;
+    }
+
+    // Create semaphores
+    if (!createSemaphores())
+    {
+        // Could not create semaphores
         return false;
     }
 
     // Renderer successfully resized
+    m_rendererReady = true;
     return true;
 }

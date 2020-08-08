@@ -130,6 +130,6 @@ void Vos::run()
     }
 
     // Close VOS
-    m_renderer.close();
+    m_renderer.cleanup();
     m_window.close();
 }
