@@ -2521,6 +2521,15 @@
     extern PFN_vkResetCommandBuffer vkResetCommandBuffer;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdBindPipeline function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdBindPipeline)(
+        VkCommandBuffer commandBuffer,
+        VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline
+    );
+    extern PFN_vkCmdBindPipeline vkCmdBindPipeline;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdClearColorImage function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdClearColorImage)(
