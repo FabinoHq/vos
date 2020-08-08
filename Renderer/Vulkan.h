@@ -2530,6 +2530,15 @@
     extern PFN_vkCmdBindPipeline vkCmdBindPipeline;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdDraw function                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdDraw)(
+        VkCommandBuffer commandBuffer, uint32_t vertexCount,
+        uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance
+    );
+    extern PFN_vkCmdDraw vkCmdDraw;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdClearColorImage function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdClearColorImage)(
