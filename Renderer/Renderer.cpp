@@ -1706,29 +1706,41 @@ bool Renderer::createCommandBuffers()
     // Record command buffers
     for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
-        VkImageMemoryBarrier presentToClear;
-        presentToClear.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        presentToClear.pNext = 0;
-        presentToClear.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-        presentToClear.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        presentToClear.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        presentToClear.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        presentToClear.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        presentToClear.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        presentToClear.image = m_swapchain.images[i].handle;
-        presentToClear.subresourceRange = subresource;
+        VkImageMemoryBarrier presentToDraw;
+        presentToDraw.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        presentToDraw.pNext = 0;
+        presentToDraw.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+        presentToDraw.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        presentToDraw.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        presentToDraw.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        presentToDraw.srcQueueFamilyIndex = m_surfaceQueueIndex;
+        presentToDraw.dstQueueFamilyIndex = m_graphicsQueueIndex;
+        presentToDraw.image = m_swapchain.images[i].handle;
+        presentToDraw.subresourceRange = subresource;
 
-        VkImageMemoryBarrier clearToPresent;
-        clearToPresent.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        clearToPresent.pNext = 0;
-        clearToPresent.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        clearToPresent.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-        clearToPresent.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        clearToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-        clearToPresent.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        clearToPresent.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        clearToPresent.image = m_swapchain.images[i].handle;
-        clearToPresent.subresourceRange = subresource;
+        VkImageMemoryBarrier drawToPresent;
+        drawToPresent.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        drawToPresent.pNext = 0;
+        drawToPresent.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        drawToPresent.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+        drawToPresent.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        drawToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        drawToPresent.srcQueueFamilyIndex = m_graphicsQueueIndex;
+        drawToPresent.dstQueueFamilyIndex = m_surfaceQueueIndex;
+        drawToPresent.image = m_swapchain.images[i].handle;
+        drawToPresent.subresourceRange = subresource;
+
+        VkRenderPassBeginInfo renderPassInfo;
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassInfo.pNext = 0;
+        renderPassInfo.renderPass = m_renderPass;
+        renderPassInfo.framebuffer = m_framebuffers[i];
+        renderPassInfo.renderArea.offset.x = 0;
+        renderPassInfo.renderArea.offset.y = 0;
+        renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
+        renderPassInfo.renderArea.extent.height = m_swapchain.extent.height;
+        renderPassInfo.clearValueCount = 1;
+        renderPassInfo.pClearValues = &RendererClearColor;
 
         // Begin command buffer
         if (vkBeginCommandBuffer(
@@ -1739,21 +1751,29 @@ bool Renderer::createCommandBuffers()
         }
         
         vkCmdPipelineBarrier(
-            m_commands.buffers[i], VK_PIPELINE_STAGE_TRANSFER_BIT,
-            VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, 0, 0, 0, 1,
-            &presentToClear
+            m_commands.buffers[i],
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            0, 0, 0, 0, 0, 1, &presentToDraw
         );
 
-        vkCmdClearColorImage(
-            m_commands.buffers[i], m_swapchain.images[i].handle,
-            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-            &RendererClearColor, 1, &subresource
+        vkCmdBeginRenderPass(
+            m_commands.buffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
         );
+
+        vkCmdBindPipeline(
+            m_commands.buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
+        );
+
+        vkCmdDraw(m_commands.buffers[i], 3, 1, 0, 0);
+
+        vkCmdEndRenderPass(m_commands.buffers[i]);
 
         vkCmdPipelineBarrier(
-            m_commands.buffers[i], VK_PIPELINE_STAGE_TRANSFER_BIT,
-            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, 0, 0, 0, 1,
-            &clearToPresent
+            m_commands.buffers[i],
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            0, 0, 0, 0, 0, 1, &drawToPresent
         );
 
         // End command buffer
