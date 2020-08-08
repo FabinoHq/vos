@@ -211,6 +211,9 @@ PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier = 0;
 // vkCmdBeginRenderPass function
 PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass = 0;
 
+// vkCmdEndRenderPass function
+PFN_vkCmdEndRenderPass vkCmdEndRenderPass = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -776,6 +779,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdEndRenderPass
+    vkCmdEndRenderPass = (PFN_vkCmdEndRenderPass)
+        vkGetDeviceProcAddr(vulkanDevice, "vkCmdEndRenderPass"
+    );
+    if (!vkCmdEndRenderPass)
+    {
+        // Could not load vkCmdEndRenderPass
+        return false;
+    }
+
     // Vulkan device functions successfully loaded
     return true;
 }
@@ -787,6 +800,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkCmdEndRenderPass = 0;
     vkCmdBeginRenderPass = 0;
     vkCmdPipelineBarrier = 0;
     vkCmdClearColorImage = 0;
