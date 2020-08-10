@@ -1990,6 +1990,11 @@ bool Renderer::createCommandBuffers()
             m_commands.buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
         );
 
+        VkDeviceSize offset = 0;
+        vkCmdBindVertexBuffers(
+            m_commands.buffers[i], 0, 1, &m_vertexBuffer.handle, &offset
+        );
+
         vkCmdDraw(m_commands.buffers[i], 3, 1, 0, 0);
 
         vkCmdEndRenderPass(m_commands.buffers[i]);
