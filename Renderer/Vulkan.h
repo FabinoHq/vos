@@ -2659,6 +2659,16 @@
     extern PFN_vkCmdBindPipeline vkCmdBindPipeline;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdBindVertexBuffers function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdBindVertexBuffers)(
+        VkCommandBuffer commandBuffer, uint32_t firstBinding,
+        uint32_t bindingCount, const VkBuffer* pBuffers,
+        const VkDeviceSize* pOffsets
+    );
+    extern PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdDraw function                                                    //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdDraw)(

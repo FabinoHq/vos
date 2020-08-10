@@ -233,6 +233,9 @@ PFN_vkResetCommandBuffer vkResetCommandBuffer = 0;
 // vkCmdBindPipeline function
 PFN_vkCmdBindPipeline vkCmdBindPipeline = 0;
 
+// vkCmdBindVertexBuffers function
+PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers = 0;
+
 // vkCmdDraw function
 PFN_vkCmdDraw vkCmdDraw = 0;
 
@@ -837,8 +840,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkFreeCommandBuffers
-    vkFreeCommandBuffers = (PFN_vkFreeCommandBuffers)
-        vkGetDeviceProcAddr(vulkanDevice, "vkFreeCommandBuffers"
+    vkFreeCommandBuffers = (PFN_vkFreeCommandBuffers)vkGetDeviceProcAddr(
+        vulkanDevice, "vkFreeCommandBuffers"
     );
     if (!vkFreeCommandBuffers)
     {
@@ -847,8 +850,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkBeginCommandBuffer
-    vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)
-        vkGetDeviceProcAddr(vulkanDevice, "vkBeginCommandBuffer"
+    vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)vkGetDeviceProcAddr(
+        vulkanDevice, "vkBeginCommandBuffer"
     );
     if (!vkBeginCommandBuffer)
     {
@@ -857,8 +860,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkBeginCommandBuffer
-    vkEndCommandBuffer = (PFN_vkEndCommandBuffer)
-        vkGetDeviceProcAddr(vulkanDevice, "vkEndCommandBuffer"
+    vkEndCommandBuffer = (PFN_vkEndCommandBuffer)vkGetDeviceProcAddr(
+        vulkanDevice, "vkEndCommandBuffer"
     );
     if (!vkEndCommandBuffer)
     {
@@ -867,8 +870,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkResetCommandBuffer
-    vkResetCommandBuffer = (PFN_vkResetCommandBuffer)
-        vkGetDeviceProcAddr(vulkanDevice, "vkResetCommandBuffer"
+    vkResetCommandBuffer = (PFN_vkResetCommandBuffer)vkGetDeviceProcAddr(
+        vulkanDevice, "vkResetCommandBuffer"
     );
     if (!vkResetCommandBuffer)
     {
@@ -877,12 +880,22 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkCmdBindPipeline
-    vkCmdBindPipeline = (PFN_vkCmdBindPipeline)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCmdBindPipeline"
+    vkCmdBindPipeline = (PFN_vkCmdBindPipeline)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCmdBindPipeline"
     );
     if (!vkCmdBindPipeline)
     {
         // Could not load vkCmdBindPipeline
+        return false;
+    }
+
+    // Load vkCmdBindVertexBuffers
+    vkCmdBindVertexBuffers = (PFN_vkCmdBindVertexBuffers)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCmdBindVertexBuffers"
+    );
+    if (!vkCmdBindVertexBuffers)
+    {
+        // Could not load vkCmdBindVertexBuffers
         return false;
     }
 
@@ -950,6 +963,7 @@ void FreeVulkanFunctions()
     vkCmdPipelineBarrier = 0;
     vkCmdClearColorImage = 0;
     vkCmdDraw = 0;
+    vkCmdBindVertexBuffers = 0;
     vkCmdBindPipeline = 0;
     vkResetCommandBuffer = 0;
     vkEndCommandBuffer = 0;
