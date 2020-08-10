@@ -2366,6 +2366,15 @@
     );
     extern PFN_vkAllocateMemory vkAllocateMemory;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkFreeMemory function                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkFreeMemory)(
+        VkDevice device, VkDeviceMemory memory,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkFreeMemory vkFreeMemory;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateRenderPass function                                           //
