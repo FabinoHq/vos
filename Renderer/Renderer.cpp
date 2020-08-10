@@ -370,6 +370,18 @@ void Renderer::cleanup()
                     vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
                 }
 
+                // Destroy vertex buffer
+                if (m_vertexBuffer.handle && vkDestroyBuffer)
+                {
+                    vkDestroyBuffer(m_vulkanDevice, m_vertexBuffer.handle, 0);
+                }
+
+                // Free vertex buffer memory
+                if (m_vertexBuffer.memory && vkFreeMemory)
+                {
+                    vkFreeMemory(m_vulkanDevice, m_vertexBuffer.memory, 0);
+                }
+
                 // Destroy graphics pipeline
                 if (m_pipeline && vkDestroyPipeline)
                 {
@@ -465,6 +477,9 @@ void Renderer::cleanup()
     m_semaphores.imageAvailable = 0;
     m_commands.buffers.clear();
     m_commands.pool = 0;
+    m_vertexBuffer.size = 0;
+    m_vertexBuffer.memory = 0;
+    m_vertexBuffer.handle = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
     m_fragmentShader = 0;
@@ -2096,6 +2111,18 @@ bool Renderer::resize()
                     vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
                 }
 
+                // Destroy vertex buffer
+                if (m_vertexBuffer.handle && vkDestroyBuffer)
+                {
+                    vkDestroyBuffer(m_vulkanDevice, m_vertexBuffer.handle, 0);
+                }
+
+                // Free vertex buffer memory
+                if (m_vertexBuffer.memory && vkFreeMemory)
+                {
+                    vkFreeMemory(m_vulkanDevice, m_vertexBuffer.memory, 0);
+                }
+
                 // Destroy graphics pipeline
                 if (m_pipeline && vkDestroyPipeline)
                 {
@@ -2178,6 +2205,9 @@ bool Renderer::resize()
     m_semaphores.imageAvailable = 0;
     m_commands.buffers.clear();
     m_commands.pool = 0;
+    m_vertexBuffer.size = 0;
+    m_vertexBuffer.memory = 0;
+    m_vertexBuffer.handle = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
     m_fragmentShader = 0;
@@ -2226,6 +2256,13 @@ bool Renderer::resize()
     if (!createPipeline())
     {
         // Could not create pipeline
+        return false;
+    }
+
+    // Create vertex buffer
+    if (!createVertexBuffer())
+    {
+        // Could not create vertex buffer
         return false;
     }
 
