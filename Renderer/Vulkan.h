@@ -1797,6 +1797,21 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkBufferCreateInfo data structure                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBufferCreateInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkBufferCreateFlags     flags;
+        VkDeviceSize            size;
+        VkBufferUsageFlags      usage;
+        VkSharingMode           sharingMode;
+        uint32_t                queueFamilyIndexCount;
+        const uint32_t*         pQueueFamilyIndices;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkAttachmentDescription data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkAttachmentDescription
@@ -2449,6 +2464,15 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroySemaphore vkDestroySemaphore;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateBuffer function                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateBuffer)(
+        VkDevice device, const VkBufferCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer
+    );
+    extern PFN_vkCreateBuffer vkCreateBuffer;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
