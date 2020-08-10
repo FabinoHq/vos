@@ -1710,6 +1710,16 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryRequirements data structure                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryRequirements
+    {
+        VkDeviceSize    size;
+        VkDeviceSize    alignment;
+        uint32_t        memoryTypeBits;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkComponentMapping data structure                                     //
     ////////////////////////////////////////////////////////////////////////////
     struct VkComponentMapping
@@ -2482,6 +2492,15 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyBuffer vkDestroyBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetBufferMemoryRequirements function                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetBufferMemoryRequirements)(
+        VkDevice device, VkBuffer buffer,
+        VkMemoryRequirements* pMemoryRequirements
+    );
+    extern PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
