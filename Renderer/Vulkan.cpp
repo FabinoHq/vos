@@ -136,6 +136,10 @@ PFN_vkQueueSubmit vkQueueSubmit = 0;
 PFN_vkQueueWaitIdle vkQueueWaitIdle = 0;
 
 
+// vkAllocateMemory function
+PFN_vkAllocateMemory vkAllocateMemory = 0;
+
+
 // vkCreateRenderPass function
 PFN_vkCreateRenderPass vkCreateRenderPass = 0;
 
@@ -543,6 +547,17 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
 
+    // Load vkAllocateMemory
+    vkAllocateMemory = (PFN_vkAllocateMemory)vkGetDeviceProcAddr(
+        vulkanDevice, "vkAllocateMemory"
+    );
+    if (!vkAllocateMemory)
+    {
+        // Could not load vkAllocateMemory
+        return false;
+    }
+
+
     // Load vkCreateRenderPass
     vkCreateRenderPass = (PFN_vkCreateRenderPass)vkGetDeviceProcAddr(
         vulkanDevice, "vkCreateRenderPass"
@@ -895,6 +910,8 @@ void FreeVulkanFunctions()
     vkCreateFramebuffer = 0;
     vkDestroyRenderPass = 0;
     vkCreateRenderPass = 0;
+
+    vkAllocateMemory = 0;
 
     vkQueueWaitIdle = 0;
     vkQueueSubmit = 0;

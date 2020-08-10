@@ -1710,6 +1710,17 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryAllocateInfo data structure                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryAllocateInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkDeviceSize        allocationSize;
+        uint32_t            memoryTypeIndex;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkMemoryRequirements data structure                                   //
     ////////////////////////////////////////////////////////////////////////////
     struct VkMemoryRequirements
@@ -2344,6 +2355,16 @@
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkQueueWaitIdle)(VkQueue queue);
     extern PFN_vkQueueWaitIdle vkQueueWaitIdle;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkAllocateMemory function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkAllocateMemory)(
+        VkDevice device, const VkMemoryAllocateInfo* pAllocateInfo,
+        const VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory
+    );
+    extern PFN_vkAllocateMemory vkAllocateMemory;
 
 
     ////////////////////////////////////////////////////////////////////////////
