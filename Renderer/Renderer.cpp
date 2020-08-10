@@ -1543,12 +1543,12 @@ bool Renderer::createPipeline()
     vertexAttributes[0].location = 0;
     vertexAttributes[0].binding = vertexBinding.binding;
     vertexAttributes[0].format = VK_FORMAT_R32G32B32A32_SFLOAT;
-    vertexAttributes[0].offset = offsetof(VertexData, x);
+    vertexAttributes[0].offset = 0;
 
     vertexAttributes[1].location = 1;
     vertexAttributes[1].binding = vertexBinding.binding;
     vertexAttributes[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
-    vertexAttributes[1].offset = offsetof(VertexData, r);
+    vertexAttributes[1].offset = sizeof(float)*3;
 
     // Vertex input
     VkPipelineVertexInputStateCreateInfo vertexInput;
