@@ -2475,6 +2475,15 @@
     extern PFN_vkCreateBuffer vkCreateBuffer;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyBuffer function                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyBuffer)(
+        VkDevice device, VkBuffer buffer,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyBuffer vkDestroyBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
