@@ -1721,6 +1721,18 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkMappedMemoryRange data structure                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMappedMemoryRange
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkDeviceMemory      memory;
+        VkDeviceSize        offset;
+        VkDeviceSize        size;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkMemoryRequirements data structure                                   //
     ////////////////////////////////////////////////////////////////////////////
     struct VkMemoryRequirements
@@ -2391,6 +2403,15 @@
         VkDevice device, VkDeviceMemory memory
     );
     extern PFN_vkUnmapMemory vkUnmapMemory;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkFlushMappedMemoryRanges function                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkFlushMappedMemoryRanges)(
+        VkDevice device, uint32_t memoryRangeCount,
+        const VkMappedMemoryRange* pMemoryRanges
+    );
+    extern PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkBindBufferMemory function                                           //
