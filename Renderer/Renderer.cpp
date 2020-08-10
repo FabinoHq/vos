@@ -1531,16 +1531,35 @@ bool Renderer::createPipeline()
     shaderStage[1].pName = "main";
     shaderStage[1].pSpecializationInfo = 0;
 
+    // Input binding
+    VkVertexInputBindingDescription vertexBinding;
+    vertexBinding.binding = 0;
+    vertexBinding.stride = sizeof(VertexData);
+    vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+    // Vertex attribute
+    VkVertexInputAttributeDescription vertexAttributes[2];
+
+    vertexAttributes[0].location = 0;
+    vertexAttributes[0].binding = vertexBinding.binding;
+    vertexAttributes[0].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+    vertexAttributes[0].offset = offsetof(VertexData, x);
+
+    vertexAttributes[1].location = 1;
+    vertexAttributes[1].binding = vertexBinding.binding;
+    vertexAttributes[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+    vertexAttributes[1].offset = offsetof(VertexData, r);
+
     // Vertex input
     VkPipelineVertexInputStateCreateInfo vertexInput;
     vertexInput.sType =
         VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInput.pNext = 0;
     vertexInput.flags = 0;
-    vertexInput.vertexBindingDescriptionCount = 0;
-    vertexInput.pVertexBindingDescriptions = 0;
-    vertexInput.vertexAttributeDescriptionCount = 0;
-    vertexInput.pVertexAttributeDescriptions = 0;
+    vertexInput.vertexBindingDescriptionCount = 1;
+    vertexInput.pVertexBindingDescriptions = &vertexBinding;
+    vertexInput.vertexAttributeDescriptionCount = 2;
+    vertexInput.pVertexAttributeDescriptions = vertexAttributes;
 
     // Input assembly
     VkPipelineInputAssemblyStateCreateInfo inputAssembly;

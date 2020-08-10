@@ -219,6 +219,20 @@
         VkSemaphore     renderFinished;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VertexData data structure                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VertexData
+    {
+        float   x;
+        float   y;
+        float   z;
+        
+        float   r;
+        float   g;
+        float   b;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
