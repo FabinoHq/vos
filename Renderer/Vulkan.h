@@ -2376,6 +2376,15 @@
     extern PFN_vkFreeMemory vkFreeMemory;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkMapMemory function                                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkMapMemory)(
+        VkDevice device, VkDeviceMemory memory, VkDeviceSize offset,
+        VkDeviceSize size, VkMemoryMapFlags flags, void** ppData
+    );
+    extern PFN_vkMapMemory vkMapMemory;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkBindBufferMemory function                                           //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkBindBufferMemory)(
