@@ -205,6 +205,23 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VulkanBuffer data structure                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VulkanBuffer
+    {
+        VulkanBuffer()
+        {
+            handle = 0;
+            memory = 0;
+            size = 0;
+        }
+
+        VkBuffer        handle;
+        VkDeviceMemory  memory;
+        uint32_t        size;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VertexData data structure                                             //
     ////////////////////////////////////////////////////////////////////////////
     struct VertexData
@@ -322,6 +339,12 @@
             bool createPipeline();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create vertex buffer                                          //
+            //  return : True if vertex buffer is successfully created        //
+            ////////////////////////////////////////////////////////////////////
+            bool createVertexBuffer();
+
+            ////////////////////////////////////////////////////////////////////
             //  Create command buffers                                        //
             //  return : True if command buffers are successfully created     //
             ////////////////////////////////////////////////////////////////////
@@ -361,6 +384,7 @@
             VkShaderModule      m_fragmentShader;       // Fragment shader
             VkPipelineLayout    m_pipelineLayout;       // Pipeline layout
             VkPipeline          m_pipeline;             // Graphics pipeline
+            VulkanBuffer        m_vertexBuffer;         // Vertex buffer
             VulkanCommands      m_commands;             // Commands
             VulkanSemaphores    m_semaphores;           // Semaphores
     };

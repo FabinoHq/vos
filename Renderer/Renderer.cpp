@@ -63,6 +63,7 @@ m_vertexShader(0),
 m_fragmentShader(0),
 m_pipelineLayout(0),
 m_pipeline(0),
+m_vertexBuffer(),
 m_commands(),
 m_semaphores()
 {
@@ -218,6 +219,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createPipeline())
     {
         // Could not create pipeline
+        return false;
+    }
+
+    // Create vertex buffer
+    if (!createVertexBuffer())
+    {
+        // Could not create vertex buffer
         return false;
     }
 
@@ -1685,6 +1693,166 @@ bool Renderer::createPipeline()
     }
 
     // Pipeline successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create vertex buffer                                                      //
+//  return : True if vertex buffer is successfully created                    //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createVertexBuffer()
+{
+    // Check physical device
+    if (!m_physicalDevice)
+    {
+        // Invalid physical device
+        return false;
+    }
+
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Create vertex buffer
+    VertexData vertices[3];
+
+    vertices[0].x = 0.0f;
+    vertices[0].y = -0.8f;
+    vertices[0].z = 0.0f;
+    vertices[0].w = 1.0f;
+    vertices[0].r = 0.2f;
+    vertices[0].g = 0.5f;
+    vertices[0].b = 0.8f;
+    vertices[0].a = 1.0f;
+
+    vertices[1].x = -0.8f;
+    vertices[1].y = 0.8f;
+    vertices[1].z = 0.0f;
+    vertices[1].w = 1.0f;
+    vertices[1].r = 0.2f;
+    vertices[1].g = 0.5f;
+    vertices[1].b = 0.8f;
+    vertices[1].a = 1.0f;
+
+    vertices[2].x = 0.8f;
+    vertices[2].y = 0.8f;
+    vertices[2].z = 0.0f;
+    vertices[2].w = 1.0f;
+    vertices[2].r = 0.2f;
+    vertices[2].g = 0.5f;
+    vertices[2].b = 0.8f;
+    vertices[2].a = 1.0f;
+
+    m_vertexBuffer.size = sizeof(vertices);
+
+    VkBufferCreateInfo bufferInfo;
+    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferInfo.pNext = 0;
+    bufferInfo.flags = 0;
+    bufferInfo.size = m_vertexBuffer.size;
+    bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferInfo.queueFamilyIndexCount = 0;
+    bufferInfo.pQueueFamilyIndices = 0;
+
+    if (vkCreateBuffer(
+        m_vulkanDevice, &bufferInfo, 0, &m_vertexBuffer.handle) != VK_SUCCESS)
+    {
+        // Could not create vertex buffer
+        return false;
+    }
+    if (!m_vertexBuffer.handle)
+    {
+        // Invalid vertex buffer
+        return false;
+    }
+
+    // Get memory requirements
+    VkMemoryRequirements memoryRequirements;
+    vkGetBufferMemoryRequirements(
+        m_vulkanDevice, m_vertexBuffer.handle, &memoryRequirements
+    );
+
+    // Get physical device memory properties
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &memoryProperties);
+
+    // Allocate buffer memory
+    bool memoryAllocated = false;
+    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
+    {
+        if (memoryRequirements.memoryTypeBits & (1 << i))
+        {
+            if (memoryProperties.memoryTypes[i].propertyFlags &
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+            {
+                VkMemoryAllocateInfo allocateInfo;
+                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+                allocateInfo.pNext = 0;
+                allocateInfo.allocationSize = memoryRequirements.size;
+                allocateInfo.memoryTypeIndex = i;
+
+                if (vkAllocateMemory(m_vulkanDevice,
+                    &allocateInfo, 0, &m_vertexBuffer.memory) == VK_SUCCESS)
+                {
+                    memoryAllocated = true;
+                    break;
+                }
+            }
+        }
+    }
+    if (!memoryAllocated)
+    {
+        // Could not allocate buffer memory
+        return false;
+    }
+
+    // Bind buffer memory
+    if (vkBindBufferMemory(m_vulkanDevice,
+        m_vertexBuffer.handle, m_vertexBuffer.memory, 0) != VK_SUCCESS)
+    {
+        // Could not bind buffer memory
+        return false;
+    }
+
+    // Map buffer memory
+    void* vertexBufferMemory = 0;
+    if (vkMapMemory(m_vulkanDevice, m_vertexBuffer.memory, 0,
+        m_vertexBuffer.size, 0, &vertexBufferMemory) != VK_SUCCESS)
+    {
+        return false;
+        // Could not map buffer memory
+    }
+    if (!vertexBufferMemory)
+    {
+        // Invalid vertex buffer memory pointer
+        return false;
+    }
+
+    // Copy vertices into vertex buffer memory
+    memcpy(vertexBufferMemory, vertices, m_vertexBuffer.size);
+
+    // Unmap buffer memory
+    VkMappedMemoryRange memoryRange;
+    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    memoryRange.pNext = 0;
+    memoryRange.memory = m_vertexBuffer.memory;
+    memoryRange.offset = 0;
+    memoryRange.size = VK_WHOLE_SIZE;
+    
+    if (vkFlushMappedMemoryRanges(
+        m_vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
+    {
+        // Could not flush vertex buffer mapped memory ranges
+        return false;
+    }
+
+    vkUnmapMemory(m_vulkanDevice, m_vertexBuffer.memory);
+
+    // Vertex buffer successfully created
     return true;
 }
 
