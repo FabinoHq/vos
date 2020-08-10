@@ -2375,6 +2375,15 @@
     );
     extern PFN_vkFreeMemory vkFreeMemory;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkBindBufferMemory function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkBindBufferMemory)(
+        VkDevice device, VkBuffer buffer,
+        VkDeviceMemory memory, VkDeviceSize memoryOffset
+    );
+    extern PFN_vkBindBufferMemory vkBindBufferMemory;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateRenderPass function                                           //
