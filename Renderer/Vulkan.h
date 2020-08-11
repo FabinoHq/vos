@@ -1820,6 +1820,16 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkFenceCreateInfo data structure                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkFenceCreateInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkFenceCreateFlags  flags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSemaphoreCreateInfo data structure                                  //
     ////////////////////////////////////////////////////////////////////////////
     struct VkSemaphoreCreateInfo
@@ -2578,6 +2588,15 @@
         VkMemoryRequirements* pMemoryRequirements
     );
     extern PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateFence function                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateFence)(
+        VkDevice device, const VkFenceCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkFence* pFence
+    );
+    extern PFN_vkCreateFence vkCreateFence;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
