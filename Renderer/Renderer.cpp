@@ -2102,93 +2102,6 @@ bool Renderer::resize()
         {
             if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
             {
-                // Destroy semaphores
-                if (vkDestroySemaphore)
-                {
-                    if (m_semaphores.renderFinished)
-                    {
-                        vkDestroySemaphore(
-                            m_vulkanDevice, m_semaphores.renderFinished, 0
-                        );
-                    }
-                    if (m_semaphores.imageAvailable)
-                    {
-                        vkDestroySemaphore(
-                            m_vulkanDevice, m_semaphores.imageAvailable, 0
-                        );
-                    }
-                }
-
-                // Destroy command buffers
-                if (m_commands.buffers.size() > 0)
-                {
-                    bool validBuffers = true;
-                    for (size_t i = 0; i < m_commands.buffers.size(); ++i)
-                    {
-                        if (!m_commands.buffers[i])
-                        {
-                            validBuffers = false;
-                            break;
-                        }
-                    }
-                    if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
-                    {
-                        vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
-                            static_cast<uint32_t>(m_commands.buffers.size()),
-                            m_commands.buffers.data()
-                        );
-                    }
-                }
-
-                // Destroy commands pool
-                if (m_commands.pool && vkDestroyCommandPool)
-                {
-                    vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
-                }
-
-                // Destroy vertex buffer
-                if (m_vertexBuffer.handle && vkDestroyBuffer)
-                {
-                    vkDestroyBuffer(m_vulkanDevice, m_vertexBuffer.handle, 0);
-                }
-
-                // Free vertex buffer memory
-                if (m_vertexBuffer.memory && vkFreeMemory)
-                {
-                    vkFreeMemory(m_vulkanDevice, m_vertexBuffer.memory, 0);
-                }
-
-                // Destroy graphics pipeline
-                if (m_pipeline && vkDestroyPipeline)
-                {
-                    vkDestroyPipeline(m_vulkanDevice, m_pipeline, 0);
-                }
-
-                // Destroy pipeline layout
-                if (m_pipelineLayout && vkDestroyPipelineLayout)
-                {
-                    vkDestroyPipelineLayout(
-                        m_vulkanDevice, m_pipelineLayout, 0
-                    );
-                }
-
-                // Destroy default shaders
-                if (vkDestroyShaderModule)
-                {
-                    if (m_fragmentShader)
-                    {
-                        vkDestroyShaderModule(
-                            m_vulkanDevice, m_fragmentShader, 0
-                        );
-                    }
-                    if (m_vertexShader)
-                    {
-                        vkDestroyShaderModule(
-                            m_vulkanDevice, m_vertexShader, 0
-                        );
-                    }
-                }
-
                 // Destroy framebuffers
                 if (vkDestroyFramebuffer)
                 {
@@ -2202,12 +2115,6 @@ bool Renderer::resize()
                         }
                         m_framebuffers[i] = 0;
                     }
-                }
-
-                // Destroy render pass
-                if (m_renderPass && vkDestroyRenderPass)
-                {
-                    vkDestroyRenderPass(m_vulkanDevice, m_renderPass, 0);
                 }
 
                 // Destroy swapchain images views
@@ -2236,82 +2143,21 @@ bool Renderer::resize()
             }
         }
     }
-    m_semaphores.renderFinished = 0;
-    m_semaphores.imageAvailable = 0;
-    m_commands.buffers.clear();
-    m_commands.pool = 0;
-    m_vertexBuffer.size = 0;
-    m_vertexBuffer.memory = 0;
-    m_vertexBuffer.handle = 0;
-    m_pipeline = 0;
-    m_pipelineLayout = 0;
-    m_fragmentShader = 0;
-    m_vertexShader = 0;
     m_framebuffers.clear();
-    m_renderPass = 0;
     m_swapchain.images.clear();
     m_swapchain.handle = 0;
 
-    // Create Vulkan swapchain
+    // Recreate Vulkan swapchain
     if (!createVulkanSwapchain())
     {
-        // Could not create Vulkan swapchain
+        // Could not recreate Vulkan swapchain
         return false;
     }
 
-    // Create render pass
-    if (!createRenderPass())
-    {
-        // Could not create render pass
-        return false;
-    }
-
-    // Create framebuffers
+    // Recreate framebuffers
     if (!createFramebuffers())
     {
-        // Could not create framebuffers
-        return false;
-    }
-
-    // Create default shaders
-    if (!createDefaultShaders())
-    {
-        // Could not create default shaders
-        return false;
-    }
-
-    // Create pipeline layout
-    if (!createPipelineLayout())
-    {
-        // Could not create pipeline layout
-        return false;
-    }
-
-    // Create pipeline
-    if (!createPipeline())
-    {
-        // Could not create pipeline
-        return false;
-    }
-
-    // Create vertex buffer
-    if (!createVertexBuffer())
-    {
-        // Could not create vertex buffer
-        return false;
-    }
-
-    // Create command buffers
-    if (!createCommandBuffers())
-    {
-        // Could not create command buffers
-        return false;
-    }
-
-    // Create semaphores
-    if (!createSemaphores())
-    {
-        // Could not create semaphores
+        // Could not recreate framebuffers
         return false;
     }
 
