@@ -274,6 +274,128 @@ void Renderer::render()
         return;
     }
 
+
+    // Command buffer begin
+    VkCommandBufferBeginInfo commandBegin;
+    commandBegin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    commandBegin.pNext = 0;
+    commandBegin.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+    commandBegin.pInheritanceInfo = 0;
+
+    // Image subresource
+    VkImageSubresourceRange subresource;
+    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresource.baseMipLevel = 0;
+    subresource.levelCount = 1;
+    subresource.baseArrayLayer = 0;
+    subresource.layerCount = 1;
+
+    // Record command buffers
+    VkImageMemoryBarrier presentToDraw;
+    presentToDraw.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    presentToDraw.pNext = 0;
+    presentToDraw.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    presentToDraw.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    presentToDraw.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    presentToDraw.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    presentToDraw.srcQueueFamilyIndex = m_surfaceQueueIndex;
+    presentToDraw.dstQueueFamilyIndex = m_graphicsQueueIndex;
+    presentToDraw.image = m_swapchain.images[imageIndex].handle;
+    presentToDraw.subresourceRange = subresource;
+
+    VkImageMemoryBarrier drawToPresent;
+    drawToPresent.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    drawToPresent.pNext = 0;
+    drawToPresent.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    drawToPresent.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    drawToPresent.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    drawToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    drawToPresent.srcQueueFamilyIndex = m_graphicsQueueIndex;
+    drawToPresent.dstQueueFamilyIndex = m_surfaceQueueIndex;
+    drawToPresent.image = m_swapchain.images[imageIndex].handle;
+    drawToPresent.subresourceRange = subresource;
+
+    VkRenderPassBeginInfo renderPassInfo;
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    renderPassInfo.pNext = 0;
+    renderPassInfo.renderPass = m_renderPass;
+    renderPassInfo.framebuffer = m_framebuffers[imageIndex];
+    renderPassInfo.renderArea.offset.x = 0;
+    renderPassInfo.renderArea.offset.y = 0;
+    renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
+    renderPassInfo.renderArea.extent.height = m_swapchain.extent.height;
+    renderPassInfo.clearValueCount = 1;
+    renderPassInfo.pClearValues = &RendererClearColor;
+
+    // Begin command buffer
+    if (vkBeginCommandBuffer(
+        m_commands.buffers[imageIndex], &commandBegin) != VK_SUCCESS)
+    {
+        // Could not begin command buffer
+        m_rendererReady = false;
+        return;
+    }
+    
+    vkCmdPipelineBarrier(
+        m_commands.buffers[imageIndex],
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        0, 0, 0, 0, 0, 1, &presentToDraw
+    );
+
+    vkCmdBeginRenderPass(
+        m_commands.buffers[imageIndex],
+        &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
+    );
+
+    vkCmdBindPipeline(
+        m_commands.buffers[imageIndex],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
+    );
+
+    VkViewport viewport;
+    viewport.x = 0.0f;
+    viewport.y = 0.0f;
+    viewport.width = m_swapchain.extent.width*1.0f;
+    viewport.height = m_swapchain.extent.height*1.0f;
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+
+    vkCmdSetViewport(m_commands.buffers[imageIndex], 0, 1, &viewport);
+
+    VkRect2D scissor;
+    scissor.offset.x = 0;
+    scissor.offset.y = 0;
+    scissor.extent.width = m_swapchain.extent.width;
+    scissor.extent.height = m_swapchain.extent.height;
+
+    vkCmdSetScissor(m_commands.buffers[imageIndex], 0, 1, &scissor);
+
+    VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(
+        m_commands.buffers[imageIndex], 0, 1, &m_vertexBuffer.handle, &offset
+    );
+
+    vkCmdDraw(m_commands.buffers[imageIndex], 4, 1, 0, 0);
+
+    vkCmdEndRenderPass(m_commands.buffers[imageIndex]);
+
+    vkCmdPipelineBarrier(
+        m_commands.buffers[imageIndex],
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+        0, 0, 0, 0, 0, 1, &drawToPresent
+    );
+
+    // End command buffer
+    if (vkEndCommandBuffer(m_commands.buffers[imageIndex]) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        m_rendererReady = false;
+        return;
+    }
+
+
     // Submit next image
     VkPipelineStageFlags waitDstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
     VkSubmitInfo submitInfo;
@@ -1888,7 +2010,9 @@ bool Renderer::createCommandBuffers()
     VkCommandPoolCreateInfo commandPool;
     commandPool.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     commandPool.pNext = 0;
-    commandPool.flags = 0;
+    commandPool.flags =
+        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
+        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPool.queueFamilyIndex = m_surfaceQueueIndex;
 
     if (vkCreateCommandPool(
@@ -1918,125 +2042,6 @@ bool Renderer::createCommandBuffers()
     {
         // Could not allocate command buffers
         return false;
-    }
-
-    // Command buffer begin
-    VkCommandBufferBeginInfo commandBegin;
-    commandBegin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    commandBegin.pNext = 0;
-    commandBegin.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-    commandBegin.pInheritanceInfo = 0;
-
-    // Image subresource
-    VkImageSubresourceRange subresource;
-    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    subresource.baseMipLevel = 0;
-    subresource.levelCount = 1;
-    subresource.baseArrayLayer = 0;
-    subresource.layerCount = 1;
-
-    // Record command buffers
-    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
-    {
-        VkImageMemoryBarrier presentToDraw;
-        presentToDraw.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        presentToDraw.pNext = 0;
-        presentToDraw.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-        presentToDraw.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        presentToDraw.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        presentToDraw.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-        presentToDraw.srcQueueFamilyIndex = m_surfaceQueueIndex;
-        presentToDraw.dstQueueFamilyIndex = m_graphicsQueueIndex;
-        presentToDraw.image = m_swapchain.images[i].handle;
-        presentToDraw.subresourceRange = subresource;
-
-        VkImageMemoryBarrier drawToPresent;
-        drawToPresent.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        drawToPresent.pNext = 0;
-        drawToPresent.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        drawToPresent.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-        drawToPresent.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-        drawToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-        drawToPresent.srcQueueFamilyIndex = m_graphicsQueueIndex;
-        drawToPresent.dstQueueFamilyIndex = m_surfaceQueueIndex;
-        drawToPresent.image = m_swapchain.images[i].handle;
-        drawToPresent.subresourceRange = subresource;
-
-        VkRenderPassBeginInfo renderPassInfo;
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.pNext = 0;
-        renderPassInfo.renderPass = m_renderPass;
-        renderPassInfo.framebuffer = m_framebuffers[i];
-        renderPassInfo.renderArea.offset.x = 0;
-        renderPassInfo.renderArea.offset.y = 0;
-        renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
-        renderPassInfo.renderArea.extent.height = m_swapchain.extent.height;
-        renderPassInfo.clearValueCount = 1;
-        renderPassInfo.pClearValues = &RendererClearColor;
-
-        // Begin command buffer
-        if (vkBeginCommandBuffer(
-            m_commands.buffers[i], &commandBegin) != VK_SUCCESS)
-        {
-            // Could not begin command buffer
-            return false;
-        }
-        
-        vkCmdPipelineBarrier(
-            m_commands.buffers[i],
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            0, 0, 0, 0, 0, 1, &presentToDraw
-        );
-
-        vkCmdBeginRenderPass(
-            m_commands.buffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
-        );
-
-        vkCmdBindPipeline(
-            m_commands.buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
-        );
-
-        VkViewport viewport;
-        viewport.x = 0.0f;
-        viewport.y = 0.0f;
-        viewport.width = m_swapchain.extent.width*1.0f;
-        viewport.height = m_swapchain.extent.height*1.0f;
-        viewport.minDepth = 0.0f;
-        viewport.maxDepth = 1.0f;
-
-        vkCmdSetViewport(m_commands.buffers[i], 0, 1, &viewport);
-
-        VkRect2D scissor;
-        scissor.offset.x = 0;
-        scissor.offset.y = 0;
-        scissor.extent.width = m_swapchain.extent.width;
-        scissor.extent.height = m_swapchain.extent.height;
-
-        vkCmdSetScissor(m_commands.buffers[i], 0, 1, &scissor);
-
-        VkDeviceSize offset = 0;
-        vkCmdBindVertexBuffers(
-            m_commands.buffers[i], 0, 1, &m_vertexBuffer.handle, &offset
-        );
-
-        vkCmdDraw(m_commands.buffers[i], 4, 1, 0, 0);
-
-        vkCmdEndRenderPass(m_commands.buffers[i]);
-
-        vkCmdPipelineBarrier(
-            m_commands.buffers[i],
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-            0, 0, 0, 0, 0, 1, &drawToPresent
-        );
-
-        // End command buffer
-        if (vkEndCommandBuffer(m_commands.buffers[i]) != VK_SUCCESS)
-        {
-            // Could not end command buffer
-            return false;
-        }
     }
 
     // Command buffers successfully created
