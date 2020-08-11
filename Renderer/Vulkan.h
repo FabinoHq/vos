@@ -2686,6 +2686,15 @@
     extern PFN_vkCmdBindPipeline vkCmdBindPipeline;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetViewport function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetViewport)(
+        VkCommandBuffer commandBuffer, uint32_t firstViewport,
+        uint32_t viewportCount, const VkViewport* pViewports
+    );
+    extern PFN_vkCmdSetViewport vkCmdSetViewport;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindVertexBuffers function                                       //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindVertexBuffers)(
