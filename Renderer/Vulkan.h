@@ -2695,6 +2695,15 @@
     extern PFN_vkCmdSetViewport vkCmdSetViewport;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetScissor function                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetScissor)(
+        VkCommandBuffer commandBuffer, uint32_t firstScissor,
+        uint32_t scissorCount, const VkRect2D* pScissors
+    );
+    extern PFN_vkCmdSetScissor vkCmdSetScissor;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindVertexBuffers function                                       //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindVertexBuffers)(
