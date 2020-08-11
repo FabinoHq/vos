@@ -1594,28 +1594,14 @@ bool Renderer::createPipeline()
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
     // Viewport
-    VkViewport viewport;
-    viewport.x = 0.0f;
-    viewport.y = 0.0f;
-    viewport.width = m_swapchain.extent.width*1.0f;
-    viewport.height = m_swapchain.extent.height*1.0f;
-    viewport.minDepth = 0.0f;
-    viewport.maxDepth = 1.0f;
-
-    VkRect2D scissor;
-    scissor.offset.x = 0;
-    scissor.offset.y = 0;
-    scissor.extent.width = m_swapchain.extent.width;
-    scissor.extent.height = m_swapchain.extent.height;
-
     VkPipelineViewportStateCreateInfo viewportInfo;
     viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
     viewportInfo.pNext = 0;
     viewportInfo.flags = 0;
     viewportInfo.viewportCount = 1;
-    viewportInfo.pViewports = &viewport;
+    viewportInfo.pViewports = 0;
     viewportInfo.scissorCount = 1;
-    viewportInfo.pScissors = &scissor;
+    viewportInfo.pScissors = 0;
 
     // Rasterizer
     VkPipelineRasterizationStateCreateInfo rasterizerInfo;
@@ -1673,6 +1659,18 @@ bool Renderer::createPipeline()
     blendState.blendConstants[2] = 0.0f;
     blendState.blendConstants[3] = 0.0f;
 
+    // Dynamic states
+    VkDynamicState dynamicStates[2];
+    dynamicStates[0] = VK_DYNAMIC_STATE_VIEWPORT;
+    dynamicStates[1] = VK_DYNAMIC_STATE_SCISSOR;
+
+    VkPipelineDynamicStateCreateInfo dynamicInfo;
+    dynamicInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    dynamicInfo.pNext = 0;
+    dynamicInfo.flags = 0;
+    dynamicInfo.dynamicStateCount = 2;
+    dynamicInfo.pDynamicStates = dynamicStates;
+
     // Create pipeline
     VkGraphicsPipelineCreateInfo pipelineInfo;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -1688,7 +1686,7 @@ bool Renderer::createPipeline()
     pipelineInfo.pMultisampleState = &multisampleInfo;
     pipelineInfo.pDepthStencilState = 0;
     pipelineInfo.pColorBlendState = &blendState;
-    pipelineInfo.pDynamicState = 0;
+    pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = m_pipelineLayout;
     pipelineInfo.renderPass = m_renderPass;
     pipelineInfo.subpass = 0;
@@ -1998,6 +1996,24 @@ bool Renderer::createCommandBuffers()
         vkCmdBindPipeline(
             m_commands.buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
         );
+
+        VkViewport viewport;
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = m_swapchain.extent.width*1.0f;
+        viewport.height = m_swapchain.extent.height*1.0f;
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+
+        vkCmdSetViewport(m_commands.buffers[i], 0, 1, &viewport);
+
+        VkRect2D scissor;
+        scissor.offset.x = 0;
+        scissor.offset.y = 0;
+        scissor.extent.width = m_swapchain.extent.width;
+        scissor.extent.height = m_swapchain.extent.height;
+
+        vkCmdSetScissor(m_commands.buffers[i], 0, 1, &scissor);
 
         VkDeviceSize offset = 0;
         vkCmdBindVertexBuffers(
