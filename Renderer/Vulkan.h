@@ -2599,6 +2599,14 @@
     extern PFN_vkCreateFence vkCreateFence;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyFence function                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyFence)(
+        VkDevice device, VkFence fence, const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyFence vkDestroyFence;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
