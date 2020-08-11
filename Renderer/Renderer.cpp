@@ -1590,7 +1590,7 @@ bool Renderer::createPipeline()
         VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssembly.pNext = 0;
     inputAssembly.flags = 0;
-    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
     // Viewport
@@ -1732,9 +1732,9 @@ bool Renderer::createVertexBuffer()
     }
 
     // Create vertex buffer
-    VertexData vertices[3];
+    VertexData vertices[4];
 
-    vertices[0].x = 0.0f;
+    vertices[0].x = -0.8f;
     vertices[0].y = -0.8f;
     vertices[0].z = 0.0f;
     vertices[0].w = 1.0f;
@@ -1753,13 +1753,22 @@ bool Renderer::createVertexBuffer()
     vertices[1].a = 1.0f;
 
     vertices[2].x = 0.8f;
-    vertices[2].y = 0.8f;
+    vertices[2].y = -0.8f;
     vertices[2].z = 0.0f;
     vertices[2].w = 1.0f;
     vertices[2].r = 0.2f;
     vertices[2].g = 0.5f;
     vertices[2].b = 0.8f;
     vertices[2].a = 1.0f;
+
+    vertices[3].x = 0.8f;
+    vertices[3].y = 0.8f;
+    vertices[3].z = 0.0f;
+    vertices[3].w = 1.0f;
+    vertices[3].r = 0.2f;
+    vertices[3].g = 0.5f;
+    vertices[3].b = 0.8f;
+    vertices[3].a = 1.0f;
 
     m_vertexBuffer.size = sizeof(vertices);
 
@@ -1995,7 +2004,7 @@ bool Renderer::createCommandBuffers()
             m_commands.buffers[i], 0, 1, &m_vertexBuffer.handle, &offset
         );
 
-        vkCmdDraw(m_commands.buffers[i], 3, 1, 0, 0);
+        vkCmdDraw(m_commands.buffers[i], 4, 1, 0, 0);
 
         vkCmdEndRenderPass(m_commands.buffers[i]);
 
