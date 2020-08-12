@@ -2615,6 +2615,14 @@
     extern PFN_vkResetFences vkResetFences;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkGetFenceStatus function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetFenceStatus)(
+        VkDevice device, VkFence fence
+    );
+    extern PFN_vkGetFenceStatus vkGetFenceStatus;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
