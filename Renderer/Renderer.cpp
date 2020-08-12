@@ -559,7 +559,7 @@ void Renderer::cleanup()
                 // Destroy swapchain images views
                 if (vkDestroyImageView)
                 {
-                    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+                    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
                         if (m_swapchain.images[i].view)
                         {
@@ -608,7 +608,6 @@ void Renderer::cleanup()
     m_vertexShader = 0;
     m_framebuffers.clear();
     m_renderPass = 0;
-    m_swapchain.images.clear();
     m_swapchain.handle = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
@@ -1052,7 +1051,7 @@ bool Renderer::createVulkanSwapchain()
     }
 
     // Cleanup swapchain images views
-    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
         if (m_swapchain.images[i].view)
         {
@@ -1061,7 +1060,6 @@ bool Renderer::createVulkanSwapchain()
             m_swapchain.images[i].view = 0;
         }
     }
-    m_swapchain.images.clear();
 
 
     // Get device surface capabilities
@@ -1119,6 +1117,8 @@ bool Renderer::createVulkanSwapchain()
 
     // Set swapchain images count
     uint32_t imagesCount = RendererMaxSwapchainImages;
+
+    // Images count clamping
     if (imagesCount <= surfaceCapabilities.minImageCount)
     {
         imagesCount = surfaceCapabilities.minImageCount;
@@ -1126,6 +1126,10 @@ bool Renderer::createVulkanSwapchain()
     if (imagesCount >= surfaceCapabilities.maxImageCount)
     {
         imagesCount = surfaceCapabilities.maxImageCount;
+    }
+    if (imagesCount >= RendererMaxSwapchainImages)
+    {
+        imagesCount = RendererMaxSwapchainImages;
     }
     if (imagesCount <= 0)
     {
@@ -1307,6 +1311,18 @@ bool Renderer::createVulkanSwapchain()
         return false;
     }
 
+    // Check swapchain images count
+    if (swapchainImagesCount <= 0)
+    {
+        // Invalid swapchain images count
+        return false;
+    }
+    if (swapchainImagesCount > RendererMaxSwapchainImages)
+    {
+        // Invalid swapchain images count
+        return false;
+    }
+
     // Get current swapchain images
     std::vector<VkImage> images(swapchainImagesCount);
     if (vkGetSwapchainImagesKHR(m_vulkanDevice,
@@ -1318,8 +1334,7 @@ bool Renderer::createVulkanSwapchain()
 
     // Set swapchain images
     m_swapchain.imagesCnt = swapchainImagesCount;
-    m_swapchain.images.resize(swapchainImagesCount);
-    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
         m_swapchain.images[i].handle = images[i];
     }
@@ -1342,7 +1357,7 @@ bool Renderer::createVulkanSwapchain()
     subresource.baseArrayLayer = 0;
     subresource.layerCount = 1;
 
-    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
         // Create image view
         VkImageViewCreateInfo imageView;
@@ -1485,15 +1500,15 @@ bool Renderer::createFramebuffers()
     }
 
     // Check swapchain images count
-    if (m_swapchain.images.size() <= 0)
+    if (m_swapchain.imagesCnt <= 0)
     {
         // No swapchain images
         return false;
     }
 
     // Create framebuffers
-    m_framebuffers.resize(m_swapchain.images.size());
-    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+    m_framebuffers.resize(m_swapchain.imagesCnt);
+    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
         VkFramebufferCreateInfo framebufferInfo;
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -2124,7 +2139,7 @@ bool Renderer::resize()
                 // Destroy swapchain images views
                 if (vkDestroyImageView)
                 {
-                    for (size_t i = 0; i < m_swapchain.images.size(); ++i)
+                    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
                         if (m_swapchain.images[i].view)
                         {
@@ -2148,7 +2163,6 @@ bool Renderer::resize()
         }
     }
     m_framebuffers.clear();
-    m_swapchain.images.clear();
     m_swapchain.handle = 0;
 
     // Recreate Vulkan swapchain

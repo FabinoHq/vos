@@ -172,11 +172,11 @@
             imagesCnt = 0;
         }
 
-        VkSwapchainKHR              handle;     // Swapchain handle
-        VkFormat                    format;     // Swapchain format
-        VkExtent2D                  extent;     // Swapchain extent
-        uint32_t                    imagesCnt;  // Swapchain images count
-        std::vector<VulkanImage>    images;     // Swapchain images
+        VkSwapchainKHR  handle;                             // Swapchain handle
+        VkFormat        format;                             // Swapchain format
+        VkExtent2D      extent;                             // Swapchain extent
+        uint32_t        imagesCnt;                          // Images count
+        VulkanImage     images[RendererMaxSwapchainImages]; // Swapchain images
     };
 
     ////////////////////////////////////////////////////////////////////////////
