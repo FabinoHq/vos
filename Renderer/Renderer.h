@@ -383,7 +383,7 @@
 
             VulkanSwapchain     m_swapchain;            // Vulkan swapchain
             VkRenderPass        m_renderPass;           // Render pass
-            std::vector<VkFramebuffer>  m_framebuffers; // Framebuffers
+            VkFramebuffer       m_framebuffers[RendererMaxSwapchainImages];
             VkShaderModule      m_vertexShader;         // Vertex shader
             VkShaderModule      m_fragmentShader;       // Fragment shader
             VkPipelineLayout    m_pipelineLayout;       // Pipeline layout

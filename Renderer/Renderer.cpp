@@ -538,7 +538,7 @@ void Renderer::cleanup()
                 // Destroy framebuffers
                 if (vkDestroyFramebuffer)
                 {
-                    for (size_t i = 0; i < m_framebuffers.size(); ++i)
+                    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
                         if (m_framebuffers[i])
                         {
@@ -606,7 +606,6 @@ void Renderer::cleanup()
     m_pipelineLayout = 0;
     m_fragmentShader = 0;
     m_vertexShader = 0;
-    m_framebuffers.clear();
     m_renderPass = 0;
     m_swapchain.handle = 0;
     m_vulkanDevice = 0;
@@ -1507,7 +1506,6 @@ bool Renderer::createFramebuffers()
     }
 
     // Create framebuffers
-    m_framebuffers.resize(m_swapchain.imagesCnt);
     for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
         VkFramebufferCreateInfo framebufferInfo;
@@ -2124,7 +2122,7 @@ bool Renderer::resize()
                 // Destroy framebuffers
                 if (vkDestroyFramebuffer)
                 {
-                    for (size_t i = 0; i < m_framebuffers.size(); ++i)
+                    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
                         if (m_framebuffers[i])
                         {
@@ -2162,7 +2160,6 @@ bool Renderer::resize()
             }
         }
     }
-    m_framebuffers.clear();
     m_swapchain.handle = 0;
 
     // Recreate Vulkan swapchain
