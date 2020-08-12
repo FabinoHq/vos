@@ -1315,9 +1315,9 @@ bool Renderer::createVulkanSwapchain()
     }
 
     // Get current swapchain images
-    std::vector<VkImage> images(swapchainImagesCount);
+    VkImage images[RendererMaxSwapchainImages];
     if (vkGetSwapchainImagesKHR(m_vulkanDevice,
-        m_swapchain.handle, &swapchainImagesCount, images.data()) != VK_SUCCESS)
+        m_swapchain.handle, &swapchainImagesCount, images) != VK_SUCCESS)
     {
         // Could not get swapchain images count
         return false;
