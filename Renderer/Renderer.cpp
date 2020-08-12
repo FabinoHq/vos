@@ -319,7 +319,7 @@ void Renderer::render()
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
     renderPassInfo.renderPass = m_renderPass;
-    renderPassInfo.framebuffer = m_framebuffers[imageIndex];
+    renderPassInfo.framebuffer = m_swapchain.framebuffers[imageIndex];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
@@ -533,13 +533,13 @@ void Renderer::cleanup()
                 {
                     for (uint32_t i = 0; i < m_swapchain.count; ++i)
                     {
-                        if (m_framebuffers[i])
+                        if (m_swapchain.framebuffers[i])
                         {
                             vkDestroyFramebuffer(
-                                m_vulkanDevice, m_framebuffers[i], 0
+                                m_vulkanDevice, m_swapchain.framebuffers[i], 0
                             );
                         }
-                        m_framebuffers[i] = 0;
+                        m_swapchain.framebuffers[i] = 0;
                     }
                 }
 
@@ -1512,12 +1512,12 @@ bool Renderer::createFramebuffers()
         framebufferInfo.layers = 1;
 
         if (vkCreateFramebuffer(m_vulkanDevice,
-            &framebufferInfo, 0, &m_framebuffers[i]) != VK_SUCCESS)
+            &framebufferInfo, 0, &m_swapchain.framebuffers[i]) != VK_SUCCESS)
         {
             // Could not create framebuffer
             return false;
         }
-        if (!m_framebuffers[i])
+        if (!m_swapchain.framebuffers[i])
         {
             // Invalid framebuffer
             return false;
@@ -2114,13 +2114,13 @@ bool Renderer::resize()
                 {
                     for (uint32_t i = 0; i < m_swapchain.count; ++i)
                     {
-                        if (m_framebuffers[i])
+                        if (m_swapchain.framebuffers[i])
                         {
                             vkDestroyFramebuffer(
-                                m_vulkanDevice, m_framebuffers[i], 0
+                                m_vulkanDevice, m_swapchain.framebuffers[i], 0
                             );
                         }
-                        m_framebuffers[i] = 0;
+                        m_swapchain.framebuffers[i] = 0;
                     }
                 }
 

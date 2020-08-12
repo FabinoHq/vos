@@ -176,7 +176,8 @@
         VkFormat        format;                             // Swapchain format
         VkExtent2D      extent;                             // Swapchain extent
         uint32_t        count;                              // Images count
-        VulkanImage     images[RendererMaxSwapchainImages]; // Swapchain images
+        VulkanImage     images[RendererMaxSwapchainImages];
+        VkFramebuffer   framebuffers[RendererMaxSwapchainImages];
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -383,7 +384,6 @@
 
             VulkanSwapchain     m_swapchain;            // Vulkan swapchain
             VkRenderPass        m_renderPass;           // Render pass
-            VkFramebuffer       m_framebuffers[RendererMaxSwapchainImages];
             VkShaderModule      m_vertexShader;         // Vertex shader
             VkShaderModule      m_fragmentShader;       // Fragment shader
             VkPipelineLayout    m_pipelineLayout;       // Pipeline layout
