@@ -2607,6 +2607,14 @@
     extern PFN_vkDestroyFence vkDestroyFence;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkResetFences function                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkResetFences)(
+        VkDevice device, uint32_t fenceCount, const VkFence* pFences
+    );
+    extern PFN_vkResetFences vkResetFences;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
