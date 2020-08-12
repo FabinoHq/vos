@@ -420,7 +420,7 @@ void Renderer::render()
     present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     present.pNext = 0;
     present.waitSemaphoreCount = 1;
-    present.pWaitSemaphores = &m_semaphores.renderFinished;;
+    present.pWaitSemaphores = &m_semaphores.renderFinished;
     present.swapchainCount = 1;
     present.pSwapchains = &m_swapchain.handle;
     present.pImageIndices = &imageIndex;
