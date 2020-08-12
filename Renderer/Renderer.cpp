@@ -1118,15 +1118,19 @@ bool Renderer::createVulkanSwapchain()
 
 
     // Set swapchain images count
-    uint32_t imagesCount = surfaceCapabilities.minImageCount + 2;
-    if (surfaceCapabilities.maxImageCount <= 0)
+    uint32_t imagesCount = RendererMaxSwapchainImages;
+    if (imagesCount <= surfaceCapabilities.minImageCount)
     {
-        // Invalid swapchain max images count
-        return false;
+        imagesCount = surfaceCapabilities.minImageCount;
     }
     if (imagesCount >= surfaceCapabilities.maxImageCount)
     {
         imagesCount = surfaceCapabilities.maxImageCount;
+    }
+    if (imagesCount <= 0)
+    {
+        // Invalid swapchain images count
+        return false;
     }
 
     // Set swapchain surface format
