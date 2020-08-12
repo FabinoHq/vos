@@ -169,13 +169,13 @@
             format = VK_FORMAT_UNDEFINED;
             extent.width = 0;
             extent.height = 0;
-            imagesCnt = 0;
+            count = 0;
         }
 
         VkSwapchainKHR  handle;                             // Swapchain handle
         VkFormat        format;                             // Swapchain format
         VkExtent2D      extent;                             // Swapchain extent
-        uint32_t        imagesCnt;                          // Images count
+        uint32_t        count;                              // Images count
         VulkanImage     images[RendererMaxSwapchainImages]; // Swapchain images
     };
 
