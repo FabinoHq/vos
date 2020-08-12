@@ -189,8 +189,8 @@
             pool = 0;
         }
 
-        VkCommandPool                   pool;       // Commands pool
-        std::vector<VkCommandBuffer>    buffers;    // Commands buffers
+        VkCommandPool       pool;
+        VkCommandBuffer     buffers[RendererMaxSwapchainImages];
     };
 
     ////////////////////////////////////////////////////////////////////////////

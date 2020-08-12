@@ -466,23 +466,16 @@ void Renderer::cleanup()
                 }
 
                 // Destroy command buffers
-                if (m_commands.buffers.size() > 0)
+                if (m_commands.pool && vkFreeCommandBuffers)
                 {
-                    bool validBuffers = true;
-                    for (size_t i = 0; i < m_commands.buffers.size(); ++i)
+                    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
-                        if (!m_commands.buffers[i])
+                        if (m_commands.buffers[i])
                         {
-                            validBuffers = false;
-                            break;
+                            vkFreeCommandBuffers(m_vulkanDevice,
+                                m_commands.pool, 1, &m_commands.buffers[i]
+                            );
                         }
-                    }
-                    if (validBuffers && m_commands.pool && vkFreeCommandBuffers)
-                    {
-                        vkFreeCommandBuffers(m_vulkanDevice, m_commands.pool,
-                            static_cast<uint32_t>(m_commands.buffers.size()),
-                            m_commands.buffers.data()
-                        );
                     }
                 }
 
@@ -538,7 +531,7 @@ void Renderer::cleanup()
                 // Destroy framebuffers
                 if (vkDestroyFramebuffer)
                 {
-                    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
+                    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
                         if (m_framebuffers[i])
                         {
@@ -559,7 +552,7 @@ void Renderer::cleanup()
                 // Destroy swapchain images views
                 if (vkDestroyImageView)
                 {
-                    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
+                    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
                         if (m_swapchain.images[i].view)
                         {
@@ -597,7 +590,6 @@ void Renderer::cleanup()
 
     m_semaphores.renderFinished = 0;
     m_semaphores.imageAvailable = 0;
-    m_commands.buffers.clear();
     m_commands.pool = 0;
     m_vertexBuffer.size = 0;
     m_vertexBuffer.memory = 0;
@@ -1050,7 +1042,7 @@ bool Renderer::createVulkanSwapchain()
     }
 
     // Cleanup swapchain images views
-    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
+    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
         if (m_swapchain.images[i].view)
         {
@@ -1356,7 +1348,7 @@ bool Renderer::createVulkanSwapchain()
     subresource.baseArrayLayer = 0;
     subresource.layerCount = 1;
 
-    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
+    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
         // Create image view
         VkImageViewCreateInfo imageView;
@@ -1506,7 +1498,7 @@ bool Renderer::createFramebuffers()
     }
 
     // Create framebuffers
-    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
+    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
     {
         VkFramebufferCreateInfo framebufferInfo;
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -2045,8 +2037,6 @@ bool Renderer::createCommandBuffers()
     }
 
     // Allocate command buffers
-    m_commands.buffers.resize(m_swapchain.imagesCnt);
-
     VkCommandBufferAllocateInfo commandBuffer;
     commandBuffer.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     commandBuffer.pNext = 0;
@@ -2055,7 +2045,7 @@ bool Renderer::createCommandBuffers()
     commandBuffer.commandBufferCount = m_swapchain.imagesCnt;
 
     if (vkAllocateCommandBuffers(m_vulkanDevice,
-        &commandBuffer, m_commands.buffers.data()) != VK_SUCCESS)
+        &commandBuffer, m_commands.buffers) != VK_SUCCESS)
     {
         // Could not allocate command buffers
         return false;
@@ -2122,7 +2112,7 @@ bool Renderer::resize()
                 // Destroy framebuffers
                 if (vkDestroyFramebuffer)
                 {
-                    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
+                    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
                         if (m_framebuffers[i])
                         {
@@ -2137,7 +2127,7 @@ bool Renderer::resize()
                 // Destroy swapchain images views
                 if (vkDestroyImageView)
                 {
-                    for (size_t i = 0; i < m_swapchain.imagesCnt; ++i)
+                    for (uint32_t i = 0; i < m_swapchain.imagesCnt; ++i)
                     {
                         if (m_swapchain.images[i].view)
                         {
