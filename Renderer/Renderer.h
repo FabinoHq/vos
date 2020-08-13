@@ -169,8 +169,7 @@
         handle(0),
         format(VK_FORMAT_UNDEFINED),
         frames(0),
-        current(0),
-        cmdPool(0)
+        current(0)
         {
             extent.width = 0;
             extent.height = 0;
@@ -185,7 +184,7 @@
                 imageAvailable[i] = 0;
                 renderFinished[i] = 0;
                 fences[i] = 0;
-                cmdBuffers[i] = 0;
+                commandBuffers[i] = 0;
             }
         }
 
@@ -200,8 +199,7 @@
         VkSemaphore         imageAvailable[RendererMaxSwapchainFrames];
         VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
         VkFence             fences[RendererMaxSwapchainFrames];
-        VkCommandPool       cmdPool;
-        VkCommandBuffer     cmdBuffers[RendererMaxSwapchainFrames];
+        VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -390,6 +388,7 @@
             VkShaderModule      m_fragmentShader;       // Fragment shader
             VkPipelineLayout    m_pipelineLayout;       // Pipeline layout
             VkPipeline          m_pipeline;             // Graphics pipeline
+            VkCommandPool       m_commandsPool;         // Commands pool
             VulkanBuffer        m_vertexBuffer;         // Vertex buffer
     };
 
