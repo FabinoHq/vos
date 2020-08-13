@@ -270,6 +270,16 @@ void Renderer::render()
         return;
     }
 
+    // Clamp swapchain current frame index
+    if (m_swapchain.current <= 0)
+    {
+        m_swapchain.current = 0;
+    }
+    if (m_swapchain.current >= (m_swapchain.frames-1))
+    {
+        m_swapchain.current = (m_swapchain.frames-1);
+    }
+
     // Wait for rendering fence
     if (vkWaitForFences(m_vulkanDevice, 1,
         &m_swapchain.fences[m_swapchain.current],
@@ -293,6 +303,15 @@ void Renderer::render()
         UINT64_MAX, m_swapchain.imageAvailable[m_swapchain.current],
         0, &imageIndex) != VK_SUCCESS)
     {
+        // Could not qcquire next swapchain image
+        m_rendererReady = false;
+        return;
+    }
+
+    // Check image index
+    if ((imageIndex < 0) || (imageIndex >= m_swapchain.frames))
+    {
+        // Invalid swapchain image index
         m_rendererReady = false;
         return;
     }
