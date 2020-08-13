@@ -2217,7 +2217,7 @@ bool Renderer::createFences()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Resize renderer frame                                                     //
-//  return : True if the renderer is successfully resized                    //
+//  return : True if the renderer is successfully resized                     //
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::resize()
 {
