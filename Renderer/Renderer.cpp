@@ -315,7 +315,7 @@ void Renderer::render()
     VkCommandBufferBeginInfo commandBegin;
     commandBegin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     commandBegin.pNext = 0;
-    commandBegin.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+    commandBegin.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     commandBegin.pInheritanceInfo = 0;
 
     // Image subresource
