@@ -281,7 +281,7 @@ void Renderer::render()
         m_swapchain.current = (m_swapchain.frames-1);
     }
 
-    // Wait for rendering fence
+    // Wait for current frame rendering fence
     if (vkWaitForFences(m_vulkanDevice, 1,
         &m_swapchain.fences[m_swapchain.current],
         VK_FALSE, RendererSwapchainFenceTimeout) != VK_SUCCESS)
@@ -290,29 +290,22 @@ void Renderer::render()
         m_rendererReady = false;
         return;
     }
-    if (vkResetFences(m_vulkanDevice, 1,
-        &m_swapchain.fences[m_swapchain.current]) != VK_SUCCESS)
-    {
-        // Could not reset fence
-        m_rendererReady = false;
-        return;
-    }
 
-    // Acquire next image
-    uint32_t imageIndex = 0;
+    // Acquire current frame
+    uint32_t frameIndex = 0;
     if (vkAcquireNextImageKHR(m_vulkanDevice, m_swapchain.handle,
         UINT64_MAX, m_swapchain.imageAvailable[m_swapchain.current],
-        0, &imageIndex) != VK_SUCCESS)
+        0, &frameIndex) != VK_SUCCESS)
     {
-        // Could not qcquire next swapchain image
+        // Could not acquire swapchain frame
         m_rendererReady = false;
         return;
     }
 
-    // Check image index
-    if ((imageIndex < 0) || (imageIndex >= m_swapchain.frames))
+    // Check current frame index
+    if ((frameIndex < 0) || (frameIndex >= m_swapchain.frames))
     {
-        // Invalid swapchain image index
+        // Invalid swapchain frame index
         m_rendererReady = false;
         return;
     }
@@ -343,7 +336,7 @@ void Renderer::render()
     presentToDraw.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     presentToDraw.srcQueueFamilyIndex = m_surfaceQueueIndex;
     presentToDraw.dstQueueFamilyIndex = m_graphicsQueueIndex;
-    presentToDraw.image = m_swapchain.images[imageIndex].handle;
+    presentToDraw.image = m_swapchain.images[frameIndex].handle;
     presentToDraw.subresourceRange = subresource;
 
     VkImageMemoryBarrier drawToPresent;
@@ -355,14 +348,14 @@ void Renderer::render()
     drawToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     drawToPresent.srcQueueFamilyIndex = m_graphicsQueueIndex;
     drawToPresent.dstQueueFamilyIndex = m_surfaceQueueIndex;
-    drawToPresent.image = m_swapchain.images[imageIndex].handle;
+    drawToPresent.image = m_swapchain.images[frameIndex].handle;
     drawToPresent.subresourceRange = subresource;
 
     VkRenderPassBeginInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
     renderPassInfo.renderPass = m_renderPass;
-    renderPassInfo.framebuffer = m_swapchain.framebuffers[imageIndex];
+    renderPassInfo.framebuffer = m_swapchain.framebuffers[frameIndex];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
@@ -372,7 +365,7 @@ void Renderer::render()
 
     // Begin command buffer
     if (vkBeginCommandBuffer(
-        m_swapchain.commandBuffers[imageIndex], &commandBegin) != VK_SUCCESS)
+        m_swapchain.commandBuffers[frameIndex], &commandBegin) != VK_SUCCESS)
     {
         // Could not begin command buffer
         m_rendererReady = false;
@@ -380,19 +373,19 @@ void Renderer::render()
     }
     
     vkCmdPipelineBarrier(
-        m_swapchain.commandBuffers[imageIndex],
+        m_swapchain.commandBuffers[frameIndex],
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         0, 0, 0, 0, 0, 1, &presentToDraw
     );
 
     vkCmdBeginRenderPass(
-        m_swapchain.commandBuffers[imageIndex],
+        m_swapchain.commandBuffers[frameIndex],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
     vkCmdBindPipeline(
-        m_swapchain.commandBuffers[imageIndex],
+        m_swapchain.commandBuffers[frameIndex],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
     );
 
@@ -404,7 +397,7 @@ void Renderer::render()
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
-    vkCmdSetViewport(m_swapchain.commandBuffers[imageIndex], 0, 1, &viewport);
+    vkCmdSetViewport(m_swapchain.commandBuffers[frameIndex], 0, 1, &viewport);
 
     VkRect2D scissor;
     scissor.offset.x = 0;
@@ -412,20 +405,20 @@ void Renderer::render()
     scissor.extent.width = m_swapchain.extent.width;
     scissor.extent.height = m_swapchain.extent.height;
 
-    vkCmdSetScissor(m_swapchain.commandBuffers[imageIndex], 0, 1, &scissor);
+    vkCmdSetScissor(m_swapchain.commandBuffers[frameIndex], 0, 1, &scissor);
 
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        m_swapchain.commandBuffers[imageIndex], 0, 1,
+        m_swapchain.commandBuffers[frameIndex], 0, 1,
         &m_vertexBuffer.handle, &offset
     );
 
-    vkCmdDraw(m_swapchain.commandBuffers[imageIndex], 4, 1, 0, 0);
+    vkCmdDraw(m_swapchain.commandBuffers[frameIndex], 4, 1, 0, 0);
 
-    vkCmdEndRenderPass(m_swapchain.commandBuffers[imageIndex]);
+    vkCmdEndRenderPass(m_swapchain.commandBuffers[frameIndex]);
 
     vkCmdPipelineBarrier(
-        m_swapchain.commandBuffers[imageIndex],
+        m_swapchain.commandBuffers[frameIndex],
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
         0, 0, 0, 0, 0, 1, &drawToPresent
@@ -433,7 +426,7 @@ void Renderer::render()
 
     // End command buffer
     if (vkEndCommandBuffer(
-        m_swapchain.commandBuffers[imageIndex]) != VK_SUCCESS)
+        m_swapchain.commandBuffers[frameIndex]) != VK_SUCCESS)
     {
         // Could not end command buffer
         m_rendererReady = false;
@@ -441,7 +434,16 @@ void Renderer::render()
     }
 
 
-    // Submit next image
+    // Reset current frame rendering fence
+    if (vkResetFences(m_vulkanDevice, 1,
+        &m_swapchain.fences[m_swapchain.current]) != VK_SUCCESS)
+    {
+        // Could not reset fence
+        m_rendererReady = false;
+        return;
+    }
+
+    // Submit current frame
     VkPipelineStageFlags waitDstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
     VkSubmitInfo submitInfo;
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -451,7 +453,7 @@ void Renderer::render()
         &m_swapchain.imageAvailable[m_swapchain.current];
     submitInfo.pWaitDstStageMask = &waitDstStage;
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &m_swapchain.commandBuffers[imageIndex];
+    submitInfo.pCommandBuffers = &m_swapchain.commandBuffers[frameIndex];
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores =
         &m_swapchain.renderFinished[m_swapchain.current];
@@ -463,7 +465,7 @@ void Renderer::render()
         return;
     }
 
-    // Update surface
+    // Update surface when queue has finished rendering
     VkPresentInfoKHR present;
     present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     present.pNext = 0;
@@ -471,7 +473,7 @@ void Renderer::render()
     present.pWaitSemaphores = &m_swapchain.renderFinished[m_swapchain.current];
     present.swapchainCount = 1;
     present.pSwapchains = &m_swapchain.handle;
-    present.pImageIndices = &imageIndex;
+    present.pImageIndices = &frameIndex;
     present.pResults = 0;
 
     if (vkQueuePresentKHR(m_surfaceQueueHandle, &present) != VK_SUCCESS)
@@ -480,7 +482,7 @@ void Renderer::render()
         return;
     }
 
-    // Next swapchain image
+    // Next swapchain frame index
     ++m_swapchain.current;
     if (m_swapchain.current >= m_swapchain.frames)
     {
