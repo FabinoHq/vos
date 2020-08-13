@@ -303,7 +303,7 @@ void Renderer::render()
     }
 
     // Check current frame index
-    if ((frameIndex < 0) || (frameIndex >= m_swapchain.frames))
+    if (frameIndex >= m_swapchain.frames)
     {
         // Invalid swapchain frame index
         m_rendererReady = false;
