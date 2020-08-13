@@ -49,9 +49,10 @@
     #include <vector>
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer max swapchain images count                                   //
+    //  Renderer swapchain settings                                           //
     ////////////////////////////////////////////////////////////////////////////
     const uint32_t RendererMaxSwapchainImages = 2;
+    const uint64_t RendererSwapchainFenceTimeout = 5000000000;
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer clear color                                                  //
@@ -182,6 +183,7 @@
                 framebuffers[i] = 0;
                 imageAvailable[i] = 0;
                 renderFinished[i] = 0;
+                fences[i] = 0;
                 cmdBuffers[i] = 0;
             }
         }
@@ -195,6 +197,7 @@
         VkFramebuffer       framebuffers[RendererMaxSwapchainImages];
         VkSemaphore         imageAvailable[RendererMaxSwapchainImages];
         VkSemaphore         renderFinished[RendererMaxSwapchainImages];
+        VkFence             fences[RendererMaxSwapchainImages];
         VkCommandPool       cmdPool;
         VkCommandBuffer     cmdBuffers[RendererMaxSwapchainImages];
     };
@@ -351,6 +354,12 @@
             //  return : True if semaphores are successfully created          //
             ////////////////////////////////////////////////////////////////////
             bool createSemaphores();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create fences                                                 //
+            //  return : True if fences are successfully created              //
+            ////////////////////////////////////////////////////////////////////
+            bool createFences();
 
             ////////////////////////////////////////////////////////////////////
             //  Resize renderer frame                                         //

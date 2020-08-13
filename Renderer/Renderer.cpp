@@ -241,6 +241,13 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create fences
+    if (!createFences())
+    {
+        // Could not create fences
+        return false;
+    }
+
     // Renderer successfully loaded
     m_rendererReady = true;
     return true;
@@ -260,6 +267,21 @@ void Renderer::render()
             // Could not resize renderer
             return;
         }
+        return;
+    }
+
+    // Wait for rendering fence
+    if (vkWaitForFences(m_vulkanDevice, 1, &m_swapchain.fences[0],
+        VK_FALSE, RendererSwapchainFenceTimeout) != VK_SUCCESS)
+    {
+        // Rendering fence timed out
+        m_rendererReady = false;
+        return;
+    }
+    if (vkResetFences(m_vulkanDevice, 1, &m_swapchain.fences[0]) != VK_SUCCESS)
+    {
+        // Could not reset fence
+        m_rendererReady = false;
         return;
     }
 
@@ -408,7 +430,8 @@ void Renderer::render()
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = &m_swapchain.renderFinished[imageIndex];
 
-    if (vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo,
+        m_swapchain.fences[0]) != VK_SUCCESS)
     {
         m_rendererReady = false;
         return;
@@ -447,6 +470,21 @@ void Renderer::cleanup()
         {
             if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
             {
+                // Destroy fences
+                if (vkDestroyFence)
+                {
+                    for (uint32_t i = 0; i < m_swapchain.count; ++i)
+                    {
+                        if (m_swapchain.fences[i])
+                        {
+                            vkDestroyFence(
+                                m_vulkanDevice, m_swapchain.fences[i], 0
+                            );
+                        }
+                        m_swapchain.fences[i] = 0;
+                    }
+                }
+
                 // Destroy semaphores
                 if (vkDestroySemaphore)
                 {
@@ -454,16 +492,18 @@ void Renderer::cleanup()
                     {
                         if (m_swapchain.renderFinished[i])
                         {
-                            vkDestroySemaphore(m_vulkanDevice,
-                                m_swapchain.renderFinished[i], 0
+                            vkDestroySemaphore(
+                                m_vulkanDevice, m_swapchain.renderFinished[i], 0
                             );
                         }
+                        m_swapchain.renderFinished[i] = 0;
                         if (m_swapchain.imageAvailable[i])
                         {
-                            vkDestroySemaphore(m_vulkanDevice,
-                                m_swapchain.imageAvailable[i], 0
+                            vkDestroySemaphore(
+                                m_vulkanDevice, m_swapchain.imageAvailable[i], 0
                             );
                         }
+                        m_swapchain.imageAvailable[i] = 0;
                     }
                 }
 
@@ -479,6 +519,7 @@ void Renderer::cleanup()
                                 &m_swapchain.cmdBuffers[i]
                             );
                         }
+                        m_swapchain.cmdBuffers[i] = 0;
                     }
                 }
 
@@ -2096,6 +2137,44 @@ bool Renderer::createSemaphores()
     }
 
     // Semaphores successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create fences                                                             //
+//  return : True if fences are successfully created                          //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createFences()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Vulkan device is invalid
+        return false;
+    }
+
+    // Create fences
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = 0;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    for (uint32_t i = 0; i < m_swapchain.count; ++i)
+    {
+        if (vkCreateFence(m_vulkanDevice,
+            &fenceInfo, 0, &m_swapchain.fences[i]) != VK_SUCCESS)
+        {
+            // Could not create fence
+            return false;
+        }
+        if (!m_swapchain.fences[i])
+        {
+            // Invalid fence
+            return false;
+        }
+    }
+
+    // Fences successfully created
     return true;
 }
 
