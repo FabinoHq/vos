@@ -270,26 +270,27 @@ void Renderer::render()
         return;
     }
 
+    // Acquire next image
+    uint32_t imageIndex = 0;
+    if (vkAcquireNextImageKHR(m_vulkanDevice, m_swapchain.handle, UINT64_MAX,
+        m_swapchain.imageAvailable[imageIndex], 0, &imageIndex) != VK_SUCCESS)
+    {
+        m_rendererReady = false;
+        return;
+    }
+
     // Wait for rendering fence
-    if (vkWaitForFences(m_vulkanDevice, 1, &m_swapchain.fences[0],
+    if (vkWaitForFences(m_vulkanDevice, 1, &m_swapchain.fences[imageIndex],
         VK_FALSE, RendererSwapchainFenceTimeout) != VK_SUCCESS)
     {
         // Rendering fence timed out
         m_rendererReady = false;
         return;
     }
-    if (vkResetFences(m_vulkanDevice, 1, &m_swapchain.fences[0]) != VK_SUCCESS)
+    if (vkResetFences(
+        m_vulkanDevice, 1, &m_swapchain.fences[imageIndex]) != VK_SUCCESS)
     {
         // Could not reset fence
-        m_rendererReady = false;
-        return;
-    }
-
-    // Acquire next image
-    uint32_t imageIndex = 0;
-    if (vkAcquireNextImageKHR(m_vulkanDevice, m_swapchain.handle, UINT64_MAX,
-        m_swapchain.imageAvailable[imageIndex], 0, &imageIndex) != VK_SUCCESS)
-    {
         m_rendererReady = false;
         return;
     }
@@ -431,7 +432,7 @@ void Renderer::render()
     submitInfo.pSignalSemaphores = &m_swapchain.renderFinished[imageIndex];
 
     if (vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo,
-        m_swapchain.fences[0]) != VK_SUCCESS)
+        m_swapchain.fences[imageIndex]) != VK_SUCCESS)
     {
         m_rendererReady = false;
         return;
