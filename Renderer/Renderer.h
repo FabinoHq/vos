@@ -144,12 +144,13 @@
     ////////////////////////////////////////////////////////////////////////////
     struct VulkanImage
     {
-        VulkanImage()
+        VulkanImage() :
+        handle(0),
+        view(0),
+        sampler(0),
+        memory(0)
         {
-            handle = 0;
-            view = 0;
-            sampler = 0;
-            memory = 0;
+
         }
 
         VkImage         handle;     // Image handle
@@ -163,50 +164,39 @@
     ////////////////////////////////////////////////////////////////////////////
     struct VulkanSwapchain
     {
-        VulkanSwapchain()
+        VulkanSwapchain() :
+        handle(0),
+        format(VK_FORMAT_UNDEFINED),
+        count(0),
+        cmdPool(0)
         {
-            handle = 0;
-            format = VK_FORMAT_UNDEFINED;
             extent.width = 0;
             extent.height = 0;
-            count = 0;
+
+            for (uint32_t i = 0; i < RendererMaxSwapchainImages; ++i)
+            {
+                images[i].handle = 0;
+                images[i].view = 0;
+                images[i].sampler = 0;
+                images[i].memory = 0;
+                framebuffers[i] = 0;
+                imageAvailable[i] = 0;
+                renderFinished[i] = 0;
+                cmdBuffers[i] = 0;
+            }
         }
 
-        VkSwapchainKHR  handle;                             // Swapchain handle
-        VkFormat        format;                             // Swapchain format
-        VkExtent2D      extent;                             // Swapchain extent
-        uint32_t        count;                              // Images count
-        VulkanImage     images[RendererMaxSwapchainImages];
-        VkFramebuffer   framebuffers[RendererMaxSwapchainImages];
-    };
+        VkSwapchainKHR      handle;     // Swapchain handle
+        VkFormat            format;     // Swapchain format
+        VkExtent2D          extent;     // Swapchain extent
+        uint32_t            count;      // swapchain images count
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  VulkanCommands data structure                                         //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VulkanCommands
-    {
-        VulkanCommands()
-        {
-            pool = 0;
-        }
-
-        VkCommandPool       pool;
-        VkCommandBuffer     buffers[RendererMaxSwapchainImages];
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VulkanSemaphores data structure                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VulkanSemaphores
-    {
-        VulkanSemaphores()
-        {
-            imageAvailable = 0;
-            renderFinished = 0;
-        }
-
-        VkSemaphore     imageAvailable;
-        VkSemaphore     renderFinished;
+        VulkanImage         images[RendererMaxSwapchainImages];
+        VkFramebuffer       framebuffers[RendererMaxSwapchainImages];
+        VkSemaphore         imageAvailable[RendererMaxSwapchainImages];
+        VkSemaphore         renderFinished[RendererMaxSwapchainImages];
+        VkCommandPool       cmdPool;
+        VkCommandBuffer     cmdBuffers[RendererMaxSwapchainImages];
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -214,11 +204,12 @@
     ////////////////////////////////////////////////////////////////////////////
     struct VulkanBuffer
     {
-        VulkanBuffer()
+        VulkanBuffer() :
+        handle(0),
+        memory(0),
+        size(0)
         {
-            handle = 0;
-            memory = 0;
-            size = 0;
+
         }
 
         VkBuffer        handle;
@@ -389,8 +380,6 @@
             VkPipelineLayout    m_pipelineLayout;       // Pipeline layout
             VkPipeline          m_pipeline;             // Graphics pipeline
             VulkanBuffer        m_vertexBuffer;         // Vertex buffer
-            VulkanCommands      m_commands;             // Commands
-            VulkanSemaphores    m_semaphores;           // Semaphores
     };
 
 

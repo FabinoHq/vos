@@ -63,9 +63,7 @@ m_vertexShader(0),
 m_fragmentShader(0),
 m_pipelineLayout(0),
 m_pipeline(0),
-m_vertexBuffer(),
-m_commands(),
-m_semaphores()
+m_vertexBuffer()
 {
 
 }
@@ -268,7 +266,7 @@ void Renderer::render()
     // Acquire next image
     uint32_t imageIndex = 0;
     if (vkAcquireNextImageKHR(m_vulkanDevice, m_swapchain.handle, UINT64_MAX,
-        m_semaphores.imageAvailable, 0, &imageIndex) != VK_SUCCESS)
+        m_swapchain.imageAvailable[imageIndex], 0, &imageIndex) != VK_SUCCESS)
     {
         m_rendererReady = false;
         return;
@@ -329,7 +327,7 @@ void Renderer::render()
 
     // Begin command buffer
     if (vkBeginCommandBuffer(
-        m_commands.buffers[imageIndex], &commandBegin) != VK_SUCCESS)
+        m_swapchain.cmdBuffers[imageIndex], &commandBegin) != VK_SUCCESS)
     {
         // Could not begin command buffer
         m_rendererReady = false;
@@ -337,19 +335,19 @@ void Renderer::render()
     }
     
     vkCmdPipelineBarrier(
-        m_commands.buffers[imageIndex],
+        m_swapchain.cmdBuffers[imageIndex],
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         0, 0, 0, 0, 0, 1, &presentToDraw
     );
 
     vkCmdBeginRenderPass(
-        m_commands.buffers[imageIndex],
+        m_swapchain.cmdBuffers[imageIndex],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
     vkCmdBindPipeline(
-        m_commands.buffers[imageIndex],
+        m_swapchain.cmdBuffers[imageIndex],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
     );
 
@@ -361,7 +359,7 @@ void Renderer::render()
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
-    vkCmdSetViewport(m_commands.buffers[imageIndex], 0, 1, &viewport);
+    vkCmdSetViewport(m_swapchain.cmdBuffers[imageIndex], 0, 1, &viewport);
 
     VkRect2D scissor;
     scissor.offset.x = 0;
@@ -369,26 +367,27 @@ void Renderer::render()
     scissor.extent.width = m_swapchain.extent.width;
     scissor.extent.height = m_swapchain.extent.height;
 
-    vkCmdSetScissor(m_commands.buffers[imageIndex], 0, 1, &scissor);
+    vkCmdSetScissor(m_swapchain.cmdBuffers[imageIndex], 0, 1, &scissor);
 
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        m_commands.buffers[imageIndex], 0, 1, &m_vertexBuffer.handle, &offset
+        m_swapchain.cmdBuffers[imageIndex], 0, 1,
+        &m_vertexBuffer.handle, &offset
     );
 
-    vkCmdDraw(m_commands.buffers[imageIndex], 4, 1, 0, 0);
+    vkCmdDraw(m_swapchain.cmdBuffers[imageIndex], 4, 1, 0, 0);
 
-    vkCmdEndRenderPass(m_commands.buffers[imageIndex]);
+    vkCmdEndRenderPass(m_swapchain.cmdBuffers[imageIndex]);
 
     vkCmdPipelineBarrier(
-        m_commands.buffers[imageIndex],
+        m_swapchain.cmdBuffers[imageIndex],
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
         0, 0, 0, 0, 0, 1, &drawToPresent
     );
 
     // End command buffer
-    if (vkEndCommandBuffer(m_commands.buffers[imageIndex]) != VK_SUCCESS)
+    if (vkEndCommandBuffer(m_swapchain.cmdBuffers[imageIndex]) != VK_SUCCESS)
     {
         // Could not end command buffer
         m_rendererReady = false;
@@ -402,12 +401,12 @@ void Renderer::render()
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo.pNext = 0;
     submitInfo.waitSemaphoreCount = 1;
-    submitInfo.pWaitSemaphores = &m_semaphores.imageAvailable;
+    submitInfo.pWaitSemaphores = &m_swapchain.imageAvailable[imageIndex];
     submitInfo.pWaitDstStageMask = &waitDstStage;
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &m_commands.buffers[imageIndex];
+    submitInfo.pCommandBuffers = &m_swapchain.cmdBuffers[imageIndex];
     submitInfo.signalSemaphoreCount = 1;
-    submitInfo.pSignalSemaphores = &m_semaphores.renderFinished;
+    submitInfo.pSignalSemaphores = &m_swapchain.renderFinished[imageIndex];
 
     if (vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
@@ -420,7 +419,7 @@ void Renderer::render()
     present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     present.pNext = 0;
     present.waitSemaphoreCount = 1;
-    present.pWaitSemaphores = &m_semaphores.renderFinished;
+    present.pWaitSemaphores = &m_swapchain.renderFinished[imageIndex];
     present.swapchainCount = 1;
     present.pSwapchains = &m_swapchain.handle;
     present.pImageIndices = &imageIndex;
@@ -451,38 +450,44 @@ void Renderer::cleanup()
                 // Destroy semaphores
                 if (vkDestroySemaphore)
                 {
-                    if (m_semaphores.renderFinished)
+                    for (uint32_t i = 0; i < m_swapchain.count; ++i)
                     {
-                        vkDestroySemaphore(
-                            m_vulkanDevice, m_semaphores.renderFinished, 0
-                        );
-                    }
-                    if (m_semaphores.imageAvailable)
-                    {
-                        vkDestroySemaphore(
-                            m_vulkanDevice, m_semaphores.imageAvailable, 0
-                        );
+                        if (m_swapchain.renderFinished[i])
+                        {
+                            vkDestroySemaphore(m_vulkanDevice,
+                                m_swapchain.renderFinished[i], 0
+                            );
+                        }
+                        if (m_swapchain.imageAvailable[i])
+                        {
+                            vkDestroySemaphore(m_vulkanDevice,
+                                m_swapchain.imageAvailable[i], 0
+                            );
+                        }
                     }
                 }
 
                 // Destroy command buffers
-                if (m_commands.pool && vkFreeCommandBuffers)
+                if (m_swapchain.cmdPool && vkFreeCommandBuffers)
                 {
                     for (uint32_t i = 0; i < m_swapchain.count; ++i)
                     {
-                        if (m_commands.buffers[i])
+                        if (m_swapchain.cmdBuffers[i])
                         {
                             vkFreeCommandBuffers(m_vulkanDevice,
-                                m_commands.pool, 1, &m_commands.buffers[i]
+                                m_swapchain.cmdPool, 1,
+                                &m_swapchain.cmdBuffers[i]
                             );
                         }
                     }
                 }
 
                 // Destroy commands pool
-                if (m_commands.pool && vkDestroyCommandPool)
+                if (m_swapchain.cmdPool && vkDestroyCommandPool)
                 {
-                    vkDestroyCommandPool(m_vulkanDevice, m_commands.pool, 0);
+                    vkDestroyCommandPool(m_vulkanDevice,
+                        m_swapchain.cmdPool, 0
+                    );
                 }
 
                 // Destroy vertex buffer
@@ -588,9 +593,7 @@ void Renderer::cleanup()
         vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
     }
 
-    m_semaphores.renderFinished = 0;
-    m_semaphores.imageAvailable = 0;
-    m_commands.pool = 0;
+    m_swapchain.cmdPool = 0;
     m_vertexBuffer.size = 0;
     m_vertexBuffer.memory = 0;
     m_vertexBuffer.handle = 0;
@@ -2025,12 +2028,12 @@ bool Renderer::createCommandBuffers()
     commandPool.queueFamilyIndex = m_surfaceQueueIndex;
 
     if (vkCreateCommandPool(
-        m_vulkanDevice, &commandPool, 0, &m_commands.pool) != VK_SUCCESS)
+        m_vulkanDevice, &commandPool, 0, &m_swapchain.cmdPool) != VK_SUCCESS)
     {
         // Could not create commands pool
         return false;
     }
-    if (!m_commands.pool)
+    if (!m_swapchain.cmdPool)
     {
         // Invalid commands pool
         return false;
@@ -2040,12 +2043,12 @@ bool Renderer::createCommandBuffers()
     VkCommandBufferAllocateInfo commandBuffer;
     commandBuffer.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     commandBuffer.pNext = 0;
-    commandBuffer.commandPool = m_commands.pool;
+    commandBuffer.commandPool = m_swapchain.cmdPool;
     commandBuffer.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     commandBuffer.commandBufferCount = m_swapchain.count;
 
     if (vkAllocateCommandBuffers(m_vulkanDevice,
-        &commandBuffer, m_commands.buffers) != VK_SUCCESS)
+        &commandBuffer, m_swapchain.cmdBuffers) != VK_SUCCESS)
     {
         // Could not allocate command buffers
         return false;
@@ -2073,20 +2076,23 @@ bool Renderer::createSemaphores()
     semaphoreInfo.pNext = 0;
     semaphoreInfo.flags = 0;
 
-    // Create image available semaphore
-    if (vkCreateSemaphore(m_vulkanDevice,
-        &semaphoreInfo, 0, &m_semaphores.imageAvailable) != VK_SUCCESS)
+    for (uint32_t i = 0; i < m_swapchain.count; ++i)
     {
-        // Could not create image available semaphore
-        return false;
-    }
+        // Create image available semaphore
+        if (vkCreateSemaphore(m_vulkanDevice,
+            &semaphoreInfo, 0, &m_swapchain.imageAvailable[i]) != VK_SUCCESS)
+        {
+            // Could not create image available semaphore
+            return false;
+        }
 
-    // Create render finished semaphore
-    if (vkCreateSemaphore(m_vulkanDevice,
-        &semaphoreInfo, 0, &m_semaphores.renderFinished) != VK_SUCCESS)
-    {
-        // Could not create render finished semaphore
-        return false;
+        // Create render finished semaphore
+        if (vkCreateSemaphore(m_vulkanDevice,
+            &semaphoreInfo, 0, &m_swapchain.renderFinished[i]) != VK_SUCCESS)
+        {
+            // Could not create render finished semaphore
+            return false;
+        }
     }
 
     // Semaphores successfully created
