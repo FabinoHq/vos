@@ -364,8 +364,8 @@ void Renderer::render()
     renderPassInfo.pClearValues = &RendererClearColor;
 
     // Begin command buffer
-    if (vkBeginCommandBuffer(
-        m_swapchain.commandBuffers[frameIndex], &commandBegin) != VK_SUCCESS)
+    if (vkBeginCommandBuffer(m_swapchain.commandBuffers[m_swapchain.current],
+        &commandBegin) != VK_SUCCESS)
     {
         // Could not begin command buffer
         m_rendererReady = false;
@@ -373,19 +373,19 @@ void Renderer::render()
     }
     
     vkCmdPipelineBarrier(
-        m_swapchain.commandBuffers[frameIndex],
+        m_swapchain.commandBuffers[m_swapchain.current],
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         0, 0, 0, 0, 0, 1, &presentToDraw
     );
 
     vkCmdBeginRenderPass(
-        m_swapchain.commandBuffers[frameIndex],
+        m_swapchain.commandBuffers[m_swapchain.current],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
     vkCmdBindPipeline(
-        m_swapchain.commandBuffers[frameIndex],
+        m_swapchain.commandBuffers[m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
     );
 
@@ -397,7 +397,9 @@ void Renderer::render()
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
-    vkCmdSetViewport(m_swapchain.commandBuffers[frameIndex], 0, 1, &viewport);
+    vkCmdSetViewport(
+        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &viewport
+    );
 
     VkRect2D scissor;
     scissor.offset.x = 0;
@@ -405,20 +407,22 @@ void Renderer::render()
     scissor.extent.width = m_swapchain.extent.width;
     scissor.extent.height = m_swapchain.extent.height;
 
-    vkCmdSetScissor(m_swapchain.commandBuffers[frameIndex], 0, 1, &scissor);
+    vkCmdSetScissor(
+        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
+    );
 
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        m_swapchain.commandBuffers[frameIndex], 0, 1,
+        m_swapchain.commandBuffers[m_swapchain.current], 0, 1,
         &m_vertexBuffer.handle, &offset
     );
 
-    vkCmdDraw(m_swapchain.commandBuffers[frameIndex], 4, 1, 0, 0);
+    vkCmdDraw(m_swapchain.commandBuffers[m_swapchain.current], 4, 1, 0, 0);
 
-    vkCmdEndRenderPass(m_swapchain.commandBuffers[frameIndex]);
+    vkCmdEndRenderPass(m_swapchain.commandBuffers[m_swapchain.current]);
 
     vkCmdPipelineBarrier(
-        m_swapchain.commandBuffers[frameIndex],
+        m_swapchain.commandBuffers[m_swapchain.current],
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
         0, 0, 0, 0, 0, 1, &drawToPresent
@@ -426,7 +430,7 @@ void Renderer::render()
 
     // End command buffer
     if (vkEndCommandBuffer(
-        m_swapchain.commandBuffers[frameIndex]) != VK_SUCCESS)
+        m_swapchain.commandBuffers[m_swapchain.current]) != VK_SUCCESS)
     {
         // Could not end command buffer
         m_rendererReady = false;
@@ -453,7 +457,8 @@ void Renderer::render()
         &m_swapchain.imageAvailable[m_swapchain.current];
     submitInfo.pWaitDstStageMask = &waitDstStage;
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &m_swapchain.commandBuffers[frameIndex];
+    submitInfo.pCommandBuffers =
+        &m_swapchain.commandBuffers[m_swapchain.current];
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores =
         &m_swapchain.renderFinished[m_swapchain.current];
