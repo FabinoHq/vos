@@ -1088,6 +1088,17 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkLayerProperties data structure                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkLayerProperties
+    {
+        char        layerName[VK_MAX_EXTENSION_NAME_SIZE];
+        uint32_t    specVersion;
+        uint32_t    implementationVersion;
+        char        description[VK_MAX_DESCRIPTION_SIZE];
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkPhysicalDeviceLimits data structure                                 //
     ////////////////////////////////////////////////////////////////////////////
     struct VkPhysicalDeviceLimits
@@ -2162,6 +2173,15 @@
     );
     extern PFN_vkEnumerateInstanceExtensionProperties
         vkEnumerateInstanceExtensionProperties;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkEnumerateInstanceLayerProperties function                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkEnumerateInstanceLayerProperties)(
+        uint32_t* pPropertyCount, VkLayerProperties* pProperties
+    );
+    extern PFN_vkEnumerateInstanceLayerProperties
+        vkEnumerateInstanceLayerProperties;
 
 
     ////////////////////////////////////////////////////////////////////////////

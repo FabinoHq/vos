@@ -53,6 +53,9 @@ PFN_vkCreateInstance vkCreateInstance = 0;
 PFN_vkEnumerateInstanceExtensionProperties
     vkEnumerateInstanceExtensionProperties = 0;
 
+// vkEnumerateInstanceLayerProperties function
+PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties = 0;
+
 
 // vkDestroyInstance function
 PFN_vkDestroyInstance vkDestroyInstance = 0;
@@ -297,6 +300,17 @@ bool LoadVulkanGlobalFunctions()
     if (!vkEnumerateInstanceExtensionProperties)
     {
         // Could not load vkEnumerateInstanceExtensionProperties
+        return false;
+    }
+
+    // Load vkEnumerateInstanceLayerProperties
+    vkEnumerateInstanceLayerProperties =
+        (PFN_vkEnumerateInstanceLayerProperties)vkGetInstanceProcAddr(
+        0, "vkEnumerateInstanceLayerProperties"
+    );
+    if (!vkEnumerateInstanceLayerProperties)
+    {
+        // Could not load vkEnumerateInstanceLayerProperties
         return false;
     }
 
@@ -1124,6 +1138,7 @@ void FreeVulkanFunctions()
     vkEnumeratePhysicalDevices = 0;
     vkDestroyInstance = 0;
 
+    vkEnumerateInstanceLayerProperties = 0;
     vkEnumerateInstanceExtensionProperties = 0;
     vkCreateInstance = 0;
 }
