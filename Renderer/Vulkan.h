@@ -2255,6 +2255,16 @@
         vkEnumerateDeviceExtensionProperties;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkEnumerateDeviceLayerProperties function                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkEnumerateDeviceLayerProperties)(
+        VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount,
+        VkLayerProperties* pProperties
+    );
+    extern PFN_vkEnumerateDeviceLayerProperties
+        vkEnumerateDeviceLayerProperties;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkGetPhysicalDeviceMemoryProperties function                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceMemoryProperties)(
