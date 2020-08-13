@@ -51,7 +51,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer swapchain settings                                           //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxSwapchainImages = 2;
+    const uint32_t RendererMaxSwapchainFrames = 2;
     const uint64_t RendererSwapchainFenceTimeout = 5000000000;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -168,13 +168,14 @@
         VulkanSwapchain() :
         handle(0),
         format(VK_FORMAT_UNDEFINED),
-        count(0),
+        frames(0),
+        current(0),
         cmdPool(0)
         {
             extent.width = 0;
             extent.height = 0;
 
-            for (uint32_t i = 0; i < RendererMaxSwapchainImages; ++i)
+            for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
             {
                 images[i].handle = 0;
                 images[i].view = 0;
@@ -191,15 +192,16 @@
         VkSwapchainKHR      handle;     // Swapchain handle
         VkFormat            format;     // Swapchain format
         VkExtent2D          extent;     // Swapchain extent
-        uint32_t            count;      // swapchain images count
+        uint32_t            frames;     // Swapchain frames
+        uint32_t            current;    // swapchain current frame
 
-        VulkanImage         images[RendererMaxSwapchainImages];
-        VkFramebuffer       framebuffers[RendererMaxSwapchainImages];
-        VkSemaphore         imageAvailable[RendererMaxSwapchainImages];
-        VkSemaphore         renderFinished[RendererMaxSwapchainImages];
-        VkFence             fences[RendererMaxSwapchainImages];
+        VulkanImage         images[RendererMaxSwapchainFrames];
+        VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
+        VkSemaphore         imageAvailable[RendererMaxSwapchainFrames];
+        VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
+        VkFence             fences[RendererMaxSwapchainFrames];
         VkCommandPool       cmdPool;
-        VkCommandBuffer     cmdBuffers[RendererMaxSwapchainImages];
+        VkCommandBuffer     cmdBuffers[RendererMaxSwapchainFrames];
     };
 
     ////////////////////////////////////////////////////////////////////////////
