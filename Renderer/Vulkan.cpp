@@ -266,6 +266,9 @@ PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers = 0;
 // vkCmdDraw function
 PFN_vkCmdDraw vkCmdDraw = 0;
 
+// vkCmdCopyBuffer function
+PFN_vkCmdCopyBuffer vkCmdCopyBuffer = 0;
+
 // vkCmdClearColorImage function
 PFN_vkCmdClearColorImage vkCmdClearColorImage = 0;
 
@@ -1026,6 +1029,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdCopyBuffer
+    vkCmdCopyBuffer = (PFN_vkCmdCopyBuffer)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCmdCopyBuffer"
+    );
+    if (!vkCmdCopyBuffer)
+    {
+        // Could not load vkCmdCopyBuffer
+        return false;
+    }
+
     // Load vkCmdClearColorImage
     vkCmdClearColorImage = (PFN_vkCmdClearColorImage)
         vkGetDeviceProcAddr(vulkanDevice, "vkCmdClearColorImage"
@@ -1081,6 +1094,7 @@ void FreeVulkanFunctions()
     vkCmdBeginRenderPass = 0;
     vkCmdPipelineBarrier = 0;
     vkCmdClearColorImage = 0;
+    vkCmdCopyBuffer = 0;
     vkCmdDraw = 0;
     vkCmdBindVertexBuffers = 0;
     vkCmdSetScissor = 0;

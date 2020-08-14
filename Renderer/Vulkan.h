@@ -2778,6 +2778,15 @@
     extern PFN_vkCmdDraw vkCmdDraw;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdCopyBuffer function                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdCopyBuffer)(
+        VkCommandBuffer commandBuffer, VkBuffer srcBuffer,
+        VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions
+    );
+    extern PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdClearColorImage function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdClearColorImage)(

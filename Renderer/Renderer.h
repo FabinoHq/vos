@@ -338,12 +338,6 @@
             bool createPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create vertex buffer                                          //
-            //  return : True if vertex buffer is successfully created        //
-            ////////////////////////////////////////////////////////////////////
-            bool createVertexBuffer();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create command buffers                                        //
             //  return : True if command buffers are successfully created     //
             ////////////////////////////////////////////////////////////////////
@@ -360,6 +354,12 @@
             //  return : True if fences are successfully created              //
             ////////////////////////////////////////////////////////////////////
             bool createFences();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create vertex buffer                                          //
+            //  return : True if vertex buffer is successfully created        //
+            ////////////////////////////////////////////////////////////////////
+            bool createVertexBuffer();
 
             ////////////////////////////////////////////////////////////////////
             //  Resize renderer frame                                         //
@@ -389,6 +389,7 @@
             VkPipelineLayout    m_pipelineLayout;       // Pipeline layout
             VkPipeline          m_pipeline;             // Graphics pipeline
             VkCommandPool       m_commandsPool;         // Commands pool
+            VulkanBuffer        m_stagingBuffer;        // Staging buffer
             VulkanBuffer        m_vertexBuffer;         // Vertex buffer
     };
 
