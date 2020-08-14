@@ -1789,17 +1789,12 @@ bool Renderer::createPipeline()
     vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
     // Vertex attribute
-    VkVertexInputAttributeDescription vertexAttributes[2];
+    VkVertexInputAttributeDescription vertexAttributes[1];
 
     vertexAttributes[0].location = 0;
     vertexAttributes[0].binding = vertexBinding.binding;
-    vertexAttributes[0].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+    vertexAttributes[0].format = VK_FORMAT_R32G32B32_SFLOAT;
     vertexAttributes[0].offset = 0;
-
-    vertexAttributes[1].location = 1;
-    vertexAttributes[1].binding = vertexBinding.binding;
-    vertexAttributes[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
-    vertexAttributes[1].offset = sizeof(float)*4;
 
     // Vertex input
     VkPipelineVertexInputStateCreateInfo vertexInput;
@@ -1809,7 +1804,7 @@ bool Renderer::createPipeline()
     vertexInput.flags = 0;
     vertexInput.vertexBindingDescriptionCount = 1;
     vertexInput.pVertexBindingDescriptions = &vertexBinding;
-    vertexInput.vertexAttributeDescriptionCount = 2;
+    vertexInput.vertexAttributeDescriptionCount = 1;
     vertexInput.pVertexAttributeDescriptions = vertexAttributes;
 
     // Input assembly
@@ -2095,38 +2090,18 @@ bool Renderer::createVertexBuffer()
     vertices[0].x = -0.8f;
     vertices[0].y = -0.8f;
     vertices[0].z = 0.0f;
-    vertices[0].w = 1.0f;
-    vertices[0].r = 0.2f;
-    vertices[0].g = 0.5f;
-    vertices[0].b = 0.8f;
-    vertices[0].a = 1.0f;
 
     vertices[1].x = -0.8f;
     vertices[1].y = 0.8f;
     vertices[1].z = 0.0f;
-    vertices[1].w = 1.0f;
-    vertices[1].r = 0.2f;
-    vertices[1].g = 0.5f;
-    vertices[1].b = 0.8f;
-    vertices[1].a = 1.0f;
 
     vertices[2].x = 0.8f;
     vertices[2].y = -0.8f;
     vertices[2].z = 0.0f;
-    vertices[2].w = 1.0f;
-    vertices[2].r = 0.2f;
-    vertices[2].g = 0.5f;
-    vertices[2].b = 0.8f;
-    vertices[2].a = 1.0f;
 
     vertices[3].x = 0.8f;
     vertices[3].y = 0.8f;
     vertices[3].z = 0.0f;
-    vertices[3].w = 1.0f;
-    vertices[3].r = 0.2f;
-    vertices[3].g = 0.5f;
-    vertices[3].b = 0.8f;
-    vertices[3].a = 1.0f;
 
     // Create staging buffer
     m_stagingBuffer.size = sizeof(vertices);
