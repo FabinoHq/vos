@@ -2801,6 +2801,16 @@
     extern PFN_vkCmdDraw vkCmdDraw;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdDrawIndexed function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdDrawIndexed)(
+        VkCommandBuffer commandBuffer, uint32_t indexCount,
+        uint32_t instanceCount, uint32_t firstIndex,
+        int32_t vertexOffset, uint32_t firstInstance
+    );
+    extern PFN_vkCmdDrawIndexed vkCmdDrawIndexed;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdCopyBuffer function                                              //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdCopyBuffer)(
