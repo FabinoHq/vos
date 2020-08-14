@@ -65,7 +65,8 @@ m_pipelineLayout(0),
 m_pipeline(0),
 m_commandsPool(0),
 m_stagingBuffer(),
-m_vertexBuffer()
+m_vertexBuffer(),
+m_indexBuffer()
 {
 
 }
@@ -414,11 +415,18 @@ void Renderer::render()
 
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        m_swapchain.commandBuffers[m_swapchain.current], 0, 1,
-        &m_vertexBuffer.handle, &offset
+        m_swapchain.commandBuffers[m_swapchain.current],
+        0, 1, &m_vertexBuffer.handle, &offset
     );
 
-    vkCmdDraw(m_swapchain.commandBuffers[m_swapchain.current], 4, 1, 0, 0);
+    vkCmdBindIndexBuffer(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+    );
+
+    vkCmdDrawIndexed(
+        m_swapchain.commandBuffers[m_swapchain.current], 6, 1, 0, 0, 0
+    );
 
     vkCmdEndRenderPass(m_swapchain.commandBuffers[m_swapchain.current]);
 
@@ -568,6 +576,9 @@ void Renderer::cleanup()
                 {
                     vkDestroyCommandPool(m_vulkanDevice, m_commandsPool, 0);
                 }
+
+                // Destroy index buffer
+                m_indexBuffer.destroyBuffer(m_vulkanDevice);
 
                 // Destroy vertex buffer
                 m_vertexBuffer.destroyBuffer(m_vulkanDevice);
@@ -1789,7 +1800,7 @@ bool Renderer::createPipeline()
         VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssembly.pNext = 0;
     inputAssembly.flags = 0;
-    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
     // Viewport
@@ -2060,24 +2071,18 @@ bool Renderer::createVertexBuffer()
         return false;
     }
 
-    // Create vertex buffer
+    // Vertices
     VertexData vertices[4];
+    vertices[0].x = -0.8f;  vertices[0].y = -0.8f;  vertices[0].z = 0.0f;
+    vertices[1].x = -0.8f;  vertices[1].y = 0.8f;   vertices[1].z = 0.0f;
+    vertices[2].x = 0.8f;   vertices[2].y = 0.8f;   vertices[2].z = 0.0f;
+    vertices[3].x = 0.8f;   vertices[3].y = -0.8f;  vertices[3].z = 0.0f;
 
-    vertices[0].x = -0.8f;
-    vertices[0].y = -0.8f;
-    vertices[0].z = 0.0f;
+    // Indices
+    uint16_t indices[6];
+    indices[0] = 0; indices[1] = 1; indices[2] = 2;
+    indices[3] = 2; indices[4] = 3; indices[5] = 0;
 
-    vertices[1].x = -0.8f;
-    vertices[1].y = 0.8f;
-    vertices[1].z = 0.0f;
-
-    vertices[2].x = 0.8f;
-    vertices[2].y = -0.8f;
-    vertices[2].z = 0.0f;
-
-    vertices[3].x = 0.8f;
-    vertices[3].y = 0.8f;
-    vertices[3].z = 0.0f;
 
     // Create staging buffer
     m_stagingBuffer.size = sizeof(vertices);
@@ -2206,6 +2211,144 @@ bool Renderer::createVertexBuffer()
         // Could not wait for graphics queue idle
         return false;
     }
+
+    if (commandBuffer)
+    {
+        vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool, 1, &commandBuffer);
+    }
+    m_stagingBuffer.destroyBuffer(m_vulkanDevice);
+
+
+    // Create index buffer
+    m_stagingBuffer.size = sizeof(indices);
+
+    if (!m_stagingBuffer.createBuffer(
+        m_physicalDevice, m_vulkanDevice,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
+    {
+        // Could not create staging buffer
+        return false;
+    }
+
+    // Map staging buffer memory
+    stagingBufferMemory = 0;
+    if (vkMapMemory(m_vulkanDevice, m_stagingBuffer.memory, 0,
+        m_stagingBuffer.size, 0, &stagingBufferMemory) != VK_SUCCESS)
+    {
+        return false;
+        // Could not map staging buffer memory
+    }
+    if (!stagingBufferMemory)
+    {
+        // Invalid staging buffer memory pointer
+        return false;
+    }
+
+    // Copy vertices into staging buffer memory
+    memcpy(stagingBufferMemory, indices, m_stagingBuffer.size);
+
+    // Unmap staging buffer memory
+    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    memoryRange.pNext = 0;
+    memoryRange.memory = m_stagingBuffer.memory;
+    memoryRange.offset = 0;
+    memoryRange.size = VK_WHOLE_SIZE;
+    
+    if (vkFlushMappedMemoryRanges(
+        m_vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
+    {
+        // Could not flush staging buffer mapped memory ranges
+        return false;
+    }
+
+    vkUnmapMemory(m_vulkanDevice, m_stagingBuffer.memory);
+
+
+    // Create index buffer
+    m_indexBuffer.size = sizeof(indices);
+
+    if (!m_indexBuffer.createBuffer(
+        m_physicalDevice, m_vulkanDevice,
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
+    {
+        // Could not create index buffer
+        return false;
+    }
+
+
+    // Allocate command buffers
+    commandBuffer = 0;
+    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    bufferAllocate.pNext = 0;
+    bufferAllocate.commandPool = m_commandsPool;
+    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    bufferAllocate.commandBufferCount = m_swapchain.frames;
+
+    if (vkAllocateCommandBuffers(m_vulkanDevice,
+        &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    {
+        // Could not allocate command buffers
+        return false;
+    }
+
+
+    // Transfert staging buffer data to vertex buffer
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    bufferCopy.srcOffset = 0;
+    bufferCopy.dstOffset = 0;
+    bufferCopy.size = m_stagingBuffer.size;
+
+    vkCmdCopyBuffer(
+        commandBuffer, m_stagingBuffer.handle,
+        m_indexBuffer.handle, 1, &bufferCopy
+    );
+
+    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(m_graphicsQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    if (vkQueueWaitIdle(m_graphicsQueueHandle) != VK_SUCCESS)
+    {
+        // Could not wait for graphics queue idle
+        return false;
+    }
+
+    if (commandBuffer)
+    {
+        vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool, 1, &commandBuffer);
+    }
+    m_stagingBuffer.destroyBuffer(m_vulkanDevice);
+
 
     // Vertex buffer successfully created
     return true;

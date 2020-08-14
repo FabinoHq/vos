@@ -509,6 +509,7 @@
             VkCommandPool       m_commandsPool;         // Commands pool
             VulkanBuffer        m_stagingBuffer;        // Staging buffer
             VulkanBuffer        m_vertexBuffer;         // Vertex buffer
+            VulkanBuffer        m_indexBuffer;          // Index buffer
     };
 
 
