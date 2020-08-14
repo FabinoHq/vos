@@ -570,28 +570,10 @@ void Renderer::cleanup()
                 }
 
                 // Destroy vertex buffer
-                if (m_vertexBuffer.handle && vkDestroyBuffer)
-                {
-                    vkDestroyBuffer(m_vulkanDevice, m_vertexBuffer.handle, 0);
-                }
-
-                // Free vertex buffer memory
-                if (m_vertexBuffer.memory && vkFreeMemory)
-                {
-                    vkFreeMemory(m_vulkanDevice, m_vertexBuffer.memory, 0);
-                }
+                m_vertexBuffer.destroyBuffer(m_vulkanDevice);
 
                 // Destroy staging buffer
-                if (m_stagingBuffer.handle && vkDestroyBuffer)
-                {
-                    vkDestroyBuffer(m_vulkanDevice, m_stagingBuffer.handle, 0);
-                }
-
-                // Free staging buffer memory
-                if (m_stagingBuffer.memory && vkFreeMemory)
-                {
-                    vkFreeMemory(m_vulkanDevice, m_stagingBuffer.memory, 0);
-                }
+                m_stagingBuffer.destroyBuffer(m_vulkanDevice);
 
                 // Destroy graphics pipeline
                 if (m_pipeline && vkDestroyPipeline)
@@ -685,12 +667,6 @@ void Renderer::cleanup()
     }
 
     m_commandsPool = 0;
-    m_vertexBuffer.size = 0;
-    m_vertexBuffer.memory = 0;
-    m_vertexBuffer.handle = 0;
-    m_stagingBuffer.size = 0;
-    m_stagingBuffer.memory = 0;
-    m_stagingBuffer.handle = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
     m_fragmentShader = 0;
@@ -2106,74 +2082,12 @@ bool Renderer::createVertexBuffer()
     // Create staging buffer
     m_stagingBuffer.size = sizeof(vertices);
 
-    VkBufferCreateInfo bufferInfo;
-    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.pNext = 0;
-    bufferInfo.flags = 0;
-    bufferInfo.size = m_stagingBuffer.size;
-    bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    bufferInfo.queueFamilyIndexCount = 0;
-    bufferInfo.pQueueFamilyIndices = 0;
-
-    if (vkCreateBuffer(
-        m_vulkanDevice, &bufferInfo, 0, &m_stagingBuffer.handle) != VK_SUCCESS)
+    if (!m_stagingBuffer.createBuffer(
+        m_physicalDevice, m_vulkanDevice,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
     {
         // Could not create staging buffer
-        return false;
-    }
-    if (!m_stagingBuffer.handle)
-    {
-        // Invalid staging buffer
-        return false;
-    }
-
-    // Get memory requirements
-    VkMemoryRequirements memoryRequirements;
-    vkGetBufferMemoryRequirements(
-        m_vulkanDevice, m_stagingBuffer.handle, &memoryRequirements
-    );
-
-    // Get physical device memory properties
-    VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &memoryProperties);
-
-    // Allocate buffer memory
-    bool memoryAllocated = false;
-    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
-    {
-        if (memoryRequirements.memoryTypeBits & (1 << i))
-        {
-            if (memoryProperties.memoryTypes[i].propertyFlags &
-                (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-                VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
-            {
-                VkMemoryAllocateInfo allocateInfo;
-                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-                allocateInfo.pNext = 0;
-                allocateInfo.allocationSize = memoryRequirements.size;
-                allocateInfo.memoryTypeIndex = i;
-
-                if (vkAllocateMemory(m_vulkanDevice,
-                    &allocateInfo, 0, &m_stagingBuffer.memory) == VK_SUCCESS)
-                {
-                    memoryAllocated = true;
-                    break;
-                }
-            }
-        }
-    }
-    if (!memoryAllocated)
-    {
-        // Could not allocate buffer memory
-        return false;
-    }
-
-    // Bind buffer memory
-    if (vkBindBufferMemory(m_vulkanDevice,
-        m_stagingBuffer.handle, m_stagingBuffer.memory, 0) != VK_SUCCESS)
-    {
-        // Could not bind buffer memory
         return false;
     }
 
@@ -2215,76 +2129,15 @@ bool Renderer::createVertexBuffer()
     // Create vertex buffer
     m_vertexBuffer.size = sizeof(vertices);
 
-    VkBufferCreateInfo vbufferInfo;
-    vbufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    vbufferInfo.pNext = 0;
-    vbufferInfo.flags = 0;
-    vbufferInfo.size = m_vertexBuffer.size;
-    vbufferInfo.usage =
-        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-    vbufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    vbufferInfo.queueFamilyIndexCount = 0;
-    vbufferInfo.pQueueFamilyIndices = 0;
-
-    if (vkCreateBuffer(
-        m_vulkanDevice, &vbufferInfo, 0, &m_vertexBuffer.handle) != VK_SUCCESS)
+    if (!m_vertexBuffer.createBuffer(
+        m_physicalDevice, m_vulkanDevice,
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
     {
-        // Could not create vertex buffer
-        return false;
-    }
-    if (!m_vertexBuffer.handle)
-    {
-        // Invalid vertex buffer
+        // Could not create staging buffer
         return false;
     }
 
-    // Get memory requirements
-    VkMemoryRequirements vmemoryRequirements;
-    vkGetBufferMemoryRequirements(
-        m_vulkanDevice, m_vertexBuffer.handle, &vmemoryRequirements
-    );
-
-    // Get physical device memory properties
-    VkPhysicalDeviceMemoryProperties vmemoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &vmemoryProperties);
-
-    // Allocate buffer memory
-    bool vmemoryAllocated = false;
-    for (uint32_t i = 0; i < vmemoryProperties.memoryTypeCount; ++i)
-    {
-        if (vmemoryRequirements.memoryTypeBits & (1 << i))
-        {
-            if (vmemoryProperties.memoryTypes[i].propertyFlags &
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-            {
-                VkMemoryAllocateInfo allocateInfo;
-                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-                allocateInfo.pNext = 0;
-                allocateInfo.allocationSize = vmemoryRequirements.size;
-                allocateInfo.memoryTypeIndex = i;
-
-                if (vkAllocateMemory(m_vulkanDevice,
-                    &allocateInfo, 0, &m_vertexBuffer.memory) == VK_SUCCESS)
-                {
-                    vmemoryAllocated = true;
-                    break;
-                }
-            }
-        }
-    }
-    if (!vmemoryAllocated)
-    {
-        // Could not allocate buffer memory
-        return false;
-    }
-
-    // Bind buffer memory
-    if (vkBindBufferMemory(m_vulkanDevice,
-        m_vertexBuffer.handle, m_vertexBuffer.memory, 0) != VK_SUCCESS)
-    {
-        // Could not bind buffer memory
-        return false;
-    }
 
     // Allocate command buffers
     VkCommandBuffer commandBuffer = 0;
@@ -2301,7 +2154,6 @@ bool Renderer::createVertexBuffer()
         // Could not allocate command buffers
         return false;
     }
-
 
     // Transfert staging buffer data to vertex buffer
     VkCommandBufferBeginInfo bufferBeginInfo;
