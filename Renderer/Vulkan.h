@@ -645,6 +645,19 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkIndexType enum                                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkIndexType
+    {
+        VK_INDEX_TYPE_UINT16 = 0,
+        VK_INDEX_TYPE_UINT32 = 1,
+        VK_INDEX_TYPE_BEGIN_RANGE = 0,
+        VK_INDEX_TYPE_END_RANGE = 1,
+        VK_INDEX_TYPE_RANGE_SIZE = 2,
+        VK_INDEX_TYPE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSubpassContents enum                                                //
     ////////////////////////////////////////////////////////////////////////////
     enum VkSubpassContents
@@ -2731,6 +2744,7 @@
     );
     extern PFN_vkResetCommandBuffer vkResetCommandBuffer;
 
+
     ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindPipeline function                                            //
     ////////////////////////////////////////////////////////////////////////////
@@ -2757,6 +2771,15 @@
         uint32_t scissorCount, const VkRect2D* pScissors
     );
     extern PFN_vkCmdSetScissor vkCmdSetScissor;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdBindIndexBuffer function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdBindIndexBuffer)(
+        VkCommandBuffer commandBuffer, VkBuffer buffer,
+        VkDeviceSize offset, VkIndexType indexType
+    );
+    extern PFN_vkCmdBindIndexBuffer vkCmdBindIndexBuffer;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindVertexBuffers function                                       //
