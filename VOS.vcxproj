@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="Event.h" />
     <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Renderer\Renderer.h" />
