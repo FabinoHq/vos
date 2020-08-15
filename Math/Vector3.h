@@ -93,7 +93,7 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Reset vector to zero                                          //
+            //  Reset Vector3 to zero                                         //
             ////////////////////////////////////////////////////////////////////
             inline void reset()
             {
@@ -103,7 +103,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector components from a vector                           //
+            //  Set Vector3 components from a vector                          //
             ////////////////////////////////////////////////////////////////////
             inline void set(const Vector3& vector)
             {
@@ -113,7 +113,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector components from X and Y and Z components           //
+            //  Set Vector3 components from X and Y and Z components          //
             ////////////////////////////////////////////////////////////////////
             inline void set(float x, float y, float z)
             {
@@ -123,7 +123,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector X component                                        //
+            //  Set Vector3 X component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setX(float x)
             {
@@ -131,7 +131,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector Y component                                        //
+            //  Set Vector3 Y component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setY(float y)
             {
@@ -139,7 +139,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector Z component                                        //
+            //  Set Vector3 Z component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setZ(float z)
             {
@@ -147,7 +147,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get vector length                                             //
+            //  Get Vector3 length                                            //
             ////////////////////////////////////////////////////////////////////
             inline float length()
             {
@@ -158,7 +158,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Normalize vector                                              //
+            //  Normalize Vector3                                             //
             ////////////////////////////////////////////////////////////////////
             inline void normalize()
             {
@@ -174,7 +174,7 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get vector x component                                        //
+            //  Get Vector3 x component                                       //
             //  return : X component of the vector                            //
             ////////////////////////////////////////////////////////////////////
             inline float& x()
@@ -183,7 +183,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get vector y component                                        //
+            //  Get Vector3 y component                                       //
             //  return : Y component of the vector                            //
             ////////////////////////////////////////////////////////////////////
             inline float& y()
@@ -192,7 +192,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get vector z component                                        //
+            //  Get Vector3 z component                                       //
             //  return : Z component of the vector                            //
             ////////////////////////////////////////////////////////////////////
             inline float& z()
@@ -202,7 +202,7 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector affectation operator                                   //
+            //  Vector3 affectation operator                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector3& operator=(const Vector3& vector)
             {
@@ -213,7 +213,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector addition operator                                      //
+            //  Vector3 addition operator                                     //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 operator+(const Vector3& vector)
             {
@@ -224,8 +224,13 @@
                 return result;
             }
 
+            inline Vector3 operator+(float val)
+            {
+                return Vector3(vec[0]+val, vec[1]+val, vec[2]+val);
+            }
+
             ////////////////////////////////////////////////////////////////////
-            //  Vector subtraction operator                                   //
+            //  Vector3 subtraction operator                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 operator-(const Vector3& vector)
             {
@@ -236,8 +241,13 @@
                 return result;
             }
 
+            inline Vector3 operator-(float val)
+            {
+                return Vector3(vec[0]-val, vec[1]-val, vec[2]-val);
+            }
+
             ////////////////////////////////////////////////////////////////////
-            //  Vector unary plus operator                                    //
+            //  Vector3 unary plus operator                                   //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 operator+()
             {
@@ -245,7 +255,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector unary minus operator                                   //
+            //  Vector3 unary minus operator                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 operator-()
             {
@@ -253,7 +263,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector multiplication operator                                //
+            //  Vector3 multiplication operator                               //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 operator*(const Vector3& vector)
             {
@@ -264,8 +274,13 @@
                 return result;
             }
 
+            inline Vector3 operator*(float val)
+            {
+                return Vector3(vec[0]*val, vec[1]*val, vec[2]*val);
+            }
+
             ////////////////////////////////////////////////////////////////////
-            //  Vector division operator                                      //
+            //  Vector3 division operator                                     //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 operator/(const Vector3& vector)
             {
@@ -285,8 +300,20 @@
                 return result;
             }
 
+            inline Vector3 operator/(float val)
+            {
+                Vector3 result(*this);
+                if (val != 0.0f)
+                {
+                    result.vec[0] /= val;
+                    result.vec[1] /= val;
+                    result.vec[2] /= val;
+                }
+                return result;
+            }
+
             ////////////////////////////////////////////////////////////////////
-            //  Vector prefix increment operator                              //
+            //  Vector3 prefix increment operator                             //
             ////////////////////////////////////////////////////////////////////
             inline Vector3& operator++()
             {
@@ -297,7 +324,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector postfix increment operator                             //
+            //  Vector3 postfix increment operator                            //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 operator++(int)
             {
@@ -305,7 +332,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector prefix decrement operator                              //
+            //  Vector3 prefix decrement operator                             //
             ////////////////////////////////////////////////////////////////////
             inline Vector3& operator--()
             {
@@ -316,7 +343,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector postfix decrement operator                             //
+            //  Vector3 postfix decrement operator                            //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 operator--(int)
             {
@@ -324,7 +351,95 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector equal to operator                                      //
+            //  Vector3 addition assignment operator                          //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector3& operator+=(const Vector3& vector)
+            {
+                vec[0] += vector.vec[0];
+                vec[1] += vector.vec[1];
+                vec[2] += vector.vec[2];
+                return *this;
+            }
+
+            inline Vector3& operator+=(float val)
+            {
+                vec[0] += val;
+                vec[1] += val;
+                vec[2] += val;
+                return *this;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Vector3 subtraction assignment operator                       //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector3& operator-=(const Vector3& vector)
+            {
+                vec[0] -= vector.vec[0];
+                vec[1] -= vector.vec[1];
+                vec[2] -= vector.vec[2];
+                return *this;
+            }
+
+            inline Vector3& operator-=(float val)
+            {
+                vec[0] -= val;
+                vec[1] -= val;
+                vec[2] -= val;
+                return *this;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Vector3 multiplication assignment operator                    //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector3& operator*=(const Vector3& vector)
+            {
+                vec[0] *= vector.vec[0];
+                vec[1] *= vector.vec[1];
+                vec[2] *= vector.vec[2];
+                return *this;
+            }
+
+            inline Vector3& operator*=(float val)
+            {
+                vec[0] *= val;
+                vec[1] *= val;
+                vec[2] *= val;
+                return *this;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Vector3 division assignment operator                          //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector3& operator/=(const Vector3& vector)
+            {
+                if (vector.vec[0] != 0.0f)
+                {
+                    vec[0] *= vector.vec[0];
+                }
+                if (vector.vec[1] != 0.0f)
+                {
+                    vec[1] *= vector.vec[1];
+                }
+                if (vector.vec[2] != 0.0f)
+                {
+                    vec[2] *= vector.vec[2];
+                }
+                return *this;
+            }
+
+            inline Vector3& operator/=(float val)
+            {
+                if (val != 0.0f)
+                {
+                    vec[0] *= val;
+                    vec[1] *= val;
+                    vec[2] *= val;
+                }
+                return *this;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Vector3 equal to operator                                     //
             ////////////////////////////////////////////////////////////////////
             inline bool operator==(const Vector3& vector)
             {
@@ -335,7 +450,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector not equal to operator                                  //
+            //  Vector3 not equal to operator                                 //
             ////////////////////////////////////////////////////////////////////
             inline bool operator!=(const Vector3& vector)
             {

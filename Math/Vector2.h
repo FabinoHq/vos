@@ -89,7 +89,7 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Reset vector to zero                                          //
+            //  Reset Vector2 to zero                                         //
             ////////////////////////////////////////////////////////////////////
             inline void reset()
             {
@@ -98,7 +98,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector components from a vector                           //
+            //  Set Vector2 components from a vector                          //
             ////////////////////////////////////////////////////////////////////
             inline void set(const Vector2& vector)
             {
@@ -107,7 +107,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector components from X and Y components                 //
+            //  Set Vector2 components from X and Y components                //
             ////////////////////////////////////////////////////////////////////
             inline void set(float x, float y)
             {
@@ -116,7 +116,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector X component                                        //
+            //  Set Vector2 X component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setX(float x)
             {
@@ -124,7 +124,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set vector Y component                                        //
+            //  Set Vector2 Y component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setY(float y)
             {
@@ -132,7 +132,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get vector length                                             //
+            //  Get Vector2 length                                            //
             ////////////////////////////////////////////////////////////////////
             inline float length()
             {
@@ -140,7 +140,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Normalize vector                                              //
+            //  Normalize Vector2                                             //
             ////////////////////////////////////////////////////////////////////
             inline void normalize()
             {
@@ -155,7 +155,7 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get vector x component                                        //
+            //  Get Vector2 x component                                       //
             //  return : X component of the vector                            //
             ////////////////////////////////////////////////////////////////////
             inline float& x()
@@ -164,7 +164,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get vector y component                                        //
+            //  Get Vector2 y component                                       //
             //  return : Y component of the vector                            //
             ////////////////////////////////////////////////////////////////////
             inline float& y()
@@ -174,7 +174,7 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector affectation operator                                   //
+            //  Vector2 affectation operator                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector2& operator=(const Vector2& vector)
             {
@@ -184,23 +184,33 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector addition operator                                      //
+            //  Vector2 addition operator                                     //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 operator+(const Vector2& vector)
             {
                 return Vector2(vec[0]+vector.vec[0], vec[1]+vector.vec[1]);
             }
 
+            inline Vector2 operator+(float val)
+            {
+                return Vector2(vec[0]+val, vec[1]+val);
+            }
+
             ////////////////////////////////////////////////////////////////////
-            //  Vector subtraction operator                                   //
+            //  Vector2 subtraction operator                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 operator-(const Vector2& vector)
             {
                 return Vector2(vec[0]-vector.vec[0], vec[1]-vector.vec[1]);
             }
 
+            inline Vector2 operator-(float val)
+            {
+                return Vector2(vec[0]-val, vec[1]-val);
+            }
+
             ////////////////////////////////////////////////////////////////////
-            //  Vector unary plus operator                                    //
+            //  Vector2 unary plus operator                                   //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 operator+()
             {
@@ -208,7 +218,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector unary minus operator                                   //
+            //  Vector2 unary minus operator                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 operator-()
             {
@@ -216,15 +226,20 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector multiplication operator                                //
+            //  Vector2 multiplication operator                               //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 operator*(const Vector2& vector)
             {
                 return Vector2(vec[0]*vector.vec[0], vec[1]*vector.vec[1]);
             }
 
+            inline Vector2 operator*(float val)
+            {
+                return Vector2(vec[0]*val, vec[1]*val);
+            }
+
             ////////////////////////////////////////////////////////////////////
-            //  Vector division operator                                      //
+            //  Vector2 division operator                                     //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 operator/(const Vector2& vector)
             {
@@ -240,8 +255,19 @@
                 return result;
             }
 
+            inline Vector2 operator/(float val)
+            {
+                Vector2 result(*this);
+                if (val != 0.0f)
+                {
+                    result.vec[0] /= val;
+                    result.vec[1] /= val;
+                }
+                return result;
+            }
+
             ////////////////////////////////////////////////////////////////////
-            //  Vector prefix increment operator                              //
+            //  Vector2 prefix increment operator                             //
             ////////////////////////////////////////////////////////////////////
             inline Vector2& operator++()
             {
@@ -251,7 +277,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector postfix increment operator                             //
+            //  Vector2 postfix increment operator                            //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 operator++(int)
             {
@@ -259,7 +285,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector prefix decrement operator                              //
+            //  Vector2 prefix decrement operator                             //
             ////////////////////////////////////////////////////////////////////
             inline Vector2& operator--()
             {
@@ -269,7 +295,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector postfix decrement operator                             //
+            //  Vector2 postfix decrement operator                            //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 operator--(int)
             {
@@ -277,7 +303,84 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector equal to operator                                      //
+            //  Vector2 addition assignment operator                          //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2& operator+=(const Vector2& vector)
+            {
+                vec[0] += vector.vec[0];
+                vec[1] += vector.vec[1];
+                return *this;
+            }
+
+            inline Vector2& operator+=(float val)
+            {
+                vec[0] += val;
+                vec[1] += val;
+                return *this;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Vector2 subtraction assignment operator                       //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2& operator-=(const Vector2& vector)
+            {
+                vec[0] -= vector.vec[0];
+                vec[1] -= vector.vec[1];
+                return *this;
+            }
+
+            inline Vector2& operator-=(float val)
+            {
+                vec[0] -= val;
+                vec[1] -= val;
+                return *this;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Vector2 multiplication assignment operator                    //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2& operator*=(const Vector2& vector)
+            {
+                vec[0] *= vector.vec[0];
+                vec[1] *= vector.vec[1];
+                return *this;
+            }
+
+            inline Vector2& operator*=(float val)
+            {
+                vec[0] *= val;
+                vec[1] *= val;
+                return *this;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Vector2 division assignment operator                          //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2& operator/=(const Vector2& vector)
+            {
+                if (vector.vec[0] != 0.0f)
+                {
+                    vec[0] *= vector.vec[0];
+                }
+                if (vector.vec[1] != 0.0f)
+                {
+                    vec[1] *= vector.vec[1];
+                }
+                return *this;
+            }
+
+            inline Vector2& operator/=(float val)
+            {
+                if (val != 0.0f)
+                {
+                    vec[0] *= val;
+                    vec[1] *= val;
+                }
+                return *this;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Vector2 equal to operator                                     //
             ////////////////////////////////////////////////////////////////////
             inline bool operator==(const Vector2& vector)
             {
@@ -287,7 +390,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector not equal to operator                                  //
+            //  Vector2 not equal to operator                                 //
             ////////////////////////////////////////////////////////////////////
             inline bool operator!=(const Vector2& vector)
             {
