@@ -10,6 +10,9 @@
     <Filter Include="System\Win">
       <UniqueIdentifier>{41fa50ff-8406-426a-b709-8597c59598fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{6445f972-1c0f-47ba-b9d4-3643478f9503}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -89,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="System\SysSleep.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Math.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
