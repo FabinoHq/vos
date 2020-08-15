@@ -99,5 +99,8 @@
     <ClInclude Include="Math\Vector2.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Vector3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

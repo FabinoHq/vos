@@ -55,6 +55,7 @@
 !Math/
 !Math/Math.h
 !Math/Vector2.h
+!Math/Vector3.h
 
 !Renderer/Vulkan.h
 !Renderer/Vulkan.cpp
