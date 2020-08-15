@@ -751,7 +751,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Matrix4x4 subtraction assignment operator                     //
             ////////////////////////////////////////////////////////////////////
-            inline Matrix4x4& operator-=(const Matrix4x4& matrix)
+            Matrix4x4& operator-=(const Matrix4x4& matrix)
             {
                 mat[0] -= matrix.mat[0];
                 mat[1] -= matrix.mat[1];
