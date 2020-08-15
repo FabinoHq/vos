@@ -212,6 +212,14 @@
                 return *this;
             }
 
+            inline Vector3& operator=(float val)
+            {
+                vec[0] = val;
+                vec[1] = val;
+                vec[2] = val;
+                return *this;
+            }
+
             ////////////////////////////////////////////////////////////////////
             //  Vector3 addition operator                                     //
             ////////////////////////////////////////////////////////////////////

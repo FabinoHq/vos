@@ -53,6 +53,9 @@
         // Double precision epsilon
         const double DoubleEpsilon = 5.0e-16;
 
+        // Pi constant
+        const float Pi = 3.141592653589793238462643383279502884197169f;
+
 
         ////////////////////////////////////////////////////////////////////////
         //  Get the absolute value of x                                       //

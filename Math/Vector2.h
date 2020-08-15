@@ -183,6 +183,13 @@
                 return *this;
             }
 
+            inline Vector2& operator=(float val)
+            {
+                vec[0] = val;
+                vec[1] = val;
+                return *this;
+            }
+
             ////////////////////////////////////////////////////////////////////
             //  Vector2 addition operator                                     //
             ////////////////////////////////////////////////////////////////////
