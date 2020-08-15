@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="Event.h" />
     <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\Vulkan.h" />
     <ClInclude Include="System\SysClock.h" />
