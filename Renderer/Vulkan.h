@@ -1924,6 +1924,59 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorImageInfo data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorImageInfo
+    {
+        VkSampler       sampler;
+        VkImageView     imageView;
+        VkImageLayout   imageLayout;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorBufferInfo data structure                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorBufferInfo
+    {
+        VkBuffer        buffer;
+        VkDeviceSize    offset;
+        VkDeviceSize    range;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkWriteDescriptorSet data structure                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkWriteDescriptorSet
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkDescriptorSet                 dstSet;
+        uint32_t                        dstBinding;
+        uint32_t                        dstArrayElement;
+        uint32_t                        descriptorCount;
+        VkDescriptorType                descriptorType;
+        const VkDescriptorImageInfo*    pImageInfo;
+        const VkDescriptorBufferInfo*   pBufferInfo;
+        const VkBufferView*             pTexelBufferView;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkCopyDescriptorSet data structure                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkCopyDescriptorSet
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkDescriptorSet     srcSet;
+        uint32_t            srcBinding;
+        uint32_t            srcArrayElement;
+        VkDescriptorSet     dstSet;
+        uint32_t            dstBinding;
+        uint32_t            dstArrayElement;
+        uint32_t            descriptorCount;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkFenceCreateInfo data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     struct VkFenceCreateInfo
@@ -2731,6 +2784,17 @@
         uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets
     );
     extern PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkUpdateDescriptorSets function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkUpdateDescriptorSets)(
+        VkDevice device, uint32_t descriptorWriteCount,
+        const VkWriteDescriptorSet* pDescriptorWrites,
+        uint32_t descriptorCopyCount,
+        const VkCopyDescriptorSet* pDescriptorCopies
+    );
+    extern PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateBuffer function                                               //

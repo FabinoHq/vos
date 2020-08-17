@@ -69,7 +69,9 @@ m_stagingBuffer(),
 m_vertexBuffer(),
 m_indexBuffer(),
 m_uniformBuffer(),
-m_uniformData()
+m_uniformData(),
+m_descriptorPool(0),
+m_descriptorSet(0)
 {
 
 }
@@ -265,6 +267,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createUniformBuffer())
     {
         // Could not create uniform buffer
+        return false;
+    }
+
+    // Create descriptor pool
+    if (!createDescriptorPool())
+    {
+        // Could not create descriptor pool
         return false;
     }
 
@@ -594,6 +603,14 @@ void Renderer::cleanup()
                     vkDestroyCommandPool(m_vulkanDevice, m_commandsPool, 0);
                 }
 
+                // Destroy descriptor pool
+                if (m_descriptorPool && vkDestroyDescriptorPool)
+                {
+                    vkDestroyDescriptorPool(
+                        m_vulkanDevice, m_descriptorPool, 0
+                    );
+                }
+
                 // Destroy uniform buffer
                 m_uniformBuffer.destroyBuffer(m_vulkanDevice);
 
@@ -705,6 +722,7 @@ void Renderer::cleanup()
         vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
     }
 
+    m_descriptorPool = 0;
     m_commandsPool = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
@@ -2455,13 +2473,6 @@ bool Renderer::createUniformBuffer()
         return false;
     }
 
-    // Check commands pool
-    if (!m_commandsPool)
-    {
-        // Invalid commands pool
-        return false;
-    }
-
     // Set identity matrices
     m_uniformData.projMatrix.setIdentity();
     m_uniformData.viewMatrix.setIdentity();
@@ -2514,6 +2525,68 @@ bool Renderer::createUniformBuffer()
     vkUnmapMemory(m_vulkanDevice, m_uniformBuffer.memory);
 
     // Uniform buffers successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create descriptor pool                                                    //
+//  return : True if descriptor pool is successfully created                  //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createDescriptorPool()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Create descriptor pool
+    VkDescriptorPoolSize poolSize;
+    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize.descriptorCount = 1;
+
+    VkDescriptorPoolCreateInfo poolInfo;
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.pNext = 0;
+    poolInfo.flags = 0;
+    poolInfo.maxSets = 1;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+
+    if (vkCreateDescriptorPool(
+        m_vulkanDevice, &poolInfo, 0, &m_descriptorPool) != VK_SUCCESS)
+    {
+        // Could not create descriptor pool
+        return false;
+    }
+    if (!m_descriptorPool)
+    {
+        // Invalid descriptor pool
+        return false;
+    }
+
+    // Create descriptor set
+    VkDescriptorSetAllocateInfo descriptorInfo;
+    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorInfo.pNext = 0;
+    descriptorInfo.descriptorPool = m_descriptorPool;
+    descriptorInfo.descriptorSetCount = 1;
+    descriptorInfo.pSetLayouts = &m_descriptorSetLayout;
+
+    if (vkAllocateDescriptorSets(
+        m_vulkanDevice, &descriptorInfo, &m_descriptorSet) != VK_SUCCESS)
+    {
+        // Could not allocate descriptor set
+        return false;
+    }
+    if (!m_descriptorSet)
+    {
+        // Invalid descriptor set
+        return false;
+    }
+
+    // Descriptor pool successfully created
     return true;
 }
 

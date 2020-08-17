@@ -505,6 +505,12 @@
             bool createUniformBuffer();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create descriptor pool                                        //
+            //  return : True if descriptor pool is successfully created      //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorPool();
+
+            ////////////////////////////////////////////////////////////////////
             //  Resize renderer frame                                         //
             //  return : True if the renderer is successfully resized         //
             ////////////////////////////////////////////////////////////////////
@@ -538,6 +544,8 @@
             VulkanBuffer            m_indexBuffer;          // Index buffer
             VulkanBuffer            m_uniformBuffer;        // Uniform buffer
             UniformData             m_uniformData;          // Uniform data
+            VkDescriptorPool        m_descriptorPool;       // Descriptor pool
+            VkDescriptorSet         m_descriptorSet;        // Descriptor set
     };
 
 
