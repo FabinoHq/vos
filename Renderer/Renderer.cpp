@@ -105,10 +105,10 @@ bool Renderer::init(SysWindow* sysWindow)
 {
     m_rendererReady = false;
 
-    // Check SysWindow pointer
+    // Check SysWindow
     if (!sysWindow)
     {
-        // Invalid SysWindow pointer
+        // Invalid SysWindow
         return false;
     }
     m_sysWindow = sysWindow;
@@ -1023,7 +1023,7 @@ bool Renderer::selectVulkanDevice()
     m_physicalDevice = physicalDevices[deviceIndex];
     if (!m_physicalDevice)
     {
-        // Invalid physical device pointer
+        // Invalid physical device
         return false;
     }
 
@@ -1080,7 +1080,7 @@ bool Renderer::selectVulkanDevice()
     }
     if (!m_vulkanDevice)
     {
-        // Invalid Vulkan device pointer
+        // Invalid Vulkan device
         return false;
     }
 
@@ -2187,7 +2187,7 @@ bool Renderer::createVertexBuffer()
     }
     if (!stagingBufferMemory)
     {
-        // Invalid staging buffer memory pointer
+        // Invalid staging buffer memory
         return false;
     }
 
@@ -2322,7 +2322,7 @@ bool Renderer::createVertexBuffer()
     }
     if (!stagingBufferMemory)
     {
-        // Invalid staging buffer memory pointer
+        // Invalid staging buffer memory
         return false;
     }
 
@@ -2478,6 +2478,40 @@ bool Renderer::createUniformBuffer()
         // Could not create uniform buffer
         return false;
     }
+
+    // Map uniform buffer memory
+    void* uniformBufferMemory = 0;
+    if (vkMapMemory(m_vulkanDevice, m_uniformBuffer.memory, 0,
+        m_uniformBuffer.size, 0, &uniformBufferMemory) != VK_SUCCESS)
+    {
+        // Could not map uniform buffer memory
+        return false;
+    }
+    if (!uniformBufferMemory)
+    {
+        // Invalid uniform buffer memory
+        return false;
+    }
+
+    // Copy uniform data into uniform buffer memory
+    memcpy(uniformBufferMemory, &m_uniformData, m_uniformBuffer.size);
+
+    // Unmap uniform buffer memory
+    VkMappedMemoryRange memoryRange;
+    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    memoryRange.pNext = 0;
+    memoryRange.memory = m_uniformBuffer.memory;
+    memoryRange.offset = 0;
+    memoryRange.size = VK_WHOLE_SIZE;
+
+    if (vkFlushMappedMemoryRanges(
+        m_vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
+    {
+        // Could not flush uniform buffer mapped memory ranges
+        return false;
+    }
+
+    vkUnmapMemory(m_vulkanDevice, m_uniformBuffer.memory);
 
     // Uniform buffers successfully created
     return true;
