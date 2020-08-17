@@ -2694,6 +2694,15 @@
     extern PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkResetDescriptorPool function                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkResetDescriptorPool)(
+        VkDevice device, VkDescriptorPool descriptorPool,
+        VkDescriptorPoolResetFlags flags
+    );
+    extern PFN_vkResetDescriptorPool vkResetDescriptorPool;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateBuffer function                                               //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateBuffer)(
