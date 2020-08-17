@@ -592,6 +592,28 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorType enum                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkDescriptorType
+    {
+        VK_DESCRIPTOR_TYPE_SAMPLER = 0,
+        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = 1,
+        VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = 2,
+        VK_DESCRIPTOR_TYPE_STORAGE_IMAGE = 3,
+        VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER = 4,
+        VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER = 5,
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER = 6,
+        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER = 7,
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = 8,
+        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = 9,
+        VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = 10,
+        VK_DESCRIPTOR_TYPE_BEGIN_RANGE = 0,
+        VK_DESCRIPTOR_TYPE_END_RANGE = 10,
+        VK_DESCRIPTOR_TYPE_RANGE_SIZE = 11,
+        VK_DESCRIPTOR_TYPE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkAttachmentLoadOp enum                                               //
     ////////////////////////////////////////////////////////////////////////////
     enum VkAttachmentLoadOp
@@ -1844,6 +1866,30 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorSetLayoutBinding data structure                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorSetLayoutBinding
+    {
+        uint32_t            binding;
+        VkDescriptorType    descriptorType;
+        uint32_t            descriptorCount;
+        VkShaderStageFlags  stageFlags;
+        const VkSampler*    pImmutableSamplers;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorSetLayoutCreateInfo data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorSetLayoutCreateInfo
+    {
+        VkStructureType                         sType;
+        const void*                             pNext;
+        VkDescriptorSetLayoutCreateFlags        flags;
+        uint32_t                                bindingCount;
+        const VkDescriptorSetLayoutBinding*     pBindings;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkFenceCreateInfo data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     struct VkFenceCreateInfo
@@ -2586,6 +2632,16 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyPipeline vkDestroyPipeline;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateDescriptorSetLayout function                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateDescriptorSetLayout)(
+        VkDevice device, const VkDescriptorSetLayoutCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator,
+        VkDescriptorSetLayout* pSetLayout
+    );
+    extern PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateBuffer function                                               //
