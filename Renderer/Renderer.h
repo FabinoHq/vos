@@ -445,6 +445,12 @@
             bool createDefaultShaders();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create descriptor set layout                                  //
+            //  return : True if descriptor layout is successfully created    //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorSetLayout();
+
+            ////////////////////////////////////////////////////////////////////
             //  Create pipeline layout                                        //
             //  return : True if pipeline layout is successfully created      //
             ////////////////////////////////////////////////////////////////////
@@ -501,16 +507,17 @@
             uint32_t            m_surfaceQueueIndex;    // Surface queue index
             VkQueue             m_surfaceQueueHandle;   // Surface queue handle
 
-            VulkanSwapchain     m_swapchain;            // Vulkan swapchain
-            VkRenderPass        m_renderPass;           // Render pass
-            VkShaderModule      m_vertexShader;         // Vertex shader
-            VkShaderModule      m_fragmentShader;       // Fragment shader
-            VkPipelineLayout    m_pipelineLayout;       // Pipeline layout
-            VkPipeline          m_pipeline;             // Graphics pipeline
-            VkCommandPool       m_commandsPool;         // Commands pool
-            VulkanBuffer        m_stagingBuffer;        // Staging buffer
-            VulkanBuffer        m_vertexBuffer;         // Vertex buffer
-            VulkanBuffer        m_indexBuffer;          // Index buffer
+            VulkanSwapchain         m_swapchain;            // Vulkan swapchain
+            VkRenderPass            m_renderPass;           // Render pass
+            VkShaderModule          m_vertexShader;         // Vertex shader
+            VkShaderModule          m_fragmentShader;       // Fragment shader
+            VkDescriptorSetLayout   m_descriptorSetLayout;  // Descriptor layout
+            VkPipelineLayout        m_pipelineLayout;       // Pipeline layout
+            VkPipeline              m_pipeline;             // Graphics pipeline
+            VkCommandPool           m_commandsPool;         // Commands pool
+            VulkanBuffer            m_stagingBuffer;        // Staging buffer
+            VulkanBuffer            m_vertexBuffer;         // Vertex buffer
+            VulkanBuffer            m_indexBuffer;          // Index buffer
     };
 
 

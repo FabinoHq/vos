@@ -61,6 +61,7 @@ m_swapchain(),
 m_renderPass(0),
 m_vertexShader(0),
 m_fragmentShader(0),
+m_descriptorSetLayout(0),
 m_pipelineLayout(0),
 m_pipeline(0),
 m_commandsPool(0),
@@ -206,6 +207,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createDefaultShaders())
     {
         // Could not create default shaders
+        return false;
+    }
+
+    // Create descriptor set layout
+    if (!createDescriptorSetLayout())
+    {
+        // Could not create descriptor set layout
         return false;
     }
 
@@ -600,6 +608,14 @@ void Renderer::cleanup()
                     );
                 }
 
+                // Destroy descriptor set layout
+                if (m_descriptorSetLayout && vkDestroyDescriptorSetLayout)
+                {
+                    vkDestroyDescriptorSetLayout(
+                        m_vulkanDevice, m_descriptorSetLayout, 0
+                    );
+                }
+
                 // Destroy default shaders
                 if (vkDestroyShaderModule)
                 {
@@ -680,6 +696,7 @@ void Renderer::cleanup()
     m_commandsPool = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
+    m_descriptorSetLayout = 0;
     m_fragmentShader = 0;
     m_vertexShader = 0;
     m_renderPass = 0;
@@ -1671,6 +1688,51 @@ bool Renderer::createDefaultShaders()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Create descriptor set layout                                              //
+//  return : True if descriptor layout is successfully created                //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createDescriptorSetLayout()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Create descriptor set layout
+    VkDescriptorSetLayoutBinding descriptorSetBinding;
+    descriptorSetBinding.binding = 0;
+    descriptorSetBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    descriptorSetBinding.descriptorCount = 1;
+    descriptorSetBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    descriptorSetBinding.pImmutableSamplers = 0;
+
+    VkDescriptorSetLayoutCreateInfo descriptorSetInfo;
+    descriptorSetInfo.sType =
+        VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    descriptorSetInfo.pNext = 0;
+    descriptorSetInfo.flags = 0;
+    descriptorSetInfo.bindingCount = 1;
+    descriptorSetInfo.pBindings = &descriptorSetBinding;
+
+    if (vkCreateDescriptorSetLayout(m_vulkanDevice,
+        &descriptorSetInfo, 0, &m_descriptorSetLayout) != VK_SUCCESS)
+    {
+        // Could not create descriptor set layout
+        return false;
+    }
+    if (!m_descriptorSetLayout)
+    {
+        // Invalid descriptor set layout
+        return false;
+    }
+
+    // Descriptor set layout successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Create pipeline layout                                                    //
 //  return : True if pipeline layout is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1683,13 +1745,20 @@ bool Renderer::createPipelineLayout()
         return false;
     }
 
+    // Check descriptor set layout
+    if (!m_descriptorSetLayout)
+    {
+        // Invalid descriptor set layout
+        return false;
+    }
+
     // Create pipeline layout
     VkPipelineLayoutCreateInfo pipelineInfo;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineInfo.pNext = 0;
     pipelineInfo.flags = 0;
-    pipelineInfo.setLayoutCount = 0;
-    pipelineInfo.pSetLayouts = 0;
+    pipelineInfo.setLayoutCount = 1;
+    pipelineInfo.pSetLayouts = &m_descriptorSetLayout;
     pipelineInfo.pushConstantRangeCount = 0;
     pipelineInfo.pPushConstantRanges = 0;
 
