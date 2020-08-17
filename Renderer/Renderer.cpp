@@ -67,7 +67,9 @@ m_pipeline(0),
 m_commandsPool(0),
 m_stagingBuffer(),
 m_vertexBuffer(),
-m_indexBuffer()
+m_indexBuffer(),
+m_uniformBuffer(),
+m_uniformData()
 {
 
 }
@@ -256,6 +258,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createVertexBuffer())
     {
         // Could not create vertex buffer
+        return false;
+    }
+
+    // Create uniform buffer
+    if (!createUniformBuffer())
+    {
+        // Could not create uniform buffer
         return false;
     }
 
@@ -584,6 +593,9 @@ void Renderer::cleanup()
                 {
                     vkDestroyCommandPool(m_vulkanDevice, m_commandsPool, 0);
                 }
+
+                // Destroy uniform buffer
+                m_uniformBuffer.destroyBuffer(m_vulkanDevice);
 
                 // Destroy index buffer
                 m_indexBuffer.destroyBuffer(m_vulkanDevice);
@@ -2420,6 +2432,54 @@ bool Renderer::createVertexBuffer()
 
 
     // Vertex buffer successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create uniform buffer                                                     //
+//  return : True if uniform buffer is successfully created                   //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createUniformBuffer()
+{
+    // Check physical device
+    if (!m_physicalDevice)
+    {
+        // Invalid physical device
+        return false;
+    }
+
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Check commands pool
+    if (!m_commandsPool)
+    {
+        // Invalid commands pool
+        return false;
+    }
+
+    // Set identity matrices
+    m_uniformData.projMatrix.setIdentity();
+    m_uniformData.viewMatrix.setIdentity();
+    m_uniformData.modelMatrix.setIdentity();
+
+    // Create uniform buffer
+    m_uniformBuffer.size = sizeof(m_uniformData);
+
+    if (!m_uniformBuffer.createBuffer(
+        m_physicalDevice, m_vulkanDevice, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
+    {
+        // Could not create uniform buffer
+        return false;
+    }
+
+    // Uniform buffers successfully created
     return true;
 }
 

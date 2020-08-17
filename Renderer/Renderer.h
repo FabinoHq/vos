@@ -45,6 +45,8 @@
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"
     #include "Vulkan.h"
+    #include "../Math/Math.h"
+    #include "../Math/Matrix4x4.h"
 
     #include <vector>
 
@@ -346,6 +348,16 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  UniformData data structure                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct UniformData
+    {
+        Matrix4x4   projMatrix;
+        Matrix4x4   viewMatrix;
+        Matrix4x4   modelMatrix;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VertexData data structure                                             //
     ////////////////////////////////////////////////////////////////////////////
     struct VertexData
@@ -487,6 +499,12 @@
             bool createVertexBuffer();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create uniform buffer                                         //
+            //  return : True if uniform buffer is successfully created       //
+            ////////////////////////////////////////////////////////////////////
+            bool createUniformBuffer();
+
+            ////////////////////////////////////////////////////////////////////
             //  Resize renderer frame                                         //
             //  return : True if the renderer is successfully resized         //
             ////////////////////////////////////////////////////////////////////
@@ -518,6 +536,8 @@
             VulkanBuffer            m_stagingBuffer;        // Staging buffer
             VulkanBuffer            m_vertexBuffer;         // Vertex buffer
             VulkanBuffer            m_indexBuffer;          // Index buffer
+            VulkanBuffer            m_uniformBuffer;        // Uniform buffer
+            UniformData             m_uniformData;          // Uniform data
     };
 
 
