@@ -203,6 +203,9 @@ PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout = 0;
 // vkDestroyDescriptorSetLayout function
 PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout = 0;
 
+// vkCreateDescriptorPool function
+PFN_vkCreateDescriptorPool vkCreateDescriptorPool = 0;
+
 // vkCreateBuffer function
 PFN_vkCreateBuffer vkCreateBuffer = 0;
 
@@ -833,6 +836,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCreateDescriptorPool
+    vkCreateDescriptorPool = (PFN_vkCreateDescriptorPool)
+        vkGetDeviceProcAddr(vulkanDevice, "vkCreateDescriptorPool"
+    );
+    if (!vkCreateDescriptorPool)
+    {
+        // Could not load vkCreateDescriptorPool
+        return false;
+    }
+
     // Load vkCreateBuffer
     vkCreateBuffer = (PFN_vkCreateBuffer)vkGetDeviceProcAddr(
         vulkanDevice, "vkCreateBuffer"
@@ -1175,6 +1188,7 @@ void FreeVulkanFunctions()
     vkGetBufferMemoryRequirements = 0;
     vkDestroyBuffer = 0;
     vkCreateBuffer = 0;
+    vkCreateDescriptorPool = 0;
     vkDestroyDescriptorSetLayout = 0;
     vkCreateDescriptorSetLayout = 0;
     vkDestroyPipeline = 0;

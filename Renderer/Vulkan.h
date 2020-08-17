@@ -1890,6 +1890,28 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorPoolSize data structure                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorPoolSize
+    {
+        VkDescriptorType    type;
+        uint32_t            descriptorCount;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorPoolCreateInfo data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorPoolCreateInfo
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkDescriptorPoolCreateFlags     flags;
+        uint32_t                        maxSets;
+        uint32_t                        poolSizeCount;
+        const VkDescriptorPoolSize*     pPoolSizes;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkFenceCreateInfo data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     struct VkFenceCreateInfo
@@ -2651,6 +2673,16 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateDescriptorPool function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateDescriptorPool)(
+        VkDevice device, const VkDescriptorPoolCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator,
+        VkDescriptorPool* pDescriptorPool
+    );
+    extern PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateBuffer function                                               //
