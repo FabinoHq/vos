@@ -2724,6 +2724,15 @@
     extern PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkFreeDescriptorSets function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkFreeDescriptorSets)(
+        VkDevice device, VkDescriptorPool descriptorPool,
+        uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets
+    );
+    extern PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateBuffer function                                               //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateBuffer)(
