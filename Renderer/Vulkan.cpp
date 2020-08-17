@@ -212,6 +212,9 @@ PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool = 0;
 // vkResetDescriptorPool function
 PFN_vkResetDescriptorPool vkResetDescriptorPool = 0;
 
+// vkAllocateDescriptorSets function
+PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets = 0;
+
 // vkCreateBuffer function
 PFN_vkCreateBuffer vkCreateBuffer = 0;
 
@@ -843,8 +846,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkCreateDescriptorPool
-    vkCreateDescriptorPool = (PFN_vkCreateDescriptorPool)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCreateDescriptorPool"
+    vkCreateDescriptorPool = (PFN_vkCreateDescriptorPool)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCreateDescriptorPool"
     );
     if (!vkCreateDescriptorPool)
     {
@@ -853,8 +856,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkDestroyDescriptorPool
-    vkDestroyDescriptorPool = (PFN_vkDestroyDescriptorPool)
-        vkGetDeviceProcAddr(vulkanDevice, "vkDestroyDescriptorPool"
+    vkDestroyDescriptorPool = (PFN_vkDestroyDescriptorPool)vkGetDeviceProcAddr(
+        vulkanDevice, "vkDestroyDescriptorPool"
     );
     if (!vkDestroyDescriptorPool)
     {
@@ -863,12 +866,22 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkResetDescriptorPool
-    vkResetDescriptorPool = (PFN_vkResetDescriptorPool)
-        vkGetDeviceProcAddr(vulkanDevice, "vkResetDescriptorPool"
+    vkResetDescriptorPool = (PFN_vkResetDescriptorPool)vkGetDeviceProcAddr(
+        vulkanDevice, "vkResetDescriptorPool"
     );
     if (!vkResetDescriptorPool)
     {
         // Could not load vkResetDescriptorPool
+        return false;
+    }
+
+    // Load vkAllocateDescriptorSets
+    vkAllocateDescriptorSets = (PFN_vkAllocateDescriptorSets)
+        vkGetDeviceProcAddr(vulkanDevice, "vkAllocateDescriptorSets"
+    );
+    if (!vkAllocateDescriptorSets)
+    {
+        // Could not load vkAllocateDescriptorSets
         return false;
     }
 
@@ -1214,6 +1227,7 @@ void FreeVulkanFunctions()
     vkGetBufferMemoryRequirements = 0;
     vkDestroyBuffer = 0;
     vkCreateBuffer = 0;
+    vkAllocateDescriptorSets = 0;
     vkResetDescriptorPool = 0;
     vkDestroyDescriptorPool = 0;
     vkCreateDescriptorPool = 0;

@@ -1912,6 +1912,18 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorSetAllocateInfo data structure                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorSetAllocateInfo
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkDescriptorPool                descriptorPool;
+        uint32_t                        descriptorSetCount;
+        const VkDescriptorSetLayout*    pSetLayouts;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkFenceCreateInfo data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     struct VkFenceCreateInfo
@@ -2701,6 +2713,15 @@
         VkDescriptorPoolResetFlags flags
     );
     extern PFN_vkResetDescriptorPool vkResetDescriptorPool;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkAllocateDescriptorSets function                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkAllocateDescriptorSets)(
+        VkDevice device, const VkDescriptorSetAllocateInfo* pAllocateInfo,
+        VkDescriptorSet* pDescriptorSets
+    );
+    extern PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateBuffer function                                               //

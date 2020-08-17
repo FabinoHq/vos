@@ -116,6 +116,7 @@
         typedef struct VkSampler_T*             VkSampler;
         typedef struct VkDescriptorSetLayout_T* VkDescriptorSetLayout;
         typedef struct VkDescriptorPool_T*      VkDescriptorPool;
+        typedef struct VkDescriptorSet_T*       VkDescriptorSet;
         typedef struct VkFramebuffer_T*         VkFramebuffer;
         typedef struct VkCommandPool_T*         VkCommandPool;
     #else
@@ -135,6 +136,7 @@
         typedef uint64_t                        VkSampler;
         typedef uint64_t                        VkDescriptorSetLayout;
         typedef uint64_t                        VkDescriptorPool;
+        typedef uint64_t                        VkDescriptorSet;
         typedef uint64_t                        VkFramebuffer;
         typedef uint64_t                        VkCommandPool;
     #endif
