@@ -2644,6 +2644,15 @@
     extern PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyDescriptorSetLayout function                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyDescriptorSetLayout)(
+        VkDevice device, VkDescriptorSetLayout descriptorSetLayout,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateBuffer function                                               //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateBuffer)(
