@@ -439,6 +439,12 @@ void Renderer::render()
         m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
     );
 
+    vkCmdBindDescriptorSets(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
+        &m_descriptorSet, 0, 0
+    );
+
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
@@ -2585,6 +2591,26 @@ bool Renderer::createDescriptorPool()
         // Invalid descriptor set
         return false;
     }
+
+    // Update descriptor set
+    VkDescriptorBufferInfo bufferInfo;
+    bufferInfo.buffer = m_uniformBuffer.handle;
+    bufferInfo.offset = 0;
+    bufferInfo.range = m_uniformBuffer.size;
+
+    VkWriteDescriptorSet descriptorWrite;
+    descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    descriptorWrite.pNext = 0;
+    descriptorWrite.dstSet = m_descriptorSet;
+    descriptorWrite.dstBinding = 0;
+    descriptorWrite.dstArrayElement = 0;
+    descriptorWrite.descriptorCount = 1;
+    descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    descriptorWrite.pImageInfo = 0;
+    descriptorWrite.pBufferInfo = &bufferInfo;
+    descriptorWrite.pTexelBufferView = 0;
+
+    vkUpdateDescriptorSets(m_vulkanDevice, 1, &descriptorWrite, 0, 0);
 
     // Descriptor pool successfully created
     return true;

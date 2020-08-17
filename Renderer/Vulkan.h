@@ -2982,6 +2982,17 @@
     extern PFN_vkCmdSetScissor vkCmdSetScissor;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdBindDescriptorSets function                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdBindDescriptorSets)(
+        VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint,
+        VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount,
+        const VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount,
+        const uint32_t* pDynamicOffsets
+    );
+    extern PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindIndexBuffer function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindIndexBuffer)(
