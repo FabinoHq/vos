@@ -619,6 +619,65 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkFilter enum                                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkFilter
+    {
+        VK_FILTER_NEAREST = 0,
+        VK_FILTER_LINEAR = 1,
+        VK_FILTER_BEGIN_RANGE = 0,
+        VK_FILTER_END_RANGE = 1,
+        VK_FILTER_RANGE_SIZE = 2,
+        VK_FILTER_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSamplerMipmapMode enum                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSamplerMipmapMode
+    {
+        VK_SAMPLER_MIPMAP_MODE_NEAREST = 0,
+        VK_SAMPLER_MIPMAP_MODE_LINEAR = 1,
+        VK_SAMPLER_MIPMAP_MODE_BEGIN_RANGE = 0,
+        VK_SAMPLER_MIPMAP_MODE_END_RANGE = 1,
+        VK_SAMPLER_MIPMAP_MODE_RANGE_SIZE = 2,
+        VK_SAMPLER_MIPMAP_MODE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSamplerAddressMode enum                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSamplerAddressMode
+    {
+        VK_SAMPLER_ADDRESS_MODE_REPEAT = 0,
+        VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1,
+        VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2,
+        VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3,
+        VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4,
+        VK_SAMPLER_ADDRESS_MODE_BEGIN_RANGE = 0,
+        VK_SAMPLER_ADDRESS_MODE_END_RANGE = 4,
+        VK_SAMPLER_ADDRESS_MODE_RANGE_SIZE = 5,
+        VK_SAMPLER_ADDRESS_MODE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBorderColor enum                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkBorderColor
+    {
+        VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = 0,
+        VK_BORDER_COLOR_INT_TRANSPARENT_BLACK = 1,
+        VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK = 2,
+        VK_BORDER_COLOR_INT_OPAQUE_BLACK = 3,
+        VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE = 4,
+        VK_BORDER_COLOR_INT_OPAQUE_WHITE = 5,
+        VK_BORDER_COLOR_BEGIN_RANGE = 0,
+        VK_BORDER_COLOR_END_RANGE = 5,
+        VK_BORDER_COLOR_RANGE_SIZE = 6,
+        VK_BORDER_COLOR_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkDescriptorType enum                                                 //
     ////////////////////////////////////////////////////////////////////////////
     enum VkDescriptorType
@@ -1916,6 +1975,31 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkSamplerCreateInfo data structure                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSamplerCreateInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkSamplerCreateFlags    flags;
+        VkFilter                magFilter;
+        VkFilter                minFilter;
+        VkSamplerMipmapMode     mipmapMode;
+        VkSamplerAddressMode    addressModeU;
+        VkSamplerAddressMode    addressModeV;
+        VkSamplerAddressMode    addressModeW;
+        float                   mipLodBias;
+        VkBool32                anisotropyEnable;
+        float                   maxAnisotropy;
+        VkBool32                compareEnable;
+        VkCompareOp             compareOp;
+        float                   minLod;
+        float                   maxLod;
+        VkBorderColor           borderColor;
+        VkBool32                unnormalizedCoordinates;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkDescriptorSetLayoutBinding data structure                           //
     ////////////////////////////////////////////////////////////////////////////
     struct VkDescriptorSetLayoutBinding
@@ -2795,6 +2879,15 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateSampler function                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateSampler)(
+        VkDevice device, const VkSamplerCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkSampler* pSampler
+    );
+    extern PFN_vkCreateSampler vkCreateSampler;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateGraphicsPipelines function                                    //
