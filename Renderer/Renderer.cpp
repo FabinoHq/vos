@@ -70,6 +70,7 @@ m_vertexBuffer(),
 m_indexBuffer(),
 m_uniformBuffer(),
 m_uniformData(),
+m_texture(),
 m_descriptorPool(0),
 m_descriptorSet(0)
 {
@@ -267,6 +268,13 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createUniformBuffer())
     {
         // Could not create uniform buffer
+        return false;
+    }
+
+    // Create texture
+    if (!createTexture())
+    {
+        // Could not create texture
         return false;
     }
 
@@ -617,6 +625,18 @@ void Renderer::cleanup()
                     );
                 }
 
+                // Destroy texture
+                if (m_texture.handle && vkDestroyImage)
+                {
+                    vkDestroyImage(m_vulkanDevice, m_texture.handle, 0);
+                }
+
+                // Destroy texture memory
+                if (m_texture.memory && vkFreeMemory)
+                {
+                    vkFreeMemory(m_vulkanDevice, m_texture.memory, 0);
+                }
+
                 // Destroy uniform buffer
                 m_uniformBuffer.destroyBuffer(m_vulkanDevice);
 
@@ -729,6 +749,8 @@ void Renderer::cleanup()
     }
 
     m_descriptorPool = 0;
+    m_texture.memory = 0;
+    m_texture.handle = 0;
     m_commandsPool = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
@@ -2531,6 +2553,241 @@ bool Renderer::createUniformBuffer()
     vkUnmapMemory(m_vulkanDevice, m_uniformBuffer.memory);
 
     // Uniform buffers successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create texture                                                            //
+//  return : True if texture is successfully created                          //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createTexture()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    uint32_t textureSize = TestSpriteWidth * TestSpriteHeight * TestSpriteDepth;
+
+    // Create staging buffer
+    m_stagingBuffer.size = textureSize;
+
+    if (!m_stagingBuffer.createBuffer(
+        m_physicalDevice, m_vulkanDevice,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
+    {
+        // Could not create staging buffer
+        return false;
+    }
+
+    // Map staging buffer memory
+    void* stagingBufferMemory = 0;
+    if (vkMapMemory(m_vulkanDevice, m_stagingBuffer.memory, 0,
+        m_stagingBuffer.size, 0, &stagingBufferMemory) != VK_SUCCESS)
+    {
+        return false;
+        // Could not map staging buffer memory
+    }
+    if (!stagingBufferMemory)
+    {
+        // Invalid staging buffer memory
+        return false;
+    }
+
+    // Copy texture into staging buffer memory
+    memcpy(stagingBufferMemory, TestSprite, m_stagingBuffer.size);
+
+    // Unmap staging buffer memory
+    VkMappedMemoryRange memoryRange;
+    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    memoryRange.pNext = 0;
+    memoryRange.memory = m_stagingBuffer.memory;
+    memoryRange.offset = 0;
+    memoryRange.size = VK_WHOLE_SIZE;
+    
+    if (vkFlushMappedMemoryRanges(
+        m_vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
+    {
+        // Could not flush staging buffer mapped memory ranges
+        return false;
+    }
+
+    vkUnmapMemory(m_vulkanDevice, m_stagingBuffer.memory);
+
+
+    // Create texture
+    VkImageCreateInfo imageInfo;
+    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.pNext = 0;
+    imageInfo.flags = 0;
+    imageInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+    imageInfo.extent.width = TestSpriteWidth;
+    imageInfo.extent.height = TestSpriteHeight;
+    imageInfo.extent.depth = 1;
+    imageInfo.mipLevels = 1;
+    imageInfo.arrayLayers = 1;
+    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.usage =
+        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.queueFamilyIndexCount = 0;
+    imageInfo.pQueueFamilyIndices = 0;
+    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    if (vkCreateImage(
+        m_vulkanDevice, &imageInfo, 0, &m_texture.handle) != VK_SUCCESS)
+    {
+        // Could not create texture
+        return false;
+    }
+    if (!m_texture.handle)
+    {
+        // Invalid texture
+        return false;
+    }
+
+    // Get memory requirements
+    VkMemoryRequirements memoryRequirements;
+    vkGetImageMemoryRequirements(
+        m_vulkanDevice, m_texture.handle, &memoryRequirements
+    );
+
+    // Get physical device memory properties
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(
+        m_physicalDevice, &memoryProperties
+    );
+
+    // Allocate buffer memory
+    bool memoryAllocated = false;
+    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
+    {
+        if (memoryRequirements.memoryTypeBits & (1 << i))
+        {
+            if (memoryProperties.memoryTypes[i].propertyFlags &
+                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+            {
+                VkMemoryAllocateInfo allocateInfo;
+                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+                allocateInfo.pNext = 0;
+                allocateInfo.allocationSize = memoryRequirements.size;
+                allocateInfo.memoryTypeIndex = i;
+
+                if (vkAllocateMemory(m_vulkanDevice,
+                    &allocateInfo, 0, &m_texture.memory) == VK_SUCCESS)
+                {
+                    memoryAllocated = true;
+                    break;
+                }
+            }
+        }
+    }
+    if (!memoryAllocated)
+    {
+        // Could not allocate buffer memory
+        return false;
+    }
+
+    // Bind texture memory
+    if (vkBindImageMemory(
+        m_vulkanDevice, m_texture.handle, m_texture.memory, 0) != VK_SUCCESS)
+    {
+        // Could not bind texture memory
+        return false;
+    }
+
+
+    // Allocate command buffers
+    VkCommandBuffer commandBuffer = 0;
+    VkCommandBufferAllocateInfo bufferAllocate;
+    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    bufferAllocate.pNext = 0;
+    bufferAllocate.commandPool = m_commandsPool;
+    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    bufferAllocate.commandBufferCount = m_swapchain.frames;
+
+    if (vkAllocateCommandBuffers(m_vulkanDevice,
+        &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    {
+        // Could not allocate command buffers
+        return false;
+    }
+
+    // Transfert staging buffer data to texture buffer
+    VkCommandBufferBeginInfo bufferBeginInfo;
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    VkBufferImageCopy imageCopy;
+    imageCopy.bufferOffset = 0;
+    imageCopy.bufferRowLength = 0;
+    imageCopy.bufferImageHeight = 0;
+    imageCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageCopy.imageSubresource.mipLevel = 0;
+    imageCopy.imageSubresource.baseArrayLayer = 0;
+    imageCopy.imageSubresource.layerCount = 1;
+    imageCopy.imageOffset.x = 0;
+    imageCopy.imageOffset.y = 0;
+    imageCopy.imageOffset.z = 0;
+    imageCopy.imageExtent.width = TestSpriteWidth;
+    imageCopy.imageExtent.height = TestSpriteHeight;
+    imageCopy.imageExtent.depth = 1;
+
+    vkCmdCopyBufferToImage(
+        commandBuffer, m_stagingBuffer.handle, m_texture.handle,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
+    );
+
+    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(m_graphicsQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    if (vkQueueWaitIdle(m_graphicsQueueHandle) != VK_SUCCESS)
+    {
+        // Could not wait for graphics queue idle
+        return false;
+    }
+
+    if (commandBuffer)
+    {
+        vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool, 1, &commandBuffer);
+    }
+    m_stagingBuffer.destroyBuffer(m_vulkanDevice);
+
+
+    // Texture successfully created
     return true;
 }
 

@@ -160,6 +160,9 @@ PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges = 0;
 // vkBindBufferMemory function
 PFN_vkBindBufferMemory vkBindBufferMemory = 0;
 
+// vkBindImageMemory function
+PFN_vkBindImageMemory vkBindImageMemory = 0;
+
 
 // vkCreateRenderPass function
 PFN_vkCreateRenderPass vkCreateRenderPass = 0;
@@ -730,6 +733,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     if (!vkBindBufferMemory)
     {
         // Could not load vkBindBufferMemory
+        return false;
+    }
+
+    // Load vkBindImageMemory
+    vkBindImageMemory = (PFN_vkBindImageMemory)vkGetDeviceProcAddr(
+        vulkanDevice, "vkBindImageMemory"
+    );
+    if (!vkBindImageMemory)
+    {
+        // Could not load vkBindImageMemory
         return false;
     }
 
@@ -1385,6 +1398,7 @@ void FreeVulkanFunctions()
     vkDestroyRenderPass = 0;
     vkCreateRenderPass = 0;
 
+    vkBindImageMemory = 0;
     vkBindBufferMemory = 0;
     vkFlushMappedMemoryRanges = 0;
     vkUnmapMemory = 0;
