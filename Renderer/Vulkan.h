@@ -3172,6 +3172,16 @@
     extern PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdCopyImageToBuffer function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdCopyImageToBuffer)(
+        VkCommandBuffer commandBuffer, VkImage srcImage,
+        VkImageLayout srcImageLayout, VkBuffer dstBuffer,
+        uint32_t regionCount, const VkBufferImageCopy* pRegions
+    );
+    extern PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdClearColorImage function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdClearColorImage)(
