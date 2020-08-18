@@ -2890,6 +2890,15 @@
     extern PFN_vkCreateSampler vkCreateSampler;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroySampler function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroySampler)(
+        VkDevice device, VkSampler sampler,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroySampler vkDestroySampler;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateGraphicsPipelines function                                    //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateGraphicsPipelines)(
