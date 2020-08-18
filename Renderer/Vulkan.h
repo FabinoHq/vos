@@ -272,6 +272,33 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkImageType enum                                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkImageType
+    {
+        VK_IMAGE_TYPE_1D = 0,
+        VK_IMAGE_TYPE_2D = 1,
+        VK_IMAGE_TYPE_3D = 2,
+        VK_IMAGE_TYPE_BEGIN_RANGE = 0,
+        VK_IMAGE_TYPE_END_RANGE = 2,
+        VK_IMAGE_TYPE_RANGE_SIZE = 3,
+        VK_IMAGE_TYPE_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageTiling enum                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkImageTiling
+    {
+        VK_IMAGE_TILING_OPTIMAL = 0,
+        VK_IMAGE_TILING_LINEAR = 1,
+        VK_IMAGE_TILING_BEGIN_RANGE = 0,
+        VK_IMAGE_TILING_END_RANGE = 1,
+        VK_IMAGE_TILING_RANGE_SIZE = 2,
+        VK_IMAGE_TILING_MAX_ENUM = 0x7FFFFFFF
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkColorSpaceKHR enum                                                  //
     ////////////////////////////////////////////////////////////////////////////
     enum VkColorSpaceKHR
@@ -790,6 +817,19 @@
         VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080
     };
     typedef VkFlags VkImageUsageFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageCreateFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkImageCreateFlagBits
+    {
+        VK_IMAGE_CREATE_SPARSE_BINDING_BIT = 0x00000001,
+        VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = 0x00000002,
+        VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = 0x00000004,
+        VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = 0x00000008,
+        VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = 0x00000010
+    };
+    typedef VkFlags VkImageCreateFlags;
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkImageAspectFlags                                                    //
@@ -2012,6 +2052,28 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkImageCreateInfo data structure                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageCreateInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkImageCreateFlags      flags;
+        VkImageType             imageType;
+        VkFormat                format;
+        VkExtent3D              extent;
+        uint32_t                mipLevels;
+        uint32_t                arrayLayers;
+        VkSampleCountFlagBits   samples;
+        VkImageTiling           tiling;
+        VkImageUsageFlags       usage;
+        VkSharingMode           sharingMode;
+        uint32_t                queueFamilyIndexCount;
+        const uint32_t*         pQueueFamilyIndices;
+        VkImageLayout           initialLayout;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkAttachmentDescription data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkAttachmentDescription
@@ -2813,6 +2875,15 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyBuffer vkDestroyBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateImage function                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateImage)(
+        VkDevice device, const VkImageCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkImage* pImage
+    );
+    extern PFN_vkCreateImage vkCreateImage;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkGetBufferMemoryRequirements function                                //

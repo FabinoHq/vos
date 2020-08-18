@@ -227,6 +227,9 @@ PFN_vkCreateBuffer vkCreateBuffer = 0;
 // vkDestroyBuffer function
 PFN_vkDestroyBuffer vkDestroyBuffer = 0;
 
+// vkCreateImage function
+PFN_vkCreateImage vkCreateImage = 0;
+
 // vkGetBufferMemoryRequirements function
 PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements = 0;
 
@@ -934,6 +937,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCreateImage
+    vkCreateImage = (PFN_vkCreateImage)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCreateImage"
+    );
+    if (!vkCreateImage)
+    {
+        // Could not load vkCreateImage
+        return false;
+    }
+
     // Load vkGetBufferMemoryRequirements
     vkGetBufferMemoryRequirements =
         (PFN_vkGetBufferMemoryRequirements)vkGetDeviceProcAddr(
@@ -1265,6 +1278,7 @@ void FreeVulkanFunctions()
     vkDestroyFence = 0;
     vkCreateFence = 0;
     vkGetBufferMemoryRequirements = 0;
+    vkCreateImage = 0;
     vkDestroyBuffer = 0;
     vkCreateBuffer = 0;
     vkUpdateDescriptorSets = 0;
