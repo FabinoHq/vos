@@ -1759,20 +1759,29 @@ bool Renderer::createDescriptorSetLayout()
     }
 
     // Create descriptor set layout
-    VkDescriptorSetLayoutBinding descriptorSetBinding;
-    descriptorSetBinding.binding = 0;
-    descriptorSetBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    descriptorSetBinding.descriptorCount = 1;
-    descriptorSetBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    descriptorSetBinding.pImmutableSamplers = 0;
+    VkDescriptorSetLayoutBinding descriptorSetBindings[2];
+
+    descriptorSetBindings[0].binding = 0;
+    descriptorSetBindings[0].descriptorType =
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    descriptorSetBindings[0].descriptorCount = 1;
+    descriptorSetBindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    descriptorSetBindings[0].pImmutableSamplers = 0;
+
+    descriptorSetBindings[1].binding = 1;
+    descriptorSetBindings[1].descriptorType =
+        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    descriptorSetBindings[1].descriptorCount = 1;
+    descriptorSetBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    descriptorSetBindings[1].pImmutableSamplers = 0;
 
     VkDescriptorSetLayoutCreateInfo descriptorSetInfo;
     descriptorSetInfo.sType =
         VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
     descriptorSetInfo.pNext = 0;
     descriptorSetInfo.flags = 0;
-    descriptorSetInfo.bindingCount = 1;
-    descriptorSetInfo.pBindings = &descriptorSetBinding;
+    descriptorSetInfo.bindingCount = 2;
+    descriptorSetInfo.pBindings = descriptorSetBindings;
 
     if (vkCreateDescriptorSetLayout(m_vulkanDevice,
         &descriptorSetInfo, 0, &m_descriptorSetLayout) != VK_SUCCESS)
@@ -1903,12 +1912,17 @@ bool Renderer::createPipeline()
     vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
     // Vertex attribute
-    VkVertexInputAttributeDescription vertexAttributes[1];
+    VkVertexInputAttributeDescription vertexAttributes[2];
 
     vertexAttributes[0].location = 0;
     vertexAttributes[0].binding = vertexBinding.binding;
     vertexAttributes[0].format = VK_FORMAT_R32G32B32_SFLOAT;
     vertexAttributes[0].offset = 0;
+
+    vertexAttributes[1].location = 1;
+    vertexAttributes[1].binding = vertexBinding.binding;
+    vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
+    vertexAttributes[1].offset = sizeof(float) * 3;
 
     // Vertex input
     VkPipelineVertexInputStateCreateInfo vertexInput;
@@ -1918,7 +1932,7 @@ bool Renderer::createPipeline()
     vertexInput.flags = 0;
     vertexInput.vertexBindingDescriptionCount = 1;
     vertexInput.pVertexBindingDescriptions = &vertexBinding;
-    vertexInput.vertexAttributeDescriptionCount = 1;
+    vertexInput.vertexAttributeDescriptionCount = 2;
     vertexInput.pVertexAttributeDescriptions = vertexAttributes;
 
     // Input assembly
@@ -2204,6 +2218,11 @@ bool Renderer::createVertexBuffer()
     vertices[1].x = -0.8f;  vertices[1].y = 0.8f;   vertices[1].z = 0.0f;
     vertices[2].x = 0.8f;   vertices[2].y = 0.8f;   vertices[2].z = 0.0f;
     vertices[3].x = 0.8f;   vertices[3].y = -0.8f;  vertices[3].z = 0.0f;
+
+    vertices[0].u = 0.0f;   vertices[0].v = 0.0f;
+    vertices[1].u = 0.0f;   vertices[1].v = 1.0f;
+    vertices[2].u = 1.0f;   vertices[2].v = 1.0f;
+    vertices[3].u = 1.0f;   vertices[3].v = 0.0f;
 
     // Indices
     uint16_t indices[6];
@@ -2787,6 +2806,69 @@ bool Renderer::createTexture()
     m_stagingBuffer.destroyBuffer(m_vulkanDevice);
 
 
+    // Create image view
+    VkImageViewCreateInfo viewInfo;
+    viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    viewInfo.pNext = 0;
+    viewInfo.flags = 0;
+    viewInfo.image = m_texture.handle;
+    viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+    viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    viewInfo.subresourceRange.baseMipLevel = 0;
+    viewInfo.subresourceRange.levelCount = 1;
+    viewInfo.subresourceRange.baseArrayLayer = 0;
+    viewInfo.subresourceRange.layerCount = 1;
+
+    if (vkCreateImageView(
+        m_vulkanDevice, &viewInfo, 0, &m_texture.view) != VK_SUCCESS)
+    {
+        // Could not create image view
+        return false;
+    }
+    if (!m_texture.view)
+    {
+        // Invalid image view
+        return false;
+    }
+
+    // Create texture sampler
+    VkSamplerCreateInfo samplerInfo;
+    samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    samplerInfo.pNext = 0;
+    samplerInfo.flags = 0;
+    samplerInfo.magFilter = VK_FILTER_NEAREST;
+    samplerInfo.minFilter = VK_FILTER_NEAREST;
+    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.mipLodBias = 0.0f;
+    samplerInfo.anisotropyEnable = VK_FALSE;
+    samplerInfo.maxAnisotropy = 1.0f;
+    samplerInfo.compareEnable = VK_FALSE;
+    samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
+    samplerInfo.minLod = 0.0f;
+    samplerInfo.maxLod = 0.0f;
+    samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+    samplerInfo.unnormalizedCoordinates = VK_FALSE;
+
+    if (vkCreateSampler(
+        m_vulkanDevice, &samplerInfo, 0, &m_texture.sampler) != VK_SUCCESS)
+    {
+        // Could not create texture sampler
+        return false;
+    }
+    if (!m_texture.sampler)
+    {
+        // Invalid texture sampler
+        return false;
+    }
+
     // Texture successfully created
     return true;
 }
@@ -2805,17 +2887,21 @@ bool Renderer::createDescriptorPool()
     }
 
     // Create descriptor pool
-    VkDescriptorPoolSize poolSize;
-    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSize.descriptorCount = 1;
+    VkDescriptorPoolSize poolSize[2];
+
+    poolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize[0].descriptorCount = 1;
+
+    poolSize[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    poolSize[1].descriptorCount = 1;
 
     VkDescriptorPoolCreateInfo poolInfo;
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.pNext = 0;
     poolInfo.flags = 0;
     poolInfo.maxSets = 1;
-    poolInfo.poolSizeCount = 1;
-    poolInfo.pPoolSizes = &poolSize;
+    poolInfo.poolSizeCount = 2;
+    poolInfo.pPoolSizes = poolSize;
 
     if (vkCreateDescriptorPool(
         m_vulkanDevice, &poolInfo, 0, &m_descriptorPool) != VK_SUCCESS)
@@ -2855,19 +2941,38 @@ bool Renderer::createDescriptorPool()
     bufferInfo.offset = 0;
     bufferInfo.range = m_uniformBuffer.size;
 
-    VkWriteDescriptorSet descriptorWrite;
-    descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    descriptorWrite.pNext = 0;
-    descriptorWrite.dstSet = m_descriptorSet;
-    descriptorWrite.dstBinding = 0;
-    descriptorWrite.dstArrayElement = 0;
-    descriptorWrite.descriptorCount = 1;
-    descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    descriptorWrite.pImageInfo = 0;
-    descriptorWrite.pBufferInfo = &bufferInfo;
-    descriptorWrite.pTexelBufferView = 0;
+    VkDescriptorImageInfo imageInfo;
+    imageInfo.sampler = m_texture.sampler;
+    imageInfo.imageView = m_texture.view;
+    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
-    vkUpdateDescriptorSets(m_vulkanDevice, 1, &descriptorWrite, 0, 0);
+    VkWriteDescriptorSet descriptorWrites[2];
+
+    descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    descriptorWrites[0].pNext = 0;
+    descriptorWrites[0].dstSet = m_descriptorSet;
+    descriptorWrites[0].dstBinding = 0;
+    descriptorWrites[0].dstArrayElement = 0;
+    descriptorWrites[0].descriptorCount = 1;
+    descriptorWrites[0].descriptorType =
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    descriptorWrites[0].pImageInfo = 0;
+    descriptorWrites[0].pBufferInfo = &bufferInfo;
+    descriptorWrites[0].pTexelBufferView = 0;
+
+    descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    descriptorWrites[1].pNext = 0;
+    descriptorWrites[1].dstSet = m_descriptorSet;
+    descriptorWrites[1].dstBinding = 1;
+    descriptorWrites[1].dstArrayElement = 0;
+    descriptorWrites[1].descriptorCount = 1;
+    descriptorWrites[1].descriptorType =
+        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    descriptorWrites[1].pImageInfo = &imageInfo;
+    descriptorWrites[1].pBufferInfo = 0;
+    descriptorWrites[1].pTexelBufferView = 0;
+
+    vkUpdateDescriptorSets(m_vulkanDevice, 2, descriptorWrites, 0, 0);
 
     // Descriptor pool successfully created
     return true;
