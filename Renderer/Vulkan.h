@@ -1377,6 +1377,16 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkOffset3D data structure                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkOffset3D
+    {
+        int32_t x;
+        int32_t y;
+        int32_t z;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkExtent3D data structure                                             //
     ////////////////////////////////////////////////////////////////////////////
     struct VkExtent3D
@@ -2257,6 +2267,30 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkImageSubresourceLayers data structure                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageSubresourceLayers
+    {
+        VkImageAspectFlags  aspectMask;
+        uint32_t            mipLevel;
+        uint32_t            baseArrayLayer;
+        uint32_t            layerCount;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBufferImageCopy data structure                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBufferImageCopy
+    {
+        VkDeviceSize                bufferOffset;
+        uint32_t                    bufferRowLength;
+        uint32_t                    bufferImageHeight;
+        VkImageSubresourceLayers    imageSubresource;
+        VkOffset3D                  imageOffset;
+        VkExtent3D                  imageExtent;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkClearColorValue data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     union VkClearColorValue
@@ -3126,6 +3160,16 @@
         VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions
     );
     extern PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdCopyBufferToImage function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdCopyBufferToImage)(
+        VkCommandBuffer commandBuffer, VkBuffer srcBuffer,
+        VkImage dstImage, VkImageLayout dstImageLayout,
+        uint32_t regionCount, const VkBufferImageCopy* pRegions
+    );
+    extern PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCmdClearColorImage function                                         //
