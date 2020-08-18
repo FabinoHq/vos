@@ -236,6 +236,9 @@ PFN_vkDestroyImage vkDestroyImage = 0;
 // vkGetBufferMemoryRequirements function
 PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements = 0;
 
+// vkGetImageMemoryRequirements function
+PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements = 0;
+
 // vkCreateFence function
 PFN_vkCreateFence vkCreateFence = 0;
 
@@ -961,13 +964,22 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkGetBufferMemoryRequirements
-    vkGetBufferMemoryRequirements =
-        (PFN_vkGetBufferMemoryRequirements)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetBufferMemoryRequirements"
+    vkGetBufferMemoryRequirements = (PFN_vkGetBufferMemoryRequirements)
+        vkGetDeviceProcAddr(vulkanDevice, "vkGetBufferMemoryRequirements"
     );
     if (!vkGetBufferMemoryRequirements)
     {
         // Could not load vkGetBufferMemoryRequirements
+        return false;
+    }
+
+    // Load vkGetImageMemoryRequirements
+    vkGetImageMemoryRequirements = (PFN_vkGetImageMemoryRequirements)
+        vkGetDeviceProcAddr(vulkanDevice, "vkGetImageMemoryRequirements"
+    );
+    if (!vkGetImageMemoryRequirements)
+    {
+        // Could not load vkGetImageMemoryRequirements
         return false;
     }
 
@@ -1290,6 +1302,7 @@ void FreeVulkanFunctions()
     vkResetFences = 0;
     vkDestroyFence = 0;
     vkCreateFence = 0;
+    vkGetImageMemoryRequirements = 0;
     vkGetBufferMemoryRequirements = 0;
     vkDestroyImage = 0;
     vkCreateImage = 0;

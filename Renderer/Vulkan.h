@@ -2903,6 +2903,15 @@
     extern PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkGetImageMemoryRequirements function                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetImageMemoryRequirements)(
+        VkDevice device, VkImage image,
+        VkMemoryRequirements* pMemoryRequirements
+    );
+    extern PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateFence function                                                //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateFence)(
