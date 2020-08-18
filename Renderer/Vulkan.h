@@ -2886,6 +2886,14 @@
     extern PFN_vkCreateImage vkCreateImage;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyImage function                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyImage)(
+        VkDevice device, VkImage image, const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyImage vkDestroyImage;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkGetBufferMemoryRequirements function                                //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkGetBufferMemoryRequirements)(
