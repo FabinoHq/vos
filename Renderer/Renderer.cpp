@@ -637,6 +637,18 @@ void Renderer::cleanup()
                     vkFreeMemory(m_vulkanDevice, m_texture.memory, 0);
                 }
 
+                // Destroy texture image view
+                if (m_texture.view && vkDestroyImageView)
+                {
+                    vkDestroyImageView(m_vulkanDevice, m_texture.view, 0);
+                }
+
+                // Destroy texture sampler
+                if (m_texture.sampler && vkDestroySampler)
+                {
+                    vkDestroySampler(m_vulkanDevice, m_texture.sampler, 0);
+                }
+
                 // Destroy uniform buffer
                 m_uniformBuffer.destroyBuffer(m_vulkanDevice);
 
@@ -749,6 +761,8 @@ void Renderer::cleanup()
     }
 
     m_descriptorPool = 0;
+    m_texture.sampler = 0;
+    m_texture.view = 0;
     m_texture.memory = 0;
     m_texture.handle = 0;
     m_commandsPool = 0;
@@ -2750,6 +2764,44 @@ bool Renderer::createTexture()
         return false;
     }
 
+    VkImageSubresourceRange subresourceRange;
+    subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresourceRange.baseMipLevel = 0;
+    subresourceRange.levelCount = 1;
+    subresourceRange.baseArrayLayer = 0;
+    subresourceRange.layerCount = 1;
+
+    VkImageMemoryBarrier undefinedToTransfer;
+    undefinedToTransfer.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    undefinedToTransfer.pNext = 0;
+    undefinedToTransfer.srcAccessMask = 0;
+    undefinedToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    undefinedToTransfer.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    undefinedToTransfer.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    undefinedToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    undefinedToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    undefinedToTransfer.image = m_texture.handle;
+    undefinedToTransfer.subresourceRange = subresourceRange;
+
+    VkImageMemoryBarrier transferToShader;
+    transferToShader.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    transferToShader.pNext = 0;
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.image = m_texture.handle;
+    transferToShader.subresourceRange = subresourceRange;
+
+    vkCmdPipelineBarrier(
+       commandBuffer,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        0, 0, 0, 0, 0, 1, &undefinedToTransfer
+    );
+
     VkBufferImageCopy imageCopy;
     imageCopy.bufferOffset = 0;
     imageCopy.bufferRowLength = 0;
@@ -2768,6 +2820,13 @@ bool Renderer::createTexture()
     vkCmdCopyBufferToImage(
         commandBuffer, m_stagingBuffer.handle, m_texture.handle,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
+    );
+
+    vkCmdPipelineBarrier(
+        commandBuffer,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+        0, 0, 0, 0, 0, 1, &transferToShader
     );
 
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
