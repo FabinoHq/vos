@@ -98,7 +98,7 @@
     typedef VkFlags                     VkWin32SurfaceCreateFlagsKHR;
     typedef VkFlags                     VkSwapchainCreateFlagsKHR;
 
-        #ifdef VOS_64BITS
+    #ifdef VOS_64BITS
         typedef struct VkSurfaceKHR_T*          VkSurfaceKHR;
         typedef struct VkSwapchainKHR_T*        VkSwapchainKHR;
         typedef struct VkDeviceMemory_T*        VkDeviceMemory;
