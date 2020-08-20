@@ -755,9 +755,9 @@
     ////////////////////////////////////////////////////////////////////////////
     struct UniformData
     {
-        Matrix4x4   projMatrix;
-        Matrix4x4   viewMatrix;
-        Matrix4x4   modelMatrix;
+        float   projMatrix[16];
+        float   viewMatrix[16];
+        float   modelMatrix[16];
     };
 
     ////////////////////////////////////////////////////////////////////////////
