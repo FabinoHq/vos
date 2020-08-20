@@ -2657,7 +2657,7 @@ bool Renderer::createTexture()
     imageInfo.pNext = 0;
     imageInfo.flags = 0;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
-    imageInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+    imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
     imageInfo.extent.width = TestSpriteWidth;
     imageInfo.extent.height = TestSpriteHeight;
     imageInfo.extent.depth = 1;
@@ -2872,7 +2872,7 @@ bool Renderer::createTexture()
     viewInfo.flags = 0;
     viewInfo.image = m_texture.handle;
     viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+    viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
     viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
     viewInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
