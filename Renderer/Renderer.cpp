@@ -2546,9 +2546,9 @@ bool Renderer::createUniformBuffer()
     modelMatrix.setIdentity();
 
     // Copy matrices data into uniform data
-    memcpy(m_uniformData.projMatrix, projMatrix.mat, sizeof(float)*16);
-    memcpy(m_uniformData.viewMatrix, viewMatrix.mat, sizeof(float)*16);
-    memcpy(m_uniformData.modelMatrix, modelMatrix.mat, sizeof(float)*16);
+    memcpy(m_uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
+    memcpy(m_uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
+    memcpy(m_uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
     // Create uniform buffer
     m_uniformBuffer.size = sizeof(m_uniformData);
