@@ -50,6 +50,9 @@
     <ClCompile Include="Renderer\VulkanBuffer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\VulkanImage.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -109,6 +112,9 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\VulkanBuffer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\VulkanImage.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>

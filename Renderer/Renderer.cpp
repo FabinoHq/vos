@@ -626,28 +626,7 @@ void Renderer::cleanup()
                 }
 
                 // Destroy texture
-                if (m_texture.handle && vkDestroyImage)
-                {
-                    vkDestroyImage(m_vulkanDevice, m_texture.handle, 0);
-                }
-
-                // Destroy texture memory
-                if (m_texture.memory && vkFreeMemory)
-                {
-                    vkFreeMemory(m_vulkanDevice, m_texture.memory, 0);
-                }
-
-                // Destroy texture image view
-                if (m_texture.view && vkDestroyImageView)
-                {
-                    vkDestroyImageView(m_vulkanDevice, m_texture.view, 0);
-                }
-
-                // Destroy texture sampler
-                if (m_texture.sampler && vkDestroySampler)
-                {
-                    vkDestroySampler(m_vulkanDevice, m_texture.sampler, 0);
-                }
+                m_texture.destroyImage(m_vulkanDevice);
 
                 // Destroy uniform buffer
                 m_uniformBuffer.destroyBuffer(m_vulkanDevice);
@@ -761,10 +740,6 @@ void Renderer::cleanup()
     }
 
     m_descriptorPool = 0;
-    m_texture.sampler = 0;
-    m_texture.view = 0;
-    m_texture.memory = 0;
-    m_texture.handle = 0;
     m_commandsPool = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
@@ -2762,86 +2737,11 @@ bool Renderer::createTexture()
     vkUnmapMemory(m_vulkanDevice, m_stagingBuffer.memory);
 
 
-    // Create texture
-    VkImageCreateInfo imageInfo;
-    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-    imageInfo.pNext = 0;
-    imageInfo.flags = 0;
-    imageInfo.imageType = VK_IMAGE_TYPE_2D;
-    imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-    imageInfo.extent.width = TestSpriteWidth;
-    imageInfo.extent.height = TestSpriteHeight;
-    imageInfo.extent.depth = 1;
-    imageInfo.mipLevels = 1;
-    imageInfo.arrayLayers = 1;
-    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-    imageInfo.usage =
-        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    imageInfo.queueFamilyIndexCount = 0;
-    imageInfo.pQueueFamilyIndices = 0;
-    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-    if (vkCreateImage(
-        m_vulkanDevice, &imageInfo, 0, &m_texture.handle) != VK_SUCCESS)
+    // Create image
+    if (!m_texture.createImage(
+        m_physicalDevice, m_vulkanDevice, TestSpriteWidth, TestSpriteHeight))
     {
-        // Could not create texture
-        return false;
-    }
-    if (!m_texture.handle)
-    {
-        // Invalid texture
-        return false;
-    }
-
-    // Get memory requirements
-    VkMemoryRequirements memoryRequirements;
-    vkGetImageMemoryRequirements(
-        m_vulkanDevice, m_texture.handle, &memoryRequirements
-    );
-
-    // Get physical device memory properties
-    VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(
-        m_physicalDevice, &memoryProperties
-    );
-
-    // Allocate buffer memory
-    bool memoryAllocated = false;
-    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
-    {
-        if (memoryRequirements.memoryTypeBits & (1 << i))
-        {
-            if (memoryProperties.memoryTypes[i].propertyFlags &
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-            {
-                VkMemoryAllocateInfo allocateInfo;
-                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-                allocateInfo.pNext = 0;
-                allocateInfo.allocationSize = memoryRequirements.size;
-                allocateInfo.memoryTypeIndex = i;
-
-                if (vkAllocateMemory(m_vulkanDevice,
-                    &allocateInfo, 0, &m_texture.memory) == VK_SUCCESS)
-                {
-                    memoryAllocated = true;
-                    break;
-                }
-            }
-        }
-    }
-    if (!memoryAllocated)
-    {
-        // Could not allocate buffer memory
-        return false;
-    }
-
-    // Bind texture memory
-    if (vkBindImageMemory(
-        m_vulkanDevice, m_texture.handle, m_texture.memory, 0) != VK_SUCCESS)
-    {
-        // Could not bind texture memory
+        // Could not create image
         return false;
     }
 

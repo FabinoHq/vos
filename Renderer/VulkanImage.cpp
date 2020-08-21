@@ -37,87 +37,91 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanBuffer.cpp : Vulkan Buffer management                   //
+//     Renderer/VulkanImage.cpp : Vulkan Image management                     //
 ////////////////////////////////////////////////////////////////////////////////
-#include "VulkanBuffer.h"
+#include "VulkanImage.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VulkanBuffer default constructor                                          //
+//  VulkanImage default constructor                                           //
 ////////////////////////////////////////////////////////////////////////////////
-VulkanBuffer::VulkanBuffer() :
+VulkanImage::VulkanImage() :
 handle(0),
 memory(0),
-size(0)
+sampler(0),
+view(0)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VulkanBuffer destructor                                                   //
+//  VulkanImage destructor                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-VulkanBuffer::~VulkanBuffer()
+VulkanImage::~VulkanImage()
 {
-    size = 0;
+    view = 0;
+    sampler = 0;
     memory = 0;
     handle = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Vulkan Buffer                                                      //
-//  return : True if Vulkan Buffer is successfully created                    //
+//  Create Vulkan Image                                                       //
+//  return : True if Vulkan Image is successfully created                     //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VkBufferUsageFlags usage,
-    VkMemoryPropertyFlags properties)
+bool VulkanImage::createImage(VkPhysicalDevice& physicalDevice,
+    VkDevice& vulkanDevice, uint32_t width, uint32_t height)
 {
-    // Check physical device
-    if (!physicalDevice)
+    // Check image size
+    if (width == 0 || height == 0)
     {
-        // Invalid physical device
+        // Invalid image size
         return false;
     }
 
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check buffer handle
+    // Check image handle
     if (handle)
     {
-        // Destroy Vulkan Buffer
-        destroyBuffer(vulkanDevice);
+        // Destroy Vulkan Image
+        destroyImage(vulkanDevice);
     }
 
-    // Create Vulkan Buffer
-    VkBufferCreateInfo bufferInfo;
-    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.pNext = 0;
-    bufferInfo.flags = 0;
-    bufferInfo.size = size;
-    bufferInfo.usage = usage;
-    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    bufferInfo.queueFamilyIndexCount = 0;
-    bufferInfo.pQueueFamilyIndices = 0;
+    // Create image
+    VkImageCreateInfo imageInfo;
+    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.pNext = 0;
+    imageInfo.flags = 0;
+    imageInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+    imageInfo.extent.width = width;
+    imageInfo.extent.height = height;
+    imageInfo.extent.depth = 1;
+    imageInfo.mipLevels = 1;
+    imageInfo.arrayLayers = 1;
+    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.usage =
+        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.queueFamilyIndexCount = 0;
+    imageInfo.pQueueFamilyIndices = 0;
+    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    if (vkCreateBuffer(vulkanDevice, &bufferInfo, 0, &handle) != VK_SUCCESS)
+    if (vkCreateImage(vulkanDevice, &imageInfo, 0, &handle) != VK_SUCCESS)
     {
-        // Could not create buffer
+        // Could not create image
         return false;
     }
     if (!handle)
     {
-        // Invalid buffer
+        // Invalid image
         return false;
     }
 
     // Get memory requirements
     VkMemoryRequirements memoryRequirements;
-    vkGetBufferMemoryRequirements(vulkanDevice, handle, &memoryRequirements);
+    vkGetImageMemoryRequirements(vulkanDevice, handle, &memoryRequirements);
 
     // Get physical device memory properties
     VkPhysicalDeviceMemoryProperties memoryProperties;
@@ -130,7 +134,7 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         if (memoryRequirements.memoryTypeBits & (1 << i))
         {
             if (memoryProperties.memoryTypes[i].propertyFlags &
-                properties)
+                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
             {
                 VkMemoryAllocateInfo allocateInfo;
                 allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -153,37 +157,47 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Bind buffer memory
-    if (vkBindBufferMemory(vulkanDevice, handle, memory, 0) != VK_SUCCESS)
+    // Bind image memory
+    if (vkBindImageMemory(vulkanDevice, handle, memory, 0) != VK_SUCCESS)
     {
-        // Could not bind buffer memory
+        // Could not bind image memory
         return false;
     }
 
-    // Buffer successfully created
+    // Vulkan Image successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy Vulkan Buffer                                                     //
+//  Destroy Vulkan Image                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice)
+void VulkanImage::destroyImage(VkDevice& vulkanDevice)
 {
-    if (vulkanDevice)
+    // Destroy image view
+    if (view && vkDestroyImageView)
     {
-        // Destroy buffer
-        if (handle && vkDestroyBuffer)
-        {
-            vkDestroyBuffer(vulkanDevice, handle, 0);
-        }
-
-        // Free vertex buffer memory
-        if (memory && vkFreeMemory)
-        {
-            vkFreeMemory(vulkanDevice, memory, 0);
-        }
+        vkDestroyImageView(vulkanDevice, view, 0);
     }
-    size = 0;
+    view = 0;
+
+    // Destroy image sampler
+    if (sampler && vkDestroySampler)
+    {
+        vkDestroySampler(vulkanDevice, sampler, 0);
+    }
+    sampler = 0;
+
+    // Free image memory
+    if (memory && vkFreeMemory)
+    {
+        vkFreeMemory(vulkanDevice, memory, 0);
+    }
     memory = 0;
+
+    // Destroy image
+    if (handle && vkDestroyImage)
+    {
+        vkDestroyImage(vulkanDevice, handle, 0);
+    }
     handle = 0;
 }

@@ -50,14 +50,16 @@ VOS: main.o \
 	System/SysSleep.o System/SysThread.o \
 	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	Renderer/Vulkan.o Renderer/VulkanBuffer.o Renderer/Renderer.o
+	Renderer/Vulkan.o Renderer/VulkanBuffer.o Renderer/VulkanImage.o \
+	Renderer/Renderer.o
 	
 	$(CC) -o VOS \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
 	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	Renderer/Vulkan.o Renderer/VulkanBuffer.o Renderer/Renderer.o \
+	Renderer/Vulkan.o Renderer/VulkanBuffer.o Renderer/VulkanImage.o \
+	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
 main.o: main.cpp
@@ -96,6 +98,9 @@ Renderer/Vulkan.o: Renderer/Vulkan.cpp
 
 Renderer/VulkanBuffer.o: Renderer/VulkanBuffer.cpp
 	$(CC) -o Renderer/VulkanBuffer.o -c Renderer/VulkanBuffer.cpp $(CFLAGS)
+
+Renderer/VulkanImage.o: Renderer/VulkanImage.cpp
+	$(CC) -o Renderer/VulkanImage.o -c Renderer/VulkanImage.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

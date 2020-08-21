@@ -46,6 +46,7 @@
     #include "../System/SysVulkan.h"
     #include "Vulkan.h"
     #include "VulkanBuffer.h"
+    #include "VulkanImage.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
 
@@ -551,26 +552,6 @@
         0x2E, 0x2E, 0x2E, 0xFF
     };
 
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VulkanImage data structure                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VulkanImage
-    {
-        VulkanImage() :
-        handle(0),
-        view(0),
-        sampler(0),
-        memory(0)
-        {
-
-        }
-
-        VkImage         handle;     // Image handle
-        VkImageView     view;       // Image view
-        VkSampler       sampler;    // Image sampler
-        VkDeviceMemory  memory;     // Image memory
-    };
 
     ////////////////////////////////////////////////////////////////////////////
     //  VulkanSwapchain data structure                                        //
