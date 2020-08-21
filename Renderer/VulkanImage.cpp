@@ -248,31 +248,35 @@ bool VulkanImage::createImage(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanImage::destroyImage(VkDevice& vulkanDevice)
 {
-    // Destroy image view
-    if (view && vkDestroyImageView)
+    if (vulkanDevice)
     {
-        vkDestroyImageView(vulkanDevice, view, 0);
+        // Destroy image view
+        if (view && vkDestroyImageView)
+        {
+            vkDestroyImageView(vulkanDevice, view, 0);
+        }
+
+        // Destroy image sampler
+        if (sampler && vkDestroySampler)
+        {
+            vkDestroySampler(vulkanDevice, sampler, 0);
+        }
+
+        // Free image memory
+        if (memory && vkFreeMemory)
+        {
+            vkFreeMemory(vulkanDevice, memory, 0);
+        }
+
+        // Destroy image
+        if (handle && vkDestroyImage)
+        {
+            vkDestroyImage(vulkanDevice, handle, 0);
+        }
     }
+
     view = 0;
-
-    // Destroy image sampler
-    if (sampler && vkDestroySampler)
-    {
-        vkDestroySampler(vulkanDevice, sampler, 0);
-    }
     sampler = 0;
-
-    // Free image memory
-    if (memory && vkFreeMemory)
-    {
-        vkFreeMemory(vulkanDevice, memory, 0);
-    }
     memory = 0;
-
-    // Destroy image
-    if (handle && vkDestroyImage)
-    {
-        vkDestroyImage(vulkanDevice, handle, 0);
-    }
     handle = 0;
 }
