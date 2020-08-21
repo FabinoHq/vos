@@ -86,6 +86,14 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    // Check Vulkan Buffer
+    if (handle)
+    {
+        // Destroy Vulkan Buffer
+        destroyBuffer(vulkanDevice);
+    }
+
+    // Create Vulkan Buffer
     VkBufferCreateInfo bufferInfo;
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.pNext = 0;
