@@ -52,13 +52,15 @@
 !System/Win/SysVulkan.h
 !System/Win/SysVulkan.cpp
 
-!Math/
 !Math/Math.h
 !Math/Vector2.h
 !Math/Vector3.h
 !Math/Matrix4x4.h
 
+!Renderer/
 !Renderer/Vulkan.h
 !Renderer/Vulkan.cpp
+!Renderer/VulkanBuffer.h
+!Renderer/VulkanBuffer.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp

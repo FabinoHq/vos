@@ -130,6 +130,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\Vulkan.cpp" />
+    <ClCompile Include="Renderer\VulkanBuffer.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysMutex.cpp" />
     <ClCompile Include="System\SysMutexLocker.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\Vulkan.h" />
+    <ClInclude Include="Renderer\VulkanBuffer.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysDisplayMode.h" />
     <ClInclude Include="System\SysMutex.h" />
