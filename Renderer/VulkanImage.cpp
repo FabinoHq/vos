@@ -73,6 +73,20 @@ VulkanImage::~VulkanImage()
 bool VulkanImage::createImage(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, uint32_t width, uint32_t height)
 {
+    // Check physical device
+    if (!physicalDevice)
+    {
+        // Invalid physical device
+        return false;
+    }
+
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
     // Check image size
     if (width == 0 || height == 0)
     {
