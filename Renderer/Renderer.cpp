@@ -2560,51 +2560,141 @@ bool Renderer::createUniformBuffer()
     memcpy(m_uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
     memcpy(m_uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
-    // Create uniform buffer
-    m_uniformBuffer.size = sizeof(m_uniformData);
+    // Create staging buffer
+    m_stagingBuffer.size = sizeof(m_uniformData);
 
-    if (!m_uniformBuffer.createBuffer(
-        m_physicalDevice, m_vulkanDevice, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+    if (!m_stagingBuffer.createBuffer(
+        m_physicalDevice, m_vulkanDevice,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
         VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
     {
-        // Could not create uniform buffer
+        // Could not create staging buffer
         return false;
     }
 
-    // Map uniform buffer memory
-    void* uniformBufferMemory = 0;
-    if (vkMapMemory(m_vulkanDevice, m_uniformBuffer.memory, 0,
-        m_uniformBuffer.size, 0, &uniformBufferMemory) != VK_SUCCESS)
+    // Map staging buffer memory
+    void* stagingBufferMemory = 0;
+    if (vkMapMemory(m_vulkanDevice, m_stagingBuffer.memory, 0,
+        m_stagingBuffer.size, 0, &stagingBufferMemory) != VK_SUCCESS)
     {
-        // Could not map uniform buffer memory
+        // Could not map staging buffer memory
         return false;
     }
-    if (!uniformBufferMemory)
+    if (!stagingBufferMemory)
     {
-        // Invalid uniform buffer memory
+        // Invalid staging buffer memory
         return false;
     }
 
-    // Copy uniform data into uniform buffer memory
-    memcpy(uniformBufferMemory, &m_uniformData, m_uniformBuffer.size);
+    // Copy uniform data into staging buffer memory
+    memcpy(stagingBufferMemory, &m_uniformData, m_stagingBuffer.size);
 
-    // Unmap uniform buffer memory
+    // Unmap staging buffer memory
     VkMappedMemoryRange memoryRange;
     memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     memoryRange.pNext = 0;
-    memoryRange.memory = m_uniformBuffer.memory;
+    memoryRange.memory = m_stagingBuffer.memory;
     memoryRange.offset = 0;
     memoryRange.size = VK_WHOLE_SIZE;
 
     if (vkFlushMappedMemoryRanges(
         m_vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
     {
-        // Could not flush uniform buffer mapped memory ranges
+        // Could not flush staging buffer mapped memory ranges
         return false;
     }
 
-    vkUnmapMemory(m_vulkanDevice, m_uniformBuffer.memory);
+    vkUnmapMemory(m_vulkanDevice, m_stagingBuffer.memory);
+
+
+    // Create uniform buffer
+    m_uniformBuffer.size = sizeof(m_uniformData);
+
+    if (!m_uniformBuffer.createBuffer(
+        m_physicalDevice, m_vulkanDevice,
+        VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
+    {
+        // Could not create uniform buffer
+        return false;
+    }
+
+
+    // Allocate command buffers
+    VkCommandBuffer commandBuffer = 0;
+    VkCommandBufferAllocateInfo bufferAllocate;
+    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    bufferAllocate.pNext = 0;
+    bufferAllocate.commandPool = m_commandsPool;
+    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    bufferAllocate.commandBufferCount = m_swapchain.frames;
+
+    if (vkAllocateCommandBuffers(m_vulkanDevice,
+        &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    {
+        // Could not allocate command buffers
+        return false;
+    }
+
+
+    // Transfert staging buffer data to uniform buffer
+    VkCommandBufferBeginInfo bufferBeginInfo;
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    VkBufferCopy bufferCopy;
+    bufferCopy.srcOffset = 0;
+    bufferCopy.dstOffset = 0;
+    bufferCopy.size = m_stagingBuffer.size;
+
+    vkCmdCopyBuffer(
+        commandBuffer, m_stagingBuffer.handle,
+        m_uniformBuffer.handle, 1, &bufferCopy
+    );
+
+    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(m_graphicsQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    if (vkQueueWaitIdle(m_graphicsQueueHandle) != VK_SUCCESS)
+    {
+        // Could not wait for graphics queue idle
+        return false;
+    }
+
+    if (commandBuffer)
+    {
+        vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool, 1, &commandBuffer);
+    }
+    m_stagingBuffer.destroyBuffer(m_vulkanDevice);
+
 
     // Uniform buffers successfully created
     return true;
