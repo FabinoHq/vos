@@ -996,6 +996,16 @@ bool Renderer::selectVulkanDevice()
             // Vulkan version is not supported by the device
             continue;
         }
+        else if (VK_VERSION_MAJOR(deviceProperties.apiVersion) ==
+            VK_VERSION_MAJOR(VK_API_VERSION))
+        {
+            if (VK_VERSION_MINOR(deviceProperties.apiVersion) <
+                VK_VERSION_MINOR(VK_API_VERSION))
+            {
+                // Vulkan version is not supported by the device
+                continue;
+            }
+        }
 
         // Get device queue families
         uint32_t queueFamilyCount = 0;

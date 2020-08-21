@@ -53,7 +53,7 @@
     #define VK_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
     #define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3FF)
     #define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xFFF)
-    #define VK_API_VERSION VK_MAKE_VERSION(1, 0, 0)
+    #define VK_API_VERSION VK_MAKE_VERSION(1, 1, 0)
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan constants definitions                                          //
