@@ -903,6 +903,8 @@ bool Renderer::selectVulkanDevice()
         // Current device supports graphics and surface queues
         if (graphicsQueueFound && surfaceQueueFound)
         {
+            m_graphicsQueue.index = graphicsQueueIndex;
+            m_surfaceQueue.index = surfaceQueueIndex;
             deviceIndex = i;
             deviceFound = true;
             break;
