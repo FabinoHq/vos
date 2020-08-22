@@ -312,12 +312,6 @@
             bool createPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create command buffers                                        //
-            //  return : True if command buffers are successfully created     //
-            ////////////////////////////////////////////////////////////////////
-            bool createCommandBuffers();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create vertex buffer                                          //
             //  return : True if vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
@@ -363,7 +357,6 @@
             VkQueue             m_surfaceQueueHandle;   // Surface queue handle
 
             Swapchain               m_swapchain;            // Swapchain
-            VkRenderPass            m_renderPass;           // Render pass
             VkShaderModule          m_vertexShader;         // Vertex shader
             VkShaderModule          m_fragmentShader;       // Fragment shader
             VkDescriptorSetLayout   m_descriptorSetLayout;  // Descriptor layout
