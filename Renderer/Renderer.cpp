@@ -229,13 +229,6 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create semaphores
-    if (!createSemaphores())
-    {
-        // Could not create semaphores
-        return false;
-    }
-
     // Create vertex buffer
     if (!createVertexBuffer())
     {
@@ -1454,47 +1447,6 @@ bool Renderer::createCommandBuffers()
     }
 
     // Command buffers successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create semaphores                                                         //
-//  return : True if semaphores are successfully created                      //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createSemaphores()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Vulkan device is invalid
-        return false;
-    }
-
-    VkSemaphoreCreateInfo semaphoreInfo;
-    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    semaphoreInfo.pNext = 0;
-    semaphoreInfo.flags = 0;
-
-    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-    {
-        // Create image available semaphore
-        if (vkCreateSemaphore(m_vulkanDevice,
-            &semaphoreInfo, 0, &m_swapchain.renderReady[i]) != VK_SUCCESS)
-        {
-            // Could not create image available semaphore
-            return false;
-        }
-
-        // Create render finished semaphore
-        if (vkCreateSemaphore(m_vulkanDevice,
-            &semaphoreInfo, 0, &m_swapchain.renderFinished[i]) != VK_SUCCESS)
-        {
-            // Could not create render finished semaphore
-            return false;
-        }
-    }
-
-    // Semaphores successfully created
     return true;
 }
 

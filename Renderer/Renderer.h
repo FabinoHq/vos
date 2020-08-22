@@ -318,12 +318,6 @@
             bool createCommandBuffers();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create semaphores                                             //
-            //  return : True if semaphores are successfully created          //
-            ////////////////////////////////////////////////////////////////////
-            bool createSemaphores();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create vertex buffer                                          //
             //  return : True if vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////

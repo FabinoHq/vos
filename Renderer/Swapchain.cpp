@@ -550,6 +550,31 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         }
     }
 
+    // Create semaphores
+    VkSemaphoreCreateInfo semaphoreInfo;
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    semaphoreInfo.pNext = 0;
+    semaphoreInfo.flags = 0;
+
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        // Create render ready semaphore
+        if (vkCreateSemaphore(
+            vulkanDevice, &semaphoreInfo, 0, &renderReady[i]) != VK_SUCCESS)
+        {
+            // Could not create render ready semaphore
+            return false;
+        }
+
+        // Create render finished semaphore
+        if (vkCreateSemaphore(
+            vulkanDevice, &semaphoreInfo, 0, &renderFinished[i]) != VK_SUCCESS)
+        {
+            // Could not create render finished semaphore
+            return false;
+        }
+    }
+
     // Create fences
     VkFenceCreateInfo fenceInfo;
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
