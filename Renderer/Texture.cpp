@@ -262,16 +262,16 @@ void Texture::destroyTexture(VkDevice& vulkanDevice)
             vkDestroySampler(vulkanDevice, sampler, 0);
         }
 
-        // Free image memory
-        if (memory && vkFreeMemory)
-        {
-            vkFreeMemory(vulkanDevice, memory, 0);
-        }
-
         // Destroy image
         if (handle && vkDestroyImage)
         {
             vkDestroyImage(vulkanDevice, handle, 0);
+        }
+
+        // Free image memory
+        if (memory && vkFreeMemory)
+        {
+            vkFreeMemory(vulkanDevice, memory, 0);
         }
     }
 
