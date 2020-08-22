@@ -555,183 +555,80 @@ void Renderer::cleanup()
     // Destroy swapchain and device
     if (m_vulkanDevice)
     {
-        // Wait for device idle
-        if (vkDeviceWaitIdle)
+        // Destroy swapchain
+        m_swapchain.destroySwapchain(m_vulkanDevice, m_commandsPool);
+
+        // Destroy commands pool
+        if (m_commandsPool && vkDestroyCommandPool)
         {
-            if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+            vkDestroyCommandPool(m_vulkanDevice, m_commandsPool, 0);
+        }
+
+        // Destroy descriptor pool
+        if (m_descriptorPool && vkDestroyDescriptorPool)
+        {
+            vkDestroyDescriptorPool(m_vulkanDevice, m_descriptorPool, 0);
+        }
+
+        // Destroy texture
+        m_texture.destroyTexture(m_vulkanDevice);
+
+        // Destroy uniform buffer
+        m_uniformBuffer.destroyBuffer(m_vulkanDevice);
+
+        // Destroy index buffer
+        m_indexBuffer.destroyBuffer(m_vulkanDevice);
+
+        // Destroy vertex buffer
+        m_vertexBuffer.destroyBuffer(m_vulkanDevice);
+
+        // Destroy staging buffer
+        m_stagingBuffer.destroyBuffer(m_vulkanDevice);
+
+        // Destroy graphics pipeline
+        if (m_pipeline && vkDestroyPipeline)
+        {
+            vkDestroyPipeline(m_vulkanDevice, m_pipeline, 0);
+        }
+
+        // Destroy pipeline layout
+        if (m_pipelineLayout && vkDestroyPipelineLayout)
+        {
+            vkDestroyPipelineLayout(m_vulkanDevice, m_pipelineLayout, 0);
+        }
+
+        // Destroy descriptor set layout
+        if (m_descriptorSetLayout && vkDestroyDescriptorSetLayout)
+        {
+            vkDestroyDescriptorSetLayout(
+                m_vulkanDevice, m_descriptorSetLayout, 0
+            );
+        }
+
+        // Destroy default shaders
+        if (vkDestroyShaderModule)
+        {
+            if (m_fragmentShader)
             {
-                // Destroy fences
-                if (vkDestroyFence)
-                {
-                    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-                    {
-                        if (m_swapchain.fences[i])
-                        {
-                            vkDestroyFence(
-                                m_vulkanDevice, m_swapchain.fences[i], 0
-                            );
-                        }
-                        m_swapchain.fences[i] = 0;
-                    }
-                }
-
-                // Destroy semaphores
-                if (vkDestroySemaphore)
-                {
-                    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-                    {
-                        if (m_swapchain.renderFinished[i])
-                        {
-                            vkDestroySemaphore(
-                                m_vulkanDevice, m_swapchain.renderFinished[i], 0
-                            );
-                        }
-                        m_swapchain.renderFinished[i] = 0;
-                        if (m_swapchain.renderReady[i])
-                        {
-                            vkDestroySemaphore(
-                                m_vulkanDevice, m_swapchain.renderReady[i], 0
-                            );
-                        }
-                        m_swapchain.renderReady[i] = 0;
-                    }
-                }
-
-                // Destroy command buffers
-                if (m_commandsPool && vkFreeCommandBuffers)
-                {
-                    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-                    {
-                        if (m_swapchain.commandBuffers[i])
-                        {
-                            vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool,
-                                1, &m_swapchain.commandBuffers[i]
-                            );
-                        }
-                        m_swapchain.commandBuffers[i] = 0;
-                    }
-                }
-
-                // Destroy commands pool
-                if (m_commandsPool && vkDestroyCommandPool)
-                {
-                    vkDestroyCommandPool(m_vulkanDevice, m_commandsPool, 0);
-                }
-
-                // Destroy descriptor pool
-                if (m_descriptorPool && vkDestroyDescriptorPool)
-                {
-                    vkDestroyDescriptorPool(
-                        m_vulkanDevice, m_descriptorPool, 0
-                    );
-                }
-
-                // Destroy texture
-                m_texture.destroyTexture(m_vulkanDevice);
-
-                // Destroy uniform buffer
-                m_uniformBuffer.destroyBuffer(m_vulkanDevice);
-
-                // Destroy index buffer
-                m_indexBuffer.destroyBuffer(m_vulkanDevice);
-
-                // Destroy vertex buffer
-                m_vertexBuffer.destroyBuffer(m_vulkanDevice);
-
-                // Destroy staging buffer
-                m_stagingBuffer.destroyBuffer(m_vulkanDevice);
-
-                // Destroy graphics pipeline
-                if (m_pipeline && vkDestroyPipeline)
-                {
-                    vkDestroyPipeline(m_vulkanDevice, m_pipeline, 0);
-                }
-
-                // Destroy pipeline layout
-                if (m_pipelineLayout && vkDestroyPipelineLayout)
-                {
-                    vkDestroyPipelineLayout(
-                        m_vulkanDevice, m_pipelineLayout, 0
-                    );
-                }
-
-                // Destroy descriptor set layout
-                if (m_descriptorSetLayout && vkDestroyDescriptorSetLayout)
-                {
-                    vkDestroyDescriptorSetLayout(
-                        m_vulkanDevice, m_descriptorSetLayout, 0
-                    );
-                }
-
-                // Destroy default shaders
-                if (vkDestroyShaderModule)
-                {
-                    if (m_fragmentShader)
-                    {
-                        vkDestroyShaderModule(
-                            m_vulkanDevice, m_fragmentShader, 0
-                        );
-                    }
-                    if (m_vertexShader)
-                    {
-                        vkDestroyShaderModule(
-                            m_vulkanDevice, m_vertexShader, 0
-                        );
-                    }
-                }
-
-                // Destroy framebuffers
-                if (vkDestroyFramebuffer)
-                {
-                    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-                    {
-                        if (m_swapchain.framebuffers[i])
-                        {
-                            vkDestroyFramebuffer(
-                                m_vulkanDevice, m_swapchain.framebuffers[i], 0
-                            );
-                        }
-                        m_swapchain.framebuffers[i] = 0;
-                    }
-                }
-
-                // Destroy render pass
-                if (m_renderPass && vkDestroyRenderPass)
-                {
-                    vkDestroyRenderPass(m_vulkanDevice, m_renderPass, 0);
-                }
-
-                // Destroy swapchain images views
-                if (vkDestroyImageView)
-                {
-                    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-                    {
-                        if (m_swapchain.views[i])
-                        {
-                            // Destroy image view
-                            vkDestroyImageView(
-                                m_vulkanDevice, m_swapchain.views[i], 0
-                            );
-                            m_swapchain.views[i] = 0;
-                        }
-                    }
-                }
-
-                // Destroy Vulkan swapchain
-                if (m_swapchain.handle && vkDestroySwapchainKHR)
-                {
-                    vkDestroySwapchainKHR(
-                        m_vulkanDevice, m_swapchain.handle, 0
-                    );
-                }
+                vkDestroyShaderModule(m_vulkanDevice, m_fragmentShader, 0);
+            }
+            if (m_vertexShader)
+            {
+                vkDestroyShaderModule(m_vulkanDevice, m_vertexShader, 0);
             }
         }
 
-        // Destroy Vulkan device
-        if (vkDestroyDevice)
+        // Destroy render pass
+        if (m_renderPass && vkDestroyRenderPass)
         {
-            vkDestroyDevice(m_vulkanDevice, 0);
+            vkDestroyRenderPass(m_vulkanDevice, m_renderPass, 0);
         }
+    }
+
+    // Destroy Vulkan device
+    if (vkDestroyDevice)
+    {
+        vkDestroyDevice(m_vulkanDevice, 0);
     }
 
     // Destroy Vulkan surface

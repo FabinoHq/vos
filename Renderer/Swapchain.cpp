@@ -92,7 +92,8 @@ Swapchain::~Swapchain()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Swapchain                                                          //
+//  Create swapchain                                                          //
+//  return : True if swapchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface)
@@ -462,4 +463,103 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 
     // Vulkan swapchain successfully created
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy swapchain                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void Swapchain::destroySwapchain(VkDevice& vulkanDevice,
+    VkCommandPool& commandsPool)
+{
+    if (vulkanDevice)
+    {
+        if (vkDeviceWaitIdle)
+        {
+            if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
+            {
+                for (uint32_t i = 0; i < frames; ++i)
+                {
+                    // Destroy command buffers
+                    if (commandsPool && vkFreeCommandBuffers)
+                    {
+                        if (commandBuffers[i])
+                        {
+                            vkFreeCommandBuffers(vulkanDevice,
+                                commandsPool, 1, &commandBuffers[i]
+                            );
+                        }
+                    }
+
+                    // Destroy fences
+                    if (vkDestroyFence)
+                    {
+                        if (fences[i])
+                        {
+                            vkDestroyFence(vulkanDevice, fences[i], 0);
+                        }
+                    }
+
+                    // Destroy semaphores
+                    if (vkDestroySemaphore)
+                    {
+                        if (renderFinished[i])
+                        {
+                            vkDestroySemaphore(
+                                vulkanDevice, renderFinished[i], 0
+                            );
+                        }
+                        if (renderReady[i])
+                        {
+                            vkDestroySemaphore(vulkanDevice, renderReady[i], 0);
+                        }
+                    }
+
+                    // Destroy framebuffers
+                    if (vkDestroyFramebuffer)
+                    {
+                        if (framebuffers[i])
+                        {
+                            vkDestroyFramebuffer(
+                                vulkanDevice, framebuffers[i], 0
+                            );
+                        }
+                    }
+
+                    // Destroy swapchain images views
+                    if (vkDestroyImageView)
+                    {
+                        if (views[i])
+                        {
+                            // Destroy image view
+                            vkDestroyImageView(vulkanDevice, views[i], 0);
+                        }
+                    }
+                }
+
+                // Destroy Vulkan swapchain
+                if (handle && vkDestroySwapchainKHR)
+                {
+                    vkDestroySwapchainKHR(vulkanDevice, handle, 0);
+                }
+            }
+        }
+    }
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        commandBuffers[i] = 0;
+        fences[i] = 0;
+        renderFinished[i] = 0;
+        renderReady[i] = 0;
+        framebuffers[i] = 0;
+        views[i]= 0;
+        memories[i]= 0;
+        images[i] = 0;
+    }
+    extent.height = 0;
+    extent.width = 0;
+    current = 0;
+    frames = 0;
+    format = VK_FORMAT_UNDEFINED;
+    handle = 0;
 }

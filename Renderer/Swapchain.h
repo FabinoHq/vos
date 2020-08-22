@@ -70,10 +70,17 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Swapchain                                              //
+            //  Create swapchain                                              //
+            //  return : True if swapchain is successfully created            //
             ////////////////////////////////////////////////////////////////////
             bool createSwapchain(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy swapchain                                             //
+            ////////////////////////////////////////////////////////////////////
+            void destroySwapchain(VkDevice& vulkanDevice,
+                VkCommandPool& commandsPool);
 
 
         public:
