@@ -236,13 +236,6 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create fences
-    if (!createFences())
-    {
-        // Could not create fences
-        return false;
-    }
-
     // Create vertex buffer
     if (!createVertexBuffer())
     {
@@ -1506,44 +1499,6 @@ bool Renderer::createSemaphores()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create fences                                                             //
-//  return : True if fences are successfully created                          //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createFences()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Vulkan device is invalid
-        return false;
-    }
-
-    // Create fences
-    VkFenceCreateInfo fenceInfo;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-    {
-        if (vkCreateFence(m_vulkanDevice,
-            &fenceInfo, 0, &m_swapchain.fences[i]) != VK_SUCCESS)
-        {
-            // Could not create fence
-            return false;
-        }
-        if (!m_swapchain.fences[i])
-        {
-            // Invalid fence
-            return false;
-        }
-    }
-
-    // Fences successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Create vertex buffer                                                      //
 //  return : True if vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
@@ -2423,13 +2378,6 @@ bool Renderer::resize()
         m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_commandsPool))
     {
         // Could not recreate Vulkan swapchain
-        return false;
-    }
-
-    // Recreate fences
-    if (!createFences())
-    {
-        // Could not recreate fences
         return false;
     }
 

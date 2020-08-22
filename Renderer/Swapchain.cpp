@@ -550,6 +550,27 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         }
     }
 
+    // Create fences
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = 0;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        if (vkCreateFence(
+            vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
+        {
+            // Could not create fence
+            return false;
+        }
+        if (!fences[i])
+        {
+            // Invalid fence
+            return false;
+        }
+    }
+
     // Wait for device idle
     if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
     {

@@ -324,12 +324,6 @@
             bool createSemaphores();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create fences                                                 //
-            //  return : True if fences are successfully created              //
-            ////////////////////////////////////////////////////////////////////
-            bool createFences();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create vertex buffer                                          //
             //  return : True if vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
