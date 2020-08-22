@@ -55,6 +55,8 @@ m_physicalDevice(0),
 m_vulkanDevice(0),
 m_graphicsQueue(),
 m_surfaceQueue(),
+m_transferQueue(),
+m_transferCommandPool(0),
 m_swapchain(),
 m_vertexShader(0),
 m_fragmentShader(0),
@@ -190,11 +192,39 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Request transfer queue handle
+    if (!m_transferQueue.createVulkanQueue(m_vulkanDevice))
+    {
+        // Could not get surface queue handle
+        return false;
+    }
+
     // Create Vulkan swapchain
     if (!m_swapchain.createSwapchain(m_physicalDevice,
         m_vulkanDevice, m_vulkanSurface, m_surfaceQueue.index))
     {
         // Could not create Vulkan swapchain
+        return false;
+    }
+
+    // Create transfer commands pool
+    VkCommandPoolCreateInfo commandPoolInfo;
+    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.pNext = 0;
+    commandPoolInfo.flags =
+        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
+        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.queueFamilyIndex = m_transferQueue.index;
+
+    if (vkCreateCommandPool(m_vulkanDevice,
+        &commandPoolInfo, 0, &m_transferCommandPool) != VK_SUCCESS)
+    {
+        // Could not create transfer commands pool
+        return false;
+    }
+    if (!m_transferCommandPool)
+    {
+        // Invalid transfer commands pool
         return false;
     }
 
@@ -547,6 +577,12 @@ void Renderer::cleanup()
         // Destroy staging buffer
         m_stagingBuffer.destroyBuffer(m_vulkanDevice);
 
+        // Destroy transfer commands pool
+        if (m_transferCommandPool && vkDestroyCommandPool)
+        {
+            vkDestroyCommandPool(m_vulkanDevice, m_transferCommandPool, 0);
+        }
+
         // Destroy graphics pipeline
         if (m_pipeline && vkDestroyPipeline)
         {
@@ -764,6 +800,10 @@ bool Renderer::selectVulkanDevice()
     uint32_t graphicsQueueIndex = 0;
     bool surfaceQueueFound = false;
     uint32_t surfaceQueueIndex = 0;
+    bool fallbackTransferQueueFound = false;
+    uint32_t fallbackTransferQueueIndex = 0;
+    bool transferQueueFound = false;
+    uint32_t transferQueueIndex = 0;
     for (uint32_t i = 0; i < devicesCounts; ++i)
     {
         // Get device extensions count
@@ -862,6 +902,17 @@ bool Renderer::selectVulkanDevice()
 
             if (queueFamilies[j].queueCount > 0)
             {
+                // Check if current queue supports transfer
+                if (queueFamilies[j].queueFlags & VK_QUEUE_TRANSFER_BIT)
+                {
+                    // Fallback transfer queue found
+                    if (!fallbackTransferQueueFound)
+                    {
+                        fallbackTransferQueueIndex = j;
+                        fallbackTransferQueueFound = true;
+                    }
+                }
+
                 // Check if current queue supports graphics
                 if (queueFamilies[j].queueFlags & VK_QUEUE_GRAPHICS_BIT)
                 {
@@ -873,7 +924,6 @@ bool Renderer::selectVulkanDevice()
                         graphicsQueueFound = true;
                         surfaceQueueIndex = j;
                         surfaceQueueFound = true;
-                        break;
                     }
                     else
                     {
@@ -887,6 +937,17 @@ bool Renderer::selectVulkanDevice()
                 }
                 else
                 {
+                    // Check if current queue supports transfer
+                    if (queueFamilies[j].queueFlags & VK_QUEUE_TRANSFER_BIT)
+                    {
+                        // Transfer queue found
+                        if (!transferQueueFound)
+                        {
+                            transferQueueIndex = j;
+                            transferQueueFound = true;
+                        }
+                    }
+
                     if (queueSurfaceSupport[j])
                     {
                         // Current queue supports only surface
@@ -900,11 +961,19 @@ bool Renderer::selectVulkanDevice()
             }
         }
 
+        // Set fallback transfer queue
+        if (!transferQueueFound && fallbackTransferQueueFound)
+        {
+            transferQueueIndex = fallbackTransferQueueIndex;
+            transferQueueFound = true;
+        }
+
         // Current device supports graphics and surface queues
-        if (graphicsQueueFound && surfaceQueueFound)
+        if (graphicsQueueFound && surfaceQueueFound && transferQueueFound)
         {
             m_graphicsQueue.index = graphicsQueueIndex;
             m_surfaceQueue.index = surfaceQueueIndex;
+            m_transferQueue.index = transferQueueIndex;
             deviceIndex = i;
             deviceFound = true;
             break;
@@ -948,6 +1017,21 @@ bool Renderer::selectVulkanDevice()
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
         queueInfos.back().queueFamilyIndex = surfaceQueueIndex;
+        queueInfos.back().queueCount = static_cast<uint32_t>(
+            queuePriorities.size()
+        );
+        queueInfos.back().pQueuePriorities = queuePriorities.data();
+    }
+
+    // Add another queue if the transfer queue is different
+    if ((transferQueueIndex != graphicsQueueIndex) &&
+        (transferQueueIndex != surfaceQueueIndex))
+    {
+        queueInfos.push_back(VkDeviceQueueCreateInfo());
+        queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueInfos.back().pNext = 0;
+        queueInfos.back().flags = 0;
+        queueInfos.back().queueFamilyIndex = transferQueueIndex;
         queueInfos.back().queueCount = static_cast<uint32_t>(
             queuePriorities.size()
         );
@@ -1377,10 +1461,10 @@ bool Renderer::createVertexBuffer()
         return false;
     }
 
-    // Check commands pool
-    if (!m_swapchain.commandsPool)
+    // Check transfer command pool
+    if (!m_transferCommandPool)
     {
-        // Invalid commands pool
+        // Invalid transfer command pool
         return false;
     }
 
@@ -1467,7 +1551,7 @@ bool Renderer::createVertexBuffer()
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_swapchain.commandsPool;
+    bufferAllocate.commandPool = m_transferCommandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = m_swapchain.frames;
 
@@ -1518,22 +1602,22 @@ bool Renderer::createVertexBuffer()
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_transferQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(m_graphicsQueue.handle) != VK_SUCCESS)
+    if (vkQueueWaitIdle(m_transferQueue.handle) != VK_SUCCESS)
     {
-        // Could not wait for graphics queue idle
+        // Could not wait for transfer queue idle
         return false;
     }
 
     if (commandBuffer)
     {
         vkFreeCommandBuffers(
-            m_vulkanDevice, m_swapchain.commandsPool, 1, &commandBuffer
+            m_vulkanDevice, m_transferCommandPool, 1, &commandBuffer
         );
     }
     m_stagingBuffer.destroyBuffer(m_vulkanDevice);
@@ -1602,7 +1686,7 @@ bool Renderer::createVertexBuffer()
     commandBuffer = 0;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_swapchain.commandsPool;
+    bufferAllocate.commandPool = m_transferCommandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = m_swapchain.frames;
 
@@ -1651,22 +1735,22 @@ bool Renderer::createVertexBuffer()
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_transferQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(m_graphicsQueue.handle) != VK_SUCCESS)
+    if (vkQueueWaitIdle(m_transferQueue.handle) != VK_SUCCESS)
     {
-        // Could not wait for graphics queue idle
+        // Could not wait for transfer queue idle
         return false;
     }
 
     if (commandBuffer)
     {
         vkFreeCommandBuffers(
-            m_vulkanDevice, m_swapchain.commandsPool, 1, &commandBuffer
+            m_vulkanDevice, m_transferCommandPool, 1, &commandBuffer
         );
     }
     m_stagingBuffer.destroyBuffer(m_vulkanDevice);
@@ -1693,6 +1777,13 @@ bool Renderer::createUniformBuffer()
     if (!m_vulkanDevice)
     {
         // Invalid Vulkan device
+        return false;
+    }
+
+    // Check transfer command pool
+    if (!m_transferCommandPool)
+    {
+        // Invalid transfer command pool
         return false;
     }
 
@@ -1777,7 +1868,7 @@ bool Renderer::createUniformBuffer()
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_swapchain.commandsPool;
+    bufferAllocate.commandPool = m_transferCommandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = m_swapchain.frames;
 
@@ -1829,22 +1920,22 @@ bool Renderer::createUniformBuffer()
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_transferQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(m_graphicsQueue.handle) != VK_SUCCESS)
+    if (vkQueueWaitIdle(m_transferQueue.handle) != VK_SUCCESS)
     {
-        // Could not wait for graphics queue idle
+        // Could not wait for transfer queue idle
         return false;
     }
 
     if (commandBuffer)
     {
         vkFreeCommandBuffers(
-            m_vulkanDevice, m_swapchain.commandsPool, 1, &commandBuffer
+            m_vulkanDevice, m_transferCommandPool, 1, &commandBuffer
         );
     }
     m_stagingBuffer.destroyBuffer(m_vulkanDevice);
@@ -1860,10 +1951,24 @@ bool Renderer::createUniformBuffer()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::createTexture()
 {
+    // Check physical device
+    if (!m_physicalDevice)
+    {
+        // Invalid physical device
+        return false;
+    }
+
     // Check Vulkan device
     if (!m_vulkanDevice)
     {
         // Invalid Vulkan device
+        return false;
+    }
+
+    // Check commands pool
+    if (!m_swapchain.commandsPool)
+    {
+        // Invalid commands pool
         return false;
     }
 
@@ -1986,7 +2091,7 @@ bool Renderer::createTexture()
     transferToShader.subresourceRange = subresourceRange;
 
     vkCmdPipelineBarrier(
-       commandBuffer,
+        commandBuffer,
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
         0, 0, 0, 0, 0, 1, &undefinedToTransfer

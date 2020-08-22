@@ -347,6 +347,8 @@
             VkDevice            m_vulkanDevice;         // Vulkan device
             VulkanQueue         m_graphicsQueue;        // Graphics queue
             VulkanQueue         m_surfaceQueue;         // Surface queue
+            VulkanQueue         m_transferQueue;        // Transfer queue
+            VkCommandPool       m_transferCommandPool;  // Transfer command pool
 
             Swapchain               m_swapchain;            // Swapchain
             VkShaderModule          m_vertexShader;         // Vertex shader
