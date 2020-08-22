@@ -69,6 +69,13 @@
             ~Swapchain();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Create Swapchain                                              //
+            ////////////////////////////////////////////////////////////////////
+            bool createSwapchain(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface);
+
+
         public:
             VkSwapchainKHR      handle;     // Swapchain handle
             VkFormat            format;     // Swapchain format

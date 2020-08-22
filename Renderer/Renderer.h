@@ -637,12 +637,6 @@
             bool getQueuesHandles();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan swapchain                                       //
-            //  return : True if Vulkan swapchain is successfully created     //
-            ////////////////////////////////////////////////////////////////////
-            bool createVulkanSwapchain();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create render pass                                            //
             //  return : True if render pass is successfully created          //
             ////////////////////////////////////////////////////////////////////
