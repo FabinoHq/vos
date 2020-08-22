@@ -288,12 +288,6 @@
             bool getQueuesHandles();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create framebuffers                                           //
-            //  return : True if framebuffers are successfully created        //
-            ////////////////////////////////////////////////////////////////////
-            bool createFramebuffers();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create default shaders                                        //
             //  return : True if default shaders are successfully created     //
             ////////////////////////////////////////////////////////////////////

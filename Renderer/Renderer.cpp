@@ -194,13 +194,6 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create framebuffers
-    if (!createFramebuffers())
-    {
-        // Could not create framebuffers
-        return false;
-    }
-
     // Create default shaders
     if (!createDefaultShaders())
     {
@@ -1052,65 +1045,6 @@ bool Renderer::getQueuesHandles()
     // Vulkan queues handles are valid
     return true;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create framebuffers                                                       //
-//  return : True if framebuffers are successfully created                    //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createFramebuffers()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check render pass
-    if (!m_swapchain.renderPass)
-    {
-        // Invalid render pass
-        return false;
-    }
-
-    // Check swapchain images count
-    if (m_swapchain.frames <= 0)
-    {
-        // No swapchain images
-        return false;
-    }
-
-    // Create framebuffers
-    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-    {
-        VkFramebufferCreateInfo framebufferInfo;
-        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.pNext = 0;
-        framebufferInfo.flags = 0;
-        framebufferInfo.renderPass = m_swapchain.renderPass;
-        framebufferInfo.attachmentCount = 1;
-        framebufferInfo.pAttachments = &m_swapchain.views[i];
-        framebufferInfo.width = m_swapchain.extent.width;
-        framebufferInfo.height = m_swapchain.extent.height;
-        framebufferInfo.layers = 1;
-
-        if (vkCreateFramebuffer(m_vulkanDevice,
-            &framebufferInfo, 0, &m_swapchain.framebuffers[i]) != VK_SUCCESS)
-        {
-            // Could not create framebuffer
-            return false;
-        }
-        if (!m_swapchain.framebuffers[i])
-        {
-            // Invalid framebuffer
-            return false;
-        }
-    }
-
-    // Framebuffers successfully created
-    return true;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Create default shaders                                                    //
@@ -2489,13 +2423,6 @@ bool Renderer::resize()
         m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_commandsPool))
     {
         // Could not recreate Vulkan swapchain
-        return false;
-    }
-
-    // Recreate framebuffers
-    if (!createFramebuffers())
-    {
-        // Could not recreate framebuffers
         return false;
     }
 

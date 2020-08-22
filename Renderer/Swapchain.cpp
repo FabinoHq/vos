@@ -523,6 +523,33 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    // Create framebuffers
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        VkFramebufferCreateInfo framebufferInfo;
+        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferInfo.pNext = 0;
+        framebufferInfo.flags = 0;
+        framebufferInfo.renderPass = renderPass;
+        framebufferInfo.attachmentCount = 1;
+        framebufferInfo.pAttachments = &views[i];
+        framebufferInfo.width = extent.width;
+        framebufferInfo.height = extent.height;
+        framebufferInfo.layers = 1;
+
+        if (vkCreateFramebuffer(
+            vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        {
+            // Could not create framebuffer
+            return false;
+        }
+        if (!framebuffers[i])
+        {
+            // Invalid framebuffer
+            return false;
+        }
+    }
+
     // Wait for device idle
     if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
     {
