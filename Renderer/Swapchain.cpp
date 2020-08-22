@@ -48,6 +48,7 @@
 Swapchain::Swapchain() :
 handle(0),
 format(VK_FORMAT_UNDEFINED),
+renderPass(0),
 frames(0),
 current(0)
 {
@@ -84,6 +85,7 @@ Swapchain::~Swapchain()
     extent.width = 0;
     current = 0;
     frames = 0;
+    renderPass = 0;
     format = VK_FORMAT_UNDEFINED;
     handle = 0;
 }
@@ -94,7 +96,8 @@ Swapchain::~Swapchain()
 //  return : True if swapchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface)
+    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
+    VkCommandPool& commandsPool)
 {
     // Check physical device
     if (!physicalDevice)
@@ -117,24 +120,19 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    // Check current swapchain
+    if (handle)
+    {
+        // Destroy current swapchain
+        destroySwapchain(vulkanDevice, commandsPool);
+    }
+
     // Wait for device idle
     if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
     {
         // Could not get the device ready
         return false;
     }
-
-    // Cleanup swapchain images views
-    for (uint32_t i = 0; i < frames; ++i)
-    {
-        if (views[i])
-        {
-            // Destroy image view
-            vkDestroyImageView(vulkanDevice, views[i], 0);
-            views[i] = 0;
-        }
-    }
-
 
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
@@ -452,6 +450,79 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         }
     }
 
+    // Create render pass
+    VkAttachmentDescription attachmentDescription;
+    attachmentDescription.flags = 0;
+    attachmentDescription.format = format;
+    attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
+    attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentReference attachmentReference;
+    attachmentReference.attachment = 0;
+    attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpassDescription;
+    subpassDescription.flags = 0;
+    subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpassDescription.inputAttachmentCount = 0;
+    subpassDescription.pInputAttachments = 0;
+    subpassDescription.colorAttachmentCount = 1;
+    subpassDescription.pColorAttachments = &attachmentReference;
+    subpassDescription.pResolveAttachments = 0;
+    subpassDescription.pDepthStencilAttachment = 0;
+    subpassDescription.preserveAttachmentCount = 0;
+    subpassDescription.pPreserveAttachments = 0;
+
+    VkSubpassDependency subpassDependencies[2];
+
+    subpassDependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+    subpassDependencies[0].dstSubpass = 0;
+    subpassDependencies[0].srcStageMask =
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    subpassDependencies[0].dstStageMask =
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    subpassDependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    subpassDependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    subpassDependencies[1].srcSubpass = 0;
+    subpassDependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+    subpassDependencies[1].srcStageMask =
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    subpassDependencies[1].dstStageMask =
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    subpassDependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    subpassDependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    VkRenderPassCreateInfo renderPassInfo;
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.pNext = 0;
+    renderPassInfo.flags = 0;
+    renderPassInfo.attachmentCount = 1;
+    renderPassInfo.pAttachments = &attachmentDescription;
+    renderPassInfo.subpassCount = 1;
+    renderPassInfo.pSubpasses = &subpassDescription;
+    renderPassInfo.dependencyCount = 2;
+    renderPassInfo.pDependencies = subpassDependencies;
+
+    if (vkCreateRenderPass(
+        vulkanDevice, &renderPassInfo, 0, &renderPass) != VK_SUCCESS)
+    {
+        // Could not create render pass
+        return false;
+    }
+    if (!renderPass)
+    {
+        // Invalid render pass
+        return false;
+    }
+
     // Wait for device idle
     if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
     {
@@ -475,6 +546,12 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice,
         {
             if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
             {
+                // Destroy render pass
+                if (renderPass && vkDestroyRenderPass)
+                {
+                    vkDestroyRenderPass(vulkanDevice, renderPass, 0);
+                }
+
                 for (uint32_t i = 0; i < frames; ++i)
                 {
                     // Destroy command buffers
@@ -557,6 +634,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice,
     extent.width = 0;
     current = 0;
     frames = 0;
+    renderPass = 0;
     format = VK_FORMAT_UNDEFINED;
     handle = 0;
 }

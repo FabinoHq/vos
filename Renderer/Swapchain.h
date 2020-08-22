@@ -74,7 +74,8 @@
             //  return : True if swapchain is successfully created            //
             ////////////////////////////////////////////////////////////////////
             bool createSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface);
+                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
+                VkCommandPool& commandsPool);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy swapchain                                             //
@@ -84,11 +85,12 @@
 
 
         public:
-            VkSwapchainKHR      handle;     // Swapchain handle
-            VkFormat            format;     // Swapchain format
-            VkExtent2D          extent;     // Swapchain extent
-            uint32_t            frames;     // Swapchain frames
-            uint32_t            current;    // swapchain current frame
+            VkSwapchainKHR      handle;         // Swapchain handle
+            VkFormat            format;         // Swapchain format
+            VkExtent2D          extent;         // Swapchain extent
+            VkRenderPass        renderPass;     // Render pass
+            uint32_t            frames;         // Swapchain frames count
+            uint32_t            current;        // swapchain current frame
 
             VkImage             images[RendererMaxSwapchainFrames];
             VkImageView         views[RendererMaxSwapchainFrames];

@@ -58,7 +58,6 @@ m_graphicsQueueHandle(0),
 m_surfaceQueueIndex(0),
 m_surfaceQueueHandle(0),
 m_swapchain(),
-m_renderPass(0),
 m_vertexShader(0),
 m_fragmentShader(0),
 m_descriptorSetLayout(0),
@@ -189,16 +188,9 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create Vulkan swapchain
     if (!m_swapchain.createSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface))
+        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_commandsPool))
     {
         // Could not create Vulkan swapchain
-        return false;
-    }
-
-    // Create render pass
-    if (!createRenderPass())
-    {
-        // Could not create render pass
         return false;
     }
 
@@ -391,7 +383,7 @@ void Renderer::render()
     VkRenderPassBeginInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
-    renderPassInfo.renderPass = m_renderPass;
+    renderPassInfo.renderPass = m_swapchain.renderPass;
     renderPassInfo.framebuffer = m_swapchain.framebuffers[frameIndex];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
@@ -617,12 +609,6 @@ void Renderer::cleanup()
                 vkDestroyShaderModule(m_vulkanDevice, m_vertexShader, 0);
             }
         }
-
-        // Destroy render pass
-        if (m_renderPass && vkDestroyRenderPass)
-        {
-            vkDestroyRenderPass(m_vulkanDevice, m_renderPass, 0);
-        }
     }
 
     // Destroy Vulkan device
@@ -644,7 +630,6 @@ void Renderer::cleanup()
     m_descriptorSetLayout = 0;
     m_fragmentShader = 0;
     m_vertexShader = 0;
-    m_renderPass = 0;
     m_swapchain.handle = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
@@ -1069,96 +1054,6 @@ bool Renderer::getQueuesHandles()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create render pass                                                        //
-//  return : True if render pass is successfully created                      //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createRenderPass()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Create render pass
-    VkAttachmentDescription attachmentDescription;
-    attachmentDescription.flags = 0;
-    attachmentDescription.format = m_swapchain.format;
-    attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
-    attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-    VkAttachmentReference attachmentReference;
-    attachmentReference.attachment = 0;
-    attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-    VkSubpassDescription subpassDescription;
-    subpassDescription.flags = 0;
-    subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpassDescription.inputAttachmentCount = 0;
-    subpassDescription.pInputAttachments = 0;
-    subpassDescription.colorAttachmentCount = 1;
-    subpassDescription.pColorAttachments = &attachmentReference;
-    subpassDescription.pResolveAttachments = 0;
-    subpassDescription.pDepthStencilAttachment = 0;
-    subpassDescription.preserveAttachmentCount = 0;
-    subpassDescription.pPreserveAttachments = 0;
-
-    VkSubpassDependency subpassDependencies[2];
-
-    subpassDependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-    subpassDependencies[0].dstSubpass = 0;
-    subpassDependencies[0].srcStageMask =
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-    subpassDependencies[0].dstStageMask =
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    subpassDependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-    subpassDependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    subpassDependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-    subpassDependencies[1].srcSubpass = 0;
-    subpassDependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
-    subpassDependencies[1].srcStageMask =
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    subpassDependencies[1].dstStageMask =
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-    subpassDependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    subpassDependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-    subpassDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-    VkRenderPassCreateInfo renderPassInfo;
-    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    renderPassInfo.pNext = 0;
-    renderPassInfo.flags = 0;
-    renderPassInfo.attachmentCount = 1;
-    renderPassInfo.pAttachments = &attachmentDescription;
-    renderPassInfo.subpassCount = 1;
-    renderPassInfo.pSubpasses = &subpassDescription;
-    renderPassInfo.dependencyCount = 2;
-    renderPassInfo.pDependencies = subpassDependencies;
-
-    if (vkCreateRenderPass(
-        m_vulkanDevice, &renderPassInfo, 0, &m_renderPass) != VK_SUCCESS)
-    {
-        // Could not create render pass
-        return false;
-    }
-    if (!m_renderPass)
-    {
-        // Invalid render pass
-        return false;
-    }
-
-    // Render pass successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Create framebuffers                                                       //
 //  return : True if framebuffers are successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1172,7 +1067,7 @@ bool Renderer::createFramebuffers()
     }
 
     // Check render pass
-    if (!m_renderPass)
+    if (!m_swapchain.renderPass)
     {
         // Invalid render pass
         return false;
@@ -1192,7 +1087,7 @@ bool Renderer::createFramebuffers()
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferInfo.pNext = 0;
         framebufferInfo.flags = 0;
-        framebufferInfo.renderPass = m_renderPass;
+        framebufferInfo.renderPass = m_swapchain.renderPass;
         framebufferInfo.attachmentCount = 1;
         framebufferInfo.pAttachments = &m_swapchain.views[i];
         framebufferInfo.width = m_swapchain.extent.width;
@@ -1388,7 +1283,7 @@ bool Renderer::createPipeline()
     }
 
     // Check render pass
-    if (!m_renderPass)
+    if (!m_swapchain.renderPass)
     {
         // Invalid render pass
         return false;
@@ -1568,7 +1463,7 @@ bool Renderer::createPipeline()
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = m_pipelineLayout;
-    pipelineInfo.renderPass = m_renderPass;
+    pipelineInfo.renderPass = m_swapchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
@@ -2524,7 +2419,7 @@ bool Renderer::resize()
     m_rendererReady = false;
 
     // Cleanup renderer
-    if (m_vulkanDevice && vkDeviceWaitIdle)
+    if (m_vulkanDevice)
     {
         // Wait for device idle
         if (vkDeviceWaitIdle)
@@ -2591,7 +2486,7 @@ bool Renderer::resize()
 
     // Recreate Vulkan swapchain
     if (!m_swapchain.createSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface))
+        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_commandsPool))
     {
         // Could not recreate Vulkan swapchain
         return false;
