@@ -45,6 +45,7 @@
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"
     #include "Vulkan.h"
+    #include "Swapchain.h"
     #include "VulkanBuffer.h"
     #include "Texture.h"
     #include "../Math/Math.h"
@@ -52,12 +53,6 @@
 
     #include <vector>
 
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer swapchain settings                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxSwapchainFrames = 2;
-    const uint64_t RendererSwapchainFenceTimeout = 5000000000;
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer clear color                                                  //
@@ -554,49 +549,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanSwapchain data structure                                        //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VulkanSwapchain
-    {
-        VulkanSwapchain() :
-        handle(0),
-        format(VK_FORMAT_UNDEFINED),
-        frames(0),
-        current(0)
-        {
-            extent.width = 0;
-            extent.height = 0;
-
-            for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-            {
-                images[i] = 0;
-                memories[i]= 0;
-                views[i]= 0;
-                framebuffers[i] = 0;
-                imageAvailable[i] = 0;
-                renderFinished[i] = 0;
-                fences[i] = 0;
-                commandBuffers[i] = 0;
-            }
-        }
-
-        VkSwapchainKHR      handle;     // Swapchain handle
-        VkFormat            format;     // Swapchain format
-        VkExtent2D          extent;     // Swapchain extent
-        uint32_t            frames;     // Swapchain frames
-        uint32_t            current;    // swapchain current frame
-
-        VkImage             images[RendererMaxSwapchainFrames];
-        VkDeviceMemory      memories[RendererMaxSwapchainFrames];
-        VkImageView         views[RendererMaxSwapchainFrames];
-        VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
-        VkSemaphore         imageAvailable[RendererMaxSwapchainFrames];
-        VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
-        VkFence             fences[RendererMaxSwapchainFrames];
-        VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
     //  UniformData data structure                                            //
     ////////////////////////////////////////////////////////////////////////////
     struct UniformData
@@ -789,7 +741,7 @@
             uint32_t            m_surfaceQueueIndex;    // Surface queue index
             VkQueue             m_surfaceQueueHandle;   // Surface queue handle
 
-            VulkanSwapchain         m_swapchain;            // Vulkan swapchain
+            Swapchain               m_swapchain;            // Swapchain
             VkRenderPass            m_renderPass;           // Render pass
             VkShaderModule          m_vertexShader;         // Vertex shader
             VkShaderModule          m_fragmentShader;       // Fragment shader

@@ -330,7 +330,7 @@ void Renderer::render()
     // Acquire current frame
     uint32_t frameIndex = 0;
     if (vkAcquireNextImageKHR(m_vulkanDevice, m_swapchain.handle,
-        UINT64_MAX, m_swapchain.imageAvailable[m_swapchain.current],
+        UINT64_MAX, m_swapchain.renderReady[m_swapchain.current],
         0, &frameIndex) != VK_SUCCESS)
     {
         // Could not acquire swapchain frame
@@ -503,7 +503,7 @@ void Renderer::render()
     submitInfo.pNext = 0;
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores =
-        &m_swapchain.imageAvailable[m_swapchain.current];
+        &m_swapchain.renderReady[m_swapchain.current];
     submitInfo.pWaitDstStageMask = &waitDstStage;
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers =
@@ -586,13 +586,13 @@ void Renderer::cleanup()
                             );
                         }
                         m_swapchain.renderFinished[i] = 0;
-                        if (m_swapchain.imageAvailable[i])
+                        if (m_swapchain.renderReady[i])
                         {
                             vkDestroySemaphore(
-                                m_vulkanDevice, m_swapchain.imageAvailable[i], 0
+                                m_vulkanDevice, m_swapchain.renderReady[i], 0
                             );
                         }
-                        m_swapchain.imageAvailable[i] = 0;
+                        m_swapchain.renderReady[i] = 0;
                     }
                 }
 
@@ -2127,7 +2127,7 @@ bool Renderer::createSemaphores()
     {
         // Create image available semaphore
         if (vkCreateSemaphore(m_vulkanDevice,
-            &semaphoreInfo, 0, &m_swapchain.imageAvailable[i]) != VK_SUCCESS)
+            &semaphoreInfo, 0, &m_swapchain.renderReady[i]) != VK_SUCCESS)
         {
             // Could not create image available semaphore
             return false;
