@@ -91,7 +91,6 @@
             uint32_t            current;    // swapchain current frame
 
             VkImage             images[RendererMaxSwapchainFrames];
-            VkDeviceMemory      memories[RendererMaxSwapchainFrames];
             VkImageView         views[RendererMaxSwapchainFrames];
             VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
             VkSemaphore         renderReady[RendererMaxSwapchainFrames];

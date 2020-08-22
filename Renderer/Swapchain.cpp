@@ -56,7 +56,6 @@ current(0)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         images[i] = 0;
-        memories[i]= 0;
         views[i]= 0;
         framebuffers[i] = 0;
         renderReady[i] = 0;
@@ -79,7 +78,6 @@ Swapchain::~Swapchain()
         renderReady[i] = 0;
         framebuffers[i] = 0;
         views[i]= 0;
-        memories[i]= 0;
         images[i] = 0;
     }
     extent.height = 0;
@@ -553,7 +551,6 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice,
         renderReady[i] = 0;
         framebuffers[i] = 0;
         views[i]= 0;
-        memories[i]= 0;
         images[i] = 0;
     }
     extent.height = 0;
