@@ -56,6 +56,9 @@
     <ClCompile Include="Renderer\Swapchain.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\VulkanQueue.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -121,6 +124,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\Swapchain.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\VulkanQueue.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>

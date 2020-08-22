@@ -53,10 +53,8 @@ m_vulkanInstance(0),
 m_vulkanSurface(0),
 m_physicalDevice(0),
 m_vulkanDevice(0),
-m_graphicsQueueIndex(0),
-m_graphicsQueueHandle(0),
-m_surfaceQueueIndex(0),
-m_surfaceQueueHandle(0),
+m_graphicsQueue(),
+m_surfaceQueue(),
 m_swapchain(),
 m_vertexShader(0),
 m_fragmentShader(0),
@@ -178,16 +176,23 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Get Vulkan queues handles
-    if (!getQueuesHandles())
+    // Request graphics queue handle
+    if (!m_graphicsQueue.createVulkanQueue(m_vulkanDevice))
     {
-        // Could not get Vulkan queues handles
+        // Could not get graphics queue handle
+        return false;
+    }
+
+    // Request surface queue handle
+    if (!m_surfaceQueue.createVulkanQueue(m_vulkanDevice))
+    {
+        // Could not get surface queue handle
         return false;
     }
 
     // Create Vulkan swapchain
-    if (!m_swapchain.createSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_surfaceQueueIndex))
+    if (!m_swapchain.createSwapchain(m_physicalDevice,
+        m_vulkanDevice, m_vulkanSurface, m_surfaceQueue.index))
     {
         // Could not create Vulkan swapchain
         return false;
@@ -334,8 +339,8 @@ void Renderer::render()
     presentToDraw.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     presentToDraw.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     presentToDraw.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    presentToDraw.srcQueueFamilyIndex = m_surfaceQueueIndex;
-    presentToDraw.dstQueueFamilyIndex = m_graphicsQueueIndex;
+    presentToDraw.srcQueueFamilyIndex = m_surfaceQueue.index;
+    presentToDraw.dstQueueFamilyIndex = m_graphicsQueue.index;
     presentToDraw.image = m_swapchain.images[frameIndex];
     presentToDraw.subresourceRange = subresource;
 
@@ -346,8 +351,8 @@ void Renderer::render()
     drawToPresent.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     drawToPresent.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     drawToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    drawToPresent.srcQueueFamilyIndex = m_graphicsQueueIndex;
-    drawToPresent.dstQueueFamilyIndex = m_surfaceQueueIndex;
+    drawToPresent.srcQueueFamilyIndex = m_graphicsQueue.index;
+    drawToPresent.dstQueueFamilyIndex = m_surfaceQueue.index;
     drawToPresent.image = m_swapchain.images[frameIndex];
     drawToPresent.subresourceRange = subresource;
 
@@ -476,7 +481,7 @@ void Renderer::render()
     submitInfo.pSignalSemaphores =
         &m_swapchain.renderFinished[m_swapchain.current];
 
-    if (vkQueueSubmit(m_surfaceQueueHandle, 1, &submitInfo,
+    if (vkQueueSubmit(m_surfaceQueue.handle, 1, &submitInfo,
         m_swapchain.fences[m_swapchain.current]) != VK_SUCCESS)
     {
         m_rendererReady = false;
@@ -494,7 +499,7 @@ void Renderer::render()
     present.pImageIndices = &frameIndex;
     present.pResults = 0;
 
-    if (vkQueuePresentKHR(m_surfaceQueueHandle, &present) != VK_SUCCESS)
+    if (vkQueuePresentKHR(m_surfaceQueue.handle, &present) != VK_SUCCESS)
     {
         m_rendererReady = false;
         return;
@@ -898,8 +903,6 @@ bool Renderer::selectVulkanDevice()
         // Current device supports graphics and surface queues
         if (graphicsQueueFound && surfaceQueueFound)
         {
-            m_graphicsQueueIndex = graphicsQueueIndex;
-            m_surfaceQueueIndex = surfaceQueueIndex;
             deviceIndex = i;
             deviceFound = true;
             break;
@@ -977,43 +980,6 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Vulkan device successfully selected
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get Vulkan queues handles                                                 //
-//  return : True if queues handles are valid                                 //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::getQueuesHandles()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Vulkan device is invalid
-        return false;
-    }
-
-    // Get graphics queue handle
-    vkGetDeviceQueue(
-        m_vulkanDevice, m_graphicsQueueIndex, 0, &m_graphicsQueueHandle
-    );
-    if (!m_graphicsQueueHandle)
-    {
-        // Could not get graphics queue handle
-        return false;
-    }
-
-    // Get surface queue handle
-    vkGetDeviceQueue(
-        m_vulkanDevice, m_surfaceQueueIndex, 0, &m_surfaceQueueHandle
-    );
-    if (!m_surfaceQueueHandle)
-    {
-        // Could not get surface queue handle
-        return false;
-    }
-
-    // Vulkan queues handles are valid
     return true;
 }
 
@@ -1550,13 +1516,13 @@ bool Renderer::createVertexBuffer()
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(m_graphicsQueueHandle) != VK_SUCCESS)
+    if (vkQueueWaitIdle(m_graphicsQueue.handle) != VK_SUCCESS)
     {
         // Could not wait for graphics queue idle
         return false;
@@ -1683,13 +1649,13 @@ bool Renderer::createVertexBuffer()
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(m_graphicsQueueHandle) != VK_SUCCESS)
+    if (vkQueueWaitIdle(m_graphicsQueue.handle) != VK_SUCCESS)
     {
         // Could not wait for graphics queue idle
         return false;
@@ -1861,13 +1827,13 @@ bool Renderer::createUniformBuffer()
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(m_graphicsQueueHandle) != VK_SUCCESS)
+    if (vkQueueWaitIdle(m_graphicsQueue.handle) != VK_SUCCESS)
     {
         // Could not wait for graphics queue idle
         return false;
@@ -2068,13 +2034,13 @@ bool Renderer::createTexture()
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueueHandle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(m_graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(m_graphicsQueueHandle) != VK_SUCCESS)
+    if (vkQueueWaitIdle(m_graphicsQueue.handle) != VK_SUCCESS)
     {
         // Could not wait for graphics queue idle
         return false;

@@ -45,6 +45,7 @@
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"
     #include "Vulkan.h"
+    #include "VulkanQueue.h"
     #include "Swapchain.h"
     #include "VulkanBuffer.h"
     #include "Texture.h"
@@ -282,12 +283,6 @@
             bool selectVulkanDevice();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vulkan queues handles                                     //
-            //  return : True if queues handles are valid                     //
-            ////////////////////////////////////////////////////////////////////
-            bool getQueuesHandles();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create default shaders                                        //
             //  return : True if default shaders are successfully created     //
             ////////////////////////////////////////////////////////////////////
@@ -350,11 +345,8 @@
             VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
             VkPhysicalDevice    m_physicalDevice;       // Physical device
             VkDevice            m_vulkanDevice;         // Vulkan device
-
-            uint32_t            m_graphicsQueueIndex;   // Graphics queue index
-            VkQueue             m_graphicsQueueHandle;  // Graphics queue handle
-            uint32_t            m_surfaceQueueIndex;    // Surface queue index
-            VkQueue             m_surfaceQueueHandle;   // Surface queue handle
+            VulkanQueue         m_graphicsQueue;        // Graphics queue
+            VulkanQueue         m_surfaceQueue;         // Surface queue
 
             Swapchain               m_swapchain;            // Swapchain
             VkShaderModule          m_vertexShader;         // Vertex shader

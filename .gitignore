@@ -60,6 +60,8 @@
 !Renderer/
 !Renderer/Vulkan.h
 !Renderer/Vulkan.cpp
+!Renderer/VulkanQueue.h
+!Renderer/VulkanQueue.cpp
 !Renderer/Swapchain.h
 !Renderer/Swapchain.cpp
 !Renderer/VulkanBuffer.h
