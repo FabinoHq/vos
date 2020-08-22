@@ -64,5 +64,7 @@
 !Renderer/VulkanBuffer.cpp
 !Renderer/VulkanImage.h
 !Renderer/VulkanImage.cpp
+!Renderer/Texture.h
+!Renderer/Texture.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp

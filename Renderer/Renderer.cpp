@@ -372,7 +372,7 @@ void Renderer::render()
     presentToDraw.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     presentToDraw.srcQueueFamilyIndex = m_surfaceQueueIndex;
     presentToDraw.dstQueueFamilyIndex = m_graphicsQueueIndex;
-    presentToDraw.image = m_swapchain.images[frameIndex].handle;
+    presentToDraw.image = m_swapchain.images[frameIndex];
     presentToDraw.subresourceRange = subresource;
 
     VkImageMemoryBarrier drawToPresent;
@@ -384,7 +384,7 @@ void Renderer::render()
     drawToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     drawToPresent.srcQueueFamilyIndex = m_graphicsQueueIndex;
     drawToPresent.dstQueueFamilyIndex = m_surfaceQueueIndex;
-    drawToPresent.image = m_swapchain.images[frameIndex].handle;
+    drawToPresent.image = m_swapchain.images[frameIndex];
     drawToPresent.subresourceRange = subresource;
 
     VkRenderPassBeginInfo renderPassInfo;
@@ -626,7 +626,7 @@ void Renderer::cleanup()
                 }
 
                 // Destroy texture
-                m_texture.destroyImage(m_vulkanDevice);
+                m_texture.destroyTexture(m_vulkanDevice);
 
                 // Destroy uniform buffer
                 m_uniformBuffer.destroyBuffer(m_vulkanDevice);
@@ -705,13 +705,13 @@ void Renderer::cleanup()
                 {
                     for (uint32_t i = 0; i < m_swapchain.frames; ++i)
                     {
-                        if (m_swapchain.images[i].view)
+                        if (m_swapchain.views[i])
                         {
                             // Destroy image view
                             vkDestroyImageView(
-                                m_vulkanDevice, m_swapchain.images[i].view, 0
+                                m_vulkanDevice, m_swapchain.views[i], 0
                             );
-                            m_swapchain.images[i].view = 0;
+                            m_swapchain.views[i] = 0;
                         }
                     }
                 }
@@ -1202,11 +1202,11 @@ bool Renderer::createVulkanSwapchain()
     // Cleanup swapchain images views
     for (uint32_t i = 0; i < m_swapchain.frames; ++i)
     {
-        if (m_swapchain.images[i].view)
+        if (m_swapchain.views[i])
         {
             // Destroy image view
-            vkDestroyImageView(m_vulkanDevice, m_swapchain.images[i].view, 0);
-            m_swapchain.images[i].view = 0;
+            vkDestroyImageView(m_vulkanDevice, m_swapchain.views[i], 0);
+            m_swapchain.views[i] = 0;
         }
     }
 
@@ -1485,7 +1485,7 @@ bool Renderer::createVulkanSwapchain()
     m_swapchain.frames = swapchainFramesCount;
     for (uint32_t i = 0; i < m_swapchain.frames; ++i)
     {
-        m_swapchain.images[i].handle = images[i];
+        m_swapchain.images[i] = images[i];
     }
 
     // Set swapchain extent
@@ -1513,14 +1513,14 @@ bool Renderer::createVulkanSwapchain()
         imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         imageView.pNext = 0;
         imageView.flags = 0;
-        imageView.image = m_swapchain.images[i].handle;
+        imageView.image = m_swapchain.images[i];
         imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
         imageView.format = m_swapchain.format;
         imageView.components = components;
         imageView.subresourceRange = subresource;
 
         if (vkCreateImageView(m_vulkanDevice,
-            &imageView, 0, &m_swapchain.images[i].view) != VK_SUCCESS)
+            &imageView, 0, &m_swapchain.views[i]) != VK_SUCCESS)
         {
             // Could not create swapchain image view
             return false;
@@ -1664,7 +1664,7 @@ bool Renderer::createFramebuffers()
         framebufferInfo.flags = 0;
         framebufferInfo.renderPass = m_renderPass;
         framebufferInfo.attachmentCount = 1;
-        framebufferInfo.pAttachments = &m_swapchain.images[i].view;
+        framebufferInfo.pAttachments = &m_swapchain.views[i];
         framebufferInfo.width = m_swapchain.extent.width;
         framebufferInfo.height = m_swapchain.extent.height;
         framebufferInfo.layers = 1;
@@ -2738,7 +2738,7 @@ bool Renderer::createTexture()
 
 
     // Create image
-    if (!m_texture.createImage(
+    if (!m_texture.createTexture(
         m_physicalDevice, m_vulkanDevice, TestSpriteWidth, TestSpriteHeight))
     {
         // Could not create image
@@ -3036,13 +3036,13 @@ bool Renderer::resize()
                 {
                     for (uint32_t i = 0; i < m_swapchain.frames; ++i)
                     {
-                        if (m_swapchain.images[i].view)
+                        if (m_swapchain.views[i])
                         {
                             // Destroy image view
                             vkDestroyImageView(
-                                m_vulkanDevice, m_swapchain.images[i].view, 0
+                                m_vulkanDevice, m_swapchain.views[i], 0
                             );
-                            m_swapchain.images[i].view = 0;
+                            m_swapchain.views[i] = 0;
                         }
                     }
                 }

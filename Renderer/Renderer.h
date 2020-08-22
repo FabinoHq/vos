@@ -46,7 +46,7 @@
     #include "../System/SysVulkan.h"
     #include "Vulkan.h"
     #include "VulkanBuffer.h"
-    #include "VulkanImage.h"
+    #include "Texture.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
 
@@ -569,10 +569,9 @@
 
             for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
             {
-                images[i].handle = 0;
-                images[i].view = 0;
-                images[i].sampler = 0;
-                images[i].memory = 0;
+                images[i] = 0;
+                memories[i]= 0;
+                views[i]= 0;
                 framebuffers[i] = 0;
                 imageAvailable[i] = 0;
                 renderFinished[i] = 0;
@@ -587,7 +586,9 @@
         uint32_t            frames;     // Swapchain frames
         uint32_t            current;    // swapchain current frame
 
-        VulkanImage         images[RendererMaxSwapchainFrames];
+        VkImage             images[RendererMaxSwapchainFrames];
+        VkDeviceMemory      memories[RendererMaxSwapchainFrames];
+        VkImageView         views[RendererMaxSwapchainFrames];
         VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
         VkSemaphore         imageAvailable[RendererMaxSwapchainFrames];
         VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
@@ -801,7 +802,7 @@
             VulkanBuffer            m_indexBuffer;          // Index buffer
             VulkanBuffer            m_uniformBuffer;        // Uniform buffer
             UniformData             m_uniformData;          // Uniform data
-            VulkanImage             m_texture;              // Test texture
+            Texture                 m_texture;              // Test texture
             VkDescriptorPool        m_descriptorPool;       // Descriptor pool
             VkDescriptorSet         m_descriptorSet;        // Descriptor set
     };

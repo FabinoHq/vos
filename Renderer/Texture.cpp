@@ -37,15 +37,15 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanImage.cpp : Vulkan Image management                     //
+//     Renderer/Texture.cpp : Texture management                              //
 ////////////////////////////////////////////////////////////////////////////////
-#include "VulkanImage.h"
+#include "Texture.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VulkanImage default constructor                                           //
+//  Texture default constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
-VulkanImage::VulkanImage() :
+Texture::Texture() :
 handle(0),
 memory(0),
 sampler(0),
@@ -55,9 +55,9 @@ view(0)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VulkanImage destructor                                                    //
+//  Texture destructor                                                        //
 ////////////////////////////////////////////////////////////////////////////////
-VulkanImage::~VulkanImage()
+Texture::~Texture()
 {
     view = 0;
     sampler = 0;
@@ -67,10 +67,10 @@ VulkanImage::~VulkanImage()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Vulkan Image                                                       //
-//  return : True if Vulkan Image is successfully created                     //
+//  Create texture                                                            //
+//  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanImage::createImage(VkPhysicalDevice& physicalDevice,
+bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, uint32_t width, uint32_t height)
 {
     // Check physical device
@@ -87,18 +87,18 @@ bool VulkanImage::createImage(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Check image size
+    // Check texture size
     if (width == 0 || height == 0)
     {
-        // Invalid image size
+        // Invalid texture size
         return false;
     }
 
-    // Check image handle
+    // Check texture handle
     if (handle)
     {
-        // Destroy Vulkan Image
-        destroyImage(vulkanDevice);
+        // Destroy texture
+        destroyTexture(vulkanDevice);
     }
 
     // Create image
@@ -244,9 +244,9 @@ bool VulkanImage::createImage(VkPhysicalDevice& physicalDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy Vulkan Image                                                      //
+//  Destroy texture                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-void VulkanImage::destroyImage(VkDevice& vulkanDevice)
+void Texture::destroyTexture(VkDevice& vulkanDevice)
 {
     if (vulkanDevice)
     {

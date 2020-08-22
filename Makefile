@@ -50,7 +50,7 @@ VOS: main.o \
 	System/SysSleep.o System/SysThread.o \
 	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	Renderer/Vulkan.o Renderer/VulkanBuffer.o Renderer/VulkanImage.o \
+	Renderer/Vulkan.o Renderer/VulkanBuffer.o Renderer/Texture.o \
 	Renderer/Renderer.o
 	
 	$(CC) -o VOS \
@@ -58,7 +58,7 @@ VOS: main.o \
 	System/SysSleep.o System/SysThread.o \
 	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	Renderer/Vulkan.o Renderer/VulkanBuffer.o Renderer/VulkanImage.o \
+	Renderer/Vulkan.o Renderer/VulkanBuffer.o Renderer/Texture.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -99,8 +99,8 @@ Renderer/Vulkan.o: Renderer/Vulkan.cpp
 Renderer/VulkanBuffer.o: Renderer/VulkanBuffer.cpp
 	$(CC) -o Renderer/VulkanBuffer.o -c Renderer/VulkanBuffer.cpp $(CFLAGS)
 
-Renderer/VulkanImage.o: Renderer/VulkanImage.cpp
-	$(CC) -o Renderer/VulkanImage.o -c Renderer/VulkanImage.cpp $(CFLAGS)
+Renderer/Texture.o: Renderer/Texture.cpp
+	$(CC) -o Renderer/Texture.o -c Renderer/Texture.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

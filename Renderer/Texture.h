@@ -37,49 +37,49 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanImage.h : Vulkan Image management                       //
+//     Renderer/Texture.h : Texture management                                //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKANIMAGE_HEADER
-#define VOS_RENDERER_VULKANIMAGE_HEADER
+#ifndef VOS_RENDERER_TEXTURE_HEADER
+#define VOS_RENDERER_TEXTURE_HEADER
 
     #include "Vulkan.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanImage class definition                                          //
+    //  Texture class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
-    class VulkanImage
+    class Texture
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanImage default constructor                               //
+            //  Texture default constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            VulkanImage();
+            Texture();
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanImage destructor                                        //
+            //  Texture destructor                                            //
             ////////////////////////////////////////////////////////////////////
-            ~VulkanImage();
+            ~Texture();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan Image                                           //
-            //  return : True if Vulkan Image is successfully created         //
+            //  Create texture                                                //
+            //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createImage(VkPhysicalDevice& physicalDevice,
+            bool createTexture(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy Vulkan Image                                          //
+            //  Destroy texture                                               //
             ////////////////////////////////////////////////////////////////////
-            void destroyImage(VkDevice& vulkanDevice);
+            void destroyTexture(VkDevice& vulkanDevice);
 
 
         public:
-            VkImage         handle;     // Image handle
-            VkDeviceMemory  memory;     // Image memory
-            VkSampler       sampler;    // Image sampler
-            VkImageView     view;       // Image view
+            VkImage         handle;     // Texture handle
+            VkDeviceMemory  memory;     // Texture memory
+            VkSampler       sampler;    // Texture sampler
+            VkImageView     view;       // Texture view
     };
 
-#endif // VOS_RENDERER_VULKANIMAGE_HEADER
+#endif // VOS_RENDERER_TEXTURE_HEADER
