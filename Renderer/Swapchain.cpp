@@ -49,6 +49,7 @@ Swapchain::Swapchain() :
 handle(0),
 format(VK_FORMAT_UNDEFINED),
 renderPass(0),
+commandsPool(0),
 frames(0),
 current(0)
 {
@@ -85,6 +86,7 @@ Swapchain::~Swapchain()
     extent.width = 0;
     current = 0;
     frames = 0;
+    commandsPool = 0;
     renderPass = 0;
     format = VK_FORMAT_UNDEFINED;
     handle = 0;
@@ -97,7 +99,7 @@ Swapchain::~Swapchain()
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-    VkCommandPool& commandsPool)
+    uint32_t surfaceQueueIndex)
 {
     // Check physical device
     if (!physicalDevice)
@@ -124,7 +126,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (handle)
     {
         // Destroy current swapchain
-        destroySwapchain(vulkanDevice, commandsPool);
+        destroySwapchain(vulkanDevice);
     }
 
     // Wait for device idle
@@ -596,6 +598,42 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         }
     }
 
+    // Create commands pool
+    VkCommandPoolCreateInfo commandPoolInfo;
+    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.pNext = 0;
+    commandPoolInfo.flags =
+        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
+        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.queueFamilyIndex = surfaceQueueIndex;
+
+    if (vkCreateCommandPool(
+        vulkanDevice, &commandPoolInfo, 0, &commandsPool) != VK_SUCCESS)
+    {
+        // Could not create commands pool
+        return false;
+    }
+    if (!commandsPool)
+    {
+        // Invalid commands pool
+        return false;
+    }
+
+    // Allocate command buffers
+    VkCommandBufferAllocateInfo commandBufferInfo;
+    commandBufferInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    commandBufferInfo.pNext = 0;
+    commandBufferInfo.commandPool = commandsPool;
+    commandBufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    commandBufferInfo.commandBufferCount = frames;
+
+    if (vkAllocateCommandBuffers(
+        vulkanDevice, &commandBufferInfo, commandBuffers) != VK_SUCCESS)
+    {
+        // Could not allocate command buffers
+        return false;
+    }
+
     // Wait for device idle
     if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
     {
@@ -610,8 +648,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy swapchain                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Swapchain::destroySwapchain(VkDevice& vulkanDevice,
-    VkCommandPool& commandsPool)
+void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
 {
     if (vulkanDevice)
     {
@@ -684,6 +721,12 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice,
                     }
                 }
 
+                // Destroy commands pool
+                if (commandsPool && vkDestroyCommandPool)
+                {
+                    vkDestroyCommandPool(vulkanDevice, commandsPool, 0);
+                }
+
                 // Destroy Vulkan swapchain
                 if (handle && vkDestroySwapchainKHR)
                 {
@@ -707,6 +750,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice,
     extent.width = 0;
     current = 0;
     frames = 0;
+    commandsPool = 0;
     renderPass = 0;
     format = VK_FORMAT_UNDEFINED;
     handle = 0;

@@ -369,7 +369,6 @@
             VkDescriptorSetLayout   m_descriptorSetLayout;  // Descriptor layout
             VkPipelineLayout        m_pipelineLayout;       // Pipeline layout
             VkPipeline              m_pipeline;             // Graphics pipeline
-            VkCommandPool           m_commandsPool;         // Commands pool
             VulkanBuffer            m_stagingBuffer;        // Staging buffer
             VulkanBuffer            m_vertexBuffer;         // Vertex buffer
             VulkanBuffer            m_indexBuffer;          // Index buffer

@@ -63,7 +63,6 @@ m_fragmentShader(0),
 m_descriptorSetLayout(0),
 m_pipelineLayout(0),
 m_pipeline(0),
-m_commandsPool(0),
 m_stagingBuffer(),
 m_vertexBuffer(),
 m_indexBuffer(),
@@ -188,7 +187,7 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create Vulkan swapchain
     if (!m_swapchain.createSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_commandsPool))
+        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_surfaceQueueIndex))
     {
         // Could not create Vulkan swapchain
         return false;
@@ -219,13 +218,6 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createPipeline())
     {
         // Could not create pipeline
-        return false;
-    }
-
-    // Create command buffers
-    if (!createCommandBuffers())
-    {
-        // Could not create command buffers
         return false;
     }
 
@@ -527,13 +519,7 @@ void Renderer::cleanup()
     if (m_vulkanDevice)
     {
         // Destroy swapchain
-        m_swapchain.destroySwapchain(m_vulkanDevice, m_commandsPool);
-
-        // Destroy commands pool
-        if (m_commandsPool && vkDestroyCommandPool)
-        {
-            vkDestroyCommandPool(m_vulkanDevice, m_commandsPool, 0);
-        }
+        m_swapchain.destroySwapchain(m_vulkanDevice);
 
         // Destroy descriptor pool
         if (m_descriptorPool && vkDestroyDescriptorPool)
@@ -603,7 +589,6 @@ void Renderer::cleanup()
     }
 
     m_descriptorPool = 0;
-    m_commandsPool = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
     m_descriptorSetLayout = 0;
@@ -1405,52 +1390,6 @@ bool Renderer::createPipeline()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create command buffers                                                    //
-//  return : True if command buffers are successfully created                 //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createCommandBuffers()
-{
-    // Create commands pool
-    VkCommandPoolCreateInfo commandPool;
-    commandPool.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    commandPool.pNext = 0;
-    commandPool.flags =
-        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
-        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-    commandPool.queueFamilyIndex = m_surfaceQueueIndex;
-
-    if (vkCreateCommandPool(
-        m_vulkanDevice, &commandPool, 0, &m_commandsPool) != VK_SUCCESS)
-    {
-        // Could not create commands pool
-        return false;
-    }
-    if (!m_commandsPool)
-    {
-        // Invalid commands pool
-        return false;
-    }
-
-    // Allocate command buffers
-    VkCommandBufferAllocateInfo commandBuffer;
-    commandBuffer.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    commandBuffer.pNext = 0;
-    commandBuffer.commandPool = m_commandsPool;
-    commandBuffer.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    commandBuffer.commandBufferCount = m_swapchain.frames;
-
-    if (vkAllocateCommandBuffers(m_vulkanDevice,
-        &commandBuffer, m_swapchain.commandBuffers) != VK_SUCCESS)
-    {
-        // Could not allocate command buffers
-        return false;
-    }
-
-    // Command buffers successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Create vertex buffer                                                      //
 //  return : True if vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1471,7 +1410,7 @@ bool Renderer::createVertexBuffer()
     }
 
     // Check commands pool
-    if (!m_commandsPool)
+    if (!m_swapchain.commandsPool)
     {
         // Invalid commands pool
         return false;
@@ -1560,7 +1499,7 @@ bool Renderer::createVertexBuffer()
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_commandsPool;
+    bufferAllocate.commandPool = m_swapchain.commandsPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = m_swapchain.frames;
 
@@ -1625,7 +1564,9 @@ bool Renderer::createVertexBuffer()
 
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(
+            m_vulkanDevice, m_swapchain.commandsPool, 1, &commandBuffer
+        );
     }
     m_stagingBuffer.destroyBuffer(m_vulkanDevice);
 
@@ -1693,7 +1634,7 @@ bool Renderer::createVertexBuffer()
     commandBuffer = 0;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_commandsPool;
+    bufferAllocate.commandPool = m_swapchain.commandsPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = m_swapchain.frames;
 
@@ -1756,7 +1697,9 @@ bool Renderer::createVertexBuffer()
 
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(
+            m_vulkanDevice, m_swapchain.commandsPool, 1, &commandBuffer
+        );
     }
     m_stagingBuffer.destroyBuffer(m_vulkanDevice);
 
@@ -1866,7 +1809,7 @@ bool Renderer::createUniformBuffer()
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_commandsPool;
+    bufferAllocate.commandPool = m_swapchain.commandsPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = m_swapchain.frames;
 
@@ -1932,7 +1875,9 @@ bool Renderer::createUniformBuffer()
 
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(
+            m_vulkanDevice, m_swapchain.commandsPool, 1, &commandBuffer
+        );
     }
     m_stagingBuffer.destroyBuffer(m_vulkanDevice);
 
@@ -2017,7 +1962,7 @@ bool Renderer::createTexture()
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_commandsPool;
+    bufferAllocate.commandPool = m_swapchain.commandsPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = m_swapchain.frames;
 
@@ -2137,7 +2082,9 @@ bool Renderer::createTexture()
 
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(m_vulkanDevice, m_commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(
+            m_vulkanDevice, m_swapchain.commandsPool, 1, &commandBuffer
+        );
     }
     m_stagingBuffer.destroyBuffer(m_vulkanDevice);
 
@@ -2327,7 +2274,7 @@ bool Renderer::resize()
 
     // Recreate Vulkan swapchain
     if (!m_swapchain.createSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_commandsPool))
+        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_surfaceQueueIndex))
     {
         // Could not recreate Vulkan swapchain
         return false;

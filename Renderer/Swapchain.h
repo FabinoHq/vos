@@ -75,13 +75,12 @@
             ////////////////////////////////////////////////////////////////////
             bool createSwapchain(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                VkCommandPool& commandsPool);
+                uint32_t surfaceQueueIndex);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy swapchain                                             //
             ////////////////////////////////////////////////////////////////////
-            void destroySwapchain(VkDevice& vulkanDevice,
-                VkCommandPool& commandsPool);
+            void destroySwapchain(VkDevice& vulkanDevice);
 
 
         public:
@@ -89,6 +88,7 @@
             VkFormat            format;         // Swapchain format
             VkExtent2D          extent;         // Swapchain extent
             VkRenderPass        renderPass;     // Render pass
+            VkCommandPool       commandsPool;   // Command pool
             uint32_t            frames;         // Swapchain frames count
             uint32_t            current;        // swapchain current frame
 
