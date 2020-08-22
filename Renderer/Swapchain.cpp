@@ -646,6 +646,428 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Resize swapchain                                                          //
+//  return : True if swapchain is successfully resized                        //
+////////////////////////////////////////////////////////////////////////////////
+bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
+    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface)
+{
+    // Recreate swapchain
+    if (vulkanDevice)
+    {
+        // Wait for device idle
+        if (vkDeviceWaitIdle)
+        {
+            if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
+            {
+                for (uint32_t i = 0; i < frames; ++i)
+                {
+                    // Destroy fences
+                    if (fences[i] && vkDestroyFence)
+                    {
+                        vkDestroyFence(vulkanDevice, fences[i], 0);
+                    }
+
+                    // Destroy framebuffers
+                    if (framebuffers[i] && vkDestroyFramebuffer)
+                    {
+                        vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
+                    }
+
+                    // Destroy swapchain images views
+                    if (views[i] && vkDestroyImageView)
+                    {
+                        // Destroy image view
+                        vkDestroyImageView(vulkanDevice, views[i], 0);
+                    }
+                }
+            }
+            else
+            {
+                // Could not wait for device idle
+                return false;
+            }
+        }
+    }
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        fences[i] = 0;
+        framebuffers[i] = 0;
+        views[i] = 0;
+    }
+
+    // Get device surface capabilities
+    VkSurfaceCapabilitiesKHR surfaceCapabilities;
+    if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+        physicalDevice, vulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
+    {
+        // Could not get device surface capabilities
+        return false;
+    }
+
+    // Get surface formats
+    uint32_t formatsCnt = 0;
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(
+        physicalDevice, vulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
+    {
+        // Could not get surface formats count
+        return false;
+    }
+    if (formatsCnt <= 0)
+    {
+        // No surface formats found
+        return false;
+    }
+
+    std::vector<VkSurfaceFormatKHR> surfaceFormats(formatsCnt);
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,
+        vulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
+    {
+        // Could not get surface formats
+        return false;
+    }
+
+    // Get present modes
+    uint32_t presentModesCnt = 0;
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(
+        physicalDevice, vulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
+    {
+        // Could not get present modes count
+        return false;
+    }
+    if (presentModesCnt <= 0)
+    {
+        // No present modes found
+        return false;
+    }
+    std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
+        vulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
+    {
+        // Could not get present modes
+        return false;
+    }
+
+
+    // Set swapchain images count
+    uint32_t imagesCount = RendererMaxSwapchainFrames;
+
+    // Images count clamping
+    if (imagesCount <= surfaceCapabilities.minImageCount)
+    {
+        imagesCount = surfaceCapabilities.minImageCount;
+    }
+    if (imagesCount >= surfaceCapabilities.maxImageCount)
+    {
+        imagesCount = surfaceCapabilities.maxImageCount;
+    }
+    if (imagesCount >= RendererMaxSwapchainFrames)
+    {
+        imagesCount = RendererMaxSwapchainFrames;
+    }
+    if (imagesCount <= 0)
+    {
+        // Invalid swapchain images count
+        return false;
+    }
+
+    // Set swapchain surface format
+    VkSurfaceFormatKHR surfaceFormat;
+    surfaceFormat.format = VK_FORMAT_UNDEFINED;
+    surfaceFormat.colorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+    if (surfaceFormats.size() <= 0)
+    {
+        // Invalid surface formats count
+        return false;
+    }
+
+    // Select best surface format
+    if (surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
+    {
+        surfaceFormat.format = VK_FORMAT_R8G8B8A8_UNORM;
+        surfaceFormat.colorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+    }
+    else
+    {
+        bool formatFound = false;
+        for (size_t i = 0; i < surfaceFormats.size(); ++i)
+        {
+            if (surfaceFormats[i].format == VK_FORMAT_R8G8B8A8_UNORM)
+            {
+                // Surface format found
+                surfaceFormat.format = surfaceFormats[i].format;
+                surfaceFormat.colorSpace = surfaceFormats[i].colorSpace;
+                formatFound = true;
+                break;
+            }
+        }
+        if (!formatFound)
+        {
+            // Select first surface format
+            surfaceFormat.format = surfaceFormats[0].format;
+            surfaceFormat.colorSpace = surfaceFormats[0].colorSpace;
+        }
+    }
+
+    // Set swapchain extent
+    VkExtent2D swapchainExtent;
+    swapchainExtent.width = surfaceCapabilities.currentExtent.width;
+    swapchainExtent.height = surfaceCapabilities.currentExtent.height;
+
+    // Clamp swapchain extent
+    if (swapchainExtent.width < surfaceCapabilities.minImageExtent.width)
+    {
+        swapchainExtent.width = surfaceCapabilities.minImageExtent.width;
+    }
+    if (swapchainExtent.height < surfaceCapabilities.minImageExtent.height)
+    {
+        swapchainExtent.height = surfaceCapabilities.minImageExtent.height;
+    }
+    if (swapchainExtent.width > surfaceCapabilities.maxImageExtent.width)
+    {
+        swapchainExtent.width = surfaceCapabilities.maxImageExtent.width;
+    }
+    if (swapchainExtent.height > surfaceCapabilities.maxImageExtent.height)
+    {
+        swapchainExtent.height = surfaceCapabilities.maxImageExtent.height;
+    }
+
+    if ((swapchainExtent.width <= 0) || (swapchainExtent.height <= 0))
+    {
+        // Invalid swapchain extent
+        return false;
+    }
+
+    // Set swapchain image usage
+    VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    if (!(surfaceCapabilities.supportedUsageFlags &
+        VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT))
+    {
+        // Color attachment flag is not supported
+        return false;
+    }
+
+    // Set surface transform flags
+    VkSurfaceTransformFlagBitsKHR transformFlags =
+        VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+    if (!(surfaceCapabilities.supportedTransforms &
+        VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR))
+    {
+        transformFlags = surfaceCapabilities.currentTransform;
+    }
+
+    // Set present mode
+    VkPresentModeKHR present = VK_PRESENT_MODE_IMMEDIATE_KHR;
+    bool immediateModeFound = false;
+    bool mailboxModeFound = false;
+    bool fifoModeFound = false;
+    for (size_t i = 0; i < presentModes.size(); ++i)
+    {
+        if (presentModes[i] == VK_PRESENT_MODE_IMMEDIATE_KHR)
+        {
+            immediateModeFound = true;
+        }
+        if (presentModes[i] == VK_PRESENT_MODE_MAILBOX_KHR)
+        {
+            mailboxModeFound = true;
+        }
+        if (presentModes[i] == VK_PRESENT_MODE_FIFO_KHR)
+        {
+            fifoModeFound = true;
+        }
+    }
+    if (!immediateModeFound)
+    {
+        if (mailboxModeFound)
+        {
+            present = VK_PRESENT_MODE_MAILBOX_KHR;
+        }
+        else
+        {
+            if (fifoModeFound)
+            {
+                present = VK_PRESENT_MODE_FIFO_KHR;
+            }
+            else
+            {
+                // No present mode is supported
+                return false;
+            }
+        }
+    }
+
+    // Set old swapchain
+    VkSwapchainKHR oldSwapchain = handle;
+
+    // Create swapchain
+    VkSwapchainCreateInfoKHR swapchainInfos;
+    swapchainInfos.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    swapchainInfos.pNext = 0;
+    swapchainInfos.flags = 0;
+    swapchainInfos.surface = vulkanSurface;
+    swapchainInfos.minImageCount = imagesCount;
+    swapchainInfos.imageFormat = surfaceFormat.format;
+    swapchainInfos.imageColorSpace = surfaceFormat.colorSpace;
+    swapchainInfos.imageExtent = swapchainExtent;
+    swapchainInfos.imageArrayLayers = 1;
+    swapchainInfos.imageUsage = imageUsage;
+    swapchainInfos.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    swapchainInfos.queueFamilyIndexCount = 0;
+    swapchainInfos.pQueueFamilyIndices = 0;
+    swapchainInfos.preTransform = transformFlags;
+    swapchainInfos.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    swapchainInfos.presentMode = present;
+    swapchainInfos.clipped = VK_TRUE;
+    swapchainInfos.oldSwapchain = oldSwapchain;
+
+    if (vkCreateSwapchainKHR(
+        vulkanDevice, &swapchainInfos, 0, &handle) != VK_SUCCESS)
+    {
+        // Could not create Vulkan swapchain
+        return false;
+    }
+
+    // Destroy old swapchain
+    if (oldSwapchain)
+    {
+        vkDestroySwapchainKHR(vulkanDevice, oldSwapchain, 0);
+    }
+
+    // Set swapchain format
+    format = surfaceFormat.format;
+
+    // Get swapchain frames count
+    uint32_t swapchainFramesCount = 0;
+    if (vkGetSwapchainImagesKHR(
+        vulkanDevice, handle, &swapchainFramesCount, 0) != VK_SUCCESS)
+    {
+        // Could not get swapchain frames count
+        return false;
+    }
+
+    // Check swapchain frames count
+    if (swapchainFramesCount <= 0)
+    {
+        // Invalid swapchain frames count
+        return false;
+    }
+    if (swapchainFramesCount > RendererMaxSwapchainFrames)
+    {
+        // Invalid swapchain frames count
+        return false;
+    }
+
+    // Get current swapchain images
+    VkImage swapchainImages[RendererMaxSwapchainFrames];
+    if (vkGetSwapchainImagesKHR(vulkanDevice,
+        handle, &swapchainFramesCount, swapchainImages) != VK_SUCCESS)
+    {
+        // Could not get swapchain images count
+        return false;
+    }
+
+    // Set swapchain images
+    frames = swapchainFramesCount;
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        images[i] = swapchainImages[i];
+    }
+
+    // Set swapchain extent
+    extent.width = swapchainExtent.width;
+    extent.height = swapchainExtent.height;
+
+    // Create swapchain images views
+    VkComponentMapping components;
+    components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    VkImageSubresourceRange subresource;
+    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresource.baseMipLevel = 0;
+    subresource.levelCount = 1;
+    subresource.baseArrayLayer = 0;
+    subresource.layerCount = 1;
+
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        // Create image view
+        VkImageViewCreateInfo imageView;
+        imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        imageView.pNext = 0;
+        imageView.flags = 0;
+        imageView.image = images[i];
+        imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        imageView.format = format;
+        imageView.components = components;
+        imageView.subresourceRange = subresource;
+
+        if (vkCreateImageView(
+            vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
+        {
+            // Could not create swapchain image view
+            return false;
+        }
+    }
+
+    // Recreate framebuffers
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        VkFramebufferCreateInfo framebufferInfo;
+        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferInfo.pNext = 0;
+        framebufferInfo.flags = 0;
+        framebufferInfo.renderPass = renderPass;
+        framebufferInfo.attachmentCount = 1;
+        framebufferInfo.pAttachments = &views[i];
+        framebufferInfo.width = extent.width;
+        framebufferInfo.height = extent.height;
+        framebufferInfo.layers = 1;
+
+        if (vkCreateFramebuffer(
+            vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        {
+            // Could not create framebuffer
+            return false;
+        }
+        if (!framebuffers[i])
+        {
+            // Invalid framebuffer
+            return false;
+        }
+    }
+
+    // Recreate fences
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = 0;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        if (vkCreateFence(
+            vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
+        {
+            // Could not create fence
+            return false;
+        }
+        if (!fences[i])
+        {
+            // Invalid fence
+            return false;
+        }
+    }
+
+    // Reset swapchain current frame index
+    current = 0;
+
+    // Swapchain successfully resized
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy swapchain                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 void Swapchain::destroySwapchain(VkDevice& vulkanDevice)

@@ -78,6 +78,13 @@
                 uint32_t surfaceQueueIndex);
 
             ////////////////////////////////////////////////////////////////////
+            //  Resize swapchain                                              //
+            //  return : True if swapchain is successfully resized            //
+            ////////////////////////////////////////////////////////////////////
+            bool resizeSwapchain(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface);
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy swapchain                                             //
             ////////////////////////////////////////////////////////////////////
             void destroySwapchain(VkDevice& vulkanDevice);

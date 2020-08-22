@@ -2206,82 +2206,12 @@ bool Renderer::resize()
 {
     m_rendererReady = false;
 
-    // Cleanup renderer
-    if (m_vulkanDevice)
+    // Resize swapchain
+    if (!m_swapchain.resizeSwapchain(
+        m_physicalDevice, m_vulkanDevice, m_vulkanSurface))
     {
-        // Wait for device idle
-        if (vkDeviceWaitIdle)
-        {
-            if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
-            {
-                // Destroy fences
-                if (vkDestroyFence)
-                {
-                    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-                    {
-                        if (m_swapchain.fences[i])
-                        {
-                            vkDestroyFence(
-                                m_vulkanDevice, m_swapchain.fences[i], 0
-                            );
-                        }
-                        m_swapchain.fences[i] = 0;
-                    }
-                }
-
-                // Destroy framebuffers
-                if (vkDestroyFramebuffer)
-                {
-                    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-                    {
-                        if (m_swapchain.framebuffers[i])
-                        {
-                            vkDestroyFramebuffer(
-                                m_vulkanDevice, m_swapchain.framebuffers[i], 0
-                            );
-                        }
-                        m_swapchain.framebuffers[i] = 0;
-                    }
-                }
-
-                // Destroy swapchain images views
-                if (vkDestroyImageView)
-                {
-                    for (uint32_t i = 0; i < m_swapchain.frames; ++i)
-                    {
-                        if (m_swapchain.views[i])
-                        {
-                            // Destroy image view
-                            vkDestroyImageView(
-                                m_vulkanDevice, m_swapchain.views[i], 0
-                            );
-                            m_swapchain.views[i] = 0;
-                        }
-                    }
-                }
-
-                // Destroy Vulkan swapchain
-                if (m_swapchain.handle && vkDestroySwapchainKHR)
-                {
-                    vkDestroySwapchainKHR(
-                        m_vulkanDevice, m_swapchain.handle, 0
-                    );
-                }
-            }
-        }
-    }
-    m_swapchain.handle = 0;
-
-    // Recreate Vulkan swapchain
-    if (!m_swapchain.createSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_surfaceQueueIndex))
-    {
-        // Could not recreate Vulkan swapchain
         return false;
     }
-
-    // Reset swapchain current frame index
-    m_swapchain.current = 0;
 
     // Renderer successfully resized
     m_rendererReady = true;
