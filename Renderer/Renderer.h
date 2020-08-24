@@ -319,7 +319,6 @@
             VulkanBuffer            m_stagingBuffer;        // Staging buffer
             VertexBuffer            m_vertexBuffer;         // Vertex buffer
             UniformBuffer           m_uniformBuffer;        // Uniform buffer
-            UniformData             m_uniformData;          // Uniform data
             Texture                 m_texture;              // Test texture
             VkDescriptorPool        m_descriptorPool;       // Descriptor pool
             VkDescriptorSet         m_descriptorSet;        // Descriptor set

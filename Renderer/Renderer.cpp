@@ -66,7 +66,6 @@ m_pipeline(0),
 m_stagingBuffer(),
 m_vertexBuffer(),
 m_uniformBuffer(),
-m_uniformData(),
 m_texture(),
 m_descriptorPool(0),
 m_descriptorSet(0)
@@ -275,14 +274,15 @@ bool Renderer::init(SysWindow* sysWindow)
     modelMatrix.setIdentity();
 
     // Copy matrices data into uniform data
-    memcpy(m_uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
-    memcpy(m_uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
-    memcpy(m_uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
+    UniformData uniformData;
+    memcpy(uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
+    memcpy(uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
+    memcpy(uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
     // Create uniform buffer
     if (!m_uniformBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
         m_transferCommandPool, m_transferQueue,
-        &m_uniformData, sizeof(m_uniformData)))
+        &uniformData, sizeof(uniformData)))
     {
         // Could not create uniform buffer
         return false;
