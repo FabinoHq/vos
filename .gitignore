@@ -68,6 +68,8 @@
 !Renderer/VulkanBuffer.cpp
 !Renderer/VertexBuffer.h
 !Renderer/VertexBuffer.cpp
+!Renderer/UniformBuffer.h
+!Renderer/UniformBuffer.cpp
 !Renderer/Texture.h
 !Renderer/Texture.cpp
 !Renderer/Renderer.h

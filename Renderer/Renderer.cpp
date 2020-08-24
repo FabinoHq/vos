@@ -263,8 +263,26 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Set default matrices
+    Matrix4x4 projMatrix;
+    projMatrix.setOrthographic(-1.0f, 1.0f, 1.0f, -1.0f, -2.0f, 2.0f);
+    projMatrix.translateZ(-1.0f);
+
+    Matrix4x4 viewMatrix;
+    viewMatrix.setIdentity();
+
+    Matrix4x4 modelMatrix;
+    modelMatrix.setIdentity();
+
+    // Copy matrices data into uniform data
+    memcpy(m_uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
+    memcpy(m_uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
+    memcpy(m_uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
+
     // Create uniform buffer
-    if (!createUniformBuffer())
+    if (!m_uniformBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
+        m_transferCommandPool, m_transferQueue,
+        &m_uniformData, sizeof(m_uniformData)))
     {
         // Could not create uniform buffer
         return false;
@@ -1441,191 +1459,6 @@ bool Renderer::createPipeline()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create uniform buffer                                                     //
-//  return : True if uniform buffer is successfully created                   //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createUniformBuffer()
-{
-    // Check physical device
-    if (!m_physicalDevice)
-    {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check transfer command pool
-    if (!m_transferCommandPool)
-    {
-        // Invalid transfer command pool
-        return false;
-    }
-
-    // Set default matrices
-    Matrix4x4 projMatrix;
-    projMatrix.setOrthographic(-1.0f, 1.0f, 1.0f, -1.0f, -2.0f, 2.0f);
-    projMatrix.translateZ(-1.0f);
-
-    Matrix4x4 viewMatrix;
-    viewMatrix.setIdentity();
-
-    Matrix4x4 modelMatrix;
-    modelMatrix.setIdentity();
-
-    // Copy matrices data into uniform data
-    memcpy(m_uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
-    memcpy(m_uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
-    memcpy(m_uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
-
-    // Create staging buffer
-    m_stagingBuffer.size = sizeof(m_uniformData);
-
-    if (!m_stagingBuffer.createBuffer(
-        m_physicalDevice, m_vulkanDevice,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
-    {
-        // Could not create staging buffer
-        return false;
-    }
-
-    // Map staging buffer memory
-    void* stagingBufferMemory = 0;
-    if (vkMapMemory(m_vulkanDevice, m_stagingBuffer.memory, 0,
-        m_stagingBuffer.size, 0, &stagingBufferMemory) != VK_SUCCESS)
-    {
-        // Could not map staging buffer memory
-        return false;
-    }
-    if (!stagingBufferMemory)
-    {
-        // Invalid staging buffer memory
-        return false;
-    }
-
-    // Copy uniform data into staging buffer memory
-    memcpy(stagingBufferMemory, &m_uniformData, m_stagingBuffer.size);
-
-    // Unmap staging buffer memory
-    VkMappedMemoryRange memoryRange;
-    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-    memoryRange.pNext = 0;
-    memoryRange.memory = m_stagingBuffer.memory;
-    memoryRange.offset = 0;
-    memoryRange.size = VK_WHOLE_SIZE;
-
-    if (vkFlushMappedMemoryRanges(
-        m_vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
-    {
-        // Could not flush staging buffer mapped memory ranges
-        return false;
-    }
-
-    vkUnmapMemory(m_vulkanDevice, m_stagingBuffer.memory);
-
-
-    // Create uniform buffer
-    m_uniformBuffer.size = sizeof(m_uniformData);
-
-    if (!m_uniformBuffer.createBuffer(
-        m_physicalDevice, m_vulkanDevice,
-        VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
-    {
-        // Could not create uniform buffer
-        return false;
-    }
-
-
-    // Allocate command buffers
-    VkCommandBuffer commandBuffer = 0;
-    VkCommandBufferAllocateInfo bufferAllocate;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_transferCommandPool;
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = m_swapchain.frames;
-
-    if (vkAllocateCommandBuffers(m_vulkanDevice,
-        &bufferAllocate, &commandBuffer) != VK_SUCCESS)
-    {
-        // Could not allocate command buffers
-        return false;
-    }
-
-
-    // Transfert staging buffer data to uniform buffer
-    VkCommandBufferBeginInfo bufferBeginInfo;
-    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext = 0;
-    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = 0;
-
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
-    {
-        // Could not record command buffer
-        return false;
-    }
-
-    VkBufferCopy bufferCopy;
-    bufferCopy.srcOffset = 0;
-    bufferCopy.dstOffset = 0;
-    bufferCopy.size = m_stagingBuffer.size;
-
-    vkCmdCopyBuffer(
-        commandBuffer, m_stagingBuffer.handle,
-        m_uniformBuffer.handle, 1, &bufferCopy
-    );
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-    {
-        // Could not end command buffer
-        return false;
-    }
-
-    VkSubmitInfo submitInfo;
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = 0;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (vkQueueSubmit(m_transferQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
-    {
-        // Could not submit queue
-        return false;
-    }
-
-    if (vkQueueWaitIdle(m_transferQueue.handle) != VK_SUCCESS)
-    {
-        // Could not wait for transfer queue idle
-        return false;
-    }
-
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(
-            m_vulkanDevice, m_transferCommandPool, 1, &commandBuffer
-        );
-    }
-    m_stagingBuffer.destroyBuffer(m_vulkanDevice);
-
-
-    // Uniform buffers successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Create descriptor pool                                                    //
 //  return : True if descriptor pool is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1689,9 +1522,9 @@ bool Renderer::createDescriptorPool()
 
     // Update descriptor set
     VkDescriptorBufferInfo bufferInfo;
-    bufferInfo.buffer = m_uniformBuffer.handle;
+    bufferInfo.buffer = m_uniformBuffer.uniformBuffer.handle;
     bufferInfo.offset = 0;
-    bufferInfo.range = m_uniformBuffer.size;
+    bufferInfo.range = m_uniformBuffer.uniformBuffer.size;
 
     VkDescriptorImageInfo imageInfo;
     imageInfo.sampler = m_texture.sampler;

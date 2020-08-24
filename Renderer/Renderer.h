@@ -49,6 +49,7 @@
     #include "Swapchain.h"
     #include "VulkanBuffer.h"
     #include "VertexBuffer.h"
+    #include "UniformBuffer.h"
     #include "Texture.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
@@ -202,17 +203,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  UniformData data structure                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    struct UniformData
-    {
-        float   projMatrix[16];
-        float   viewMatrix[16];
-        float   modelMatrix[16];
-    };
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
     ////////////////////////////////////////////////////////////////////////////
     class Renderer
@@ -295,12 +285,6 @@
             bool createPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create uniform buffer                                         //
-            //  return : True if uniform buffer is successfully created       //
-            ////////////////////////////////////////////////////////////////////
-            bool createUniformBuffer();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create descriptor pool                                        //
             //  return : True if descriptor pool is successfully created      //
             ////////////////////////////////////////////////////////////////////
@@ -334,7 +318,7 @@
             VkPipeline              m_pipeline;             // Graphics pipeline
             VulkanBuffer            m_stagingBuffer;        // Staging buffer
             VertexBuffer            m_vertexBuffer;         // Vertex buffer
-            VulkanBuffer            m_uniformBuffer;        // Uniform buffer
+            UniformBuffer           m_uniformBuffer;        // Uniform buffer
             UniformData             m_uniformData;          // Uniform data
             Texture                 m_texture;              // Test texture
             VkDescriptorPool        m_descriptorPool;       // Descriptor pool
