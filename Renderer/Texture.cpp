@@ -46,6 +46,8 @@
 //  Texture default constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
 Texture::Texture() :
+width(0),
+height(0),
 handle(0),
 memory(0),
 sampler(0),
@@ -63,6 +65,8 @@ Texture::~Texture()
     sampler = 0;
     memory = 0;
     handle = 0;
+    height = 0;
+    width = 0;
 }
 
 
@@ -71,7 +75,7 @@ Texture::~Texture()
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, uint32_t width, uint32_t height)
+    VkDevice& vulkanDevice, uint32_t texWidth, uint32_t texHeight)
 {
     // Check physical device
     if (!physicalDevice)
@@ -88,7 +92,7 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     }
 
     // Check texture size
-    if (width == 0 || height == 0)
+    if (texWidth == 0 || texHeight == 0)
     {
         // Invalid texture size
         return false;
@@ -100,6 +104,10 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
         // Destroy texture
         destroyTexture(vulkanDevice);
     }
+
+    // Set texture size
+    width = texWidth;
+    height = texHeight;
 
     // Create image
     VkImageCreateInfo imageInfo;
@@ -239,7 +247,231 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Vulkan Image successfully created
+    // Vulkan Texture successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load texture                                                              //
+//  return : True if texture is successfully loaded                           //
+////////////////////////////////////////////////////////////////////////////////
+bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
+    VkDevice& vulkanDevice, VkCommandPool& commandsPool,
+    VulkanQueue& graphicsQueue, uint32_t texWidth,
+    uint32_t texHeight, uint32_t texDepth,
+    const unsigned char* data)
+{
+    // Check physical device
+    if (!physicalDevice)
+    {
+        // Invalid physical device
+        return false;
+    }
+
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Check texture size
+    if (texWidth == 0 || texHeight == 0 || texDepth == 0)
+    {
+        // Invalid texture size
+        return false;
+    }
+
+    // Check current texture
+    if (!handle || (texWidth != width) || (texHeight != height))
+    {
+        // Recreate texture
+        destroyTexture(vulkanDevice);
+        createTexture(physicalDevice, vulkanDevice, texWidth, texHeight);
+    }
+
+    uint32_t textureSize = width * height * texDepth;
+
+    // Create staging buffer
+    VulkanBuffer stagingBuffer;
+    stagingBuffer.size = textureSize;
+
+    if (!stagingBuffer.createBuffer(
+        physicalDevice, vulkanDevice,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
+    {
+        // Could not create staging buffer
+        return false;
+    }
+
+    // Map staging buffer memory
+    void* stagingBufferMemory = 0;
+    if (vkMapMemory(vulkanDevice, stagingBuffer.memory, 0,
+        stagingBuffer.size, 0, &stagingBufferMemory) != VK_SUCCESS)
+    {
+        return false;
+        // Could not map staging buffer memory
+    }
+    if (!stagingBufferMemory)
+    {
+        // Invalid staging buffer memory
+        return false;
+    }
+
+    // Copy texture into staging buffer memory
+    memcpy(stagingBufferMemory, data, stagingBuffer.size);
+
+    // Unmap staging buffer memory
+    VkMappedMemoryRange memoryRange;
+    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    memoryRange.pNext = 0;
+    memoryRange.memory = stagingBuffer.memory;
+    memoryRange.offset = 0;
+    memoryRange.size = VK_WHOLE_SIZE;
+    
+    if (vkFlushMappedMemoryRanges(
+        vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
+    {
+        // Could not flush staging buffer mapped memory ranges
+        return false;
+    }
+
+    vkUnmapMemory(vulkanDevice, stagingBuffer.memory);
+
+
+    // Allocate command buffers
+    VkCommandBuffer commandBuffer = 0;
+    VkCommandBufferAllocateInfo bufferAllocate;
+    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    bufferAllocate.pNext = 0;
+    bufferAllocate.commandPool = commandsPool;
+    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    bufferAllocate.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(vulkanDevice,
+        &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    {
+        // Could not allocate command buffers
+        return false;
+    }
+
+    // Transfert staging buffer data to texture buffer
+    VkCommandBufferBeginInfo bufferBeginInfo;
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    VkImageSubresourceRange subresourceRange;
+    subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresourceRange.baseMipLevel = 0;
+    subresourceRange.levelCount = 1;
+    subresourceRange.baseArrayLayer = 0;
+    subresourceRange.layerCount = 1;
+
+    VkImageMemoryBarrier undefinedToTransfer;
+    undefinedToTransfer.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    undefinedToTransfer.pNext = 0;
+    undefinedToTransfer.srcAccessMask = 0;
+    undefinedToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    undefinedToTransfer.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    undefinedToTransfer.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    undefinedToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    undefinedToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    undefinedToTransfer.image = handle;
+    undefinedToTransfer.subresourceRange = subresourceRange;
+
+    VkImageMemoryBarrier transferToShader;
+    transferToShader.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    transferToShader.pNext = 0;
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.image = handle;
+    transferToShader.subresourceRange = subresourceRange;
+
+    vkCmdPipelineBarrier(
+        commandBuffer,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        0, 0, 0, 0, 0, 1, &undefinedToTransfer
+    );
+
+    VkBufferImageCopy imageCopy;
+    imageCopy.bufferOffset = 0;
+    imageCopy.bufferRowLength = 0;
+    imageCopy.bufferImageHeight = 0;
+    imageCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageCopy.imageSubresource.mipLevel = 0;
+    imageCopy.imageSubresource.baseArrayLayer = 0;
+    imageCopy.imageSubresource.layerCount = 1;
+    imageCopy.imageOffset.x = 0;
+    imageCopy.imageOffset.y = 0;
+    imageCopy.imageOffset.z = 0;
+    imageCopy.imageExtent.width = TestSpriteWidth;
+    imageCopy.imageExtent.height = TestSpriteHeight;
+    imageCopy.imageExtent.depth = 1;
+
+    vkCmdCopyBufferToImage(
+        commandBuffer, stagingBuffer.handle, handle,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
+    );
+
+    vkCmdPipelineBarrier(
+        commandBuffer,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+        0, 0, 0, 0, 0, 1, &transferToShader
+    );
+
+    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    if (vkQueueWaitIdle(graphicsQueue.handle) != VK_SUCCESS)
+    {
+        // Could not wait for graphics queue idle
+        return false;
+    }
+
+    if (commandBuffer)
+    {
+        vkFreeCommandBuffers(
+            vulkanDevice, commandsPool, 1, &commandBuffer
+        );
+    }
+    stagingBuffer.destroyBuffer(vulkanDevice);
+
+    // Texture successfully transferred
     return true;
 }
 
@@ -279,4 +511,6 @@ void Texture::destroyTexture(VkDevice& vulkanDevice)
     sampler = 0;
     memory = 0;
     handle = 0;
+    height = 0;
+    width = 0;
 }

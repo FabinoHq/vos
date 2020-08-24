@@ -43,6 +43,8 @@
 #define VOS_RENDERER_TEXTURE_HEADER
 
     #include "Vulkan.h"
+    #include "VulkanQueue.h"
+    #include "VulkanBuffer.h"
 
 
     const unsigned int TestSpriteWidth = 32;
@@ -417,7 +419,17 @@
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
             bool createTexture(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, uint32_t width, uint32_t height);
+                VkDevice& vulkanDevice, uint32_t texWidth, uint32_t texHeight);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Load texture                                                  //
+            //  return : True if texture is successfully loaded               //
+            ////////////////////////////////////////////////////////////////////
+            bool loadTexture(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VkCommandPool& commandsPool,
+                VulkanQueue& graphicsQueue, uint32_t texWidth,
+                uint32_t texHeight, uint32_t texDepth,
+                const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy texture                                               //
@@ -426,6 +438,8 @@
 
 
         public:
+            uint32_t        width;      // Texture width
+            uint32_t        height;     // texture height
             VkImage         handle;     // Texture handle
             VkDeviceMemory  memory;     // Texture memory
             VkSampler       sampler;    // Texture sampler
