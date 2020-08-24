@@ -440,6 +440,25 @@ bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    VkFence fence = 0;
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = 0;
+    fenceInfo.flags = 0;
+
+    if (vkCreateFence(
+        vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
+    {
+        // Could not create fence
+        return false;
+    }
+    if (!fence)
+    {
+        // Invalid fence
+        return false;
+    }
+
+    // Submit queue
     VkSubmitInfo submitInfo;
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo.pNext = 0;
@@ -451,19 +470,29 @@ bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(graphicsQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(
+        graphicsQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(graphicsQueue.handle) != VK_SUCCESS)
+    // Wait for transfer to finish
+    if (vkWaitForFences(
+        vulkanDevice, 1, &fence, VK_FALSE, 100000000000) != VK_SUCCESS)
     {
-        // Could not wait for graphics queue idle
+        // Transfer timed out
         return false;
     }
 
-    if (commandBuffer)
+    // Destroy fence
+    if (fence && vkDestroyFence)
+    {
+        vkDestroyFence(vulkanDevice, fence, 0);
+    }
+
+    // Destroy buffers
+    if (commandBuffer && vkFreeCommandBuffers)
     {
         vkFreeCommandBuffers(
             vulkanDevice, commandsPool, 1, &commandBuffer
@@ -471,7 +500,7 @@ bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
     }
     stagingBuffer.destroyBuffer(vulkanDevice);
 
-    // Texture successfully transferred
+    // Texture successfully loaded
     return true;
 }
 
