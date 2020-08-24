@@ -316,12 +316,12 @@
             VkDescriptorSetLayout   m_descriptorSetLayout;  // Descriptor layout
             VkPipelineLayout        m_pipelineLayout;       // Pipeline layout
             VkPipeline              m_pipeline;             // Graphics pipeline
-            VulkanBuffer            m_stagingBuffer;        // Staging buffer
             VertexBuffer            m_vertexBuffer;         // Vertex buffer
-            UniformBuffer           m_uniformBuffer;        // Uniform buffer
             Texture                 m_texture;              // Test texture
-            VkDescriptorPool        m_descriptorPool;       // Descriptor pool
-            VkDescriptorSet         m_descriptorSet;        // Descriptor set
+
+            UniformBuffer       m_uniformBuffer[RendererMaxSwapchainFrames];
+            VkDescriptorPool    m_descriptorPool[RendererMaxSwapchainFrames];
+            VkDescriptorSet     m_descriptorSet[RendererMaxSwapchainFrames];
     };
 
 

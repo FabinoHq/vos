@@ -63,12 +63,8 @@ m_fragmentShader(0),
 m_descriptorSetLayout(0),
 m_pipelineLayout(0),
 m_pipeline(0),
-m_stagingBuffer(),
 m_vertexBuffer(),
-m_uniformBuffer(),
-m_texture(),
-m_descriptorPool(0),
-m_descriptorSet(0)
+m_texture()
 {
 
 }
@@ -279,13 +275,16 @@ bool Renderer::init(SysWindow* sysWindow)
     memcpy(uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
     memcpy(uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
-    // Create uniform buffer
-    if (!m_uniformBuffer.updateBuffer(m_physicalDevice, m_vulkanDevice,
-        m_transferCommandPool, m_transferQueue,
-        &uniformData, sizeof(uniformData)))
+    // Create uniform buffers
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        // Could not create uniform buffer
-        return false;
+        if (!m_uniformBuffer[i].updateBuffer(m_physicalDevice, m_vulkanDevice,
+            m_transferCommandPool, m_transferQueue,
+            &uniformData, sizeof(uniformData)))
+        {
+            // Could not create uniform buffer
+            return false;
+        }
     }
 
     // Load texture
@@ -473,7 +472,7 @@ void Renderer::render()
     vkCmdBindDescriptorSets(
         m_swapchain.commandBuffers[m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
-        &m_descriptorSet, 0, 0
+        &m_descriptorSet[m_swapchain.current], 0, 0
     );
 
     // Update matrices
@@ -500,9 +499,9 @@ void Renderer::render()
     memcpy(uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
     // Update uniform buffer
-    if (!m_uniformBuffer.updateBuffer(m_physicalDevice, m_vulkanDevice,
-        m_transferCommandPool, m_transferQueue,
-        &uniformData, sizeof(uniformData)))
+    if (!m_uniformBuffer[m_swapchain.current].updateBuffer(
+        m_physicalDevice, m_vulkanDevice, m_transferCommandPool,
+        m_transferQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
         m_rendererReady = false;
@@ -615,22 +614,25 @@ void Renderer::cleanup()
         m_swapchain.destroySwapchain(m_vulkanDevice);
 
         // Destroy descriptor pool
-        if (m_descriptorPool && vkDestroyDescriptorPool)
+        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
         {
-            vkDestroyDescriptorPool(m_vulkanDevice, m_descriptorPool, 0);
+            if (m_descriptorPool[i] && vkDestroyDescriptorPool)
+            {
+                vkDestroyDescriptorPool(m_vulkanDevice, m_descriptorPool[i], 0);
+            }
         }
 
         // Destroy texture
         m_texture.destroyTexture(m_vulkanDevice);
 
         // Destroy uniform buffer
-        m_uniformBuffer.destroyBuffer(m_vulkanDevice);
+        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+        {
+            m_uniformBuffer[i].destroyBuffer(m_vulkanDevice);
+        }
 
         // Destroy vertex buffer
         m_vertexBuffer.destroyBuffer(m_vulkanDevice);
-
-        // Destroy staging buffer
-        m_stagingBuffer.destroyBuffer(m_vulkanDevice);
 
         // Destroy transfer commands pool
         if (m_transferCommandPool && vkDestroyCommandPool)
@@ -684,7 +686,6 @@ void Renderer::cleanup()
         vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
     }
 
-    m_descriptorPool = 0;
     m_pipeline = 0;
     m_pipelineLayout = 0;
     m_descriptorSetLayout = 0;
@@ -1509,93 +1510,96 @@ bool Renderer::createDescriptorPool()
         return false;
     }
 
-    // Create descriptor pool
-    VkDescriptorPoolSize poolSize[2];
-
-    poolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSize[0].descriptorCount = 1;
-
-    poolSize[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSize[1].descriptorCount = 1;
-
-    VkDescriptorPoolCreateInfo poolInfo;
-    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    poolInfo.pNext = 0;
-    poolInfo.flags = 0;
-    poolInfo.maxSets = 1;
-    poolInfo.poolSizeCount = 2;
-    poolInfo.pPoolSizes = poolSize;
-
-    if (vkCreateDescriptorPool(
-        m_vulkanDevice, &poolInfo, 0, &m_descriptorPool) != VK_SUCCESS)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        // Could not create descriptor pool
-        return false;
+        // Create descriptor pool
+        VkDescriptorPoolSize poolSize[2];
+
+        poolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSize[0].descriptorCount = 1;
+
+        poolSize[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        poolSize[1].descriptorCount = 1;
+
+        VkDescriptorPoolCreateInfo poolInfo;
+        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        poolInfo.pNext = 0;
+        poolInfo.flags = 0;
+        poolInfo.maxSets = 1;
+        poolInfo.poolSizeCount = 2;
+        poolInfo.pPoolSizes = poolSize;
+
+        if (vkCreateDescriptorPool(
+            m_vulkanDevice, &poolInfo, 0, &m_descriptorPool[i]) != VK_SUCCESS)
+        {
+            // Could not create descriptor pool
+            return false;
+        }
+        if (!m_descriptorPool[i])
+        {
+            // Invalid descriptor pool
+            return false;
+        }
+
+        // Create descriptor set
+        VkDescriptorSetAllocateInfo descriptorInfo;
+        descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        descriptorInfo.pNext = 0;
+        descriptorInfo.descriptorPool = m_descriptorPool[i];
+        descriptorInfo.descriptorSetCount = 1;
+        descriptorInfo.pSetLayouts = &m_descriptorSetLayout;
+
+        if (vkAllocateDescriptorSets(
+            m_vulkanDevice, &descriptorInfo, &m_descriptorSet[i]) != VK_SUCCESS)
+        {
+            // Could not allocate descriptor set
+            return false;
+        }
+        if (!m_descriptorSet[i])
+        {
+            // Invalid descriptor set
+            return false;
+        }
+
+        // Update descriptor set
+        VkDescriptorBufferInfo bufferInfo;
+        bufferInfo.buffer = m_uniformBuffer[i].uniformBuffer.handle;
+        bufferInfo.offset = 0;
+        bufferInfo.range = m_uniformBuffer[i].uniformBuffer.size;
+
+        VkDescriptorImageInfo imageInfo;
+        imageInfo.sampler = m_texture.sampler;
+        imageInfo.imageView = m_texture.view;
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+        VkWriteDescriptorSet descriptorWrites[2];
+
+        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites[0].pNext = 0;
+        descriptorWrites[0].dstSet = m_descriptorSet[i];
+        descriptorWrites[0].dstBinding = 0;
+        descriptorWrites[0].dstArrayElement = 0;
+        descriptorWrites[0].descriptorCount = 1;
+        descriptorWrites[0].descriptorType =
+            VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrites[0].pImageInfo = 0;
+        descriptorWrites[0].pBufferInfo = &bufferInfo;
+        descriptorWrites[0].pTexelBufferView = 0;
+
+        descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites[1].pNext = 0;
+        descriptorWrites[1].dstSet = m_descriptorSet[i];
+        descriptorWrites[1].dstBinding = 1;
+        descriptorWrites[1].dstArrayElement = 0;
+        descriptorWrites[1].descriptorCount = 1;
+        descriptorWrites[1].descriptorType =
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrites[1].pImageInfo = &imageInfo;
+        descriptorWrites[1].pBufferInfo = 0;
+        descriptorWrites[1].pTexelBufferView = 0;
+
+        vkUpdateDescriptorSets(m_vulkanDevice, 2, descriptorWrites, 0, 0);
     }
-    if (!m_descriptorPool)
-    {
-        // Invalid descriptor pool
-        return false;
-    }
-
-    // Create descriptor set
-    VkDescriptorSetAllocateInfo descriptorInfo;
-    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = m_descriptorPool;
-    descriptorInfo.descriptorSetCount = 1;
-    descriptorInfo.pSetLayouts = &m_descriptorSetLayout;
-
-    if (vkAllocateDescriptorSets(
-        m_vulkanDevice, &descriptorInfo, &m_descriptorSet) != VK_SUCCESS)
-    {
-        // Could not allocate descriptor set
-        return false;
-    }
-    if (!m_descriptorSet)
-    {
-        // Invalid descriptor set
-        return false;
-    }
-
-    // Update descriptor set
-    VkDescriptorBufferInfo bufferInfo;
-    bufferInfo.buffer = m_uniformBuffer.uniformBuffer.handle;
-    bufferInfo.offset = 0;
-    bufferInfo.range = m_uniformBuffer.uniformBuffer.size;
-
-    VkDescriptorImageInfo imageInfo;
-    imageInfo.sampler = m_texture.sampler;
-    imageInfo.imageView = m_texture.view;
-    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-    VkWriteDescriptorSet descriptorWrites[2];
-
-    descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    descriptorWrites[0].pNext = 0;
-    descriptorWrites[0].dstSet = m_descriptorSet;
-    descriptorWrites[0].dstBinding = 0;
-    descriptorWrites[0].dstArrayElement = 0;
-    descriptorWrites[0].descriptorCount = 1;
-    descriptorWrites[0].descriptorType =
-        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    descriptorWrites[0].pImageInfo = 0;
-    descriptorWrites[0].pBufferInfo = &bufferInfo;
-    descriptorWrites[0].pTexelBufferView = 0;
-
-    descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    descriptorWrites[1].pNext = 0;
-    descriptorWrites[1].dstSet = m_descriptorSet;
-    descriptorWrites[1].dstBinding = 1;
-    descriptorWrites[1].dstArrayElement = 0;
-    descriptorWrites[1].descriptorCount = 1;
-    descriptorWrites[1].descriptorType =
-        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    descriptorWrites[1].pImageInfo = &imageInfo;
-    descriptorWrites[1].pBufferInfo = 0;
-    descriptorWrites[1].pTexelBufferView = 0;
-
-    vkUpdateDescriptorSets(m_vulkanDevice, 2, descriptorWrites, 0, 0);
 
     // Descriptor pool successfully created
     return true;
