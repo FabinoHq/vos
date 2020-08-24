@@ -208,6 +208,24 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    VkFence fence = 0;
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = 0;
+    fenceInfo.flags = 0;
+
+    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
+    {
+        // Could not create fence
+        return false;
+    }
+    if (!fence)
+    {
+        // Invalid fence
+        return false;
+    }
+
+    // Submit queue
     VkSubmitInfo submitInfo;
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo.pNext = 0;
@@ -219,18 +237,28 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(transferQueue.handle, 1, &submitInfo, 0) != VK_SUCCESS)
+    if (vkQueueSubmit(
+        transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
-    if (vkQueueWaitIdle(transferQueue.handle) != VK_SUCCESS)
+    // Wait for transfer to finish
+    if (vkWaitForFences(
+        vulkanDevice, 1, &fence, VK_FALSE, 100000000000) != VK_SUCCESS)
     {
-        // Could not wait for transfer queue idle
+        // Transfer timed out
         return false;
     }
 
+    // Destroy fence
+    if (fence)
+    {
+        vkDestroyFence(vulkanDevice, fence, 0);
+    }
+
+    // Destroy buffers
     if (commandBuffer)
     {
         vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);

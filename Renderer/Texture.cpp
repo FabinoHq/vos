@@ -344,8 +344,7 @@ bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
     memoryRange.offset = 0;
     memoryRange.size = VK_WHOLE_SIZE;
     
-    if (vkFlushMappedMemoryRanges(
-        vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
+    if (vkFlushMappedMemoryRanges(vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
     {
         // Could not flush staging buffer mapped memory ranges
         return false;
@@ -363,8 +362,8 @@ bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
-    if (vkAllocateCommandBuffers(vulkanDevice,
-        &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    if (vkAllocateCommandBuffers(
+        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
     {
         // Could not allocate command buffers
         return false;
@@ -499,17 +498,15 @@ bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
     }
 
     // Destroy fence
-    if (fence && vkDestroyFence)
+    if (fence)
     {
         vkDestroyFence(vulkanDevice, fence, 0);
     }
 
     // Destroy buffers
-    if (commandBuffer && vkFreeCommandBuffers)
+    if (commandBuffer)
     {
-        vkFreeCommandBuffers(
-            vulkanDevice, commandsPool, 1, &commandBuffer
-        );
+        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
     stagingBuffer.destroyBuffer(vulkanDevice);
 

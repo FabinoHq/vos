@@ -174,8 +174,8 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
-    if (vkAllocateCommandBuffers(vulkanDevice,
-        &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    if (vkAllocateCommandBuffers(
+        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
     {
         // Could not allocate command buffers
         return false;
@@ -255,16 +255,15 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Destroy fence
-    if (fence && vkDestroyFence)
+    if (fence)
     {
         vkDestroyFence(vulkanDevice, fence, 0);
     }
 
+    // Destroy buffers
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(
-            vulkanDevice, commandsPool, 1, &commandBuffer
-        );
+        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
     stagingBuffer.destroyBuffer(vulkanDevice);
 
@@ -335,8 +334,8 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
-    if (vkAllocateCommandBuffers(vulkanDevice,
-        &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    if (vkAllocateCommandBuffers(
+        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
     {
         // Could not allocate command buffers
         return false;
@@ -412,7 +411,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Destroy fence
-    if (fence && vkDestroyFence)
+    if (fence)
     {
         vkDestroyFence(vulkanDevice, fence, 0);
     }
@@ -420,9 +419,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     // Destroy buffers
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(
-            vulkanDevice, commandsPool, 1, &commandBuffer
-        );
+        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
     stagingBuffer.destroyBuffer(vulkanDevice);
 
