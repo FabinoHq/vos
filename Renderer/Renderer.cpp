@@ -434,6 +434,7 @@ void Renderer::render()
         0, 0, 0, 0, 0, 1, &presentToDraw
     );
 
+    // Begin render pass
     vkCmdBeginRenderPass(
         m_swapchain.commandBuffers[m_swapchain.current],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
@@ -444,6 +445,7 @@ void Renderer::render()
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
     );
 
+    // Set viewport
     VkViewport viewport;
     viewport.x = 0.0f;
     viewport.y = m_swapchain.extent.height*1.0f;
@@ -456,6 +458,7 @@ void Renderer::render()
         m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &viewport
     );
 
+    // Set scissor
     VkRect2D scissor;
     scissor.offset.x = 0;
     scissor.offset.y = 0;
@@ -466,12 +469,47 @@ void Renderer::render()
         m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
     );
 
+    // Bind descriptor set
     vkCmdBindDescriptorSets(
         m_swapchain.commandBuffers[m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
         &m_descriptorSet, 0, 0
     );
 
+    // Update matrices
+    float ratio = 1.0f;
+    if ((m_swapchain.extent.width > 0) && (m_swapchain.extent.height > 0))
+    {
+        ratio = (m_swapchain.extent.width*1.0f) /
+            (m_swapchain.extent.height*1.0f);
+    }
+    Matrix4x4 projMatrix;
+    projMatrix.setOrthographic(-ratio, ratio, 1.0f, -1.0f, -2.0f, 2.0f);
+    projMatrix.translateZ(-1.0f);
+
+    Matrix4x4 viewMatrix;
+    viewMatrix.setIdentity();
+
+    Matrix4x4 modelMatrix;
+    modelMatrix.setIdentity();
+
+    // Copy matrices data into uniform data
+    UniformData uniformData;
+    memcpy(uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
+    memcpy(uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
+    memcpy(uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
+
+    // Update uniform buffer
+    if (!m_uniformBuffer.updateBuffer(m_physicalDevice, m_vulkanDevice,
+        m_transferCommandPool, m_transferQueue,
+        &uniformData, sizeof(uniformData)))
+    {
+        // Could not update uniform buffer
+        m_rendererReady = false;
+        return;
+    }
+
+    // Draw vertices
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
@@ -487,6 +525,7 @@ void Renderer::render()
         m_swapchain.commandBuffers[m_swapchain.current], 6, 1, 0, 0, 0
     );
 
+    // End render pass
     vkCmdEndRenderPass(m_swapchain.commandBuffers[m_swapchain.current]);
 
     vkCmdPipelineBarrier(
@@ -504,7 +543,6 @@ void Renderer::render()
         m_rendererReady = false;
         return;
     }
-
 
     // Reset current frame rendering fence
     if (vkResetFences(m_vulkanDevice, 1,
