@@ -460,8 +460,7 @@ bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
     fenceInfo.pNext = 0;
     fenceInfo.flags = 0;
 
-    if (vkCreateFence(
-        vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
+    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
     {
         // Could not create fence
         return false;
