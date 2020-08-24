@@ -80,6 +80,13 @@
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, uint32_t size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update Uniform buffer                                         //
+            //  return : True if Vertex buffer is successfully updated        //
+            ////////////////////////////////////////////////////////////////////
+            bool updateBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VkCommandPool& commandsPool,
                 VulkanQueue& transferQueue, void* data, uint32_t size);
 

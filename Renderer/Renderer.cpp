@@ -280,7 +280,7 @@ bool Renderer::init(SysWindow* sysWindow)
     memcpy(uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
     // Create uniform buffer
-    if (!m_uniformBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
+    if (!m_uniformBuffer.updateBuffer(m_physicalDevice, m_vulkanDevice,
         m_transferCommandPool, m_transferQueue,
         &uniformData, sizeof(uniformData)))
     {
@@ -289,7 +289,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Load texture
-    if (!m_texture.loadTexture(m_physicalDevice, m_vulkanDevice,
+    if (!m_texture.updateTexture(m_physicalDevice, m_vulkanDevice,
         m_swapchain.commandsPool, m_graphicsQueue, TestSpriteWidth,
         TestSpriteHeight, TestSpriteDepth, TestSprite))
     {

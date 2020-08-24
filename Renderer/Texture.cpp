@@ -252,10 +252,10 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Load texture                                                              //
-//  return : True if texture is successfully loaded                           //
+//  Update texture                                                            //
+//  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
+bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkCommandPool& commandsPool,
     VulkanQueue& graphicsQueue, uint32_t texWidth,
     uint32_t texHeight, uint32_t texDepth,

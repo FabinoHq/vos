@@ -422,10 +422,10 @@
                 VkDevice& vulkanDevice, uint32_t texWidth, uint32_t texHeight);
 
             ////////////////////////////////////////////////////////////////////
-            //  Load texture                                                  //
-            //  return : True if texture is successfully loaded               //
+            //  Update texture                                                //
+            //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
-            bool loadTexture(VkPhysicalDevice& physicalDevice,
+            bool updateTexture(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VkCommandPool& commandsPool,
                 VulkanQueue& graphicsQueue, uint32_t texWidth,
                 uint32_t texHeight, uint32_t texDepth,
