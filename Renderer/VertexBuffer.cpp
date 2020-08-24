@@ -104,27 +104,10 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         destroyBuffer(vulkanDevice);
     }
 
-    // Vertices
-    VertexData vertices[4];
-    vertices[0].x = -0.8f;  vertices[0].y = -0.8f;  vertices[0].z = 0.0f;
-    vertices[1].x = 0.8f;   vertices[1].y = -0.8f;  vertices[1].z = 0.0f;
-    vertices[2].x = 0.8f;   vertices[2].y = 0.8f;   vertices[2].z = 0.0f;
-    vertices[3].x = -0.8f;  vertices[3].y = 0.8f;   vertices[3].z = 0.0f;
-
-    vertices[0].u = 0.0f;   vertices[0].v = 1.0f;
-    vertices[1].u = 1.0f;   vertices[1].v = 1.0f;
-    vertices[2].u = 1.0f;   vertices[2].v = 0.0f;
-    vertices[3].u = 0.0f;   vertices[3].v = 0.0f;
-
-    // Indices
-    uint16_t indices[6];
-    indices[0] = 0; indices[1] = 1; indices[2] = 2;
-    indices[3] = 2; indices[4] = 3; indices[5] = 0;
-
 
     // Create staging buffer
     VulkanBuffer stagingBuffer;
-    stagingBuffer.size = sizeof(vertices);
+    stagingBuffer.size = sizeof(DefaultVertices);
 
     if (!stagingBuffer.createBuffer(
         physicalDevice, vulkanDevice,
@@ -150,7 +133,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Copy vertices into staging buffer memory
-    memcpy(stagingBufferMemory, vertices, stagingBuffer.size);
+    memcpy(stagingBufferMemory, DefaultVertices, stagingBuffer.size);
 
     // Unmap staging buffer memory
     VkMappedMemoryRange memoryRange;
@@ -170,7 +153,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
 
     // Create vertex buffer
-    vertexBuffer.size = sizeof(vertices);
+    vertexBuffer.size = sizeof(DefaultVertices);
 
     if (!vertexBuffer.createBuffer(
         physicalDevice, vulkanDevice,
@@ -287,7 +270,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
 
     // Create index buffer
-    stagingBuffer.size = sizeof(indices);
+    stagingBuffer.size = sizeof(DefaultIndices);
 
     if (!stagingBuffer.createBuffer(
         physicalDevice, vulkanDevice,
@@ -312,8 +295,8 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Copy vertices into staging buffer memory
-    memcpy(stagingBufferMemory, indices, stagingBuffer.size);
+    // Copy indices into staging buffer memory
+    memcpy(stagingBufferMemory, DefaultIndices, stagingBuffer.size);
 
     // Unmap staging buffer memory
     memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -332,7 +315,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
 
     // Create index buffer
-    indexBuffer.size = sizeof(indices);
+    indexBuffer.size = sizeof(DefaultIndices);
 
     if (!indexBuffer.createBuffer(
         physicalDevice, vulkanDevice,
