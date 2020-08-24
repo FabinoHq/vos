@@ -51,7 +51,8 @@ VOS: main.o \
 	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/VulkanQueue.o Renderer/Swapchain.o \
-	Renderer/VulkanBuffer.o Renderer/Texture.o Renderer/Renderer.o
+	Renderer/VulkanBuffer.o Renderer/VertexBuffer.o Renderer/Texture.o \
+	Renderer/Renderer.o
 
 	$(CC) -o VOS \
 	Vos.o \
@@ -59,7 +60,8 @@ VOS: main.o \
 	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/VulkanQueue.o Renderer/Swapchain.o \
-	Renderer/VulkanBuffer.o Renderer/Texture.o Renderer/Renderer.o \
+	Renderer/VulkanBuffer.o Renderer/VertexBuffer.o Renderer/Texture.o \
+	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
 main.o: main.cpp
@@ -104,6 +106,9 @@ Renderer/Swapchain.o: Renderer/Swapchain.cpp
 
 Renderer/VulkanBuffer.o: Renderer/VulkanBuffer.cpp
 	$(CC) -o Renderer/VulkanBuffer.o -c Renderer/VulkanBuffer.cpp $(CFLAGS)
+
+Renderer/VertexBuffer.o: Renderer/VertexBuffer.cpp
+	$(CC) -o Renderer/VertexBuffer.o -c Renderer/VertexBuffer.cpp $(CFLAGS)
 
 Renderer/Texture.o: Renderer/Texture.cpp
 	$(CC) -o Renderer/Texture.o -c Renderer/Texture.cpp $(CFLAGS)

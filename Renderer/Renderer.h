@@ -48,6 +48,7 @@
     #include "VulkanQueue.h"
     #include "Swapchain.h"
     #include "VulkanBuffer.h"
+    #include "VertexBuffer.h"
     #include "Texture.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
@@ -210,19 +211,6 @@
         float   modelMatrix[16];
     };
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  VertexData data structure                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VertexData
-    {
-        float   x;
-        float   y;
-        float   z;
-
-        float   u;
-        float   v;
-    };
-
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
@@ -307,22 +295,10 @@
             bool createPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create vertex buffer                                          //
-            //  return : True if vertex buffer is successfully created        //
-            ////////////////////////////////////////////////////////////////////
-            bool createVertexBuffer();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create uniform buffer                                         //
             //  return : True if uniform buffer is successfully created       //
             ////////////////////////////////////////////////////////////////////
             bool createUniformBuffer();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create texture                                                //
-            //  return : True if texture is successfully created              //
-            ////////////////////////////////////////////////////////////////////
-            bool createTexture();
 
             ////////////////////////////////////////////////////////////////////
             //  Create descriptor pool                                        //
@@ -357,8 +333,7 @@
             VkPipelineLayout        m_pipelineLayout;       // Pipeline layout
             VkPipeline              m_pipeline;             // Graphics pipeline
             VulkanBuffer            m_stagingBuffer;        // Staging buffer
-            VulkanBuffer            m_vertexBuffer;         // Vertex buffer
-            VulkanBuffer            m_indexBuffer;          // Index buffer
+            VertexBuffer            m_vertexBuffer;         // Vertex buffer
             VulkanBuffer            m_uniformBuffer;        // Uniform buffer
             UniformData             m_uniformData;          // Uniform data
             Texture                 m_texture;              // Test texture

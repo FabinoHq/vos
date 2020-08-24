@@ -37,49 +37,65 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanBuffer.h : Vulkan buffer management                     //
+//     Renderer/VertexBuffer.h : Vertex buffer management                     //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKANBUFFER_HEADER
-#define VOS_RENDERER_VULKANBUFFER_HEADER
+#ifndef VOS_RENDERER_VERTEXBUFFER_HEADER
+#define VOS_RENDERER_VERTEXBUFFER_HEADER
 
     #include "Vulkan.h"
+    #include "VulkanQueue.h"
+    #include "VulkanBuffer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanBuffer class definition                                         //
+    //  VertexData data structure                                             //
     ////////////////////////////////////////////////////////////////////////////
-    class VulkanBuffer
+    struct VertexData
+    {
+        float   x;
+        float   y;
+        float   z;
+
+        float   u;
+        float   v;
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VertexBuffer class definition                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    class VertexBuffer
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer default constructor                              //
+            //  VertexBuffer default constructor                              //
             ////////////////////////////////////////////////////////////////////
-            VulkanBuffer();
+            VertexBuffer();
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer destructor                                       //
+            //  VertexBuffer destructor                                       //
             ////////////////////////////////////////////////////////////////////
-            ~VulkanBuffer();
+            ~VertexBuffer();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan buffer                                          //
-            //  return : True if Vulkan buffer is successfully created        //
+            //  Create Vertex buffer                                          //
+            //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkBufferUsageFlags usage,
-                VkMemoryPropertyFlags properties);
+                VkDevice& vulkanDevice, VkCommandPool& commandsPool,
+                VulkanQueue& transferQueue);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy Vulkan buffer                                         //
+            //  Destroy Vertex buffer                                         //
             ////////////////////////////////////////////////////////////////////
             void destroyBuffer(VkDevice& vulkanDevice);
 
 
         public:
-            VkBuffer        handle;     // Buffer handle
-            VkDeviceMemory  memory;     // Buffer memory
-            uint32_t        size;       // Buffer size
+            VulkanBuffer    vertexBuffer;   // Vertex buffer
+            VulkanBuffer    indexBuffer;    // Index buffer
     };
 
-#endif // VOS_RENDERER_VULKANBUFFER_HEADER
+
+#endif // VOS_RENDERER_VERTEXBUFFER_HEADER

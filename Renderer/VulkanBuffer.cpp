@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanBuffer.cpp : Vulkan Buffer management                   //
+//     Renderer/VulkanBuffer.cpp : Vulkan buffer management                   //
 ////////////////////////////////////////////////////////////////////////////////
 #include "VulkanBuffer.h"
 
@@ -65,8 +65,8 @@ VulkanBuffer::~VulkanBuffer()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Vulkan Buffer                                                      //
-//  return : True if Vulkan Buffer is successfully created                    //
+//  Create Vulkan buffer                                                      //
+//  return : True if Vulkan buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkBufferUsageFlags usage,
@@ -165,7 +165,7 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy Vulkan Buffer                                                     //
+//  Destroy Vulkan buffer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice)
 {

@@ -275,6 +275,20 @@ bool Texture::loadTexture(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    // Check commands pool
+    if (!commandsPool)
+    {
+        // Invalid commands pool
+        return false;
+    }
+
+    // Check graphics queue
+    if (!graphicsQueue.handle)
+    {
+        // Invalid graphics queue
+        return false;
+    }
+
     // Check texture size
     if (texWidth == 0 || texHeight == 0 || texDepth == 0)
     {
