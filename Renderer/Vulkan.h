@@ -2844,6 +2844,15 @@
     extern PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkInvalidateMappedMemoryRanges function                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkInvalidateMappedMemoryRanges)(
+        VkDevice device, uint32_t memoryRangeCount,
+        const VkMappedMemoryRange* pMemoryRanges
+    );
+    extern PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkBindBufferMemory function                                           //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkBindBufferMemory)(
