@@ -924,6 +924,17 @@
     typedef VkFlags VkImageAspectFlags;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseImageFormatFlags                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSparseImageFormatFlagBits
+    {
+        VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = 0x00000001,
+        VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = 0x00000002,
+        VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = 0x00000004
+    };
+    typedef VkFlags VkSparseImageFormatFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceTransformFlagsKHR                                            //
     ////////////////////////////////////////////////////////////////////////////
     enum VkSurfaceTransformFlagBitsKHR
@@ -1938,6 +1949,28 @@
         VkDeviceSize    size;
         VkDeviceSize    alignment;
         uint32_t        memoryTypeBits;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseImageFormatProperties data structure                          //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseImageFormatProperties
+    {
+        VkImageAspectFlags          aspectMask;
+        VkExtent3D                  imageGranularity;
+        VkSparseImageFormatFlags    flags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseImageMemoryRequirements data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseImageMemoryRequirements
+    {
+        VkSparseImageFormatProperties   formatProperties;
+        uint32_t                        imageMipTailFirstLod;
+        VkDeviceSize                    imageMipTailSize;
+        VkDeviceSize                    imageMipTailOffset;
+        VkDeviceSize                    imageMipTailStride;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -3137,6 +3170,16 @@
         VkMemoryRequirements* pMemoryRequirements
     );
     extern PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetImageSparseMemoryRequirements function                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetImageSparseMemoryRequirements)(
+        VkDevice device, VkImage image, uint32_t* pSparseMemoryRequirementCount,
+        VkSparseImageMemoryRequirements* pSparseMemoryRequirements
+    );
+    extern PFN_vkGetImageSparseMemoryRequirements
+        vkGetImageSparseMemoryRequirements;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateFence function                                                //
