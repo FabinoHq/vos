@@ -3275,6 +3275,15 @@
     extern PFN_vkCreateBufferView vkCreateBufferView;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyBufferView function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyBufferView)(
+        VkDevice device, VkBufferView bufferView,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyBufferView vkDestroyBufferView;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateImage function                                                //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateImage)(
