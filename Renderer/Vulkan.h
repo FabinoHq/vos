@@ -3375,6 +3375,14 @@
     extern PFN_vkCreateEvent vkCreateEvent;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyEvent function                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyEvent)(
+        VkDevice device, VkEvent event, const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyEvent vkDestroyEvent;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
