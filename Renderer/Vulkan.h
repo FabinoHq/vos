@@ -3416,6 +3416,15 @@
     extern PFN_vkCreateQueryPool vkCreateQueryPool;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyQueryPool function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyQueryPool)(
+        VkDevice device, VkQueryPool queryPool,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyQueryPool vkDestroyQueryPool;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
