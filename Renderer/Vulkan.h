@@ -2853,6 +2853,15 @@
     extern PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDeviceMemoryCommitment function                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetDeviceMemoryCommitment)(
+        VkDevice device, VkDeviceMemory memory,
+        VkDeviceSize* pCommittedMemoryInBytes
+    );
+    extern PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkBindBufferMemory function                                           //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkBindBufferMemory)(

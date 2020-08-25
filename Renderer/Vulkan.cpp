@@ -167,6 +167,9 @@ PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges = 0;
 // vkInvalidateMappedMemoryRanges function
 PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges = 0;
 
+// vkGetDeviceMemoryCommitment function
+PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment = 0;
+
 // vkBindBufferMemory function
 PFN_vkBindBufferMemory vkBindBufferMemory = 0;
 
@@ -748,9 +751,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkFlushMappedMemoryRanges
-    vkFlushMappedMemoryRanges =
-        (PFN_vkFlushMappedMemoryRanges)vkGetDeviceProcAddr(
-        vulkanDevice, "vkFlushMappedMemoryRanges"
+    vkFlushMappedMemoryRanges = (PFN_vkFlushMappedMemoryRanges)
+        vkGetDeviceProcAddr(vulkanDevice, "vkFlushMappedMemoryRanges"
     );
     if (!vkFlushMappedMemoryRanges)
     {
@@ -759,13 +761,22 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkInvalidateMappedMemoryRanges
-    vkInvalidateMappedMemoryRanges =
-        (PFN_vkInvalidateMappedMemoryRanges)vkGetDeviceProcAddr(
-        vulkanDevice, "vkInvalidateMappedMemoryRanges"
+    vkInvalidateMappedMemoryRanges = (PFN_vkInvalidateMappedMemoryRanges)
+        vkGetDeviceProcAddr(vulkanDevice, "vkInvalidateMappedMemoryRanges"
     );
     if (!vkInvalidateMappedMemoryRanges)
     {
         // Could not load vkInvalidateMappedMemoryRanges
+        return false;
+    }
+
+    // Load vkGetDeviceMemoryCommitment
+    vkGetDeviceMemoryCommitment = (PFN_vkGetDeviceMemoryCommitment)
+        vkGetDeviceProcAddr(vulkanDevice, "vkGetDeviceMemoryCommitment"
+    );
+    if (!vkGetDeviceMemoryCommitment)
+    {
+        // Could not load vkGetDeviceMemoryCommitment
         return false;
     }
 
@@ -1443,6 +1454,7 @@ void FreeVulkanFunctions()
 
     vkBindImageMemory = 0;
     vkBindBufferMemory = 0;
+    vkGetDeviceMemoryCommitment = 0;
     vkInvalidateMappedMemoryRanges = 0;
     vkFlushMappedMemoryRanges = 0;
     vkUnmapMemory = 0;
