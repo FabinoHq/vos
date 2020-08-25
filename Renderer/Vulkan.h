@@ -3383,6 +3383,14 @@
     extern PFN_vkDestroyEvent vkDestroyEvent;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkGetEventStatus function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetEventStatus)(
+        VkDevice device, VkEvent event
+    );
+    extern PFN_vkGetEventStatus vkGetEventStatus;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
