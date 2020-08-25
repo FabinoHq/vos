@@ -313,6 +313,9 @@ PFN_vkCreateQueryPool vkCreateQueryPool = 0;
 // vkDestroyQueryPool function
 PFN_vkDestroyQueryPool vkDestroyQueryPool = 0;
 
+// vkGetQueryPoolResults function
+PFN_vkGetQueryPoolResults vkGetQueryPoolResults = 0;
+
 // vkCreateCommandPool function
 PFN_vkCreateCommandPool vkCreateCommandPool = 0;
 
@@ -1286,6 +1289,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkGetQueryPoolResults
+    vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)vkGetDeviceProcAddr(
+        vulkanDevice, "vkGetQueryPoolResults"
+    );
+    if (!vkGetQueryPoolResults)
+    {
+        // Could not load vkGetQueryPoolResults
+        return false;
+    }
+
     // Load vkCreateCommandPool
     vkCreateCommandPool = (PFN_vkCreateCommandPool)vkGetDeviceProcAddr(
         vulkanDevice, "vkCreateCommandPool"
@@ -1550,6 +1563,7 @@ void FreeVulkanFunctions()
     vkResetCommandPool = 0;
     vkDestroyCommandPool = 0;
     vkCreateCommandPool = 0;
+    vkGetQueryPoolResults = 0;
     vkDestroyQueryPool = 0;
     vkCreateQueryPool = 0;
     vkResetEvent = 0;

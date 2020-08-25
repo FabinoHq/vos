@@ -3425,6 +3425,16 @@
     extern PFN_vkDestroyQueryPool vkDestroyQueryPool;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkGetQueryPoolResults function                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetQueryPoolResults)(
+        VkDevice device, VkQueryPool queryPool,
+        uint32_t firstQuery, uint32_t queryCount, size_t dataSize,
+        void* pData, VkDeviceSize stride, VkQueryResultFlags flags
+    );
+    extern PFN_vkGetQueryPoolResults vkGetQueryPoolResults;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateCommandPool)(
