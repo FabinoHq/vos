@@ -935,6 +935,15 @@
     typedef VkFlags VkSparseImageFormatFlags;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseMemoryBindFlags                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSparseMemoryBindFlagBits
+    {
+        VK_SPARSE_MEMORY_BIND_METADATA_BIT = 0x00000001
+    };
+    typedef VkFlags VkSparseMemoryBindFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceTransformFlagsKHR                                            //
     ////////////////////////////////////////////////////////////////////////////
     enum VkSurfaceTransformFlagBitsKHR
@@ -2187,6 +2196,90 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseMemoryBind data structure                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseMemoryBind
+    {
+        VkDeviceSize                resourceOffset;
+        VkDeviceSize                size;
+        VkDeviceMemory              memory;
+        VkDeviceSize                memoryOffset;
+        VkSparseMemoryBindFlags     flags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseBufferMemoryBindInfo data structure                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseBufferMemoryBindInfo
+    {
+        VkBuffer                    buffer;
+        uint32_t                    bindCount;
+        const VkSparseMemoryBind*   pBinds;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseImageOpaqueMemoryBindInfo data structure                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseImageOpaqueMemoryBindInfo
+    {
+        VkImage                     image;
+        uint32_t                    bindCount;
+        const VkSparseMemoryBind*   pBinds;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageSubresource data structure                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageSubresource
+    {
+        VkImageAspectFlags  aspectMask;
+        uint32_t            mipLevel;
+        uint32_t            arrayLayer;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseImageMemoryBind data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseImageMemoryBind
+    {
+        VkImageSubresource          subresource;
+        VkOffset3D                  offset;
+        VkExtent3D                  extent;
+        VkDeviceMemory              memory;
+        VkDeviceSize                memoryOffset;
+        VkSparseMemoryBindFlags     flags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseImageMemoryBindInfo data structure                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseImageMemoryBindInfo
+    {
+        VkImage                         image;
+        uint32_t                        bindCount;
+        const VkSparseImageMemoryBind*  pBinds;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBindSparseInfo data structure                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBindSparseInfo
+    {
+        VkStructureType                             sType;
+        const void*                                 pNext;
+        uint32_t                                    waitSemaphoreCount;
+        const VkSemaphore*                          pWaitSemaphores;
+        uint32_t                                    bufferBindCount;
+        const VkSparseBufferMemoryBindInfo*         pBufferBinds;
+        uint32_t                                    imageOpaqueBindCount;
+        const VkSparseImageOpaqueMemoryBindInfo*    pImageOpaqueBinds;
+        uint32_t                                    imageBindCount;
+        const VkSparseImageMemoryBindInfo*          pImageBinds;
+        uint32_t                                    signalSemaphoreCount;
+        const VkSemaphore*                          pSignalSemaphores;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkFenceCreateInfo data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     struct VkFenceCreateInfo
@@ -3192,6 +3285,15 @@
     );
     extern PFN_vkGetImageSparseMemoryRequirements
         vkGetImageSparseMemoryRequirements;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkQueueBindSparse function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkQueueBindSparse)(
+        VkQueue queue, uint32_t bindInfoCount,
+        const VkBindSparseInfo* pBindInfo, VkFence fence
+    );
+    extern PFN_vkQueueBindSparse vkQueueBindSparse;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateFence function                                                //
