@@ -1487,6 +1487,18 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkImageFormatProperties data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageFormatProperties
+    {
+        VkExtent3D          maxExtent;
+        uint32_t            maxMipLevels;
+        uint32_t            maxArrayLayers;
+        VkSampleCountFlags  sampleCounts;
+        VkDeviceSize        maxResourceSize;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkQueueFamilyProperties data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkQueueFamilyProperties
@@ -2583,6 +2595,17 @@
     );
     extern PFN_vkGetPhysicalDeviceFormatProperties
         vkGetPhysicalDeviceFormatProperties;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceImageFormatProperties function                     //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetPhysicalDeviceImageFormatProperties)(
+        VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type,
+        VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags,
+        VkImageFormatProperties* pImageFormatProperties
+    );
+    extern PFN_vkGetPhysicalDeviceImageFormatProperties
+        vkGetPhysicalDeviceImageFormatProperties;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkGetPhysicalDeviceQueueFamilyProperties function                     //
