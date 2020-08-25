@@ -52,7 +52,7 @@ VOS: main.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/VulkanQueue.o Renderer/Swapchain.o \
 	Renderer/VulkanBuffer.o Renderer/VertexBuffer.o Renderer/UniformBuffer.o \
-	Renderer/Texture.o Renderer/Renderer.o
+	Renderer/Texture.o Renderer/Shader.o Renderer/Renderer.o
 
 	$(CC) -o VOS \
 	Vos.o \
@@ -61,7 +61,7 @@ VOS: main.o \
 	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/VulkanQueue.o Renderer/Swapchain.o \
 	Renderer/VulkanBuffer.o Renderer/VertexBuffer.o Renderer/UniformBuffer.o \
-	Renderer/Texture.o Renderer/Renderer.o \
+	Renderer/Texture.o Renderer/Shader.o Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
 main.o: main.cpp
@@ -115,6 +115,9 @@ Renderer/UniformBuffer.o: Renderer/UniformBuffer.cpp
 
 Renderer/Texture.o: Renderer/Texture.cpp
 	$(CC) -o Renderer/Texture.o -c Renderer/Texture.cpp $(CFLAGS)
+
+Renderer/Shader.o: Renderer/Shader.cpp
+	$(CC) -o Renderer/Shader.o -c Renderer/Shader.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

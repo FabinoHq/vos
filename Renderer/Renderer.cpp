@@ -58,13 +58,12 @@ m_surfaceQueue(),
 m_transferQueue(),
 m_transferCommandPool(0),
 m_swapchain(),
-m_vertexShader(0),
-m_fragmentShader(0),
 m_descriptorSetLayout(0),
 m_pipelineLayout(0),
 m_pipeline(0),
 m_vertexBuffer(),
-m_texture()
+m_texture(),
+m_shader()
 {
 
 }
@@ -223,7 +222,9 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create default shaders
-    if (!createDefaultShaders())
+    if (!m_shader.createShader(m_vulkanDevice,
+        DefaultVertexShader, DefaultVertexShaderSize,
+        DefaultFragmentShader, DefaultFragmentShaderSize))
     {
         // Could not create default shaders
         return false;
@@ -622,6 +623,9 @@ void Renderer::cleanup()
             }
         }
 
+        // Destroy shader
+        m_shader.destroyShader(m_vulkanDevice);
+
         // Destroy texture
         m_texture.destroyTexture(m_vulkanDevice);
 
@@ -659,19 +663,6 @@ void Renderer::cleanup()
                 m_vulkanDevice, m_descriptorSetLayout, 0
             );
         }
-
-        // Destroy default shaders
-        if (vkDestroyShaderModule)
-        {
-            if (m_fragmentShader)
-            {
-                vkDestroyShaderModule(m_vulkanDevice, m_fragmentShader, 0);
-            }
-            if (m_vertexShader)
-            {
-                vkDestroyShaderModule(m_vulkanDevice, m_vertexShader, 0);
-            }
-        }
     }
 
     // Destroy Vulkan device
@@ -689,8 +680,6 @@ void Renderer::cleanup()
     m_pipeline = 0;
     m_pipelineLayout = 0;
     m_descriptorSetLayout = 0;
-    m_fragmentShader = 0;
-    m_vertexShader = 0;
     m_swapchain.handle = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
@@ -1126,63 +1115,6 @@ bool Renderer::selectVulkanDevice()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create default shaders                                                    //
-//  return : True if default shaders are successfully created                 //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createDefaultShaders()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Create default vertex shader
-    VkShaderModuleCreateInfo vertexShaderInfo;
-    vertexShaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    vertexShaderInfo.pNext = 0;
-    vertexShaderInfo.flags = 0;
-    vertexShaderInfo.codeSize = DefaultVertexShaderSize;
-    vertexShaderInfo.pCode = DefaultVertexShader;
-
-    if (vkCreateShaderModule(m_vulkanDevice,
-        &vertexShaderInfo, 0, &m_vertexShader) != VK_SUCCESS)
-    {
-        // Could not create default vertex shader
-        return false;
-    }
-    if (!m_vertexShader)
-    {
-        // Invalid default vertex shader
-        return false;
-    }
-
-    // Create default fragment shader
-    VkShaderModuleCreateInfo fragmentShaderInfo;
-    fragmentShaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    fragmentShaderInfo.pNext = 0;
-    fragmentShaderInfo.flags = 0;
-    fragmentShaderInfo.codeSize = DefaultFragmentShaderSize;
-    fragmentShaderInfo.pCode = DefaultFragmentShader;
-
-    if (vkCreateShaderModule(m_vulkanDevice,
-        &fragmentShaderInfo, 0, &m_fragmentShader) != VK_SUCCESS)
-    {
-        // Could not create default fragment shader
-        return false;
-    }
-    if (!m_fragmentShader)
-    {
-        // Invalid default fragment shader
-        return false;
-    }
-
-    // Default shaders successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Create descriptor set layout                                              //
 //  return : True if descriptor layout is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1303,14 +1235,14 @@ bool Renderer::createPipeline()
     }
 
     // Check vertex shader
-    if (!m_vertexShader)
+    if (!m_shader.vertexShader)
     {
         // Invalid vertex shader
         return false;
     }
 
     // Check fragment shader
-    if (!m_fragmentShader)
+    if (!m_shader.fragmentShader)
     {
         // Invalid fragment shader
         return false;
@@ -1330,7 +1262,7 @@ bool Renderer::createPipeline()
     shaderStage[0].pNext = 0;
     shaderStage[0].flags = 0;
     shaderStage[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
-    shaderStage[0].module = m_vertexShader;
+    shaderStage[0].module = m_shader.vertexShader;
     shaderStage[0].pName = "main";
     shaderStage[0].pSpecializationInfo = 0;
 
@@ -1338,7 +1270,7 @@ bool Renderer::createPipeline()
     shaderStage[1].pNext = 0;
     shaderStage[1].flags = 0;
     shaderStage[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-    shaderStage[1].module = m_fragmentShader;
+    shaderStage[1].module = m_shader.fragmentShader;
     shaderStage[1].pName = "main";
     shaderStage[1].pSpecializationInfo = 0;
 

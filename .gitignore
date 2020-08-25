@@ -72,5 +72,7 @@
 !Renderer/UniformBuffer.cpp
 !Renderer/Texture.h
 !Renderer/Texture.cpp
+!Renderer/Shader.h
+!Renderer/Shader.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
