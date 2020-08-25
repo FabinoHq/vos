@@ -2325,6 +2325,20 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkBufferViewCreateInfo data structure                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBufferViewCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkBufferViewCreateFlags     flags;
+        VkBuffer                    buffer;
+        VkFormat                    format;
+        VkDeviceSize                offset;
+        VkDeviceSize                range;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkImageCreateInfo data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     struct VkImageCreateInfo
@@ -3250,6 +3264,15 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyBuffer vkDestroyBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateBufferView function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateBufferView)(
+        VkDevice device, const VkBufferViewCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkBufferView* pView
+    );
+    extern PFN_vkCreateBufferView vkCreateBufferView;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateImage function                                                //
