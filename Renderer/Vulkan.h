@@ -785,6 +785,27 @@
     typedef VkFlags VkInstanceCreateFlags;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkFormatFeatureFlags                                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkFormatFeatureFlagBits
+    {
+        VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = 0x00000001,
+        VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = 0x00000002,
+        VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = 0x00000004,
+        VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000008,
+        VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = 0x00000010,
+        VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = 0x00000020,
+        VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = 0x00000040,
+        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = 0x00000080,
+        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = 0x00000100,
+        VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000200,
+        VK_FORMAT_FEATURE_BLIT_SRC_BIT = 0x00000400,
+        VK_FORMAT_FEATURE_BLIT_DST_BIT = 0x00000800,
+        VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000
+    };
+    typedef VkFlags VkFormatFeatureFlags;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSampleCountFlags                                                    //
     ////////////////////////////////////////////////////////////////////////////
     enum VkSampleCountFlagBits
@@ -1433,6 +1454,16 @@
         VkBool32    sparseResidencyAliased;
         VkBool32    variableMultisampleRate;
         VkBool32    inheritedQueries;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkFormatProperties data structure                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkFormatProperties
+    {
+        VkFormatFeatureFlags    linearTilingFeatures;
+        VkFormatFeatureFlags    optimalTilingFeatures;
+        VkFormatFeatureFlags    bufferFeatures;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -2542,6 +2573,16 @@
         VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures* pFeatures
     );
     extern PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceFormatProperties function                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceFormatProperties)(
+        VkPhysicalDevice physicalDevice, VkFormat format,
+        VkFormatProperties* pFormatProperties
+    );
+    extern PFN_vkGetPhysicalDeviceFormatProperties
+        vkGetPhysicalDeviceFormatProperties;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkGetPhysicalDeviceQueueFamilyProperties function                     //
