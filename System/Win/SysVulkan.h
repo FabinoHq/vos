@@ -106,6 +106,7 @@
         typedef struct VkFence_T*               VkFence;
         typedef struct VkBuffer_T*              VkBuffer;
         typedef struct VkImage_T*               VkImage;
+        typedef struct VkEvent_T*               VkEvent;
         typedef struct VkBufferView_T*          VkBufferView;
         typedef struct VkImageView_T*           VkImageView;
         typedef struct VkShaderModule_T*        VkShaderModule;
@@ -127,6 +128,7 @@
         typedef uint64_t                        VkFence;
         typedef uint64_t                        VkBuffer;
         typedef uint64_t                        VkImage;
+        typedef uint64_t                        VkEvent;
         typedef uint64_t                        VkBufferView;
         typedef uint64_t                        VkImageView;
         typedef uint64_t                        VkShaderModule;

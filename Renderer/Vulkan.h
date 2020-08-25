@@ -2300,6 +2300,16 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkEventCreateInfo data structure                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkEventCreateInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkEventCreateFlags  flags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkBufferCreateInfo data structure                                     //
     ////////////////////////////////////////////////////////////////////////////
     struct VkBufferCreateInfo
@@ -3354,6 +3364,15 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroySemaphore vkDestroySemaphore;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateEvent function                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateEvent)(
+        VkDevice device, const VkEventCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkEvent* pEvent
+    );
+    extern PFN_vkCreateEvent vkCreateEvent;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateCommandPool function                                          //
