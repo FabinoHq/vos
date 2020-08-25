@@ -2697,6 +2697,18 @@
     extern PFN_vkGetPhysicalDeviceMemoryProperties
         vkGetPhysicalDeviceMemoryProperties;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceSparseImageFormatProperties function               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceSparseImageFormatProperties)
+        (VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type,
+        VkSampleCountFlagBits samples, VkImageUsageFlags usage,
+        VkImageTiling tiling, uint32_t* pPropertyCount,
+        VkSparseImageFormatProperties* pProperties
+    );
+    extern PFN_vkGetPhysicalDeviceSparseImageFormatProperties
+        vkGetPhysicalDeviceSparseImageFormatProperties;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroySurfaceKHR function                                          //
