@@ -2361,6 +2361,18 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkSubresourceLayout data structure                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSubresourceLayout
+    {
+        VkDeviceSize    offset;
+        VkDeviceSize    size;
+        VkDeviceSize    rowPitch;
+        VkDeviceSize    arrayPitch;
+        VkDeviceSize    depthPitch;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkAttachmentDescription data structure                                //
     ////////////////////////////////////////////////////////////////////////////
     struct VkAttachmentDescription
@@ -3299,6 +3311,15 @@
         VkDevice device, VkImage image, const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyImage vkDestroyImage;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetImageSubresourceLayout function                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetImageSubresourceLayout)(
+        VkDevice device, VkImage image, const VkImageSubresource* pSubresource,
+        VkSubresourceLayout* pLayout
+    );
+    extern PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkGetBufferMemoryRequirements function                                //
