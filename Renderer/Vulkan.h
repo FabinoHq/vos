@@ -1223,6 +1223,17 @@
     };
     typedef VkFlags VkCommandBufferResetFlags;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkStencilFaceFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkStencilFaceFlagBits
+    {
+        VK_STENCIL_FACE_FRONT_BIT = 0x00000001,
+        VK_STENCIL_FACE_BACK_BIT = 0x00000002,
+        VK_STENCIL_FRONT_AND_BACK = 0x3
+    };
+    typedef VkFlags VkStencilFaceFlags;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
@@ -3699,6 +3710,15 @@
         float minDepthBounds, float maxDepthBounds
     );
     extern PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetStencilCompareMask function                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetStencilCompareMask)(
+        VkCommandBuffer commandBuffer,
+        VkStencilFaceFlags faceMask, uint32_t compareMask
+    );
+    extern PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindDescriptorSets function                                      //
