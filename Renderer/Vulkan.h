@@ -3099,6 +3099,14 @@
     extern PFN_vkDestroyRenderPass vkDestroyRenderPass;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkGetRenderAreaGranularity function                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetRenderAreaGranularity)(
+        VkDevice device, VkRenderPass renderPass, VkExtent2D* pGranularity
+    );
+    extern PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateFramebuffer function                                          //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateFramebuffer)(

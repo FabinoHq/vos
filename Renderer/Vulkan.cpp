@@ -187,6 +187,9 @@ PFN_vkCreateRenderPass vkCreateRenderPass = 0;
 // vkDestroyRenderPass function
 PFN_vkDestroyRenderPass vkDestroyRenderPass = 0;
 
+// vkGetRenderAreaGranularity function
+PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity = 0;
+
 // vkCreateFramebuffer function
 PFN_vkCreateFramebuffer vkCreateFramebuffer = 0;
 
@@ -888,6 +891,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     if (!vkDestroyRenderPass)
     {
         // Could not load vkDestroyRenderPass
+        return false;
+    }
+
+    // Load vkGetRenderAreaGranularity
+    vkGetRenderAreaGranularity = (PFN_vkGetRenderAreaGranularity)
+        vkGetDeviceProcAddr(vulkanDevice, "vkGetRenderAreaGranularity"
+    );
+    if (!vkGetRenderAreaGranularity)
+    {
+        // Could not load vkGetRenderAreaGranularity
         return false;
     }
 
@@ -1717,6 +1730,7 @@ void FreeVulkanFunctions()
     vkCreateImageView = 0;
     vkDestroyFramebuffer = 0;
     vkCreateFramebuffer = 0;
+    vkGetRenderAreaGranularity = 0;
     vkDestroyRenderPass = 0;
     vkCreateRenderPass = 0;
 
