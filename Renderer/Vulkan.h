@@ -2036,6 +2036,20 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkComputePipelineCreateInfo data structure                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkComputePipelineCreateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkPipelineCreateFlags               flags;
+        VkPipelineShaderStageCreateInfo     stage;
+        VkPipelineLayout                    layout;
+        VkPipeline                          basePipelineHandle;
+        int32_t                             basePipelineIndex;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkPushConstantRange data structure                                    //
     ////////////////////////////////////////////////////////////////////////////
     struct VkPushConstantRange
@@ -3221,6 +3235,17 @@
         const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines
     );
     extern PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateComputePipelines function                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateComputePipelines)(
+        VkDevice device, VkPipelineCache pipelineCache,
+        uint32_t createInfoCount,
+        const VkComputePipelineCreateInfo* pCreateInfos,
+        const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines
+    );
+    extern PFN_vkCreateComputePipelines vkCreateComputePipelines;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroyPipeline function                                            //
