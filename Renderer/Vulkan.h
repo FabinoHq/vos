@@ -4031,6 +4031,15 @@
     extern PFN_vkCmdEndQuery vkCmdEndQuery;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdResetQueryPool function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdResetQueryPool)(
+        VkCommandBuffer commandBuffer, VkQueryPool queryPool,
+        uint32_t firstQuery, uint32_t queryCount
+    );
+    extern PFN_vkCmdResetQueryPool vkCmdResetQueryPool;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBeginRenderPass function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBeginRenderPass)(
