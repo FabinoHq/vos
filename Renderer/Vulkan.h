@@ -4040,6 +4040,15 @@
     extern PFN_vkCmdResetQueryPool vkCmdResetQueryPool;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdWriteTimestamp function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdWriteTimestamp)(
+        VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage,
+        VkQueryPool queryPool, uint32_t query
+    );
+    extern PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBeginRenderPass function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBeginRenderPass)(
