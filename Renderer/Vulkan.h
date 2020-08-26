@@ -3905,6 +3905,15 @@
     extern PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdFillBuffer function                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdFillBuffer)(
+        VkCommandBuffer commandBuffer, VkBuffer dstBuffer,
+        VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data
+    );
+    extern PFN_vkCmdFillBuffer vkCmdFillBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdClearColorImage function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdClearColorImage)(
