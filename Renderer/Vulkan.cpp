@@ -428,6 +428,9 @@ PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect = 0;
 // vkCmdCopyBuffer function
 PFN_vkCmdCopyBuffer vkCmdCopyBuffer = 0;
 
+// vkCmdCopyImage function
+PFN_vkCmdCopyImage vkCmdCopyImage = 0;
+
 // vkCmdCopyBufferToImage function
 PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage = 0;
 
@@ -1727,6 +1730,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdCopyImage
+    vkCmdCopyImage = (PFN_vkCmdCopyImage)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCmdCopyImage"
+    );
+    if (!vkCmdCopyImage)
+    {
+        // Could not load vkCmdCopyImage
+        return false;
+    }
+
     // Load vkCmdCopyBufferToImage
     vkCmdCopyBufferToImage = (PFN_vkCmdCopyBufferToImage)vkGetDeviceProcAddr(
         vulkanDevice, "vkCmdCopyBufferToImage"
@@ -1804,6 +1817,7 @@ void FreeVulkanFunctions()
     vkCmdClearColorImage = 0;
     vkCmdCopyImageToBuffer = 0;
     vkCmdCopyBufferToImage = 0;
+    vkCmdCopyImage = 0;
     vkCmdCopyBuffer = 0;
     vkCmdDispatchIndirect = 0;
     vkCmdDispatch = 0;

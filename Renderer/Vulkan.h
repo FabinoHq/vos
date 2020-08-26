@@ -2604,6 +2604,18 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkImageCopy data structure                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageCopy
+    {
+        VkImageSubresourceLayers    srcSubresource;
+        VkOffset3D                  srcOffset;
+        VkImageSubresourceLayers    dstSubresource;
+        VkOffset3D                  dstOffset;
+        VkExtent3D                  extent;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkBufferImageCopy data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     struct VkBufferImageCopy
@@ -3829,6 +3841,17 @@
         VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions
     );
     extern PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdCopyImage function                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdCopyImage)(
+        VkCommandBuffer commandBuffer, VkImage srcImage,
+        VkImageLayout srcImageLayout, VkImage dstImage,
+        VkImageLayout dstImageLayout, uint32_t regionCount,
+        const VkImageCopy* pRegions
+    );
+    extern PFN_vkCmdCopyImage vkCmdCopyImage;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCmdCopyBufferToImage function                                       //
