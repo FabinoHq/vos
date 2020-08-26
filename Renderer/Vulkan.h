@@ -1171,7 +1171,8 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VkDescriptorPoolCreateFlagBits
     {
-        VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001
+        VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = 0x00000001,
+        VK_DESCRIPTOR_POOL_CREATE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
     };
     typedef VkFlags VkDescriptorPoolCreateFlags;
     typedef VkFlags VkDescriptorPoolResetFlags;
