@@ -3934,6 +3934,16 @@
     extern PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdClearAttachments function                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdClearAttachments)(
+        VkCommandBuffer commandBuffer, uint32_t attachmentCount,
+        const VkClearAttachment* pAttachments, uint32_t rectCount,
+        const VkClearRect* pRects
+    );
+    extern PFN_vkCmdClearAttachments vkCmdClearAttachments;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdPipelineBarrier function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdPipelineBarrier)(
