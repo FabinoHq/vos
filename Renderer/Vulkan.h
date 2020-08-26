@@ -1221,7 +1221,8 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VkDependencyFlagBits
     {
-        VK_DEPENDENCY_BY_REGION_BIT = 0x00000001
+        VK_DEPENDENCY_BY_REGION_BIT = 0x00000001,
+        VK_DEPENDENCY_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
     };
     typedef VkFlags VkDependencyFlags;
 
