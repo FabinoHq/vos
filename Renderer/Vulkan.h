@@ -3814,6 +3814,14 @@
     extern PFN_vkCmdDispatch vkCmdDispatch;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdDispatchIndirect function                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdDispatchIndirect)(
+        VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset
+    );
+    extern PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdCopyBuffer function                                              //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdCopyBuffer)(
