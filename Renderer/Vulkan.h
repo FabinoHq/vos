@@ -3806,6 +3806,14 @@
     extern PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdDispatch function                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdDispatch)(
+        VkCommandBuffer commandBuffer, uint32_t x, uint32_t y, uint32_t z
+    );
+    extern PFN_vkCmdDispatch vkCmdDispatch;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdCopyBuffer function                                              //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdCopyBuffer)(
