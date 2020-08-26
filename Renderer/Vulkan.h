@@ -2688,6 +2688,18 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkImageResolve data structure                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageResolve
+    {
+        VkImageSubresourceLayers    srcSubresource;
+        VkOffset3D                  srcOffset;
+        VkImageSubresourceLayers    dstSubresource;
+        VkOffset3D                  dstOffset;
+        VkExtent3D                  extent;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkMemoryBarrier data structure                                        //
     ////////////////////////////////////////////////////////////////////////////
     struct VkMemoryBarrier
@@ -3942,6 +3954,17 @@
         const VkClearRect* pRects
     );
     extern PFN_vkCmdClearAttachments vkCmdClearAttachments;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdResolveImage function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdResolveImage)(
+        VkCommandBuffer commandBuffer, VkImage srcImage,
+        VkImageLayout srcImageLayout, VkImage dstImage,
+        VkImageLayout dstImageLayout, uint32_t regionCount,
+        const VkImageResolve* pRegions
+    );
+    extern PFN_vkCmdResolveImage vkCmdResolveImage;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCmdPipelineBarrier function                                         //
