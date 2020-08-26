@@ -3730,6 +3730,15 @@
     extern PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetStencilReference function                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetStencilReference)(
+        VkCommandBuffer commandBuffer,
+        VkStencilFaceFlags faceMask, uint32_t reference
+    );
+    extern PFN_vkCmdSetStencilReference vkCmdSetStencilReference;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindDescriptorSets function                                      //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindDescriptorSets)(

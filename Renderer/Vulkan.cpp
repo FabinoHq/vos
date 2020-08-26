@@ -395,6 +395,9 @@ PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask = 0;
 // vkCmdSetStencilWriteMask function
 PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask = 0;
 
+// vkCmdSetStencilReference function
+PFN_vkCmdSetStencilReference vkCmdSetStencilReference = 0;
+
 // vkCmdBindDescriptorSets function
 PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets = 0;
 
@@ -1604,6 +1607,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdSetStencilReference
+    vkCmdSetStencilReference = (PFN_vkCmdSetStencilReference)
+        vkGetDeviceProcAddr(vulkanDevice, "vkCmdSetStencilReference"
+    );
+    if (!vkCmdSetStencilReference)
+    {
+        // Could not load vkCmdSetStencilReference
+        return false;
+    }
+
     // Load vkCmdBindDescriptorSets
     vkCmdBindDescriptorSets = (PFN_vkCmdBindDescriptorSets)vkGetDeviceProcAddr(
         vulkanDevice, "vkCmdBindDescriptorSets"
@@ -1745,6 +1758,7 @@ void FreeVulkanFunctions()
     vkCmdBindVertexBuffers = 0;
     vkCmdBindIndexBuffer = 0;
     vkCmdBindDescriptorSets = 0;
+    vkCmdSetStencilReference = 0;
     vkCmdSetStencilWriteMask = 0;
     vkCmdSetStencilCompareMask = 0;
     vkCmdSetDepthBounds = 0;
