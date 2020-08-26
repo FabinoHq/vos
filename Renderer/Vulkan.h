@@ -3721,6 +3721,15 @@
     extern PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetStencilWriteMask function                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetStencilWriteMask)(
+        VkCommandBuffer commandBuffer,
+        VkStencilFaceFlags faceMask, uint32_t writeMask
+    );
+    extern PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindDescriptorSets function                                      //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindDescriptorSets)(
