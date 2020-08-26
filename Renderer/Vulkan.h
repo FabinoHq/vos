@@ -2484,6 +2484,18 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineCacheCreateInfo data structure                              //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineCacheCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkPipelineCacheCreateFlags  flags;
+        size_t                      initialDataSize;
+        const void*                 pInitialData;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkQueryPoolCreateInfo data structure                                  //
     ////////////////////////////////////////////////////////////////////////////
     struct VkQueryPoolCreateInfo
@@ -3125,6 +3137,15 @@
         const VkAllocationCallbacks* pAllocator
     );
     extern PFN_vkDestroyShaderModule vkDestroyShaderModule;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreatePipelineCache function                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreatePipelineCache)(
+        VkDevice device, const VkPipelineCacheCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache
+    );
+    extern PFN_vkCreatePipelineCache vkCreatePipelineCache;
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreatePipelineLayout function                                       //
