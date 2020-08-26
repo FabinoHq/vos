@@ -3675,6 +3675,15 @@
     extern PFN_vkCmdSetLineWidth vkCmdSetLineWidth;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetDepthBias function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetDepthBias)(
+        VkCommandBuffer commandBuffer, float depthBiasConstantFactor,
+        float depthBiasClamp, float depthBiasSlopeFactor
+    );
+    extern PFN_vkCmdSetDepthBias vkCmdSetDepthBias;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindDescriptorSets function                                      //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindDescriptorSets)(
