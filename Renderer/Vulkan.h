@@ -4014,6 +4014,15 @@
     extern PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdBeginQuery function                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdBeginQuery)(
+        VkCommandBuffer commandBuffer, VkQueryPool queryPool,
+        uint32_t query, VkQueryControlFlags flags
+    );
+    extern PFN_vkCmdBeginQuery vkCmdBeginQuery;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBeginRenderPass function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBeginRenderPass)(
