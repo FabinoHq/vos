@@ -851,7 +851,8 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VkMemoryHeapFlagBits
     {
-        VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001
+        VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 0x00000001,
+        VK_MEMORY_HEAP_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
     };
     typedef VkFlags VkMemoryHeapFlags;
     typedef VkFlags VkDeviceCreateFlags;
