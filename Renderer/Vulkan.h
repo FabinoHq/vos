@@ -3148,6 +3148,15 @@
     extern PFN_vkCreatePipelineCache vkCreatePipelineCache;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyPipelineCache function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyPipelineCache)(
+        VkDevice device, VkPipelineCache pipelineCache,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreatePipelineLayout function                                       //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreatePipelineLayout)(
