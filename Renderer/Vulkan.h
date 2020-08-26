@@ -4094,6 +4094,15 @@
     );
     extern PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdExecuteCommands function                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdExecuteCommands)(
+        VkCommandBuffer commandBuffer, uint32_t commandBufferCount,
+        const VkCommandBuffer* pCommandBuffers
+    );
+    extern PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
