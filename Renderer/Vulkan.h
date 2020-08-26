@@ -4079,6 +4079,14 @@
     extern PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdNextSubpass function                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdNextSubpass)(
+        VkCommandBuffer commandBuffer, VkSubpassContents contents
+    );
+    extern PFN_vkCmdNextSubpass vkCmdNextSubpass;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdEndRenderPass function                                           //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdEndRenderPass)(
