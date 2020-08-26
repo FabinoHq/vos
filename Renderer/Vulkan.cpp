@@ -383,6 +383,9 @@ PFN_vkCmdSetLineWidth vkCmdSetLineWidth = 0;
 // vkCmdSetDepthBias function
 PFN_vkCmdSetDepthBias vkCmdSetDepthBias = 0;
 
+// vkCmdSetBlendConstants function
+PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants = 0;
+
 // vkCmdBindDescriptorSets function
 PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets = 0;
 
@@ -1552,6 +1555,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdSetBlendConstants
+    vkCmdSetBlendConstants = (PFN_vkCmdSetBlendConstants)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCmdSetBlendConstants"
+    );
+    if (!vkCmdSetBlendConstants)
+    {
+        // Could not load vkCmdSetBlendConstants
+        return false;
+    }
+
     // Load vkCmdBindDescriptorSets
     vkCmdBindDescriptorSets = (PFN_vkCmdBindDescriptorSets)vkGetDeviceProcAddr(
         vulkanDevice, "vkCmdBindDescriptorSets"
@@ -1693,6 +1706,7 @@ void FreeVulkanFunctions()
     vkCmdBindVertexBuffers = 0;
     vkCmdBindIndexBuffer = 0;
     vkCmdBindDescriptorSets = 0;
+    vkCmdSetBlendConstants = 0;
     vkCmdSetDepthBias = 0;
     vkCmdSetLineWidth = 0;
     vkCmdSetScissor = 0;

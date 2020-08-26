@@ -3684,6 +3684,14 @@
     extern PFN_vkCmdSetDepthBias vkCmdSetDepthBias;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetBlendConstants function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetBlendConstants)(
+        VkCommandBuffer commandBuffer, const float blendConstants[4]
+    );
+    extern PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindDescriptorSets function                                      //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindDescriptorSets)(
