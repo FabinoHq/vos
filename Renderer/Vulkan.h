@@ -3896,6 +3896,15 @@
     extern PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdUpdateBuffer function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdUpdateBuffer)(
+        VkCommandBuffer commandBuffer, VkBuffer dstBuffer,
+        VkDeviceSize dstOffset, VkDeviceSize dataSize, const uint32_t* pData
+    );
+    extern PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdClearColorImage function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdClearColorImage)(
