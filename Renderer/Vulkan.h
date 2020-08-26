@@ -3985,6 +3985,21 @@
     extern PFN_vkCmdResetEvent vkCmdResetEvent;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdWaitEvents function                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdWaitEvents)(
+        VkCommandBuffer commandBuffer, uint32_t eventCount,
+        const VkEvent* pEvents, VkPipelineStageFlags srcStageMask,
+        VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount,
+        const VkMemoryBarrier* pMemoryBarriers,
+        uint32_t bufferMemoryBarrierCount,
+        const VkBufferMemoryBarrier* pBufferMemoryBarriers,
+        uint32_t imageMemoryBarrierCount,
+        const VkImageMemoryBarrier* pImageMemoryBarriers
+    );
+    extern PFN_vkCmdWaitEvents vkCmdWaitEvents;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdPipelineBarrier function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdPipelineBarrier)(
