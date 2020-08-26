@@ -4049,6 +4049,16 @@
     extern PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdCopyQueryPoolResults function                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdCopyQueryPoolResults)(
+        VkCommandBuffer commandBuffer, VkQueryPool queryPool,
+        uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer,
+        VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags
+    );
+    extern PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBeginRenderPass function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBeginRenderPass)(
