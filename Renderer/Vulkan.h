@@ -3692,6 +3692,15 @@
     extern PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetDepthBounds function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetDepthBounds)(
+        VkCommandBuffer commandBuffer,
+        float minDepthBounds, float maxDepthBounds
+    );
+    extern PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindDescriptorSets function                                      //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindDescriptorSets)(
