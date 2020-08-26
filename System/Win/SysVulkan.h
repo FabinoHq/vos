@@ -63,11 +63,6 @@
     typedef HMODULE VulkanLibHandle;
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Vulkan instance type                                                  //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef struct VkInstance_T* VkInstance;
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Vulkan extensions for Windows                                         //
     ////////////////////////////////////////////////////////////////////////////
     const std::vector<const char*> VulkanExtensions = {
@@ -90,6 +85,7 @@
     typedef uint64_t                    VkDeviceSize;
     typedef uint32_t                    VkSampleMask;
 
+    typedef struct VkInstance_T*        VkInstance;
     typedef struct VkPhysicalDevice_T*  VkPhysicalDevice;
     typedef struct VkDevice_T*          VkDevice;
     typedef struct VkQueue_T*           VkQueue;
