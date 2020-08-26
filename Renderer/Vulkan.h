@@ -3924,6 +3924,16 @@
     extern PFN_vkCmdClearColorImage vkCmdClearColorImage;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdClearDepthStencilImage function                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdClearDepthStencilImage)(
+        VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout,
+        const VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount,
+        const VkImageSubresourceRange* pRanges
+    );
+    extern PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdPipelineBarrier function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdPipelineBarrier)(

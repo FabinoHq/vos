@@ -449,6 +449,9 @@ PFN_vkCmdFillBuffer vkCmdFillBuffer = 0;
 // vkCmdClearColorImage function
 PFN_vkCmdClearColorImage vkCmdClearColorImage = 0;
 
+// vkCmdClearDepthStencilImage function
+PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage = 0;
+
 // vkCmdPipelineBarrier function
 PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier = 0;
 
@@ -1809,6 +1812,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdClearDepthStencilImage
+    vkCmdClearDepthStencilImage = (PFN_vkCmdClearDepthStencilImage)
+        vkGetDeviceProcAddr(vulkanDevice, "vkCmdClearDepthStencilImage"
+    );
+    if (!vkCmdClearDepthStencilImage)
+    {
+        // Could not load vkCmdClearDepthStencilImage
+        return false;
+    }
+
     // Load vkCmdPipelineBarrier
     vkCmdPipelineBarrier = (PFN_vkCmdPipelineBarrier)
         vkGetDeviceProcAddr(vulkanDevice, "vkCmdPipelineBarrier"
@@ -1853,6 +1866,7 @@ void FreeVulkanFunctions()
     vkCmdEndRenderPass = 0;
     vkCmdBeginRenderPass = 0;
     vkCmdPipelineBarrier = 0;
+    vkCmdClearDepthStencilImage = 0;
     vkCmdClearColorImage = 0;
     vkCmdFillBuffer = 0;
     vkCmdUpdateBuffer = 0;
