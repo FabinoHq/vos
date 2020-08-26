@@ -416,6 +416,9 @@ PFN_vkCmdDrawIndexed vkCmdDrawIndexed = 0;
 // vkCmdDrawIndirect function
 PFN_vkCmdDrawIndirect vkCmdDrawIndirect = 0;
 
+// vkCmdDrawIndexedIndirect function
+PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect = 0;
+
 // vkCmdCopyBuffer function
 PFN_vkCmdCopyBuffer vkCmdCopyBuffer = 0;
 
@@ -1678,6 +1681,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdDrawIndexedIndirect
+    vkCmdDrawIndexedIndirect = (PFN_vkCmdDrawIndexedIndirect)
+        vkGetDeviceProcAddr(vulkanDevice, "vkCmdDrawIndexedIndirect"
+    );
+    if (!vkCmdDrawIndexedIndirect)
+    {
+        // Could not load vkCmdDrawIndexedIndirect
+        return false;
+    }
+
     // Load vkCmdCopyBuffer
     vkCmdCopyBuffer = (PFN_vkCmdCopyBuffer)vkGetDeviceProcAddr(
         vulkanDevice, "vkCmdCopyBuffer"
@@ -1766,6 +1779,7 @@ void FreeVulkanFunctions()
     vkCmdCopyImageToBuffer = 0;
     vkCmdCopyBufferToImage = 0;
     vkCmdCopyBuffer = 0;
+    vkCmdDrawIndexedIndirect = 0;
     vkCmdDrawIndirect = 0;
     vkCmdDrawIndexed = 0;
     vkCmdDraw = 0;
