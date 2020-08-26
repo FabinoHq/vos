@@ -4059,6 +4059,16 @@
     extern PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdPushConstants function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdPushConstants)(
+        VkCommandBuffer commandBuffer, VkPipelineLayout layout,
+        VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size,
+        const void* pValues
+    );
+    extern PFN_vkCmdPushConstants vkCmdPushConstants;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBeginRenderPass function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBeginRenderPass)(
