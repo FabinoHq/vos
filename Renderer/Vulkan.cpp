@@ -458,6 +458,9 @@ PFN_vkCmdClearAttachments vkCmdClearAttachments = 0;
 // vkCmdResolveImage function
 PFN_vkCmdResolveImage vkCmdResolveImage = 0;
 
+// vkCmdSetEvent function
+PFN_vkCmdSetEvent vkCmdSetEvent = 0;
+
 // vkCmdPipelineBarrier function
 PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier = 0;
 
@@ -1848,6 +1851,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkCmdSetEvent
+    vkCmdSetEvent = (PFN_vkCmdSetEvent)vkGetDeviceProcAddr(
+        vulkanDevice, "vkCmdSetEvent"
+    );
+    if (!vkCmdSetEvent)
+    {
+        // Could not load vkCmdSetEvent
+        return false;
+    }
+
     // Load vkCmdPipelineBarrier
     vkCmdPipelineBarrier = (PFN_vkCmdPipelineBarrier)vkGetDeviceProcAddr(
         vulkanDevice, "vkCmdPipelineBarrier"
@@ -1892,6 +1905,7 @@ void FreeVulkanFunctions()
     vkCmdEndRenderPass = 0;
     vkCmdBeginRenderPass = 0;
     vkCmdPipelineBarrier = 0;
+    vkCmdSetEvent = 0;
     vkCmdResolveImage = 0;
     vkCmdClearAttachments = 0;
     vkCmdClearDepthStencilImage = 0;

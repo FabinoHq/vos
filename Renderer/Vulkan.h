@@ -3967,6 +3967,15 @@
     extern PFN_vkCmdResolveImage vkCmdResolveImage;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetEvent function                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetEvent)(
+        VkCommandBuffer commandBuffer, VkEvent event,
+        VkPipelineStageFlags stageMask
+    );
+    extern PFN_vkCmdSetEvent vkCmdSetEvent;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdPipelineBarrier function                                         //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdPipelineBarrier)(
