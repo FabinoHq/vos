@@ -3667,6 +3667,14 @@
     extern PFN_vkCmdSetScissor vkCmdSetScissor;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetLineWidth function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetLineWidth)(
+        VkCommandBuffer commandBuffer, float lineWidth
+    );
+    extern PFN_vkCmdSetLineWidth vkCmdSetLineWidth;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCmdBindDescriptorSets function                                      //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdBindDescriptorSets)(
