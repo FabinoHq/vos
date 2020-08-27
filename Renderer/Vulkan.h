@@ -4159,6 +4159,17 @@
     extern PFN_vkGetPhysicalDeviceExternalBufferProperties
         vkGetPhysicalDeviceExternalBufferProperties;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceExternalFenceProperties function                   //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceExternalFenceProperties)(
+        VkPhysicalDevice physicalDevice,
+        const VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo,
+        VkExternalFenceProperties* pExternalFenceProperties
+    );
+    extern PFN_vkGetPhysicalDeviceExternalFenceProperties
+        vkGetPhysicalDeviceExternalFenceProperties;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSwapchainKHR function                                         //
