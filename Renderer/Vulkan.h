@@ -5243,6 +5243,14 @@
     extern PFN_vkGetDeviceGroupPeerMemoryFeatures
         vkGetDeviceGroupPeerMemoryFeatures;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdSetDeviceMask function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdSetDeviceMask)(
+        VkCommandBuffer commandBuffer, uint32_t deviceMask
+    );
+    extern PFN_vkCmdSetDeviceMask vkCmdSetDeviceMask;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
