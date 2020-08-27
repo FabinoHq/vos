@@ -4127,6 +4127,16 @@
     extern PFN_vkGetPhysicalDeviceQueueFamilyProperties2
         vkGetPhysicalDeviceQueueFamilyProperties2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceMemoryProperties2 function                         //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceMemoryProperties2)(
+        VkPhysicalDevice physicalDevice,
+        VkPhysicalDeviceMemoryProperties2* pMemoryProperties
+    );
+    extern PFN_vkGetPhysicalDeviceMemoryProperties2
+        vkGetPhysicalDeviceMemoryProperties2;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSwapchainKHR function                                         //
