@@ -5377,6 +5377,14 @@
     );
     extern PFN_vkTrimCommandPool vkTrimCommandPool;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDeviceQueue2 function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetDeviceQueue2)(
+        VkDevice device, const VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue
+    );
+    extern PFN_vkGetDeviceQueue2 vkGetDeviceQueue2;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
