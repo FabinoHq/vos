@@ -4148,6 +4148,17 @@
     extern PFN_vkGetPhysicalDeviceSparseImageFormatProperties2
         vkGetPhysicalDeviceSparseImageFormatProperties2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceExternalBufferProperties function                  //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceExternalBufferProperties)(
+        VkPhysicalDevice physicalDevice,
+        const VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo,
+        VkExternalBufferProperties* pExternalBufferProperties
+    );
+    extern PFN_vkGetPhysicalDeviceExternalBufferProperties
+        vkGetPhysicalDeviceExternalBufferProperties;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSwapchainKHR function                                         //
