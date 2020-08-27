@@ -48,6 +48,9 @@
     #include "SysMutex.h"
 
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysMutexLocker class definition                                       //
+    ////////////////////////////////////////////////////////////////////////////
     class SysMutexLocker
     {
         public:
@@ -57,9 +60,9 @@
             SysMutexLocker(SysMutex& mutex);
 
             ////////////////////////////////////////////////////////////////////
-            //  SysMutexLocker virtual destructor                             //
+            //  SysMutexLocker destructor                                     //
             ////////////////////////////////////////////////////////////////////
-            virtual ~SysMutexLocker();
+            ~SysMutexLocker();
 
 
             ////////////////////////////////////////////////////////////////////
@@ -84,6 +87,7 @@
             //  SysMutexLocker private copy operator : Not copyable           //
             ////////////////////////////////////////////////////////////////////
             SysMutexLocker& operator=(const SysMutexLocker&) = delete;
+
 
         private:
             SysMutex&                       m_mutex;    // Associated mutex

@@ -53,7 +53,7 @@ m_lock(0)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  SysMutexLocker virtual destructor                                         //
+//  SysMutexLocker destructor                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 SysMutexLocker::~SysMutexLocker()
 {
@@ -115,5 +115,3 @@ void SysMutexLocker::unlock()
         m_lock = 0;
     }
 }
-
-
