@@ -5369,6 +5369,14 @@
     extern PFN_vkGetImageSparseMemoryRequirements2
         vkGetImageSparseMemoryRequirements2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkTrimCommandPool function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkTrimCommandPool)(
+        VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags
+    );
+    extern PFN_vkTrimCommandPool vkTrimCommandPool;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
