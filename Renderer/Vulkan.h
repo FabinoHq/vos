@@ -1469,6 +1469,18 @@
     };
     typedef VkFlags VkPeerMemoryFeatureFlags;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryAllocateFlags                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkMemoryAllocateFlagBits
+    {
+        VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT = 0x00000001,
+        VK_MEMORY_ALLOCATE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+    };
+    typedef VkFlags VkMemoryAllocateFlags;
+    typedef VkFlags VkCommandPoolTrimFlags;
+    typedef VkFlags VkDescriptorUpdateTemplateCreateFlags;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
