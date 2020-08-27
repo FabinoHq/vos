@@ -5215,6 +5215,16 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  vkBindBufferMemory2 function                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkBindBufferMemory2)(
+        VkDevice device, uint32_t bindInfoCount,
+        const VkBindBufferMemoryInfo* pBindInfos
+    );
+    extern PFN_vkBindBufferMemory2 vkBindBufferMemory2;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
     //  return : True if Vulkan global functions are successfully loaded      //
     ////////////////////////////////////////////////////////////////////////////

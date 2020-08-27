@@ -504,6 +504,10 @@ PFN_vkCmdEndRenderPass vkCmdEndRenderPass = 0;
 PFN_vkCmdExecuteCommands vkCmdExecuteCommands = 0;
 
 
+// vkBindBufferMemory2 function
+PFN_vkBindBufferMemory2 vkBindBufferMemory2 = 0;
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
 //  return : True if Vulkan global functions are successfully loaded          //
@@ -2034,6 +2038,17 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+
+    // Load vkBindBufferMemory2
+    vkBindBufferMemory2 = (PFN_vkBindBufferMemory2)vkGetDeviceProcAddr(
+        vulkanDevice, "vkBindBufferMemory2"
+    );
+    if (!vkBindBufferMemory2)
+    {
+        // Could not load vkBindBufferMemory2
+        return false;
+    }
+
     // Vulkan device functions successfully loaded
     return true;
 }
@@ -2045,6 +2060,8 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkBindBufferMemory2 = 0;
+
     vkCmdExecuteCommands = 0;
     vkCmdEndRenderPass = 0;
     vkCmdNextSubpass = 0;
