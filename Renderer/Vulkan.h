@@ -4019,6 +4019,15 @@
     extern PFN_vkGetPhysicalDeviceSparseImageFormatProperties
         vkGetPhysicalDeviceSparseImageFormatProperties;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkEnumeratePhysicalDeviceGroups function                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkEnumeratePhysicalDeviceGroups)(
+        VkInstance instance, uint32_t* pPhysicalDeviceGroupCount,
+        VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties
+    );
+    extern PFN_vkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroups;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroySurfaceKHR function                                          //
