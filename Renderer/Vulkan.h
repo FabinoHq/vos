@@ -1481,6 +1481,22 @@
     typedef VkFlags VkCommandPoolTrimFlags;
     typedef VkFlags VkDescriptorUpdateTemplateCreateFlags;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalMemoryHandleTypeFlags                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkExternalMemoryHandleTypeFlagBits
+    {
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = 0x00000001,
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT = 0x00000002,
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = 0x00000004,
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT = 0x00000008,
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT = 0x00000010,
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = 0x00000020,
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = 0x00000040,
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+    };
+    typedef VkFlags VkExternalMemoryHandleTypeFlags;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
