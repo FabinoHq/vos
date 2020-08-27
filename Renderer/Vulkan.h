@@ -1543,6 +1543,16 @@
     };
     typedef VkFlags VkFenceImportFlags;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSemaphoreImportFlags                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSemaphoreImportFlagBits
+    {
+        VK_SEMAPHORE_IMPORT_TEMPORARY_BIT = 0x00000001,
+        VK_SEMAPHORE_IMPORT_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+    };
+    typedef VkFlags VkSemaphoreImportFlags;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
