@@ -149,6 +149,10 @@ PFN_vkGetPhysicalDeviceQueueFamilyProperties2
 PFN_vkGetPhysicalDeviceMemoryProperties2
     vkGetPhysicalDeviceMemoryProperties2 = 0;
 
+// vkGetPhysicalDeviceSparseImageFormatProperties2 function
+PFN_vkGetPhysicalDeviceSparseImageFormatProperties2
+    vkGetPhysicalDeviceSparseImageFormatProperties2 = 0;
+
 
 // vkCreateSwapchainKHR function
 PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR = 0;
@@ -885,6 +889,18 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     if (!vkGetPhysicalDeviceMemoryProperties2)
     {
         // Could not load vkGetPhysicalDeviceMemoryProperties2
+        return false;
+    }
+
+    // Load vkGetPhysicalDeviceSparseImageFormatProperties2
+    vkGetPhysicalDeviceSparseImageFormatProperties2 =
+        (PFN_vkGetPhysicalDeviceSparseImageFormatProperties2)
+        vkGetInstanceProcAddr(vulkanInstance,
+        "vkGetPhysicalDeviceSparseImageFormatProperties2"
+    );
+    if (!vkGetPhysicalDeviceSparseImageFormatProperties2)
+    {
+        // Could not load vkGetPhysicalDeviceSparseImageFormatProperties2
         return false;
     }
 
@@ -2394,6 +2410,7 @@ void FreeVulkanFunctions()
     vkDestroySwapchainKHR = 0;
     vkCreateSwapchainKHR = 0;
 
+    vkGetPhysicalDeviceSparseImageFormatProperties2 = 0;
     vkGetPhysicalDeviceMemoryProperties2 = 0;
     vkGetPhysicalDeviceQueueFamilyProperties2 = 0;
     vkGetPhysicalDeviceImageFormatProperties2 = 0;
