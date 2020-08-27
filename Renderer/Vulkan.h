@@ -886,6 +886,19 @@
         VK_SAMPLER_YCBCR_RANGE_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkChromaLocation enum                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkChromaLocation
+    {
+        VK_CHROMA_LOCATION_COSITED_EVEN = 0,
+        VK_CHROMA_LOCATION_MIDPOINT = 1,
+        VK_CHROMA_LOCATION_BEGIN_RANGE = 0,
+        VK_CHROMA_LOCATION_END_RANGE = 1,
+        VK_CHROMA_LOCATION_RANGE_SIZE = 2,
+        VK_CHROMA_LOCATION_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
