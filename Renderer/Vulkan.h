@@ -3961,7 +3961,8 @@
     //  vkCmdDispatch function                                                //
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdDispatch)(
-        VkCommandBuffer commandBuffer, uint32_t x, uint32_t y, uint32_t z
+        VkCommandBuffer commandBuffer, uint32_t groupCountX,
+        uint32_t groupCountY, uint32_t groupCountZ
     );
     extern PFN_vkCmdDispatch vkCmdDispatch;
 
@@ -4029,7 +4030,7 @@
     ////////////////////////////////////////////////////////////////////////////
     typedef void (VOSVK_PTR *PFN_vkCmdUpdateBuffer)(
         VkCommandBuffer commandBuffer, VkBuffer dstBuffer,
-        VkDeviceSize dstOffset, VkDeviceSize dataSize, const uint32_t* pData
+        VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData
     );
     extern PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer;
 
