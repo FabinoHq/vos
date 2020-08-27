@@ -832,6 +832,20 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkPointClippingBehavior enum                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkPointClippingBehavior
+    {
+        VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = 0,
+        VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = 1,
+        VK_POINT_CLIPPING_BEHAVIOR_BEGIN_RANGE = 0,
+        VK_POINT_CLIPPING_BEHAVIOR_END_RANGE = 1,
+        VK_POINT_CLIPPING_BEHAVIOR_RANGE_SIZE = 2,
+        VK_POINT_CLIPPING_BEHAVIOR_MAX_ENUM = 0x7FFFFFFF
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkFlags VkInstanceCreateFlags;
