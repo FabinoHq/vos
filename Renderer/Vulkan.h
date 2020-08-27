@@ -76,6 +76,10 @@
     #define VK_MAX_EXTENSION_NAME_SIZE          256
     #define VK_MAX_DESCRIPTION_SIZE             256
 
+    #define VK_MAX_DEVICE_GROUP_SIZE            32
+    #define VK_LUID_SIZE                        8
+    #define VK_QUEUE_FAMILY_EXTERNAL            (~0U-1)
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkFormat enum                                                         //
