@@ -3115,6 +3115,18 @@
         VkBool32                quadOperationsInAllStages;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBindBufferMemoryInfo data structure                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBindBufferMemoryInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkBuffer            buffer;
+        VkDeviceMemory      memory;
+        VkDeviceSize        memoryOffset;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
