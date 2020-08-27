@@ -3174,6 +3174,17 @@
         VkBuffer            buffer;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryAllocateFlagsInfo data structure                              //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryAllocateFlagsInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkMemoryAllocateFlags   flags;
+        uint32_t                deviceMask;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
