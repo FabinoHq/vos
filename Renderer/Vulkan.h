@@ -899,6 +899,18 @@
         VK_CHROMA_LOCATION_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorUpdateTemplateType enum                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkDescriptorUpdateTemplateType
+    {
+        VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = 0,
+        VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_BEGIN_RANGE = 0,
+        VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_END_RANGE = 0,
+        VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_RANGE_SIZE = 1,
+        VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
