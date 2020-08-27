@@ -3103,6 +3103,20 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceSubgroupProperties data structure                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceSubgroupProperties
+    {
+        VkStructureType         sType;
+        void*                   pNext;
+        uint32_t                subgroupSize;
+        VkShaderStageFlags      supportedStages;
+        VkSubgroupFeatureFlags  supportedOperations;
+        VkBool32                quadOperationsInAllStages;
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
     ////////////////////////////////////////////////////////////////////////////
     typedef VkResult (VOSVK_PTR *PFN_vkCreateInstance)(
