@@ -5385,6 +5385,16 @@
     );
     extern PFN_vkGetDeviceQueue2 vkGetDeviceQueue2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateSamplerYcbcrConversion function                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateSamplerYcbcrConversion)(
+        VkDevice device, const VkSamplerYcbcrConversionCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator,
+        VkSamplerYcbcrConversion* pYcbcrConversion
+    );
+    extern PFN_vkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversion;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
