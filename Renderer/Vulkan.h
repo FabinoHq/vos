@@ -3233,6 +3233,53 @@
         uint32_t            memoryDeviceIndex;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBindBufferMemoryDeviceGroupInfo data structure                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBindBufferMemoryDeviceGroupInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        uint32_t            deviceIndexCount;
+        const uint32_t*     pDeviceIndices;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBindImageMemoryDeviceGroupInfo data structure                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBindImageMemoryDeviceGroupInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        uint32_t            deviceIndexCount;
+        const uint32_t*     pDeviceIndices;
+        uint32_t            splitInstanceBindRegionCount;
+        const VkRect2D*     pSplitInstanceBindRegions;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceGroupProperties data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceGroupProperties
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        uint32_t            physicalDeviceCount;
+        VkPhysicalDevice    physicalDevices[VK_MAX_DEVICE_GROUP_SIZE];
+        VkBool32            subsetAllocation;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceGroupDeviceCreateInfo data structure                          //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceGroupDeviceCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        uint32_t                    physicalDeviceCount;
+        const VkPhysicalDevice*     pPhysicalDevices;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
