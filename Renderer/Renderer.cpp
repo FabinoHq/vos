@@ -750,7 +750,7 @@ bool Renderer::createVulkanInstance()
     appInfos.applicationVersion = 1;
     appInfos.pEngineName = "VOS";
     appInfos.engineVersion = 1;
-    appInfos.apiVersion = VK_API_VERSION;
+    appInfos.apiVersion = VK_REQ_API_VERSION;
 
     // VkInstanceCreateInfo
     VkInstanceCreateInfo createInfos;
@@ -903,16 +903,16 @@ bool Renderer::selectVulkanDevice()
 
         // Check Vulkan version of the device
         if (VK_VERSION_MAJOR(deviceProperties.apiVersion) <
-            VK_VERSION_MAJOR(VK_API_VERSION))
+            VK_REQ_MAJOR_API_VERSION)
         {
             // Vulkan version is not supported by the device
             continue;
         }
         else if (VK_VERSION_MAJOR(deviceProperties.apiVersion) ==
-            VK_VERSION_MAJOR(VK_API_VERSION))
+            VK_REQ_MAJOR_API_VERSION)
         {
             if (VK_VERSION_MINOR(deviceProperties.apiVersion) <
-                VK_VERSION_MINOR(VK_API_VERSION))
+                VK_REQ_MINOR_API_VERSION)
             {
                 // Vulkan version is not supported by the device
                 continue;
