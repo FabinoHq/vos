@@ -510,6 +510,9 @@ PFN_vkBindBufferMemory2 vkBindBufferMemory2 = 0;
 // vkBindImageMemory2 function
 PFN_vkBindImageMemory2 vkBindImageMemory2 = 0;
 
+// vkGetDeviceGroupPeerMemoryFeatures function
+PFN_vkGetDeviceGroupPeerMemoryFeatures vkGetDeviceGroupPeerMemoryFeatures = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -2062,6 +2065,17 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkGetDeviceGroupPeerMemoryFeatures
+    vkGetDeviceGroupPeerMemoryFeatures =
+        (PFN_vkGetDeviceGroupPeerMemoryFeatures)vkGetDeviceProcAddr(
+        vulkanDevice, "vkGetDeviceGroupPeerMemoryFeatures"
+    );
+    if (!vkGetDeviceGroupPeerMemoryFeatures)
+    {
+        // Could not load vkGetDeviceGroupPeerMemoryFeatures
+        return false;
+    }
+
     // Vulkan device functions successfully loaded
     return true;
 }
@@ -2073,6 +2087,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkGetDeviceGroupPeerMemoryFeatures = 0;
     vkBindImageMemory2 = 0;
     vkBindBufferMemory2 = 0;
 

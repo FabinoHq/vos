@@ -5232,6 +5232,17 @@
     );
     extern PFN_vkBindImageMemory2 vkBindImageMemory2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDeviceGroupPeerMemoryFeatures function                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetDeviceGroupPeerMemoryFeatures)(
+        VkDevice device, uint32_t heapIndex,
+        uint32_t localDeviceIndex, uint32_t remoteDeviceIndex,
+        VkPeerMemoryFeatureFlags* pPeerMemoryFeatures
+    );
+    extern PFN_vkGetDeviceGroupPeerMemoryFeatures
+        vkGetDeviceGroupPeerMemoryFeatures;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
