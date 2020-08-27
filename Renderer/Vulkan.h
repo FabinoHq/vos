@@ -3280,6 +3280,154 @@
         const VkPhysicalDevice*     pPhysicalDevices;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBufferMemoryRequirementsInfo2 data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBufferMemoryRequirementsInfo2
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkBuffer            buffer;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageMemoryRequirementsInfo2 data structure                         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageMemoryRequirementsInfo2
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkImage             image;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageSparseMemoryRequirementsInfo2 data structure                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageSparseMemoryRequirementsInfo2
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkImage             image;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryRequirements2 data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryRequirements2
+    {
+        VkStructureType         sType;
+        void*                   pNext;
+        VkMemoryRequirements    memoryRequirements;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseImageMemoryRequirements2 data structure                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseImageMemoryRequirements2
+    {
+        VkStructureType                     sType;
+        void*                               pNext;
+        VkSparseImageMemoryRequirements     memoryRequirements;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceFeatures2 data structure                              //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceFeatures2
+    {
+        VkStructureType             sType;
+        void*                       pNext;
+        VkPhysicalDeviceFeatures    features;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceProperties2 data structure                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceProperties2
+    {
+        VkStructureType             sType;
+        void*                       pNext;
+        VkPhysicalDeviceProperties  properties;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkFormatProperties2 data structure                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkFormatProperties2
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkFormatProperties  formatProperties;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageFormatProperties2 data structure                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageFormatProperties2
+    {
+        VkStructureType             sType;
+        void*                       pNext;
+        VkImageFormatProperties     imageFormatProperties;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceImageFormatInfo2 data structure                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceImageFormatInfo2
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkFormat            format;
+        VkImageType         type;
+        VkImageTiling       tiling;
+        VkImageUsageFlags   usage;
+        VkImageCreateFlags  flags;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkQueueFamilyProperties2 data structure                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkQueueFamilyProperties2
+    {
+        VkStructureType             sType;
+        void*                       pNext;
+        VkQueueFamilyProperties     queueFamilyProperties;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceMemoryProperties2 data structure                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceMemoryProperties2
+    {
+        VkStructureType                     sType;
+        void*                               pNext;
+        VkPhysicalDeviceMemoryProperties    memoryProperties;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSparseImageFormatProperties2 data structure                         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSparseImageFormatProperties2
+    {
+        VkStructureType                 sType;
+        void*                           pNext;
+        VkSparseImageFormatProperties   properties;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceSparseImageFormatInfo2 data structure                 //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceSparseImageFormatInfo2
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkFormat                format;
+        VkImageType             type;
+        VkSampleCountFlagBits   samples;
+        VkImageUsageFlags       usage;
+        VkImageTiling           tiling;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
