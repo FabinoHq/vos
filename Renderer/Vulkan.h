@@ -5416,6 +5416,16 @@
     extern PFN_vkCreateDescriptorUpdateTemplate
         vkCreateDescriptorUpdateTemplate;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroyDescriptorUpdateTemplate function                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroyDescriptorUpdateTemplate)(
+        VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroyDescriptorUpdateTemplate
+        vkDestroyDescriptorUpdateTemplate;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
