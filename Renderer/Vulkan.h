@@ -5469,6 +5469,15 @@
     extern PFN_vkUpdateDescriptorSetWithTemplate
         vkUpdateDescriptorSetWithTemplate;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDescriptorSetLayoutSupport function                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetDescriptorSetLayoutSupport)(
+        VkDevice device, const VkDescriptorSetLayoutCreateInfo* pCreateInfo,
+        VkDescriptorSetLayoutSupport* pSupport
+    );
+    extern PFN_vkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupport;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
