@@ -4170,6 +4170,17 @@
     extern PFN_vkGetPhysicalDeviceExternalFenceProperties
         vkGetPhysicalDeviceExternalFenceProperties;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceExternalSemaphoreProperties function               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceExternalSemaphoreProperties)
+        (VkPhysicalDevice physicalDevice,
+        const VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo,
+        VkExternalSemaphoreProperties* pExternalSemaphoreProperties
+    );
+    extern PFN_vkGetPhysicalDeviceExternalSemaphoreProperties
+        vkGetPhysicalDeviceExternalSemaphoreProperties;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSwapchainKHR function                                         //
