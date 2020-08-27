@@ -5251,6 +5251,16 @@
     );
     extern PFN_vkCmdSetDeviceMask vkCmdSetDeviceMask;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCmdDispatchBase function                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkCmdDispatchBase)(
+        VkCommandBuffer commandBuffer,
+        uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ,
+        uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ
+    );
+    extern PFN_vkCmdDispatchBase vkCmdDispatchBase;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
