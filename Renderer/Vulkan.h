@@ -1131,7 +1131,8 @@
         VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = 0x00000020,
         VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = 0x00000040,
         VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = 0x00000080,
-        VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = 0x00000100
+        VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = 0x00000100,
+        VK_SURFACE_TRANSFORM_FLAG_BITS_MAX_ENUM_KHR = 0x7FFFFFFF
     };
     typedef VkFlags VkSurfaceTransformFlagsKHR;
 
@@ -1143,9 +1144,34 @@
         VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = 0x00000001,
         VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = 0x00000002,
         VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = 0x00000004,
-        VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008
+        VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = 0x00000008,
+        VK_COMPOSITE_ALPHA_FLAG_BITS_MAX_ENUM_KHR = 0x7FFFFFFF
     };
     typedef VkFlags VkCompositeAlphaFlagsKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSwapchainCreateFlagsKHR                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSwapchainCreateFlagBitsKHR
+    {
+        VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = 0x00000001,
+        VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = 0x00000002,
+        VK_SWAPCHAIN_CREATE_FLAG_BITS_MAX_ENUM_KHR = 0x7FFFFFFF
+    };
+    typedef VkFlags VkSwapchainCreateFlagsKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceGroupPresentModeFlagsKHR                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkDeviceGroupPresentModeFlagBitsKHR
+    {
+        VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = 0x00000001,
+        VK_DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = 0x00000002,
+        VK_DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = 0x00000004,
+        VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = 0x00000008,
+        VK_DEVICE_GROUP_PRESENT_MODE_FLAG_BITS_MAX_ENUM_KHR = 0x7FFFFFFF
+    };
+    typedef VkFlags VkDeviceGroupPresentModeFlagsKHR;
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkFenceCreateFlags                                                    //
@@ -2221,9 +2247,10 @@
     ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceFormatKHR data structure                                     //
     ////////////////////////////////////////////////////////////////////////////
-    struct VkSurfaceFormatKHR {
-        VkFormat           format;
-        VkColorSpaceKHR    colorSpace;
+    struct VkSurfaceFormatKHR
+    {
+        VkFormat            format;
+        VkColorSpaceKHR     colorSpace;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -2264,6 +2291,31 @@
         const VkSwapchainKHR*   pSwapchains;
         const uint32_t*         pImageIndices;
         VkResult*               pResults;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkAcquireNextImageInfoKHR data structure                              //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkAcquireNextImageInfoKHR
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkSwapchainKHR      swapchain;
+        uint64_t            timeout;
+        VkSemaphore         semaphore;
+        VkFence             fence;
+        uint32_t            deviceMask;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceGroupPresentCapabilitiesKHR data structure                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceGroupPresentCapabilitiesKHR
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        uint32_t                        presentMask[VK_MAX_DEVICE_GROUP_SIZE];
+        VkDeviceGroupPresentModeFlagsKHR    modes;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -4225,6 +4277,45 @@
         VkQueue queue, const VkPresentInfoKHR* pPresentInfo
     );
     extern PFN_vkQueuePresentKHR vkQueuePresentKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDeviceGroupPresentCapabilitiesKHR function                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetDeviceGroupPresentCapabilitiesKHR)(
+        VkDevice device,
+        VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities
+    );
+    extern PFN_vkGetDeviceGroupPresentCapabilitiesKHR
+        vkGetDeviceGroupPresentCapabilitiesKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDeviceGroupSurfacePresentModesKHR function                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetDeviceGroupSurfacePresentModesKHR)(
+        VkDevice device, VkSurfaceKHR surface,
+        VkDeviceGroupPresentModeFlagsKHR* pModes
+    );
+    extern PFN_vkGetDeviceGroupSurfacePresentModesKHR
+        vkGetDeviceGroupSurfacePresentModesKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDevicePresentRectanglesKHR function                      //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetPhysicalDevicePresentRectanglesKHR)(
+        VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
+        uint32_t* pRectCount, VkRect2D* pRects
+    );
+    extern PFN_vkGetPhysicalDevicePresentRectanglesKHR
+        vkGetPhysicalDevicePresentRectanglesKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkAcquireNextImage2KHR function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkAcquireNextImage2KHR)(
+        VkDevice device, const VkAcquireNextImageInfoKHR* pAcquireInfo,
+        uint32_t* pImageIndex
+    );
+    extern PFN_vkAcquireNextImage2KHR vkAcquireNextImage2KHR;
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -92,7 +92,6 @@
     typedef struct VkCommandBuffer_T*   VkCommandBuffer;
 
     typedef VkFlags                     VkWin32SurfaceCreateFlagsKHR;
-    typedef VkFlags                     VkSwapchainCreateFlagsKHR;
 
     #ifdef VOS_64BITS
         typedef struct VkSurfaceKHR_T*              VkSurfaceKHR;
