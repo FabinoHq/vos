@@ -3127,6 +3127,18 @@
         VkDeviceSize        memoryOffset;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBindImageMemoryInfo data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBindImageMemoryInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkImage             image;
+        VkDeviceMemory      memory;
+        VkDeviceSize        memoryOffset;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
