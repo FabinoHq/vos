@@ -1567,6 +1567,17 @@
     };
     typedef VkFlags VkExternalSemaphoreHandleTypeFlags;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalSemaphoreFeatureFlags                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkExternalSemaphoreFeatureFlagBits
+    {
+        VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = 0x00000001,
+        VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = 0x00000002,
+        VK_EXTERNAL_SEMAPHORE_FEATURE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+    };
+    typedef VkFlags VkExternalSemaphoreFeatureFlags;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
