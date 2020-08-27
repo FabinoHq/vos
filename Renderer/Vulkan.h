@@ -4301,12 +4301,12 @@
     ////////////////////////////////////////////////////////////////////////////
     //  vkGetPhysicalDevicePresentRectanglesKHR function                      //
     ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkGetPhysicalDevicePresentRectanglesKHR)(
+    /*typedef VkResult (VOSVK_PTR *PFN_vkGetPhysicalDevicePresentRectanglesKHR)(
         VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
         uint32_t* pRectCount, VkRect2D* pRects
     );
     extern PFN_vkGetPhysicalDevicePresentRectanglesKHR
-        vkGetPhysicalDevicePresentRectanglesKHR;
+        vkGetPhysicalDevicePresentRectanglesKHR;*/
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkAcquireNextImage2KHR function                                       //
