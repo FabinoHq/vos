@@ -1440,6 +1440,24 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkSubgroupFeatureFlags                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSubgroupFeatureFlagBits
+    {
+        VK_SUBGROUP_FEATURE_BASIC_BIT = 0x00000001,
+        VK_SUBGROUP_FEATURE_VOTE_BIT = 0x00000002,
+        VK_SUBGROUP_FEATURE_ARITHMETIC_BIT = 0x00000004,
+        VK_SUBGROUP_FEATURE_BALLOT_BIT = 0x00000008,
+        VK_SUBGROUP_FEATURE_SHUFFLE_BIT = 0x00000010,
+        VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = 0x00000020,
+        VK_SUBGROUP_FEATURE_CLUSTERED_BIT = 0x00000040,
+        VK_SUBGROUP_FEATURE_QUAD_BIT = 0x00000080,
+        VK_SUBGROUP_FEATURE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+    };
+    typedef VkFlags VkSubgroupFeatureFlags;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
     struct VkApplicationInfo
