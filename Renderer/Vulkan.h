@@ -3887,6 +3887,14 @@
     extern PFN_vkEnumerateInstanceLayerProperties
         vkEnumerateInstanceLayerProperties;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkEnumerateInstanceVersion function                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkEnumerateInstanceVersion)(
+        uint32_t* pApiVersion
+    );
+    extern PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroyInstance function                                            //
