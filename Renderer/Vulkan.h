@@ -1522,6 +1522,17 @@
     };
     typedef VkFlags VkExternalFenceHandleTypeFlags;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalFenceFeatureFlags                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkExternalFenceFeatureFlagBits
+    {
+        VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = 0x00000001,
+        VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = 0x00000002,
+        VK_EXTERNAL_FENCE_FEATURE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+    };
+    typedef VkFlags VkExternalFenceFeatureFlags;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
