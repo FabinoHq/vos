@@ -5288,6 +5288,17 @@
     );
     extern PFN_vkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetImageSparseMemoryRequirements2 function                          //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetImageSparseMemoryRequirements2)(
+        VkDevice device, const VkImageSparseMemoryRequirementsInfo2* pInfo,
+        uint32_t* pSparseMemoryRequirementCount,
+        VkSparseImageMemoryRequirements2* pSparseMemoryRequirements
+    );
+    extern PFN_vkGetImageSparseMemoryRequirements2
+        vkGetImageSparseMemoryRequirements2;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
