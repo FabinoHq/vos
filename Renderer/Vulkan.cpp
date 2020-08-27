@@ -576,6 +576,9 @@ PFN_vkCreateDescriptorUpdateTemplate vkCreateDescriptorUpdateTemplate = 0;
 // vkDestroyDescriptorUpdateTemplate function
 PFN_vkDestroyDescriptorUpdateTemplate vkDestroyDescriptorUpdateTemplate = 0;
 
+//  vkUpdateDescriptorSetWithTemplate function
+PFN_vkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplate = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -2337,6 +2340,16 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Load vkUpdateDescriptorSetWithTemplate
+    vkUpdateDescriptorSetWithTemplate = (PFN_vkUpdateDescriptorSetWithTemplate)
+        vkGetDeviceProcAddr(vulkanDevice, "vkUpdateDescriptorSetWithTemplate"
+    );
+    if (!vkUpdateDescriptorSetWithTemplate)
+    {
+        // Could not load vkUpdateDescriptorSetWithTemplate
+        return false;
+    }
+
 
     // Vulkan device functions successfully loaded
     return true;
@@ -2349,6 +2362,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
+    vkUpdateDescriptorSetWithTemplate = 0;
     vkDestroyDescriptorUpdateTemplate = 0;
     vkCreateDescriptorUpdateTemplate = 0;
     vkDestroySamplerYcbcrConversion = 0;
