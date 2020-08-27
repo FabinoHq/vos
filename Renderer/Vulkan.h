@@ -873,6 +873,19 @@
         VK_SAMPLER_YCBCR_MODEL_CONVERSION_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSamplerYcbcrRange enum                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkSamplerYcbcrRange
+    {
+        VK_SAMPLER_YCBCR_RANGE_ITU_FULL = 0,
+        VK_SAMPLER_YCBCR_RANGE_ITU_NARROW = 1,
+        VK_SAMPLER_YCBCR_RANGE_BEGIN_RANGE = 0,
+        VK_SAMPLER_YCBCR_RANGE_END_RANGE = 1,
+        VK_SAMPLER_YCBCR_RANGE_RANGE_SIZE = 2,
+        VK_SAMPLER_YCBCR_RANGE_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
