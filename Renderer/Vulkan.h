@@ -5270,6 +5270,15 @@
     );
     extern PFN_vkCmdDispatchBase vkCmdDispatchBase;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetImageMemoryRequirements2 function                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetImageMemoryRequirements2)(
+        VkDevice device, const VkImageMemoryRequirementsInfo2* pInfo,
+        VkMemoryRequirements2* pMemoryRequirements
+    );
+    extern PFN_vkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
