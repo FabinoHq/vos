@@ -3163,6 +3163,17 @@
         VkBool32            requiresDedicatedAllocation;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryDedicatedAllocateInfo data structure                          //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryDedicatedAllocateInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkImage             image;
+        VkBuffer            buffer;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
