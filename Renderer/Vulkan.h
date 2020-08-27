@@ -3139,6 +3139,19 @@
         VkDeviceSize        memoryOffset;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDevice16BitStorageFeatures data structure                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDevice16BitStorageFeatures
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            storageBuffer16BitAccess;
+        VkBool32            uniformAndStorageBuffer16BitAccess;
+        VkBool32            storagePushConstant16;
+        VkBool32            storageInputOutput16;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
