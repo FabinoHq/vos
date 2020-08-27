@@ -1533,6 +1533,16 @@
     };
     typedef VkFlags VkExternalFenceFeatureFlags;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkFenceImportFlags                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkFenceImportFlagBits
+    {
+        VK_FENCE_IMPORT_TEMPORARY_BIT = 0x00000001,
+        VK_FENCE_IMPORT_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+    };
+    typedef VkFlags VkFenceImportFlags;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VkApplicationInfo data structure                                      //
