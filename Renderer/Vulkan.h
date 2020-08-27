@@ -4087,6 +4087,15 @@
     );
     extern PFN_vkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceProperties2 function                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkGetPhysicalDeviceProperties2)(
+        VkPhysicalDevice physicalDevice,
+        VkPhysicalDeviceProperties2* pProperties
+    );
+    extern PFN_vkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSwapchainKHR function                                         //
