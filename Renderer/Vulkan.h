@@ -844,6 +844,19 @@
         VK_POINT_CLIPPING_BEHAVIOR_MAX_ENUM = 0x7FFFFFFF
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkTessellationDomainOrigin enum                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkTessellationDomainOrigin
+    {
+        VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = 0,
+        VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = 1,
+        VK_TESSELLATION_DOMAIN_ORIGIN_BEGIN_RANGE = 0,
+        VK_TESSELLATION_DOMAIN_ORIGIN_END_RANGE = 1,
+        VK_TESSELLATION_DOMAIN_ORIGIN_RANGE_SIZE = 2,
+        VK_TESSELLATION_DOMAIN_ORIGIN_MAX_ENUM = 0x7FFFFFFF
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan flags definitions                                              //
