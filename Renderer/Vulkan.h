@@ -3152,6 +3152,17 @@
         VkBool32            storageInputOutput16;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkMemoryDedicatedRequirements data structure                          //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkMemoryDedicatedRequirements
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            prefersDedicatedAllocation;
+        VkBool32            requiresDedicatedAllocation;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
