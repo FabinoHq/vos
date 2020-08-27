@@ -3428,6 +3428,148 @@
         VkImageTiling           tiling;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDevicePointClippingProperties data structure                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDevicePointClippingProperties
+    {
+        VkStructureType             sType;
+        void*                       pNext;
+        VkPointClippingBehavior     pointClippingBehavior;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkInputAttachmentAspectReference data structure                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkInputAttachmentAspectReference
+    {
+        uint32_t            subpass;
+        uint32_t            inputAttachmentIndex;
+        VkImageAspectFlags  aspectMask;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkRenderPassInputAttachmentAspectCreateInfo data structure            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkRenderPassInputAttachmentAspectCreateInfo
+    {
+        VkStructureType                             sType;
+        const void*                                 pNext;
+        uint32_t                                    aspectReferenceCount;
+        const VkInputAttachmentAspectReference*     pAspectReferences;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImageViewUsageCreateInfo data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImageViewUsageCreateInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkImageUsageFlags   usage;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPipelineTessellationDomainOriginStateCreateInfo data structure      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPipelineTessellationDomainOriginStateCreateInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkTessellationDomainOrigin  domainOrigin;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkRenderPassMultiviewCreateInfo data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkRenderPassMultiviewCreateInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        uint32_t            subpassCount;
+        const uint32_t*     pViewMasks;
+        uint32_t            dependencyCount;
+        const int32_t*      pViewOffsets;
+        uint32_t            correlationMaskCount;
+        const uint32_t*     pCorrelationMasks;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceMultiviewFeatures data structure                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceMultiviewFeatures
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            multiview;
+        VkBool32            multiviewGeometryShader;
+        VkBool32            multiviewTessellationShader;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceMultiviewProperties data structure                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceMultiviewProperties
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        uint32_t            maxMultiviewViewCount;
+        uint32_t            maxMultiviewInstanceIndex;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceVariablePointerFeatures data structure                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceVariablePointerFeatures
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            variablePointersStorageBuffer;
+        VkBool32            variablePointers;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceProtectedMemoryFeatures data structure                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceProtectedMemoryFeatures
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            protectedMemory;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceProtectedMemoryProperties data structure              //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceProtectedMemoryProperties
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            protectedNoFault;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceQueueInfo2 data structure                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceQueueInfo2
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkDeviceQueueCreateFlags    flags;
+        uint32_t                    queueFamilyIndex;
+        uint32_t                    queueIndex;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkProtectedSubmitInfo data structure                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkProtectedSubmitInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        VkBool32            protectedSubmit;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
