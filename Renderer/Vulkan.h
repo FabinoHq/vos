@@ -5404,6 +5404,18 @@
     );
     extern PFN_vkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversion;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateDescriptorUpdateTemplate function                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateDescriptorUpdateTemplate)(
+        VkDevice device,
+        const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator,
+        VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate
+    );
+    extern PFN_vkCreateDescriptorUpdateTemplate
+        vkCreateDescriptorUpdateTemplate;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
