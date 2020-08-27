@@ -5223,6 +5223,15 @@
     );
     extern PFN_vkBindBufferMemory2 vkBindBufferMemory2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkBindImageMemory2 function                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkBindImageMemory2)(
+        VkDevice device, uint32_t bindInfoCount,
+        const VkBindImageMemoryInfo* pBindInfos
+    );
+    extern PFN_vkBindImageMemory2 vkBindImageMemory2;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
