@@ -45,7 +45,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  UniformBuffer default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-UniformBuffer::UniformBuffer()
+UniformBuffer::UniformBuffer() :
+uniformBuffer(),
+stagingBuffer()
 {
 
 }
@@ -99,6 +101,18 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    // Create staging buffer
+    stagingBuffer.size = size;
+
+    if (!stagingBuffer.createBuffer(
+        physicalDevice, vulkanDevice,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
+    {
+        // Could not create staging buffer
+        return false;
+    }
+
     // Uniform buffer successfully created
     return true;
 }
@@ -140,25 +154,14 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Check current buffer
-    if (!uniformBuffer.handle || (uniformBuffer.size != size))
+    if (!uniformBuffer.handle || (uniformBuffer.size != size) ||
+        !stagingBuffer.handle || (stagingBuffer.size != size))
     {
         // Recreate uniform buffer
         destroyBuffer(vulkanDevice);
         createBuffer(physicalDevice, vulkanDevice, size);
     }
 
-    // Create staging buffer
-    VulkanBuffer stagingBuffer;
-    stagingBuffer.size = size;
-
-    if (!stagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
-    {
-        // Could not create staging buffer
-        return false;
-    }
 
     // Map staging buffer memory
     void* stagingBufferMemory = 0;
@@ -290,12 +293,11 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
         vkDestroyFence(vulkanDevice, fence, 0);
     }
 
-    // Destroy buffers
+    // Destroy command buffer
     if (commandBuffer)
     {
         vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
-    stagingBuffer.destroyBuffer(vulkanDevice);
 
     // Uniform buffer successfully updated
     return true;
@@ -306,5 +308,6 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void UniformBuffer::destroyBuffer(VkDevice& vulkanDevice)
 {
+    stagingBuffer.destroyBuffer(vulkanDevice);
     uniformBuffer.destroyBuffer(vulkanDevice);
 }

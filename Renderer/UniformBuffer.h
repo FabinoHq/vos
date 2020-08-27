@@ -98,6 +98,7 @@
 
         public:
             VulkanBuffer    uniformBuffer;      // Uniform buffer
+            VulkanBuffer    stagingBuffer;      // Staging buffer
     };
 
 
