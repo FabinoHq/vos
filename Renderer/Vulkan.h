@@ -3570,6 +3570,294 @@
         VkBool32            protectedSubmit;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSamplerYcbcrConversionCreateInfo data structure                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSamplerYcbcrConversionCreateInfo
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkFormat                        format;
+        VkSamplerYcbcrModelConversion   ycbcrModel;
+        VkSamplerYcbcrRange             ycbcrRange;
+        VkComponentMapping              components;
+        VkChromaLocation                xChromaOffset;
+        VkChromaLocation                yChromaOffset;
+        VkFilter                        chromaFilter;
+        VkBool32                        forceExplicitReconstruction;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSamplerYcbcrConversionInfo data structure                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSamplerYcbcrConversionInfo
+    {
+        VkStructureType             sType;
+        const void*                 pNext;
+        VkSamplerYcbcrConversion    conversion;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkBindImagePlaneMemoryInfo data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkBindImagePlaneMemoryInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkImageAspectFlagBits   planeAspect;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkImagePlaneMemoryRequirementsInfo data structure                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkImagePlaneMemoryRequirementsInfo
+    {
+        VkStructureType         sType;
+        const void*             pNext;
+        VkImageAspectFlagBits   planeAspect;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceSamplerYcbcrConversionFeatures data structure         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceSamplerYcbcrConversionFeatures
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            samplerYcbcrConversion;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkSamplerYcbcrConversionImageFormatProperties data structure          //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkSamplerYcbcrConversionImageFormatProperties
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        uint32_t            combinedImageSamplerDescriptorCount;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorUpdateTemplateEntry data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorUpdateTemplateEntry
+    {
+        uint32_t            dstBinding;
+        uint32_t            dstArrayElement;
+        uint32_t            descriptorCount;
+        VkDescriptorType    descriptorType;
+        size_t              offset;
+        size_t              stride;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorUpdateTemplateCreateInfo data structure                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorUpdateTemplateCreateInfo
+    {
+        VkStructureType                         sType;
+        void*                                   pNext;
+        VkDescriptorUpdateTemplateCreateFlags   flags;
+        uint32_t                                descriptorUpdateEntryCount;
+        const VkDescriptorUpdateTemplateEntry*  pDescriptorUpdateEntries;
+        VkDescriptorUpdateTemplateType          templateType;
+        VkDescriptorSetLayout                   descriptorSetLayout;
+        VkPipelineBindPoint                     pipelineBindPoint;
+        VkPipelineLayout                        pipelineLayout;
+        uint32_t                                set;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalMemoryProperties data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExternalMemoryProperties
+    {
+        VkExternalMemoryFeatureFlags        externalMemoryFeatures;
+        VkExternalMemoryHandleTypeFlags     exportFromImportedHandleTypes;
+        VkExternalMemoryHandleTypeFlags     compatibleHandleTypes;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceExternalImageFormatInfo data structure                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceExternalImageFormatInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkExternalMemoryHandleTypeFlagBits  handleType;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalImageFormatProperties data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExternalImageFormatProperties
+    {
+        VkStructureType             sType;
+        void*                       pNext;
+        VkExternalMemoryProperties  externalMemoryProperties;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceExternalBufferInfo data structure                     //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceExternalBufferInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkBufferCreateFlags                 flags;
+        VkBufferUsageFlags                  usage;
+        VkExternalMemoryHandleTypeFlagBits  handleType;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalBufferProperties data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExternalBufferProperties
+    {
+        VkStructureType             sType;
+        void*                       pNext;
+        VkExternalMemoryProperties  externalMemoryProperties;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceIDProperties data structure                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceIDProperties
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        uint8_t             deviceUUID[VK_UUID_SIZE];
+        uint8_t             driverUUID[VK_UUID_SIZE];
+        uint8_t             deviceLUID[VK_LUID_SIZE];
+        uint32_t            deviceNodeMask;
+        VkBool32            deviceLUIDValid;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalMemoryImageCreateInfo data structure                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExternalMemoryImageCreateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkExternalMemoryHandleTypeFlags     handleTypes;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalMemoryBufferCreateInfo data structure                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExternalMemoryBufferCreateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkExternalMemoryHandleTypeFlags     handleTypes;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExportMemoryAllocateInfo data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExportMemoryAllocateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkExternalMemoryHandleTypeFlags     handleTypes;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceExternalFenceInfo data structure                      //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceExternalFenceInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkExternalFenceHandleTypeFlagBits   handleType;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalFenceProperties data structure                              //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExternalFenceProperties
+    {
+        VkStructureType                 sType;
+        void*                           pNext;
+        VkExternalFenceHandleTypeFlags  exportFromImportedHandleTypes;
+        VkExternalFenceHandleTypeFlags  compatibleHandleTypes;
+        VkExternalFenceFeatureFlags     externalFenceFeatures;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExportFenceCreateInfo data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExportFenceCreateInfo
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkExternalFenceHandleTypeFlags  handleTypes;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExportSemaphoreCreateInfo data structure                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExportSemaphoreCreateInfo
+    {
+        VkStructureType                     sType;
+        const void*                         pNext;
+        VkExternalSemaphoreHandleTypeFlags  handleTypes;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceExternalSemaphoreInfo data structure                  //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceExternalSemaphoreInfo
+    {
+        VkStructureType                         sType;
+        const void*                             pNext;
+        VkExternalSemaphoreHandleTypeFlagBits   handleType;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkExternalSemaphoreProperties data structure                          //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkExternalSemaphoreProperties
+    {
+        VkStructureType                     sType;
+        void*                               pNext;
+        VkExternalSemaphoreHandleTypeFlags  exportFromImportedHandleTypes;
+        VkExternalSemaphoreHandleTypeFlags  compatibleHandleTypes;
+        VkExternalSemaphoreFeatureFlags     externalSemaphoreFeatures;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceMaintenance3Properties data structure                 //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceMaintenance3Properties
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        uint32_t            maxPerSetDescriptors;
+        VkDeviceSize        maxMemoryAllocationSize;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDescriptorSetLayoutSupport data structure                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDescriptorSetLayoutSupport
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            supported;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkPhysicalDeviceShaderDrawParameterFeatures data structure            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkPhysicalDeviceShaderDrawParameterFeatures
+    {
+        VkStructureType     sType;
+        void*               pNext;
+        VkBool32            shaderDrawParameters;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
