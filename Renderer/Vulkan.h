@@ -5395,6 +5395,15 @@
     );
     extern PFN_vkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversion;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkDestroySamplerYcbcrConversion function                              //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef void (VOSVK_PTR *PFN_vkDestroySamplerYcbcrConversion)(
+        VkDevice device, VkSamplerYcbcrConversion ycbcrConversion,
+        const VkAllocationCallbacks* pAllocator
+    );
+    extern PFN_vkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversion;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
