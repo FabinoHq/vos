@@ -3185,6 +3185,54 @@
         uint32_t                deviceMask;
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceGroupRenderPassBeginInfo data structure                       //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceGroupRenderPassBeginInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        uint32_t            deviceMask;
+        uint32_t            deviceRenderAreaCount;
+        const VkRect2D*     pDeviceRenderAreas;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceGroupCommandBufferBeginInfo data structure                    //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceGroupCommandBufferBeginInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        uint32_t            deviceMask;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceGroupSubmitInfo data structure                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceGroupSubmitInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        uint32_t            waitSemaphoreCount;
+        const uint32_t*     pWaitSemaphoreDeviceIndices;
+        uint32_t            commandBufferCount;
+        const uint32_t*     pCommandBufferDeviceMasks;
+        uint32_t            signalSemaphoreCount;
+        const uint32_t*     pSignalSemaphoreDeviceIndices;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDeviceGroupBindSparseInfo data structure                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDeviceGroupBindSparseInfo
+    {
+        VkStructureType     sType;
+        const void*         pNext;
+        uint32_t            resourceDeviceIndex;
+        uint32_t            memoryDeviceIndex;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateInstance function                                             //
