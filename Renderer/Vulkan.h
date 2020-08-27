@@ -4106,6 +4106,17 @@
     extern PFN_vkGetPhysicalDeviceFormatProperties2
         vkGetPhysicalDeviceFormatProperties2;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceImageFormatProperties2 function                    //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetPhysicalDeviceImageFormatProperties2)(
+        VkPhysicalDevice physicalDevice,
+        const VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo,
+        VkImageFormatProperties2* pImageFormatProperties
+    );
+    extern PFN_vkGetPhysicalDeviceImageFormatProperties2
+        vkGetPhysicalDeviceImageFormatProperties2;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkCreateSwapchainKHR function                                         //
