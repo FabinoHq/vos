@@ -47,7 +47,9 @@
 //  VulkanMemory default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 VulkanMemory::VulkanMemory() :
-m_memoryReady(false)
+m_memoryReady(false),
+m_deviceMemoryIndex(0),
+m_hostMemoryIndex(0)
 {
 
 }
@@ -57,6 +59,8 @@ m_memoryReady(false)
 ////////////////////////////////////////////////////////////////////////////////
 VulkanMemory::~VulkanMemory()
 {
+    m_hostMemoryIndex = 0;
+    m_deviceMemoryIndex = 0;
     m_memoryReady = false;
 }
 
@@ -88,14 +92,55 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
     }
 
     // Get physical device memory properties
+    VkPhysicalDeviceMemoryProperties physicalMemoryProperties;
     vkGetPhysicalDeviceMemoryProperties(
-        physicalDevice, &m_physicalMemoryProperties
+        physicalDevice, &physicalMemoryProperties
     );
 
     // Check physical memory types
-    if (m_physicalMemoryProperties.memoryTypeCount <= 0)
+    if (physicalMemoryProperties.memoryTypeCount <= 0)
     {
         // No physical memory type
+        return false;
+    }
+
+    bool deviceMemoryFound = false;
+    bool hostMemoryFound = false;
+    for (uint32_t i = 0; i < physicalMemoryProperties.memoryTypeCount; ++i)
+    {
+        // Device local memory type
+        if (physicalMemoryProperties.memoryTypes[i].propertyFlags &
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+        {
+            if (!deviceMemoryFound)
+            {
+                m_deviceMemoryIndex = i;
+                deviceMemoryFound = true;
+            }
+        }
+
+        // Host memory type
+        if (physicalMemoryProperties.memoryTypes[i].propertyFlags &
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+        {
+            if (!hostMemoryFound)
+            {
+                m_hostMemoryIndex = i;
+                hostMemoryFound = true;
+            }
+        }
+
+        // All memory types found
+        if (deviceMemoryFound && hostMemoryFound)
+        {
+            break;
+        }
+    }
+
+    // Check if all memory types are found
+    if (!deviceMemoryFound || !hostMemoryFound)
+    {
+        // Could not find all memory types
         return false;
     }
 
@@ -133,19 +178,6 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Memory type properties
-    VkMemoryPropertyFlags properties;
-    if (memoryType == VULKAN_MEMORY_DEVICE)
-    {
-        // Local memory
-        properties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    }
-    else
-    {
-        // Host memory
-        properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-    }
-
     // Get memory requirements
     VkMemoryRequirements memoryRequirements;
     vkGetBufferMemoryRequirements(
@@ -160,39 +192,46 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
     }
 
     // Allocate buffer memory
-    for (uint32_t i = 0; i < m_physicalMemoryProperties.memoryTypeCount; ++i)
+    VkMemoryAllocateInfo allocateInfo;
+    allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocateInfo.pNext = 0;
+    allocateInfo.allocationSize = memoryRequirements.size;
+
+    // Set memory type index
+    if (memoryType == VULKAN_MEMORY_DEVICE)
     {
-        if (memoryRequirements.memoryTypeBits & (1 << i))
-        {
-            if (m_physicalMemoryProperties.memoryTypes[i].propertyFlags &
-                properties)
-            {
-                VkMemoryAllocateInfo allocateInfo;
-                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-                allocateInfo.pNext = 0;
-                allocateInfo.allocationSize = memoryRequirements.size;
-                allocateInfo.memoryTypeIndex = i;
-
-                if (vkAllocateMemory(vulkanDevice,
-                    &allocateInfo, 0, &buffer.memory) == VK_SUCCESS)
-                {
-                    // Bind buffer memory
-                    if (vkBindBufferMemory(vulkanDevice,
-                        buffer.handle, buffer.memory, 0) != VK_SUCCESS)
-                    {
-                        // Could not bind buffer memory
-                        return false;
-                    }
-
-                    // Buffer memory successfully allocated
-                    return true;
-                }
-            }
-        }
+        allocateInfo.memoryTypeIndex = m_deviceMemoryIndex;
+    }
+    else
+    {
+        allocateInfo.memoryTypeIndex = m_hostMemoryIndex;
     }
 
-    // Could not allocate buffer memory
-    return false;
+    // Check memory type bits
+    if (!(memoryRequirements.memoryTypeBits &
+        (1 << allocateInfo.memoryTypeIndex)))
+    {
+        // Invalid memory type bits
+        return false;
+    }
+
+    if (vkAllocateMemory(
+        vulkanDevice, &allocateInfo, 0, &buffer.memory) != VK_SUCCESS)
+    {
+        // Could not allocate buffer memory
+        return false;
+    }
+
+    // Bind buffer memory
+    if (vkBindBufferMemory(
+        vulkanDevice, buffer.handle, buffer.memory, 0) != VK_SUCCESS)
+    {
+        // Could not bind buffer memory
+        return false;
+    }
+
+    // Buffer memory successfully allocated
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -322,39 +361,35 @@ bool VulkanMemory::allocateImageMemory(VkDevice& vulkanDevice,
     }
 
     // Allocate image memory
-    for (uint32_t i = 0; i < m_physicalMemoryProperties.memoryTypeCount; ++i)
+    VkMemoryAllocateInfo allocateInfo;
+    allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocateInfo.pNext = 0;
+    allocateInfo.allocationSize = memoryRequirements.size;
+    allocateInfo.memoryTypeIndex = m_deviceMemoryIndex;
+
+    // Check memory type bits
+    if (!(memoryRequirements.memoryTypeBits &
+        (1 << allocateInfo.memoryTypeIndex)))
     {
-        if (memoryRequirements.memoryTypeBits & (1 << i))
-        {
-            if (m_physicalMemoryProperties.memoryTypes[i].propertyFlags &
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-            {
-                VkMemoryAllocateInfo allocateInfo;
-                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-                allocateInfo.pNext = 0;
-                allocateInfo.allocationSize = memoryRequirements.size;
-                allocateInfo.memoryTypeIndex = i;
-
-                if (vkAllocateMemory(
-                    vulkanDevice, &allocateInfo, 0, &memory) == VK_SUCCESS)
-                {
-                    // Bind image memory
-                    if (vkBindImageMemory(
-                        vulkanDevice, image, memory, 0) != VK_SUCCESS)
-                    {
-                        // Could not bind image memory
-                        return false;
-                    }
-
-                    // Image memory successfully allocated
-                    return true;
-                }
-            }
-        }
+        // Invalid memory type bits
+        return false;
     }
 
-    // Could not allocate image memory
-    return false;
+    if (vkAllocateMemory(vulkanDevice, &allocateInfo, 0, &memory) != VK_SUCCESS)
+    {
+        // Could not allocate image memory
+        return false;
+    }
+
+    // Bind image memory
+    if (vkBindImageMemory(vulkanDevice, image, memory, 0) != VK_SUCCESS)
+    {
+        // Could not bind image memory
+        return false;
+    }
+
+    // Image memory successfully allocated
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -121,8 +121,9 @@
 
 
         private:
-            bool                                m_memoryReady;
-            VkPhysicalDeviceMemoryProperties    m_physicalMemoryProperties;
+            bool        m_memoryReady;
+            uint32_t    m_deviceMemoryIndex;
+            uint32_t    m_hostMemoryIndex;
     };
 
 
