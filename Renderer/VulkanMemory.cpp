@@ -149,6 +149,17 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Cleanup Vulkan memory                                                     //
+////////////////////////////////////////////////////////////////////////////////
+void VulkanMemory::cleanup(VkDevice& vulkanDevice)
+{
+    if (vulkanDevice)
+    {
+        
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Allocate buffer memory                                                    //

@@ -84,6 +84,11 @@
             ////////////////////////////////////////////////////////////////////
             bool init(VkPhysicalDevice& physicalDevice);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Cleanup Vulkan memory                                         //
+            ////////////////////////////////////////////////////////////////////
+            void cleanup(VkDevice& vulkanDevice);
+
 
             ////////////////////////////////////////////////////////////////////
             //  Allocate buffer memory                                        //
@@ -121,9 +126,9 @@
 
 
         private:
-            bool        m_memoryReady;
-            uint32_t    m_deviceMemoryIndex;
-            uint32_t    m_hostMemoryIndex;
+            bool        m_memoryReady;          // Vulkan memory ready state
+            uint32_t    m_deviceMemoryIndex;    // Device memory type index
+            uint32_t    m_hostMemoryIndex;      // Host memory type index
     };
 
 

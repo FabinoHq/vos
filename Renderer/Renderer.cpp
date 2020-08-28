@@ -670,12 +670,15 @@ void Renderer::cleanup()
                 m_vulkanDevice, m_descriptorSetLayout, 0
             );
         }
-    }
 
-    // Destroy Vulkan device
-    if (vkDestroyDevice)
-    {
-        vkDestroyDevice(m_vulkanDevice, 0);
+        // Cleanup Vulkan memory
+        m_vulkanMemory.cleanup(m_vulkanDevice);
+
+        // Destroy Vulkan device
+        if (vkDestroyDevice)
+        {
+            vkDestroyDevice(m_vulkanDevice, 0);
+        }
     }
 
     // Destroy Vulkan surface
