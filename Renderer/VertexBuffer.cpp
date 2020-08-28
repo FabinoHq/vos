@@ -118,8 +118,8 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Map staging buffer memory
-    if (!vulkanMemory.mapBufferMemory(vulkanDevice, stagingBuffer.handle,
-        stagingBuffer.memory, DefaultVertices, stagingBuffer.size))
+    if (!vulkanMemory.mapBufferMemory(
+        vulkanDevice, stagingBuffer, DefaultVertices))
     {
         // Could not map staging buffer memory
         return false;
@@ -254,8 +254,8 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Map staging buffer memory
-    if (!vulkanMemory.mapBufferMemory(vulkanDevice, stagingBuffer.handle,
-        stagingBuffer.memory, DefaultIndices, stagingBuffer.size))
+    if (!vulkanMemory.mapBufferMemory(
+        vulkanDevice, stagingBuffer, DefaultIndices))
     {
         // Could not map staging buffer memory
         return false;

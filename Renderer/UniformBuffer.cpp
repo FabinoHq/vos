@@ -164,8 +164,7 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 
 
     // Map staging buffer memory
-    if (!vulkanMemory.mapBufferMemory(vulkanDevice, stagingBuffer.handle,
-        stagingBuffer.memory, data, stagingBuffer.size))
+    if (!vulkanMemory.mapBufferMemory(vulkanDevice, stagingBuffer, data))
     {
         // Could not map staging buffer memory
         return false;

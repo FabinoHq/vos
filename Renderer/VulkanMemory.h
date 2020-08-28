@@ -46,6 +46,12 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VulkanBuffer class declaration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    class VulkanBuffer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VulkanMemoryType enum                                                 //
     ////////////////////////////////////////////////////////////////////////////
     enum VulkanMemoryType
@@ -83,15 +89,15 @@
             //  Allocate buffer memory                                        //
             //  return : True if buffer memory is successfully allocated      //
             ////////////////////////////////////////////////////////////////////
-            bool allocateBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
-                VkDeviceMemory& memory, VulkanMemoryType memoryType);
+            bool allocateBufferMemory(VkDevice& vulkanDevice,
+                VulkanBuffer& buffer, VulkanMemoryType memoryType);
 
             ////////////////////////////////////////////////////////////////////
             //  Map buffer memory                                             //
             //  return : True if buffer memory is successfully mapped         //
             ////////////////////////////////////////////////////////////////////
-            bool mapBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
-                VkDeviceMemory& memory, const void* data, uint32_t size);
+            bool mapBufferMemory(VkDevice& vulkanDevice,
+                VulkanBuffer& buffer, const void* data);
 
             ////////////////////////////////////////////////////////////////////
             //  Free buffer memory                                            //

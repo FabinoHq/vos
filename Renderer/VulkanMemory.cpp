@@ -40,6 +40,7 @@
 //     Renderer/VulkanMemory.cpp : Vulkan memory management                   //
 ////////////////////////////////////////////////////////////////////////////////
 #include "VulkanMemory.h"
+#include "VulkanBuffer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +110,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
 //  return : True if buffer memory is successfully allocated                  //
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
-    VkBuffer& buffer, VkDeviceMemory& memory, VulkanMemoryType memoryType)
+    VulkanBuffer& buffer, VulkanMemoryType memoryType)
 {
     // Check Vulkan memory
     if (!m_memoryReady)
@@ -125,10 +126,10 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Check buffer
-    if (!buffer)
+    // Check buffer handle
+    if (!buffer.handle)
     {
-        // Invalid buffer
+        // Invalid buffer handle
         return false;
     }
 
@@ -148,7 +149,9 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
 
     // Get memory requirements
     VkMemoryRequirements memoryRequirements;
-    vkGetBufferMemoryRequirements(vulkanDevice, buffer, &memoryRequirements);
+    vkGetBufferMemoryRequirements(
+        vulkanDevice, buffer.handle, &memoryRequirements
+    );
 
     // Check memory requirements size
     if (memoryRequirements.size <= 0)
@@ -171,12 +174,12 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
                 allocateInfo.allocationSize = memoryRequirements.size;
                 allocateInfo.memoryTypeIndex = i;
 
-                if (vkAllocateMemory(
-                    vulkanDevice, &allocateInfo, 0, &memory) == VK_SUCCESS)
+                if (vkAllocateMemory(vulkanDevice,
+                    &allocateInfo, 0, &buffer.memory) == VK_SUCCESS)
                 {
                     // Bind buffer memory
-                    if (vkBindBufferMemory(
-                        vulkanDevice, buffer, memory, 0) != VK_SUCCESS)
+                    if (vkBindBufferMemory(vulkanDevice,
+                        buffer.handle, buffer.memory, 0) != VK_SUCCESS)
                     {
                         // Could not bind buffer memory
                         return false;
@@ -197,8 +200,8 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
 //  Map buffer memory                                                         //
 //  return : True if buffer memory is successfully mapped                     //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanMemory::mapBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
-    VkDeviceMemory& memory, const void* data, uint32_t size)
+bool VulkanMemory::mapBufferMemory(VkDevice& vulkanDevice,
+    VulkanBuffer& buffer, const void* data)
 {
     // Check Vulkan memory
     if (!m_memoryReady)
@@ -214,15 +217,15 @@ bool VulkanMemory::mapBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
         return false;
     }
 
-    // Check buffer
-    if (!buffer)
+    // Check buffer handle
+    if (!buffer.handle)
     {
-        // Invalid buffer
+        // Invalid buffer handle
         return false;
     }
 
     // Check data
-    if (!data || (size <= 0))
+    if (!data || (buffer.size <= 0))
     {
         // Invalid data
         return false;
@@ -230,8 +233,8 @@ bool VulkanMemory::mapBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
 
     // Map buffer memory
     void* bufferMemory = 0;
-    if (vkMapMemory(
-        vulkanDevice, memory, 0, size, 0, &bufferMemory) != VK_SUCCESS)
+    if (vkMapMemory(vulkanDevice,
+        buffer.memory, 0, buffer.size, 0, &bufferMemory) != VK_SUCCESS)
     {
         // Could not map buffer memory
         return false;
@@ -243,13 +246,13 @@ bool VulkanMemory::mapBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
     }
 
     // Copy data into buffer memory
-    memcpy(bufferMemory, data, size);
+    memcpy(bufferMemory, data, buffer.size);
 
     // Unmap buffer memory
     VkMappedMemoryRange memoryRange;
     memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     memoryRange.pNext = 0;
-    memoryRange.memory = memory;
+    memoryRange.memory = buffer.memory;
     memoryRange.offset = 0;
     memoryRange.size = VK_WHOLE_SIZE;
 
@@ -259,7 +262,7 @@ bool VulkanMemory::mapBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
         return false;
     }
 
-    vkUnmapMemory(vulkanDevice, memory);
+    vkUnmapMemory(vulkanDevice, buffer.memory);
 
     // Buffer memory successfully mapped
     return true;
