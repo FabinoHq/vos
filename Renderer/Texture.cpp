@@ -75,7 +75,8 @@ Texture::~Texture()
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, uint32_t texWidth, uint32_t texHeight)
+    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+    uint32_t texWidth, uint32_t texHeight)
 {
     // Check physical device
     if (!physicalDevice)
@@ -102,7 +103,7 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     if (handle)
     {
         // Destroy texture
-        destroyTexture(vulkanDevice);
+        destroyTexture(vulkanDevice, vulkanMemory);
     }
 
     // Set texture size
@@ -256,9 +257,9 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VkCommandPool& commandsPool,
-    VulkanQueue& graphicsQueue, uint32_t texWidth,
-    uint32_t texHeight, uint32_t texDepth,
+    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+    VkCommandPool& commandsPool, VulkanQueue& graphicsQueue,
+    uint32_t texWidth, uint32_t texHeight, uint32_t texDepth,
     const unsigned char* data)
 {
     // Check physical device
@@ -300,8 +301,10 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     if (!handle || (texWidth != width) || (texHeight != height))
     {
         // Recreate texture
-        destroyTexture(vulkanDevice);
-        createTexture(physicalDevice, vulkanDevice, texWidth, texHeight);
+        destroyTexture(vulkanDevice, vulkanMemory);
+        createTexture(
+            physicalDevice, vulkanDevice, vulkanMemory, texWidth, texHeight
+        );
     }
 
     uint32_t textureSize = width * height * texDepth;
@@ -311,7 +314,7 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     stagingBuffer.size = textureSize;
 
     if (!stagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice,
+        physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
         VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
     {
@@ -508,7 +511,7 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     {
         vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
-    stagingBuffer.destroyBuffer(vulkanDevice);
+    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 
     // Texture successfully loaded
     return true;
@@ -517,7 +520,7 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy texture                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-void Texture::destroyTexture(VkDevice& vulkanDevice)
+void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
 {
     if (vulkanDevice)
     {

@@ -83,4 +83,5 @@
             uint32_t    index;      // Queue index
     };
 
+
 #endif // VOS_RENDERER_VULKANQUEUE_HEADER

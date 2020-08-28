@@ -37,40 +37,35 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanBuffer.cpp : Vulkan buffer management                   //
+//     Renderer/VulkanMemory.cpp : Vulkan memory management                   //
 ////////////////////////////////////////////////////////////////////////////////
-#include "VulkanBuffer.h"
+#include "VulkanMemory.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VulkanBuffer default constructor                                          //
+//  VulkanMemory default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
-VulkanBuffer::VulkanBuffer() :
-handle(0),
-memory(0),
-size(0)
+VulkanMemory::VulkanMemory()
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VulkanBuffer destructor                                                   //
+//  VulkanMemory destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-VulkanBuffer::~VulkanBuffer()
+VulkanMemory::~VulkanMemory()
 {
-    size = 0;
-    memory = 0;
-    handle = 0;
+
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Vulkan buffer                                                      //
-//  return : True if Vulkan buffer is successfully created                    //
+//  Allocate buffer memory                                                    //
+//  return : True if buffer memory is successfully allocated                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkBufferUsageFlags usage, VkMemoryPropertyFlags properties)
+bool VulkanMemory::allocateBufferMemory(VkPhysicalDevice& physicalDevice,
+    VkDevice& vulkanDevice, VkBuffer& buffer, VkDeviceMemory& memory,
+    VkMemoryPropertyFlags properties)
 {
     // Check physical device
     if (!physicalDevice)
@@ -86,73 +81,58 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Check buffer handle
-    if (handle)
-    {
-        // Destroy Vulkan Buffer
-        destroyBuffer(vulkanDevice, vulkanMemory);
-    }
+    // Get memory requirements
+    VkMemoryRequirements memoryRequirements;
+    vkGetBufferMemoryRequirements(vulkanDevice, buffer, &memoryRequirements);
 
-    // Create Vulkan Buffer
-    VkBufferCreateInfo bufferInfo;
-    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.pNext = 0;
-    bufferInfo.flags = 0;
-    bufferInfo.size = size;
-    bufferInfo.usage = usage;
-    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    bufferInfo.queueFamilyIndexCount = 0;
-    bufferInfo.pQueueFamilyIndices = 0;
-
-    if (vkCreateBuffer(vulkanDevice, &bufferInfo, 0, &handle) != VK_SUCCESS)
-    {
-        // Could not create buffer
-        return false;
-    }
-    if (!handle)
-    {
-        // Invalid buffer
-        return false;
-    }
+    // Get physical device memory properties
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
 
     // Allocate buffer memory
-    if (!vulkanMemory.allocateBufferMemory(
-        physicalDevice, vulkanDevice, handle, memory, properties))
+    bool memoryAllocated = false;
+    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
+    {
+        if (memoryRequirements.memoryTypeBits & (1 << i))
+        {
+            if (memoryProperties.memoryTypes[i].propertyFlags &
+                properties)
+            {
+                VkMemoryAllocateInfo allocateInfo;
+                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+                allocateInfo.pNext = 0;
+                allocateInfo.allocationSize = memoryRequirements.size;
+                allocateInfo.memoryTypeIndex = i;
+
+                if (vkAllocateMemory(
+                    vulkanDevice, &allocateInfo, 0, &memory) == VK_SUCCESS)
+                {
+                    memoryAllocated = true;
+                    break;
+                }
+            }
+        }
+    }
+    if (!memoryAllocated)
     {
         // Could not allocate buffer memory
         return false;
     }
 
-    // Bind buffer memory
-    if (vkBindBufferMemory(vulkanDevice, handle, memory, 0) != VK_SUCCESS)
-    {
-        // Could not bind buffer memory
-        return false;
-    }
-
-    // Buffer successfully created
+    // Buffer memory successfully allocated
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy Vulkan buffer                                                     //
+//  Free buffer memory                                                        //
 ////////////////////////////////////////////////////////////////////////////////
-void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory)
+void VulkanMemory::freeBufferMemory(VkDevice& vulkanDevice,
+    VkDeviceMemory& memory)
 {
-    if (vulkanDevice)
+    // Free buffer memory
+    if (vulkanDevice && memory && vkFreeMemory)
     {
-        // Destroy buffer
-        if (handle && vkDestroyBuffer)
-        {
-            vkDestroyBuffer(vulkanDevice, handle, 0);
-        }
-
-        // Free buffer memory
-        vulkanMemory.freeBufferMemory(vulkanDevice, memory);
+        vkFreeMemory(vulkanDevice, memory, 0);
     }
-
-    size = 0;
     memory = 0;
-    handle = 0;
 }

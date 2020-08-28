@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VERTEXBUFFER_HEADER
 
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
     #include "VulkanQueue.h"
     #include "VulkanBuffer.h"
 
@@ -103,13 +104,14 @@
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkCommandPool& commandsPool,
-                VulkanQueue& transferQueue);
+                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                VkCommandPool& commandsPool, VulkanQueue& transferQueue);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Vertex buffer                                         //
             ////////////////////////////////////////////////////////////////////
-            void destroyBuffer(VkDevice& vulkanDevice);
+            void destroyBuffer(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory);
 
 
         public:

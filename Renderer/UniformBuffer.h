@@ -43,6 +43,7 @@
 #define VOS_RENDERER_UNIFORMBUFFER_HEADER
 
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
     #include "VulkanQueue.h"
     #include "VulkanBuffer.h"
 
@@ -80,20 +81,23 @@
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, uint32_t size);
+                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Update Uniform buffer                                         //
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
             bool updateBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkCommandPool& commandsPool,
-                VulkanQueue& transferQueue, void* data, uint32_t size);
+                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+                void* data, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Uniform buffer                                        //
             ////////////////////////////////////////////////////////////////////
-            void destroyBuffer(VkDevice& vulkanDevice);
+            void destroyBuffer(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory);
 
 
         public:

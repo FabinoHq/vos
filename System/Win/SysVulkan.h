@@ -44,7 +44,6 @@
 
     #include <cstdint>
     #include <cstring>
-    #include <vector>
 
     #include "../System.h"
     #include "../SysWindow.h"

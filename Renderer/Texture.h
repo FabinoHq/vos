@@ -43,6 +43,7 @@
 #define VOS_RENDERER_TEXTURE_HEADER
 
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
     #include "VulkanQueue.h"
     #include "VulkanBuffer.h"
 
@@ -419,22 +420,24 @@
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
             bool createTexture(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, uint32_t texWidth, uint32_t texHeight);
+                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                uint32_t texWidth, uint32_t texHeight);
 
             ////////////////////////////////////////////////////////////////////
             //  Update texture                                                //
             //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
             bool updateTexture(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkCommandPool& commandsPool,
-                VulkanQueue& graphicsQueue, uint32_t texWidth,
-                uint32_t texHeight, uint32_t texDepth,
+                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                VkCommandPool& commandsPool, VulkanQueue& graphicsQueue,
+                uint32_t texWidth, uint32_t texHeight, uint32_t texDepth,
                 const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy texture                                               //
             ////////////////////////////////////////////////////////////////////
-            void destroyTexture(VkDevice& vulkanDevice);
+            void destroyTexture(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory);
 
 
         public:

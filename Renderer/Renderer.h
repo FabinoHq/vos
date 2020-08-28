@@ -45,6 +45,7 @@
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
     #include "VulkanQueue.h"
     #include "Swapchain.h"
     #include "VulkanBuffer.h"
@@ -166,6 +167,7 @@
             VulkanQueue         m_transferQueue;        // Transfer queue
             VkCommandPool       m_transferCommandPool;  // Transfer command pool
 
+            VulkanMemory            m_vulkanMemory;         // Vulkan memory
             Swapchain               m_swapchain;            // Swapchain
             VkDescriptorSetLayout   m_descriptorSetLayout;  // Descriptor layout
             VkPipelineLayout        m_pipelineLayout;       // Pipeline layout

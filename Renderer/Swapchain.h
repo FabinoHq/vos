@@ -108,4 +108,5 @@
             VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
     };
 
+
 #endif // VOS_RENDERER_SWAPCHAIN_HEADER

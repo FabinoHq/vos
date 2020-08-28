@@ -66,8 +66,8 @@ VertexBuffer::~VertexBuffer()
 //  return : True if Vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VkCommandPool& commandsPool,
-    VulkanQueue& transferQueue)
+    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+    VkCommandPool& commandsPool, VulkanQueue& transferQueue)
 {
     // Check physical device
     if (!physicalDevice)
@@ -101,7 +101,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (vertexBuffer.handle || indexBuffer.handle)
     {
         // Destroy current buffers
-        destroyBuffer(vulkanDevice);
+        destroyBuffer(vulkanDevice, vulkanMemory);
     }
 
 
@@ -110,7 +110,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     stagingBuffer.size = sizeof(DefaultVertices);
 
     if (!stagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice,
+        physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
         VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
     {
@@ -156,7 +156,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     vertexBuffer.size = sizeof(DefaultVertices);
 
     if (!vertexBuffer.createBuffer(
-        physicalDevice, vulkanDevice,
+        physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
     {
@@ -265,14 +265,14 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     {
         vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
-    stagingBuffer.destroyBuffer(vulkanDevice);
+    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 
 
     // Create index buffer
     stagingBuffer.size = sizeof(DefaultIndices);
 
     if (!stagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice,
+        physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
         VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
     {
@@ -317,7 +317,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     indexBuffer.size = sizeof(DefaultIndices);
 
     if (!indexBuffer.createBuffer(
-        physicalDevice, vulkanDevice,
+        physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
     {
@@ -421,7 +421,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     {
         vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
-    stagingBuffer.destroyBuffer(vulkanDevice);
+    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 
     // Vertex buffer successfully created
     return true;
@@ -430,8 +430,9 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vertex buffer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void VertexBuffer::destroyBuffer(VkDevice& vulkanDevice)
+void VertexBuffer::destroyBuffer(VkDevice& vulkanDevice,
+    VulkanMemory& vulkanMemory)
 {
-    indexBuffer.destroyBuffer(vulkanDevice);
-    vertexBuffer.destroyBuffer(vulkanDevice);
+    indexBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    vertexBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 }

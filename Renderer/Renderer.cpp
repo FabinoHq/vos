@@ -57,6 +57,7 @@ m_graphicsQueue(),
 m_surfaceQueue(),
 m_transferQueue(),
 m_transferCommandPool(0),
+m_vulkanMemory(),
 m_swapchain(),
 m_descriptorSetLayout(0),
 m_pipelineLayout(0),
@@ -253,7 +254,7 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create vertex buffer
     if (!m_vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
-        m_transferCommandPool, m_transferQueue))
+        m_vulkanMemory, m_transferCommandPool, m_transferQueue))
     {
         // Could not create vertex buffer
         return false;
@@ -280,7 +281,7 @@ bool Renderer::init(SysWindow* sysWindow)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         if (!m_uniformBuffer[i].updateBuffer(m_physicalDevice, m_vulkanDevice,
-            m_transferCommandPool, m_transferQueue,
+            m_vulkanMemory, m_transferCommandPool, m_transferQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
@@ -290,8 +291,8 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Load texture
     if (!m_texture.updateTexture(m_physicalDevice, m_vulkanDevice,
-        m_swapchain.commandsPool, m_graphicsQueue, TestSpriteWidth,
-        TestSpriteHeight, TestSpriteDepth, TestSprite))
+        m_vulkanMemory, m_swapchain.commandsPool, m_graphicsQueue,
+        TestSpriteWidth, TestSpriteHeight, TestSpriteDepth, TestSprite))
     {
         // Could not load texture
         return false;
@@ -501,7 +502,7 @@ void Renderer::render()
 
     // Update uniform buffer
     if (!m_uniformBuffer[m_swapchain.current].updateBuffer(
-        m_physicalDevice, m_vulkanDevice, m_transferCommandPool,
+        m_physicalDevice, m_vulkanDevice, m_vulkanMemory, m_transferCommandPool,
         m_transferQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
@@ -627,16 +628,16 @@ void Renderer::cleanup()
         m_shader.destroyShader(m_vulkanDevice);
 
         // Destroy texture
-        m_texture.destroyTexture(m_vulkanDevice);
+        m_texture.destroyTexture(m_vulkanDevice, m_vulkanMemory);
 
         // Destroy uniform buffer
         for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
         {
-            m_uniformBuffer[i].destroyBuffer(m_vulkanDevice);
+            m_uniformBuffer[i].destroyBuffer(m_vulkanDevice, m_vulkanMemory);
         }
 
         // Destroy vertex buffer
-        m_vertexBuffer.destroyBuffer(m_vulkanDevice);
+        m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
 
         // Destroy transfer commands pool
         if (m_transferCommandPool && vkDestroyCommandPool)

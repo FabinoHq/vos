@@ -37,52 +37,48 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanBuffer.h : Vulkan buffer management                     //
+//     Renderer/VulkanMemory.h : Vulkan memory management                     //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKANBUFFER_HEADER
-#define VOS_RENDERER_VULKANBUFFER_HEADER
+#ifndef VOS_RENDERER_VULKANMEMORY_HEADER
+#define VOS_RENDERER_VULKANMEMORY_HEADER
 
     #include "Vulkan.h"
-    #include "VulkanMemory.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanBuffer class definition                                         //
+    //  VulkanMemory class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
-    class VulkanBuffer
+    class VulkanMemory
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer default constructor                              //
+            //  VulkanMemory default constructor                              //
             ////////////////////////////////////////////////////////////////////
-            VulkanBuffer();
+            VulkanMemory();
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer destructor                                       //
+            //  VulkanMemory destructor                                       //
             ////////////////////////////////////////////////////////////////////
-            ~VulkanBuffer();
+            ~VulkanMemory();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan buffer                                          //
-            //  return : True if Vulkan buffer is successfully created        //
+            //  Allocate buffer memory                                        //
+            //  return : True if buffer memory is successfully allocated      //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkBufferUsageFlags usage, VkMemoryPropertyFlags properties);
+            bool allocateBufferMemory(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VkBuffer& buffer,
+                VkDeviceMemory& memory, VkMemoryPropertyFlags properties);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy Vulkan buffer                                         //
+            //  Free buffer memory                                            //
             ////////////////////////////////////////////////////////////////////
-            void destroyBuffer(VkDevice& vulkanDevice,
-                VulkanMemory& vulkanMemory);
+            void freeBufferMemory(VkDevice& vulkanDevice,
+                VkDeviceMemory& memory);
 
 
         public:
-            VkBuffer        handle;     // Buffer handle
-            VkDeviceMemory  memory;     // Buffer memory
-            uint32_t        size;       // Buffer size
     };
 
 
-#endif // VOS_RENDERER_VULKANBUFFER_HEADER
+#endif // VOS_RENDERER_VULKANMEMORY_HEADER
