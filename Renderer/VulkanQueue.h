@@ -69,6 +69,15 @@
             bool createVulkanQueue(VkDevice& vulkanDevice);
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vulkan queue families availables for the device           //
+            //  return : True if the device supports all queue families       //
+            ////////////////////////////////////////////////////////////////////
+            static bool getDeviceQueues(VkSurfaceKHR& vulkanSurface,
+                VkPhysicalDevice& physicalDevice, VulkanQueue& graphicsQueue,
+                VulkanQueue& surfaceQueue, VulkanQueue& transferQueue);
+
+
         public:
             VkQueue     handle;     // Queue handle
             uint32_t    index;      // Queue index

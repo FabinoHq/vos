@@ -788,14 +788,14 @@ bool Renderer::selectVulkanDevice()
     // Check Vulkan instance
     if (!m_vulkanInstance)
     {
-        // Vulkan instance is invalid
+        // Invalid Vulkan instance
         return false;
     }
 
     // Check Vulkan surface
     if (!m_vulkanSurface)
     {
-        // Vulkan surface is invalid
+        // Invalid vulkan surface
         return false;
     }
 
@@ -809,7 +809,7 @@ bool Renderer::selectVulkanDevice()
     // Check Vulkan device
     if (m_vulkanDevice)
     {
-        // Vulkan device already created
+        // Vulkan device already selected
         return false;
     }
 
@@ -839,14 +839,6 @@ bool Renderer::selectVulkanDevice()
     // Select a physical device with matching extensions properties
     bool deviceFound = false;
     uint32_t deviceIndex = 0;
-    bool graphicsQueueFound = false;
-    uint32_t graphicsQueueIndex = 0;
-    bool surfaceQueueFound = false;
-    uint32_t surfaceQueueIndex = 0;
-    bool fallbackTransferQueueFound = false;
-    uint32_t fallbackTransferQueueIndex = 0;
-    bool transferQueueFound = false;
-    uint32_t transferQueueIndex = 0;
     for (uint32_t i = 0; i < devicesCounts; ++i)
     {
         // Get device extensions count
@@ -918,105 +910,10 @@ bool Renderer::selectVulkanDevice()
         }
 
         // Get device queue families
-        uint32_t queueFamilyCount = 0;
-        vkGetPhysicalDeviceQueueFamilyProperties(
-            physicalDevices[i], &queueFamilyCount, 0
-        );
-        if (queueFamilyCount <= 0)
+        if (VulkanQueue::getDeviceQueues(m_vulkanSurface, physicalDevices[i],
+            m_graphicsQueue, m_surfaceQueue, m_transferQueue))
         {
-            // No device queue families found
-            continue;
-        }
-
-        // Get device queue families list
-        std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-        std::vector<VkBool32> queueSurfaceSupport(queueFamilyCount);
-        vkGetPhysicalDeviceQueueFamilyProperties(
-            physicalDevices[i], &queueFamilyCount, queueFamilies.data()
-        );
-        for (uint32_t j = 0; j < queueFamilyCount; ++j)
-        {
-            if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevices[i], j,
-                m_vulkanSurface, &queueSurfaceSupport[j]) != VK_SUCCESS)
-            {
-                // Could not get physical device surface support
-                continue;
-            }
-
-            if (queueFamilies[j].queueCount > 0)
-            {
-                // Check if current queue supports transfer
-                if (queueFamilies[j].queueFlags & VK_QUEUE_TRANSFER_BIT)
-                {
-                    // Fallback transfer queue found
-                    if (!fallbackTransferQueueFound)
-                    {
-                        fallbackTransferQueueIndex = j;
-                        fallbackTransferQueueFound = true;
-                    }
-                }
-
-                // Check if current queue supports graphics
-                if (queueFamilies[j].queueFlags & VK_QUEUE_GRAPHICS_BIT)
-                {
-                    // Check if current queue supports present surface
-                    if (queueSurfaceSupport[j])
-                    {
-                        // Current queue supports both graphics and surface
-                        graphicsQueueIndex = j;
-                        graphicsQueueFound = true;
-                        surfaceQueueIndex = j;
-                        surfaceQueueFound = true;
-                    }
-                    else
-                    {
-                        // Current queue supports only graphics
-                        if (!graphicsQueueFound)
-                        {
-                            graphicsQueueIndex = j;
-                            graphicsQueueFound = true;
-                        }
-                    }
-                }
-                else
-                {
-                    // Check if current queue supports transfer
-                    if (queueFamilies[j].queueFlags & VK_QUEUE_TRANSFER_BIT)
-                    {
-                        // Transfer queue found
-                        if (!transferQueueFound)
-                        {
-                            transferQueueIndex = j;
-                            transferQueueFound = true;
-                        }
-                    }
-
-                    if (queueSurfaceSupport[j])
-                    {
-                        // Current queue supports only surface
-                        if (!surfaceQueueFound)
-                        {
-                            surfaceQueueIndex = j;
-                            surfaceQueueFound = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Set fallback transfer queue
-        if (!transferQueueFound && fallbackTransferQueueFound)
-        {
-            transferQueueIndex = fallbackTransferQueueIndex;
-            transferQueueFound = true;
-        }
-
-        // Current device supports graphics and surface queues
-        if (graphicsQueueFound && surfaceQueueFound && transferQueueFound)
-        {
-            m_graphicsQueue.index = graphicsQueueIndex;
-            m_surfaceQueue.index = surfaceQueueIndex;
-            m_transferQueue.index = transferQueueIndex;
+            // Current device supports graphics, surface, and transfer queues
             deviceIndex = i;
             deviceFound = true;
             break;
@@ -1025,7 +922,7 @@ bool Renderer::selectVulkanDevice()
 
     if (!deviceFound)
     {
-        // Could not find a device with both graphics and surface queues
+        // Could not find a device with graphics, surface, and transfer queues
         return false;
     }
 
@@ -1046,20 +943,20 @@ bool Renderer::selectVulkanDevice()
     queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueInfos.back().pNext = 0;
     queueInfos.back().flags = 0;
-    queueInfos.back().queueFamilyIndex = graphicsQueueIndex;
+    queueInfos.back().queueFamilyIndex = m_graphicsQueue.index;
     queueInfos.back().queueCount = static_cast<uint32_t>(
         queuePriorities.size()
     );
     queueInfos.back().pQueuePriorities = queuePriorities.data();
 
     // Add another queue if the surface queue is different
-    if (surfaceQueueIndex != graphicsQueueIndex)
+    if (m_surfaceQueue.index != m_graphicsQueue.index)
     {
         queueInfos.push_back(VkDeviceQueueCreateInfo());
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = surfaceQueueIndex;
+        queueInfos.back().queueFamilyIndex = m_surfaceQueue.index;
         queueInfos.back().queueCount = static_cast<uint32_t>(
             queuePriorities.size()
         );
@@ -1067,14 +964,14 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Add another queue if the transfer queue is different
-    if ((transferQueueIndex != graphicsQueueIndex) &&
-        (transferQueueIndex != surfaceQueueIndex))
+    if ((m_transferQueue.index != m_graphicsQueue.index) &&
+        (m_transferQueue.index != m_surfaceQueue.index))
     {
         queueInfos.push_back(VkDeviceQueueCreateInfo());
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = transferQueueIndex;
+        queueInfos.back().queueFamilyIndex = m_transferQueue.index;
         queueInfos.back().queueCount = static_cast<uint32_t>(
             queuePriorities.size()
         );

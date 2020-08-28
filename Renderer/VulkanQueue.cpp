@@ -86,3 +86,142 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
     // Vulkan queue successfully created
     return true;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get Vulkan queue families availables for the device                       //
+//  return : True if the device supports all queue families                   //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
+    VkPhysicalDevice& physicalDevice, VulkanQueue& graphicsQueue,
+    VulkanQueue& surfaceQueue, VulkanQueue& transferQueue)
+{
+    // Check Vulkan surface
+    if (!vulkanSurface)
+    {
+        // Invalid Vulkan surface
+        return false;
+    }
+
+    // Check physical device
+    if (!physicalDevice)
+    {
+        // Invalid physical device
+        return false;
+    }
+
+    // Get device queue families
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(
+        physicalDevice, &queueFamilyCount, 0
+    );
+    if (queueFamilyCount <= 0)
+    {
+        // No device queue families found
+        return false;
+    }
+
+    // Get device queue families list
+    bool graphicsQueueFound = false;
+    uint32_t graphicsQueueIndex = 0;
+    bool surfaceQueueFound = false;
+    uint32_t surfaceQueueIndex = 0;
+    bool fallbackTransferQueueFound = false;
+    uint32_t fallbackTransferQueueIndex = 0;
+    bool transferQueueFound = false;
+    uint32_t transferQueueIndex = 0;
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+    std::vector<VkBool32> queueSurfaceSupport(queueFamilyCount);
+
+    vkGetPhysicalDeviceQueueFamilyProperties(
+        physicalDevice, &queueFamilyCount, queueFamilies.data()
+    );
+    for (uint32_t i = 0; i < queueFamilyCount; ++i)
+    {
+        if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i,
+            vulkanSurface, &queueSurfaceSupport[i]) != VK_SUCCESS)
+        {
+            // Could not get physical device surface support
+            continue;
+        }
+
+        if (queueFamilies[i].queueCount > 0)
+        {
+            // Check if current queue supports transfer
+            if (queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT)
+            {
+                // Fallback transfer queue found
+                if (!fallbackTransferQueueFound)
+                {
+                    fallbackTransferQueueIndex = i;
+                    fallbackTransferQueueFound = true;
+                }
+            }
+
+            // Check if current queue supports graphics
+            if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            {
+                // Check if current queue supports present surface
+                if (queueSurfaceSupport[i])
+                {
+                    // Current queue supports both graphics and surface
+                    graphicsQueueIndex = i;
+                    graphicsQueueFound = true;
+                    surfaceQueueIndex = i;
+                    surfaceQueueFound = true;
+                }
+                else
+                {
+                    // Current queue supports only graphics
+                    if (!graphicsQueueFound)
+                    {
+                        graphicsQueueIndex = i;
+                        graphicsQueueFound = true;
+                    }
+                }
+            }
+            else
+            {
+                // Check if current queue supports transfer
+                if (queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT)
+                {
+                    // Transfer queue found
+                    if (!transferQueueFound)
+                    {
+                        transferQueueIndex = i;
+                        transferQueueFound = true;
+                    }
+                }
+
+                if (queueSurfaceSupport[i])
+                {
+                    // Current queue supports only surface
+                    if (!surfaceQueueFound)
+                    {
+                        surfaceQueueIndex = i;
+                        surfaceQueueFound = true;
+                    }
+                }
+            }
+        }
+    }
+
+    // Set fallback transfer queue
+    if (!transferQueueFound && fallbackTransferQueueFound)
+    {
+        transferQueueIndex = fallbackTransferQueueIndex;
+        transferQueueFound = true;
+    }
+
+    // Check if current device supports graphics, surface, and transfer queues
+    if (!graphicsQueueFound || !surfaceQueueFound || !transferQueueFound)
+    {
+        return false;
+    }
+
+    // Current device supports graphics, surface, and transfer queues
+    graphicsQueue.index = graphicsQueueIndex;
+    surfaceQueue.index = surfaceQueueIndex;
+    transferQueue.index = transferQueueIndex;
+    return true;
+}
