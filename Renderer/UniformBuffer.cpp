@@ -95,7 +95,7 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (!uniformBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        VULKAN_MEMORY_LOCAL))
+        VULKAN_MEMORY_DEVICE))
     {
         // Could not create uniform buffer
         return false;
@@ -164,38 +164,12 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 
 
     // Map staging buffer memory
-    void* stagingBufferMemory = 0;
-    if (vkMapMemory(vulkanDevice, stagingBuffer.memory, 0,
-        stagingBuffer.size, 0, &stagingBufferMemory) != VK_SUCCESS)
+    if (!vulkanMemory.mapBufferMemory(vulkanDevice, stagingBuffer.handle,
+        stagingBuffer.memory, data, stagingBuffer.size))
     {
         // Could not map staging buffer memory
         return false;
     }
-    if (!stagingBufferMemory)
-    {
-        // Invalid staging buffer memory
-        return false;
-    }
-
-    // Copy uniform data into staging buffer memory
-    memcpy(stagingBufferMemory, data, stagingBuffer.size);
-
-    // Unmap staging buffer memory
-    VkMappedMemoryRange memoryRange;
-    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-    memoryRange.pNext = 0;
-    memoryRange.memory = stagingBuffer.memory;
-    memoryRange.offset = 0;
-    memoryRange.size = VK_WHOLE_SIZE;
-
-    if (vkFlushMappedMemoryRanges(vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
-    {
-        // Could not flush staging buffer mapped memory ranges
-        return false;
-    }
-
-    vkUnmapMemory(vulkanDevice, stagingBuffer.memory);
-
 
     // Allocate command buffers
     VkCommandBuffer commandBuffer = 0;

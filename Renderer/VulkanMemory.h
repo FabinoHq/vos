@@ -50,7 +50,7 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VulkanMemoryType
     {
-        VULKAN_MEMORY_LOCAL = 0,
+        VULKAN_MEMORY_DEVICE = 0,
         VULKAN_MEMORY_HOST = 1
     };
 
@@ -85,6 +85,13 @@
             ////////////////////////////////////////////////////////////////////
             bool allocateBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
                 VkDeviceMemory& memory, VulkanMemoryType memoryType);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Map buffer memory                                             //
+            //  return : True if buffer memory is successfully mapped         //
+            ////////////////////////////////////////////////////////////////////
+            bool mapBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
+                VkDeviceMemory& memory, const void* data, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Free buffer memory                                            //

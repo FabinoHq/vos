@@ -118,37 +118,12 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Map staging buffer memory
-    void* stagingBufferMemory = 0;
-    if (vkMapMemory(vulkanDevice, stagingBuffer.memory, 0,
-        stagingBuffer.size, 0, &stagingBufferMemory) != VK_SUCCESS)
+    if (!vulkanMemory.mapBufferMemory(vulkanDevice, stagingBuffer.handle,
+        stagingBuffer.memory, DefaultVertices, stagingBuffer.size))
     {
-        return false;
         // Could not map staging buffer memory
-    }
-    if (!stagingBufferMemory)
-    {
-        // Invalid staging buffer memory
         return false;
     }
-
-    // Copy vertices into staging buffer memory
-    memcpy(stagingBufferMemory, DefaultVertices, stagingBuffer.size);
-
-    // Unmap staging buffer memory
-    VkMappedMemoryRange memoryRange;
-    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-    memoryRange.pNext = 0;
-    memoryRange.memory = stagingBuffer.memory;
-    memoryRange.offset = 0;
-    memoryRange.size = VK_WHOLE_SIZE;
-    
-    if (vkFlushMappedMemoryRanges(vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
-    {
-        // Could not flush staging buffer mapped memory ranges
-        return false;
-    }
-
-    vkUnmapMemory(vulkanDevice, stagingBuffer.memory);
 
 
     // Create vertex buffer
@@ -157,7 +132,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (!vertexBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_LOCAL))
+        VULKAN_MEMORY_DEVICE))
     {
         // Could not create vertex buffer
         return false;
@@ -267,7 +242,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 
 
-    // Create index buffer
+    // Create staging buffer
     stagingBuffer.size = sizeof(DefaultIndices);
 
     if (!stagingBuffer.createBuffer(
@@ -279,36 +254,12 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Map staging buffer memory
-    stagingBufferMemory = 0;
-    if (vkMapMemory(vulkanDevice, stagingBuffer.memory, 0,
-        stagingBuffer.size, 0, &stagingBufferMemory) != VK_SUCCESS)
+    if (!vulkanMemory.mapBufferMemory(vulkanDevice, stagingBuffer.handle,
+        stagingBuffer.memory, DefaultIndices, stagingBuffer.size))
     {
-        return false;
         // Could not map staging buffer memory
-    }
-    if (!stagingBufferMemory)
-    {
-        // Invalid staging buffer memory
         return false;
     }
-
-    // Copy indices into staging buffer memory
-    memcpy(stagingBufferMemory, DefaultIndices, stagingBuffer.size);
-
-    // Unmap staging buffer memory
-    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-    memoryRange.pNext = 0;
-    memoryRange.memory = stagingBuffer.memory;
-    memoryRange.offset = 0;
-    memoryRange.size = VK_WHOLE_SIZE;
-    
-    if (vkFlushMappedMemoryRanges(vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
-    {
-        // Could not flush staging buffer mapped memory ranges
-        return false;
-    }
-
-    vkUnmapMemory(vulkanDevice, stagingBuffer.memory);
 
 
     // Create index buffer
@@ -317,7 +268,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (!indexBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_LOCAL))
+        VULKAN_MEMORY_DEVICE))
     {
         // Could not create index buffer
         return false;

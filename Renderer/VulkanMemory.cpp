@@ -125,9 +125,16 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
+    // Check buffer
+    if (!buffer)
+    {
+        // Invalid buffer
+        return false;
+    }
+
     // Memory type properties
     VkMemoryPropertyFlags properties;
-    if (memoryType == VULKAN_MEMORY_LOCAL)
+    if (memoryType == VULKAN_MEMORY_DEVICE)
     {
         // Local memory
         properties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
@@ -187,6 +194,78 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Map buffer memory                                                         //
+//  return : True if buffer memory is successfully mapped                     //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanMemory::mapBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
+    VkDeviceMemory& memory, const void* data, uint32_t size)
+{
+    // Check Vulkan memory
+    if (!m_memoryReady)
+    {
+        // Vulkan memory is not ready
+        return false;
+    }
+
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Check buffer
+    if (!buffer)
+    {
+        // Invalid buffer
+        return false;
+    }
+
+    // Check data
+    if (!data || (size <= 0))
+    {
+        // Invalid data
+        return false;
+    }
+
+    // Map buffer memory
+    void* bufferMemory = 0;
+    if (vkMapMemory(
+        vulkanDevice, memory, 0, size, 0, &bufferMemory) != VK_SUCCESS)
+    {
+        // Could not map buffer memory
+        return false;
+    }
+    if (!bufferMemory)
+    {
+        // Invalid buffer memory
+        return false;
+    }
+
+    // Copy data into buffer memory
+    memcpy(bufferMemory, data, size);
+
+    // Unmap buffer memory
+    VkMappedMemoryRange memoryRange;
+    memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    memoryRange.pNext = 0;
+    memoryRange.memory = memory;
+    memoryRange.offset = 0;
+    memoryRange.size = VK_WHOLE_SIZE;
+
+    if (vkFlushMappedMemoryRanges(vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
+    {
+        // Could not flush buffer mapped memory ranges
+        return false;
+    }
+
+    vkUnmapMemory(vulkanDevice, memory);
+
+    // Buffer memory successfully mapped
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Free buffer memory                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanMemory::freeBufferMemory(VkDevice& vulkanDevice,
@@ -219,6 +298,13 @@ bool VulkanMemory::allocateImageMemory(VkDevice& vulkanDevice,
     if (!vulkanDevice)
     {
         // Invalid Vulkan device
+        return false;
+    }
+
+    // Check image
+    if (!image)
+    {
+        // Invalid image
         return false;
     }
 
