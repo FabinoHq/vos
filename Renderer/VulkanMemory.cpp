@@ -128,6 +128,13 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
     VkMemoryRequirements memoryRequirements;
     vkGetBufferMemoryRequirements(vulkanDevice, buffer, &memoryRequirements);
 
+    // Check memory requirements size
+    if (memoryRequirements.size <= 0)
+    {
+        // Invalid memory requirements size
+        return false;
+    }
+
     // Allocate buffer memory
     for (uint32_t i = 0; i < m_physicalMemoryProperties.memoryTypeCount; ++i)
     {
@@ -195,6 +202,13 @@ bool VulkanMemory::allocateImageMemory(VkDevice& vulkanDevice,
     // Get memory requirements
     VkMemoryRequirements memoryRequirements;
     vkGetImageMemoryRequirements(vulkanDevice, image, &memoryRequirements);
+
+    // Check memory requirements size
+    if (memoryRequirements.size <= 0)
+    {
+        // Invalid memory requirements size
+        return false;
+    }
 
     // Allocate image memory
     for (uint32_t i = 0; i < m_physicalMemoryProperties.memoryTypeCount; ++i)
