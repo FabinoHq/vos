@@ -142,41 +142,11 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Get memory requirements
-    VkMemoryRequirements memoryRequirements;
-    vkGetImageMemoryRequirements(vulkanDevice, handle, &memoryRequirements);
-
-    // Get physical device memory properties
-    VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
-
-    // Allocate buffer memory
-    bool memoryAllocated = false;
-    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
+    // Allocate image memory
+    if (!vulkanMemory.allocateImageMemory(
+        physicalDevice, vulkanDevice, handle, memory))
     {
-        if (memoryRequirements.memoryTypeBits & (1 << i))
-        {
-            if (memoryProperties.memoryTypes[i].propertyFlags &
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-            {
-                VkMemoryAllocateInfo allocateInfo;
-                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-                allocateInfo.pNext = 0;
-                allocateInfo.allocationSize = memoryRequirements.size;
-                allocateInfo.memoryTypeIndex = i;
-
-                if (vkAllocateMemory(
-                    vulkanDevice, &allocateInfo, 0, &memory) == VK_SUCCESS)
-                {
-                    memoryAllocated = true;
-                    break;
-                }
-            }
-        }
-    }
-    if (!memoryAllocated)
-    {
-        // Could not allocate buffer memory
+        // Could not allocate image memory
         return false;
     }
 
@@ -543,10 +513,7 @@ void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
         }
 
         // Free image memory
-        if (memory && vkFreeMemory)
-        {
-            vkFreeMemory(vulkanDevice, memory, 0);
-        }
+        vulkanMemory.freeImageMemory(vulkanDevice, memory);
     }
 
     view = 0;

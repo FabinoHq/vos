@@ -90,7 +90,6 @@ bool VulkanMemory::allocateBufferMemory(VkPhysicalDevice& physicalDevice,
     vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
 
     // Allocate buffer memory
-    bool memoryAllocated = false;
     for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
     {
         if (memoryRequirements.memoryTypeBits & (1 << i))
@@ -107,20 +106,15 @@ bool VulkanMemory::allocateBufferMemory(VkPhysicalDevice& physicalDevice,
                 if (vkAllocateMemory(
                     vulkanDevice, &allocateInfo, 0, &memory) == VK_SUCCESS)
                 {
-                    memoryAllocated = true;
-                    break;
+                    // Buffer memory successfully allocated
+                    return true;
                 }
             }
         }
     }
-    if (!memoryAllocated)
-    {
-        // Could not allocate buffer memory
-        return false;
-    }
 
-    // Buffer memory successfully allocated
-    return true;
+    // Could not allocate buffer memory
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,6 +124,64 @@ void VulkanMemory::freeBufferMemory(VkDevice& vulkanDevice,
     VkDeviceMemory& memory)
 {
     // Free buffer memory
+    if (vulkanDevice && memory && vkFreeMemory)
+    {
+        vkFreeMemory(vulkanDevice, memory, 0);
+    }
+    memory = 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Allocate image memory                                                     //
+//  return : True if image memory is successfully allocated                   //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanMemory::allocateImageMemory(VkPhysicalDevice& physicalDevice,
+    VkDevice& vulkanDevice, VkImage& image, VkDeviceMemory& memory)
+{
+    // Get memory requirements
+    VkMemoryRequirements memoryRequirements;
+    vkGetImageMemoryRequirements(vulkanDevice, image, &memoryRequirements);
+
+    // Get physical device memory properties
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
+
+    // Allocate image memory
+    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
+    {
+        if (memoryRequirements.memoryTypeBits & (1 << i))
+        {
+            if (memoryProperties.memoryTypes[i].propertyFlags &
+                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+            {
+                VkMemoryAllocateInfo allocateInfo;
+                allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+                allocateInfo.pNext = 0;
+                allocateInfo.allocationSize = memoryRequirements.size;
+                allocateInfo.memoryTypeIndex = i;
+
+                if (vkAllocateMemory(
+                    vulkanDevice, &allocateInfo, 0, &memory) == VK_SUCCESS)
+                {
+                    // Image memory successfully allocated
+                    return true;
+                }
+            }
+        }
+    }
+
+    // Could not allocate image memory
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Free image memory                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void VulkanMemory::freeImageMemory(VkDevice& vulkanDevice,
+    VkDeviceMemory& memory)
+{
+    // Free image memory
     if (vulkanDevice && memory && vkFreeMemory)
     {
         vkFreeMemory(vulkanDevice, memory, 0);

@@ -77,6 +77,20 @@
                 VkDeviceMemory& memory);
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Allocate image memory                                         //
+            //  return : True if image memory is successfully allocated       //
+            ////////////////////////////////////////////////////////////////////
+            bool allocateImageMemory(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VkImage& image, VkDeviceMemory& memory);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Free image memory                                             //
+            ////////////////////////////////////////////////////////////////////
+            void freeImageMemory(VkDevice& vulkanDevice,
+                VkDeviceMemory& memory);
+
+
         public:
     };
 
