@@ -718,7 +718,7 @@ bool Renderer::createVulkanInstance()
 
     // Check Vulkan extensions properties
     bool allExtFound = true;
-    for (size_t i = 0; i < VulkanExtensions.size(); ++i)
+    for (size_t i = 0; i < VulkanExtensionsSize; ++i)
     {
         bool extFound = false;
         for (size_t j = 0; j < extProperties.size(); ++j)
@@ -760,10 +760,8 @@ bool Renderer::createVulkanInstance()
     createInfos.pApplicationInfo = &appInfos;
     createInfos.enabledLayerCount = 0;
     createInfos.ppEnabledLayerNames = 0;
-    createInfos.enabledExtensionCount = static_cast<uint32_t>(
-        VulkanExtensions.size()
-    );
-    createInfos.ppEnabledExtensionNames = VulkanExtensions.data();
+    createInfos.enabledExtensionCount = VulkanExtensionsSize;
+    createInfos.ppEnabledExtensionNames = VulkanExtensions;
 
     // Create Vulkan instance
     if (vkCreateInstance(&createInfos, 0, &m_vulkanInstance) != VK_SUCCESS)
@@ -871,7 +869,7 @@ bool Renderer::selectVulkanDevice()
 
         // Check device extensions properties
         bool allExtFound = true;
-        for (size_t j = 0; j < VulkanDeviceExtensions.size(); ++j)
+        for (size_t j = 0; j < VulkanDeviceExtensionsSize; ++j)
         {
             bool extFound = false;
             for (size_t k = 0; k < extProperties.size(); ++k)
@@ -1092,10 +1090,8 @@ bool Renderer::selectVulkanDevice()
     deviceInfos.pQueueCreateInfos = queueInfos.data();
     deviceInfos.enabledLayerCount = 0;
     deviceInfos.ppEnabledLayerNames = 0;
-    deviceInfos.enabledExtensionCount = static_cast<uint32_t>(
-        VulkanDeviceExtensions.size()
-    );
-    deviceInfos.ppEnabledExtensionNames = VulkanDeviceExtensions.data();
+    deviceInfos.enabledExtensionCount = VulkanDeviceExtensionsSize;
+    deviceInfos.ppEnabledExtensionNames = VulkanDeviceExtensions;
     deviceInfos.pEnabledFeatures = 0;
 
     if (vkCreateDevice(

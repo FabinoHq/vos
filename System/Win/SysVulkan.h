@@ -65,16 +65,14 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan extensions for Windows                                         //
     ////////////////////////////////////////////////////////////////////////////
-    const std::vector<const char*> VulkanExtensions = {
-        "VK_KHR_surface", "VK_KHR_win32_surface"
-    };
+    extern const uint32_t VulkanExtensionsSize;
+    extern const char* VulkanExtensions[];
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan device extensions for Windows                                  //
     ////////////////////////////////////////////////////////////////////////////
-    const std::vector<const char*> VulkanDeviceExtensions = {
-        "VK_KHR_swapchain"
-    };
+    extern const uint32_t VulkanDeviceExtensionsSize;
+    extern const char* VulkanDeviceExtensions[];
 
 
     ////////////////////////////////////////////////////////////////////////////
