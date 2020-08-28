@@ -196,10 +196,10 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Map buffer memory                                                         //
-//  return : True if buffer memory is successfully mapped                     //
+//  Write buffer memory                                                       //
+//  return : True if buffer memory is successfully written                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanMemory::mapBufferMemory(VkDevice& vulkanDevice,
+bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
     VulkanBuffer& buffer, const void* data)
 {
     // Check Vulkan memory

@@ -281,10 +281,10 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Map staging buffer memory
-    if (!vulkanMemory.mapBufferMemory(vulkanDevice, stagingBuffer, data))
+    // Write data into staging buffer memory
+    if (!vulkanMemory.writeBufferMemory(vulkanDevice, stagingBuffer, data))
     {
-        // Could not map staging buffer memory
+        // Could not write data into staging buffer memory
         return false;
     }
 

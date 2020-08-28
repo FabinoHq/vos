@@ -93,10 +93,10 @@
                 VulkanBuffer& buffer, VulkanMemoryType memoryType);
 
             ////////////////////////////////////////////////////////////////////
-            //  Map buffer memory                                             //
-            //  return : True if buffer memory is successfully mapped         //
+            //  Write buffer memory                                           //
+            //  return : True if buffer memory is successfully written        //
             ////////////////////////////////////////////////////////////////////
-            bool mapBufferMemory(VkDevice& vulkanDevice,
+            bool writeBufferMemory(VkDevice& vulkanDevice,
                 VulkanBuffer& buffer, const void* data);
 
             ////////////////////////////////////////////////////////////////////
