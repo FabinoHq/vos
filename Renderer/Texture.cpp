@@ -143,8 +143,7 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     }
 
     // Allocate image memory
-    if (!vulkanMemory.allocateImageMemory(
-        physicalDevice, vulkanDevice, handle, memory))
+    if (!vulkanMemory.allocateImageMemory(vulkanDevice, handle, memory))
     {
         // Could not allocate image memory
         return false;

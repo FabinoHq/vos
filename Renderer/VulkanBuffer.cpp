@@ -117,7 +117,7 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Allocate buffer memory
     if (!vulkanMemory.allocateBufferMemory(
-        physicalDevice, vulkanDevice, handle, memory, properties))
+        vulkanDevice, handle, memory, properties))
     {
         // Could not allocate buffer memory
         return false;

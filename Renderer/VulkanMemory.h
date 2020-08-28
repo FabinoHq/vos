@@ -63,11 +63,17 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Init Vulkan memory                                            //
+            //  return : True if Vulkan memory is ready                       //
+            ////////////////////////////////////////////////////////////////////
+            bool init(VkPhysicalDevice& physicalDevice);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Allocate buffer memory                                        //
             //  return : True if buffer memory is successfully allocated      //
             ////////////////////////////////////////////////////////////////////
-            bool allocateBufferMemory(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkBuffer& buffer,
+            bool allocateBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
                 VkDeviceMemory& memory, VkMemoryPropertyFlags properties);
 
             ////////////////////////////////////////////////////////////////////
@@ -81,8 +87,8 @@
             //  Allocate image memory                                         //
             //  return : True if image memory is successfully allocated       //
             ////////////////////////////////////////////////////////////////////
-            bool allocateImageMemory(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkImage& image, VkDeviceMemory& memory);
+            bool allocateImageMemory(VkDevice& vulkanDevice,
+                VkImage& image, VkDeviceMemory& memory);
 
             ////////////////////////////////////////////////////////////////////
             //  Free image memory                                             //
@@ -91,7 +97,9 @@
                 VkDeviceMemory& memory);
 
 
-        public:
+        private:
+            bool                                m_memoryReady;
+            VkPhysicalDeviceMemoryProperties    m_physicalMemoryProperties;
     };
 
 

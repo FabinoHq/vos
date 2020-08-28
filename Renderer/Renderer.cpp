@@ -172,6 +172,12 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Init Vulkan memory
+    if (!m_vulkanMemory.init(m_physicalDevice))
+    {
+        return false;
+    }
+
     // Request graphics queue handle
     if (!m_graphicsQueue.createVulkanQueue(m_vulkanDevice))
     {
