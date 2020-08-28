@@ -273,11 +273,9 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
 
     // Create staging buffer
     VulkanBuffer stagingBuffer;
-    stagingBuffer.size = textureSize;
-
     if (!stagingBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_HOST))
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_HOST, textureSize))
     {
         // Could not create staging buffer
         return false;

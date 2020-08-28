@@ -90,23 +90,19 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Create uniform buffer
-    uniformBuffer.size = size;
-
     if (!uniformBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        VULKAN_MEMORY_DEVICE))
+        VULKAN_MEMORY_DEVICE, size))
     {
         // Could not create uniform buffer
         return false;
     }
 
     // Create staging buffer
-    stagingBuffer.size = size;
-
     if (!stagingBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_HOST))
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_HOST, size))
     {
         // Could not create staging buffer
         return false;
