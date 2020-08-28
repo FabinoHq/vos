@@ -123,13 +123,6 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Bind buffer memory
-    if (vkBindBufferMemory(vulkanDevice, handle, memory, 0) != VK_SUCCESS)
-    {
-        // Could not bind buffer memory
-        return false;
-    }
-
     // Buffer successfully created
     return true;
 }

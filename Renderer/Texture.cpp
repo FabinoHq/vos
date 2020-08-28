@@ -149,13 +149,6 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Bind image memory
-    if (vkBindImageMemory(vulkanDevice, handle, memory, 0) != VK_SUCCESS)
-    {
-        // Could not bind image memory
-        return false;
-    }
-
     // Create image sampler
     VkSamplerCreateInfo samplerInfo;
     samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;

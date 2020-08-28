@@ -79,7 +79,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
     // Check memory functions
     if (!vkGetPhysicalDeviceMemoryProperties ||
         !vkGetBufferMemoryRequirements || !vkGetImageMemoryRequirements ||
-        !vkAllocateMemory || !vkFreeMemory)
+        !vkAllocateMemory || !vkFreeMemory ||
+        !vkBindBufferMemory || !vkBindImageMemory)
     {
         // Invalid memory functions
         return false;
@@ -152,6 +153,14 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
                 if (vkAllocateMemory(
                     vulkanDevice, &allocateInfo, 0, &memory) == VK_SUCCESS)
                 {
+                    // Bind buffer memory
+                    if (vkBindBufferMemory(
+                        vulkanDevice, buffer, memory, 0) != VK_SUCCESS)
+                    {
+                        // Could not bind buffer memory
+                        return false;
+                    }
+
                     // Buffer memory successfully allocated
                     return true;
                 }
@@ -227,6 +236,14 @@ bool VulkanMemory::allocateImageMemory(VkDevice& vulkanDevice,
                 if (vkAllocateMemory(
                     vulkanDevice, &allocateInfo, 0, &memory) == VK_SUCCESS)
                 {
+                    // Bind image memory
+                    if (vkBindImageMemory(
+                        vulkanDevice, image, memory, 0) != VK_SUCCESS)
+                    {
+                        // Could not bind image memory
+                        return false;
+                    }
+
                     // Image memory successfully allocated
                     return true;
                 }
