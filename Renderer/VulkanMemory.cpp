@@ -143,8 +143,7 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
     else
     {
         // Host memory
-        properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-            VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+        properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     }
 
     // Get memory requirements
