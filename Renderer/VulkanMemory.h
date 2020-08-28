@@ -46,6 +46,16 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VulkanMemoryType enum                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VulkanMemoryType
+    {
+        VULKAN_MEMORY_LOCAL = 0,
+        VULKAN_MEMORY_HOST = 1
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VulkanMemory class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
     class VulkanMemory
@@ -74,7 +84,7 @@
             //  return : True if buffer memory is successfully allocated      //
             ////////////////////////////////////////////////////////////////////
             bool allocateBufferMemory(VkDevice& vulkanDevice, VkBuffer& buffer,
-                VkDeviceMemory& memory, VkMemoryPropertyFlags properties);
+                VkDeviceMemory& memory, VulkanMemoryType memoryType);
 
             ////////////////////////////////////////////////////////////////////
             //  Free buffer memory                                            //

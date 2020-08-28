@@ -69,7 +69,7 @@
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkBufferUsageFlags usage, VkMemoryPropertyFlags properties);
+                VkBufferUsageFlags usage, VulkanMemoryType memoryType);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Vulkan buffer                                         //

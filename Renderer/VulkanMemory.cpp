@@ -109,7 +109,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
 //  return : True if buffer memory is successfully allocated                  //
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
-    VkBuffer& buffer, VkDeviceMemory& memory, VkMemoryPropertyFlags properties)
+    VkBuffer& buffer, VkDeviceMemory& memory, VulkanMemoryType memoryType)
 {
     // Check Vulkan memory
     if (!m_memoryReady)
@@ -123,6 +123,20 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
     {
         // Invalid Vulkan device
         return false;
+    }
+
+    // Memory type properties
+    VkMemoryPropertyFlags properties;
+    if (memoryType == VULKAN_MEMORY_LOCAL)
+    {
+        // Local memory
+        properties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    }
+    else
+    {
+        // Host memory
+        properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+            VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
     }
 
     // Get memory requirements
