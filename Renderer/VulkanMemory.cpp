@@ -296,16 +296,46 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
             return false;
         }
 
+        // Compute memory alignment
+        VkDeviceSize size = memoryRequirements.size;
+        VkDeviceSize alignment = m_memoryAlignment;
+        if (memoryRequirements.alignment >= alignment)
+        {
+            alignment = memoryRequirements.alignment;
+            if ((alignment % m_memoryAlignment) != 0)
+            {
+                // Invalid memory alignment
+                return false;
+            }
+        }
+        else
+        {
+            if ((alignment % memoryRequirements.alignment) != 0)
+            {
+                // Invalid memory alignment
+                return false;
+            }
+        }
+        VkDeviceSize sizeOffset = (size % alignment);
+        if (sizeOffset != 0)
+        {
+            size += (m_memoryAlignment - sizeOffset);
+        }
+
+        // Set buffer memory size and offset
+        buffer.memorySize = size;
+        buffer.memoryOffset = m_deviceMemoryOffset;
+
         // Bind buffer memory
         if (vkBindBufferMemory(vulkanDevice,
-            buffer.handle, m_deviceMemory, m_deviceMemoryOffset) != VK_SUCCESS)
+            buffer.handle, m_deviceMemory, buffer.memoryOffset) != VK_SUCCESS)
         {
             // Could not bind buffer memory
             return false;
         }
-        buffer.memorySize = memoryRequirements.size;
-        buffer.memoryOffset = m_deviceMemoryOffset;
-        m_deviceMemoryOffset += memoryRequirements.size;
+
+        // Update current memory offset
+        m_deviceMemoryOffset += size;
     }
     else
     {
@@ -316,24 +346,45 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
             return false;
         }
 
+        // Compute memory alignment
+        VkDeviceSize size = memoryRequirements.size;
+        VkDeviceSize alignment = m_memoryAlignment;
+        if (memoryRequirements.alignment >= alignment)
+        {
+            alignment = memoryRequirements.alignment;
+            if ((alignment % m_memoryAlignment) != 0)
+            {
+                // Invalid memory alignment
+                return false;
+            }
+        }
+        else
+        {
+            if ((alignment % memoryRequirements.alignment) != 0)
+            {
+                // Invalid memory alignment
+                return false;
+            }
+        }
+        VkDeviceSize sizeOffset = (size % alignment);
+        if (sizeOffset != 0)
+        {
+            size += (m_memoryAlignment - sizeOffset);
+        }
+
+        // Set buffer memory size and offset
+        buffer.memorySize = size;
+        buffer.memoryOffset = m_hostMemoryOffset;
+
         // Bind buffer memory
         if (vkBindBufferMemory(vulkanDevice,
-            buffer.handle, m_hostMemory, m_hostMemoryOffset) != VK_SUCCESS)
+            buffer.handle, m_hostMemory, buffer.memoryOffset) != VK_SUCCESS)
         {
             // Could not bind buffer memory
             return false;
         }
 
-        // Compute memory alignment
-        VkDeviceSize size = memoryRequirements.size;
-        VkDeviceSize alignment = (size % m_memoryAlignment);
-        if (alignment != 0)
-        {
-            size += (m_memoryAlignment - alignment);
-        }
-
-        buffer.memorySize = size;
-        buffer.memoryOffset = m_hostMemoryOffset;
+        // Update current memory offset
         m_hostMemoryOffset += size;
     }
 
@@ -475,16 +526,46 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
         return false;
     }
 
+    // Compute memory alignment
+    VkDeviceSize size = memoryRequirements.size;
+    VkDeviceSize alignment = m_memoryAlignment;
+    if (memoryRequirements.alignment >= alignment)
+    {
+        alignment = memoryRequirements.alignment;
+        if ((alignment % m_memoryAlignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+    else
+    {
+        if ((alignment % memoryRequirements.alignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+    VkDeviceSize sizeOffset = (size % alignment);
+    if (sizeOffset != 0)
+    {
+        size += (m_memoryAlignment - sizeOffset);
+    }
+
+    // Set texture memory size and offset
+    texture.memorySize = size;
+    texture.memoryOffset = m_deviceMemoryOffset;
+
     // Bind texture memory
     if (vkBindImageMemory(vulkanDevice,
-        texture.handle, m_deviceMemory, m_deviceMemoryOffset) != VK_SUCCESS)
+        texture.handle, m_deviceMemory, texture.memoryOffset) != VK_SUCCESS)
     {
         // Could not bind texture memory
         return false;
     }
-    texture.memorySize = memoryRequirements.size;
-    texture.memoryOffset = m_deviceMemoryOffset;
-    m_deviceMemoryOffset += memoryRequirements.size;
+
+    // Update current memory offset
+    m_deviceMemoryOffset += size;
 
     // Texture memory successfully allocated
     return true;
