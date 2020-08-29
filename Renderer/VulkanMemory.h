@@ -50,6 +50,11 @@
     ////////////////////////////////////////////////////////////////////////////
     class VulkanBuffer;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Texture class declaration                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    class Texture;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VulkanMemoryType enum                                                 //
@@ -82,7 +87,7 @@
             //  Init Vulkan memory                                            //
             //  return : True if Vulkan memory is ready                       //
             ////////////////////////////////////////////////////////////////////
-            bool init(VkPhysicalDevice& physicalDevice);
+            bool init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice);
 
             ////////////////////////////////////////////////////////////////////
             //  Cleanup Vulkan memory                                         //
@@ -107,28 +112,31 @@
             ////////////////////////////////////////////////////////////////////
             //  Free buffer memory                                            //
             ////////////////////////////////////////////////////////////////////
-            void freeBufferMemory(VkDevice& vulkanDevice,
-                VkDeviceMemory& memory);
+            void freeBufferMemory(VkDevice& vulkanDevice, VulkanBuffer& buffer);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Allocate image memory                                         //
-            //  return : True if image memory is successfully allocated       //
+            //  Allocate texture memory                                       //
+            //  return : True if texture memory is successfully allocated     //
             ////////////////////////////////////////////////////////////////////
-            bool allocateImageMemory(VkDevice& vulkanDevice,
-                VkImage& image, VkDeviceMemory& memory);
+            bool allocateTextureMemory(VkDevice& vulkanDevice,
+                Texture& texture);
 
             ////////////////////////////////////////////////////////////////////
-            //  Free image memory                                             //
+            //  Free texture memory                                           //
             ////////////////////////////////////////////////////////////////////
-            void freeImageMemory(VkDevice& vulkanDevice,
-                VkDeviceMemory& memory);
+            void freeTextureMemory(VkDevice& vulkanDevice, Texture& texture);
 
 
         private:
-            bool        m_memoryReady;          // Vulkan memory ready state
-            uint32_t    m_deviceMemoryIndex;    // Device memory type index
-            uint32_t    m_hostMemoryIndex;      // Host memory type index
+            bool            m_memoryReady;          // Vulkan memory ready state
+            uint32_t        m_deviceMemoryIndex;    // Device memory type index
+            uint32_t        m_hostMemoryIndex;      // Host memory type index
+            VkDeviceSize    m_nonCoherentAtomSize;  // Non coherent alignment
+            VkDeviceMemory  m_deviceMemory;         // Device memory
+            VkDeviceSize    m_deviceMemoryOffset;   // Device memory offset
+            VkDeviceMemory  m_hostMemory;           // Host memory
+            VkDeviceSize    m_hostMemoryOffset;     // Host memory offset
     };
 
 

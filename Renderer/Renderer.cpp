@@ -173,7 +173,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Init Vulkan memory
-    if (!m_vulkanMemory.init(m_physicalDevice))
+    if (!m_vulkanMemory.init(m_physicalDevice, m_vulkanDevice))
     {
         return false;
     }

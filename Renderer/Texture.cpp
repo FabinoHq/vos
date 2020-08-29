@@ -49,9 +49,10 @@ Texture::Texture() :
 width(0),
 height(0),
 handle(0),
-memory(0),
 sampler(0),
-view(0)
+view(0),
+memorySize(0),
+memoryOffset(0)
 {
 
 }
@@ -61,9 +62,10 @@ view(0)
 ////////////////////////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
+    memoryOffset = 0;
+    memorySize = 0;
     view = 0;
     sampler = 0;
-    memory = 0;
     handle = 0;
     height = 0;
     width = 0;
@@ -142,10 +144,10 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Allocate image memory
-    if (!vulkanMemory.allocateImageMemory(vulkanDevice, handle, memory))
+    // Allocate texture memory
+    if (!vulkanMemory.allocateTextureMemory(vulkanDevice, *this))
     {
-        // Could not allocate image memory
+        // Could not allocate texture memory
         return false;
     }
 
@@ -474,13 +476,12 @@ void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
             vkDestroyImage(vulkanDevice, handle, 0);
         }
 
-        // Free image memory
-        vulkanMemory.freeImageMemory(vulkanDevice, memory);
+        // Free texture memory
+        vulkanMemory.freeTextureMemory(vulkanDevice, *this);
     }
 
     view = 0;
     sampler = 0;
-    memory = 0;
     handle = 0;
     height = 0;
     width = 0;

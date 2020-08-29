@@ -41,6 +41,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "VulkanMemory.h"
 #include "VulkanBuffer.h"
+#include "Texture.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +50,12 @@
 VulkanMemory::VulkanMemory() :
 m_memoryReady(false),
 m_deviceMemoryIndex(0),
-m_hostMemoryIndex(0)
+m_hostMemoryIndex(0),
+m_nonCoherentAtomSize(0),
+m_deviceMemory(0),
+m_deviceMemoryOffset(0),
+m_hostMemory(0),
+m_hostMemoryOffset(0)
 {
 
 }
@@ -59,6 +65,11 @@ m_hostMemoryIndex(0)
 ////////////////////////////////////////////////////////////////////////////////
 VulkanMemory::~VulkanMemory()
 {
+    m_hostMemoryOffset = 0;
+    m_hostMemory = 0;
+    m_deviceMemoryOffset = 0;
+    m_deviceMemory = 0;
+    m_nonCoherentAtomSize = 0;
     m_hostMemoryIndex = 0;
     m_deviceMemoryIndex = 0;
     m_memoryReady = false;
@@ -69,7 +80,8 @@ VulkanMemory::~VulkanMemory()
 //  Init Vulkan memory                                                        //
 //  return : True if Vulkan memory is ready                                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
+bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
+    VkDevice& vulkanDevice)
 {
     // Init Vulkan memory
     m_memoryReady = false;
@@ -82,14 +94,19 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
     }
 
     // Check memory functions
-    if (!vkGetPhysicalDeviceMemoryProperties ||
-        !vkGetBufferMemoryRequirements || !vkGetImageMemoryRequirements ||
-        !vkAllocateMemory || !vkFreeMemory ||
-        !vkBindBufferMemory || !vkBindImageMemory)
+    if (!vkGetPhysicalDeviceProperties || !vkGetPhysicalDeviceMemoryProperties
+        || !vkGetBufferMemoryRequirements || !vkGetImageMemoryRequirements
+        || !vkAllocateMemory || !vkFreeMemory
+        || !vkBindBufferMemory || !vkBindImageMemory)
     {
         // Invalid memory functions
         return false;
     }
+
+    // Get physical device properties
+    VkPhysicalDeviceProperties deviceProperties;
+    vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+    m_nonCoherentAtomSize = deviceProperties.limits.nonCoherentAtomSize;
 
     // Get physical device memory properties
     VkPhysicalDeviceMemoryProperties physicalMemoryProperties;
@@ -144,6 +161,33 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
         return false;
     }
 
+    // Allocate device memory
+    VkMemoryAllocateInfo allocateInfo;
+    allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocateInfo.pNext = 0;
+    allocateInfo.allocationSize = 1048576;
+    allocateInfo.memoryTypeIndex = m_deviceMemoryIndex;
+
+    if (vkAllocateMemory(
+        vulkanDevice, &allocateInfo, 0, &m_deviceMemory) != VK_SUCCESS)
+    {
+        // Could not allocate device memory
+        return false;
+    }
+
+    // Allocate host memory
+    allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocateInfo.pNext = 0;
+    allocateInfo.allocationSize = 1048576;
+    allocateInfo.memoryTypeIndex = m_hostMemoryIndex;
+
+    if (vkAllocateMemory(
+        vulkanDevice, &allocateInfo, 0, &m_hostMemory) != VK_SUCCESS)
+    {
+        // Could not allocate host memory
+        return false;
+    }
+
     // Vulkan memory is ready
     m_memoryReady = true;
     return true;
@@ -154,9 +198,19 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice)
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanMemory::cleanup(VkDevice& vulkanDevice)
 {
-    if (vulkanDevice)
+    if (m_memoryReady && vulkanDevice)
     {
-        
+        if (m_hostMemory)
+        {
+            vkFreeMemory(vulkanDevice, m_hostMemory, 0);
+        }
+        m_hostMemory = 0;
+
+        if (m_deviceMemory)
+        {
+            vkFreeMemory(vulkanDevice, m_deviceMemory, 0);
+        }
+        m_deviceMemory = 0;
     }
 }
 
@@ -202,43 +256,51 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Allocate buffer memory
-    VkMemoryAllocateInfo allocateInfo;
-    allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    allocateInfo.pNext = 0;
-    allocateInfo.allocationSize = memoryRequirements.size;
-
-    // Set memory type index
     if (memoryType == VULKAN_MEMORY_DEVICE)
     {
-        allocateInfo.memoryTypeIndex = m_deviceMemoryIndex;
+        // Check memory type bits
+        if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
+        {
+            // Invalid memory type bits
+            return false;
+        }
+
+        // Bind buffer memory
+        if (vkBindBufferMemory(vulkanDevice,
+            buffer.handle, m_deviceMemory, m_deviceMemoryOffset) != VK_SUCCESS)
+        {
+            // Could not bind buffer memory
+            return false;
+        }
+        buffer.memorySize = memoryRequirements.size;
+        buffer.memoryOffset = m_deviceMemoryOffset;
+        m_deviceMemoryOffset += memoryRequirements.size;
     }
     else
     {
-        allocateInfo.memoryTypeIndex = m_hostMemoryIndex;
-    }
+        // Check memory type bits
+        if (!(memoryRequirements.memoryTypeBits & (1 << m_hostMemoryIndex)))
+        {
+            // Invalid memory type bits
+            return false;
+        }
 
-    // Check memory type bits
-    if (!(memoryRequirements.memoryTypeBits &
-        (1 << allocateInfo.memoryTypeIndex)))
-    {
-        // Invalid memory type bits
-        return false;
-    }
+        // Bind buffer memory
+        if (vkBindBufferMemory(vulkanDevice,
+            buffer.handle, m_hostMemory, m_hostMemoryOffset) != VK_SUCCESS)
+        {
+            // Could not bind buffer memory
+            return false;
+        }
+        buffer.memorySize = memoryRequirements.size;
+        buffer.memoryOffset = m_hostMemoryOffset;
+        m_hostMemoryOffset += memoryRequirements.size;
 
-    if (vkAllocateMemory(
-        vulkanDevice, &allocateInfo, 0, &buffer.memory) != VK_SUCCESS)
-    {
-        // Could not allocate buffer memory
-        return false;
-    }
-
-    // Bind buffer memory
-    if (vkBindBufferMemory(
-        vulkanDevice, buffer.handle, buffer.memory, 0) != VK_SUCCESS)
-    {
-        // Could not bind buffer memory
-        return false;
+        VkDeviceSize alignment = (m_hostMemoryOffset % m_nonCoherentAtomSize);
+        if (alignment != 0)
+        {
+            m_hostMemoryOffset += (m_nonCoherentAtomSize - alignment);
+        }
     }
 
     // Buffer memory successfully allocated
@@ -282,8 +344,8 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
 
     // Map buffer memory
     void* bufferMemory = 0;
-    if (vkMapMemory(vulkanDevice,
-        buffer.memory, 0, buffer.size, 0, &bufferMemory) != VK_SUCCESS)
+    if (vkMapMemory(vulkanDevice, m_hostMemory,
+        buffer.memoryOffset, buffer.memorySize, 0, &bufferMemory) != VK_SUCCESS)
     {
         // Could not map buffer memory
         return false;
@@ -301,9 +363,9 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
     VkMappedMemoryRange memoryRange;
     memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     memoryRange.pNext = 0;
-    memoryRange.memory = buffer.memory;
-    memoryRange.offset = 0;
-    memoryRange.size = VK_WHOLE_SIZE;
+    memoryRange.memory = m_hostMemory;
+    memoryRange.offset = buffer.memoryOffset;
+    memoryRange.size = buffer.memorySize;
 
     if (vkFlushMappedMemoryRanges(vulkanDevice, 1, &memoryRange) != VK_SUCCESS)
     {
@@ -311,7 +373,7 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    vkUnmapMemory(vulkanDevice, buffer.memory);
+    vkUnmapMemory(vulkanDevice, m_hostMemory);
 
     // Buffer memory successfully mapped
     return true;
@@ -321,23 +383,22 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
 //  Free buffer memory                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanMemory::freeBufferMemory(VkDevice& vulkanDevice,
-    VkDeviceMemory& memory)
+    VulkanBuffer& buffer)
 {
     // Free buffer memory
-    if (m_memoryReady && vulkanDevice && memory)
+    if (m_memoryReady && vulkanDevice)
     {
-        vkFreeMemory(vulkanDevice, memory, 0);
+        //vkFreeMemory(vulkanDevice, memory, 0);
     }
-    memory = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Allocate image memory                                                     //
-//  return : True if image memory is successfully allocated                   //
+//  Allocate texture memory                                                   //
+//  return : True if texture memory is successfully allocated                 //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanMemory::allocateImageMemory(VkDevice& vulkanDevice,
-    VkImage& image, VkDeviceMemory& memory)
+bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
+    Texture& texture)
 {
     // Check Vulkan memory
     if (!m_memoryReady)
@@ -353,16 +414,18 @@ bool VulkanMemory::allocateImageMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Check image
-    if (!image)
+    // Check texture handle
+    if (!texture.handle)
     {
-        // Invalid image
+        // Invalid texture handle
         return false;
     }
 
     // Get memory requirements
     VkMemoryRequirements memoryRequirements;
-    vkGetImageMemoryRequirements(vulkanDevice, image, &memoryRequirements);
+    vkGetImageMemoryRequirements(
+        vulkanDevice, texture.handle, &memoryRequirements
+    );
 
     // Check memory requirements size
     if (memoryRequirements.size <= 0)
@@ -371,48 +434,36 @@ bool VulkanMemory::allocateImageMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Allocate image memory
-    VkMemoryAllocateInfo allocateInfo;
-    allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    allocateInfo.pNext = 0;
-    allocateInfo.allocationSize = memoryRequirements.size;
-    allocateInfo.memoryTypeIndex = m_deviceMemoryIndex;
-
     // Check memory type bits
-    if (!(memoryRequirements.memoryTypeBits &
-        (1 << allocateInfo.memoryTypeIndex)))
+    if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
     {
         // Invalid memory type bits
         return false;
     }
 
-    if (vkAllocateMemory(vulkanDevice, &allocateInfo, 0, &memory) != VK_SUCCESS)
+    // Bind texture memory
+    if (vkBindImageMemory(vulkanDevice,
+        texture.handle, m_deviceMemory, m_deviceMemoryOffset) != VK_SUCCESS)
     {
-        // Could not allocate image memory
+        // Could not bind texture memory
         return false;
     }
+    texture.memorySize = memoryRequirements.size;
+    texture.memoryOffset = m_deviceMemoryOffset;
+    m_deviceMemoryOffset += memoryRequirements.size;
 
-    // Bind image memory
-    if (vkBindImageMemory(vulkanDevice, image, memory, 0) != VK_SUCCESS)
-    {
-        // Could not bind image memory
-        return false;
-    }
-
-    // Image memory successfully allocated
+    // Texture memory successfully allocated
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Free image memory                                                         //
+//  Free texture memory                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void VulkanMemory::freeImageMemory(VkDevice& vulkanDevice,
-    VkDeviceMemory& memory)
+void VulkanMemory::freeTextureMemory(VkDevice& vulkanDevice, Texture& texture)
 {
     // Free image memory
-    if (m_memoryReady && vulkanDevice && memory)
+    if (m_memoryReady && vulkanDevice)
     {
-        vkFreeMemory(vulkanDevice, memory, 0);
+        //vkFreeMemory(vulkanDevice, memory, 0);
     }
-    memory = 0;
 }

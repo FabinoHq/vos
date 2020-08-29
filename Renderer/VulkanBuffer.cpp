@@ -47,8 +47,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 VulkanBuffer::VulkanBuffer() :
 handle(0),
-memory(0),
-size(0)
+size(0),
+memorySize(0),
+memoryOffset(0)
 {
 
 }
@@ -58,8 +59,9 @@ size(0)
 ////////////////////////////////////////////////////////////////////////////////
 VulkanBuffer::~VulkanBuffer()
 {
+    memoryOffset = 0;
+    memorySize = 0;
     size = 0;
-    memory = 0;
     handle = 0;
 }
 
@@ -70,7 +72,7 @@ VulkanBuffer::~VulkanBuffer()
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkBufferUsageFlags usage, VulkanMemoryType memoryType, uint32_t memorySize)
+    VkBufferUsageFlags usage, VulkanMemoryType memoryType, uint32_t bufferSize)
 {
     // Check physical device
     if (!physicalDevice)
@@ -86,10 +88,10 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Check memory size
-    if (memorySize <= 0)
+    // Check buffer size
+    if (bufferSize <= 0)
     {
-        // Invalid memory size
+        // Invalid buffer size
         return false;
     }
 
@@ -105,7 +107,7 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.pNext = 0;
     bufferInfo.flags = 0;
-    bufferInfo.size = memorySize;
+    bufferInfo.size = bufferSize;
     bufferInfo.usage = usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     bufferInfo.queueFamilyIndexCount = 0;
@@ -122,8 +124,8 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Set memory size
-    size = memorySize;
+    // Set buffer size
+    size = bufferSize;
 
     // Allocate buffer memory
     if (!vulkanMemory.allocateBufferMemory(vulkanDevice, *this, memoryType))
@@ -151,10 +153,9 @@ void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice,
         }
 
         // Free buffer memory
-        vulkanMemory.freeBufferMemory(vulkanDevice, memory);
+        vulkanMemory.freeBufferMemory(vulkanDevice, *this);
     }
 
     size = 0;
-    memory = 0;
     handle = 0;
 }

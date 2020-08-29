@@ -70,7 +70,7 @@
             bool createBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
                 VkBufferUsageFlags usage, VulkanMemoryType memoryType,
-                uint32_t memorySize);
+                uint32_t bufferSize);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Vulkan buffer                                         //
@@ -80,9 +80,11 @@
 
 
         public:
-            VkBuffer        handle;     // Buffer handle
-            VkDeviceMemory  memory;     // Buffer memory
-            uint32_t        size;       // Buffer size
+            VkBuffer        handle;         // Buffer handle
+            uint32_t        size;           // Buffer size
+
+            VkDeviceSize    memorySize;     // Memory size
+            VkDeviceSize    memoryOffset;   // Memory offset
     };
 
 
