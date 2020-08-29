@@ -132,7 +132,8 @@
             bool            m_memoryReady;          // Vulkan memory ready state
             uint32_t        m_deviceMemoryIndex;    // Device memory type index
             uint32_t        m_hostMemoryIndex;      // Host memory type index
-            VkDeviceSize    m_nonCoherentAtomSize;  // Non coherent alignment
+            uint32_t        m_maxAllocationCount;   // Maximum allocation count
+            VkDeviceSize    m_memoryAlignment;      // Memory alignment
             VkDeviceMemory  m_deviceMemory;         // Device memory
             VkDeviceSize    m_deviceMemoryOffset;   // Device memory offset
             VkDeviceMemory  m_hostMemory;           // Host memory

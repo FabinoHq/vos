@@ -51,7 +51,8 @@ VulkanMemory::VulkanMemory() :
 m_memoryReady(false),
 m_deviceMemoryIndex(0),
 m_hostMemoryIndex(0),
-m_nonCoherentAtomSize(0),
+m_maxAllocationCount(0),
+m_memoryAlignment(0),
 m_deviceMemory(0),
 m_deviceMemoryOffset(0),
 m_hostMemory(0),
@@ -69,7 +70,8 @@ VulkanMemory::~VulkanMemory()
     m_hostMemory = 0;
     m_deviceMemoryOffset = 0;
     m_deviceMemory = 0;
-    m_nonCoherentAtomSize = 0;
+    m_memoryAlignment = 0;
+    m_maxAllocationCount = 0;
     m_hostMemoryIndex = 0;
     m_deviceMemoryIndex = 0;
     m_memoryReady = false;
@@ -106,7 +108,36 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     // Get physical device properties
     VkPhysicalDeviceProperties deviceProperties;
     vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
-    m_nonCoherentAtomSize = deviceProperties.limits.nonCoherentAtomSize;
+    m_maxAllocationCount = deviceProperties.limits.maxMemoryAllocationCount;
+
+    // Set memory alignment
+    m_memoryAlignment = deviceProperties.limits.minMemoryMapAlignment;
+    if (deviceProperties.limits.nonCoherentAtomSize >= m_memoryAlignment)
+    {
+        m_memoryAlignment = deviceProperties.limits.nonCoherentAtomSize;
+        if ((m_memoryAlignment %
+            deviceProperties.limits.minMemoryMapAlignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+    else
+    {
+        if ((m_memoryAlignment %
+            deviceProperties.limits.nonCoherentAtomSize) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+
+    // Check maximum allocation count
+    if (m_maxAllocationCount <= 0)
+    {
+        // Invalid maximum allocation count
+        return false;
+    }
 
     // Get physical device memory properties
     VkPhysicalDeviceMemoryProperties physicalMemoryProperties;
@@ -292,15 +323,18 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
             // Could not bind buffer memory
             return false;
         }
-        buffer.memorySize = memoryRequirements.size;
-        buffer.memoryOffset = m_hostMemoryOffset;
-        m_hostMemoryOffset += memoryRequirements.size;
 
-        VkDeviceSize alignment = (m_hostMemoryOffset % m_nonCoherentAtomSize);
+        // Compute memory alignment
+        VkDeviceSize size = memoryRequirements.size;
+        VkDeviceSize alignment = (size % m_memoryAlignment);
         if (alignment != 0)
         {
-            m_hostMemoryOffset += (m_nonCoherentAtomSize - alignment);
+            size += (m_memoryAlignment - alignment);
         }
+
+        buffer.memorySize = size;
+        buffer.memoryOffset = m_hostMemoryOffset;
+        m_hostMemoryOffset += size;
     }
 
     // Buffer memory successfully allocated
