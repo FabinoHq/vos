@@ -278,8 +278,7 @@ bool SysMemoryCheckFloat()
         return false;
     }
 
-    if (!Math::areEqual(
-        std::numeric_limits<float>::epsilon(), Math::FloatEpsilon))
+    if (std::numeric_limits<float>::epsilon() > Math::FloatEpsilon)
     {
         // Invalid float epsilon
         SysMessage::box() << "[0x1010] Invalid float epsilon\n";
@@ -309,8 +308,7 @@ bool SysMemoryCheckDouble()
         return false;
     }
 
-    if (!Math::areEqual(
-        std::numeric_limits<double>::epsilon(), Math::DoubleEpsilon))
+    if (std::numeric_limits<double>::epsilon() > Math::DoubleEpsilon)
     {
         // Invalid double epsilon
         SysMessage::box() << "[0x1012] Invalid double epsilon\n";

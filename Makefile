@@ -48,7 +48,8 @@ all: VOS
 VOS: main.o \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
-	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
+	System/SysMutex.o System/SysMutexLocker.o \
+	System/SysClock.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/VulkanMemory.o Renderer/VulkanQueue.o \
@@ -59,7 +60,8 @@ VOS: main.o \
 	$(CC) -o VOS \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
-	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
+	System/SysMutex.o System/SysMutexLocker.o \
+	System/SysClock.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/VulkanMemory.o Renderer/VulkanQueue.o \
