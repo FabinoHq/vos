@@ -42,6 +42,7 @@
 #ifndef VOS_SYSTEM_LIN_SYSMESSAGE_HEADER
 #define VOS_SYSTEM_LIN_SYSMESSAGE_HEADER
 
+    #include <iostream>
     #include <string>
     #include <sstream>
 
