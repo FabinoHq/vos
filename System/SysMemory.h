@@ -42,8 +42,11 @@
 #ifndef VOS_SYSTEM_SYSMEMORY_HEADER
 #define VOS_SYSTEM_SYSMEMORY_HEADER
 
+    #include <limits>
+
     #include "System.h"
     #include "SysMessage.h"
+    #include "../Math/Math.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -69,6 +72,12 @@
     //  return : True if the system memory int representation is correct      //
     ////////////////////////////////////////////////////////////////////////////
     bool SysMemoryCheckInt();
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Check system memory float representation                              //
+    //  return : True if the system memory float representation is correct    //
+    ////////////////////////////////////////////////////////////////////////////
+    bool SysMemoryCheckFloat();
 
 
 #endif // VOS_SYSTEM_SYSMEMORY_HEADER

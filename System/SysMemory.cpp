@@ -66,6 +66,12 @@ bool SysMemoryCheck()
         return false;
     }
 
+    if (!SysMemoryCheckFloat())
+    {
+        // Invalid float memory represantion
+        return false;
+    }
+
     // System memory is ready
     return true;
 }
@@ -246,5 +252,35 @@ bool SysMemoryCheckInt()
     }
 
     // Int memory representation is valid
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory float representation                                  //
+//  return : True if the system memory float representation is correct        //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheckFloat()
+{
+    // Check float representation
+    std::size_t floatsize = sizeof(float);
+
+    if (floatsize != 4)
+    {
+        // Invalid float memory size
+        SysMessage::box() << "[0x100F] Invalid float size\n";
+        SysMessage::box() << "Float size must be 32 bits (4 bytes)";
+        return false;
+    }
+
+    if (std::numeric_limits<float>::epsilon() > Math::FloatEpsilon)
+    {
+        // Invalid float epsilon
+        SysMessage::box() << "[0x1010] Invalid float epsilon\n";
+        SysMessage::box() << "Float minimum epsilon must be ";
+        SysMessage::box() << Math::FloatEpsilon;
+        return false;
+    }
+
+    // Float memory representation is valid
     return true;
 }
