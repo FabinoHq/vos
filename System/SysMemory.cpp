@@ -54,6 +54,12 @@ bool SysMemoryCheck()
         return false;
     }
 
+    if (!SysMemoryCheckBool())
+    {
+        // Invalid bool memory representation
+        return false;
+    }
+
     // System memory is ready
     return true;
 }
@@ -125,5 +131,44 @@ bool SysMemoryCheckChar()
     }
 
     // Char memory representation is valid
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory bool representation                                   //
+//  return : True if the system memory bool representation is correct         //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheckBool()
+{
+    // Check bool representation
+    std::size_t boolsize = sizeof(bool);
+    bool booltrue = true;
+    bool boolfalse = false;
+
+    if (boolsize != 1)
+    {
+        // Invalid bool memory size
+        SysMessage::box() << "[0x1006] Invalid bool size\n";
+        SysMessage::box() << "Bool size must be 8 bits (1 byte)";
+        return false;
+    }
+
+    if (static_cast<char>(booltrue) != 1)
+    {
+        // Invalid bool true value
+        SysMessage::box() << "[0x1007] Invalid bool true value\n";
+        SysMessage::box() << "Bool true value must be 1";
+        return false;
+    }
+
+    if (static_cast<char>(boolfalse) != 0)
+    {
+        // Invalid bool false value
+        SysMessage::box() << "[0x1008] Invalid bool false value\n";
+        SysMessage::box() << "Bool false value must be 0";
+        return false;
+    }
+
+    // Bool memory representation is valid
     return true;
 }
