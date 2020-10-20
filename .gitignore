@@ -25,7 +25,6 @@
 !Vos.h
 !Vos.cpp
 
-!System/
 !System/System.h
 !System/SysMessage.h
 !System/SysSleep.h
@@ -41,7 +40,6 @@
 !System/SysVulkan.h
 !System/SysClock.h
 !System/SysClock.cpp
-!System/Lin/
 !System/Lin/SysMessage.h
 !System/Lin/SysMessage.cpp
 !System/Lin/SysDisplayMode.h
@@ -50,7 +48,6 @@
 !System/Lin/SysWindow.cpp
 !System/Lin/SysVulkan.h
 !System/Lin/SysVulkan.cpp
-!System/Win/
 !System/Win/SysMessage.h
 !System/Win/SysMessage.cpp
 !System/Win/SysDisplayMode.h

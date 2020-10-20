@@ -43,6 +43,62 @@
 #define VOS_SYSTEM_WIN_SYSMESSAGE_HEADER
 
     #include <windows.h>
+    #include <string>
+    #include <sstream>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysMessage class definition                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    class SysMessage
+    {
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  SysMessage private constructor                                //
+            ////////////////////////////////////////////////////////////////////
+            SysMessage();
+
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  Get the system message global singleton instance              //
+            //  return : SysMessage singleton instance                        //
+            ////////////////////////////////////////////////////////////////////
+            static SysMessage& box();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Display the system message                                    //
+            ////////////////////////////////////////////////////////////////////
+            void display();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Add a system message                                          //
+            //  return : Reference to the SysMessage instance                 //
+            ////////////////////////////////////////////////////////////////////
+            template<typename T> SysMessage& operator<<(const T& t)
+            {
+                // Add to system message
+                m_message << t;
+                m_display = true;
+                return *this;
+            }
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  SysMessage private copy constructor : Not copyable            //
+            ////////////////////////////////////////////////////////////////////
+            SysMessage(const SysMessage&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  SysMessage private copy operator : Not copyable               //
+            ////////////////////////////////////////////////////////////////////
+            SysMessage& operator=(const SysMessage&) = delete;
+
+
+        private:
+            bool                m_display;      // Display the system message
+            std::ostringstream  m_message;      // Message to display
+    };
 
 
 #endif // VOS_SYSTEM_WIN_SYSMESSAGE_HEADER

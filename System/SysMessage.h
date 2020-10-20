@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/SysMessage.h : System Message management                        //
+//     System/SysMessage.h : System Message management wrapper                //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_SYSTEM_SYSMESSAGE_HEADER
 #define VOS_SYSTEM_SYSMESSAGE_HEADER
