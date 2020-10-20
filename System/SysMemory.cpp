@@ -282,8 +282,7 @@ bool SysMemoryCheckFloat()
     {
         // Invalid float epsilon
         SysMessage::box() << "[0x1010] Invalid float epsilon\n";
-        SysMessage::box() << "Float minimum epsilon must be ";
-        SysMessage::box() << Math::FloatEpsilon;
+        SysMessage::box() << "Float minimum epsilon must be 2.5e-07";
         return false;
     }
 
@@ -312,8 +311,7 @@ bool SysMemoryCheckDouble()
     {
         // Invalid double epsilon
         SysMessage::box() << "[0x1012] Invalid double epsilon\n";
-        SysMessage::box() << "Double minimum epsilon must be ";
-        SysMessage::box() << Math::DoubleEpsilon;
+        SysMessage::box() << "Double minimum epsilon must be 5.0e-16";
         return false;
     }
 
