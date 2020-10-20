@@ -46,6 +46,7 @@
 //  SysMessage private constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
 SysMessage::SysMessage() :
+m_mutex(),
 m_display(false),
 m_message()
 {
@@ -57,6 +58,8 @@ m_message()
 ////////////////////////////////////////////////////////////////////////////////
 void SysMessage::display()
 {
+    SysMutexLocker locker(m_mutex);
+    locker.lock();
     if (m_display)
     {
 

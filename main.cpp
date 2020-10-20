@@ -40,7 +40,6 @@
 //     main.cpp : Main program entry point                                    //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Vos.h"
-#include "System/SysMessage.h"
 #include <exception>
 
 
@@ -59,7 +58,6 @@ int main(int argc, char* argv[])
         if (!vos.launch())
         {
             // VOS error occured
-            SysMessage::box().display();
             return 1;
         }
     }
@@ -67,16 +65,17 @@ int main(int argc, char* argv[])
     {
         // Standard exception occured
         SysMessage::box() << "Unknown error occured";
-        SysMessage::box().display();
         return 1;
     }
     catch (...)
     {
         // Unknown exception occured
         SysMessage::box() << "Unknown error occured";
-        SysMessage::box().display();
         return 1;
     }
+
+    // Display system message if any
+    SysMessage::box().display();
 
     // Program successfully executed
     return 0;

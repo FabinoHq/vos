@@ -46,6 +46,9 @@
     #include <string>
     #include <sstream>
 
+    #include "../SysMutex.h"
+    #include "../SysMutexLocker.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  SysMessage class definition                                           //
@@ -76,6 +79,9 @@
             ////////////////////////////////////////////////////////////////////
             template<typename T> SysMessage& operator<<(const T& t)
             {
+                SysMutexLocker locker(m_mutex);
+                locker.lock();
+
                 // Add to system message
                 m_message << t;
                 m_display = true;
@@ -96,6 +102,7 @@
 
 
         private:
+            SysMutex            m_mutex;        // System message mutex
             bool                m_display;      // Display the system message
             std::ostringstream  m_message;      // Message to display
     };
