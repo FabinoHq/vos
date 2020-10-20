@@ -72,6 +72,12 @@ bool SysMemoryCheck()
         return false;
     }
 
+    if (!SysMemoryCheckDouble())
+    {
+        // Invalid double memory represantion
+        return false;
+    }
+
     // System memory is ready
     return true;
 }
@@ -97,7 +103,7 @@ bool SysMemoryCheckChar()
     if (charsize != 1)
     {
         // Invalid char memory size
-        SysMessage::box() << "[0x1001] Invalid char size\n";
+        SysMessage::box() << "[0x1001] Invalid char memory size\n";
         SysMessage::box() << "Char size must be 8 bits (1 byte)";
         return false;
     }
@@ -121,7 +127,7 @@ bool SysMemoryCheckChar()
     if (unsignedcharsize != 1)
     {
         // Invalid unsigned char memory size
-        SysMessage::box() << "[0x1003] Invalid unsigned char size\n";
+        SysMessage::box() << "[0x1003] Invalid unsigned char memory size\n";
         SysMessage::box() << "Unsigned char size must be 8 bits (1 byte)";
         return false;
     }
@@ -160,7 +166,7 @@ bool SysMemoryCheckBool()
     if (boolsize != 1)
     {
         // Invalid bool memory size
-        SysMessage::box() << "[0x1006] Invalid bool size\n";
+        SysMessage::box() << "[0x1006] Invalid bool memory size\n";
         SysMessage::box() << "Bool size must be 8 bits (1 byte)";
         return false;
     }
@@ -206,7 +212,7 @@ bool SysMemoryCheckInt()
     if (intsize != 4)
     {
         // Invalid int memory size
-        SysMessage::box() << "[0x1009] Invalid int size\n";
+        SysMessage::box() << "[0x1009] Invalid int memory size\n";
         SysMessage::box() << "Int size must be 32 bits (4 bytes)";
         return false;
     }
@@ -230,7 +236,7 @@ bool SysMemoryCheckInt()
     if (unsignedintsize != 4)
     {
         // Invalid unsigned int memory size
-        SysMessage::box() << "[0x100C] Invalid unsigned int size\n";
+        SysMessage::box() << "[0x100C] Invalid unsigned int memory size\n";
         SysMessage::box() << "Unsigned int size must be 32 bits (4 bytes)";
         return false;
     }
@@ -263,16 +269,17 @@ bool SysMemoryCheckFloat()
 {
     // Check float representation
     std::size_t floatsize = sizeof(float);
+    float floatepsilon = Math::FloatEpsilon*2.0f;
 
     if (floatsize != 4)
     {
         // Invalid float memory size
-        SysMessage::box() << "[0x100F] Invalid float size\n";
+        SysMessage::box() << "[0x100F] Invalid float memory size\n";
         SysMessage::box() << "Float size must be 32 bits (4 bytes)";
         return false;
     }
 
-    if (std::numeric_limits<float>::epsilon() > Math::FloatEpsilon)
+    if (!Math::areEqual(floatepsilon*0.5f, Math::FloatEpsilon))
     {
         // Invalid float epsilon
         SysMessage::box() << "[0x1010] Invalid float epsilon\n";
@@ -282,5 +289,36 @@ bool SysMemoryCheckFloat()
     }
 
     // Float memory representation is valid
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory double representation                                 //
+//  return : True if the system memory double representation is correct       //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheckDouble()
+{
+    // Check double representation
+    std::size_t doublesize = sizeof(double);
+    double doubleepsilon = Math::DoubleEpsilon*2.0;
+
+    if (doublesize != 8)
+    {
+        // Invalid double memory size
+        SysMessage::box() << "[0x1011] Invalid double memory size\n";
+        SysMessage::box() << "Double size must be 64 bits (8 bytes)";
+        return false;
+    }
+
+    if (!Math::areEqual(doubleepsilon*0.5, Math::DoubleEpsilon))
+    {
+        // Invalid double epsilon
+        SysMessage::box() << "[0x1012] Invalid double epsilon\n";
+        SysMessage::box() << "Double minimum epsilon must be ";
+        SysMessage::box() << Math::DoubleEpsilon;
+        return false;
+    }
+
+    // Double memory representation is valid
     return true;
 }
