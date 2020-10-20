@@ -42,6 +42,8 @@
 #ifndef VOS_SYSTEM_SYSMEMORY_HEADER
 #define VOS_SYSTEM_SYSMEMORY_HEADER
 
+    #include <limits>
+
     #include "System.h"
     #include "SysMessage.h"
     #include "../Math/Math.h"

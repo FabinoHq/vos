@@ -269,7 +269,6 @@ bool SysMemoryCheckFloat()
 {
     // Check float representation
     std::size_t floatsize = sizeof(float);
-    float floatepsilon = Math::FloatEpsilon*2.0f;
 
     if (floatsize != 4)
     {
@@ -279,7 +278,8 @@ bool SysMemoryCheckFloat()
         return false;
     }
 
-    if (!Math::areEqual(floatepsilon*0.5f, Math::FloatEpsilon))
+    if (!Math::areEqual(
+        std::numeric_limits<float>::epsilon(), Math::FloatEpsilon))
     {
         // Invalid float epsilon
         SysMessage::box() << "[0x1010] Invalid float epsilon\n";
@@ -300,7 +300,6 @@ bool SysMemoryCheckDouble()
 {
     // Check double representation
     std::size_t doublesize = sizeof(double);
-    double doubleepsilon = Math::DoubleEpsilon*2.0;
 
     if (doublesize != 8)
     {
@@ -310,7 +309,8 @@ bool SysMemoryCheckDouble()
         return false;
     }
 
-    if (!Math::areEqual(doubleepsilon*0.5, Math::DoubleEpsilon))
+    if (!Math::areEqual(
+        std::numeric_limits<double>::epsilon(), Math::DoubleEpsilon))
     {
         // Invalid double epsilon
         SysMessage::box() << "[0x1012] Invalid double epsilon\n";
