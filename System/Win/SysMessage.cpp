@@ -62,7 +62,10 @@ void SysMessage::display()
     locker.lock();
     if (m_display)
     {
-
+        MessageBox(
+            0, m_message.str().c_str(), SysMessageTitle.c_str(),
+            MB_OK | MB_ICONERROR | MB_SYSTEMMODAL
+        );
     }
 }
 

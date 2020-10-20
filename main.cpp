@@ -64,13 +64,15 @@ int main(int argc, char* argv[])
     catch (std::exception&)
     {
         // Standard exception occured
-        SysMessage::box() << "Unknown error occured";
+        SysMessage::box() << "[0x0001] Unknown error occured\n";
+        SysMessage::box() << "Please restart the VOS program";
         return 1;
     }
     catch (...)
     {
         // Unknown exception occured
-        SysMessage::box() << "Unknown error occured";
+        SysMessage::box() << "[0x0002] Unknown error occured\n";
+        SysMessage::box() << "Please restart the VOS program";
         return 1;
     }
 

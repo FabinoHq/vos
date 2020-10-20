@@ -49,6 +49,10 @@
     #include "../SysMutexLocker.h"
 
 
+    // System message box title
+    const std::wstring SysMessageTitle = L"VOS error";
+
+
     ////////////////////////////////////////////////////////////////////////////
     //  SysMessage class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
@@ -103,7 +107,7 @@
         private:
             SysMutex            m_mutex;        // System message mutex
             bool                m_display;      // Display the system message
-            std::ostringstream  m_message;      // Message to display
+            std::wostringstream m_message;      // Message to display
     };
 
 
