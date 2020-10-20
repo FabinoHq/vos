@@ -37,64 +37,17 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     System/SysMemory.cpp : System memory management                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
-
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysMemory.h"
-    #include "System/SysWindow.h"
-    #include "Renderer/Renderer.h"
-    #include "Event.h"
+#include "SysMemory.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    class Vos
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
-            ////////////////////////////////////////////////////////////////////
-            Vos();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
-            ////////////////////////////////////////////////////////////////////
-            ~Vos();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
-            ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
-            ////////////////////////////////////////////////////////////////////
-            void run();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
-            ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
-
-        private:
-            bool        m_running;  // VOS running state
-            SysWindow   m_window;   // VOS main window
-            Renderer    m_renderer; // VOS renderer
-    };
-
-
-#endif // VOS_VOS_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory representation                                        //
+//  return : True if the system memory is ready, false otherwise              //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheck()
+{
+    // System memory is ready
+    return true;
+}

@@ -68,6 +68,13 @@ Vos::~Vos()
 ////////////////////////////////////////////////////////////////////////////////
 bool Vos::launch()
 {
+    // Check system memory
+    if (!SysMemoryCheck())
+    {
+        // Invalid system memory
+        return false;
+    }
+
     // Create VOS main window
     if (!m_window.create())
     {

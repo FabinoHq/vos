@@ -89,6 +89,9 @@ System/SysMutexLocker.o: System/SysMutexLocker.cpp
 System/SysClock.o: System/SysClock.cpp
 	$(CC) -o System/SysClock.o -c System/SysClock.cpp $(CFLAGS)
 
+System/SysMemory.o: System/SysMemory.cpp
+	$(CC) -o System/SysMemory.o -c System/SysMemory.cpp $(CFLAGS)
+
 System/Lin/SysMessage.o: System/Lin/SysMessage.cpp
 	$(CC) -o System/Lin/SysMessage.o -c System/Lin/SysMessage.cpp $(CFLAGS)
 

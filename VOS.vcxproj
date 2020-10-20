@@ -139,6 +139,7 @@
     <ClCompile Include="Renderer\VulkanMemory.cpp" />
     <ClCompile Include="Renderer\VulkanQueue.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
+    <ClCompile Include="System\SysMemory.cpp" />
     <ClCompile Include="System\SysMutex.cpp" />
     <ClCompile Include="System\SysMutexLocker.cpp" />
     <ClCompile Include="System\SysSleep.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Renderer\VulkanQueue.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysDisplayMode.h" />
+    <ClInclude Include="System\SysMemory.h" />
     <ClInclude Include="System\SysMessage.h" />
     <ClInclude Include="System\SysMutex.h" />
     <ClInclude Include="System\SysMutexLocker.h" />

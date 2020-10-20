@@ -74,6 +74,9 @@
     <ClCompile Include="System\Win\SysMessage.cpp">
       <Filter>System\Win</Filter>
     </ClCompile>
+    <ClCompile Include="System\SysMemory.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -161,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="System\Win\SysMessage.h">
       <Filter>System\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysMemory.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

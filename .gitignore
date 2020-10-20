@@ -25,8 +25,11 @@
 !Vos.h
 !Vos.cpp
 
+!System/
 !System/System.h
 !System/SysMessage.h
+!System/SysMemory.h
+!System/SysMemory.cpp
 !System/SysSleep.h
 !System/SysSleep.cpp
 !System/SysThread.h
