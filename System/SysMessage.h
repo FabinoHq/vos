@@ -37,63 +37,20 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     System/SysMessage.h : System Message management                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_SYSTEM_SYSMESSAGE_HEADER
+#define VOS_SYSTEM_SYSMESSAGE_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysWindow.h"
-    #include "Renderer/Renderer.h"
-    #include "Event.h"
+    #include "System.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    class Vos
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
-            ////////////////////////////////////////////////////////////////////
-            Vos();
+    #ifdef VOS_WINDOWS
+        #include "Win/SysMessage.h"
+    #endif // VOS_WINDOWS
 
-            ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
-            ////////////////////////////////////////////////////////////////////
-            ~Vos();
+    #ifdef VOS_LINUX
+        #include "Lin/SysMessage.h"
+    #endif // VOS_LINUX
 
-
-            ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
-            ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
-            ////////////////////////////////////////////////////////////////////
-            void run();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
-            ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
-
-        private:
-            bool        m_running;  // VOS running state
-            SysWindow   m_window;   // VOS main window
-            Renderer    m_renderer; // VOS renderer
-    };
-
-
-#endif // VOS_VOS_HEADER
+#endif // VOS_SYSTEM_SYSMESSAGE_HEADER

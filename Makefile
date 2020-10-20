@@ -49,7 +49,8 @@ VOS: main.o \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
 	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
-	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
+	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
+	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/VulkanMemory.o Renderer/VulkanQueue.o \
 	Renderer/Swapchain.o Renderer/VulkanBuffer.o Renderer/VertexBuffer.o \
 	Renderer/UniformBuffer.o Renderer/Texture.o Renderer/Shader.o \
@@ -59,7 +60,8 @@ VOS: main.o \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
 	System/SysMutex.o System/SysMutexLocker.o System/SysClock.o \
-	System/Lin/SysDisplayMode.o System/Lin/SysWindow.o System/Lin/SysVulkan.o \
+	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
+	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Renderer/Vulkan.o Renderer/VulkanMemory.o Renderer/VulkanQueue.o \
 	Renderer/Swapchain.o Renderer/VulkanBuffer.o Renderer/VertexBuffer.o \
 	Renderer/UniformBuffer.o Renderer/Texture.o Renderer/Shader.o \
@@ -86,6 +88,9 @@ System/SysMutexLocker.o: System/SysMutexLocker.cpp
 
 System/SysClock.o: System/SysClock.cpp
 	$(CC) -o System/SysClock.o -c System/SysClock.cpp $(CFLAGS)
+
+System/Lin/SysMessage.o: System/Lin/SysMessage.cpp
+	$(CC) -o System/Lin/SysMessage.o -c System/Lin/SysMessage.cpp $(CFLAGS)
 
 System/Lin/SysDisplayMode.o: System/Lin/SysDisplayMode.cpp
 	$(CC) -o System/Lin/SysDisplayMode.o -c \

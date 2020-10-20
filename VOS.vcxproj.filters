@@ -71,6 +71,9 @@
     <ClCompile Include="Renderer\VulkanMemory.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="System\Win\SysMessage.cpp">
+      <Filter>System\Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -152,6 +155,12 @@
     </ClInclude>
     <ClInclude Include="Renderer\VulkanMemory.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysMessage.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Win\SysMessage.h">
+      <Filter>System\Win</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

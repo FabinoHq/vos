@@ -44,7 +44,7 @@
 
     #include "System.h"
 
-    
+
     #ifdef VOS_WINDOWS
         #include "Win/SysWindow.h"
     #endif // VOS_WINDOWS
