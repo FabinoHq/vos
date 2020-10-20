@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
         if (!vos.launch())
         {
             // VOS error occured
+            SysMessage::box().display();
             return 1;
         }
     }
@@ -66,6 +67,7 @@ int main(int argc, char* argv[])
         // Standard exception occured
         SysMessage::box() << "[0x0001] Unknown error occured\n";
         SysMessage::box() << "Please restart the VOS program";
+        SysMessage::box().display();
         return 1;
     }
     catch (...)
@@ -73,6 +75,7 @@ int main(int argc, char* argv[])
         // Unknown exception occured
         SysMessage::box() << "[0x0002] Unknown error occured\n";
         SysMessage::box() << "Please restart the VOS program";
+        SysMessage::box().display();
         return 1;
     }
 

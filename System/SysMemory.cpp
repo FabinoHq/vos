@@ -48,6 +48,82 @@
 ////////////////////////////////////////////////////////////////////////////////
 bool SysMemoryCheck()
 {
+    if (!SysMemoryCheckChar())
+    {
+        // Invalid char memory representation
+        return false;
+    }
+
     // System memory is ready
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory char representation                                   //
+//  return : True if the system memory char representation is correct         //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheckChar()
+{
+    // Check char representation
+    std::size_t charsize = sizeof(char);
+    char charunderflow = -128;
+    --charunderflow;
+    char charoverflow = 127;
+    ++charoverflow;
+    std::size_t unsignedcharsize = sizeof(unsigned char);
+    unsigned char unsignedcharunderflow = 0;
+    --unsignedcharunderflow;
+    unsigned char unsignedcharoverflow = 255;
+    ++unsignedcharoverflow;
+
+    if (charsize != 1)
+    {
+        // Invalid char memory size
+        SysMessage::box() << "[0x1001] Invalid char size\n";
+        SysMessage::box() << "Char size must be 8 bits (1 byte)";
+        return false;
+    }
+
+    if (charunderflow != 127)
+    {
+        // Invalid char undeflow
+        SysMessage::box() << "[0x1002] Invalid char underflow\n";
+        SysMessage::box() << "Char must be signed [-128; 127]";
+        return false;
+    }
+
+    if (charoverflow != -128)
+    {
+        // Invalid char overflow
+        SysMessage::box() << "[0x1002] Invalid char overflow\n";
+        SysMessage::box() << "Char must be signed [-128; 127]";
+        return false;
+    }
+
+    if (unsignedcharsize != 1)
+    {
+        // Invalid unsigned char memory size
+        SysMessage::box() << "[0x1003] Invalid unsigned char size\n";
+        SysMessage::box() << "Unsigned char size must be 8 bits (1 byte)";
+        return false;
+    }
+
+    if (unsignedcharunderflow != 255)
+    {
+        // Invalid unsigned char undeflow
+        SysMessage::box() << "[0x1004] Invalid unsigned char underflow\n";
+        SysMessage::box() << "Unsigned char must be unsigned [0; 255]";
+        return false;
+    }
+
+    if (unsignedcharoverflow != 0)
+    {
+        // Invalid unsigned char overflow
+        SysMessage::box() << "[0x1005] Invalid unsigned char overflow\n";
+        SysMessage::box() << "Unsigned char must be signed [0; 255]";
+        return false;
+    }
+
+    // Char memory representation is valid
     return true;
 }
