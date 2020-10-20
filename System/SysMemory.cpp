@@ -60,6 +60,12 @@ bool SysMemoryCheck()
         return false;
     }
 
+    if (!SysMemoryCheckInt())
+    {
+        // Invalid int memory represantion
+        return false;
+    }
+
     // System memory is ready
     return true;
 }
@@ -170,5 +176,75 @@ bool SysMemoryCheckBool()
     }
 
     // Bool memory representation is valid
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory int representation                                    //
+//  return : True if the system memory int representation is correct          //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheckInt()
+{
+    // Check int representation
+    std::size_t intsize = sizeof(int);
+    int intunderflow = -2147483648;
+    --intunderflow;
+    int intoverflow = 2147483647;
+    ++intoverflow;
+    std::size_t unsignedintsize = sizeof(unsigned int);
+    unsigned int unsignedintunderflow = 0;
+    --unsignedintunderflow;
+    unsigned int unsignedintoverflow = 4294967295;
+    ++unsignedintoverflow;
+
+    if (intsize != 4)
+    {
+        // Invalid int memory size
+        SysMessage::box() << "[0x1009] Invalid int size\n";
+        SysMessage::box() << "Int size must be 32 bits (4 bytes)";
+        return false;
+    }
+
+    if (intunderflow != 2147483647)
+    {
+        // Invalid int undeflow
+        SysMessage::box() << "[0x100A] Invalid int underflow\n";
+        SysMessage::box() << "Int must be signed [-2147483648; 2147483647]";
+        return false;
+    }
+
+    if (intoverflow != -2147483648)
+    {
+        // Invalid int overflow
+        SysMessage::box() << "[0x100B] Invalid int overflow\n";
+        SysMessage::box() << "Int must be signed [-2147483648; 2147483647]";
+        return false;
+    }
+
+    if (unsignedintsize != 4)
+    {
+        // Invalid unsigned int memory size
+        SysMessage::box() << "[0x100C] Invalid unsigned int size\n";
+        SysMessage::box() << "Unsigned int size must be 32 bits (4 bytes)";
+        return false;
+    }
+
+    if (unsignedintunderflow != 4294967295)
+    {
+        // Invalid unsigned int undeflow
+        SysMessage::box() << "[0x100D] Invalid unsigned int underflow\n";
+        SysMessage::box() << "Unsigned int must be unsigned [0; 4294967295]";
+        return false;
+    }
+
+    if (unsignedintoverflow != 0)
+    {
+        // Invalid unsigned int overflow
+        SysMessage::box() << "[0x100E] Invalid unsigned int overflow\n";
+        SysMessage::box() << "Unsigned int must be signed [0; 4294967295]";
+        return false;
+    }
+
+    // Int memory representation is valid
     return true;
 }
