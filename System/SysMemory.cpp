@@ -278,6 +278,8 @@ bool SysMemoryCheckInt()
     --uint32tunderflow;
     uint32_t uint32toverflow = 4294967295;
     ++uint32toverflow;
+    std::size_t int64tsize = sizeof(int64_t);
+    std::size_t uint64tsize = sizeof(uint64_t);
 
     if (shortsize != 2)
     {
@@ -520,6 +522,22 @@ bool SysMemoryCheckInt()
         return false;
     }
 
+    if (int64tsize != 8)
+    {
+        // Invalid int64_t memory size
+        SysMessage::box() << "[0x102B] Invalid int64_t memory size\n";
+        SysMessage::box() << "Int64_t size must be 64 bits (8 bytes)";
+        return false;
+    }
+
+    if (uint64tsize != 8)
+    {
+        // Invalid uint64_t memory size
+        SysMessage::box() << "[0x102C] Invalid uint64_t memory size\n";
+        SysMessage::box() << "Uint64_t size must be 64 bits (8 bytes)";
+        return false;
+    }
+
     // Int memory representation is valid
     return true;
 }
@@ -536,7 +554,7 @@ bool SysMemoryCheckFloat()
     if (floatsize != 4)
     {
         // Invalid float memory size
-        SysMessage::box() << "[0x102B] Invalid float memory size\n";
+        SysMessage::box() << "[0x102D] Invalid float memory size\n";
         SysMessage::box() << "Float size must be 32 bits (4 bytes)";
         return false;
     }
@@ -544,7 +562,7 @@ bool SysMemoryCheckFloat()
     if (std::numeric_limits<float>::epsilon() > Math::FloatEpsilon)
     {
         // Invalid float epsilon
-        SysMessage::box() << "[0x102C] Invalid float epsilon\n";
+        SysMessage::box() << "[0x102E] Invalid float epsilon\n";
         SysMessage::box() << "Float minimum epsilon must be 2.5e-07";
         return false;
     }
@@ -565,7 +583,7 @@ bool SysMemoryCheckDouble()
     if (doublesize != 8)
     {
         // Invalid double memory size
-        SysMessage::box() << "[0x102D] Invalid double memory size\n";
+        SysMessage::box() << "[0x102F] Invalid double memory size\n";
         SysMessage::box() << "Double size must be 64 bits (8 bytes)";
         return false;
     }
@@ -573,7 +591,7 @@ bool SysMemoryCheckDouble()
     if (std::numeric_limits<double>::epsilon() > Math::DoubleEpsilon)
     {
         // Invalid double epsilon
-        SysMessage::box() << "[0x102E] Invalid double epsilon\n";
+        SysMessage::box() << "[0x1030] Invalid double epsilon\n";
         SysMessage::box() << "Double minimum epsilon must be 5.0e-16";
         return false;
     }
