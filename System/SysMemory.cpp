@@ -113,10 +113,18 @@ bool SysMemoryCheckChar()
         return false;
     }
 
+    if (!std::numeric_limits<char>::is_signed)
+    {
+        // Invalid char memory representation
+        SysMessage::box() << "[0x1002] Invalid char memory type\n";
+        SysMessage::box() << "Char must be signed [-128; 127]";
+        return false;
+    }
+
     if (charunderflow != 127)
     {
         // Invalid char undeflow
-        SysMessage::box() << "[0x1002] Invalid char underflow\n";
+        SysMessage::box() << "[0x1003] Invalid char underflow\n";
         SysMessage::box() << "Char must be signed [-128; 127]";
         return false;
     }
@@ -124,7 +132,7 @@ bool SysMemoryCheckChar()
     if (charoverflow != -128)
     {
         // Invalid char overflow
-        SysMessage::box() << "[0x1003] Invalid char overflow\n";
+        SysMessage::box() << "[0x1004] Invalid char overflow\n";
         SysMessage::box() << "Char must be signed [-128; 127]";
         return false;
     }
@@ -132,15 +140,23 @@ bool SysMemoryCheckChar()
     if (unsignedcharsize != 1)
     {
         // Invalid unsigned char memory size
-        SysMessage::box() << "[0x1004] Invalid unsigned char memory size\n";
+        SysMessage::box() << "[0x1005] Invalid unsigned char memory size\n";
         SysMessage::box() << "Unsigned char size must be 8 bits (1 byte)";
+        return false;
+    }
+
+    if (std::numeric_limits<unsigned char>::is_signed)
+    {
+        // Invalid unsigned char memory representation
+        SysMessage::box() << "[0x1006] Invalid unsigned char memory type\n";
+        SysMessage::box() << "Unsigned char must be unsigned [0; 255]";
         return false;
     }
 
     if (unsignedcharunderflow != 255)
     {
         // Invalid unsigned char undeflow
-        SysMessage::box() << "[0x1005] Invalid unsigned char underflow\n";
+        SysMessage::box() << "[0x1007] Invalid unsigned char underflow\n";
         SysMessage::box() << "Unsigned char must be unsigned [0; 255]";
         return false;
     }
@@ -148,7 +164,7 @@ bool SysMemoryCheckChar()
     if (unsignedcharoverflow != 0)
     {
         // Invalid unsigned char overflow
-        SysMessage::box() << "[0x1006] Invalid unsigned char overflow\n";
+        SysMessage::box() << "[0x1008] Invalid unsigned char overflow\n";
         SysMessage::box() << "Unsigned char must be unsigned [0; 255]";
         return false;
     }
@@ -156,15 +172,23 @@ bool SysMemoryCheckChar()
     if (wchartsize != 2)
     {
         // Invalid wchar_t memory size
-        SysMessage::box() << "[0x1007] Invalid wchar_t memory size\n";
+        SysMessage::box() << "[0x1009] Invalid wchar_t memory size\n";
         SysMessage::box() << "Wchar_t size must be 16 bits (2 byte)";
+        return false;
+    }
+
+    if (std::numeric_limits<wchar_t>::is_signed)
+    {
+        // Invalid wchar_t memory representation
+        SysMessage::box() << "[0x100A] Invalid wchar_t memory type\n";
+        SysMessage::box() << "Wchar_t must be unsigned [0; 65535]";
         return false;
     }
 
     if (wchartunderflow != 65535)
     {
         // Invalid wchar_t undeflow
-        SysMessage::box() << "[0x1008] Invalid wchar_t underflow\n";
+        SysMessage::box() << "[0x100B] Invalid wchar_t underflow\n";
         SysMessage::box() << "Wchar_t must be unsigned [0; 65535]";
         return false;
     }
@@ -172,7 +196,7 @@ bool SysMemoryCheckChar()
     if (wchartoverflow != 0)
     {
         // Invalid wchar_t overflow
-        SysMessage::box() << "[0x1009] Invalid wchar_t overflow\n";
+        SysMessage::box() << "[0x100C] Invalid wchar_t overflow\n";
         SysMessage::box() << "Wchar_t must be unsigned [0; 65535]\n";
         return false;
     }
@@ -195,15 +219,23 @@ bool SysMemoryCheckBool()
     if (boolsize != 1)
     {
         // Invalid bool memory size
-        SysMessage::box() << "[0x100A] Invalid bool memory size\n";
+        SysMessage::box() << "[0x100D] Invalid bool memory size\n";
         SysMessage::box() << "Bool size must be 8 bits (1 byte)";
+        return false;
+    }
+
+    if (std::numeric_limits<bool>::is_signed)
+    {
+        // Invalid bool memory representation
+        SysMessage::box() << "[0x100E] Invalid bool memory type\n";
+        SysMessage::box() << "Bool must be unsigned [0; 255]";
         return false;
     }
 
     if (static_cast<char>(booltrue) != 1)
     {
         // Invalid bool true value
-        SysMessage::box() << "[0x100B] Invalid bool true value\n";
+        SysMessage::box() << "[0x100F] Invalid bool true value\n";
         SysMessage::box() << "Bool true value must be 1";
         return false;
     }
@@ -211,7 +243,7 @@ bool SysMemoryCheckBool()
     if (static_cast<char>(boolfalse) != 0)
     {
         // Invalid bool false value
-        SysMessage::box() << "[0x100C] Invalid bool false value\n";
+        SysMessage::box() << "[0x1010] Invalid bool false value\n";
         SysMessage::box() << "Bool false value must be 0";
         return false;
     }
@@ -280,19 +312,28 @@ bool SysMemoryCheckInt()
     ++uint32toverflow;
     std::size_t int64tsize = sizeof(int64_t);
     std::size_t uint64tsize = sizeof(uint64_t);
+    std::size_t sizetsize = sizeof(size_t);
 
     if (shortsize != 2)
     {
         // Invalid short memory size
-        SysMessage::box() << "[0x100D] Invalid short memory size\n";
+        SysMessage::box() << "[0x1011] Invalid short memory size\n";
         SysMessage::box() << "Short size must be 16 bits (2 bytes)";
+        return false;
+    }
+
+    if (!std::numeric_limits<short>::is_signed)
+    {
+        // Invalid short memory representation
+        SysMessage::box() << "[0x1012] Invalid short memory type\n";
+        SysMessage::box() << "Short must be signed [-32768; 32767]";
         return false;
     }
 
     if (shortunderflow != 32767)
     {
         // Invalid short undeflow
-        SysMessage::box() << "[0x100E] Invalid short underflow\n";
+        SysMessage::box() << "[0x1013] Invalid short underflow\n";
         SysMessage::box() << "Short must be signed [-32768; 32767]";
         return false;
     }
@@ -300,7 +341,7 @@ bool SysMemoryCheckInt()
     if (shortoverflow != -32768)
     {
         // Invalid short overflow
-        SysMessage::box() << "[0x100F] Invalid short overflow\n";
+        SysMessage::box() << "[0x1014] Invalid short overflow\n";
         SysMessage::box() << "Short must be signed [-32768; 32767]";
         return false;
     }
@@ -308,15 +349,23 @@ bool SysMemoryCheckInt()
     if (unsignedshortsize != 2)
     {
         // Invalid unsigned short memory size
-        SysMessage::box() << "[0x1010] Invalid unsigned short memory size\n";
+        SysMessage::box() << "[0x1015] Invalid unsigned short memory size\n";
         SysMessage::box() << "Unsigned short size must be 16 bits (2 bytes)";
+        return false;
+    }
+
+    if (std::numeric_limits<unsigned short>::is_signed)
+    {
+        // Invalid unsigned short memory representation
+        SysMessage::box() << "[0x1016] Invalid unsigned short memory type\n";
+        SysMessage::box() << "Unsigned short must be unsigned [0; 65535]";
         return false;
     }
 
     if (unsignedshortunderflow != 65535)
     {
         // Invalid unsigned short undeflow
-        SysMessage::box() << "[0x1011] Invalid unsigned short underflow\n";
+        SysMessage::box() << "[0x1017] Invalid unsigned short underflow\n";
         SysMessage::box() << "Unsigned short must be unsigned [0; 65535]";
         return false;
     }
@@ -324,7 +373,7 @@ bool SysMemoryCheckInt()
     if (unsignedshortoverflow != 0)
     {
         // Invalid unsigned short overflow
-        SysMessage::box() << "[0x1012] Invalid unsigned short overflow\n";
+        SysMessage::box() << "[0x1018] Invalid unsigned short overflow\n";
         SysMessage::box() << "Unsigned short must be unsigned [0; 65535]";
         return false;
     }
@@ -332,15 +381,23 @@ bool SysMemoryCheckInt()
     if (intsize != 4)
     {
         // Invalid int memory size
-        SysMessage::box() << "[0x1013] Invalid int memory size\n";
+        SysMessage::box() << "[0x1019] Invalid int memory size\n";
         SysMessage::box() << "Int size must be 32 bits (4 bytes)";
+        return false;
+    }
+
+    if (!std::numeric_limits<int>::is_signed)
+    {
+        // Invalid int memory representation
+        SysMessage::box() << "[0x101A] Invalid int memory type\n";
+        SysMessage::box() << "Int must be signed [-2147483648; 2147483647]";
         return false;
     }
 
     if (intunderflow != 2147483647)
     {
         // Invalid int undeflow
-        SysMessage::box() << "[0x1014] Invalid int underflow\n";
+        SysMessage::box() << "[0x101B] Invalid int underflow\n";
         SysMessage::box() << "Int must be signed [-2147483648; 2147483647]";
         return false;
     }
@@ -348,7 +405,7 @@ bool SysMemoryCheckInt()
     if (intoverflow != -2147483648)
     {
         // Invalid int overflow
-        SysMessage::box() << "[0x1015] Invalid int overflow\n";
+        SysMessage::box() << "[0x101C] Invalid int overflow\n";
         SysMessage::box() << "Int must be signed [-2147483648; 2147483647]";
         return false;
     }
@@ -356,15 +413,23 @@ bool SysMemoryCheckInt()
     if (unsignedintsize != 4)
     {
         // Invalid unsigned int memory size
-        SysMessage::box() << "[0x1016] Invalid unsigned int memory size\n";
+        SysMessage::box() << "[0x101D] Invalid unsigned int memory size\n";
         SysMessage::box() << "Unsigned int size must be 32 bits (4 bytes)";
+        return false;
+    }
+
+    if (std::numeric_limits<unsigned int>::is_signed)
+    {
+        // Invalid unsigned int memory representation
+        SysMessage::box() << "[0x101E] Invalid unsigned int memory type\n";
+        SysMessage::box() << "Unsigned int must be signed [0; 4294967295]";
         return false;
     }
 
     if (unsignedintunderflow != 4294967295)
     {
         // Invalid unsigned int undeflow
-        SysMessage::box() << "[0x1017] Invalid unsigned int underflow\n";
+        SysMessage::box() << "[0x101F] Invalid unsigned int underflow\n";
         SysMessage::box() << "Unsigned int must be unsigned [0; 4294967295]";
         return false;
     }
@@ -372,7 +437,7 @@ bool SysMemoryCheckInt()
     if (unsignedintoverflow != 0)
     {
         // Invalid unsigned int overflow
-        SysMessage::box() << "[0x1018] Invalid unsigned int overflow\n";
+        SysMessage::box() << "[0x1020] Invalid unsigned int overflow\n";
         SysMessage::box() << "Unsigned int must be unsigned [0; 4294967295]";
         return false;
     }
@@ -381,15 +446,23 @@ bool SysMemoryCheckInt()
     if (int8tsize != 1)
     {
         // Invalid int8_t memory size
-        SysMessage::box() << "[0x1019] Invalid int8_t memory size\n";
+        SysMessage::box() << "[0x1021] Invalid int8_t memory size\n";
         SysMessage::box() << "Int8_t size must be 8 bits (1 bytes)";
+        return false;
+    }
+
+    if (!std::numeric_limits<int8_t>::is_signed)
+    {
+        // Invalid int8_t memory representation
+        SysMessage::box() << "[0x1022] Invalid int8_t memory type\n";
+        SysMessage::box() << "Int8_t must be signed [-128; 127]";
         return false;
     }
 
     if (int8tunderflow != 127)
     {
         // Invalid int8_t undeflow
-        SysMessage::box() << "[0x101A] Invalid int8_t underflow\n";
+        SysMessage::box() << "[0x1023] Invalid int8_t underflow\n";
         SysMessage::box() << "Int8_t must be signed [-128; 127]";
         return false;
     }
@@ -397,7 +470,7 @@ bool SysMemoryCheckInt()
     if (int8toverflow != -128)
     {
         // Invalid int8_t overflow
-        SysMessage::box() << "[0x101B] Invalid int8_t overflow\n";
+        SysMessage::box() << "[0x1024] Invalid int8_t overflow\n";
         SysMessage::box() << "Int8_t must be signed [-128; 127]";
         return false;
     }
@@ -405,15 +478,23 @@ bool SysMemoryCheckInt()
     if (uint8tsize != 1)
     {
         // Invalid uint8_t memory size
-        SysMessage::box() << "[0x101C] Invalid uint8_t memory size\n";
+        SysMessage::box() << "[0x1025] Invalid uint8_t memory size\n";
         SysMessage::box() << "Uint8_t size must be 8 bits (1 bytes)";
+        return false;
+    }
+
+    if (std::numeric_limits<uint8_t>::is_signed)
+    {
+        // Invalid uint8_t memory representation
+        SysMessage::box() << "[0x1026] Invalid uint8_t memory type\n";
+        SysMessage::box() << "Uint8_t must be unsigned [0; 255]";
         return false;
     }
 
     if (uint8tunderflow != 255)
     {
         // Invalid uint8_t undeflow
-        SysMessage::box() << "[0x101D] Invalid uint8_t underflow\n";
+        SysMessage::box() << "[0x1027] Invalid uint8_t underflow\n";
         SysMessage::box() << "Uint8_t must be unsigned [0; 255]";
         return false;
     }
@@ -421,7 +502,7 @@ bool SysMemoryCheckInt()
     if (uint8toverflow != 0)
     {
         // Invalid uint8_t overflow
-        SysMessage::box() << "[0x101E] Invalid uint8_t overflow\n";
+        SysMessage::box() << "[0x1028] Invalid uint8_t overflow\n";
         SysMessage::box() << "Uint8_t must be unsigned [0; 255]";
         return false;
     }
@@ -429,15 +510,23 @@ bool SysMemoryCheckInt()
     if (int16tsize != 2)
     {
         // Invalid int16_t memory size
-        SysMessage::box() << "[0x101F] Invalid int16_t memory size\n";
+        SysMessage::box() << "[0x1029] Invalid int16_t memory size\n";
         SysMessage::box() << "Int16_t size must be 16 bits (2 bytes)";
+        return false;
+    }
+
+    if (!std::numeric_limits<int16_t>::is_signed)
+    {
+        // Invalid int16_t memory representation
+        SysMessage::box() << "[0x102A] Invalid int16_t memory type\n";
+        SysMessage::box() << "Int16_t must be signed [-32768; 32767]";
         return false;
     }
 
     if (int16tunderflow != 32767)
     {
         // Invalid int16_t undeflow
-        SysMessage::box() << "[0x1020] Invalid int16_t underflow\n";
+        SysMessage::box() << "[0x102B] Invalid int16_t underflow\n";
         SysMessage::box() << "Int16_t must be signed [-32768; 32767]";
         return false;
     }
@@ -445,7 +534,7 @@ bool SysMemoryCheckInt()
     if (int16toverflow != -32768)
     {
         // Invalid int16_t overflow
-        SysMessage::box() << "[0x1021] Invalid int16_t overflow\n";
+        SysMessage::box() << "[0x102C] Invalid int16_t overflow\n";
         SysMessage::box() << "Int16_t must be signed [-32768; 32767]";
         return false;
     }
@@ -453,15 +542,23 @@ bool SysMemoryCheckInt()
     if (uint16tsize != 2)
     {
         // Invalid uint16_t memory size
-        SysMessage::box() << "[0x1022] Invalid uint16_t memory size\n";
+        SysMessage::box() << "[0x102D] Invalid uint16_t memory size\n";
         SysMessage::box() << "Uint16_t size must be 16 bits (2 bytes)";
+        return false;
+    }
+
+    if (std::numeric_limits<uint16_t>::is_signed)
+    {
+        // Invalid uint16_t memory representation
+        SysMessage::box() << "[0x102E] Invalid uint16_t memory type\n";
+        SysMessage::box() << "Uint16_t must be unsigned [0; 65535]";
         return false;
     }
 
     if (uint16tunderflow != 65535)
     {
         // Invalid uint16_t undeflow
-        SysMessage::box() << "[0x1023] Invalid uint16_t underflow\n";
+        SysMessage::box() << "[0x102F] Invalid uint16_t underflow\n";
         SysMessage::box() << "Uint16_t must be unsigned [0; 65535]";
         return false;
     }
@@ -469,7 +566,7 @@ bool SysMemoryCheckInt()
     if (uint16toverflow != 0)
     {
         // Invalid uint16_t overflow
-        SysMessage::box() << "[0x1024] Invalid uint16_t overflow\n";
+        SysMessage::box() << "[0x1030] Invalid uint16_t overflow\n";
         SysMessage::box() << "Uint16_t must be unsigned [0; 65535]";
         return false;
     }
@@ -477,15 +574,23 @@ bool SysMemoryCheckInt()
     if (int32tsize != 4)
     {
         // Invalid int32_t memory size
-        SysMessage::box() << "[0x1025] Invalid int32_t memory size\n";
+        SysMessage::box() << "[0x1031] Invalid int32_t memory size\n";
         SysMessage::box() << "Int32_t size must be 32 bits (4 bytes)";
+        return false;
+    }
+
+    if (!std::numeric_limits<int32_t>::is_signed)
+    {
+        // Invalid int32_t memory representation
+        SysMessage::box() << "[0x1032] Invalid int32_t memory type\n";
+        SysMessage::box() << "Int32_t must be signed [-2147483648; 2147483647]";
         return false;
     }
 
     if (int32tunderflow != 2147483647)
     {
         // Invalid int32_t undeflow
-        SysMessage::box() << "[0x1026] Invalid int32_t underflow\n";
+        SysMessage::box() << "[0x1033] Invalid int32_t underflow\n";
         SysMessage::box() << "Int32_t must be signed [-2147483648; 2147483647]";
         return false;
     }
@@ -493,7 +598,7 @@ bool SysMemoryCheckInt()
     if (int32toverflow != -2147483648)
     {
         // Invalid int32_t overflow
-        SysMessage::box() << "[0x1027] Invalid int32_t overflow\n";
+        SysMessage::box() << "[0x1034] Invalid int32_t overflow\n";
         SysMessage::box() << "Int32_t must be signed [-2147483648; 2147483647]";
         return false;
     }
@@ -501,15 +606,23 @@ bool SysMemoryCheckInt()
     if (uint32tsize != 4)
     {
         // Invalid uint32_t memory size
-        SysMessage::box() << "[0x1028] Invalid uint32_t memory size\n";
+        SysMessage::box() << "[0x1035] Invalid uint32_t memory size\n";
         SysMessage::box() << "Uint32_t size must be 32 bits (4 bytes)";
+        return false;
+    }
+
+    if (std::numeric_limits<uint32_t>::is_signed)
+    {
+        // Invalid uint32_t memory representation
+        SysMessage::box() << "[0x1036] Invalid uint32_t memory type\n";
+        SysMessage::box() << "Uint32_t must be unsigned [0; 4294967295]";
         return false;
     }
 
     if (uint32tunderflow != 4294967295)
     {
         // Invalid uint32_t undeflow
-        SysMessage::box() << "[0x1029] Invalid uint32_t underflow\n";
+        SysMessage::box() << "[0x1037] Invalid uint32_t underflow\n";
         SysMessage::box() << "Uint32_t must be unsigned [0; 4294967295]";
         return false;
     }
@@ -517,7 +630,7 @@ bool SysMemoryCheckInt()
     if (uint32toverflow != 0)
     {
         // Invalid uint32_t overflow
-        SysMessage::box() << "[0x102A] Invalid uint32_t overflow\n";
+        SysMessage::box() << "[0x1038] Invalid uint32_t overflow\n";
         SysMessage::box() << "Uint32_t must be unsigned [0; 4294967295]";
         return false;
     }
@@ -525,16 +638,51 @@ bool SysMemoryCheckInt()
     if (int64tsize != 8)
     {
         // Invalid int64_t memory size
-        SysMessage::box() << "[0x102B] Invalid int64_t memory size\n";
+        SysMessage::box() << "[0x1039] Invalid int64_t memory size\n";
         SysMessage::box() << "Int64_t size must be 64 bits (8 bytes)";
+        return false;
+    }
+
+    if (!std::numeric_limits<int64_t>::is_signed)
+    {
+        // Invalid int64_t memory representation
+        SysMessage::box() << "[0x103A] Invalid int64_t memory type\n";
+        SysMessage::box() << "Int64_t must be signed\n";
+        SysMessage::box() << "[-9223372036854775808; 9223372036854775807]";
         return false;
     }
 
     if (uint64tsize != 8)
     {
         // Invalid uint64_t memory size
-        SysMessage::box() << "[0x102C] Invalid uint64_t memory size\n";
+        SysMessage::box() << "[0x103B] Invalid uint64_t memory size\n";
         SysMessage::box() << "Uint64_t size must be 64 bits (8 bytes)";
+        return false;
+    }
+
+    if (std::numeric_limits<uint64_t>::is_signed)
+    {
+        // Invalid uint64_t memory representation
+        SysMessage::box() << "[0x103C] Invalid uint64_t memory type\n";
+        SysMessage::box() << "Uint64_t must be unsigned\n";
+        SysMessage::box() << "[0; 18446744073709551615]";
+        return false;
+    }
+
+    if (sizetsize != 8)
+    {
+        // Invalid size_t memory size
+        SysMessage::box() << "[0x103D] Invalid size_t memory size\n";
+        SysMessage::box() << "Size_t size must be 64 bits (8 bytes)";
+        return false;
+    }
+
+    if (std::numeric_limits<size_t>::is_signed)
+    {
+        // Invalid size_t memory representation
+        SysMessage::box() << "[0x103E] Invalid size_t memory type\n";
+        SysMessage::box() << "Size_t must be unsigned\n";
+        SysMessage::box() << "[0; 18446744073709551615]";
         return false;
     }
 
@@ -554,7 +702,7 @@ bool SysMemoryCheckFloat()
     if (floatsize != 4)
     {
         // Invalid float memory size
-        SysMessage::box() << "[0x102D] Invalid float memory size\n";
+        SysMessage::box() << "[0x103F] Invalid float memory size\n";
         SysMessage::box() << "Float size must be 32 bits (4 bytes)";
         return false;
     }
@@ -562,7 +710,7 @@ bool SysMemoryCheckFloat()
     if (std::numeric_limits<float>::epsilon() > Math::FloatEpsilon)
     {
         // Invalid float epsilon
-        SysMessage::box() << "[0x102E] Invalid float epsilon\n";
+        SysMessage::box() << "[0x1040] Invalid float epsilon\n";
         SysMessage::box() << "Float minimum epsilon must be 2.5e-07";
         return false;
     }
@@ -583,7 +731,7 @@ bool SysMemoryCheckDouble()
     if (doublesize != 8)
     {
         // Invalid double memory size
-        SysMessage::box() << "[0x102F] Invalid double memory size\n";
+        SysMessage::box() << "[0x1041] Invalid double memory size\n";
         SysMessage::box() << "Double size must be 64 bits (8 bytes)";
         return false;
     }
@@ -591,7 +739,7 @@ bool SysMemoryCheckDouble()
     if (std::numeric_limits<double>::epsilon() > Math::DoubleEpsilon)
     {
         // Invalid double epsilon
-        SysMessage::box() << "[0x1030] Invalid double epsilon\n";
+        SysMessage::box() << "[0x1042] Invalid double epsilon\n";
         SysMessage::box() << "Double minimum epsilon must be 5.0e-16";
         return false;
     }
