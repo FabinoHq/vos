@@ -176,8 +176,6 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!selectVulkanDevice())
     {
         // Could not select Vulkan device
-        SysMessage::box() << "[0x300E] Could not select Vulkan device\n";
-        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -185,7 +183,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!LoadVulkanDeviceFunctions(m_vulkanDevice))
     {
         // Could not load Vulkan device functions
-        SysMessage::box() << "[0x300F] Could not load device functions\n";
+        SysMessage::box() << "[0x301C] Could not load device functions\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -238,14 +236,14 @@ bool Renderer::init(SysWindow* sysWindow)
         &commandPoolInfo, 0, &m_transferCommandPool) != VK_SUCCESS)
     {
         // Could not create transfer commands pool
-        SysMessage::box() << "[0x3034] Could not create commands pool\n";
+        SysMessage::box() << "[0x3041] Could not create commands pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_transferCommandPool)
     {
         // Invalid transfer commands pool
-        SysMessage::box() << "[0x3035] Invalid transfer commands pool\n";
+        SysMessage::box() << "[0x3042] Invalid transfer commands pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -256,7 +254,7 @@ bool Renderer::init(SysWindow* sysWindow)
         DefaultFragmentShader, DefaultFragmentShaderSize))
     {
         // Could not create default shaders
-        SysMessage::box() << "[0x3036] Could not create default shaders\n";
+        SysMessage::box() << "[0x3043] Could not create default shaders\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -265,7 +263,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createDescriptorSetLayout())
     {
         // Could not create descriptor set layout
-        SysMessage::box() << "[0x3037] Could not create descriptor layout\n";
+        SysMessage::box() << "[0x3044] Could not create descriptor layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -274,7 +272,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createPipelineLayout())
     {
         // Could not create pipeline layout
-        SysMessage::box() << "[0x3038] Could not create pipeline layout\n";
+        SysMessage::box() << "[0x3045] Could not create pipeline layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -283,7 +281,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createPipeline())
     {
         // Could not create pipeline
-        SysMessage::box() << "[0x3039] Could not create pipeline\n";
+        SysMessage::box() << "[0x3046] Could not create pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -293,7 +291,7 @@ bool Renderer::init(SysWindow* sysWindow)
         m_vulkanMemory, m_transferCommandPool, m_transferQueue))
     {
         // Could not create vertex buffer
-        SysMessage::box() << "[0x303A] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3047] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -323,7 +321,7 @@ bool Renderer::init(SysWindow* sysWindow)
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
-            SysMessage::box() << "[0x303B] Could not create uniform buffer\n";
+            SysMessage::box() << "[0x3048] Could not create uniform buffer\n";
             SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
@@ -335,7 +333,7 @@ bool Renderer::init(SysWindow* sysWindow)
         TestSpriteWidth, TestSpriteHeight, TestSpriteDepth, TestSprite))
     {
         // Could not load texture
-        SysMessage::box() << "[0x303C] Could not load texture\n";
+        SysMessage::box() << "[0x3049] Could not load texture\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -344,7 +342,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createDescriptorPool())
     {
         // Could not create descriptor pool
-        SysMessage::box() << "[0x303D] Could not create descriptor pool\n";
+        SysMessage::box() << "[0x304A] Could not create descriptor pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -849,6 +847,8 @@ bool Renderer::selectVulkanDevice()
     if (!m_vulkanInstance)
     {
         // Invalid Vulkan instance
+        SysMessage::box() << "[0x300E] Invalid Vulkan instance\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -856,6 +856,8 @@ bool Renderer::selectVulkanDevice()
     if (!m_vulkanSurface)
     {
         // Invalid vulkan surface
+        SysMessage::box() << "[0x300F] Invalid vulkan surface\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -863,6 +865,8 @@ bool Renderer::selectVulkanDevice()
     if (m_physicalDevice)
     {
         // Physical device already selected
+        SysMessage::box() << "[0x3010] Physical device already selected\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -870,6 +874,8 @@ bool Renderer::selectVulkanDevice()
     if (m_vulkanDevice)
     {
         // Vulkan device already selected
+        SysMessage::box() << "[0x3011] Vulkan device already selected\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -879,11 +885,15 @@ bool Renderer::selectVulkanDevice()
         m_vulkanInstance, &devicesCounts, 0) != VK_SUCCESS)
     {
         // Could not enumerate physical devices
+        SysMessage::box() << "[0x3012] Could not enumerate physical devices\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (devicesCounts <= 0)
     {
         // No physical device found
+        SysMessage::box() << "[0x3013] No physical device found\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -893,6 +903,8 @@ bool Renderer::selectVulkanDevice()
         m_vulkanInstance, &devicesCounts, physicalDevices.data()) != VK_SUCCESS)
     {
         // Could not get physical devices list
+        SysMessage::box() << "[0x3014] Could not get physical devices list\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -990,6 +1002,8 @@ bool Renderer::selectVulkanDevice()
     if (!m_physicalDevice)
     {
         // Invalid physical device
+        SysMessage::box() << "[0x3019] Invalid physical device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -1055,11 +1069,15 @@ bool Renderer::selectVulkanDevice()
         m_physicalDevice, &deviceInfos, 0, &m_vulkanDevice) != VK_SUCCESS)
     {
         // Could not create Vulkan device
+        SysMessage::box() << "[0x301A] Could not create Vulkan device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_vulkanDevice)
     {
         // Invalid Vulkan device
+        SysMessage::box() << "[0x301B] Invalid Vulkan device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 

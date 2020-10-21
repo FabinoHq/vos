@@ -72,7 +72,7 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
     if (!vulkanDevice)
     {
         // Invalid Vulkan device
-        SysMessage::box() << "[0x3010] Invalid Vulkan device\n";
+        SysMessage::box() << "[0x301D] Invalid Vulkan device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -82,7 +82,7 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
     if (!handle)
     {
         // Invalid queue handle
-        SysMessage::box() << "[0x3011] Invalid queue handle\n";
+        SysMessage::box() << "[0x301E] Invalid queue handle\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -104,6 +104,8 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     if (!vulkanSurface)
     {
         // Invalid Vulkan surface
+        SysMessage::box() << "[0x3015] Invalid Vulkan surface\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -111,6 +113,8 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     if (!physicalDevice)
     {
         // Invalid physical device
+        SysMessage::box() << "[0x3016] Invalid physical device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -122,6 +126,8 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     if (queueFamilyCount <= 0)
     {
         // No device queue families found
+        SysMessage::box() << "[0x3017] No device queue families found\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -220,6 +226,8 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     // Check if current device supports graphics, surface, and transfer queues
     if (!graphicsQueueFound || !surfaceQueueFound || !transferQueueFound)
     {
+        SysMessage::box() << "[0x3018] Could not find a suitable device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
