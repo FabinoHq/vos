@@ -572,7 +572,7 @@ bool SysMemoryCheckInt()
             SysMessage::box() << "Size_t must be at least 64 bits (8 bytes)";
             return false;
         }
-    #elif
+    #else
         if (sizetsize < 4)
         {
             // Invalid size_t memory size
