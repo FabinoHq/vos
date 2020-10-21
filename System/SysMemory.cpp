@@ -78,6 +78,12 @@ bool SysMemoryCheck()
         return false;
     }
 
+    if (!SysMemoryCheckEndianness())
+    {
+        // Invalid system memory endianness
+        return false;
+    }
+
     // System memory is ready
     return true;
 }
@@ -745,5 +751,29 @@ bool SysMemoryCheckDouble()
     }
 
     // Double memory representation is valid
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory endianness                                            //
+//  return : True if the system memory is little-endian                       //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheckEndianness()
+{
+    // Check system memory endianness
+    int endianness = 0x01020304;
+    int byte0 = (endianness & 0x000000FF) >> 0;
+    int byte1 = (endianness & 0x0000FF00) >> 8;
+    int byte2 = (endianness & 0x00FF0000) >> 16;
+    int byte3 = (endianness & 0xFF000000) >> 24;
+
+    if (byte0 != 0x04 || byte1 != 0x03 || byte2 != 0x02 || byte3 != 0x01)
+    {
+        SysMessage::box() << "[0x1043] Invalid system memory endianness\n";
+        SysMessage::box() << "System memory must be little-endian";
+        return false;
+    }
+
+    // System memory is little-endian
     return true;
 }
