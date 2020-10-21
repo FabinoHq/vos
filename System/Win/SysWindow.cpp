@@ -84,6 +84,8 @@ bool SysWindow::create()
     if (!displayMode.getSystemMode())
     {
         // Invalid system mode
+        SysMessage::box() << "[0x2001] Invalid system display mode\n";
+        SysMessage::box() << "Current system display mode must be valid";
         return false;
     }
 
@@ -102,6 +104,8 @@ bool SysWindow::create()
     if (!RegisterClass(&windowClass))
     {
         // Unable to register the window class
+        SysMessage::box() << "[0x2002] Unable to register the window class\n";
+        SysMessage::box() << "Window class must be registrable";
         return false;
     }
 
@@ -129,6 +133,8 @@ bool SysWindow::create()
     if (!m_handle)
     {
         // Unable to create the system window
+        SysMessage::box() << "[0x2003] Unable to create the system window\n";
+        SysMessage::box() << "System window must be creatable";
         return false;
     }
 
