@@ -104,6 +104,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!sysWindow)
     {
         // Invalid SysWindow
+        SysMessage::box() << "[0x3001] Invalid system window\n";
+        SysMessage::box() << "System window must be valid";
         return false;
     }
     m_sysWindow = sysWindow;
@@ -112,6 +114,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!LoadVulkanLibrary(m_vulkanLibHandle))
     {
         // Could not load Vulkan library
+        SysMessage::box() << "[0x3002] Could not load Vulkan library\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -119,6 +123,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!LoadVulkanGetInstance(m_vulkanLibHandle))
     {
         // Could not load Vulkan GetInstance function
+        SysMessage::box() << "[0x3003] Could not load Vulkan GetInstance\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -126,6 +132,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!LoadVulkanGlobalFunctions())
     {
         // Could not load Vulkan global functions
+        SysMessage::box() << "[0x3004] Could not load global functions\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -140,6 +148,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!LoadVulkanCreateSystemSurface(m_vulkanInstance))
     {
         // Could not load Vulkan CreateSystemSurface function
+        SysMessage::box() << "[0x300B] Could not load CreateSystemSurface\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -148,6 +158,8 @@ bool Renderer::init(SysWindow* sysWindow)
         m_vulkanInstance, *m_sysWindow, m_vulkanSurface))
     {
         // Could not create Vulkan SystemSurface
+        SysMessage::box() << "[0x300C] Could not create Vulkan SystemSurface\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -155,6 +167,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!LoadVulkanInstanceFunctions(m_vulkanInstance))
     {
         // Could not load Vulkan instance functions
+        SysMessage::box() << "[0x300D] Could not load instance functions\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -162,6 +176,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!selectVulkanDevice())
     {
         // Could not select Vulkan device
+        SysMessage::box() << "[0x300E] Could not select Vulkan device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -169,6 +185,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!LoadVulkanDeviceFunctions(m_vulkanDevice))
     {
         // Could not load Vulkan device functions
+        SysMessage::box() << "[0x300F] Could not load device functions\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -220,11 +238,15 @@ bool Renderer::init(SysWindow* sysWindow)
         &commandPoolInfo, 0, &m_transferCommandPool) != VK_SUCCESS)
     {
         // Could not create transfer commands pool
+        SysMessage::box() << "[0x3034] Could not create commands pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_transferCommandPool)
     {
         // Invalid transfer commands pool
+        SysMessage::box() << "[0x3035] Invalid transfer commands pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -234,6 +256,8 @@ bool Renderer::init(SysWindow* sysWindow)
         DefaultFragmentShader, DefaultFragmentShaderSize))
     {
         // Could not create default shaders
+        SysMessage::box() << "[0x3036] Could not create default shaders\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -241,6 +265,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createDescriptorSetLayout())
     {
         // Could not create descriptor set layout
+        SysMessage::box() << "[0x3037] Could not create descriptor layout\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -248,6 +274,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createPipelineLayout())
     {
         // Could not create pipeline layout
+        SysMessage::box() << "[0x3038] Could not create pipeline layout\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -255,6 +283,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createPipeline())
     {
         // Could not create pipeline
+        SysMessage::box() << "[0x3039] Could not create pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -263,6 +293,8 @@ bool Renderer::init(SysWindow* sysWindow)
         m_vulkanMemory, m_transferCommandPool, m_transferQueue))
     {
         // Could not create vertex buffer
+        SysMessage::box() << "[0x303A] Could not create vertex buffer\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -291,6 +323,8 @@ bool Renderer::init(SysWindow* sysWindow)
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
+            SysMessage::box() << "[0x303B] Could not create uniform buffer\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
     }
@@ -301,6 +335,8 @@ bool Renderer::init(SysWindow* sysWindow)
         TestSpriteWidth, TestSpriteHeight, TestSpriteDepth, TestSprite))
     {
         // Could not load texture
+        SysMessage::box() << "[0x303C] Could not load texture\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -308,6 +344,8 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createDescriptorPool())
     {
         // Could not create descriptor pool
+        SysMessage::box() << "[0x303D] Could not create descriptor pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -705,7 +743,9 @@ bool Renderer::createVulkanInstance()
     // Check current Vulkan instance
     if (m_vulkanInstance)
     {
-        // Vulkan instance allready created
+        // Vulkan instance already created
+        SysMessage::box() << "[0x3005] Vulkan instance already created\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -714,6 +754,8 @@ bool Renderer::createVulkanInstance()
     if (vkEnumerateInstanceExtensionProperties(0, &extCount, 0) != VK_SUCCESS)
     {
         // Could not enumerate Vulkan extensions properties
+        SysMessage::box() << "[0x3006] Could not enumerate extensions\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -723,6 +765,8 @@ bool Renderer::createVulkanInstance()
         0, &extCount, extProperties.data()) != VK_SUCCESS)
     {
         // Could not get Vulkan extensions properties
+        SysMessage::box() << "[0x3007] Could not get extensions properties\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -749,6 +793,8 @@ bool Renderer::createVulkanInstance()
     if (!allExtFound)
     {
         // One or more Vulkan extension is unavailable
+        SysMessage::box() << "[0x3008] Required extensions are not supported\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -777,11 +823,15 @@ bool Renderer::createVulkanInstance()
     if (vkCreateInstance(&createInfos, 0, &m_vulkanInstance) != VK_SUCCESS)
     {
         // Could not create Vulkan instance
+        SysMessage::box() << "[0x3009] Could not create Vulkan instance\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_vulkanInstance)
     {
         // Could not create Vulkan instance
+        SysMessage::box() << "[0x300A] Could not create Vulkan instance\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 

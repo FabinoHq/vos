@@ -92,6 +92,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     if (!physicalDevice)
     {
         // Invalid physical device
+        SysMessage::box() << "[0x3101] Invalid physical device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -102,6 +104,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
         || !vkBindBufferMemory || !vkBindImageMemory)
     {
         // Invalid memory functions
+        SysMessage::box() << "[0x3102] Invalid memory functions\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -119,6 +123,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
             deviceProperties.limits.minMemoryMapAlignment) != 0)
         {
             // Invalid memory alignment
+            SysMessage::box() << "[0x3103] Invalid memory alignment\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
     }
@@ -128,6 +134,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
             deviceProperties.limits.nonCoherentAtomSize) != 0)
         {
             // Invalid memory alignment
+            SysMessage::box() << "[0x3104] Invalid memory alignment\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
     }
@@ -136,6 +144,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     if (m_maxAllocationCount <= 0)
     {
         // Invalid maximum allocation count
+        SysMessage::box() << "[0x3105] Invalid maximum allocation count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -149,6 +159,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     if (physicalMemoryProperties.memoryTypeCount <= 0)
     {
         // No physical memory type
+        SysMessage::box() << "[0x3106] No physical memory type\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -189,6 +201,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     if (!deviceMemoryFound || !hostMemoryFound)
     {
         // Could not find all memory types
+        SysMessage::box() << "[0x3107] Could not find all memory types\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -203,6 +217,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
         vulkanDevice, &allocateInfo, 0, &m_deviceMemory) != VK_SUCCESS)
     {
         // Could not allocate device memory
+        SysMessage::box() << "[0x3108] Could not allocate device memory\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -216,6 +232,8 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
         vulkanDevice, &allocateInfo, 0, &m_hostMemory) != VK_SUCCESS)
     {
         // Could not allocate host memory
+        SysMessage::box() << "[0x3109] Could not allocate host memory\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 

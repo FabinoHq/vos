@@ -72,6 +72,8 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
     if (!vulkanDevice)
     {
         // Invalid Vulkan device
+        SysMessage::box() << "[0x3010] Invalid Vulkan device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -80,6 +82,8 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
     if (!handle)
     {
         // Invalid queue handle
+        SysMessage::box() << "[0x3011] Invalid queue handle\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 

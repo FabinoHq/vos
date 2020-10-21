@@ -46,6 +46,7 @@
     #include <X11/Xutil.h>
     #include <queue>
 
+    #include "../SysMessage.h"
     #include "SysDisplayMode.h"
     #include "../../Event.h"
 

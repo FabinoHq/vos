@@ -43,7 +43,6 @@
 #define VOS_SYSTEM_SYSWINDOW_HEADER
 
     #include "System.h"
-	#include "SysMessage.h"
 
 
     #ifdef VOS_WINDOWS

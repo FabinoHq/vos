@@ -105,6 +105,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (!physicalDevice)
     {
         // Invalid physical device
+        SysMessage::box() << "[0x3012] Invalid physical device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -112,6 +114,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (!vulkanDevice)
     {
         // Invalid Vulkan device
+        SysMessage::box() << "[0x3013] Invalid Vulkan device\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -119,6 +123,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (!vulkanSurface)
     {
         // Invalid Vulkan surface
+        SysMessage::box() << "[0x3014] Invalid Vulkan surface\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -133,6 +139,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
     {
         // Could not get the device ready
+        SysMessage::box() << "[0x3015] Could not get the device ready\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -142,6 +150,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         physicalDevice, vulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
     {
         // Could not get device surface capabilities
+        SysMessage::box() << "[0x3016] Could not get surface capabilities\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -151,11 +161,15 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         physicalDevice, vulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
     {
         // Could not get surface formats count
+        SysMessage::box() << "[0x3017] Could not get surface formats count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (formatsCnt <= 0)
     {
         // No surface formats found
+        SysMessage::box() << "[0x3018] No surface formats found\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -164,6 +178,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         vulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
     {
         // Could not get surface formats
+        SysMessage::box() << "[0x3019] Could not get surface formats\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -173,11 +189,15 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         physicalDevice, vulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
     {
         // Could not get present modes count
+        SysMessage::box() << "[0x301A] Could not get present modes count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (presentModesCnt <= 0)
     {
         // No present modes found
+        SysMessage::box() << "[0x301B] No present modes found\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
@@ -185,6 +205,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         vulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
     {
         // Could not get present modes
+        SysMessage::box() << "[0x301C] Could not get present modes\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -208,6 +230,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (imagesCount <= 0)
     {
         // Invalid swapchain images count
+        SysMessage::box() << "[0x301D] Invalid swapchain images count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -218,6 +242,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (surfaceFormats.size() <= 0)
     {
         // Invalid surface formats count
+        SysMessage::box() << "[0x301E] Invalid surface formats count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -274,7 +300,9 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 
     if ((swapchainExtent.width <= 0) || (swapchainExtent.height <= 0))
     {
-        // Invalid swapchain extent
+        // Invalid swapchain extents
+        SysMessage::box() << "[0x301F] Invalid swapchain extents\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -284,6 +312,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT))
     {
         // Color attachment flag is not supported
+        SysMessage::box() << "[0x3020] Color attachment is not supported\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -331,6 +361,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
             else
             {
                 // No present mode is supported
+                SysMessage::box() << "[0x3021] No present mode is supported\n";
+                SysMessage::box() << "Please update your graphics drivers";
                 return false;
             }
         }
@@ -364,6 +396,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         vulkanDevice, &swapchainInfos, 0, &handle) != VK_SUCCESS)
     {
         // Could not create Vulkan swapchain
+        SysMessage::box() << "[0x3022] Could not create Vulkan swapchain\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -382,6 +416,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         vulkanDevice, handle, &swapchainFramesCount, 0) != VK_SUCCESS)
     {
         // Could not get swapchain frames count
+        SysMessage::box() << "[0x3023] Could not get swapchain frames count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -389,11 +425,15 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (swapchainFramesCount <= 0)
     {
         // Invalid swapchain frames count
+        SysMessage::box() << "[0x3024] Invalid swapchain frames count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (swapchainFramesCount > RendererMaxSwapchainFrames)
     {
         // Invalid swapchain frames count
+        SysMessage::box() << "[0x3025] Invalid swapchain frames count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -403,6 +443,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         handle, &swapchainFramesCount, swapchainImages) != VK_SUCCESS)
     {
         // Could not get swapchain images count
+        SysMessage::box() << "[0x3026] Could not get swapchain images count\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -448,6 +490,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
             vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
         {
             // Could not create swapchain image view
+            SysMessage::box() << "[0x3027] Could not create swapchain view\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
     }
@@ -517,11 +561,15 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         vulkanDevice, &renderPassInfo, 0, &renderPass) != VK_SUCCESS)
     {
         // Could not create render pass
+        SysMessage::box() << "[0x3028] Could not create render pass\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!renderPass)
     {
         // Invalid render pass
+        SysMessage::box() << "[0x3029] Invalid render pass\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -543,11 +591,15 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
             vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
         {
             // Could not create framebuffer
+            SysMessage::box() << "[0x302A] Could not create framebuffer\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
         if (!framebuffers[i])
         {
             // Invalid framebuffer
+            SysMessage::box() << "[0x302B] Invalid framebuffer\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
     }
@@ -565,6 +617,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
             vulkanDevice, &semaphoreInfo, 0, &renderReady[i]) != VK_SUCCESS)
         {
             // Could not create render ready semaphore
+            SysMessage::box() << "[0x302C] Could not create ready semaphore\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
 
@@ -573,6 +627,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
             vulkanDevice, &semaphoreInfo, 0, &renderFinished[i]) != VK_SUCCESS)
         {
             // Could not create render finished semaphore
+            SysMessage::box() << "[0x302D] Could not create finish semaphore\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
     }
@@ -589,11 +645,15 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
             vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
         {
             // Could not create fence
+            SysMessage::box() << "[0x302E] Could not create fence\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
         if (!fences[i])
         {
             // Invalid fence
+            SysMessage::box() << "[0x302F] Invalid fence\n";
+            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
     }
@@ -611,11 +671,15 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         vulkanDevice, &commandPoolInfo, 0, &commandsPool) != VK_SUCCESS)
     {
         // Could not create commands pool
+        SysMessage::box() << "[0x3030] Could not create commands pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!commandsPool)
     {
         // Invalid commands pool
+        SysMessage::box() << "[0x3031] Invalid commands pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -631,6 +695,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         vulkanDevice, &commandBufferInfo, commandBuffers) != VK_SUCCESS)
     {
         // Could not allocate command buffers
+        SysMessage::box() << "[0x3032] Could not allocate command buffers\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -638,6 +704,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
     {
         // Could not get the device ready
+        SysMessage::box() << "[0x3033] Could not get the device ready\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 

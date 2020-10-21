@@ -47,6 +47,7 @@
     #include <cstring>
 
     #include "../System.h"
+    #include "../SysMessage.h"
     #include "../SysWindow.h"
 
 
