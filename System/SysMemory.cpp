@@ -99,6 +99,11 @@ bool SysMemoryCheckChar()
     --unsignedcharunderflow;
     unsigned char unsignedcharoverflow = 255;
     ++unsignedcharoverflow;
+    std::size_t wchartsize = sizeof(wchar_t);
+    wchar_t wchartunderflow = 0;
+    --wchartunderflow;
+    wchar_t wchartoverflow = 65535;
+    ++wchartoverflow;
 
     if (charsize != 1)
     {
@@ -148,6 +153,30 @@ bool SysMemoryCheckChar()
         return false;
     }
 
+    if (wchartsize != 2)
+    {
+        // Invalid wchar_t memory size
+        SysMessage::box() << "[0x1006] Invalid wchar_t memory size\n";
+        SysMessage::box() << "Wchar_t size must be 16 bits (2 byte)";
+        return false;
+    }
+
+    if (wchartunderflow != 65535)
+    {
+        // Invalid wchar_t undeflow
+        SysMessage::box() << "[0x1007] Invalid wchar_t underflow\n";
+        SysMessage::box() << "Wchar_t must be unsigned [0; 65535]";
+        return false;
+    }
+
+    if (wchartoverflow != 0)
+    {
+        // Invalid wchar_t overflow
+        SysMessage::box() << "[0x1008] Invalid wchar_t overflow\n";
+        SysMessage::box() << "Wchar_t must be unsigned [0; 65535]\n";
+        return false;
+    }
+
     // Char memory representation is valid
     return true;
 }
@@ -166,7 +195,7 @@ bool SysMemoryCheckBool()
     if (boolsize != 1)
     {
         // Invalid bool memory size
-        SysMessage::box() << "[0x1006] Invalid bool memory size\n";
+        SysMessage::box() << "[0x1009] Invalid bool memory size\n";
         SysMessage::box() << "Bool size must be 8 bits (1 byte)";
         return false;
     }
@@ -174,7 +203,7 @@ bool SysMemoryCheckBool()
     if (static_cast<char>(booltrue) != 1)
     {
         // Invalid bool true value
-        SysMessage::box() << "[0x1007] Invalid bool true value\n";
+        SysMessage::box() << "[0x100A] Invalid bool true value\n";
         SysMessage::box() << "Bool true value must be 1";
         return false;
     }
@@ -182,7 +211,7 @@ bool SysMemoryCheckBool()
     if (static_cast<char>(boolfalse) != 0)
     {
         // Invalid bool false value
-        SysMessage::box() << "[0x1008] Invalid bool false value\n";
+        SysMessage::box() << "[0x100B] Invalid bool false value\n";
         SysMessage::box() << "Bool false value must be 0";
         return false;
     }
@@ -212,7 +241,7 @@ bool SysMemoryCheckInt()
     if (intsize != 4)
     {
         // Invalid int memory size
-        SysMessage::box() << "[0x1009] Invalid int memory size\n";
+        SysMessage::box() << "[0x100C] Invalid int memory size\n";
         SysMessage::box() << "Int size must be 32 bits (4 bytes)";
         return false;
     }
@@ -220,7 +249,7 @@ bool SysMemoryCheckInt()
     if (intunderflow != 2147483647)
     {
         // Invalid int undeflow
-        SysMessage::box() << "[0x100A] Invalid int underflow\n";
+        SysMessage::box() << "[0x100D] Invalid int underflow\n";
         SysMessage::box() << "Int must be signed [-2147483648; 2147483647]";
         return false;
     }
@@ -228,7 +257,7 @@ bool SysMemoryCheckInt()
     if (intoverflow != -2147483648)
     {
         // Invalid int overflow
-        SysMessage::box() << "[0x100B] Invalid int overflow\n";
+        SysMessage::box() << "[0x100E] Invalid int overflow\n";
         SysMessage::box() << "Int must be signed [-2147483648; 2147483647]";
         return false;
     }
@@ -236,7 +265,7 @@ bool SysMemoryCheckInt()
     if (unsignedintsize != 4)
     {
         // Invalid unsigned int memory size
-        SysMessage::box() << "[0x100C] Invalid unsigned int memory size\n";
+        SysMessage::box() << "[0x100F] Invalid unsigned int memory size\n";
         SysMessage::box() << "Unsigned int size must be 32 bits (4 bytes)";
         return false;
     }
@@ -244,7 +273,7 @@ bool SysMemoryCheckInt()
     if (unsignedintunderflow != 4294967295)
     {
         // Invalid unsigned int undeflow
-        SysMessage::box() << "[0x100D] Invalid unsigned int underflow\n";
+        SysMessage::box() << "[0x1010] Invalid unsigned int underflow\n";
         SysMessage::box() << "Unsigned int must be unsigned [0; 4294967295]";
         return false;
     }
@@ -252,7 +281,7 @@ bool SysMemoryCheckInt()
     if (unsignedintoverflow != 0)
     {
         // Invalid unsigned int overflow
-        SysMessage::box() << "[0x100E] Invalid unsigned int overflow\n";
+        SysMessage::box() << "[0x1011] Invalid unsigned int overflow\n";
         SysMessage::box() << "Unsigned int must be signed [0; 4294967295]";
         return false;
     }
@@ -273,7 +302,7 @@ bool SysMemoryCheckFloat()
     if (floatsize != 4)
     {
         // Invalid float memory size
-        SysMessage::box() << "[0x100F] Invalid float memory size\n";
+        SysMessage::box() << "[0x1012] Invalid float memory size\n";
         SysMessage::box() << "Float size must be 32 bits (4 bytes)";
         return false;
     }
@@ -281,7 +310,7 @@ bool SysMemoryCheckFloat()
     if (std::numeric_limits<float>::epsilon() > Math::FloatEpsilon)
     {
         // Invalid float epsilon
-        SysMessage::box() << "[0x1010] Invalid float epsilon\n";
+        SysMessage::box() << "[0x1013] Invalid float epsilon\n";
         SysMessage::box() << "Float minimum epsilon must be 2.5e-07";
         return false;
     }
@@ -302,7 +331,7 @@ bool SysMemoryCheckDouble()
     if (doublesize != 8)
     {
         // Invalid double memory size
-        SysMessage::box() << "[0x1011] Invalid double memory size\n";
+        SysMessage::box() << "[0x1014] Invalid double memory size\n";
         SysMessage::box() << "Double size must be 64 bits (8 bytes)";
         return false;
     }
@@ -310,7 +339,7 @@ bool SysMemoryCheckDouble()
     if (std::numeric_limits<double>::epsilon() > Math::DoubleEpsilon)
     {
         // Invalid double epsilon
-        SysMessage::box() << "[0x1012] Invalid double epsilon\n";
+        SysMessage::box() << "[0x1015] Invalid double epsilon\n";
         SysMessage::box() << "Double minimum epsilon must be 5.0e-16";
         return false;
     }
