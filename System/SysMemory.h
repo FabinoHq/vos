@@ -42,6 +42,7 @@
 #ifndef VOS_SYSTEM_SYSMEMORY_HEADER
 #define VOS_SYSTEM_SYSMEMORY_HEADER
 
+    #include <cstdint>
     #include <limits>
 
     #include "System.h"

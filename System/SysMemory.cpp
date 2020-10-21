@@ -149,7 +149,7 @@ bool SysMemoryCheckChar()
     {
         // Invalid unsigned char overflow
         SysMessage::box() << "[0x1006] Invalid unsigned char overflow\n";
-        SysMessage::box() << "Unsigned char must be signed [0; 255]";
+        SysMessage::box() << "Unsigned char must be unsigned [0; 255]";
         return false;
     }
 
@@ -248,6 +248,12 @@ bool SysMemoryCheckInt()
     unsigned int unsignedintoverflow = 4294967295;
     ++unsignedintoverflow;
 
+    std::size_t int8tsize = sizeof(int8_t);
+    int8_t int8tunderflow = -128;
+    --int8tunderflow;
+    int8_t int8toverflow = 127;
+    ++int8toverflow;
+
     if (shortsize != 2)
     {
         // Invalid short memory size
@@ -340,7 +346,32 @@ bool SysMemoryCheckInt()
     {
         // Invalid unsigned int overflow
         SysMessage::box() << "[0x1018] Invalid unsigned int overflow\n";
-        SysMessage::box() << "Unsigned int must be signed [0; 4294967295]";
+        SysMessage::box() << "Unsigned int must be unsigned [0; 4294967295]";
+        return false;
+    }
+
+
+    if (int8tsize != 1)
+    {
+        // Invalid int8_t memory size
+        SysMessage::box() << "[0x1019] Invalid int8_t memory size\n";
+        SysMessage::box() << "Int8_t size must be 8 bits (1 bytes)";
+        return false;
+    }
+
+    if (int8tunderflow != 127)
+    {
+        // Invalid int8_t undeflow
+        SysMessage::box() << "[0x101A] Invalid int8_t underflow\n";
+        SysMessage::box() << "Int8_t must be signed [-128; 127]";
+        return false;
+    }
+
+    if (int8toverflow != -128)
+    {
+        // Invalid int8_t overflow
+        SysMessage::box() << "[0x101B] Invalid int8_t overflow\n";
+        SysMessage::box() << "Int8_t must be signed [-128; 127]";
         return false;
     }
 
@@ -360,7 +391,7 @@ bool SysMemoryCheckFloat()
     if (floatsize != 4)
     {
         // Invalid float memory size
-        SysMessage::box() << "[0x1019] Invalid float memory size\n";
+        SysMessage::box() << "[0x101C] Invalid float memory size\n";
         SysMessage::box() << "Float size must be 32 bits (4 bytes)";
         return false;
     }
@@ -368,7 +399,7 @@ bool SysMemoryCheckFloat()
     if (std::numeric_limits<float>::epsilon() > Math::FloatEpsilon)
     {
         // Invalid float epsilon
-        SysMessage::box() << "[0x101A] Invalid float epsilon\n";
+        SysMessage::box() << "[0x101D] Invalid float epsilon\n";
         SysMessage::box() << "Float minimum epsilon must be 2.5e-07";
         return false;
     }
@@ -389,7 +420,7 @@ bool SysMemoryCheckDouble()
     if (doublesize != 8)
     {
         // Invalid double memory size
-        SysMessage::box() << "[0x101B] Invalid double memory size\n";
+        SysMessage::box() << "[0x101E] Invalid double memory size\n";
         SysMessage::box() << "Double size must be 64 bits (8 bytes)";
         return false;
     }
@@ -397,7 +428,7 @@ bool SysMemoryCheckDouble()
     if (std::numeric_limits<double>::epsilon() > Math::DoubleEpsilon)
     {
         // Invalid double epsilon
-        SysMessage::box() << "[0x101C] Invalid double epsilon\n";
+        SysMessage::box() << "[0x101F] Invalid double epsilon\n";
         SysMessage::box() << "Double minimum epsilon must be 5.0e-16";
         return false;
     }
