@@ -334,10 +334,19 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
                 return false;
             }
         }
+
+        // Adjust memory size according to alignment
         VkDeviceSize sizeOffset = (size % alignment);
         if (sizeOffset != 0)
         {
-            size += (m_memoryAlignment - sizeOffset);
+            size += (alignment - sizeOffset);
+        }
+
+        // Adjust memory start offset according to alignment
+        VkDeviceSize startOffset = (m_deviceMemoryOffset % alignment);
+        if (startOffset != 0)
+        {
+            m_deviceMemoryOffset += (alignment - startOffset);
         }
 
         // Set buffer memory size and offset
@@ -384,10 +393,19 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
                 return false;
             }
         }
+
+        // Adjust memory size according to alignment
         VkDeviceSize sizeOffset = (size % alignment);
         if (sizeOffset != 0)
         {
-            size += (m_memoryAlignment - sizeOffset);
+            size += (alignment - sizeOffset);
+        }
+
+        // Adjust memory start offset according to alignment
+        VkDeviceSize startOffset = (m_hostMemoryOffset % alignment);
+        if (startOffset != 0)
+        {
+            m_hostMemoryOffset += (alignment - startOffset);
         }
 
         // Set buffer memory size and offset
@@ -564,10 +582,19 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
             return false;
         }
     }
+
+    // Adjust memory size according to alignment
     VkDeviceSize sizeOffset = (size % alignment);
     if (sizeOffset != 0)
     {
-        size += (m_memoryAlignment - sizeOffset);
+        size += (alignment - sizeOffset);
+    }
+
+    // Adjust memory start offset according to alignment
+    VkDeviceSize startOffset = (m_deviceMemoryOffset % alignment);
+    if (startOffset != 0)
+    {
+        m_deviceMemoryOffset += (alignment - startOffset);
     }
 
     // Set texture memory size and offset
