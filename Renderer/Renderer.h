@@ -149,6 +149,12 @@
             bool createDescriptorPool();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create descriptor sets                                        //
+            //  return : True if descriptor sets are successfully created     //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorSets();
+
+            ////////////////////////////////////////////////////////////////////
             //  Resize renderer frame                                         //
             //  return : True if the renderer is successfully resized         //
             ////////////////////////////////////////////////////////////////////
@@ -170,6 +176,7 @@
 
             VulkanMemory            m_vulkanMemory;         // Vulkan memory
             Swapchain               m_swapchain;            // Swapchain
+            VkDescriptorPool        m_descriptorPool;       // Descriptor pool
             VkDescriptorSetLayout   m_descriptorSetLayout;  // Descriptor layout
             VkPipelineLayout        m_pipelineLayout;       // Pipeline layout
             VkPipeline              m_pipeline;             // Graphics pipeline
@@ -177,9 +184,8 @@
             Texture                 m_texture;              // Test texture
             Shader                  m_shader;               // Default shader
 
-            UniformBuffer       m_uniformBuffer[RendererMaxSwapchainFrames];
-            VkDescriptorPool    m_descriptorPool[RendererMaxSwapchainFrames];
-            VkDescriptorSet     m_descriptorSet[RendererMaxSwapchainFrames];
+            UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
+            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
     };
 
 
