@@ -130,6 +130,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\Shader.cpp" />
+    <ClCompile Include="Renderer\Sprite.cpp" />
     <ClCompile Include="Renderer\Swapchain.cpp" />
     <ClCompile Include="Renderer\Texture.cpp" />
     <ClCompile Include="Renderer\UniformBuffer.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\Shader.h" />
+    <ClInclude Include="Renderer\Sprite.h" />
     <ClInclude Include="Renderer\Swapchain.h" />
     <ClInclude Include="Renderer\Texture.h" />
     <ClInclude Include="Renderer\UniformBuffer.h" />

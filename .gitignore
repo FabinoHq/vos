@@ -64,6 +64,7 @@
 !Math/Vector3.h
 !Math/Matrix4x4.h
 
+!Renderer/
 !Renderer/Vulkan.h
 !Renderer/Vulkan.cpp
 !Renderer/VulkanMemory.h
@@ -82,5 +83,7 @@
 !Renderer/Texture.cpp
 !Renderer/Shader.h
 !Renderer/Shader.cpp
+!Renderer/Sprite.h
+!Renderer/Sprite.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
