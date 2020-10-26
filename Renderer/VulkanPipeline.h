@@ -42,7 +42,12 @@
 #ifndef VOS_RENDERER_VULKANPIPELINE_HEADER
 #define VOS_RENDERER_VULKANPIPELINE_HEADER
 
+    #include "../System/SysMessage.h"
     #include "Vulkan.h"
+    #include "Swapchain.h"
+    #include "VulkanBuffer.h"
+    #include "VertexBuffer.h"
+    #include "Shader.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -62,6 +67,37 @@
             ~VulkanPipeline();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Create pipeline                                               //
+            //  return : True if pipeline is successfully created             //
+            ////////////////////////////////////////////////////////////////////
+            bool createPipeline(VkDevice& vulkanDevice, Swapchain& swapchain,
+                Shader& shader);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create descriptor pool                                        //
+            //  return : True if descriptor pool is successfully created      //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorPool(VkDevice& vulkanDevice);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create descriptor set layout                                  //
+            //  return : True if descriptor layout is successfully created    //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorSetLayout(VkDevice& vulkanDevice);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create pipeline layout                                        //
+            //  return : True if pipeline layout is successfully created      //
+            ////////////////////////////////////////////////////////////////////
+            bool createPipelineLayout(VkDevice& vulkanDevice);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy pipeline                                              //
+            ////////////////////////////////////////////////////////////////////
+            void destroyPipeline(VkDevice& vulkanDevice);
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  VulkanPipeline private copy constructor : Not copyable        //
@@ -75,6 +111,10 @@
 
 
         public:
+            VkPipeline              handle;                 // Pipeline handle
+            VkPipelineLayout        layout;                 // Pipeline layout
+            VkDescriptorPool        descriptorPool;         // Descriptor pool
+            VkDescriptorSetLayout   descriptorSetLayout;    // Descriptor layout
     };
 
 

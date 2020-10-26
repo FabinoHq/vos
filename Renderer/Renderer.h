@@ -127,30 +127,6 @@
             bool selectVulkanDevice();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create descriptor pool                                        //
-            //  return : True if descriptor pool is successfully created      //
-            ////////////////////////////////////////////////////////////////////
-            bool createDescriptorPool();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create descriptor set layout                                  //
-            //  return : True if descriptor layout is successfully created    //
-            ////////////////////////////////////////////////////////////////////
-            bool createDescriptorSetLayout();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create pipeline layout                                        //
-            //  return : True if pipeline layout is successfully created      //
-            ////////////////////////////////////////////////////////////////////
-            bool createPipelineLayout();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create pipeline                                               //
-            //  return : True if pipeline is successfully created             //
-            ////////////////////////////////////////////////////////////////////
-            bool createPipeline();
-
-            ////////////////////////////////////////////////////////////////////
             //  Create descriptor sets                                        //
             //  return : True if descriptor sets are successfully created     //
             ////////////////////////////////////////////////////////////////////
@@ -178,13 +154,10 @@
 
             VulkanMemory            m_vulkanMemory;         // Vulkan memory
             Swapchain               m_swapchain;            // Swapchain
-            VkDescriptorPool        m_descriptorPool;       // Descriptor pool
-            VkDescriptorSetLayout   m_descriptorSetLayout;  // Descriptor layout
-            VkPipelineLayout        m_pipelineLayout;       // Pipeline layout
-            VkPipeline              m_pipeline;             // Graphics pipeline
             VertexBuffer            m_vertexBuffer;         // Vertex buffer
             Texture                 m_texture;              // Test texture
             Shader                  m_shader;               // Default shader
+            VulkanPipeline          m_pipeline;             // Default pipeline
 
             UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];

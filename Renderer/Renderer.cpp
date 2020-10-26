@@ -59,13 +59,10 @@ m_transferQueue(),
 m_transferCommandPool(0),
 m_vulkanMemory(),
 m_swapchain(),
-m_descriptorPool(0),
-m_descriptorSetLayout(0),
-m_pipelineLayout(0),
-m_pipeline(0),
 m_vertexBuffer(),
 m_texture(),
-m_shader()
+m_shader(),
+m_pipeline()
 {
 
 }
@@ -260,38 +257,11 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create descriptor pool
-    if (!createDescriptorPool())
+    // Create default pipeline
+    if (!m_pipeline.createPipeline(m_vulkanDevice, m_swapchain, m_shader))
     {
-        // Could not create descriptor pool
-        SysMessage::box() << "[0x3044] Could not create descriptor pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create descriptor set layout
-    if (!createDescriptorSetLayout())
-    {
-        // Could not create descriptor set layout
-        SysMessage::box() << "[0x3045] Could not create descriptor layout\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create pipeline layout
-    if (!createPipelineLayout())
-    {
-        // Could not create pipeline layout
-        SysMessage::box() << "[0x3046] Could not create pipeline layout\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create pipeline
-    if (!createPipeline())
-    {
-        // Could not create pipeline
-        SysMessage::box() << "[0x3047] Could not create pipeline\n";
+        // Could not create default pipeline
+        SysMessage::box() << "[0x3047] Could not create default pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -495,7 +465,7 @@ void Renderer::render()
 
     vkCmdBindPipeline(
         m_swapchain.commandBuffers[m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
+        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.handle
     );
 
     // Set viewport
@@ -525,7 +495,7 @@ void Renderer::render()
     // Bind descriptor set
     vkCmdBindDescriptorSets(
         m_swapchain.commandBuffers[m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
+        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.layout, 0, 1,
         &m_descriptorSets[m_swapchain.current], 0, 0
     );
 
@@ -688,31 +658,8 @@ void Renderer::cleanup()
             vkDestroyCommandPool(m_vulkanDevice, m_transferCommandPool, 0);
         }
 
-        // Destroy graphics pipeline
-        if (m_pipeline && vkDestroyPipeline)
-        {
-            vkDestroyPipeline(m_vulkanDevice, m_pipeline, 0);
-        }
-
-        // Destroy pipeline layout
-        if (m_pipelineLayout && vkDestroyPipelineLayout)
-        {
-            vkDestroyPipelineLayout(m_vulkanDevice, m_pipelineLayout, 0);
-        }
-
-        // Destroy descriptor set layout
-        if (m_descriptorSetLayout && vkDestroyDescriptorSetLayout)
-        {
-            vkDestroyDescriptorSetLayout(
-                m_vulkanDevice, m_descriptorSetLayout, 0
-            );
-        }
-
-        // Destroy descriptor pool
-        if (m_descriptorPool && vkDestroyDescriptorPool)
-        {
-            vkDestroyDescriptorPool(m_vulkanDevice, m_descriptorPool, 0);
-        }
+        // Destroy default pipeline
+        m_pipeline.destroyPipeline(m_vulkanDevice);
 
         // Cleanup Vulkan memory
         m_vulkanMemory.cleanup(m_vulkanDevice);
@@ -731,10 +678,6 @@ void Renderer::cleanup()
     }
 
     m_swapchain.handle = 0;
-    m_pipeline = 0;
-    m_pipelineLayout = 0;
-    m_descriptorSetLayout = 0;
-    m_descriptorPool = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
 }
@@ -1094,367 +1037,6 @@ bool Renderer::selectVulkanDevice()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create descriptor pool                                                    //
-//  return : True if descriptor pool is successfully created                  //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createDescriptorPool()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Create descriptor pool
-    VkDescriptorPoolSize poolSize[2];
-
-    poolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSize[0].descriptorCount = RendererMaxSwapchainFrames;
-
-    poolSize[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSize[1].descriptorCount = RendererMaxSwapchainFrames;
-
-    VkDescriptorPoolCreateInfo poolInfo;
-    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    poolInfo.pNext = 0;
-    poolInfo.flags = 0;
-    poolInfo.maxSets = RendererMaxSwapchainFrames;
-    poolInfo.poolSizeCount = 2;
-    poolInfo.pPoolSizes = poolSize;
-
-    if (vkCreateDescriptorPool(
-        m_vulkanDevice, &poolInfo, 0, &m_descriptorPool) != VK_SUCCESS)
-    {
-        // Could not create descriptor pool
-        return false;
-    }
-    if (!m_descriptorPool)
-    {
-        // Invalid descriptor pool
-        return false;
-    }
-
-    // Descriptor pool successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create descriptor set layout                                              //
-//  return : True if descriptor layout is successfully created                //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createDescriptorSetLayout()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Create descriptor set layout
-    VkDescriptorSetLayoutBinding descriptorSetBindings[2];
-
-    descriptorSetBindings[0].binding = 0;
-    descriptorSetBindings[0].descriptorType =
-        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    descriptorSetBindings[0].descriptorCount = 1;
-    descriptorSetBindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    descriptorSetBindings[0].pImmutableSamplers = 0;
-
-    descriptorSetBindings[1].binding = 1;
-    descriptorSetBindings[1].descriptorType =
-        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    descriptorSetBindings[1].descriptorCount = 1;
-    descriptorSetBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-    descriptorSetBindings[1].pImmutableSamplers = 0;
-
-    VkDescriptorSetLayoutCreateInfo descriptorSetInfo;
-    descriptorSetInfo.sType =
-        VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    descriptorSetInfo.pNext = 0;
-    descriptorSetInfo.flags = 0;
-    descriptorSetInfo.bindingCount = 2;
-    descriptorSetInfo.pBindings = descriptorSetBindings;
-
-    if (vkCreateDescriptorSetLayout(m_vulkanDevice,
-        &descriptorSetInfo, 0, &m_descriptorSetLayout) != VK_SUCCESS)
-    {
-        // Could not create descriptor set layout
-        return false;
-    }
-    if (!m_descriptorSetLayout)
-    {
-        // Invalid descriptor set layout
-        return false;
-    }
-
-    // Descriptor set layout successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create pipeline layout                                                    //
-//  return : True if pipeline layout is successfully created                  //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createPipelineLayout()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check descriptor set layout
-    if (!m_descriptorSetLayout)
-    {
-        // Invalid descriptor set layout
-        return false;
-    }
-
-    // Create pipeline layout
-    VkPipelineLayoutCreateInfo pipelineInfo;
-    pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineInfo.pNext = 0;
-    pipelineInfo.flags = 0;
-    pipelineInfo.setLayoutCount = 1;
-    pipelineInfo.pSetLayouts = &m_descriptorSetLayout;
-    pipelineInfo.pushConstantRangeCount = 0;
-    pipelineInfo.pPushConstantRanges = 0;
-
-    if (vkCreatePipelineLayout(
-        m_vulkanDevice, &pipelineInfo, 0, &m_pipelineLayout) != VK_SUCCESS)
-    {
-        // Could not create pipeline layout
-        return false;
-    }
-    if (!m_pipelineLayout)
-    {
-        // Invalid pipeline layout
-        return false;
-    }
-
-    // Pipeline layout successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create pipeline                                                           //
-//  return : True if pipeline is successfully created                         //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createPipeline()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check render pass
-    if (!m_swapchain.renderPass)
-    {
-        // Invalid render pass
-        return false;
-    }
-
-    // Check vertex shader
-    if (!m_shader.vertexShader)
-    {
-        // Invalid vertex shader
-        return false;
-    }
-
-    // Check fragment shader
-    if (!m_shader.fragmentShader)
-    {
-        // Invalid fragment shader
-        return false;
-    }
-
-    // Check pipeline layout
-    if (!m_pipelineLayout)
-    {
-        // Invalid pipeline layout
-        return false;
-    }
-
-    // Shader stage
-    VkPipelineShaderStageCreateInfo shaderStage[2];
-
-    shaderStage[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStage[0].pNext = 0;
-    shaderStage[0].flags = 0;
-    shaderStage[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
-    shaderStage[0].module = m_shader.vertexShader;
-    shaderStage[0].pName = "main";
-    shaderStage[0].pSpecializationInfo = 0;
-
-    shaderStage[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStage[1].pNext = 0;
-    shaderStage[1].flags = 0;
-    shaderStage[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-    shaderStage[1].module = m_shader.fragmentShader;
-    shaderStage[1].pName = "main";
-    shaderStage[1].pSpecializationInfo = 0;
-
-    // Input binding
-    VkVertexInputBindingDescription vertexBinding;
-    vertexBinding.binding = 0;
-    vertexBinding.stride = sizeof(VertexData);
-    vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-    // Vertex attribute
-    VkVertexInputAttributeDescription vertexAttributes[2];
-
-    vertexAttributes[0].location = 0;
-    vertexAttributes[0].binding = vertexBinding.binding;
-    vertexAttributes[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-    vertexAttributes[0].offset = 0;
-
-    vertexAttributes[1].location = 1;
-    vertexAttributes[1].binding = vertexBinding.binding;
-    vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
-    vertexAttributes[1].offset = sizeof(float) * 3;
-
-    // Vertex input
-    VkPipelineVertexInputStateCreateInfo vertexInput;
-    vertexInput.sType =
-        VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    vertexInput.pNext = 0;
-    vertexInput.flags = 0;
-    vertexInput.vertexBindingDescriptionCount = 1;
-    vertexInput.pVertexBindingDescriptions = &vertexBinding;
-    vertexInput.vertexAttributeDescriptionCount = 2;
-    vertexInput.pVertexAttributeDescriptions = vertexAttributes;
-
-    // Input assembly
-    VkPipelineInputAssemblyStateCreateInfo inputAssembly;
-    inputAssembly.sType =
-        VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssembly.pNext = 0;
-    inputAssembly.flags = 0;
-    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    inputAssembly.primitiveRestartEnable = VK_FALSE;
-
-    // Viewport
-    VkPipelineViewportStateCreateInfo viewportInfo;
-    viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    viewportInfo.pNext = 0;
-    viewportInfo.flags = 0;
-    viewportInfo.viewportCount = 1;
-    viewportInfo.pViewports = 0;
-    viewportInfo.scissorCount = 1;
-    viewportInfo.pScissors = 0;
-
-    // Rasterizer
-    VkPipelineRasterizationStateCreateInfo rasterizerInfo;
-    rasterizerInfo.sType =
-        VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-    rasterizerInfo.pNext = 0;
-    rasterizerInfo.flags = 0;
-    rasterizerInfo.depthClampEnable = VK_FALSE;
-    rasterizerInfo.rasterizerDiscardEnable = VK_FALSE;
-    rasterizerInfo.polygonMode = VK_POLYGON_MODE_FILL;
-    rasterizerInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-    rasterizerInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-    rasterizerInfo.depthBiasEnable = VK_FALSE;
-    rasterizerInfo.depthBiasConstantFactor = 0.0f;
-    rasterizerInfo.depthBiasClamp = 0.0f;
-    rasterizerInfo.depthBiasSlopeFactor = 0.0f;
-    rasterizerInfo.lineWidth = 1.0f;
-
-    // Multisample
-    VkPipelineMultisampleStateCreateInfo multisampleInfo;
-    multisampleInfo.sType =
-        VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    multisampleInfo.pNext = 0;
-    multisampleInfo.flags = 0;
-    multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-    multisampleInfo.sampleShadingEnable = VK_FALSE;
-    multisampleInfo.minSampleShading = 1.0f;
-    multisampleInfo.pSampleMask = 0;
-    multisampleInfo.alphaToCoverageEnable = VK_FALSE;
-    multisampleInfo.alphaToOneEnable = VK_FALSE;
-
-    // Blend
-    VkPipelineColorBlendAttachmentState colorBlend;
-    colorBlend.blendEnable = VK_FALSE;
-    colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
-    colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
-    colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-    colorBlend.alphaBlendOp = VK_BLEND_OP_ADD;
-    colorBlend.colorWriteMask =
-        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-        VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-
-    VkPipelineColorBlendStateCreateInfo blendState;
-    blendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-    blendState.pNext = 0;
-    blendState.flags = 0;
-    blendState.logicOpEnable = VK_FALSE;
-    blendState.logicOp = VK_LOGIC_OP_COPY;
-    blendState.attachmentCount = 1;
-    blendState.pAttachments = &colorBlend;
-    blendState.blendConstants[0] = 0.0f;
-    blendState.blendConstants[1] = 0.0f;
-    blendState.blendConstants[2] = 0.0f;
-    blendState.blendConstants[3] = 0.0f;
-
-    // Dynamic states
-    VkDynamicState dynamicStates[2];
-    dynamicStates[0] = VK_DYNAMIC_STATE_VIEWPORT;
-    dynamicStates[1] = VK_DYNAMIC_STATE_SCISSOR;
-
-    VkPipelineDynamicStateCreateInfo dynamicInfo;
-    dynamicInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-    dynamicInfo.pNext = 0;
-    dynamicInfo.flags = 0;
-    dynamicInfo.dynamicStateCount = 2;
-    dynamicInfo.pDynamicStates = dynamicStates;
-
-    // Create pipeline
-    VkGraphicsPipelineCreateInfo pipelineInfo;
-    pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    pipelineInfo.pNext = 0;
-    pipelineInfo.flags = 0;
-    pipelineInfo.stageCount = 2;
-    pipelineInfo.pStages = shaderStage;
-    pipelineInfo.pVertexInputState = &vertexInput;
-    pipelineInfo.pInputAssemblyState = &inputAssembly;
-    pipelineInfo.pTessellationState = 0;
-    pipelineInfo.pViewportState = &viewportInfo;
-    pipelineInfo.pRasterizationState = &rasterizerInfo;
-    pipelineInfo.pMultisampleState = &multisampleInfo;
-    pipelineInfo.pDepthStencilState = 0;
-    pipelineInfo.pColorBlendState = &blendState;
-    pipelineInfo.pDynamicState = &dynamicInfo;
-    pipelineInfo.layout = m_pipelineLayout;
-    pipelineInfo.renderPass = m_swapchain.renderPass;
-    pipelineInfo.subpass = 0;
-    pipelineInfo.basePipelineHandle = 0;
-    pipelineInfo.basePipelineIndex = -1;
-
-    if (vkCreateGraphicsPipelines(
-        m_vulkanDevice, 0, 1, &pipelineInfo, 0, &m_pipeline) != VK_SUCCESS)
-    {
-        // Could not create pipeline
-        return false;
-    }
-    if (!m_pipeline)
-    {
-        // Invalid pipeline
-        return false;
-    }
-
-    // Pipeline successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Create descriptor sets                                                    //
 //  return : True if descriptor sets are successfully created                 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1464,14 +1046,14 @@ bool Renderer::createDescriptorSets()
     VkDescriptorSetLayout layouts[RendererMaxSwapchainFrames];
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        layouts[i] = m_descriptorSetLayout;
+        layouts[i] = m_pipeline.descriptorSetLayout;
     }
 
     // Create descriptor sets
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = m_descriptorPool;
+    descriptorInfo.descriptorPool = m_pipeline.descriptorPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
     descriptorInfo.pSetLayouts = layouts;
 
