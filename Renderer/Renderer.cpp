@@ -1042,20 +1042,13 @@ bool Renderer::selectVulkanDevice()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::createDescriptorSets()
 {
-    // Duplicate descriptor layout to match descriptor sets count
-    VkDescriptorSetLayout layouts[RendererMaxSwapchainFrames];
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-    {
-        layouts[i] = m_pipeline.descriptorSetLayout;
-    }
-
     // Create descriptor sets
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = m_pipeline.descriptorPool;
+    descriptorInfo.descriptorPool = m_pipeline.descPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = layouts;
+    descriptorInfo.pSetLayouts = m_pipeline.descSetLayouts;
 
     if (vkAllocateDescriptorSets(
         m_vulkanDevice, &descriptorInfo, m_descriptorSets) != VK_SUCCESS)

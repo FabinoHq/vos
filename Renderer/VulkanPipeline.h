@@ -111,10 +111,11 @@
 
 
         public:
-            VkPipeline              handle;                 // Pipeline handle
-            VkPipelineLayout        layout;                 // Pipeline layout
-            VkDescriptorPool        descriptorPool;         // Descriptor pool
-            VkDescriptorSetLayout   descriptorSetLayout;    // Descriptor layout
+            VkPipeline              handle;             // Pipeline handle
+            VkPipelineLayout        layout;             // Pipeline layout
+            VkDescriptorPool        descPool;           // Descriptor pool
+            VkDescriptorSetLayout   descSetLayout;      // Descriptor layout
+            VkDescriptorSetLayout   descSetLayouts[RendererMaxSwapchainFrames];
     };
 
 

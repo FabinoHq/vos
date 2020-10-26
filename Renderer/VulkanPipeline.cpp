@@ -48,10 +48,13 @@
 VulkanPipeline::VulkanPipeline() :
 handle(0),
 layout(0),
-descriptorPool(0),
-descriptorSetLayout(0)
+descPool(0),
+descSetLayout(0)
 {
-
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descSetLayouts[i] = 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,8 +62,12 @@ descriptorSetLayout(0)
 ////////////////////////////////////////////////////////////////////////////////
 VulkanPipeline::~VulkanPipeline()
 {
-    descriptorSetLayout = 0;
-    descriptorPool = 0;
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descSetLayouts[i] = 0;
+    }
+    descSetLayout = 0;
+    descPool = 0;
     layout = 0;
     handle = 0;
 }
@@ -333,12 +340,12 @@ bool VulkanPipeline::createDescriptorPool(VkDevice& vulkanDevice)
     poolInfo.pPoolSizes = poolSize;
 
     if (vkCreateDescriptorPool(
-        vulkanDevice, &poolInfo, 0, &descriptorPool) != VK_SUCCESS)
+        vulkanDevice, &poolInfo, 0, &descPool) != VK_SUCCESS)
     {
         // Could not create descriptor pool
         return false;
     }
-    if (!descriptorPool)
+    if (!descPool)
     {
         // Invalid descriptor pool
         return false;
@@ -387,15 +394,21 @@ bool VulkanPipeline::createDescriptorSetLayout(VkDevice& vulkanDevice)
     descriptorSetInfo.pBindings = descriptorSetBindings;
 
     if (vkCreateDescriptorSetLayout(vulkanDevice,
-        &descriptorSetInfo, 0, &descriptorSetLayout) != VK_SUCCESS)
+        &descriptorSetInfo, 0, &descSetLayout) != VK_SUCCESS)
     {
         // Could not create descriptor set layout
         return false;
     }
-    if (!descriptorSetLayout)
+    if (!descSetLayout)
     {
         // Invalid descriptor set layout
         return false;
+    }
+
+    // Duplicate descriptor set layout to match descriptor sets count
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descSetLayouts[i] = descSetLayout;
     }
 
     // Descriptor set layout successfully created
@@ -416,7 +429,7 @@ bool VulkanPipeline::createPipelineLayout(VkDevice& vulkanDevice)
     }
 
     // Check descriptor set layout
-    if (!descriptorSetLayout)
+    if (!descSetLayout)
     {
         // Invalid descriptor set layout
         return false;
@@ -428,7 +441,7 @@ bool VulkanPipeline::createPipelineLayout(VkDevice& vulkanDevice)
     pipelineInfo.pNext = 0;
     pipelineInfo.flags = 0;
     pipelineInfo.setLayoutCount = 1;
-    pipelineInfo.pSetLayouts = &descriptorSetLayout;
+    pipelineInfo.pSetLayouts = &descSetLayout;
     pipelineInfo.pushConstantRangeCount = 0;
     pipelineInfo.pPushConstantRanges = 0;
 
@@ -456,15 +469,15 @@ void VulkanPipeline::destroyPipeline(VkDevice& vulkanDevice)
     if (vulkanDevice)
     {
         // Destroy descriptor set layout
-        if (descriptorSetLayout && vkDestroyDescriptorSetLayout)
+        if (descSetLayout && vkDestroyDescriptorSetLayout)
         {
-            vkDestroyDescriptorSetLayout(vulkanDevice, descriptorSetLayout, 0);
+            vkDestroyDescriptorSetLayout(vulkanDevice, descSetLayout, 0);
         }
 
         // Destroy descriptor pool
-        if (descriptorPool && vkDestroyDescriptorPool)
+        if (descPool && vkDestroyDescriptorPool)
         {
-            vkDestroyDescriptorPool(vulkanDevice, descriptorPool, 0);
+            vkDestroyDescriptorPool(vulkanDevice, descPool, 0);
         }
 
         // Destroy pipeline layout
@@ -480,8 +493,8 @@ void VulkanPipeline::destroyPipeline(VkDevice& vulkanDevice)
         }
     }
 
-    descriptorSetLayout = 0;
-    descriptorPool = 0;
+    descSetLayout = 0;
+    descPool = 0;
     layout = 0;
     handle = 0;
 }
