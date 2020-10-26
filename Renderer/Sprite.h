@@ -42,6 +42,14 @@
 #ifndef VOS_RENDERER_SPRITE_HEADER
 #define VOS_RENDERER_SPRITE_HEADER
 
+    #include "Vulkan.h"
+    #include "Texture.h"
+    #include "VulkanBuffer.h"
+    #include "UniformBuffer.h"
+    #include "VulkanPipeline.h"
+    #include "../Math/Math.h"
+    #include "../Math/Matrix4x4.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Sprite class definition                                               //
@@ -60,6 +68,14 @@
             ~Sprite();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Init sprite                                                   //
+            //  return : True if the sprite is successfully created           //
+            ////////////////////////////////////////////////////////////////////
+            bool init(VkDevice vulkanDevice, VulkanPipeline& pipeline,
+                Texture& texture, float width, float height);
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  Sprite private copy constructor : Not copyable                //
@@ -72,7 +88,22 @@
             Sprite& operator=(const Sprite&) = delete;
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Create descriptor sets                                        //
+            //  return : True if descriptor sets are successfully created     //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorSets(VkDevice vulkanDevice,
+                VulkanPipeline& pipeline);
+
+
         public:
+            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
+            UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
+            Matrix4x4           m_modelMatrix;      // Sprite model matrix
+            Texture*            m_texture;          // Sprite texture pointer
+            Vector2             m_position;         // Sprite position
+            Vector2             m_size;             // Sprite size
+            float               m_angle;            // Sprite angle
     };
 
 

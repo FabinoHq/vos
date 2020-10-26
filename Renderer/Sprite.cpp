@@ -45,9 +45,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Sprite default constructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
-Sprite::Sprite()
+Sprite::Sprite() :
+m_modelMatrix(),
+m_texture(0),
+m_position(0.0f, 0.0f),
+m_size(1.0f, 1.0f),
+m_angle(0.0f)
 {
-
+	for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+	{
+		m_descriptorSets[i] = 0;
+	}
+	m_modelMatrix.setIdentity();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,5 +64,143 @@ Sprite::Sprite()
 ////////////////////////////////////////////////////////////////////////////////
 Sprite::~Sprite()
 {
+	m_angle = 0.0f;
+	m_size.reset();
+	m_position.reset();
+	m_texture = 0;
+	m_modelMatrix.reset();
+	for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+	{
+		m_descriptorSets[i] = 0;
+	}
+}
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init sprite                                                               //
+//  return : True if the sprite is successfully created                       //
+////////////////////////////////////////////////////////////////////////////////
+bool Sprite::init(VkDevice vulkanDevice, VulkanPipeline& pipeline,
+	Texture& texture, float width, float height)
+{
+	// Check Vulkan device
+	if (!vulkanDevice)
+	{
+		// Invalid Vulkan device
+		return false;
+	}
+
+	// Check pipeline handle
+	if (!pipeline.handle)
+	{
+		// Invalid pipeline handle
+		return false;
+	}
+
+	// Check texture handle
+	if (!texture.handle)
+	{
+		// Invalid texture handle
+		return false;
+	}
+
+	// Reset descriptor sets
+	for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+	{
+		m_descriptorSets[i] = 0;
+	}
+
+	// Set sprite texture pointer
+	m_texture = &texture;
+
+	// Create descriptor sets
+	if (!createDescriptorSets(vulkanDevice, pipeline))
+	{
+		// Could not create descriptor sets
+		return false;
+	}
+
+	// Reset sprite model matrix
+	m_modelMatrix.setIdentity();
+
+	// Reset sprite position
+	m_position.reset();
+
+	// Set sprite size
+	m_size.set(width, height);
+
+	// Reset sprite angle
+	m_angle = 0.0f;
+
+	// Sprite successfully created
+	return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create descriptor sets                                                    //
+//  return : True if descriptor sets are successfully created                 //
+////////////////////////////////////////////////////////////////////////////////
+bool Sprite::createDescriptorSets(VkDevice vulkanDevice,
+	VulkanPipeline& pipeline)
+{
+    // Create descriptor sets
+    VkDescriptorSetAllocateInfo descriptorInfo;
+    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorInfo.pNext = 0;
+    descriptorInfo.descriptorPool = pipeline.descPool;
+    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
+    descriptorInfo.pSetLayouts = pipeline.descSetLayouts;
+
+    if (vkAllocateDescriptorSets(
+        vulkanDevice, &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
+    {
+        // Could not allocate descriptor sets
+        return false;
+    }
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        // Update descriptor set
+        VkDescriptorBufferInfo bufferInfo;
+        bufferInfo.buffer = m_uniformBuffers[i].uniformBuffer.handle;
+        bufferInfo.offset = 0;
+        bufferInfo.range = m_uniformBuffers[i].uniformBuffer.size;
+
+        VkDescriptorImageInfo imageInfo;
+        imageInfo.sampler = m_texture->sampler;
+        imageInfo.imageView = m_texture->view;
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+        VkWriteDescriptorSet descriptorWrites[2];
+
+        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites[0].pNext = 0;
+        descriptorWrites[0].dstSet = m_descriptorSets[i];
+        descriptorWrites[0].dstBinding = 0;
+        descriptorWrites[0].dstArrayElement = 0;
+        descriptorWrites[0].descriptorCount = 1;
+        descriptorWrites[0].descriptorType =
+            VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrites[0].pImageInfo = 0;
+        descriptorWrites[0].pBufferInfo = &bufferInfo;
+        descriptorWrites[0].pTexelBufferView = 0;
+
+        descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites[1].pNext = 0;
+        descriptorWrites[1].dstSet = m_descriptorSets[i];
+        descriptorWrites[1].dstBinding = 1;
+        descriptorWrites[1].dstArrayElement = 0;
+        descriptorWrites[1].descriptorCount = 1;
+        descriptorWrites[1].descriptorType =
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrites[1].pImageInfo = &imageInfo;
+        descriptorWrites[1].pBufferInfo = 0;
+        descriptorWrites[1].pTexelBufferView = 0;
+
+        vkUpdateDescriptorSets(vulkanDevice, 2, descriptorWrites, 0, 0);
+    }
+
+    // Descriptor sets successfully created
+    return true;
 }

@@ -62,7 +62,8 @@ m_swapchain(),
 m_vertexBuffer(),
 m_texture(),
 m_shader(),
-m_pipeline()
+m_pipeline(),
+m_sprite()
 {
 
 }
@@ -296,9 +297,9 @@ bool Renderer::init(SysWindow* sysWindow)
     // Create uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        if (!m_uniformBuffers[i].updateBuffer(m_physicalDevice, m_vulkanDevice,
-            m_vulkanMemory, m_transferCommandPool, m_transferQueue,
-            &uniformData, sizeof(uniformData)))
+        if (!m_sprite.m_uniformBuffers[i].updateBuffer(m_physicalDevice,
+            m_vulkanDevice, m_vulkanMemory, m_transferCommandPool,
+            m_transferQueue, &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
             SysMessage::box() << "[0x3049] Could not create uniform buffer\n";
@@ -318,12 +319,9 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create descriptor sets
-    if (!createDescriptorSets())
+    // Init test sprite
+    if (!m_sprite.init(m_vulkanDevice, m_pipeline, m_texture, 1.0f, 1.0f))
     {
-        // Could not create descriptor sets
-        SysMessage::box() << "[0x304B] Could not create descriptor sets\n";
-        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -496,7 +494,7 @@ void Renderer::render()
     vkCmdBindDescriptorSets(
         m_swapchain.commandBuffers[m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.layout, 0, 1,
-        &m_descriptorSets[m_swapchain.current], 0, 0
+        &m_sprite.m_descriptorSets[m_swapchain.current], 0, 0
     );
 
     // Update matrices
@@ -523,7 +521,7 @@ void Renderer::render()
     memcpy(uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
     // Update uniform buffer
-    if (!m_uniformBuffers[m_swapchain.current].updateBuffer(
+    if (!m_sprite.m_uniformBuffers[m_swapchain.current].updateBuffer(
         m_physicalDevice, m_vulkanDevice, m_vulkanMemory, m_transferCommandPool,
         m_transferQueue, &uniformData, sizeof(uniformData)))
     {
@@ -646,7 +644,9 @@ void Renderer::cleanup()
         // Destroy uniform buffer
         for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
         {
-            m_uniformBuffers[i].destroyBuffer(m_vulkanDevice, m_vulkanMemory);
+            m_sprite.m_uniformBuffers[i].destroyBuffer(
+                m_vulkanDevice, m_vulkanMemory
+            );
         }
 
         // Destroy vertex buffer
@@ -1033,73 +1033,6 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Vulkan device successfully selected
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create descriptor sets                                                    //
-//  return : True if descriptor sets are successfully created                 //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createDescriptorSets()
-{
-    // Create descriptor sets
-    VkDescriptorSetAllocateInfo descriptorInfo;
-    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = m_pipeline.descPool;
-    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = m_pipeline.descSetLayouts;
-
-    if (vkAllocateDescriptorSets(
-        m_vulkanDevice, &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
-    {
-        // Could not allocate descriptor sets
-        return false;
-    }
-
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-    {
-        // Update descriptor set
-        VkDescriptorBufferInfo bufferInfo;
-        bufferInfo.buffer = m_uniformBuffers[i].uniformBuffer.handle;
-        bufferInfo.offset = 0;
-        bufferInfo.range = m_uniformBuffers[i].uniformBuffer.size;
-
-        VkDescriptorImageInfo imageInfo;
-        imageInfo.sampler = m_texture.sampler;
-        imageInfo.imageView = m_texture.view;
-        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-        VkWriteDescriptorSet descriptorWrites[2];
-
-        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].pNext = 0;
-        descriptorWrites[0].dstSet = m_descriptorSets[i];
-        descriptorWrites[0].dstBinding = 0;
-        descriptorWrites[0].dstArrayElement = 0;
-        descriptorWrites[0].descriptorCount = 1;
-        descriptorWrites[0].descriptorType =
-            VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites[0].pImageInfo = 0;
-        descriptorWrites[0].pBufferInfo = &bufferInfo;
-        descriptorWrites[0].pTexelBufferView = 0;
-
-        descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[1].pNext = 0;
-        descriptorWrites[1].dstSet = m_descriptorSets[i];
-        descriptorWrites[1].dstBinding = 1;
-        descriptorWrites[1].dstArrayElement = 0;
-        descriptorWrites[1].descriptorCount = 1;
-        descriptorWrites[1].descriptorType =
-            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        descriptorWrites[1].pImageInfo = &imageInfo;
-        descriptorWrites[1].pBufferInfo = 0;
-        descriptorWrites[1].pTexelBufferView = 0;
-
-        vkUpdateDescriptorSets(m_vulkanDevice, 2, descriptorWrites, 0, 0);
-    }
-
-    // Descriptor sets successfully created
     return true;
 }
 

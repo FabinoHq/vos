@@ -127,12 +127,6 @@
             bool selectVulkanDevice();
 
             ////////////////////////////////////////////////////////////////////
-            //  Create descriptor sets                                        //
-            //  return : True if descriptor sets are successfully created     //
-            ////////////////////////////////////////////////////////////////////
-            bool createDescriptorSets();
-
-            ////////////////////////////////////////////////////////////////////
             //  Resize renderer frame                                         //
             //  return : True if the renderer is successfully resized         //
             ////////////////////////////////////////////////////////////////////
@@ -152,15 +146,13 @@
             VulkanQueue         m_transferQueue;        // Transfer queue
             VkCommandPool       m_transferCommandPool;  // Transfer command pool
 
-            VulkanMemory            m_vulkanMemory;         // Vulkan memory
-            Swapchain               m_swapchain;            // Swapchain
-            VertexBuffer            m_vertexBuffer;         // Vertex buffer
-            Texture                 m_texture;              // Test texture
-            Shader                  m_shader;               // Default shader
-            VulkanPipeline          m_pipeline;             // Default pipeline
-
-            UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
-            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
+            VulkanMemory        m_vulkanMemory;         // Vulkan memory
+            Swapchain           m_swapchain;            // Swapchain
+            VertexBuffer        m_vertexBuffer;         // Vertex buffer
+            Texture             m_texture;              // Test texture
+            Shader              m_shader;               // Default shader
+            VulkanPipeline      m_pipeline;             // Default pipeline
+            Sprite              m_sprite;               // Test sprite
     };
 
 
