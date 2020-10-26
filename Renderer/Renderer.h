@@ -125,6 +125,12 @@
             bool selectVulkanDevice();
 
             ////////////////////////////////////////////////////////////////////
+            //  Create descriptor pool                                        //
+            //  return : True if descriptor pool is successfully created      //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorPool();
+
+            ////////////////////////////////////////////////////////////////////
             //  Create descriptor set layout                                  //
             //  return : True if descriptor layout is successfully created    //
             ////////////////////////////////////////////////////////////////////
@@ -141,12 +147,6 @@
             //  return : True if pipeline is successfully created             //
             ////////////////////////////////////////////////////////////////////
             bool createPipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create descriptor pool                                        //
-            //  return : True if descriptor pool is successfully created      //
-            ////////////////////////////////////////////////////////////////////
-            bool createDescriptorPool();
 
             ////////////////////////////////////////////////////////////////////
             //  Create descriptor sets                                        //

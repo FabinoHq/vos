@@ -260,11 +260,20 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create descriptor pool
+    if (!createDescriptorPool())
+    {
+        // Could not create descriptor pool
+        SysMessage::box() << "[0x3044] Could not create descriptor pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create descriptor set layout
     if (!createDescriptorSetLayout())
     {
         // Could not create descriptor set layout
-        SysMessage::box() << "[0x3044] Could not create descriptor layout\n";
+        SysMessage::box() << "[0x3045] Could not create descriptor layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -273,7 +282,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createPipelineLayout())
     {
         // Could not create pipeline layout
-        SysMessage::box() << "[0x3045] Could not create pipeline layout\n";
+        SysMessage::box() << "[0x3046] Could not create pipeline layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -282,7 +291,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!createPipeline())
     {
         // Could not create pipeline
-        SysMessage::box() << "[0x3046] Could not create pipeline\n";
+        SysMessage::box() << "[0x3047] Could not create pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -292,7 +301,7 @@ bool Renderer::init(SysWindow* sysWindow)
         m_vulkanMemory, m_transferCommandPool, m_transferQueue))
     {
         // Could not create vertex buffer
-        SysMessage::box() << "[0x3047] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3048] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -322,7 +331,7 @@ bool Renderer::init(SysWindow* sysWindow)
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
-            SysMessage::box() << "[0x3048] Could not create uniform buffer\n";
+            SysMessage::box() << "[0x3049] Could not create uniform buffer\n";
             SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
@@ -334,16 +343,7 @@ bool Renderer::init(SysWindow* sysWindow)
         TestSpriteWidth, TestSpriteHeight, TestSpriteDepth, TestSprite))
     {
         // Could not load texture
-        SysMessage::box() << "[0x3049] Could not load texture\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create descriptor pool
-    if (!createDescriptorPool())
-    {
-        // Could not create descriptor pool
-        SysMessage::box() << "[0x304A] Could not create descriptor pool\n";
+        SysMessage::box() << "[0x304A] Could not load texture\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -1094,6 +1094,52 @@ bool Renderer::selectVulkanDevice()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Create descriptor pool                                                    //
+//  return : True if descriptor pool is successfully created                  //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createDescriptorPool()
+{
+    // Check Vulkan device
+    if (!m_vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Create descriptor pool
+    VkDescriptorPoolSize poolSize[2];
+
+    poolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize[0].descriptorCount = RendererMaxSwapchainFrames;
+
+    poolSize[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    poolSize[1].descriptorCount = RendererMaxSwapchainFrames;
+
+    VkDescriptorPoolCreateInfo poolInfo;
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.pNext = 0;
+    poolInfo.flags = 0;
+    poolInfo.maxSets = RendererMaxSwapchainFrames;
+    poolInfo.poolSizeCount = 2;
+    poolInfo.pPoolSizes = poolSize;
+
+    if (vkCreateDescriptorPool(
+        m_vulkanDevice, &poolInfo, 0, &m_descriptorPool) != VK_SUCCESS)
+    {
+        // Could not create descriptor pool
+        return false;
+    }
+    if (!m_descriptorPool)
+    {
+        // Invalid descriptor pool
+        return false;
+    }
+
+    // Descriptor pool successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Create descriptor set layout                                              //
 //  return : True if descriptor layout is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1405,52 +1451,6 @@ bool Renderer::createPipeline()
     }
 
     // Pipeline successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create descriptor pool                                                    //
-//  return : True if descriptor pool is successfully created                  //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createDescriptorPool()
-{
-    // Check Vulkan device
-    if (!m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Create descriptor pool
-    VkDescriptorPoolSize poolSize[2];
-
-    poolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSize[0].descriptorCount = RendererMaxSwapchainFrames;
-
-    poolSize[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSize[1].descriptorCount = RendererMaxSwapchainFrames;
-
-    VkDescriptorPoolCreateInfo poolInfo;
-    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    poolInfo.pNext = 0;
-    poolInfo.flags = 0;
-    poolInfo.maxSets = RendererMaxSwapchainFrames;
-    poolInfo.poolSizeCount = 2;
-    poolInfo.pPoolSizes = poolSize;
-
-    if (vkCreateDescriptorPool(
-        m_vulkanDevice, &poolInfo, 0, &m_descriptorPool) != VK_SUCCESS)
-    {
-        // Could not create descriptor pool
-        return false;
-    }
-    if (!m_descriptorPool)
-    {
-        // Invalid descriptor pool
-        return false;
-    }
-
-    // Descriptor pool successfully created
     return true;
 }
 
