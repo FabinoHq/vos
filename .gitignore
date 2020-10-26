@@ -83,6 +83,8 @@
 !Renderer/Texture.cpp
 !Renderer/Shader.h
 !Renderer/Shader.cpp
+!Renderer/VulkanPipeline.h
+!Renderer/VulkanPipeline.cpp
 !Renderer/Sprite.h
 !Renderer/Sprite.cpp
 !Renderer/Renderer.h

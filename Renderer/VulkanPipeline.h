@@ -37,31 +37,33 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Sprite.h : Sprite management                                  //
+//     Renderer/VulkanPipeline.h : Vulkan Pipeline management                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SPRITE_HEADER
-#define VOS_RENDERER_SPRITE_HEADER
+#ifndef VOS_RENDERER_VULKANPIPELINE_HEADER
+#define VOS_RENDERER_VULKANPIPELINE_HEADER
+
+    #include "Vulkan.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Sprite class definition                                               //
+    //  VulkanPipeline class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Sprite
+    class VulkanPipeline
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Sprite default constructor                                    //
+            //  VulkanPipeline default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            Sprite();
+            VulkanPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Sprite destructor                                             //
+            //  VulkanPipeline destructor                                     //
             ////////////////////////////////////////////////////////////////////
-            ~Sprite();
+            ~VulkanPipeline();
 
 
         public:
     };
 
 
-#endif // VOS_RENDERER_SPRITE_HEADER
+#endif // VOS_RENDERER_VULKANPIPELINE_HEADER

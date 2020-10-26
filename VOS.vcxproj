@@ -138,6 +138,7 @@
     <ClCompile Include="Renderer\Vulkan.cpp" />
     <ClCompile Include="Renderer\VulkanBuffer.cpp" />
     <ClCompile Include="Renderer\VulkanMemory.cpp" />
+    <ClCompile Include="Renderer\VulkanPipeline.cpp" />
     <ClCompile Include="Renderer\VulkanQueue.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysMemory.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Renderer\Vulkan.h" />
     <ClInclude Include="Renderer\VulkanBuffer.h" />
     <ClInclude Include="Renderer\VulkanMemory.h" />
+    <ClInclude Include="Renderer\VulkanPipeline.h" />
     <ClInclude Include="Renderer\VulkanQueue.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysDisplayMode.h" />
