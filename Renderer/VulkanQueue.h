@@ -78,6 +78,18 @@
                 VulkanQueue& surfaceQueue, VulkanQueue& transferQueue);
 
 
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  VulkanQueue private copy constructor : Not copyable           //
+            ////////////////////////////////////////////////////////////////////
+            VulkanQueue(const VulkanQueue&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  VulkanQueue private copy operator : Not copyable              //
+            ////////////////////////////////////////////////////////////////////
+            VulkanQueue& operator=(const VulkanQueue&) = delete;
+
+
         public:
             VkQueue     handle;     // Queue handle
             uint32_t    index;      // Queue index

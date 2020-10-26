@@ -100,6 +100,18 @@
                 VulkanMemory& vulkanMemory);
 
 
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  UniformBuffer private copy constructor : Not copyable         //
+            ////////////////////////////////////////////////////////////////////
+            UniformBuffer(const UniformBuffer&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  UniformBuffer private copy operator : Not copyable            //
+            ////////////////////////////////////////////////////////////////////
+            UniformBuffer& operator=(const UniformBuffer&) = delete;
+
+
         public:
             VulkanBuffer    uniformBuffer;      // Uniform buffer
             VulkanBuffer    stagingBuffer;      // Staging buffer

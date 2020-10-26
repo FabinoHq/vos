@@ -440,6 +440,18 @@
                 VulkanMemory& vulkanMemory);
 
 
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  Texture private copy constructor : Not copyable               //
+            ////////////////////////////////////////////////////////////////////
+            Texture(const Texture&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  Texture private copy operator : Not copyable                  //
+            ////////////////////////////////////////////////////////////////////
+            Texture& operator=(const Texture&) = delete;
+
+
         public:
             uint32_t        width;          // Texture width
             uint32_t        height;         // texture height

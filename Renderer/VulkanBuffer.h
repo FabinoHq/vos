@@ -78,6 +78,17 @@
             void destroyBuffer(VkDevice& vulkanDevice,
                 VulkanMemory& vulkanMemory);
 
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  VulkanBuffer private copy constructor : Not copyable          //
+            ////////////////////////////////////////////////////////////////////
+            VulkanBuffer(const VulkanBuffer&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  VulkanBuffer private copy operator : Not copyable             //
+            ////////////////////////////////////////////////////////////////////
+            VulkanBuffer& operator=(const VulkanBuffer&) = delete;
+
 
         public:
             VkBuffer        handle;         // Buffer handle

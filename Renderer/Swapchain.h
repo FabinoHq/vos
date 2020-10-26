@@ -90,6 +90,18 @@
             void destroySwapchain(VkDevice& vulkanDevice);
 
 
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  Swapchain private copy constructor : Not copyable             //
+            ////////////////////////////////////////////////////////////////////
+            Swapchain(const Swapchain&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  Swapchain private copy operator : Not copyable                //
+            ////////////////////////////////////////////////////////////////////
+            Swapchain& operator=(const Swapchain&) = delete;
+
+
         public:
             VkSwapchainKHR      handle;         // Swapchain handle
             VkFormat            format;         // Swapchain format

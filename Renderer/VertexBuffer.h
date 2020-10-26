@@ -114,6 +114,18 @@
                 VulkanMemory& vulkanMemory);
 
 
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  VertexBuffer private copy constructor : Not copyable          //
+            ////////////////////////////////////////////////////////////////////
+            VertexBuffer(const VertexBuffer&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  VertexBuffer private copy operator : Not copyable             //
+            ////////////////////////////////////////////////////////////////////
+            VertexBuffer& operator=(const VertexBuffer&) = delete;
+
+
         public:
             VulkanBuffer    vertexBuffer;   // Vertex buffer
             VulkanBuffer    indexBuffer;    // Index buffer

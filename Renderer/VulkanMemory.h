@@ -129,6 +129,18 @@
 
 
         private:
+            ////////////////////////////////////////////////////////////////////
+            //  VulkanMemory private copy constructor : Not copyable          //
+            ////////////////////////////////////////////////////////////////////
+            VulkanMemory(const VulkanMemory&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  VulkanMemory private copy operator : Not copyable             //
+            ////////////////////////////////////////////////////////////////////
+            VulkanMemory& operator=(const VulkanMemory&) = delete;
+
+
+        private:
             bool            m_memoryReady;          // Vulkan memory ready state
             uint32_t        m_deviceMemoryIndex;    // Device memory type index
             uint32_t        m_hostMemoryIndex;      // Host memory type index

@@ -62,6 +62,18 @@
             ~VulkanPipeline();
 
 
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  VulkanPipeline private copy constructor : Not copyable        //
+            ////////////////////////////////////////////////////////////////////
+            VulkanPipeline(const VulkanPipeline&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  VulkanPipeline private copy operator : Not copyable           //
+            ////////////////////////////////////////////////////////////////////
+            VulkanPipeline& operator=(const VulkanPipeline&) = delete;
+
+
         public:
     };
 

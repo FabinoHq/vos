@@ -216,6 +216,18 @@
             void destroyShader(VkDevice& vulkanDevice);
 
 
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  Shader private copy constructor : Not copyable                //
+            ////////////////////////////////////////////////////////////////////
+            Shader(const Shader&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  Shader private copy operator : Not copyable                   //
+            ////////////////////////////////////////////////////////////////////
+            Shader& operator=(const Shader&) = delete;
+
+
         public:
             VkShaderModule      vertexShader;         // Vertex shader
             VkShaderModule      fragmentShader;       // Fragment shader
