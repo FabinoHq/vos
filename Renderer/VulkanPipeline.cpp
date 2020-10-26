@@ -493,6 +493,10 @@ void VulkanPipeline::destroyPipeline(VkDevice& vulkanDevice)
         }
     }
 
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descSetLayouts[i] = 0;
+    }
     descSetLayout = 0;
     descPool = 0;
     layout = 0;
