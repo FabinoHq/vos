@@ -53,6 +53,21 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Descriptor sets count                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t DescriptorSetsCnt = 2;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Descriptor sets types                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum DescriptorSetsType
+    {
+        DESC_MATRICES = 0,
+        DESC_TEXTURE = 1
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  GraphicsPipeline class definition                                     //
     ////////////////////////////////////////////////////////////////////////////
     class GraphicsPipeline
@@ -77,22 +92,22 @@
                 Shader& shader);
 
             ////////////////////////////////////////////////////////////////////
-            //  Create descriptor pool                                        //
+            //  Create descriptor pools                                       //
             //  return : True if descriptor pool is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool createDescriptorPool(VkDevice& vulkanDevice);
+            bool createDescriptorPools(VkDevice& vulkanDevice);
 
             ////////////////////////////////////////////////////////////////////
-            //  Create descriptor set layout                                  //
+            //  Create descriptor set layouts                                 //
             //  return : True if descriptor layout is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool createDescriptorSetLayout(VkDevice& vulkanDevice);
+            bool createDescriptorSetLayouts(VkDevice& vulkanDevice);
 
             ////////////////////////////////////////////////////////////////////
-            //  Create pipeline layout                                        //
+            //  Create pipeline layouts                                       //
             //  return : True if pipeline layout is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool createPipelineLayout(VkDevice& vulkanDevice);
+            bool createPipelineLayouts(VkDevice& vulkanDevice);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy pipeline                                              //
@@ -115,9 +130,14 @@
         public:
             VkPipeline              handle;             // Pipeline handle
             VkPipelineLayout        layout;             // Pipeline layout
-            VkDescriptorPool        descPool;           // Descriptor pool
-            VkDescriptorSetLayout   descSetLayout;      // Descriptor layout
-            VkDescriptorSetLayout   descSetLayouts[RendererMaxSwapchainFrames];
+
+            // Descriptor pools
+            VkDescriptorPool        descPools[DescriptorSetsCnt];
+
+            // Descriptor set layouts
+            VkDescriptorSetLayout   descSetLayouts[DescriptorSetsCnt];
+            VkDescriptorSetLayout
+                swapSetLayouts[RendererMaxSwapchainFrames*DescriptorSetsCnt];
     };
 
 

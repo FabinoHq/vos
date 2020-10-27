@@ -52,11 +52,11 @@ m_position(0.0f, 0.0f),
 m_size(1.0f, 1.0f),
 m_angle(0.0f)
 {
-	for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-	{
-		m_descriptorSets[i] = 0;
-	}
-	m_modelMatrix.setIdentity();
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_descriptorSets[i] = 0;
+    }
+    m_modelMatrix.setIdentity();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,15 +64,15 @@ m_angle(0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 Sprite::~Sprite()
 {
-	m_angle = 0.0f;
-	m_size.reset();
-	m_position.reset();
-	m_texture = 0;
-	m_modelMatrix.reset();
-	for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-	{
-		m_descriptorSets[i] = 0;
-	}
+    m_angle = 0.0f;
+    m_size.reset();
+    m_position.reset();
+    m_texture = 0;
+    m_modelMatrix.reset();
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_descriptorSets[i] = 0;
+    }
 }
 
 
@@ -81,59 +81,59 @@ Sprite::~Sprite()
 //  return : True if the sprite is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
 bool Sprite::init(VkDevice vulkanDevice, GraphicsPipeline& pipeline,
-	UniformBuffer* uniformBuffers, Texture& texture, float width, float height)
+    UniformBuffer* uniformBuffers, Texture& texture, float width, float height)
 {
-	// Check Vulkan device
-	if (!vulkanDevice)
-	{
-		// Invalid Vulkan device
-		return false;
-	}
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
 
-	// Check pipeline handle
-	if (!pipeline.handle)
-	{
-		// Invalid pipeline handle
-		return false;
-	}
+    // Check pipeline handle
+    if (!pipeline.handle)
+    {
+        // Invalid pipeline handle
+        return false;
+    }
 
-	// Check texture handle
-	if (!texture.handle)
-	{
-		// Invalid texture handle
-		return false;
-	}
+    // Check texture handle
+    if (!texture.handle)
+    {
+        // Invalid texture handle
+        return false;
+    }
 
-	// Reset descriptor sets
-	for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-	{
-		m_descriptorSets[i] = 0;
-	}
+    // Reset descriptor sets
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_descriptorSets[i] = 0;
+    }
 
-	// Set sprite texture pointer
-	m_texture = &texture;
+    // Set sprite texture pointer
+    m_texture = &texture;
 
-	// Create descriptor sets
-	if (!createDescriptorSets(vulkanDevice, pipeline, uniformBuffers))
-	{
-		// Could not create descriptor sets
-		return false;
-	}
+    // Create descriptor sets
+    if (!createDescriptorSets(vulkanDevice, pipeline, uniformBuffers))
+    {
+        // Could not create descriptor sets
+        return false;
+    }
 
-	// Reset sprite model matrix
-	m_modelMatrix.setIdentity();
+    // Reset sprite model matrix
+    m_modelMatrix.setIdentity();
 
-	// Reset sprite position
-	m_position.reset();
+    // Reset sprite position
+    m_position.reset();
 
-	// Set sprite size
-	m_size.set(width, height);
+    // Set sprite size
+    m_size.set(width, height);
 
-	// Reset sprite angle
-	m_angle = 0.0f;
+    // Reset sprite angle
+    m_angle = 0.0f;
 
-	// Sprite successfully created
-	return true;
+    // Sprite successfully created
+    return true;
 }
 
 
@@ -142,8 +142,8 @@ bool Sprite::init(VkDevice vulkanDevice, GraphicsPipeline& pipeline,
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setPosition(float x, float y)
 {
-	m_position.vec[0] = x;
-	m_position.vec[1] = y;
+    m_position.vec[0] = x;
+    m_position.vec[1] = y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,8 +151,8 @@ void Sprite::setPosition(float x, float y)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setPosition(Vector2& position)
 {
-	m_position.vec[0] = position.vec[0];
-	m_position.vec[1] = position.vec[1];
+    m_position.vec[0] = position.vec[0];
+    m_position.vec[1] = position.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +160,7 @@ void Sprite::setPosition(Vector2& position)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setX(float x)
 {
-	m_position.vec[0] = x;
+    m_position.vec[0] = x;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +168,7 @@ void Sprite::setX(float x)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setY(float y)
 {
-	m_position.vec[1] = y;
+    m_position.vec[1] = y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -176,8 +176,8 @@ void Sprite::setY(float y)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::move(float x, float y)
 {
-	m_position.vec[0] += x;
-	m_position.vec[1] += y;
+    m_position.vec[0] += x;
+    m_position.vec[1] += y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -185,8 +185,8 @@ void Sprite::move(float x, float y)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::move(Vector2& vector)
 {
-	m_position.vec[0] += vector.vec[0];
-	m_position.vec[1] += vector.vec[1];
+    m_position.vec[0] += vector.vec[0];
+    m_position.vec[1] += vector.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -194,7 +194,7 @@ void Sprite::move(Vector2& vector)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::moveX(float x)
 {
-	m_position.vec[0] += x;
+    m_position.vec[0] += x;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -202,7 +202,7 @@ void Sprite::moveX(float x)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::moveY(float y)
 {
-	m_position.vec[1] += y;
+    m_position.vec[1] += y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,8 +210,8 @@ void Sprite::moveY(float y)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setSize(float width, float height)
 {
-	m_size.vec[0] = width;
-	m_size.vec[1] = height;
+    m_size.vec[0] = width;
+    m_size.vec[1] = height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -219,8 +219,8 @@ void Sprite::setSize(float width, float height)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setSize(Vector2& size)
 {
-	m_size.vec[0] = size.vec[0];
-	m_size.vec[1] = size.vec[1];
+    m_size.vec[0] = size.vec[0];
+    m_size.vec[1] = size.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -228,7 +228,7 @@ void Sprite::setSize(Vector2& size)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setWidth(float width)
 {
-	m_size.vec[0] = width;
+    m_size.vec[0] = width;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +236,7 @@ void Sprite::setWidth(float width)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setHeight(float height)
 {
-	m_size.vec[1] = height;
+    m_size.vec[1] = height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -244,7 +244,7 @@ void Sprite::setHeight(float height)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::setAngle(float angle)
 {
-	m_angle = angle;
+    m_angle = angle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -252,7 +252,7 @@ void Sprite::setAngle(float angle)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::rotate(float angle)
 {
-	m_angle += angle;
+    m_angle += angle;
 }
 
 
@@ -261,15 +261,15 @@ void Sprite::rotate(float angle)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::render(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline)
 {
-	// Set sprite model matrix
-	m_modelMatrix.setIdentity();
-	m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
-	m_modelMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
-	m_modelMatrix.rotateZ(m_angle);
-	m_modelMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
-	m_modelMatrix.scale(m_size.vec[0], m_size.vec[1]);
+    // Set sprite model matrix
+    m_modelMatrix.setIdentity();
+    m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
+    m_modelMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
+    m_modelMatrix.rotateZ(m_angle);
+    m_modelMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
+    m_modelMatrix.scale(m_size.vec[0], m_size.vec[1]);
 
-	// Push model matrix into command buffer
+    // Push model matrix into command buffer
     vkCmdPushConstants(
         commandBuffer, pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT,
         0, sizeof(Matrix4x4::mat), m_modelMatrix.mat
@@ -285,26 +285,42 @@ void Sprite::render(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline)
 //  return : True if descriptor sets are successfully created                 //
 ////////////////////////////////////////////////////////////////////////////////
 bool Sprite::createDescriptorSets(VkDevice vulkanDevice,
-	GraphicsPipeline& pipeline, UniformBuffer* uniformBuffers)
+    GraphicsPipeline& pipeline, UniformBuffer* uniformBuffers)
 {
-    // Create descriptor sets
+    // Create matrices descriptor set
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = pipeline.descPool;
+    descriptorInfo.descriptorPool = pipeline.descPools[DESC_MATRICES];
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = pipeline.descSetLayouts;
+    descriptorInfo.pSetLayouts =
+        &pipeline.swapSetLayouts[DESC_MATRICES*RendererMaxSwapchainFrames];
 
     if (vkAllocateDescriptorSets(
         vulkanDevice, &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
-        // Could not allocate descriptor sets
+        // Could not allocate matrices descriptor sets
+        return false;
+    }
+
+    // Create texture descriptor set
+    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorInfo.pNext = 0;
+    descriptorInfo.descriptorPool = pipeline.descPools[DESC_TEXTURE];
+    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
+    descriptorInfo.pSetLayouts =
+        &pipeline.swapSetLayouts[DESC_TEXTURE*RendererMaxSwapchainFrames];
+
+    if (vkAllocateDescriptorSets(
+        vulkanDevice, &descriptorInfo, m_descriptorSets2) != VK_SUCCESS)
+    {
+        // Could not allocate texture descriptor sets
         return false;
     }
 
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        // Update descriptor set
+        // Update descriptor sets
         VkDescriptorBufferInfo bufferInfo;
         bufferInfo.buffer = uniformBuffers[i].uniformBuffer.handle;
         bufferInfo.offset = 0;
@@ -315,33 +331,37 @@ bool Sprite::createDescriptorSets(VkDevice vulkanDevice,
         imageInfo.imageView = m_texture->view;
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
-        VkWriteDescriptorSet descriptorWrites[2];
+        // Update matrices descriptor sets
+        VkWriteDescriptorSet descriptorWrites;
 
-        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].pNext = 0;
-        descriptorWrites[0].dstSet = m_descriptorSets[i];
-        descriptorWrites[0].dstBinding = 0;
-        descriptorWrites[0].dstArrayElement = 0;
-        descriptorWrites[0].descriptorCount = 1;
-        descriptorWrites[0].descriptorType =
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.pNext = 0;
+        descriptorWrites.dstSet = m_descriptorSets[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.descriptorType =
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites[0].pImageInfo = 0;
-        descriptorWrites[0].pBufferInfo = &bufferInfo;
-        descriptorWrites[0].pTexelBufferView = 0;
+        descriptorWrites.pImageInfo = 0;
+        descriptorWrites.pBufferInfo = &bufferInfo;
+        descriptorWrites.pTexelBufferView = 0;
 
-        descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[1].pNext = 0;
-        descriptorWrites[1].dstSet = m_descriptorSets[i];
-        descriptorWrites[1].dstBinding = 1;
-        descriptorWrites[1].dstArrayElement = 0;
-        descriptorWrites[1].descriptorCount = 1;
-        descriptorWrites[1].descriptorType =
+        vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);
+
+        // Update texture descriptor sets
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.pNext = 0;
+        descriptorWrites.dstSet = m_descriptorSets2[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.descriptorType =
             VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        descriptorWrites[1].pImageInfo = &imageInfo;
-        descriptorWrites[1].pBufferInfo = 0;
-        descriptorWrites[1].pTexelBufferView = 0;
+        descriptorWrites.pImageInfo = &imageInfo;
+        descriptorWrites.pBufferInfo = 0;
+        descriptorWrites.pTexelBufferView = 0;
 
-        vkUpdateDescriptorSets(vulkanDevice, 2, descriptorWrites, 0, 0);
+        vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
     // Descriptor sets successfully created

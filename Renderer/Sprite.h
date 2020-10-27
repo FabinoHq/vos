@@ -178,6 +178,7 @@
 
         public:
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
+            VkDescriptorSet     m_descriptorSets2[RendererMaxSwapchainFrames];
             Matrix4x4           m_modelMatrix;      // Sprite model matrix
             Texture*            m_texture;          // Sprite texture pointer
             Vector2             m_position;         // Sprite position

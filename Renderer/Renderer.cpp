@@ -497,6 +497,12 @@ void Renderer::render()
         &m_sprite.m_descriptorSets[m_swapchain.current], 0, 0
     );
 
+    vkCmdBindDescriptorSets(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.layout, 1, 1,
+        &m_sprite.m_descriptorSets2[m_swapchain.current], 0, 0
+    );
+
     // Update matrices
     float ratio = 1.0f;
     if ((m_swapchain.extent.width > 0) && (m_swapchain.extent.height > 0))
