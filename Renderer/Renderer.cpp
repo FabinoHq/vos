@@ -296,7 +296,7 @@ bool Renderer::init(SysWindow* sysWindow)
     // Create uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        if (!m_sprite.m_uniformBuffers[i].updateBuffer(m_physicalDevice,
+        if (!m_uniformBuffers[i].updateBuffer(m_physicalDevice,
             m_vulkanDevice, m_vulkanMemory, m_transferCommandPool,
             m_transferQueue, &uniformData, sizeof(uniformData)))
         {
@@ -319,7 +319,8 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Init test sprite
-    if (!m_sprite.init(m_vulkanDevice, m_pipeline, m_texture, 1.0f, 1.0f))
+    if (!m_sprite.init(
+        m_vulkanDevice, m_pipeline, m_uniformBuffers, m_texture, 1.0f, 1.0f))
     {
         return false;
     }
@@ -519,7 +520,7 @@ void Renderer::render()
     memcpy(uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
 
     // Update uniform buffer
-    if (!m_sprite.m_uniformBuffers[m_swapchain.current].updateBuffer(
+    if (!m_uniformBuffers[m_swapchain.current].updateBuffer(
         m_physicalDevice, m_vulkanDevice, m_vulkanMemory, m_transferCommandPool,
         m_transferQueue, &uniformData, sizeof(uniformData)))
     {
@@ -649,9 +650,7 @@ void Renderer::cleanup()
         // Destroy uniform buffer
         for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
         {
-            m_sprite.m_uniformBuffers[i].destroyBuffer(
-                m_vulkanDevice, m_vulkanMemory
-            );
+            m_uniformBuffers[i].destroyBuffer(m_vulkanDevice, m_vulkanMemory);
         }
 
         // Destroy vertex buffer

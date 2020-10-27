@@ -153,6 +153,8 @@
             Shader              m_shader;               // Default shader
             GraphicsPipeline    m_pipeline;             // Default pipeline
             Sprite              m_sprite;               // Test sprite
+
+            UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
     };
 
 

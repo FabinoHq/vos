@@ -81,7 +81,7 @@ Sprite::~Sprite()
 //  return : True if the sprite is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
 bool Sprite::init(VkDevice vulkanDevice, GraphicsPipeline& pipeline,
-	Texture& texture, float width, float height)
+	UniformBuffer* uniformBuffers, Texture& texture, float width, float height)
 {
 	// Check Vulkan device
 	if (!vulkanDevice)
@@ -114,7 +114,7 @@ bool Sprite::init(VkDevice vulkanDevice, GraphicsPipeline& pipeline,
 	m_texture = &texture;
 
 	// Create descriptor sets
-	if (!createDescriptorSets(vulkanDevice, pipeline))
+	if (!createDescriptorSets(vulkanDevice, pipeline, uniformBuffers))
 	{
 		// Could not create descriptor sets
 		return false;
@@ -142,7 +142,7 @@ bool Sprite::init(VkDevice vulkanDevice, GraphicsPipeline& pipeline,
 //  return : True if descriptor sets are successfully created                 //
 ////////////////////////////////////////////////////////////////////////////////
 bool Sprite::createDescriptorSets(VkDevice vulkanDevice,
-	GraphicsPipeline& pipeline)
+	GraphicsPipeline& pipeline, UniformBuffer* uniformBuffers)
 {
     // Create descriptor sets
     VkDescriptorSetAllocateInfo descriptorInfo;
@@ -163,9 +163,9 @@ bool Sprite::createDescriptorSets(VkDevice vulkanDevice,
     {
         // Update descriptor set
         VkDescriptorBufferInfo bufferInfo;
-        bufferInfo.buffer = m_uniformBuffers[i].uniformBuffer.handle;
+        bufferInfo.buffer = uniformBuffers[i].uniformBuffer.handle;
         bufferInfo.offset = 0;
-        bufferInfo.range = m_uniformBuffers[i].uniformBuffer.size;
+        bufferInfo.range = uniformBuffers[i].uniformBuffer.size;
 
         VkDescriptorImageInfo imageInfo;
         imageInfo.sampler = m_texture->sampler;
