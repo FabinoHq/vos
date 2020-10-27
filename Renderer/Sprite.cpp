@@ -263,15 +263,11 @@ void Sprite::render(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline)
 {
 	// Set sprite model matrix
 	m_modelMatrix.setIdentity();
-	m_modelMatrix.translateX(m_position.vec[0]);
-	m_modelMatrix.translateY(m_position.vec[1]);
-	m_modelMatrix.translateX(m_size.vec[0]*0.5f);
-	m_modelMatrix.translateY(m_size.vec[1]*0.5f);
+	m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
+	m_modelMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
 	m_modelMatrix.rotateZ(m_angle);
-	m_modelMatrix.translateX(-m_size.vec[0]*0.5f);
-	m_modelMatrix.translateY(-m_size.vec[1]*0.5f);
-	m_modelMatrix.scaleX(m_size.vec[0]);
-	m_modelMatrix.scaleY(m_size.vec[0]);
+	m_modelMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
+	m_modelMatrix.scale(m_size.vec[0], m_size.vec[1]);
 
 	// Push model matrix into command buffer
     vkCmdPushConstants(

@@ -325,6 +325,14 @@
                 mat[15] += (mat[3]*x + mat[7]*y + mat[11]*z);
             }
 
+            void translate(float x, float y)
+            {
+                mat[12] += (mat[0]*x + mat[4]*y);
+                mat[13] += (mat[1]*x + mat[5]*y);
+                mat[14] += (mat[2]*x + mat[6]*y);
+                mat[15] += (mat[3]*x + mat[7]*y);
+            }
+
             void translate(const Vector2& vector)
             {
                 mat[12] += (mat[0]*vector.vec[0] + mat[4]*vector.vec[1]);
@@ -526,16 +534,16 @@
                 mat[11] *= z;
             }
 
-            void scale(const Vector2& vector)
+            void scale(float x, float y)
             {
-                mat[0] *= vector.vec[0];
-                mat[1] *= vector.vec[0];
-                mat[2] *= vector.vec[0];
-                mat[3] *= vector.vec[0];
-                mat[4] *= vector.vec[1];
-                mat[5] *= vector.vec[1];
-                mat[6] *= vector.vec[1];
-                mat[7] *= vector.vec[1];
+                mat[0] *= x;
+                mat[1] *= x;
+                mat[2] *= x;
+                mat[3] *= x;
+                mat[4] *= y;
+                mat[5] *= y;
+                mat[6] *= y;
+                mat[7] *= y;
             }
 
             void scale(const Vector3& vector)
@@ -552,6 +560,18 @@
                 mat[9] *= vector.vec[2];
                 mat[10] *= vector.vec[2];
                 mat[11] *= vector.vec[2];
+            }
+
+            void scale(const Vector2& vector)
+            {
+                mat[0] *= vector.vec[0];
+                mat[1] *= vector.vec[0];
+                mat[2] *= vector.vec[0];
+                mat[3] *= vector.vec[0];
+                mat[4] *= vector.vec[1];
+                mat[5] *= vector.vec[1];
+                mat[6] *= vector.vec[1];
+                mat[7] *= vector.vec[1];
             }
 
             ////////////////////////////////////////////////////////////////////

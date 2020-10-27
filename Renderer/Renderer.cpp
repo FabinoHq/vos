@@ -539,8 +539,8 @@ void Renderer::render()
     );
 
     // Render test sprite
-    m_sprite.setSize(1.8f, 1.8f);
-    m_sprite.setPosition(-0.9f, -0.9f);
+    m_sprite.setSize(ratio*2.0f, 2.0f);
+    m_sprite.setPosition(-ratio, -1.0f);
     m_sprite.render(
         m_swapchain.commandBuffers[m_swapchain.current], m_pipeline
     );
