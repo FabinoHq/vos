@@ -78,7 +78,7 @@ Texture::~Texture()
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    uint32_t texWidth, uint32_t texHeight)
+    GraphicsPipeline& pipeline, uint32_t texWidth, uint32_t texHeight)
 {
     // Check physical device
     if (!physicalDevice)
@@ -212,6 +212,13 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    // Create texture descriptor sets
+    if (!createDescriptorSets(vulkanDevice, pipeline))
+    {
+        // Could not create texture descriptor sets
+        return false;
+    }
+
     // Vulkan Texture successfully created
     return true;
 }
@@ -222,9 +229,9 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkCommandPool& commandsPool, VulkanQueue& graphicsQueue,
-    uint32_t texWidth, uint32_t texHeight, uint32_t texDepth,
-    const unsigned char* data)
+    GraphicsPipeline& pipeline, VkCommandPool& commandsPool,
+    VulkanQueue& graphicsQueue, uint32_t texWidth, uint32_t texHeight,
+    uint32_t texDepth, const unsigned char* data)
 {
     // Check physical device
     if (!physicalDevice)
@@ -267,7 +274,8 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
         // Recreate texture
         destroyTexture(vulkanDevice, vulkanMemory);
         createTexture(
-            physicalDevice, vulkanDevice, vulkanMemory, texWidth, texHeight
+            physicalDevice, vulkanDevice, vulkanMemory,
+            pipeline, texWidth, texHeight
         );
     }
 
@@ -485,4 +493,57 @@ void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
     handle = 0;
     height = 0;
     width = 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create texture descriptor sets                                            //
+//  return : True if descriptor sets are successfully created                 //
+////////////////////////////////////////////////////////////////////////////////
+bool Texture::createDescriptorSets(VkDevice& vulkanDevice,
+    GraphicsPipeline& pipeline)
+{
+    // Create texture descriptor set
+    VkDescriptorSetAllocateInfo descriptorInfo;
+    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorInfo.pNext = 0;
+    descriptorInfo.descriptorPool = pipeline.descPools[DESC_TEXTURE];
+    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
+    descriptorInfo.pSetLayouts =
+        &pipeline.swapSetLayouts[DESC_TEXTURE*RendererMaxSwapchainFrames];
+
+    if (vkAllocateDescriptorSets(
+        vulkanDevice, &descriptorInfo, descriptorSets) != VK_SUCCESS)
+    {
+        // Could not allocate texture descriptor sets
+        return false;
+    }
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        // Update texture descriptor sets
+        VkDescriptorImageInfo imageInfo;
+        imageInfo.sampler = sampler;
+        imageInfo.imageView = view;
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+        VkWriteDescriptorSet descriptorWrites;
+
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.pNext = 0;
+        descriptorWrites.dstSet = descriptorSets[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.descriptorType =
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrites.pImageInfo = &imageInfo;
+        descriptorWrites.pBufferInfo = 0;
+        descriptorWrites.pTexelBufferView = 0;
+
+        vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);
+    }
+
+    // Texture descriptor sets successfully created
+    return true;
 }

@@ -309,7 +309,7 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Load texture
     if (!m_texture.updateTexture(m_physicalDevice, m_vulkanDevice,
-        m_vulkanMemory, m_swapchain.commandsPool, m_graphicsQueue,
+        m_vulkanMemory, m_pipeline, m_swapchain.commandsPool, m_graphicsQueue,
         TestSpriteWidth, TestSpriteHeight, TestSpriteDepth, TestSprite))
     {
         // Could not load texture
@@ -490,17 +490,11 @@ void Renderer::render()
         m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
     );
 
-    // Bind descriptor set
+    // Bind matrices descriptor set
     vkCmdBindDescriptorSets(
         m_swapchain.commandBuffers[m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.layout, 0, 1,
+        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.layout, DESC_MATRICES, 1,
         &m_sprite.m_descriptorSets[m_swapchain.current], 0, 0
-    );
-
-    vkCmdBindDescriptorSets(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.layout, 1, 1,
-        &m_sprite.m_descriptorSets2[m_swapchain.current], 0, 0
     );
 
     // Update matrices
@@ -548,7 +542,8 @@ void Renderer::render()
     m_sprite.setSize(ratio*2.0f, 2.0f);
     m_sprite.setPosition(-ratio, -1.0f);
     m_sprite.render(
-        m_swapchain.commandBuffers[m_swapchain.current], m_pipeline
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_pipeline, m_swapchain.current
     );
 
     // End render pass

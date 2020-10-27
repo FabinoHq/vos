@@ -73,7 +73,7 @@
             //  Init sprite                                                   //
             //  return : True if the sprite is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(VkDevice vulkanDevice, GraphicsPipeline& pipeline,
+            bool init(VkDevice& vulkanDevice, GraphicsPipeline& pipeline,
                 UniformBuffer* uniformBuffers, Texture& texture,
                 float width, float height);
 
@@ -153,7 +153,7 @@
             //  Render sprite                                                 //
             ////////////////////////////////////////////////////////////////////
             void render(VkCommandBuffer& commandBuffer,
-                GraphicsPipeline& pipeline);
+                GraphicsPipeline& pipeline, uint32_t currentSwapchain);
 
 
         private:
@@ -172,13 +172,12 @@
             //  Create descriptor sets                                        //
             //  return : True if descriptor sets are successfully created     //
             ////////////////////////////////////////////////////////////////////
-            bool createDescriptorSets(VkDevice vulkanDevice,
+            bool createDescriptorSets(VkDevice& vulkanDevice,
                 GraphicsPipeline& pipeline, UniformBuffer* uniformBuffers);
 
 
         public:
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
-            VkDescriptorSet     m_descriptorSets2[RendererMaxSwapchainFrames];
             Matrix4x4           m_modelMatrix;      // Sprite model matrix
             Texture*            m_texture;          // Sprite texture pointer
             Vector2             m_position;         // Sprite position

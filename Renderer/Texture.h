@@ -45,7 +45,9 @@
     #include "Vulkan.h"
     #include "VulkanMemory.h"
     #include "VulkanQueue.h"
+    #include "Swapchain.h"
     #include "VulkanBuffer.h"
+    #include "GraphicsPipeline.h"
 
 
     const unsigned int TestSpriteWidth = 32;
@@ -421,6 +423,7 @@
             ////////////////////////////////////////////////////////////////////
             bool createTexture(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                GraphicsPipeline& pipeline,
                 uint32_t texWidth, uint32_t texHeight);
 
             ////////////////////////////////////////////////////////////////////
@@ -429,8 +432,9 @@
             ////////////////////////////////////////////////////////////////////
             bool updateTexture(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkCommandPool& commandsPool, VulkanQueue& graphicsQueue,
-                uint32_t texWidth, uint32_t texHeight, uint32_t texDepth,
+                GraphicsPipeline& pipeline, VkCommandPool& commandsPool,
+                VulkanQueue& graphicsQueue, uint32_t texWidth,
+                uint32_t texHeight, uint32_t texDepth,
                 const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
@@ -452,15 +456,25 @@
             Texture& operator=(const Texture&) = delete;
 
 
-        public:
-            uint32_t        width;          // Texture width
-            uint32_t        height;         // texture height
-            VkImage         handle;         // Texture handle
-            VkSampler       sampler;        // Texture sampler
-            VkImageView     view;           // Texture view
+            ////////////////////////////////////////////////////////////////////
+            //  Create texture descriptor sets                                //
+            //  return : True if descriptor sets are successfully created     //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorSets(VkDevice& vulkanDevice,
+                GraphicsPipeline& pipeline);
 
-            VkDeviceSize    memorySize;     // Memory size
-            VkDeviceSize    memoryOffset;   // Memory offset
+
+        public:
+            uint32_t            width;          // Texture width
+            uint32_t            height;         // texture height
+            VkImage             handle;         // Texture handle
+            VkSampler           sampler;        // Texture sampler
+            VkImageView         view;           // Texture view
+
+            VkDeviceSize        memorySize;     // Memory size
+            VkDeviceSize        memoryOffset;   // Memory offset
+
+            VkDescriptorSet     descriptorSets[RendererMaxSwapchainFrames];
     };
 
 #endif // VOS_RENDERER_TEXTURE_HEADER
