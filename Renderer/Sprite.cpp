@@ -276,7 +276,7 @@ void Sprite::render(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline)
 	// Push model matrix into command buffer
     vkCmdPushConstants(
         commandBuffer, pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT,
-        0, sizeof(m_modelMatrix.mat), m_modelMatrix.mat
+        0, sizeof(Matrix4x4::mat), m_modelMatrix.mat
     );
 
     // Draw sprite triangles

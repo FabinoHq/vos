@@ -439,7 +439,7 @@ bool GraphicsPipeline::createPipelineLayout(VkDevice& vulkanDevice)
     VkPushConstantRange pushConstantRange;
     pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     pushConstantRange.offset = 0;
-    pushConstantRange.size = sizeof(float)*16;
+    pushConstantRange.size = sizeof(Matrix4x4::mat);
 
     VkPipelineLayoutCreateInfo pipelineInfo;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
