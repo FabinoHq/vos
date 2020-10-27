@@ -511,9 +511,6 @@ void Renderer::render()
     Matrix4x4 viewMatrix;
     viewMatrix.setIdentity();
 
-    Matrix4x4 modelMatrix;
-    modelMatrix.setIdentity();
-
     // Copy matrices data into uniform data
     UniformData uniformData;
     memcpy(uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
@@ -529,14 +526,7 @@ void Renderer::render()
         return;
     }
 
-    // Push model matrix into command buffer
-    vkCmdPushConstants(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        m_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT,
-        0, sizeof(modelMatrix.mat), modelMatrix.mat
-    );
-
-    // Draw vertices
+    // Bind vertices
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
@@ -548,8 +538,11 @@ void Renderer::render()
         m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
     );
 
-    vkCmdDrawIndexed(
-        m_swapchain.commandBuffers[m_swapchain.current], 6, 1, 0, 0, 0
+    // Render test sprite
+    m_sprite.setSize(1.8f, 1.8f);
+    m_sprite.setPosition(-0.9f, -0.9f);
+    m_sprite.render(
+        m_swapchain.commandBuffers[m_swapchain.current], m_pipeline
     );
 
     // End render pass

@@ -257,6 +257,34 @@ void Sprite::rotate(float angle)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Render sprite                                                             //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::render(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline)
+{
+	// Set sprite model matrix
+	m_modelMatrix.setIdentity();
+	m_modelMatrix.translateX(m_position.vec[0]);
+	m_modelMatrix.translateY(m_position.vec[1]);
+	m_modelMatrix.translateX(m_size.vec[0]*0.5f);
+	m_modelMatrix.translateY(m_size.vec[1]*0.5f);
+	m_modelMatrix.rotateZ(m_angle);
+	m_modelMatrix.translateX(-m_size.vec[0]*0.5f);
+	m_modelMatrix.translateY(-m_size.vec[1]*0.5f);
+	m_modelMatrix.scaleX(m_size.vec[0]);
+	m_modelMatrix.scaleY(m_size.vec[0]);
+
+	// Push model matrix into command buffer
+    vkCmdPushConstants(
+        commandBuffer, pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT,
+        0, sizeof(m_modelMatrix.mat), m_modelMatrix.mat
+    );
+
+    // Draw sprite triangles
+    vkCmdDrawIndexed(commandBuffer, 6, 1, 0, 0, 0);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Create descriptor sets                                                    //
 //  return : True if descriptor sets are successfully created                 //
 ////////////////////////////////////////////////////////////////////////////////

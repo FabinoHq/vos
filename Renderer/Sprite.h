@@ -149,6 +149,13 @@
             void rotate(float angle);
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Render sprite                                                 //
+            ////////////////////////////////////////////////////////////////////
+            void render(VkCommandBuffer& commandBuffer,
+                GraphicsPipeline& pipeline);
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  Sprite private copy constructor : Not copyable                //
