@@ -292,7 +292,6 @@ bool Renderer::init(SysWindow* sysWindow)
     UniformData uniformData;
     memcpy(uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
     memcpy(uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
-    memcpy(uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
     // Create uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
@@ -518,7 +517,6 @@ void Renderer::render()
     UniformData uniformData;
     memcpy(uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
     memcpy(uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
-    memcpy(uniformData.modelMatrix, modelMatrix.mat, sizeof(modelMatrix.mat));
 
     // Update uniform buffer
     if (!m_sprite.m_uniformBuffers[m_swapchain.current].updateBuffer(
@@ -529,6 +527,13 @@ void Renderer::render()
         m_rendererReady = false;
         return;
     }
+
+    // Push model matrix into command buffer
+    vkCmdPushConstants(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT,
+        0, sizeof(modelMatrix.mat), modelMatrix.mat
+    );
 
     // Draw vertices
     VkDeviceSize offset = 0;

@@ -55,7 +55,6 @@
     {
         float   projMatrix[16];
         float   viewMatrix[16];
-        float   modelMatrix[16];
     };
 
 

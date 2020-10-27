@@ -436,14 +436,19 @@ bool VulkanPipeline::createPipelineLayout(VkDevice& vulkanDevice)
     }
 
     // Create pipeline layout
+    VkPushConstantRange pushConstantRange;
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    pushConstantRange.offset = 0;
+    pushConstantRange.size = sizeof(float)*16;
+
     VkPipelineLayoutCreateInfo pipelineInfo;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineInfo.pNext = 0;
     pipelineInfo.flags = 0;
     pipelineInfo.setLayoutCount = 1;
     pipelineInfo.pSetLayouts = &descSetLayout;
-    pipelineInfo.pushConstantRangeCount = 0;
-    pipelineInfo.pPushConstantRanges = 0;
+    pipelineInfo.pushConstantRangeCount = 1;
+    pipelineInfo.pPushConstantRanges = &pushConstantRange;
 
     if (vkCreatePipelineLayout(
         vulkanDevice, &pipelineInfo, 0, &layout) != VK_SUCCESS)
