@@ -54,7 +54,7 @@
     #include "UniformBuffer.h"
     #include "Texture.h"
     #include "Shader.h"
-    #include "VulkanPipeline.h"
+    #include "GraphicsPipeline.h"
     #include "Sprite.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
@@ -151,7 +151,7 @@
             VertexBuffer        m_vertexBuffer;         // Vertex buffer
             Texture             m_texture;              // Test texture
             Shader              m_shader;               // Default shader
-            VulkanPipeline      m_pipeline;             // Default pipeline
+            GraphicsPipeline    m_pipeline;             // Default pipeline
             Sprite              m_sprite;               // Test sprite
     };
 

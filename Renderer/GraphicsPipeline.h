@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanPipeline.h : Vulkan Pipeline management                 //
+//     Renderer/GraphicsPipeline.h : Vulkan Graphics pipeline management      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKANPIPELINE_HEADER
-#define VOS_RENDERER_VULKANPIPELINE_HEADER
+#ifndef VOS_RENDERER_GRAPHICSPIPELINE_HEADER
+#define VOS_RENDERER_GRAPHICSPIPELINE_HEADER
 
     #include "../System/SysMessage.h"
     #include "Vulkan.h"
@@ -51,25 +51,25 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanPipeline class definition                                       //
+    //  GraphicsPipeline class definition                                     //
     ////////////////////////////////////////////////////////////////////////////
-    class VulkanPipeline
+    class GraphicsPipeline
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanPipeline default constructor                            //
+            //  GraphicsPipeline default constructor                          //
             ////////////////////////////////////////////////////////////////////
-            VulkanPipeline();
+            GraphicsPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanPipeline destructor                                     //
+            //  GraphicsPipeline destructor                                   //
             ////////////////////////////////////////////////////////////////////
-            ~VulkanPipeline();
+            ~GraphicsPipeline();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create pipeline                                               //
-            //  return : True if pipeline is successfully created             //
+            //  Create graphics pipeline                                      //
+            //  return : True if graphics pipeline is successfully created    //
             ////////////////////////////////////////////////////////////////////
             bool createPipeline(VkDevice& vulkanDevice, Swapchain& swapchain,
                 Shader& shader);
@@ -100,14 +100,14 @@
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanPipeline private copy constructor : Not copyable        //
+            //  GraphicsPipeline private copy constructor : Not copyable      //
             ////////////////////////////////////////////////////////////////////
-            VulkanPipeline(const VulkanPipeline&) = delete;
+            GraphicsPipeline(const GraphicsPipeline&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanPipeline private copy operator : Not copyable           //
+            //  GraphicsPipeline private copy operator : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            VulkanPipeline& operator=(const VulkanPipeline&) = delete;
+            GraphicsPipeline& operator=(const GraphicsPipeline&) = delete;
 
 
         public:
@@ -119,4 +119,4 @@
     };
 
 
-#endif // VOS_RENDERER_VULKANPIPELINE_HEADER
+#endif // VOS_RENDERER_GRAPHICSPIPELINE_HEADER

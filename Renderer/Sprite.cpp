@@ -80,7 +80,7 @@ Sprite::~Sprite()
 //  Init sprite                                                               //
 //  return : True if the sprite is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool Sprite::init(VkDevice vulkanDevice, VulkanPipeline& pipeline,
+bool Sprite::init(VkDevice vulkanDevice, GraphicsPipeline& pipeline,
 	Texture& texture, float width, float height)
 {
 	// Check Vulkan device
@@ -142,7 +142,7 @@ bool Sprite::init(VkDevice vulkanDevice, VulkanPipeline& pipeline,
 //  return : True if descriptor sets are successfully created                 //
 ////////////////////////////////////////////////////////////////////////////////
 bool Sprite::createDescriptorSets(VkDevice vulkanDevice,
-	VulkanPipeline& pipeline)
+	GraphicsPipeline& pipeline)
 {
     // Create descriptor sets
     VkDescriptorSetAllocateInfo descriptorInfo;

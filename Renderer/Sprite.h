@@ -46,7 +46,7 @@
     #include "Texture.h"
     #include "VulkanBuffer.h"
     #include "UniformBuffer.h"
-    #include "VulkanPipeline.h"
+    #include "GraphicsPipeline.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
 
@@ -72,7 +72,7 @@
             //  Init sprite                                                   //
             //  return : True if the sprite is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(VkDevice vulkanDevice, VulkanPipeline& pipeline,
+            bool init(VkDevice vulkanDevice, GraphicsPipeline& pipeline,
                 Texture& texture, float width, float height);
 
 
@@ -93,7 +93,7 @@
             //  return : True if descriptor sets are successfully created     //
             ////////////////////////////////////////////////////////////////////
             bool createDescriptorSets(VkDevice vulkanDevice,
-                VulkanPipeline& pipeline);
+                GraphicsPipeline& pipeline);
 
 
         public:

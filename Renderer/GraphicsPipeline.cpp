@@ -37,15 +37,15 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanPipeline.cpp : Vulkan Pipeline management               //
+//     Renderer/GraphicsPipeline.cpp : Vulkan Graphics pipeline management    //
 ////////////////////////////////////////////////////////////////////////////////
-#include "VulkanPipeline.h"
+#include "GraphicsPipeline.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VulkanPipeline default constructor                                        //
+//  GraphicsPipeline default constructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
-VulkanPipeline::VulkanPipeline() :
+GraphicsPipeline::GraphicsPipeline() :
 handle(0),
 layout(0),
 descPool(0),
@@ -58,9 +58,9 @@ descSetLayout(0)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VulkanPipeline destructor                                                 //
+//  GraphicsPipeline destructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
-VulkanPipeline::~VulkanPipeline()
+GraphicsPipeline::~GraphicsPipeline()
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -74,10 +74,10 @@ VulkanPipeline::~VulkanPipeline()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create pipeline                                                           //
-//  return : True if pipeline is successfully created                         //
+//  Create graphics pipeline                                                  //
+//  return : True if graphics pipeline is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanPipeline::createPipeline(VkDevice& vulkanDevice,
+bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
     Swapchain& swapchain, Shader& shader)
 {
     // Check Vulkan device
@@ -271,7 +271,7 @@ bool VulkanPipeline::createPipeline(VkDevice& vulkanDevice,
     dynamicInfo.dynamicStateCount = 2;
     dynamicInfo.pDynamicStates = dynamicStates;
 
-    // Create pipeline
+    // Create graphics pipeline
     VkGraphicsPipelineCreateInfo pipelineInfo;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.pNext = 0;
@@ -305,7 +305,7 @@ bool VulkanPipeline::createPipeline(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Pipeline successfully created
+    // Graphics pipeline successfully created
     return true;
 }
 
@@ -313,7 +313,7 @@ bool VulkanPipeline::createPipeline(VkDevice& vulkanDevice,
 //  Create descriptor pool                                                    //
 //  return : True if descriptor pool is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanPipeline::createDescriptorPool(VkDevice& vulkanDevice)
+bool GraphicsPipeline::createDescriptorPool(VkDevice& vulkanDevice)
 {
     // Check Vulkan device
     if (!vulkanDevice)
@@ -359,7 +359,7 @@ bool VulkanPipeline::createDescriptorPool(VkDevice& vulkanDevice)
 //  Create descriptor set layout                                              //
 //  return : True if descriptor layout is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanPipeline::createDescriptorSetLayout(VkDevice& vulkanDevice)
+bool GraphicsPipeline::createDescriptorSetLayout(VkDevice& vulkanDevice)
 {
     // Check Vulkan device
     if (!vulkanDevice)
@@ -419,7 +419,7 @@ bool VulkanPipeline::createDescriptorSetLayout(VkDevice& vulkanDevice)
 //  Create pipeline layout                                                    //
 //  return : True if pipeline layout is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanPipeline::createPipelineLayout(VkDevice& vulkanDevice)
+bool GraphicsPipeline::createPipelineLayout(VkDevice& vulkanDevice)
 {
     // Check Vulkan device
     if (!vulkanDevice)
@@ -469,7 +469,7 @@ bool VulkanPipeline::createPipelineLayout(VkDevice& vulkanDevice)
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy pipeline                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void VulkanPipeline::destroyPipeline(VkDevice& vulkanDevice)
+void GraphicsPipeline::destroyPipeline(VkDevice& vulkanDevice)
 {
     if (vulkanDevice)
     {
