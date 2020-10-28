@@ -46,8 +46,8 @@
 //  Sprite default constructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
 Sprite::Sprite() :
-m_modelMatrix(),
 m_texture(0),
+m_modelMatrix(),
 m_position(0.0f, 0.0f),
 m_size(1.0f, 1.0f),
 m_angle(0.0f)
@@ -63,8 +63,8 @@ Sprite::~Sprite()
     m_angle = 0.0f;
     m_size.reset();
     m_position.reset();
-    m_texture = 0;
     m_modelMatrix.reset();
+    m_texture = 0;
 }
 
 
@@ -100,6 +100,23 @@ bool Sprite::init(Texture& texture, float width, float height)
     return true;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite texture                                                        //
+//  return : True if sprite texture is successfully set                       //
+////////////////////////////////////////////////////////////////////////////////
+bool Sprite::setTexture(Texture& texture)
+{
+    // Check texture handle
+    if (!texture.handle)
+    {
+        // Invalid texture handle
+        return false;
+    }
+
+    // Set sprite texture pointer
+    m_texture = &texture;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set sprite position                                                       //

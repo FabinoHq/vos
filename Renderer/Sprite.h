@@ -75,6 +75,12 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Set sprite texture                                            //
+            //  return : True if sprite texture is successfully set           //
+            ////////////////////////////////////////////////////////////////////
+            bool setTexture(Texture& texture);
+
+            ////////////////////////////////////////////////////////////////////
             //  Set sprite position                                           //
             ////////////////////////////////////////////////////////////////////
             void setPosition(float x, float y);
@@ -165,8 +171,8 @@
 
 
         public:
-            Matrix4x4           m_modelMatrix;      // Sprite model matrix
             Texture*            m_texture;          // Sprite texture pointer
+            Matrix4x4           m_modelMatrix;      // Sprite model matrix
             Vector2             m_position;         // Sprite position
             Vector2             m_size;             // Sprite size
             float               m_angle;            // Sprite angle
