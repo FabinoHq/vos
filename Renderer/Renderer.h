@@ -54,6 +54,7 @@
     #include "UniformBuffer.h"
     #include "Texture.h"
     #include "Shader.h"
+    #include "Shaders/Default.h"
     #include "GraphicsPipeline.h"
     #include "View.h"
     #include "Sprite.h"

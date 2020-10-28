@@ -37,61 +37,34 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shader.h : Shader management                                  //
+//     Renderer/Shaders/Sources/Default.vert : Default vertex shader          //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHADER_HEADER
-#define VOS_RENDERER_SHADER_HEADER
+#version 450
 
-    #include "Vulkan.h"
+// Matrices buffer (projection and view)
+layout(set = 0, binding = 0) uniform MatricesBuffer
+{
+    mat4 proj;
+    mat4 view;
+} mats;
 
+// Model matrix (push constant)
+layout(push_constant) uniform ModelMatrix
+{
+    mat4 model;
+} matrix;
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Shader class definition                                               //
-    ////////////////////////////////////////////////////////////////////////////
-    class Shader
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader default constructor                                    //
-            ////////////////////////////////////////////////////////////////////
-            Shader();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Shader destructor                                             //
-            ////////////////////////////////////////////////////////////////////
-            ~Shader();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create Shader                                                 //
-            //  return : True if Shader is successfully created               //
-            ////////////////////////////////////////////////////////////////////
-            bool createShader(VkDevice& vulkanDevice,
-                const uint32_t* vertexSource, const size_t vertexSize,
-                const uint32_t* fragmentSource, const size_t fragmentSize);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy Shader                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyShader(VkDevice& vulkanDevice);
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy constructor : Not copyable                //
-            ////////////////////////////////////////////////////////////////////
-            Shader(const Shader&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy operator : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Shader& operator=(const Shader&) = delete;
-
-
-        public:
-            VkShaderModule      vertexShader;         // Vertex shader
-            VkShaderModule      fragmentShader;       // Fragment shader
-    };
-
-
-#endif // VOS_RENDERER_SHADER_HEADER
+// Input and output position and texture coordinates
+layout(location = 0) in vec3 i_Position;
+layout(location = 1) in vec2 i_TexCoords;
+layout(location = 0) out vec2 texCoords;
+out gl_PerVertex
+{
+    vec4 gl_Position;
+};
+void main()
+{
+    // Compute vertex position
+    texCoords = i_TexCoords;
+    gl_Position = mats.proj * mats.view * matrix.model * vec4(i_Position, 1.0);
+}

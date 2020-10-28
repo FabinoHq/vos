@@ -37,61 +37,18 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shader.h : Shader management                                  //
+//     Renderer/Shaders/Sources/Default.frag : Default fragment shader        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHADER_HEADER
-#define VOS_RENDERER_SHADER_HEADER
+#version 450
 
-    #include "Vulkan.h"
+// Texture sampler
+layout(set = 1, binding = 0) uniform sampler2D texSampler;
 
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Shader class definition                                               //
-    ////////////////////////////////////////////////////////////////////////////
-    class Shader
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader default constructor                                    //
-            ////////////////////////////////////////////////////////////////////
-            Shader();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Shader destructor                                             //
-            ////////////////////////////////////////////////////////////////////
-            ~Shader();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create Shader                                                 //
-            //  return : True if Shader is successfully created               //
-            ////////////////////////////////////////////////////////////////////
-            bool createShader(VkDevice& vulkanDevice,
-                const uint32_t* vertexSource, const size_t vertexSize,
-                const uint32_t* fragmentSource, const size_t fragmentSize);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy Shader                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyShader(VkDevice& vulkanDevice);
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy constructor : Not copyable                //
-            ////////////////////////////////////////////////////////////////////
-            Shader(const Shader&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy operator : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Shader& operator=(const Shader&) = delete;
-
-
-        public:
-            VkShaderModule      vertexShader;         // Vertex shader
-            VkShaderModule      fragmentShader;       // Fragment shader
-    };
-
-
-#endif // VOS_RENDERER_SHADER_HEADER
+// Input texture coordinates and output color
+layout(location = 0) in vec2 texCoords;
+layout(location = 0) out vec4 o_Color;
+void main()
+{
+    // Compute output color
+    o_Color = texture(texSampler, texCoords);
+}

@@ -83,6 +83,11 @@
 !Renderer/Texture.cpp
 !Renderer/Shader.h
 !Renderer/Shader.cpp
+!Renderer/Shaders/
+!Renderer/Shaders/Sources/
+!Renderer/Shaders/Sources/Default.vert
+!Renderer/Shaders/Sources/Default.frag
+!Renderer/Shaders/Default.h
 !Renderer/GraphicsPipeline.h
 !Renderer/GraphicsPipeline.cpp
 !Renderer/View.h
