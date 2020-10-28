@@ -55,6 +55,7 @@
     #include "Texture.h"
     #include "Shader.h"
     #include "GraphicsPipeline.h"
+    #include "View.h"
     #include "Sprite.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"

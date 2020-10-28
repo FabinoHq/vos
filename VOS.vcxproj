@@ -136,6 +136,7 @@
     <ClCompile Include="Renderer\Texture.cpp" />
     <ClCompile Include="Renderer\UniformBuffer.cpp" />
     <ClCompile Include="Renderer\VertexBuffer.cpp" />
+    <ClCompile Include="Renderer\View.cpp" />
     <ClCompile Include="Renderer\Vulkan.cpp" />
     <ClCompile Include="Renderer\VulkanBuffer.cpp" />
     <ClCompile Include="Renderer\VulkanMemory.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Renderer\Texture.h" />
     <ClInclude Include="Renderer\UniformBuffer.h" />
     <ClInclude Include="Renderer\VertexBuffer.h" />
+    <ClInclude Include="Renderer\View.h" />
     <ClInclude Include="Renderer\Vulkan.h" />
     <ClInclude Include="Renderer\VulkanBuffer.h" />
     <ClInclude Include="Renderer\VulkanMemory.h" />

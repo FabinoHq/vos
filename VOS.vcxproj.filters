@@ -83,6 +83,9 @@
     <ClCompile Include="Renderer\GraphicsPipeline.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\View.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -178,6 +181,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\GraphicsPipeline.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\View.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
