@@ -96,3 +96,7 @@
 !Renderer/Sprite.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
+
+!Renderer/Images/
+!Renderer/Images/Embedded
+!Renderer/Images/Embedded/Cursor.h

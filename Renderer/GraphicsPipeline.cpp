@@ -241,9 +241,9 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
 
     // Blend
     VkPipelineColorBlendAttachmentState colorBlend;
-    colorBlend.blendEnable = VK_FALSE;
-    colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlend.blendEnable = VK_TRUE;
+    colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
     colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
     colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;

@@ -278,12 +278,12 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Load texture
+    // Load cursor texture
     if (!m_texture.updateTexture(m_physicalDevice, m_vulkanDevice,
         m_vulkanMemory, m_pipeline, m_swapchain.commandsPool, m_graphicsQueue,
-        TestSpriteWidth, TestSpriteHeight, TestSpriteDepth, TestSprite))
+        CursorImageWidth, CursorImageHeight, CursorImageDepth, CursorImage))
     {
-        // Could not load texture
+        // Could not load cursor texture
         SysMessage::box() << "[0x304A] Could not load texture\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;

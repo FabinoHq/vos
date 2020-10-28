@@ -61,6 +61,8 @@
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
 
+    #include "Images/Embedded/Cursor.h"
+
     #include <vector>
 
 
@@ -151,7 +153,7 @@
             VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain
             VertexBuffer        m_vertexBuffer;         // Vertex buffer
-            Texture             m_texture;              // Test texture
+            Texture             m_texture;              // Cursor texture
             Shader              m_shader;               // Default shader
             GraphicsPipeline    m_pipeline;             // Default pipeline
             View                m_view;                 // Default view

@@ -417,8 +417,8 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     imageCopy.imageOffset.x = 0;
     imageCopy.imageOffset.y = 0;
     imageCopy.imageOffset.z = 0;
-    imageCopy.imageExtent.width = TestSpriteWidth;
-    imageCopy.imageExtent.height = TestSpriteHeight;
+    imageCopy.imageExtent.width = texWidth;
+    imageCopy.imageExtent.height = texHeight;
     imageCopy.imageExtent.depth = 1;
 
     vkCmdCopyBufferToImage(
