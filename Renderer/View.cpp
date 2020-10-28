@@ -158,10 +158,10 @@ bool View::init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Update descriptor sets
-        VkDescriptorBufferInfo bufferInfo;
-        bufferInfo.buffer = m_uniformBuffers[i].uniformBuffer.handle;
-        bufferInfo.offset = 0;
-        bufferInfo.range = m_uniformBuffers[i].uniformBuffer.size;
+        VkDescriptorBufferInfo descBufferInfo;
+        descBufferInfo.buffer = m_uniformBuffers[i].uniformBuffer.handle;
+        descBufferInfo.offset = 0;
+        descBufferInfo.range = m_uniformBuffers[i].uniformBuffer.size;
 
         // Update matrices descriptor sets
         VkWriteDescriptorSet descriptorWrites;
@@ -175,7 +175,7 @@ bool View::init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
         descriptorWrites.descriptorType =
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         descriptorWrites.pImageInfo = 0;
-        descriptorWrites.pBufferInfo = &bufferInfo;
+        descriptorWrites.pBufferInfo = &descBufferInfo;
         descriptorWrites.pTexelBufferView = 0;
 
         vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);

@@ -462,14 +462,6 @@
             Texture& operator=(const Texture&) = delete;
 
 
-            ////////////////////////////////////////////////////////////////////
-            //  Create texture descriptor sets                                //
-            //  return : True if descriptor sets are successfully created     //
-            ////////////////////////////////////////////////////////////////////
-            bool createDescriptorSets(VkDevice& vulkanDevice,
-                GraphicsPipeline& pipeline);
-
-
         public:
             VkImage             handle;         // Texture handle
             VkSampler           sampler;        // Texture sampler

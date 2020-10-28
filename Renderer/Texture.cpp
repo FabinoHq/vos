@@ -220,10 +220,44 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     }
 
     // Create texture descriptor sets
-    if (!createDescriptorSets(vulkanDevice, pipeline))
+    VkDescriptorSetAllocateInfo descriptorInfo;
+    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorInfo.pNext = 0;
+    descriptorInfo.descriptorPool = pipeline.descPools[DESC_TEXTURE];
+    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
+    descriptorInfo.pSetLayouts =
+        &pipeline.swapSetLayouts[DESC_TEXTURE*RendererMaxSwapchainFrames];
+
+    if (vkAllocateDescriptorSets(
+        vulkanDevice, &descriptorInfo, descriptorSets) != VK_SUCCESS)
     {
-        // Could not create texture descriptor sets
+        // Could not allocate texture descriptor sets
         return false;
+    }
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        // Update texture descriptor sets
+        VkDescriptorImageInfo descImageInfo;
+        descImageInfo.sampler = sampler;
+        descImageInfo.imageView = view;
+        descImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+        VkWriteDescriptorSet descriptorWrites;
+
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.pNext = 0;
+        descriptorWrites.dstSet = descriptorSets[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.descriptorType =
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrites.pImageInfo = &descImageInfo;
+        descriptorWrites.pBufferInfo = 0;
+        descriptorWrites.pTexelBufferView = 0;
+
+        vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
     // Vulkan Texture successfully created
@@ -519,57 +553,4 @@ void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
     view = 0;
     sampler = 0;
     handle = 0;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create texture descriptor sets                                            //
-//  return : True if descriptor sets are successfully created                 //
-////////////////////////////////////////////////////////////////////////////////
-bool Texture::createDescriptorSets(VkDevice& vulkanDevice,
-    GraphicsPipeline& pipeline)
-{
-    // Create texture descriptor set
-    VkDescriptorSetAllocateInfo descriptorInfo;
-    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = pipeline.descPools[DESC_TEXTURE];
-    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts =
-        &pipeline.swapSetLayouts[DESC_TEXTURE*RendererMaxSwapchainFrames];
-
-    if (vkAllocateDescriptorSets(
-        vulkanDevice, &descriptorInfo, descriptorSets) != VK_SUCCESS)
-    {
-        // Could not allocate texture descriptor sets
-        return false;
-    }
-
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-    {
-        // Update texture descriptor sets
-        VkDescriptorImageInfo imageInfo;
-        imageInfo.sampler = sampler;
-        imageInfo.imageView = view;
-        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-        VkWriteDescriptorSet descriptorWrites;
-
-        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites.pNext = 0;
-        descriptorWrites.dstSet = descriptorSets[i];
-        descriptorWrites.dstBinding = 0;
-        descriptorWrites.dstArrayElement = 0;
-        descriptorWrites.descriptorCount = 1;
-        descriptorWrites.descriptorType =
-            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        descriptorWrites.pImageInfo = &imageInfo;
-        descriptorWrites.pBufferInfo = 0;
-        descriptorWrites.pTexelBufferView = 0;
-
-        vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);
-    }
-
-    // Texture descriptor sets successfully created
-    return true;
 }
