@@ -48,6 +48,7 @@
 Swapchain::Swapchain() :
 handle(0),
 format(VK_FORMAT_UNDEFINED),
+extent(),
 renderPass(0),
 commandsPool(0),
 frames(0),
@@ -82,12 +83,12 @@ Swapchain::~Swapchain()
         views[i]= 0;
         images[i] = 0;
     }
-    extent.height = 0;
-    extent.width = 0;
     current = 0;
     frames = 0;
     commandsPool = 0;
     renderPass = 0;
+    extent.height = 0;
+    extent.width = 0;
     format = VK_FORMAT_UNDEFINED;
     handle = 0;
 }
@@ -1236,12 +1237,12 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
         views[i]= 0;
         images[i] = 0;
     }
-    extent.height = 0;
-    extent.width = 0;
     current = 0;
     frames = 0;
     commandsPool = 0;
     renderPass = 0;
+    extent.height = 0;
+    extent.width = 0;
     format = VK_FORMAT_UNDEFINED;
     handle = 0;
 }

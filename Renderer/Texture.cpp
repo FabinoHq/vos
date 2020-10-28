@@ -46,15 +46,18 @@
 //  Texture default constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
 Texture::Texture() :
-width(0),
-height(0),
 handle(0),
 sampler(0),
 view(0),
 memorySize(0),
-memoryOffset(0)
+memoryOffset(0),
+width(0),
+height(0)
 {
-
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descriptorSets[i] = 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,13 +65,17 @@ memoryOffset(0)
 ////////////////////////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
+    width = 0;
+    height = 0;
     memoryOffset = 0;
     memorySize = 0;
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descriptorSets[i] = 0;
+    }
     view = 0;
     sampler = 0;
     handle = 0;
-    height = 0;
-    width = 0;
 }
 
 
@@ -488,11 +495,17 @@ void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
         vulkanMemory.freeTextureMemory(vulkanDevice, *this);
     }
 
+    width = 0;
+    height = 0;
+    memoryOffset = 0;
+    memorySize = 0;
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descriptorSets[i] = 0;
+    }
     view = 0;
     sampler = 0;
     handle = 0;
-    height = 0;
-    width = 0;
 }
 
 

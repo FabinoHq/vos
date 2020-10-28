@@ -465,16 +465,16 @@
 
 
         public:
-            uint32_t            width;          // Texture width
-            uint32_t            height;         // texture height
             VkImage             handle;         // Texture handle
             VkSampler           sampler;        // Texture sampler
             VkImageView         view;           // Texture view
+            VkDescriptorSet     descriptorSets[RendererMaxSwapchainFrames];
 
             VkDeviceSize        memorySize;     // Memory size
             VkDeviceSize        memoryOffset;   // Memory offset
 
-            VkDescriptorSet     descriptorSets[RendererMaxSwapchainFrames];
+            uint32_t            width;          // Texture width
+            uint32_t            height;         // texture height
     };
 
 #endif // VOS_RENDERER_TEXTURE_HEADER

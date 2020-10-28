@@ -156,6 +156,8 @@ void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice,
         vulkanMemory.freeBufferMemory(vulkanDevice, *this);
     }
 
+    memoryOffset = 0;
+    memorySize = 0;
     size = 0;
     handle = 0;
 }

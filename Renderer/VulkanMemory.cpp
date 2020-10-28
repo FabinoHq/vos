@@ -253,14 +253,22 @@ void VulkanMemory::cleanup(VkDevice& vulkanDevice)
         {
             vkFreeMemory(vulkanDevice, m_hostMemory, 0);
         }
-        m_hostMemory = 0;
 
         if (m_deviceMemory)
         {
             vkFreeMemory(vulkanDevice, m_deviceMemory, 0);
         }
-        m_deviceMemory = 0;
     }
+
+    m_hostMemoryOffset = 0;
+    m_hostMemory = 0;
+    m_deviceMemoryOffset = 0;
+    m_deviceMemory = 0;
+    m_memoryAlignment = 0;
+    m_maxAllocationCount = 0;
+    m_hostMemoryIndex = 0;
+    m_deviceMemoryIndex = 0;
+    m_memoryReady = false;
 }
 
 

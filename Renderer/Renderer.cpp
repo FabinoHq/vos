@@ -590,37 +590,45 @@ void Renderer::cleanup()
     // Destroy swapchain and device
     if (m_vulkanDevice)
     {
-        // Destroy swapchain
-        m_swapchain.destroySwapchain(m_vulkanDevice);
-
-        // Destroy default view
-        m_view.destroyView(m_vulkanDevice, m_vulkanMemory);
-
-        // Destroy shader
-        m_shader.destroyShader(m_vulkanDevice);
-
-        // Destroy test texture
-        m_texture.destroyTexture(m_vulkanDevice, m_vulkanMemory);
-
-        // Destroy vertex buffer
-        m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
-
-        // Destroy transfer commands pool
-        if (m_transferCommandPool && vkDestroyCommandPool)
+        if (vkDeviceWaitIdle)
         {
-            vkDestroyCommandPool(m_vulkanDevice, m_transferCommandPool, 0);
-        }
+            if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+            {
+                // Destroy default view
+                m_view.destroyView(m_vulkanDevice, m_vulkanMemory);
 
-        // Destroy default pipeline
-        m_pipeline.destroyPipeline(m_vulkanDevice);
+                // Destroy test texture
+                m_texture.destroyTexture(m_vulkanDevice, m_vulkanMemory);
 
-        // Cleanup Vulkan memory
-        m_vulkanMemory.cleanup(m_vulkanDevice);
+                // Destroy vertex buffer
+                m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
 
-        // Destroy Vulkan device
-        if (vkDestroyDevice)
-        {
-            vkDestroyDevice(m_vulkanDevice, 0);
+                // Destroy default pipeline
+                m_pipeline.destroyPipeline(m_vulkanDevice);
+
+                // Destroy shader
+                m_shader.destroyShader(m_vulkanDevice);
+
+                // Destroy transfer commands pool
+                if (m_transferCommandPool && vkDestroyCommandPool)
+                {
+                    vkDestroyCommandPool(
+                        m_vulkanDevice, m_transferCommandPool, 0
+                    );
+                }
+
+                // Destroy swapchain
+                m_swapchain.destroySwapchain(m_vulkanDevice);
+
+                // Cleanup Vulkan memory
+                m_vulkanMemory.cleanup(m_vulkanDevice);
+
+                // Destroy Vulkan device
+                if (vkDestroyDevice)
+                {
+                    vkDestroyDevice(m_vulkanDevice, 0);
+                }
+            }
         }
     }
 
@@ -630,7 +638,7 @@ void Renderer::cleanup()
         vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
     }
 
-    m_swapchain.handle = 0;
+    m_transferCommandPool = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
 }
