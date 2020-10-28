@@ -438,6 +438,12 @@
                 const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
+            //  Bind texture                                                  //
+            ////////////////////////////////////////////////////////////////////
+            void bind(VkCommandBuffer& commandBuffer,
+                GraphicsPipeline& pipeline, uint32_t currentSwapchainFrame);
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy texture                                               //
             ////////////////////////////////////////////////////////////////////
             void destroyTexture(VkDevice& vulkanDevice,

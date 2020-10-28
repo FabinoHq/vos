@@ -467,6 +467,19 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind texture                                                              //
+////////////////////////////////////////////////////////////////////////////////
+void Texture::bind(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline,
+    uint32_t currentSwapchainFrame)
+{
+    // Bind texture descriptor set
+    vkCmdBindDescriptorSets(
+        commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout,
+        DESC_TEXTURE, 1, &descriptorSets[currentSwapchainFrame], 0, 0
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy texture                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
