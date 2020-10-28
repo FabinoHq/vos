@@ -63,6 +63,7 @@ m_vertexBuffer(),
 m_texture(),
 m_shader(),
 m_pipeline(),
+m_view(),
 m_sprite()
 {
 
@@ -277,36 +278,6 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Set default matrices
-    Matrix4x4 projMatrix;
-    projMatrix.setOrthographic(-1.0f, 1.0f, 1.0f, -1.0f, -2.0f, 2.0f);
-    projMatrix.translateZ(-1.0f);
-
-    Matrix4x4 viewMatrix;
-    viewMatrix.setIdentity();
-
-    Matrix4x4 modelMatrix;
-    modelMatrix.setIdentity();
-
-    // Copy matrices data into uniform data
-    UniformData uniformData;
-    memcpy(uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
-    memcpy(uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
-
-    // Create uniform buffers
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-    {
-        if (!m_uniformBuffers[i].updateBuffer(m_physicalDevice,
-            m_vulkanDevice, m_vulkanMemory, m_transferCommandPool,
-            m_transferQueue, &uniformData, sizeof(uniformData)))
-        {
-            // Could not create uniform buffer
-            SysMessage::box() << "[0x3049] Could not create uniform buffer\n";
-            SysMessage::box() << "Please update your graphics drivers";
-            return false;
-        }
-    }
-
     // Load texture
     if (!m_texture.updateTexture(m_physicalDevice, m_vulkanDevice,
         m_vulkanMemory, m_pipeline, m_swapchain.commandsPool, m_graphicsQueue,
@@ -318,10 +289,18 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Init test sprite
-    if (!m_sprite.init(
-        m_vulkanDevice, m_pipeline, m_uniformBuffers, m_texture, 1.0f, 1.0f))
+    // Init default view
+    if (!m_view.init(m_physicalDevice, m_vulkanDevice, m_vulkanMemory,
+        m_pipeline, m_transferCommandPool, m_transferQueue))
     {
+        // Could not init default view
+        return false;
+    }
+
+    // Init test sprite
+    if (!m_sprite.init(m_texture, 1.0f, 1.0f))
+    {
+        // Could not init test sprite
         return false;
     }
 
@@ -490,38 +469,11 @@ void Renderer::render()
         m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
     );
 
-    // Bind matrices descriptor set
-    vkCmdBindDescriptorSets(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.layout, DESC_MATRICES, 1,
-        &m_sprite.m_descriptorSets[m_swapchain.current], 0, 0
-    );
-
-    // Update matrices
-    float ratio = 1.0f;
-    if ((m_swapchain.extent.width > 0) && (m_swapchain.extent.height > 0))
+    // Bind default view
+    if (!m_view.bind(m_physicalDevice, m_vulkanDevice, m_swapchain,
+        m_vulkanMemory, m_pipeline, m_transferCommandPool, m_transferQueue))
     {
-        ratio = (m_swapchain.extent.width*1.0f) /
-            (m_swapchain.extent.height*1.0f);
-    }
-    Matrix4x4 projMatrix;
-    projMatrix.setOrthographic(-ratio, ratio, 1.0f, -1.0f, -2.0f, 2.0f);
-    projMatrix.translateZ(-1.0f);
-
-    Matrix4x4 viewMatrix;
-    viewMatrix.setIdentity();
-
-    // Copy matrices data into uniform data
-    UniformData uniformData;
-    memcpy(uniformData.projMatrix, projMatrix.mat, sizeof(projMatrix.mat));
-    memcpy(uniformData.viewMatrix, viewMatrix.mat, sizeof(viewMatrix.mat));
-
-    // Update uniform buffer
-    if (!m_uniformBuffers[m_swapchain.current].updateBuffer(
-        m_physicalDevice, m_vulkanDevice, m_vulkanMemory, m_transferCommandPool,
-        m_transferQueue, &uniformData, sizeof(uniformData)))
-    {
-        // Could not update uniform buffer
+        // Could not bind default view
         m_rendererReady = false;
         return;
     }
@@ -539,6 +491,12 @@ void Renderer::render()
     );
 
     // Render test sprite
+    float ratio = 1.0f;
+    if ((m_swapchain.extent.width > 0) && (m_swapchain.extent.height > 0))
+    {
+        ratio = (m_swapchain.extent.width*1.0f) /
+            (m_swapchain.extent.height*1.0f);
+    }
     m_sprite.setSize(ratio*2.0f, 2.0f);
     m_sprite.setPosition(-ratio, -1.0f);
     m_sprite.render(
@@ -635,17 +593,14 @@ void Renderer::cleanup()
         // Destroy swapchain
         m_swapchain.destroySwapchain(m_vulkanDevice);
 
+        // Destroy default view
+        m_view.destroyView(m_vulkanDevice, m_vulkanMemory);
+
         // Destroy shader
         m_shader.destroyShader(m_vulkanDevice);
 
-        // Destroy texture
+        // Destroy test texture
         m_texture.destroyTexture(m_vulkanDevice, m_vulkanMemory);
-
-        // Destroy uniform buffer
-        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-        {
-            m_uniformBuffers[i].destroyBuffer(m_vulkanDevice, m_vulkanMemory);
-        }
 
         // Destroy vertex buffer
         m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);

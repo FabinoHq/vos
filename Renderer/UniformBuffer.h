@@ -89,7 +89,7 @@
             ////////////////////////////////////////////////////////////////////
             bool updateBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+                VkCommandPool& transferCommandPool, VulkanQueue& transferQueue,
                 void* data, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////

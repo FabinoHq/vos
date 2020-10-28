@@ -45,7 +45,6 @@
     #include "Vulkan.h"
     #include "Texture.h"
     #include "VulkanBuffer.h"
-    #include "UniformBuffer.h"
     #include "GraphicsPipeline.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
@@ -73,9 +72,7 @@
             //  Init sprite                                                   //
             //  return : True if the sprite is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(VkDevice& vulkanDevice, GraphicsPipeline& pipeline,
-                UniformBuffer* uniformBuffers, Texture& texture,
-                float width, float height);
+            bool init(Texture& texture, float width, float height);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -168,16 +165,7 @@
             Sprite& operator=(const Sprite&) = delete;
 
 
-            ////////////////////////////////////////////////////////////////////
-            //  Create descriptor sets                                        //
-            //  return : True if descriptor sets are successfully created     //
-            ////////////////////////////////////////////////////////////////////
-            bool createDescriptorSets(VkDevice& vulkanDevice,
-                GraphicsPipeline& pipeline, UniformBuffer* uniformBuffers);
-
-
         public:
-            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
             Matrix4x4           m_modelMatrix;      // Sprite model matrix
             Texture*            m_texture;          // Sprite texture pointer
             Vector2             m_position;         // Sprite position

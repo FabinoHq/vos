@@ -118,7 +118,7 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+    VkCommandPool& transferCommandPool, VulkanQueue& transferQueue,
     void* data, uint32_t size)
 {
     // Check physical device
@@ -136,7 +136,7 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Check commands pool
-    if (!commandsPool)
+    if (!transferCommandPool)
     {
         // Invalid commands pool
         return false;
@@ -171,7 +171,7 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandsPool;
+    bufferAllocate.commandPool = transferCommandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -265,7 +265,9 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     // Destroy command buffer
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(
+            vulkanDevice, transferCommandPool, 1, &commandBuffer
+        );
     }
 
     // Uniform buffer successfully updated

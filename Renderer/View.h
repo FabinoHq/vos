@@ -42,8 +42,13 @@
 #ifndef VOS_RENDERER_VIEW_HEADER
 #define VOS_RENDERER_VIEW_HEADER
 
+    #include "../System/SysMessage.h"
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
     #include "Swapchain.h"
+    #include "VulkanBuffer.h"
+    #include "UniformBuffer.h"
+    #include "GraphicsPipeline.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"
@@ -66,6 +71,29 @@
             ~View();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Init view                                                     //
+            //  return : True if the view is successfully created             //
+            ////////////////////////////////////////////////////////////////////
+            bool init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory, GraphicsPipeline& pipeline,
+                VkCommandPool& transferCommandPool, VulkanQueue& transferQueue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind view                                                     //
+            ////////////////////////////////////////////////////////////////////
+            bool bind(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
+                Swapchain& swapchain, VulkanMemory& vulkanMemory,
+                GraphicsPipeline& pipeline, VkCommandPool& transferCommandPool,
+                VulkanQueue& transferQueue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy view                                                  //
+            ////////////////////////////////////////////////////////////////////
+            void destroyView(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory);
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  View private copy constructor : Not copyable                  //
@@ -80,6 +108,8 @@
 
         public:
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
+            UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
+            Matrix4x4           m_projMatrix;       // Projection matrix
             Matrix4x4           m_viewMatrix;       // View matrix
     };
 

@@ -72,23 +72,8 @@ Sprite::~Sprite()
 //  Init sprite                                                               //
 //  return : True if the sprite is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool Sprite::init(VkDevice& vulkanDevice, GraphicsPipeline& pipeline,
-    UniformBuffer* uniformBuffers, Texture& texture, float width, float height)
+bool Sprite::init(Texture& texture, float width, float height)
 {
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check pipeline handle
-    if (!pipeline.handle)
-    {
-        // Invalid pipeline handle
-        return false;
-    }
-
     // Check texture handle
     if (!texture.handle)
     {
@@ -110,13 +95,6 @@ bool Sprite::init(VkDevice& vulkanDevice, GraphicsPipeline& pipeline,
 
     // Reset sprite angle
     m_angle = 0.0f;
-
-    // Create descriptor sets
-    if (!createDescriptorSets(vulkanDevice, pipeline, uniformBuffers))
-    {
-        // Could not create descriptor sets
-        return false;
-    }
 
     // Sprite successfully created
     return true;
@@ -270,58 +248,4 @@ void Sprite::render(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline,
 
     // Draw sprite triangles
     vkCmdDrawIndexed(commandBuffer, 6, 1, 0, 0, 0);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create descriptor sets                                                    //
-//  return : True if descriptor sets are successfully created                 //
-////////////////////////////////////////////////////////////////////////////////
-bool Sprite::createDescriptorSets(VkDevice& vulkanDevice,
-    GraphicsPipeline& pipeline, UniformBuffer* uniformBuffers)
-{
-    // Create matrices descriptor set
-    VkDescriptorSetAllocateInfo descriptorInfo;
-    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = pipeline.descPools[DESC_MATRICES];
-    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts =
-        &pipeline.swapSetLayouts[DESC_MATRICES*RendererMaxSwapchainFrames];
-
-    if (vkAllocateDescriptorSets(
-        vulkanDevice, &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
-    {
-        // Could not allocate matrices descriptor sets
-        return false;
-    }
-
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-    {
-        // Update descriptor sets
-        VkDescriptorBufferInfo bufferInfo;
-        bufferInfo.buffer = uniformBuffers[i].uniformBuffer.handle;
-        bufferInfo.offset = 0;
-        bufferInfo.range = uniformBuffers[i].uniformBuffer.size;
-
-        // Update matrices descriptor sets
-        VkWriteDescriptorSet descriptorWrites;
-
-        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites.pNext = 0;
-        descriptorWrites.dstSet = m_descriptorSets[i];
-        descriptorWrites.dstBinding = 0;
-        descriptorWrites.dstArrayElement = 0;
-        descriptorWrites.descriptorCount = 1;
-        descriptorWrites.descriptorType =
-            VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites.pImageInfo = 0;
-        descriptorWrites.pBufferInfo = &bufferInfo;
-        descriptorWrites.pTexelBufferView = 0;
-
-        vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);
-    }
-
-    // Descriptor sets successfully created
-    return true;
 }

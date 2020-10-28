@@ -153,9 +153,8 @@
             Texture             m_texture;              // Test texture
             Shader              m_shader;               // Default shader
             GraphicsPipeline    m_pipeline;             // Default pipeline
+            View                m_view;                 // Default view
             Sprite              m_sprite;               // Test sprite
-
-            UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
     };
 
 
