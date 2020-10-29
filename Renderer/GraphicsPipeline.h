@@ -53,17 +53,13 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Descriptor sets count                                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t DescriptorSetsCnt = 2;
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Descriptor sets types                                                 //
     ////////////////////////////////////////////////////////////////////////////
     enum DescriptorSetsType
     {
         DESC_MATRICES = 0,
-        DESC_TEXTURE = 1
+        DESC_TEXTURE = 1,
+        DESC_SETS_COUNT = 2
     };
 
 
@@ -132,12 +128,12 @@
             VkPipelineLayout        layout;             // Pipeline layout
 
             // Descriptor pools
-            VkDescriptorPool        descPools[DescriptorSetsCnt];
+            VkDescriptorPool        descPools[DESC_SETS_COUNT];
 
             // Descriptor set layouts
-            VkDescriptorSetLayout   descSetLayouts[DescriptorSetsCnt];
+            VkDescriptorSetLayout   descSetLayouts[DESC_SETS_COUNT];
             VkDescriptorSetLayout
-                swapSetLayouts[RendererMaxSwapchainFrames*DescriptorSetsCnt];
+                swapSetLayouts[RendererMaxSwapchainFrames*DESC_SETS_COUNT];
     };
 
 

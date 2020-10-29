@@ -49,12 +49,12 @@ GraphicsPipeline::GraphicsPipeline() :
 handle(0),
 layout(0)
 {
-    for (uint32_t i = 0; i < DescriptorSetsCnt; ++i)
+    for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         descPools[i] = 0;
         descSetLayouts[i] = 0;
     }
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DescriptorSetsCnt; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DESC_SETS_COUNT; ++i)
     {
         swapSetLayouts[i] = 0;
     }
@@ -65,11 +65,11 @@ layout(0)
 ////////////////////////////////////////////////////////////////////////////////
 GraphicsPipeline::~GraphicsPipeline()
 {
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DescriptorSetsCnt; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DESC_SETS_COUNT; ++i)
     {
         swapSetLayouts[i] = 0;
     }
-    for (uint32_t i = 0; i < DescriptorSetsCnt; ++i)
+    for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         descSetLayouts[i] = 0;
         descPools[i] = 0;
@@ -394,7 +394,7 @@ bool GraphicsPipeline::createDescriptorSetLayouts(VkDevice& vulkanDevice)
     }
 
     // Create descriptor set layouts
-    VkDescriptorSetLayoutBinding descriptorSetBindings[DescriptorSetsCnt];
+    VkDescriptorSetLayoutBinding descriptorSetBindings[DESC_SETS_COUNT];
 
     descriptorSetBindings[DESC_MATRICES].binding = 0;
     descriptorSetBindings[DESC_MATRICES].descriptorType =
@@ -455,7 +455,7 @@ bool GraphicsPipeline::createDescriptorSetLayouts(VkDevice& vulkanDevice)
     }
 
     // Copy descriptor set layouts to match swapchain frames count
-    for (uint32_t i = 0; i < DescriptorSetsCnt; ++i)
+    for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         for (uint32_t j = 0; j < RendererMaxSwapchainFrames; ++j)
         {
@@ -482,7 +482,7 @@ bool GraphicsPipeline::createPipelineLayouts(VkDevice& vulkanDevice)
     }
 
     // Check descriptor set layouts
-    for (uint32_t i = 0; i < DescriptorSetsCnt; ++i)
+    for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         if (!descSetLayouts[i])
         {
@@ -501,7 +501,7 @@ bool GraphicsPipeline::createPipelineLayouts(VkDevice& vulkanDevice)
     pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineInfo.pNext = 0;
     pipelineInfo.flags = 0;
-    pipelineInfo.setLayoutCount = DescriptorSetsCnt;
+    pipelineInfo.setLayoutCount = DESC_SETS_COUNT;
     pipelineInfo.pSetLayouts = descSetLayouts;
     pipelineInfo.pushConstantRangeCount = 1;
     pipelineInfo.pPushConstantRanges = &pushConstantRange;
@@ -529,7 +529,7 @@ void GraphicsPipeline::destroyPipeline(VkDevice& vulkanDevice)
 {
     if (vulkanDevice)
     {
-        for (uint32_t i = 0; i < DescriptorSetsCnt; ++i)
+        for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
         {
             // Destroy descriptor set layout
             if (descSetLayouts[i] && vkDestroyDescriptorSetLayout)
@@ -559,11 +559,11 @@ void GraphicsPipeline::destroyPipeline(VkDevice& vulkanDevice)
         }
     }
 
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DescriptorSetsCnt; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DESC_SETS_COUNT; ++i)
     {
         swapSetLayouts[i] = 0;
     }
-    for (uint32_t i = 0; i < DescriptorSetsCnt; ++i)
+    for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         descSetLayouts[i] = 0;
         descPools[i] = 0;
