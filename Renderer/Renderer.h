@@ -96,9 +96,14 @@
             bool init(SysWindow* sysWindow);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render frame                                                  //
+            //  Start rendering frame                                         //
             ////////////////////////////////////////////////////////////////////
-            void render();
+            void startFrame();
+
+            ////////////////////////////////////////////////////////////////////
+            //  End rendering frame                                           //
+            ////////////////////////////////////////////////////////////////////
+            void endFrame();
 
             ////////////////////////////////////////////////////////////////////
             //  Cleanup renderer                                              //
@@ -139,6 +144,7 @@
 
         private:
             bool                m_rendererReady;        // Renderer ready state
+            uint32_t            m_frameIndex;           // Current frame index
             SysWindow*          m_sysWindow;            // SysWindow pointer
             VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
             VkInstance          m_vulkanInstance;       // Vulkan instance

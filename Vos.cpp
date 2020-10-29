@@ -133,7 +133,8 @@ void Vos::run()
         }
 
         // Render frame
-        m_renderer.render();
+        m_renderer.startFrame();
+        m_renderer.endFrame();
     }
 
     // Close VOS
