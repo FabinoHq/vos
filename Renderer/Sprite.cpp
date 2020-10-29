@@ -117,6 +117,7 @@ bool Sprite::setTexture(Texture& texture)
 
     // Set sprite texture pointer
     m_texture = &texture;
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
