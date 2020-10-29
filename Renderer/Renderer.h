@@ -52,10 +52,12 @@
     #include "VulkanBuffer.h"
     #include "VertexBuffer.h"
     #include "UniformBuffer.h"
+    #include "Texture.h"
     #include "Shader.h"
     #include "Shaders/Default.h"
     #include "GraphicsPipeline.h"
     #include "View.h"
+    #include "Sprite.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
 
@@ -171,7 +173,7 @@
             bool resize();
 
 
-        public:
+        private:
             bool                m_rendererReady;        // Renderer ready state
             uint32_t            m_frameIndex;           // Current frame index
             SysWindow*          m_sysWindow;            // SysWindow pointer
@@ -191,6 +193,10 @@
             Shader              m_shader;               // Default shader
             GraphicsPipeline    m_pipeline;             // Default pipeline
             View                m_view;                 // Default view
+
+            friend class        Texture;                // Texture has access
+            friend class        View;                   // View has access
+            friend class        Sprite;                 // Sprite has access
     };
 
 
