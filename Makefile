@@ -69,7 +69,7 @@ VOS: main.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
-	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsPipeline.o\
+	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsPipeline.o \
 	Renderer/Shader.o Renderer/Texture.o Renderer/View.o Renderer/Sprite.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
