@@ -90,8 +90,16 @@ bool Vos::launch()
         return false;
     }
 
+    // Load cursor texture
+    if (!m_texture.updateTexture(m_renderer,
+        CursorImageWidth, CursorImageHeight, CursorImageDepth, CursorImage))
+    {
+        // Could not load cursor texture
+        return false;
+    }
+
     // Init cursor sprite
-    if (!m_cursor.init(m_renderer.m_texture, 1.0f, 1.0f))
+    if (!m_cursor.init(m_texture, 1.0f, 1.0f))
     {
         // Could not init test sprite
         return false;
@@ -154,6 +162,13 @@ void Vos::run()
             // End rendering
             m_renderer.endFrame();
         }
+    }
+
+    // Wait for renderer device idle state
+    if (m_renderer.waitDeviceIdle())
+    {
+        // Destroy cursor texture
+        m_texture.destroyTexture(m_renderer);
     }
 
     // Close VOS

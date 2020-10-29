@@ -48,6 +48,7 @@
     #include "Swapchain.h"
     #include "VulkanBuffer.h"
     #include "GraphicsPipeline.h"
+    #include "Renderer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -71,33 +72,26 @@
             //  Create texture                                                //
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createTexture(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                GraphicsPipeline& pipeline,
+            bool createTexture(Renderer& renderer,
                 uint32_t texWidth, uint32_t texHeight);
 
             ////////////////////////////////////////////////////////////////////
             //  Update texture                                                //
             //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
-            bool updateTexture(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                GraphicsPipeline& pipeline, VkCommandPool& commandsPool,
-                VulkanQueue& graphicsQueue, uint32_t texWidth,
-                uint32_t texHeight, uint32_t texDepth,
+            bool updateTexture(Renderer& renderer,
+                uint32_t texWidth, uint32_t texHeight, uint32_t texDepth,
                 const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture                                                  //
             ////////////////////////////////////////////////////////////////////
-            void bind(VkCommandBuffer& commandBuffer,
-                GraphicsPipeline& pipeline, uint32_t currentSwapchainFrame);
+            void bind(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy texture                                               //
             ////////////////////////////////////////////////////////////////////
-            void destroyTexture(VkDevice& vulkanDevice,
-                VulkanMemory& vulkanMemory);
+            void destroyTexture(Renderer& renderer);
 
 
             ////////////////////////////////////////////////////////////////////

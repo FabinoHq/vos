@@ -52,15 +52,12 @@
     #include "VulkanBuffer.h"
     #include "VertexBuffer.h"
     #include "UniformBuffer.h"
-    #include "Texture.h"
     #include "Shader.h"
     #include "Shaders/Default.h"
     #include "GraphicsPipeline.h"
     #include "View.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
-
-    #include "Images/Embedded/Cursor.h"
 
     #include <vector>
 
@@ -105,6 +102,12 @@
             //  return : True if the frame is rendering                       //
             ////////////////////////////////////////////////////////////////////
             bool endFrame();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Wait renderer device for idle state                           //
+            //  return : True if the renderer device is in idle state         //
+            ////////////////////////////////////////////////////////////////////
+            bool waitDeviceIdle();
 
             ////////////////////////////////////////////////////////////////////
             //  Cleanup renderer                                              //
@@ -185,7 +188,6 @@
             VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain
             VertexBuffer        m_vertexBuffer;         // Default vertex buffer
-            Texture             m_texture;              // Cursor texture
             Shader              m_shader;               // Default shader
             GraphicsPipeline    m_pipeline;             // Default pipeline
             View                m_view;                 // Default view

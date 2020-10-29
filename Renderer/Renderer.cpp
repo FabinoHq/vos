@@ -61,7 +61,6 @@ m_transferCommandPool(0),
 m_vulkanMemory(),
 m_swapchain(),
 m_vertexBuffer(),
-m_texture(),
 m_shader(),
 m_pipeline(),
 m_view()
@@ -274,17 +273,6 @@ bool Renderer::init(SysWindow* sysWindow)
     {
         // Could not create vertex buffer
         SysMessage::box() << "[0x3048] Could not create vertex buffer\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Load cursor texture
-    if (!m_texture.updateTexture(m_physicalDevice, m_vulkanDevice,
-        m_vulkanMemory, m_pipeline, m_swapchain.commandsPool, m_graphicsQueue,
-        CursorImageWidth, CursorImageHeight, CursorImageDepth, CursorImage))
-    {
-        // Could not load cursor texture
-        SysMessage::box() << "[0x304A] Could not load texture\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -587,6 +575,27 @@ bool Renderer::endFrame()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Wait renderer device for idle state                                       //
+//  return : True if the renderer device is in idle state                     //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::waitDeviceIdle()
+{
+    m_rendererReady = false;
+
+    if (m_vulkanDevice && vkDeviceWaitIdle)
+    {
+        if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+        {
+            // Renderer device is in idle state
+            return true;
+        }
+    }
+
+    // Could not wait for renderer device idle state
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Cleanup renderer                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::cleanup()
@@ -596,44 +605,36 @@ void Renderer::cleanup()
     // Destroy swapchain and device
     if (m_vulkanDevice)
     {
-        if (vkDeviceWaitIdle)
+        if (waitDeviceIdle())
         {
-            if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+            // Destroy default view
+            m_view.destroyView(m_vulkanDevice, m_vulkanMemory);
+
+            // Destroy vertex buffer
+            m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
+
+            // Destroy default pipeline
+            m_pipeline.destroyPipeline(m_vulkanDevice);
+
+            // Destroy shader
+            m_shader.destroyShader(m_vulkanDevice);
+
+            // Destroy transfer commands pool
+            if (m_transferCommandPool && vkDestroyCommandPool)
             {
-                // Destroy default view
-                m_view.destroyView(m_vulkanDevice, m_vulkanMemory);
+                vkDestroyCommandPool(m_vulkanDevice, m_transferCommandPool, 0);
+            }
 
-                // Destroy test texture
-                m_texture.destroyTexture(m_vulkanDevice, m_vulkanMemory);
+            // Destroy swapchain
+            m_swapchain.destroySwapchain(m_vulkanDevice);
 
-                // Destroy vertex buffer
-                m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
+            // Cleanup Vulkan memory
+            m_vulkanMemory.cleanup(m_vulkanDevice);
 
-                // Destroy default pipeline
-                m_pipeline.destroyPipeline(m_vulkanDevice);
-
-                // Destroy shader
-                m_shader.destroyShader(m_vulkanDevice);
-
-                // Destroy transfer commands pool
-                if (m_transferCommandPool && vkDestroyCommandPool)
-                {
-                    vkDestroyCommandPool(
-                        m_vulkanDevice, m_transferCommandPool, 0
-                    );
-                }
-
-                // Destroy swapchain
-                m_swapchain.destroySwapchain(m_vulkanDevice);
-
-                // Cleanup Vulkan memory
-                m_vulkanMemory.cleanup(m_vulkanDevice);
-
-                // Destroy Vulkan device
-                if (vkDestroyDevice)
-                {
-                    vkDestroyDevice(m_vulkanDevice, 0);
-                }
+            // Destroy Vulkan device
+            if (vkDestroyDevice)
+            {
+                vkDestroyDevice(m_vulkanDevice, 0);
             }
         }
     }

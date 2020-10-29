@@ -50,6 +50,8 @@
     #include "Renderer/Sprite.h"
     #include "Event.h"
 
+    #include "Renderer/Images/Embedded/Cursor.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VOS main class definition                                             //
@@ -95,6 +97,7 @@
             bool            m_running;      // VOS running state
             SysWindow       m_window;       // VOS main window
             Renderer        m_renderer;     // VOS renderer
+            Texture         m_texture;      // Cursor texture
             Sprite          m_cursor;       // Cursor sprite
     };
 

@@ -83,19 +83,18 @@ Texture::~Texture()
 //  Create texture                                                            //
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    GraphicsPipeline& pipeline, uint32_t texWidth, uint32_t texHeight)
+bool Texture::createTexture(Renderer& renderer,
+    uint32_t texWidth, uint32_t texHeight)
 {
     // Check physical device
-    if (!physicalDevice)
+    if (!renderer.m_physicalDevice)
     {
         // Invalid physical device
         return false;
     }
 
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!renderer.m_vulkanDevice)
     {
         // Invalid Vulkan device
         return false;
@@ -112,7 +111,7 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     if (m_handle)
     {
         // Destroy current texture
-        destroyTexture(vulkanDevice, vulkanMemory);
+        destroyTexture(renderer);
     }
 
     // Set texture size
@@ -140,7 +139,8 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     imageInfo.pQueueFamilyIndices = 0;
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    if (vkCreateImage(vulkanDevice, &imageInfo, 0, &m_handle) != VK_SUCCESS)
+    if (vkCreateImage(
+        renderer.m_vulkanDevice, &imageInfo, 0, &m_handle) != VK_SUCCESS)
     {
         // Could not create image
         return false;
@@ -152,7 +152,8 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     }
 
     // Allocate texture memory
-    if (!vulkanMemory.allocateTextureMemory(vulkanDevice, *this))
+    if (!renderer.m_vulkanMemory.allocateTextureMemory(
+        renderer.m_vulkanDevice, *this))
     {
         // Could not allocate texture memory
         return false;
@@ -180,7 +181,7 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
     if (vkCreateSampler(
-        vulkanDevice, &samplerInfo, 0, &m_sampler) != VK_SUCCESS)
+        renderer.m_vulkanDevice, &samplerInfo, 0, &m_sampler) != VK_SUCCESS)
     {
         // Could not create image sampler
         return false;
@@ -209,7 +210,8 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 1;
 
-    if (vkCreateImageView(vulkanDevice, &viewInfo, 0, &m_view) != VK_SUCCESS)
+    if (vkCreateImageView(
+        renderer.m_vulkanDevice, &viewInfo, 0, &m_view) != VK_SUCCESS)
     {
         // Could not create image view
         return false;
@@ -224,13 +226,13 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = pipeline.descPools[DESC_TEXTURE];
+    descriptorInfo.descriptorPool = renderer.m_pipeline.descPools[DESC_TEXTURE];
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts =
-        &pipeline.swapSetLayouts[DESC_TEXTURE*RendererMaxSwapchainFrames];
+    descriptorInfo.pSetLayouts = &renderer.m_pipeline.
+        swapSetLayouts[DESC_TEXTURE*RendererMaxSwapchainFrames];
 
-    if (vkAllocateDescriptorSets(
-        vulkanDevice, &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
+    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
+        &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
         // Could not allocate texture descriptor sets
         return false;
@@ -258,7 +260,9 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
         descriptorWrites.pBufferInfo = 0;
         descriptorWrites.pTexelBufferView = 0;
 
-        vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);
+        vkUpdateDescriptorSets(
+            renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
+        );
     }
 
     // Vulkan Texture successfully created
@@ -269,35 +273,32 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
 //  Update texture                                                            //
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    GraphicsPipeline& pipeline, VkCommandPool& commandsPool,
-    VulkanQueue& graphicsQueue, uint32_t texWidth, uint32_t texHeight,
-    uint32_t texDepth, const unsigned char* data)
+bool Texture::updateTexture(Renderer& renderer, uint32_t texWidth,
+    uint32_t texHeight, uint32_t texDepth, const unsigned char* data)
 {
     // Check physical device
-    if (!physicalDevice)
+    if (!renderer.m_physicalDevice)
     {
         // Invalid physical device
         return false;
     }
 
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!renderer.m_vulkanDevice)
     {
         // Invalid Vulkan device
         return false;
     }
 
     // Check commands pool
-    if (!commandsPool)
+    if (!renderer.m_swapchain.commandsPool)
     {
         // Invalid commands pool
         return false;
     }
 
     // Check graphics queue
-    if (!graphicsQueue.handle)
+    if (!renderer.m_graphicsQueue.handle)
     {
         // Invalid graphics queue
         return false;
@@ -314,11 +315,8 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     if (!m_handle || (texWidth != m_width) || (texHeight != m_height))
     {
         // Recreate texture
-        destroyTexture(vulkanDevice, vulkanMemory);
-        createTexture(
-            physicalDevice, vulkanDevice, vulkanMemory,
-            pipeline, texWidth, texHeight
-        );
+        destroyTexture(renderer);
+        createTexture(renderer, texWidth, texHeight);
     }
 
     uint32_t textureSize = m_width * m_height * texDepth;
@@ -326,15 +324,17 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     // Create staging buffer
     VulkanBuffer stagingBuffer;
     if (!stagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_HOST, textureSize))
+        renderer.m_physicalDevice, renderer.m_vulkanDevice,
+        renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VULKAN_MEMORY_HOST, textureSize))
     {
         // Could not create staging buffer
         return false;
     }
 
     // Write data into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(vulkanDevice, stagingBuffer, data))
+    if (!renderer.m_vulkanMemory.writeBufferMemory(
+        renderer.m_vulkanDevice, stagingBuffer, data))
     {
         // Could not write data into staging buffer memory
         return false;
@@ -345,12 +345,12 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandsPool;
+    bufferAllocate.commandPool = renderer.m_swapchain.commandsPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
     if (vkAllocateCommandBuffers(
-        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+        renderer.m_vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
     {
         // Could not allocate command buffers
         return false;
@@ -446,7 +446,8 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     fenceInfo.pNext = 0;
     fenceInfo.flags = 0;
 
-    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
+    if (vkCreateFence(
+        renderer.m_vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
     {
         // Could not create fence
         return false;
@@ -470,15 +471,15 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     submitInfo.pSignalSemaphores = 0;
 
     if (vkQueueSubmit(
-        graphicsQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
+        renderer.m_graphicsQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(
-        vulkanDevice, 1, &fence, VK_FALSE, 100000000000) != VK_SUCCESS)
+    if (vkWaitForFences(renderer.m_vulkanDevice, 1,
+        &fence, VK_FALSE, 100000000000) != VK_SUCCESS)
     {
         // Transfer timed out
         return false;
@@ -487,15 +488,19 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     // Destroy fence
     if (fence)
     {
-        vkDestroyFence(vulkanDevice, fence, 0);
+        vkDestroyFence(renderer.m_vulkanDevice, fence, 0);
     }
 
     // Destroy buffers
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(renderer.m_vulkanDevice,
+            renderer.m_swapchain.commandsPool, 1, &commandBuffer
+        );
     }
-    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    stagingBuffer.destroyBuffer(
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory
+    );
 
     // Texture successfully loaded
     return true;
@@ -504,43 +509,45 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind texture                                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void Texture::bind(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline,
-    uint32_t currentSwapchainFrame)
+void Texture::bind(Renderer& renderer)
 {
     // Bind texture descriptor set
     vkCmdBindDescriptorSets(
-        commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout,
-        DESC_TEXTURE, 1, &m_descriptorSets[currentSwapchainFrame], 0, 0
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_pipeline.layout,
+        DESC_TEXTURE, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
     );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy texture                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
+void Texture::destroyTexture(Renderer& renderer)
 {
-    if (vulkanDevice)
+    if (renderer.m_vulkanDevice)
     {
         // Destroy image view
         if (m_view && vkDestroyImageView)
         {
-            vkDestroyImageView(vulkanDevice, m_view, 0);
+            vkDestroyImageView(renderer.m_vulkanDevice, m_view, 0);
         }
 
         // Destroy image sampler
         if (m_sampler && vkDestroySampler)
         {
-            vkDestroySampler(vulkanDevice, m_sampler, 0);
+            vkDestroySampler(renderer.m_vulkanDevice, m_sampler, 0);
         }
 
         // Destroy image
         if (m_handle && vkDestroyImage)
         {
-            vkDestroyImage(vulkanDevice, m_handle, 0);
+            vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
         }
 
         // Free texture memory
-        vulkanMemory.freeTextureMemory(vulkanDevice, *this);
+        renderer.m_vulkanMemory.freeTextureMemory(
+            renderer.m_vulkanDevice, *this
+        );
     }
 
     m_height = 0;

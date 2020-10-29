@@ -243,10 +243,7 @@ void Sprite::rotate(float angle)
 void Sprite::render(Renderer& renderer)
 {
     // Bind sprite texture
-    m_texture->bind(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_pipeline, renderer.m_swapchain.current
-    );
+    m_texture->bind(renderer);
 
     // Set sprite model matrix
     m_modelMatrix.setIdentity();
