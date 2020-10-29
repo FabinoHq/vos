@@ -57,7 +57,6 @@
     #include "Shaders/Default.h"
     #include "GraphicsPipeline.h"
     #include "View.h"
-    #include "Sprite.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
 
@@ -97,19 +96,27 @@
 
             ////////////////////////////////////////////////////////////////////
             //  Start rendering frame                                         //
+            //  return : True if the rendering frame is ready                 //
             ////////////////////////////////////////////////////////////////////
-            void startFrame();
+            bool startFrame();
 
             ////////////////////////////////////////////////////////////////////
             //  End rendering frame                                           //
+            //  return : True if the frame is rendering                       //
             ////////////////////////////////////////////////////////////////////
-            void endFrame();
+            bool endFrame();
 
             ////////////////////////////////////////////////////////////////////
             //  Cleanup renderer                                              //
             ////////////////////////////////////////////////////////////////////
             void cleanup();
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get renderer ready state                                      //
+            //  return : True if the renderer is ready, false otherwise       //
+            ////////////////////////////////////////////////////////////////////
+            bool isReady();
 
             ////////////////////////////////////////////////////////////////////
             //  Get renderer width                                            //
@@ -161,7 +168,7 @@
             bool resize();
 
 
-        private:
+        public:
             bool                m_rendererReady;        // Renderer ready state
             uint32_t            m_frameIndex;           // Current frame index
             SysWindow*          m_sysWindow;            // SysWindow pointer
@@ -177,12 +184,11 @@
 
             VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain
-            VertexBuffer        m_vertexBuffer;         // Vertex buffer
+            VertexBuffer        m_vertexBuffer;         // Default vertex buffer
             Texture             m_texture;              // Cursor texture
             Shader              m_shader;               // Default shader
             GraphicsPipeline    m_pipeline;             // Default pipeline
             View                m_view;                 // Default view
-            Sprite              m_sprite;               // Test sprite
     };
 
 

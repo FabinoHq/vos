@@ -47,6 +47,7 @@
     #include "System/SysMemory.h"
     #include "System/SysWindow.h"
     #include "Renderer/Renderer.h"
+    #include "Renderer/Sprite.h"
     #include "Event.h"
 
 
@@ -91,9 +92,10 @@
             Vos& operator=(const Vos&) = delete;
 
         private:
-            bool        m_running;  // VOS running state
-            SysWindow   m_window;   // VOS main window
-            Renderer    m_renderer; // VOS renderer
+            bool            m_running;      // VOS running state
+            SysWindow       m_window;       // VOS main window
+            Renderer        m_renderer;     // VOS renderer
+            Sprite          m_cursor;       // Cursor sprite
     };
 
 

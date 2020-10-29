@@ -240,11 +240,13 @@ void Sprite::rotate(float angle)
 ////////////////////////////////////////////////////////////////////////////////
 //  Render sprite                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void Sprite::render(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline,
-    uint32_t currentSwapchainFrame)
+void Sprite::render(Renderer& renderer)
 {
     // Bind sprite texture
-    m_texture->bind(commandBuffer, pipeline, currentSwapchainFrame);
+    m_texture->bind(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        renderer.m_pipeline, renderer.m_swapchain.current
+    );
 
     // Set sprite model matrix
     m_modelMatrix.setIdentity();
@@ -256,10 +258,14 @@ void Sprite::render(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline,
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        commandBuffer, pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT,
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        renderer.m_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT,
         0, sizeof(Matrix4x4::mat), m_modelMatrix.mat
     );
 
     // Draw sprite triangles
-    vkCmdDrawIndexed(commandBuffer, 6, 1, 0, 0, 0);
+    vkCmdDrawIndexed(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        6, 1, 0, 0, 0
+    );
 }

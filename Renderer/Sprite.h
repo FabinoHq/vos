@@ -45,6 +45,7 @@
     #include "Vulkan.h"
     #include "Texture.h"
     #include "GraphicsPipeline.h"
+    #include "Renderer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"
@@ -154,8 +155,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Render sprite                                                 //
             ////////////////////////////////////////////////////////////////////
-            void render(VkCommandBuffer& commandBuffer,
-                GraphicsPipeline& pipeline, uint32_t currentSwapchainFrame);
+            void render(Renderer& renderer);
 
 
         private:

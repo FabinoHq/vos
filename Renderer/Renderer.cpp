@@ -64,8 +64,7 @@ m_vertexBuffer(),
 m_texture(),
 m_shader(),
 m_pipeline(),
-m_view(),
-m_sprite()
+m_view()
 {
 
 }
@@ -298,13 +297,6 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Init test sprite
-    if (!m_sprite.init(m_texture, 1.0f, 1.0f))
-    {
-        // Could not init test sprite
-        return false;
-    }
-
     // Renderer successfully loaded
     m_rendererReady = true;
     return true;
@@ -312,8 +304,9 @@ bool Renderer::init(SysWindow* sysWindow)
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Start rendering frame                                                     //
+//  return : True if the rendering frame is ready                             //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::startFrame()
+bool Renderer::startFrame()
 {
     // Check renderer state
     if (!m_rendererReady)
@@ -322,7 +315,7 @@ void Renderer::startFrame()
         if (!resize())
         {
             // Could not resize renderer
-            return;
+            return false;
         }
     }
 
@@ -343,7 +336,7 @@ void Renderer::startFrame()
     {
         // Rendering fence timed out
         m_rendererReady = false;
-        return;
+        return false;
     }
 
     // Acquire current frame
@@ -353,7 +346,7 @@ void Renderer::startFrame()
     {
         // Could not acquire swapchain frame
         m_rendererReady = false;
-        return;
+        return false;
     }
 
     // Check current frame index
@@ -361,7 +354,7 @@ void Renderer::startFrame()
     {
         // Invalid swapchain frame index
         m_rendererReady = false;
-        return;
+        return false;
     }
 
 
@@ -378,7 +371,7 @@ void Renderer::startFrame()
     {
         // Could not begin command buffer
         m_rendererReady = false;
-        return;
+        return false;
     }
 
     // Present to draw pipeline barrier
@@ -462,23 +455,10 @@ void Renderer::startFrame()
     {
         // Could not bind default view
         m_rendererReady = false;
-        return;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  End rendering frame                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::endFrame()
-{
-    // Check renderer state
-    if (!m_rendererReady)
-    {
-        // Renderer is not ready
-        return;
+        return false;
     }
 
-    // Bind vertices
+    // Bind default vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
@@ -490,13 +470,22 @@ void Renderer::endFrame()
         m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
     );
 
-    // Render test sprite
-    m_sprite.setSize(m_swapchain.ratio*2.0f, 2.0f);
-    m_sprite.setPosition(-m_swapchain.ratio, -1.0f);
-    m_sprite.render(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        m_pipeline, m_swapchain.current
-    );
+    // Rendering frame is ready
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  End rendering frame                                                       //
+//  return : True if the frame is rendering                                   //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::endFrame()
+{
+    // Check renderer state
+    if (!m_rendererReady)
+    {
+        // Renderer is not ready
+        return false;
+    }
 
     // End render pass
     vkCmdEndRenderPass(m_swapchain.commandBuffers[m_swapchain.current]);
@@ -534,7 +523,7 @@ void Renderer::endFrame()
     {
         // Could not end command buffer
         m_rendererReady = false;
-        return;
+        return false;
     }
 
     // Reset current frame rendering fence
@@ -543,7 +532,7 @@ void Renderer::endFrame()
     {
         // Could not reset fence
         m_rendererReady = false;
-        return;
+        return false;
     }
 
     // Submit current frame
@@ -566,7 +555,7 @@ void Renderer::endFrame()
         m_swapchain.fences[m_swapchain.current]) != VK_SUCCESS)
     {
         m_rendererReady = false;
-        return;
+        return false;
     }
 
     // Update surface when queue has finished rendering
@@ -583,7 +572,7 @@ void Renderer::endFrame()
     if (vkQueuePresentKHR(m_surfaceQueue.handle, &present) != VK_SUCCESS)
     {
         m_rendererReady = false;
-        return;
+        return false;
     }
 
     // Next swapchain frame index
@@ -592,6 +581,9 @@ void Renderer::endFrame()
     {
         m_swapchain.current = 0;
     }
+
+    // Current frame is submitted for rendering
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -657,6 +649,15 @@ void Renderer::cleanup()
     m_vulkanSurface = 0;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get renderer ready state                                                  //
+//  return : True if the renderer is ready, false otherwise                   //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::isReady()
+{
+    return m_rendererReady;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get renderer width                                                        //

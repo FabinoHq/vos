@@ -48,7 +48,8 @@
 Vos::Vos() :
 m_running(false),
 m_window(),
-m_renderer()
+m_renderer(),
+m_cursor()
 {
 
 }
@@ -86,6 +87,13 @@ bool Vos::launch()
     if (!m_renderer.init(&m_window))
     {
         // Unable to init VOS renderer
+        return false;
+    }
+
+    // Init cursor sprite
+    if (!m_cursor.init(m_renderer.m_texture, 1.0f, 1.0f))
+    {
+        // Could not init test sprite
         return false;
     }
 
@@ -133,8 +141,19 @@ void Vos::run()
         }
 
         // Render frame
-        m_renderer.startFrame();
-        m_renderer.endFrame();
+        if (m_renderer.startFrame())
+        {
+            // Get renderer aspect ratio
+            float ratio = m_renderer.getRatio();
+
+            // Draw cursor
+            m_cursor.setSize(ratio*2.0f, 2.0f);
+            m_cursor.setPosition(-ratio, -1.0f);
+            m_cursor.render(m_renderer);
+
+            // End rendering
+            m_renderer.endFrame();
+        }
     }
 
     // Close VOS
