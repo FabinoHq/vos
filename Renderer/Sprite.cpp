@@ -75,7 +75,7 @@ Sprite::~Sprite()
 bool Sprite::init(Texture& texture, float width, float height)
 {
     // Check texture handle
-    if (!texture.handle)
+    if (!texture.isValid())
     {
         // Invalid texture handle
         return false;
@@ -108,7 +108,7 @@ bool Sprite::init(Texture& texture, float width, float height)
 bool Sprite::setTexture(Texture& texture)
 {
     // Check texture handle
-    if (!texture.handle)
+    if (!texture.isValid())
     {
         // Invalid texture handle
         return false;

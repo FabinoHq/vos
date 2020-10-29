@@ -100,6 +100,27 @@
                 VulkanMemory& vulkanMemory);
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Check if the texture has a valid handle                       //
+            //  return : True if the texture is valid                         //
+            ////////////////////////////////////////////////////////////////////
+            bool isValid();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get texture memory requirements                               //
+            ////////////////////////////////////////////////////////////////////
+            void getMemoryRequirements(VkDevice& vulkanDevice,
+                VkMemoryRequirements* memoryRequirements);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind texture memory                                           //
+            //  return : True if texture memory is successfully binded        //
+            ////////////////////////////////////////////////////////////////////
+            bool bindTextureMemory(VkDevice& vulkanDevice,
+                VkDeviceMemory& deviceMemory, VkDeviceSize size,
+                VkDeviceSize offset);
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  Texture private copy constructor : Not copyable               //
@@ -112,17 +133,17 @@
             Texture& operator=(const Texture&) = delete;
 
 
-        public:
-            VkImage             handle;         // Texture handle
-            VkSampler           sampler;        // Texture sampler
-            VkImageView         view;           // Texture view
-            VkDescriptorSet     descriptorSets[RendererMaxSwapchainFrames];
+        private:
+            VkImage             m_handle;           // Texture handle
+            VkSampler           m_sampler;          // Texture sampler
+            VkImageView         m_view;             // Texture view
+            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
 
-            VkDeviceSize        memorySize;     // Memory size
-            VkDeviceSize        memoryOffset;   // Memory offset
+            VkDeviceSize        m_memorySize;       // Memory size
+            VkDeviceSize        m_memoryOffset;     // Memory offset
 
-            uint32_t            width;          // Texture width
-            uint32_t            height;         // texture height
+            uint32_t            m_width;            // Texture width
+            uint32_t            m_height;           // texture height
     };
 
 #endif // VOS_RENDERER_TEXTURE_HEADER

@@ -544,7 +544,7 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
     }
 
     // Check texture handle
-    if (!texture.handle)
+    if (!texture.isValid())
     {
         // Invalid texture handle
         return false;
@@ -552,9 +552,7 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
 
     // Get memory requirements
     VkMemoryRequirements memoryRequirements;
-    vkGetImageMemoryRequirements(
-        vulkanDevice, texture.handle, &memoryRequirements
-    );
+    texture.getMemoryRequirements(vulkanDevice, &memoryRequirements);
 
     // Check memory requirements size
     if (memoryRequirements.size <= 0)
@@ -605,13 +603,9 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
         m_deviceMemoryOffset += (alignment - startOffset);
     }
 
-    // Set texture memory size and offset
-    texture.memorySize = size;
-    texture.memoryOffset = m_deviceMemoryOffset;
-
     // Bind texture memory
-    if (vkBindImageMemory(vulkanDevice,
-        texture.handle, m_deviceMemory, texture.memoryOffset) != VK_SUCCESS)
+    if (!texture.bindTextureMemory(
+        vulkanDevice, m_deviceMemory, size, m_deviceMemoryOffset))
     {
         // Could not bind texture memory
         return false;

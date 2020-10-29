@@ -46,17 +46,17 @@
 //  Texture default constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
 Texture::Texture() :
-handle(0),
-sampler(0),
-view(0),
-memorySize(0),
-memoryOffset(0),
-width(0),
-height(0)
+m_handle(0),
+m_sampler(0),
+m_view(0),
+m_memorySize(0),
+m_memoryOffset(0),
+m_width(0),
+m_height(0)
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        descriptorSets[i] = 0;
+        m_descriptorSets[i] = 0;
     }
 }
 
@@ -65,17 +65,17 @@ height(0)
 ////////////////////////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
-    width = 0;
-    height = 0;
-    memoryOffset = 0;
-    memorySize = 0;
+    m_height = 0;
+    m_width = 0;
+    m_memoryOffset = 0;
+    m_memorySize = 0;
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        descriptorSets[i] = 0;
+        m_descriptorSets[i] = 0;
     }
-    view = 0;
-    sampler = 0;
-    handle = 0;
+    m_view = 0;
+    m_sampler = 0;
+    m_handle = 0;
 }
 
 
@@ -109,15 +109,15 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     }
 
     // Check texture handle
-    if (handle)
+    if (m_handle)
     {
-        // Destroy texture
+        // Destroy current texture
         destroyTexture(vulkanDevice, vulkanMemory);
     }
 
     // Set texture size
-    width = texWidth;
-    height = texHeight;
+    m_width = texWidth;
+    m_height = texHeight;
 
     // Create image
     VkImageCreateInfo imageInfo;
@@ -126,8 +126,8 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     imageInfo.flags = 0;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
     imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-    imageInfo.extent.width = width;
-    imageInfo.extent.height = height;
+    imageInfo.extent.width = m_width;
+    imageInfo.extent.height = m_height;
     imageInfo.extent.depth = 1;
     imageInfo.mipLevels = 1;
     imageInfo.arrayLayers = 1;
@@ -140,12 +140,12 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     imageInfo.pQueueFamilyIndices = 0;
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    if (vkCreateImage(vulkanDevice, &imageInfo, 0, &handle) != VK_SUCCESS)
+    if (vkCreateImage(vulkanDevice, &imageInfo, 0, &m_handle) != VK_SUCCESS)
     {
         // Could not create image
         return false;
     }
-    if (!handle)
+    if (!m_handle)
     {
         // Invalid image
         return false;
@@ -179,12 +179,13 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-    if (vkCreateSampler(vulkanDevice, &samplerInfo, 0, &sampler) != VK_SUCCESS)
+    if (vkCreateSampler(
+        vulkanDevice, &samplerInfo, 0, &m_sampler) != VK_SUCCESS)
     {
         // Could not create image sampler
         return false;
     }
-    if (!sampler)
+    if (!m_sampler)
     {
         // Invalid image sampler
         return false;
@@ -195,7 +196,7 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.pNext = 0;
     viewInfo.flags = 0;
-    viewInfo.image = handle;
+    viewInfo.image = m_handle;
     viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
     viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
     viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -208,12 +209,12 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 1;
 
-    if (vkCreateImageView(vulkanDevice, &viewInfo, 0, &view) != VK_SUCCESS)
+    if (vkCreateImageView(vulkanDevice, &viewInfo, 0, &m_view) != VK_SUCCESS)
     {
         // Could not create image view
         return false;
     }
-    if (!view)
+    if (!m_view)
     {
         // Invalid image view
         return false;
@@ -229,7 +230,7 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
         &pipeline.swapSetLayouts[DESC_TEXTURE*RendererMaxSwapchainFrames];
 
     if (vkAllocateDescriptorSets(
-        vulkanDevice, &descriptorInfo, descriptorSets) != VK_SUCCESS)
+        vulkanDevice, &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
         // Could not allocate texture descriptor sets
         return false;
@@ -239,15 +240,15 @@ bool Texture::createTexture(VkPhysicalDevice& physicalDevice,
     {
         // Update texture descriptor sets
         VkDescriptorImageInfo descImageInfo;
-        descImageInfo.sampler = sampler;
-        descImageInfo.imageView = view;
+        descImageInfo.sampler = m_sampler;
+        descImageInfo.imageView = m_view;
         descImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
         VkWriteDescriptorSet descriptorWrites;
 
         descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrites.pNext = 0;
-        descriptorWrites.dstSet = descriptorSets[i];
+        descriptorWrites.dstSet = m_descriptorSets[i];
         descriptorWrites.dstBinding = 0;
         descriptorWrites.dstArrayElement = 0;
         descriptorWrites.descriptorCount = 1;
@@ -310,7 +311,7 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     }
 
     // Check current texture
-    if (!handle || (texWidth != width) || (texHeight != height))
+    if (!m_handle || (texWidth != m_width) || (texHeight != m_height))
     {
         // Recreate texture
         destroyTexture(vulkanDevice, vulkanMemory);
@@ -320,7 +321,7 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
         );
     }
 
-    uint32_t textureSize = width * height * texDepth;
+    uint32_t textureSize = m_width * m_height * texDepth;
 
     // Create staging buffer
     VulkanBuffer stagingBuffer;
@@ -384,7 +385,7 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     undefinedToTransfer.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
     undefinedToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     undefinedToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    undefinedToTransfer.image = handle;
+    undefinedToTransfer.image = m_handle;
     undefinedToTransfer.subresourceRange = subresourceRange;
 
     VkImageMemoryBarrier transferToShader;
@@ -396,7 +397,7 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    transferToShader.image = handle;
+    transferToShader.image = m_handle;
     transferToShader.subresourceRange = subresourceRange;
 
     vkCmdPipelineBarrier(
@@ -417,12 +418,12 @@ bool Texture::updateTexture(VkPhysicalDevice& physicalDevice,
     imageCopy.imageOffset.x = 0;
     imageCopy.imageOffset.y = 0;
     imageCopy.imageOffset.z = 0;
-    imageCopy.imageExtent.width = texWidth;
-    imageCopy.imageExtent.height = texHeight;
+    imageCopy.imageExtent.width = m_width;
+    imageCopy.imageExtent.height = m_height;
     imageCopy.imageExtent.depth = 1;
 
     vkCmdCopyBufferToImage(
-        commandBuffer, stagingBuffer.handle, handle,
+        commandBuffer, stagingBuffer.handle, m_handle,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
     );
 
@@ -509,7 +510,7 @@ void Texture::bind(VkCommandBuffer& commandBuffer, GraphicsPipeline& pipeline,
     // Bind texture descriptor set
     vkCmdBindDescriptorSets(
         commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout,
-        DESC_TEXTURE, 1, &descriptorSets[currentSwapchainFrame], 0, 0
+        DESC_TEXTURE, 1, &m_descriptorSets[currentSwapchainFrame], 0, 0
     );
 }
 
@@ -521,36 +522,76 @@ void Texture::destroyTexture(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
     if (vulkanDevice)
     {
         // Destroy image view
-        if (view && vkDestroyImageView)
+        if (m_view && vkDestroyImageView)
         {
-            vkDestroyImageView(vulkanDevice, view, 0);
+            vkDestroyImageView(vulkanDevice, m_view, 0);
         }
 
         // Destroy image sampler
-        if (sampler && vkDestroySampler)
+        if (m_sampler && vkDestroySampler)
         {
-            vkDestroySampler(vulkanDevice, sampler, 0);
+            vkDestroySampler(vulkanDevice, m_sampler, 0);
         }
 
         // Destroy image
-        if (handle && vkDestroyImage)
+        if (m_handle && vkDestroyImage)
         {
-            vkDestroyImage(vulkanDevice, handle, 0);
+            vkDestroyImage(vulkanDevice, m_handle, 0);
         }
 
         // Free texture memory
         vulkanMemory.freeTextureMemory(vulkanDevice, *this);
     }
 
-    width = 0;
-    height = 0;
-    memoryOffset = 0;
-    memorySize = 0;
+    m_height = 0;
+    m_width = 0;
+    m_memoryOffset = 0;
+    m_memorySize = 0;
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        descriptorSets[i] = 0;
+        m_descriptorSets[i] = 0;
     }
-    view = 0;
-    sampler = 0;
-    handle = 0;
+    m_view = 0;
+    m_sampler = 0;
+    m_handle = 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check if the texture has a valid handle                                   //
+//  return : True if the texture is valid                                     //
+////////////////////////////////////////////////////////////////////////////////
+bool Texture::isValid()
+{
+    return m_handle;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get texture memory requirements                                           //
+////////////////////////////////////////////////////////////////////////////////
+void Texture::getMemoryRequirements(VkDevice& vulkanDevice,
+    VkMemoryRequirements* memoryRequirements)
+{
+    vkGetImageMemoryRequirements(vulkanDevice, m_handle, memoryRequirements);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind texture memory                                                       //
+//  return : True if texture memory is successfully binded                    //
+////////////////////////////////////////////////////////////////////////////////
+bool Texture::bindTextureMemory(VkDevice& vulkanDevice,
+    VkDeviceMemory& deviceMemory, VkDeviceSize size, VkDeviceSize offset)
+{
+    // Bind texture memory
+    if (vkBindImageMemory(
+        vulkanDevice, m_handle, deviceMemory, offset) != VK_SUCCESS)
+    {
+        // Could not bind texture memory
+        return false;
+    }
+
+    // Texture memory successfully binded
+    m_memorySize = size;
+    m_memoryOffset = offset;
+    return true;
 }
