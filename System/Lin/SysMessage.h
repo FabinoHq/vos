@@ -50,7 +50,9 @@
     #include "../SysMutexLocker.h"
 
 
-    // System message box title
+    ////////////////////////////////////////////////////////////////////////////
+    //  System message box title                                              //
+    ////////////////////////////////////////////////////////////////////////////
     const std::wstring SysMessageTitle = L"VOS error";
 
 

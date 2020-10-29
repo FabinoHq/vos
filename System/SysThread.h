@@ -49,7 +49,9 @@
     #include "SysMutexLocker.h"
 
 
-    // SysThread standby sleep time : 10 ms
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysThread standby sleep time : 10 ms                                  //
+    ////////////////////////////////////////////////////////////////////////////
     const double SysThreadStandbySleepTime = 0.01;
 
 
