@@ -37,89 +37,84 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Swapchain.h : Swapchain management                            //
+//     Renderer/Vulkan/UniformBuffer.h : Uniform buffer management            //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SWAPCHAIN_HEADER
-#define VOS_RENDERER_SWAPCHAIN_HEADER
+#ifndef VOS_RENDERER_VULKAN_UNIFORMBUFFER_HEADER
+#define VOS_RENDERER_VULKAN_UNIFORMBUFFER_HEADER
 
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
+    #include "VulkanQueue.h"
+    #include "VulkanBuffer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer swapchain settings                                           //
+    //  UniformData data structure                                            //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxSwapchainFrames = 2;
-    const uint64_t RendererSwapchainFenceTimeout = 5000000000;
+    struct UniformData
+    {
+        float   projMatrix[16];
+        float   viewMatrix[16];
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Swapchain class definition                                            //
+    //  UniformBuffer class definition                                        //
     ////////////////////////////////////////////////////////////////////////////
-    class Swapchain
+    class UniformBuffer
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain default constructor                                 //
+            //  UniformBuffer default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            Swapchain();
+            UniformBuffer();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain destructor                                          //
+            //  UniformBuffer destructor                                      //
             ////////////////////////////////////////////////////////////////////
-            ~Swapchain();
+            ~UniformBuffer();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create swapchain                                              //
-            //  return : True if swapchain is successfully created            //
+            //  Create Uniform buffer                                         //
+            //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                uint32_t surfaceQueueIndex);
+            bool createBuffer(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
-            //  Resize swapchain                                              //
-            //  return : True if swapchain is successfully resized            //
+            //  Update Uniform buffer                                         //
+            //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
-            bool resizeSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface);
+            bool updateBuffer(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                VkCommandPool& transferCommandPool, VulkanQueue& transferQueue,
+                void* data, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy swapchain                                             //
+            //  Destroy Uniform buffer                                        //
             ////////////////////////////////////////////////////////////////////
-            void destroySwapchain(VkDevice& vulkanDevice);
+            void destroyBuffer(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain private copy constructor : Not copyable             //
+            //  UniformBuffer private copy constructor : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            Swapchain(const Swapchain&) = delete;
+            UniformBuffer(const UniformBuffer&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain private copy operator : Not copyable                //
+            //  UniformBuffer private copy operator : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            Swapchain& operator=(const Swapchain&) = delete;
+            UniformBuffer& operator=(const UniformBuffer&) = delete;
 
 
         public:
-            VkSwapchainKHR      handle;         // Swapchain handle
-            VkFormat            format;         // Swapchain format
-            VkExtent2D          extent;         // Swapchain extent
-            VkRenderPass        renderPass;     // Render pass
-            VkCommandPool       commandsPool;   // Command pool
-            uint32_t            frames;         // Swapchain frames count
-            uint32_t            current;        // Swapchain current frame
-            float               ratio;          // Swapchain aspect ratio
-
-            VkImage             images[RendererMaxSwapchainFrames];
-            VkImageView         views[RendererMaxSwapchainFrames];
-            VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
-            VkSemaphore         renderReady[RendererMaxSwapchainFrames];
-            VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
-            VkFence             fences[RendererMaxSwapchainFrames];
-            VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
+            VulkanBuffer    uniformBuffer;      // Uniform buffer
+            VulkanBuffer    stagingBuffer;      // Staging buffer
     };
 
 
-#endif // VOS_RENDERER_SWAPCHAIN_HEADER
+#endif // VOS_RENDERER_VULKAN_UNIFORMBUFFER_HEADER

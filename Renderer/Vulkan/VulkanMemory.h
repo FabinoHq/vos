@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanMemory.h : Vulkan memory management                     //
+//     Renderer/Vulkan/VulkanMemory.h : Vulkan memory management              //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKANMEMORY_HEADER
-#define VOS_RENDERER_VULKANMEMORY_HEADER
+#ifndef VOS_RENDERER_VULKAN_VULKANMEMORY_HEADER
+#define VOS_RENDERER_VULKAN_VULKANMEMORY_HEADER
 
     #include "Vulkan.h"
 
@@ -153,4 +153,4 @@
     };
 
 
-#endif // VOS_RENDERER_VULKANMEMORY_HEADER
+#endif // VOS_RENDERER_VULKAN_VULKANMEMORY_HEADER

@@ -52,10 +52,11 @@ VOS: main.o \
 	System/SysClock.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	Renderer/Vulkan.o Renderer/VulkanMemory.o Renderer/VulkanQueue.o \
-	Renderer/Swapchain.o Renderer/VulkanBuffer.o Renderer/VertexBuffer.o \
-	Renderer/UniformBuffer.o Renderer/Texture.o Renderer/Shader.o \
-	Renderer/GraphicsPipeline.o Renderer/View.o Renderer/Sprite.o \
+	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
+	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
+	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
+	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsPipeline.o \
+	Renderer/Shader.o Renderer/Texture.o Renderer/View.o Renderer/Sprite.o \
 	Renderer/Renderer.o
 
 	$(CC) -o VOS \
@@ -65,10 +66,11 @@ VOS: main.o \
 	System/SysClock.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	Renderer/Vulkan.o Renderer/VulkanMemory.o Renderer/VulkanQueue.o \
-	Renderer/Swapchain.o Renderer/VulkanBuffer.o Renderer/VertexBuffer.o \
-	Renderer/UniformBuffer.o Renderer/Texture.o Renderer/Shader.o \
-	Renderer/GraphicsPipeline.o Renderer/View.o Renderer/Sprite.o \
+	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
+	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
+	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
+	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsPipeline.o\
+	Renderer/Shader.o Renderer/Texture.o Renderer/View.o Renderer/Sprite.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -109,36 +111,42 @@ System/Lin/SysWindow.o: System/Lin/SysWindow.cpp
 System/Lin/SysVulkan.o: System/Lin/SysVulkan.cpp
 	$(CC) -o System/Lin/SysVulkan.o -c System/Lin/SysVulkan.cpp $(CFLAGS)
 
-Renderer/Vulkan.o: Renderer/Vulkan.cpp
-	$(CC) -o Renderer/Vulkan.o -c Renderer/Vulkan.cpp $(CFLAGS)
+Renderer/Vulkan/Vulkan.o: Renderer/Vulkan/Vulkan.cpp
+	$(CC) -o Renderer/Vulkan/Vulkan.o -c Renderer/Vulkan/Vulkan.cpp $(CFLAGS)
 
-Renderer/VulkanMemory.o: Renderer/VulkanMemory.cpp
-	$(CC) -o Renderer/VulkanMemory.o -c Renderer/VulkanMemory.cpp $(CFLAGS)
+Renderer/Vulkan/VulkanMemory.o: Renderer/Vulkan/VulkanMemory.cpp
+	$(CC) -o Renderer/Vulkan/VulkanMemory.o -c \
+	Renderer/Vulkan/VulkanMemory.cpp $(CFLAGS)
 
-Renderer/VulkanQueue.o: Renderer/VulkanQueue.cpp
-	$(CC) -o Renderer/VulkanQueue.o -c Renderer/VulkanQueue.cpp $(CFLAGS)
+Renderer/Vulkan/VulkanQueue.o: Renderer/Vulkan/VulkanQueue.cpp
+	$(CC) -o Renderer/Vulkan/VulkanQueue.o -c \
+	Renderer/Vulkan/VulkanQueue.cpp $(CFLAGS)
 
-Renderer/Swapchain.o: Renderer/Swapchain.cpp
-	$(CC) -o Renderer/Swapchain.o -c Renderer/Swapchain.cpp $(CFLAGS)
+Renderer/Vulkan/Swapchain.o: Renderer/Vulkan/Swapchain.cpp
+	$(CC) -o Renderer/Vulkan/Swapchain.o -c \
+	Renderer/Vulkan/Swapchain.cpp $(CFLAGS)
 
-Renderer/VulkanBuffer.o: Renderer/VulkanBuffer.cpp
-	$(CC) -o Renderer/VulkanBuffer.o -c Renderer/VulkanBuffer.cpp $(CFLAGS)
+Renderer/Vulkan/VulkanBuffer.o: Renderer/Vulkan/VulkanBuffer.cpp
+	$(CC) -o Renderer/Vulkan/VulkanBuffer.o -c \
+	Renderer/Vulkan/VulkanBuffer.cpp $(CFLAGS)
 
-Renderer/VertexBuffer.o: Renderer/VertexBuffer.cpp
-	$(CC) -o Renderer/VertexBuffer.o -c Renderer/VertexBuffer.cpp $(CFLAGS)
+Renderer/Vulkan/VertexBuffer.o: Renderer/Vulkan/VertexBuffer.cpp
+	$(CC) -o Renderer/Vulkan/VertexBuffer.o -c \
+	Renderer/Vulkan/VertexBuffer.cpp $(CFLAGS)
 
-Renderer/UniformBuffer.o: Renderer/UniformBuffer.cpp
-	$(CC) -o Renderer/UniformBuffer.o -c Renderer/UniformBuffer.cpp $(CFLAGS)
+Renderer/Vulkan/UniformBuffer.o: Renderer/Vulkan/UniformBuffer.cpp
+	$(CC) -o Renderer/Vulkan/UniformBuffer.o -c \
+	Renderer/Vulkan/UniformBuffer.cpp $(CFLAGS)
 
-Renderer/Texture.o: Renderer/Texture.cpp
-	$(CC) -o Renderer/Texture.o -c Renderer/Texture.cpp $(CFLAGS)
+Renderer/Vulkan/GraphicsPipeline.o: Renderer/Vulkan/GraphicsPipeline.cpp
+	$(CC) -o Renderer/Vulkan/GraphicsPipeline.o -c \
+	Renderer/Vulkan/GraphicsPipeline.cpp $(CFLAGS)
 
 Renderer/Shader.o: Renderer/Shader.cpp
 	$(CC) -o Renderer/Shader.o -c Renderer/Shader.cpp $(CFLAGS)
 
-Renderer/GraphicsPipeline.o: Renderer/GraphicsPipeline.cpp
-	$(CC) -o Renderer/GraphicsPipeline.o -c \
-	Renderer/GraphicsPipeline.cpp $(CFLAGS)
+Renderer/Texture.o: Renderer/Texture.cpp
+	$(CC) -o Renderer/Texture.o -c Renderer/Texture.cpp $(CFLAGS)
 
 Renderer/View.o: Renderer/View.cpp
 	$(CC) -o Renderer/View.o -c Renderer/View.cpp $(CFLAGS)
@@ -154,6 +162,7 @@ clean:
 	rm -rf System/*.o
 	rm -rf System/Lin/*.o
 	rm -rf Renderer/*.o
+	rm -rf Renderer/Vulkan/*.o
 
 mrproper: clean 
 	rm -rf VOS

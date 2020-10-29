@@ -37,66 +37,63 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanBuffer.h : Vulkan buffer management                     //
+//     Renderer/Vulkan/VulkanQueue.h : Vulkan Queue management                //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKANBUFFER_HEADER
-#define VOS_RENDERER_VULKANBUFFER_HEADER
+#ifndef VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER
+#define VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER
 
     #include "Vulkan.h"
-    #include "VulkanMemory.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanBuffer class definition                                         //
+    //  VulkanQueue class definition                                          //
     ////////////////////////////////////////////////////////////////////////////
-    class VulkanBuffer
+    class VulkanQueue
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer default constructor                              //
+            //  VulkanQueue default constructor                               //
             ////////////////////////////////////////////////////////////////////
-            VulkanBuffer();
+            VulkanQueue();
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer destructor                                       //
+            //  VulkanQueue destructor                                        //
             ////////////////////////////////////////////////////////////////////
-            ~VulkanBuffer();
+            ~VulkanQueue();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan buffer                                          //
-            //  return : True if Vulkan buffer is successfully created        //
+            //  Create Vulkan queue from index                                //
+            //  return : True if the queue is successfully created            //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkBufferUsageFlags usage, VulkanMemoryType memoryType,
-                uint32_t bufferSize);
+            bool createVulkanQueue(VkDevice& vulkanDevice);
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy Vulkan buffer                                         //
+            //  Get Vulkan queue families availables for the device           //
+            //  return : True if the device supports all queue families       //
             ////////////////////////////////////////////////////////////////////
-            void destroyBuffer(VkDevice& vulkanDevice,
-                VulkanMemory& vulkanMemory);
+            static bool getDeviceQueues(VkSurfaceKHR& vulkanSurface,
+                VkPhysicalDevice& physicalDevice, VulkanQueue& graphicsQueue,
+                VulkanQueue& surfaceQueue, VulkanQueue& transferQueue);
+
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer private copy constructor : Not copyable          //
+            //  VulkanQueue private copy constructor : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            VulkanBuffer(const VulkanBuffer&) = delete;
+            VulkanQueue(const VulkanQueue&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer private copy operator : Not copyable             //
+            //  VulkanQueue private copy operator : Not copyable              //
             ////////////////////////////////////////////////////////////////////
-            VulkanBuffer& operator=(const VulkanBuffer&) = delete;
+            VulkanQueue& operator=(const VulkanQueue&) = delete;
 
 
         public:
-            VkBuffer        handle;         // Buffer handle
-            uint32_t        size;           // Buffer size
-
-            VkDeviceSize    memorySize;     // Memory size
-            VkDeviceSize    memoryOffset;   // Memory offset
+            VkQueue     handle;     // Queue handle
+            uint32_t    index;      // Queue index
     };
 
 
-#endif // VOS_RENDERER_VULKANBUFFER_HEADER
+#endif // VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER

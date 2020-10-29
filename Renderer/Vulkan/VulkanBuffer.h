@@ -37,84 +37,66 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/UniformBuffer.h : Uniform buffer management                   //
+//     Renderer/Vulkan/VulkanBuffer.h : Vulkan buffer management              //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_UNIFORMBUFFER_HEADER
-#define VOS_RENDERER_UNIFORMBUFFER_HEADER
+#ifndef VOS_RENDERER_VULKAN_VULKANBUFFER_HEADER
+#define VOS_RENDERER_VULKAN_VULKANBUFFER_HEADER
 
     #include "Vulkan.h"
     #include "VulkanMemory.h"
-    #include "VulkanQueue.h"
-    #include "VulkanBuffer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  UniformData data structure                                            //
+    //  VulkanBuffer class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
-    struct UniformData
-    {
-        float   projMatrix[16];
-        float   viewMatrix[16];
-    };
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  UniformBuffer class definition                                        //
-    ////////////////////////////////////////////////////////////////////////////
-    class UniformBuffer
+    class VulkanBuffer
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  UniformBuffer default constructor                             //
+            //  VulkanBuffer default constructor                              //
             ////////////////////////////////////////////////////////////////////
-            UniformBuffer();
+            VulkanBuffer();
 
             ////////////////////////////////////////////////////////////////////
-            //  UniformBuffer destructor                                      //
+            //  VulkanBuffer destructor                                       //
             ////////////////////////////////////////////////////////////////////
-            ~UniformBuffer();
+            ~VulkanBuffer();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Uniform buffer                                         //
-            //  return : True if Vertex buffer is successfully created        //
+            //  Create Vulkan buffer                                          //
+            //  return : True if Vulkan buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                uint32_t size);
+                VkBufferUsageFlags usage, VulkanMemoryType memoryType,
+                uint32_t bufferSize);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update Uniform buffer                                         //
-            //  return : True if Vertex buffer is successfully updated        //
-            ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkCommandPool& transferCommandPool, VulkanQueue& transferQueue,
-                void* data, uint32_t size);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy Uniform buffer                                        //
+            //  Destroy Vulkan buffer                                         //
             ////////////////////////////////////////////////////////////////////
             void destroyBuffer(VkDevice& vulkanDevice,
                 VulkanMemory& vulkanMemory);
 
-
         private:
             ////////////////////////////////////////////////////////////////////
-            //  UniformBuffer private copy constructor : Not copyable         //
+            //  VulkanBuffer private copy constructor : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            UniformBuffer(const UniformBuffer&) = delete;
+            VulkanBuffer(const VulkanBuffer&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  UniformBuffer private copy operator : Not copyable            //
+            //  VulkanBuffer private copy operator : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            UniformBuffer& operator=(const UniformBuffer&) = delete;
+            VulkanBuffer& operator=(const VulkanBuffer&) = delete;
 
 
         public:
-            VulkanBuffer    uniformBuffer;      // Uniform buffer
-            VulkanBuffer    stagingBuffer;      // Staging buffer
+            VkBuffer        handle;         // Buffer handle
+            uint32_t        size;           // Buffer size
+
+            VkDeviceSize    memorySize;     // Memory size
+            VkDeviceSize    memoryOffset;   // Memory offset
     };
 
 
-#endif // VOS_RENDERER_UNIFORMBUFFER_HEADER
+#endif // VOS_RENDERER_VULKAN_VULKANBUFFER_HEADER

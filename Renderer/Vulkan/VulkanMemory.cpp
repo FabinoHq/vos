@@ -37,11 +37,11 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanMemory.cpp : Vulkan memory management                   //
+//     Renderer/Vulkan/VulkanMemory.cpp : Vulkan memory management            //
 ////////////////////////////////////////////////////////////////////////////////
 #include "VulkanMemory.h"
 #include "VulkanBuffer.h"
-#include "Texture.h"
+#include "../Texture.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////

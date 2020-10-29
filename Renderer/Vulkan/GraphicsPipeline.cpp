@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/GraphicsPipeline.cpp : Vulkan Graphics pipeline management    //
+//     Renderer/Vulkan/GraphicsPipeline.cpp : Graphics pipeline management    //
 ////////////////////////////////////////////////////////////////////////////////
 #include "GraphicsPipeline.h"
 

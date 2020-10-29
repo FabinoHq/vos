@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanQueue.cpp : Vulkan Queue management                     //
+//     Renderer/Vulkan/VulkanQueue.cpp : Vulkan Queue management              //
 ////////////////////////////////////////////////////////////////////////////////
 #include "VulkanQueue.h"
 

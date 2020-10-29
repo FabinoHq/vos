@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Swapchain.cpp : Swapchain management                          //
+//     Renderer/Vulkan/Swapchain.cpp : Swapchain management                   //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Swapchain.h"
 

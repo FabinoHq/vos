@@ -37,99 +37,104 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VertexBuffer.h : Vertex buffer management                     //
+//     Renderer/Vulkan/GraphicsPipeline.h : Graphics pipeline management      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VERTEXBUFFER_HEADER
-#define VOS_RENDERER_VERTEXBUFFER_HEADER
+#ifndef VOS_RENDERER_VULKAN_GRAPHICSPIPELINE_HEADER
+#define VOS_RENDERER_VULKAN_GRAPHICSPIPELINE_HEADER
 
+    #include "../../System/SysMessage.h"
     #include "Vulkan.h"
-    #include "VulkanMemory.h"
-    #include "VulkanQueue.h"
+    #include "Swapchain.h"
     #include "VulkanBuffer.h"
+    #include "VertexBuffer.h"
+    #include "../Shader.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Matrix4x4.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VertexData data structure                                             //
+    //  Descriptor sets types                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    struct VertexData
+    enum DescriptorSetsType
     {
-        float   x;
-        float   y;
-        float   z;
-
-        float   u;
-        float   v;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Default vertex buffer vertices                                        //
-    ////////////////////////////////////////////////////////////////////////////
-    const VertexData DefaultVertices[4] =
-    {
-        0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Default vertex buffer indices                                         //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint16_t DefaultIndices[6] =
-    {
-        0, 1, 2,
-        2, 3, 0
+        DESC_MATRICES = 0,
+        DESC_TEXTURE = 1,
+        DESC_SETS_COUNT = 2
     };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VertexBuffer class definition                                         //
+    //  GraphicsPipeline class definition                                     //
     ////////////////////////////////////////////////////////////////////////////
-    class VertexBuffer
+    class GraphicsPipeline
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  VertexBuffer default constructor                              //
+            //  GraphicsPipeline default constructor                          //
             ////////////////////////////////////////////////////////////////////
-            VertexBuffer();
+            GraphicsPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  VertexBuffer destructor                                       //
+            //  GraphicsPipeline destructor                                   //
             ////////////////////////////////////////////////////////////////////
-            ~VertexBuffer();
+            ~GraphicsPipeline();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vertex buffer                                          //
-            //  return : True if Vertex buffer is successfully created        //
+            //  Create graphics pipeline                                      //
+            //  return : True if graphics pipeline is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkCommandPool& commandsPool, VulkanQueue& transferQueue);
+            bool createPipeline(VkDevice& vulkanDevice, Swapchain& swapchain,
+                Shader& shader);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy Vertex buffer                                         //
+            //  Create descriptor pools                                       //
+            //  return : True if descriptor pool is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            void destroyBuffer(VkDevice& vulkanDevice,
-                VulkanMemory& vulkanMemory);
+            bool createDescriptorPools(VkDevice& vulkanDevice);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create descriptor set layouts                                 //
+            //  return : True if descriptor layout is successfully created    //
+            ////////////////////////////////////////////////////////////////////
+            bool createDescriptorSetLayouts(VkDevice& vulkanDevice);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create pipeline layouts                                       //
+            //  return : True if pipeline layout is successfully created      //
+            ////////////////////////////////////////////////////////////////////
+            bool createPipelineLayouts(VkDevice& vulkanDevice);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy pipeline                                              //
+            ////////////////////////////////////////////////////////////////////
+            void destroyPipeline(VkDevice& vulkanDevice);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  VertexBuffer private copy constructor : Not copyable          //
+            //  GraphicsPipeline private copy constructor : Not copyable      //
             ////////////////////////////////////////////////////////////////////
-            VertexBuffer(const VertexBuffer&) = delete;
+            GraphicsPipeline(const GraphicsPipeline&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  VertexBuffer private copy operator : Not copyable             //
+            //  GraphicsPipeline private copy operator : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            VertexBuffer& operator=(const VertexBuffer&) = delete;
+            GraphicsPipeline& operator=(const GraphicsPipeline&) = delete;
 
 
         public:
-            VulkanBuffer    vertexBuffer;   // Vertex buffer
-            VulkanBuffer    indexBuffer;    // Index buffer
+            VkPipeline              handle;             // Pipeline handle
+            VkPipelineLayout        layout;             // Pipeline layout
+
+            // Descriptor pools
+            VkDescriptorPool        descPools[DESC_SETS_COUNT];
+
+            // Descriptor set layouts
+            VkDescriptorSetLayout   descSetLayouts[DESC_SETS_COUNT];
+            VkDescriptorSetLayout
+                swapSetLayouts[RendererMaxSwapchainFrames*DESC_SETS_COUNT];
     };
 
 
-#endif // VOS_RENDERER_VERTEXBUFFER_HEADER
+#endif // VOS_RENDERER_VULKAN_GRAPHICSPIPELINE_HEADER

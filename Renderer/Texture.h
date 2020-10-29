@@ -42,8 +42,8 @@
 #ifndef VOS_RENDERER_TEXTURE_HEADER
 #define VOS_RENDERER_TEXTURE_HEADER
 
-    #include "Vulkan.h"
-    #include "Swapchain.h"
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

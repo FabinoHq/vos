@@ -37,12 +37,12 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan.h : Vulkan management                                  //
+//     Renderer/Vulkan/Vulkan.h : Vulkan management                           //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKAN_HEADER
-#define VOS_RENDERER_VULKAN_HEADER
+#ifndef VOS_RENDERER_VULKAN_VULKAN_HEADER
+#define VOS_RENDERER_VULKAN_VULKAN_HEADER
 
-    #include "../System/SysVulkan.h"
+    #include "../../System/SysVulkan.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -5595,4 +5595,4 @@
     void FreeVulkanFunctions();
 
 
-#endif // VOS_RENDERER_VULKAN_HEADER
+#endif // VOS_RENDERER_VULKAN_VULKAN_HEADER

@@ -37,63 +37,89 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VulkanQueue.h : Vulkan Queue management                       //
+//     Renderer/Vulkan/Swapchain.h : Swapchain management                     //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKANQUEUE_HEADER
-#define VOS_RENDERER_VULKANQUEUE_HEADER
+#ifndef VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
+#define VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
 
     #include "Vulkan.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanQueue class definition                                          //
+    //  Renderer swapchain settings                                           //
     ////////////////////////////////////////////////////////////////////////////
-    class VulkanQueue
+    const uint32_t RendererMaxSwapchainFrames = 2;
+    const uint64_t RendererSwapchainFenceTimeout = 5000000000;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Swapchain class definition                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Swapchain
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanQueue default constructor                               //
+            //  Swapchain default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            VulkanQueue();
+            Swapchain();
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanQueue destructor                                        //
+            //  Swapchain destructor                                          //
             ////////////////////////////////////////////////////////////////////
-            ~VulkanQueue();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan queue from index                                //
-            //  return : True if the queue is successfully created            //
-            ////////////////////////////////////////////////////////////////////
-            bool createVulkanQueue(VkDevice& vulkanDevice);
+            ~Swapchain();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vulkan queue families availables for the device           //
-            //  return : True if the device supports all queue families       //
+            //  Create swapchain                                              //
+            //  return : True if swapchain is successfully created            //
             ////////////////////////////////////////////////////////////////////
-            static bool getDeviceQueues(VkSurfaceKHR& vulkanSurface,
-                VkPhysicalDevice& physicalDevice, VulkanQueue& graphicsQueue,
-                VulkanQueue& surfaceQueue, VulkanQueue& transferQueue);
+            bool createSwapchain(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
+                uint32_t surfaceQueueIndex);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Resize swapchain                                              //
+            //  return : True if swapchain is successfully resized            //
+            ////////////////////////////////////////////////////////////////////
+            bool resizeSwapchain(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy swapchain                                             //
+            ////////////////////////////////////////////////////////////////////
+            void destroySwapchain(VkDevice& vulkanDevice);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanQueue private copy constructor : Not copyable           //
+            //  Swapchain private copy constructor : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            VulkanQueue(const VulkanQueue&) = delete;
+            Swapchain(const Swapchain&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanQueue private copy operator : Not copyable              //
+            //  Swapchain private copy operator : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            VulkanQueue& operator=(const VulkanQueue&) = delete;
+            Swapchain& operator=(const Swapchain&) = delete;
 
 
         public:
-            VkQueue     handle;     // Queue handle
-            uint32_t    index;      // Queue index
+            VkSwapchainKHR      handle;         // Swapchain handle
+            VkFormat            format;         // Swapchain format
+            VkExtent2D          extent;         // Swapchain extent
+            VkRenderPass        renderPass;     // Render pass
+            VkCommandPool       commandsPool;   // Command pool
+            uint32_t            frames;         // Swapchain frames count
+            uint32_t            current;        // Swapchain current frame
+            float               ratio;          // Swapchain aspect ratio
+
+            VkImage             images[RendererMaxSwapchainFrames];
+            VkImageView         views[RendererMaxSwapchainFrames];
+            VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
+            VkSemaphore         renderReady[RendererMaxSwapchainFrames];
+            VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
+            VkFence             fences[RendererMaxSwapchainFrames];
+            VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
     };
 
 
-#endif // VOS_RENDERER_VULKANQUEUE_HEADER
+#endif // VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER

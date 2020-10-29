@@ -37,37 +37,89 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/VertexBuffer.cpp : Vertex buffer management                   //
+//     Renderer/Vulkan/UniformBuffer.cpp : Uniform buffer management          //
 ////////////////////////////////////////////////////////////////////////////////
-#include "VertexBuffer.h"
+#include "UniformBuffer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VertexBuffer default constructor                                          //
+//  UniformBuffer default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-VertexBuffer::VertexBuffer() :
-vertexBuffer(),
-indexBuffer()
+UniformBuffer::UniformBuffer() :
+uniformBuffer(),
+stagingBuffer()
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  VertexBuffer destructor                                                   //
+//  UniformBuffer destructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-VertexBuffer::~VertexBuffer()
+UniformBuffer::~UniformBuffer()
 {
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Vertex buffer                                                      //
-//  return : True if Vertex buffer is successfully created                    //
+//  Create Uniform buffer                                                     //
+//  return : True if Uniform buffer is successfully created                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
+bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
+    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory, uint32_t size)
+{
+    // Check physical device
+    if (!physicalDevice)
+    {
+        // Invalid physical device
+        return false;
+    }
+
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Check current buffer
+    if (uniformBuffer.handle)
+    {
+        // Destroy current buffer
+        uniformBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    }
+
+    // Create uniform buffer
+    if (!uniformBuffer.createBuffer(
+        physicalDevice, vulkanDevice, vulkanMemory,
+        VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        VULKAN_MEMORY_DEVICE, size))
+    {
+        // Could not create uniform buffer
+        return false;
+    }
+
+    // Create staging buffer
+    if (!stagingBuffer.createBuffer(
+        physicalDevice, vulkanDevice, vulkanMemory,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_HOST, size))
+    {
+        // Could not create staging buffer
+        return false;
+    }
+
+    // Uniform buffer successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Update Uniform buffer                                                     //
+//  return : True if Uniform buffer is successfully updated                   //
+////////////////////////////////////////////////////////////////////////////////
+bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkCommandPool& commandsPool, VulkanQueue& transferQueue)
+    VkCommandPool& transferCommandPool, VulkanQueue& transferQueue,
+    void* data, uint32_t size)
 {
     // Check physical device
     if (!physicalDevice)
@@ -84,7 +136,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Check commands pool
-    if (!commandsPool)
+    if (!transferCommandPool)
     {
         // Invalid commands pool
         return false;
@@ -97,51 +149,29 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Check current buffers
-    if (vertexBuffer.handle || indexBuffer.handle)
+    // Check current buffer
+    if (!uniformBuffer.handle || (uniformBuffer.size != size) ||
+        !stagingBuffer.handle || (stagingBuffer.size != size))
     {
-        // Destroy current buffers
+        // Recreate uniform buffer
         destroyBuffer(vulkanDevice, vulkanMemory);
+        createBuffer(physicalDevice, vulkanDevice, vulkanMemory, size);
     }
 
 
-    // Create staging buffer
-    VulkanBuffer stagingBuffer;
-    if (!stagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_HOST, sizeof(DefaultVertices)))
+    // Write data into staging buffer memory
+    if (!vulkanMemory.writeBufferMemory(vulkanDevice, stagingBuffer, data))
     {
-        // Could not create staging buffer
+        // Could not write data into staging buffer memory
         return false;
     }
-
-    // Write vertices into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, stagingBuffer, DefaultVertices))
-    {
-        // Could not write vertices into staging buffer memory
-        return false;
-    }
-
-
-    // Create vertex buffer
-    if (!vertexBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_DEVICE, sizeof(DefaultVertices)))
-    {
-        // Could not create vertex buffer
-        return false;
-    }
-
 
     // Allocate command buffers
     VkCommandBuffer commandBuffer = 0;
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandsPool;
+    bufferAllocate.commandPool = transferCommandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -152,7 +182,8 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Transfert staging buffer data to vertex buffer
+
+    // Transfert staging buffer data to uniform buffer
     VkCommandBufferBeginInfo bufferBeginInfo;
     bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     bufferBeginInfo.pNext = 0;
@@ -172,7 +203,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     vkCmdCopyBuffer(
         commandBuffer, stagingBuffer.handle,
-        vertexBuffer.handle, 1, &bufferCopy
+        uniformBuffer.handle, 1, &bufferCopy
     );
 
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
@@ -231,151 +262,24 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         vkDestroyFence(vulkanDevice, fence, 0);
     }
 
-    // Destroy buffers
+    // Destroy command buffer
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
-    }
-    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
-
-
-    // Create staging buffer
-    if (!stagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_HOST, sizeof(DefaultIndices)))
-    {
-        // Could not create staging buffer
-        return false;
+        vkFreeCommandBuffers(
+            vulkanDevice, transferCommandPool, 1, &commandBuffer
+        );
     }
 
-    // Write indices into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, stagingBuffer, DefaultIndices))
-    {
-        // Could not write indices into staging buffer memory
-        return false;
-    }
-
-
-    // Create index buffer
-    if (!indexBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_DEVICE, sizeof(DefaultIndices)))
-    {
-        // Could not create index buffer
-        return false;
-    }
-
-
-    // Allocate command buffers
-    commandBuffer = 0;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandsPool;
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(
-        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
-    {
-        // Could not allocate command buffers
-        return false;
-    }
-
-
-    // Transfert staging buffer data to vertex buffer
-    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext = 0;
-    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = 0;
-
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
-    {
-        // Could not record command buffer
-        return false;
-    }
-
-    bufferCopy.srcOffset = 0;
-    bufferCopy.dstOffset = 0;
-    bufferCopy.size = stagingBuffer.size;
-
-    vkCmdCopyBuffer(
-        commandBuffer, stagingBuffer.handle,
-        indexBuffer.handle, 1, &bufferCopy
-    );
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-    {
-        // Could not end command buffer
-        return false;
-    }
-
-    fence = 0;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = 0;
-    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
-    {
-        // Could not create fence
-        return false;
-    }
-    if (!fence)
-    {
-        // Invalid fence
-        return false;
-    }
-
-    // Submit queue
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = 0;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (vkQueueSubmit(
-        transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
-    {
-        // Could not submit queue
-        return false;
-    }
-
-    // Wait for transfer to finish
-    if (vkWaitForFences(
-        vulkanDevice, 1, &fence, VK_FALSE, 100000000000) != VK_SUCCESS)
-    {
-        // Transfer timed out
-        return false;
-    }
-
-    // Destroy fence
-    if (fence)
-    {
-        vkDestroyFence(vulkanDevice, fence, 0);
-    }
-
-    // Destroy buffers
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
-    }
-    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
-
-    // Vertex buffer successfully created
+    // Uniform buffer successfully updated
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy Vertex buffer                                                     //
+//  Destroy Uniform buffer                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void VertexBuffer::destroyBuffer(VkDevice& vulkanDevice,
+void UniformBuffer::destroyBuffer(VkDevice& vulkanDevice,
     VulkanMemory& vulkanMemory)
 {
-    indexBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
-    vertexBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    uniformBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 }

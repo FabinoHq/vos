@@ -13,14 +13,23 @@
     <Filter Include="Math">
       <UniqueIdentifier>{6445f972-1c0f-47ba-b9d4-3643478f9503}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\Vulkan">
+      <UniqueIdentifier>{827e486a-b080-4fc0-8883-bdbc151d386f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Shaders">
+      <UniqueIdentifier>{cd23c501-6888-4864-a87b-c358aaeb870b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Images">
+      <UniqueIdentifier>{d95861b1-5c28-46e7-b8aa-eb01b9bd0dd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Images\Embedded">
+      <UniqueIdentifier>{04cb918c-840c-4879-af04-128f2ebb3f51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Vos.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="System\SysClock.cpp">
@@ -47,28 +56,10 @@
     <ClCompile Include="System\SysSleep.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\VulkanBuffer.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Texture.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Swapchain.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\VulkanQueue.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\VertexBuffer.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\UniformBuffer.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Shader.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\VulkanMemory.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="System\Win\SysMessage.cpp">
@@ -80,20 +71,38 @@
     <ClCompile Include="Renderer\Sprite.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\GraphicsPipeline.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\View.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\GraphicsPipeline.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\Swapchain.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\UniformBuffer.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\VertexBuffer.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\Vulkan.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\VulkanBuffer.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\VulkanMemory.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\VulkanQueue.cpp">
+      <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Renderer\Renderer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="System\SysWindow.h">
@@ -144,28 +153,10 @@
     <ClInclude Include="Math\Matrix4x4.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\VulkanBuffer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Texture.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Swapchain.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\VulkanQueue.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\VertexBuffer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\UniformBuffer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Shader.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\VulkanMemory.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="System\SysMessage.h">
@@ -180,11 +171,38 @@
     <ClInclude Include="Renderer\Sprite.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\GraphicsPipeline.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\View.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\GraphicsPipeline.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\Swapchain.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\UniformBuffer.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\VertexBuffer.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\Vulkan.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\VulkanBuffer.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\VulkanMemory.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\VulkanQueue.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\Default.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Images\Embedded\Cursor.h">
+      <Filter>Renderer\Images\Embedded</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

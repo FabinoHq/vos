@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan.cpp : Vulkan management                                //
+//     Renderer/Vulkan/Vulkan.cpp : Vulkan management                         //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Vulkan.h"
 
