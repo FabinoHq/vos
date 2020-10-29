@@ -248,7 +248,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create default shaders
-    if (!m_shader.createShader(m_vulkanDevice,
+    if (!m_shader.createShader(*this,
         DefaultVertexShader, DefaultVertexShaderSize,
         DefaultFragmentShader, DefaultFragmentShaderSize))
     {
@@ -615,7 +615,7 @@ void Renderer::cleanup()
             m_pipeline.destroyPipeline(m_vulkanDevice);
 
             // Destroy shader
-            m_shader.destroyShader(m_vulkanDevice);
+            m_shader.destroyShader(*this);
 
             // Destroy transfer commands pool
             if (m_transferCommandPool && vkDestroyCommandPool)

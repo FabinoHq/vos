@@ -46,6 +46,12 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Shader class definition                                               //
     ////////////////////////////////////////////////////////////////////////////
     class Shader
@@ -66,14 +72,27 @@
             //  Create Shader                                                 //
             //  return : True if Shader is successfully created               //
             ////////////////////////////////////////////////////////////////////
-            bool createShader(VkDevice& vulkanDevice,
+            bool createShader(Renderer& renderer,
                 const uint32_t* vertexSource, const size_t vertexSize,
                 const uint32_t* fragmentSource, const size_t fragmentSize);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Shader                                                //
             ////////////////////////////////////////////////////////////////////
-            void destroyShader(VkDevice& vulkanDevice);
+            void destroyShader(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if the vertex and fragment shaders are valids           //
+            //  return : True if the shader is valid                          //
+            ////////////////////////////////////////////////////////////////////
+            bool isValid();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get shader stages info                                        //
+            ////////////////////////////////////////////////////////////////////
+            void getShaderStagesInfo(
+                VkPipelineShaderStageCreateInfo* shaderStageCreateInfo);
 
 
         private:
@@ -88,9 +107,9 @@
             Shader& operator=(const Shader&) = delete;
 
 
-        public:
-            VkShaderModule      vertexShader;         // Vertex shader
-            VkShaderModule      fragmentShader;       // Fragment shader
+        private:
+            VkShaderModule      m_vertexShader;         // Vertex shader
+            VkShaderModule      m_fragmentShader;       // Fragment shader
     };
 
 

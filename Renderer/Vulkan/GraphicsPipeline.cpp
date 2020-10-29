@@ -127,38 +127,16 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Check vertex shader
-    if (!shader.vertexShader)
+    // Check shader
+    if (!shader.isValid())
     {
-        // Invalid vertex shader
-        return false;
-    }
-
-    // Check fragment shader
-    if (!shader.fragmentShader)
-    {
-        // Invalid fragment shader
+        // Invalid shader
         return false;
     }
 
     // Shader stage
-    VkPipelineShaderStageCreateInfo shaderStage[2];
-
-    shaderStage[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStage[0].pNext = 0;
-    shaderStage[0].flags = 0;
-    shaderStage[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
-    shaderStage[0].module = shader.vertexShader;
-    shaderStage[0].pName = "main";
-    shaderStage[0].pSpecializationInfo = 0;
-
-    shaderStage[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStage[1].pNext = 0;
-    shaderStage[1].flags = 0;
-    shaderStage[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-    shaderStage[1].module = shader.fragmentShader;
-    shaderStage[1].pName = "main";
-    shaderStage[1].pSpecializationInfo = 0;
+    VkPipelineShaderStageCreateInfo shaderStages[2];
+    shader.getShaderStagesInfo(shaderStages);
 
     // Input binding
     VkVertexInputBindingDescription vertexBinding;
@@ -283,7 +261,7 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
     pipelineInfo.pNext = 0;
     pipelineInfo.flags = 0;
     pipelineInfo.stageCount = 2;
-    pipelineInfo.pStages = shaderStage;
+    pipelineInfo.pStages = shaderStages;
     pipelineInfo.pVertexInputState = &vertexInput;
     pipelineInfo.pInputAssemblyState = &inputAssembly;
     pipelineInfo.pTessellationState = 0;

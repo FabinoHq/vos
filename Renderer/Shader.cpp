@@ -40,14 +40,15 @@
 //     Renderer/Shader.cpp : Shader management                                //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Shader.h"
+#include "Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Shader default constructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
 Shader::Shader() :
-vertexShader(0),
-fragmentShader(0)
+m_vertexShader(0),
+m_fragmentShader(0)
 {
 
 }
@@ -57,8 +58,8 @@ fragmentShader(0)
 ////////////////////////////////////////////////////////////////////////////////
 Shader::~Shader()
 {
-    fragmentShader = 0;
-    vertexShader = 0;
+    m_fragmentShader = 0;
+    m_vertexShader = 0;
 }
 
 
@@ -66,12 +67,12 @@ Shader::~Shader()
 //  Create Shader                                                             //
 //  return : True if Shader is successfully created                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool Shader::createShader(VkDevice& vulkanDevice,
+bool Shader::createShader(Renderer& renderer,
     const uint32_t* vertexSource, const size_t vertexSize,
     const uint32_t* fragmentSource, const size_t fragmentSize)
 {
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!renderer.m_vulkanDevice)
     {
         // Invalid Vulkan device
         return false;
@@ -86,9 +87,9 @@ bool Shader::createShader(VkDevice& vulkanDevice,
     }
 
     // Check current shader
-    if (vertexShader || fragmentShader)
+    if (m_vertexShader || m_fragmentShader)
     {
-        destroyShader(vulkanDevice);
+        destroyShader(renderer);
     }
 
     // Create vertex shader
@@ -99,13 +100,13 @@ bool Shader::createShader(VkDevice& vulkanDevice,
     vertexShaderInfo.codeSize = vertexSize;
     vertexShaderInfo.pCode = vertexSource;
 
-    if (vkCreateShaderModule(
-        vulkanDevice, &vertexShaderInfo, 0, &vertexShader) != VK_SUCCESS)
+    if (vkCreateShaderModule(renderer.m_vulkanDevice,
+        &vertexShaderInfo, 0, &m_vertexShader) != VK_SUCCESS)
     {
         // Could not create vertex shader
         return false;
     }
-    if (!vertexShader)
+    if (!m_vertexShader)
     {
         // Invalid vertex shader
         return false;
@@ -119,13 +120,13 @@ bool Shader::createShader(VkDevice& vulkanDevice,
     fragmentShaderInfo.codeSize = fragmentSize;
     fragmentShaderInfo.pCode = fragmentSource;
 
-    if (vkCreateShaderModule(
-        vulkanDevice, &fragmentShaderInfo, 0, &fragmentShader) != VK_SUCCESS)
+    if (vkCreateShaderModule(renderer.m_vulkanDevice,
+        &fragmentShaderInfo, 0, &m_fragmentShader) != VK_SUCCESS)
     {
         // Could not create fragment shader
         return false;
     }
-    if (!fragmentShader)
+    if (!m_fragmentShader)
     {
         // Invalid fragment shader
         return false;
@@ -138,20 +139,56 @@ bool Shader::createShader(VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Shader                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Shader::destroyShader(VkDevice& vulkanDevice)
+void Shader::destroyShader(Renderer& renderer)
 {
     // Destroy shader
-    if (vkDestroyShaderModule)
+    if (renderer.m_vulkanDevice && vkDestroyShaderModule)
     {
-        if (fragmentShader)
+        if (m_fragmentShader)
         {
-            vkDestroyShaderModule(vulkanDevice, fragmentShader, 0);
+            vkDestroyShaderModule(renderer.m_vulkanDevice, m_fragmentShader, 0);
         }
-        if (vertexShader)
+        if (m_vertexShader)
         {
-            vkDestroyShaderModule(vulkanDevice, vertexShader, 0);
+            vkDestroyShaderModule(renderer.m_vulkanDevice, m_vertexShader, 0);
         }
     }
-    fragmentShader = 0;
-    vertexShader = 0;
+
+    m_fragmentShader = 0;
+    m_vertexShader = 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check if the vertex and fragment shaders are valids                       //
+//  return : True if the shader is valid                                      //
+////////////////////////////////////////////////////////////////////////////////
+bool Shader::isValid()
+{
+    return (m_vertexShader && m_fragmentShader);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get shader stages info                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void Shader::getShaderStagesInfo(
+    VkPipelineShaderStageCreateInfo* shaderStageCreateInfo)
+{
+    shaderStageCreateInfo[0].sType =
+        VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStageCreateInfo[0].pNext = 0;
+    shaderStageCreateInfo[0].flags = 0;
+    shaderStageCreateInfo[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
+    shaderStageCreateInfo[0].module = m_vertexShader;
+    shaderStageCreateInfo[0].pName = "main";
+    shaderStageCreateInfo[0].pSpecializationInfo = 0;
+
+    shaderStageCreateInfo[1].sType =
+        VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStageCreateInfo[1].pNext = 0;
+    shaderStageCreateInfo[1].flags = 0;
+    shaderStageCreateInfo[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+    shaderStageCreateInfo[1].module = m_fragmentShader;
+    shaderStageCreateInfo[1].pName = "main";
+    shaderStageCreateInfo[1].pSpecializationInfo = 0;
 }

@@ -52,14 +52,15 @@
     #include "Vulkan/VulkanBuffer.h"
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/UniformBuffer.h"
-    #include "Texture.h"
-    #include "Shader.h"
-    #include "Shaders/Default.h"
     #include "Vulkan/GraphicsPipeline.h"
+    #include "Shader.h"
+    #include "Texture.h"
     #include "View.h"
     #include "Sprite.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
+
+    #include "Shaders/Default.h"
 
     #include <vector>
 
@@ -194,6 +195,7 @@
             GraphicsPipeline    m_pipeline;             // Default pipeline
             View                m_view;                 // Default view
 
+            friend class        Shader;                 // Shader has access
             friend class        Texture;                // Texture has access
             friend class        View;                   // View has access
             friend class        Sprite;                 // Sprite has access
