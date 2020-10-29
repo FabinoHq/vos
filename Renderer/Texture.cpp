@@ -40,6 +40,7 @@
 //     Renderer/Texture.cpp : Texture management                              //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Texture.h"
+#include "Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -228,8 +229,9 @@ bool Texture::createTexture(Renderer& renderer,
     descriptorInfo.pNext = 0;
     descriptorInfo.descriptorPool = renderer.m_pipeline.descPools[DESC_TEXTURE];
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_pipeline.
-        swapSetLayouts[DESC_TEXTURE*RendererMaxSwapchainFrames];
+    descriptorInfo.pSetLayouts = &renderer.m_pipeline.swapSetLayouts[
+        DESC_TEXTURE*RendererMaxSwapchainFrames
+    ];
 
     if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
         &descriptorInfo, m_descriptorSets) != VK_SUCCESS)

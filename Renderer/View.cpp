@@ -40,6 +40,7 @@
 //     Renderer/View.cpp : View management                                    //
 ////////////////////////////////////////////////////////////////////////////////
 #include "View.h"
+#include "Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,40 +76,38 @@ View::~View()
 //  Init view                                                                 //
 //  return : True if the view is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool View::init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory, GraphicsPipeline& pipeline,
-    VkCommandPool& transferCommandPool, VulkanQueue& transferQueue)
+bool View::init(Renderer& renderer)
 {
     // Check physical device
-    if (!physicalDevice)
+    if (!renderer.m_physicalDevice)
     {
         // Invalid physical device
         return false;
     }
 
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!renderer.m_vulkanDevice)
     {
         // Invalid Vulkan device
         return false;
     }
 
     // Check pipeline handle
-    if (!pipeline.handle)
+    if (!renderer.m_pipeline.handle)
     {
         // Invalid pipeline handle
         return false;
     }
 
-    // Check commands pool
-    if (!transferCommandPool)
+    // Check transfer commands pool
+    if (!renderer.m_transferCommandPool)
     {
-        // Invalid commands pool
+        // Invalid transfer commands pool
         return false;
     }
 
     // Check transfer queue
-    if (!transferQueue.handle)
+    if (!renderer.m_transferQueue.handle)
     {
         // Invalid transfer queue
         return false;
@@ -128,13 +127,12 @@ bool View::init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
     // Create uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        if (!m_uniformBuffers[i].updateBuffer(physicalDevice,
-            vulkanDevice, vulkanMemory, transferCommandPool, transferQueue,
+        if (!m_uniformBuffers[i].updateBuffer(renderer.m_physicalDevice,
+            renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+            renderer.m_transferCommandPool, renderer.m_transferQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
-            SysMessage::box() << "[0x3049] Could not create uniform buffer\n";
-            SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
     }
@@ -143,13 +141,15 @@ bool View::init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = pipeline.descPools[DESC_MATRICES];
+    descriptorInfo.descriptorPool =
+        renderer.m_pipeline.descPools[DESC_MATRICES];
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts =
-        &pipeline.swapSetLayouts[DESC_MATRICES*RendererMaxSwapchainFrames];
+    descriptorInfo.pSetLayouts = &renderer.m_pipeline.swapSetLayouts[
+        DESC_MATRICES*RendererMaxSwapchainFrames
+    ];
 
-    if (vkAllocateDescriptorSets(
-        vulkanDevice, &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
+    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
+        &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
         // Could not allocate matrices descriptor sets
         return false;
@@ -178,7 +178,9 @@ bool View::init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
         descriptorWrites.pBufferInfo = &descBufferInfo;
         descriptorWrites.pTexelBufferView = 0;
 
-        vkUpdateDescriptorSets(vulkanDevice, 1, &descriptorWrites, 0, 0);
+        vkUpdateDescriptorSets(
+            renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
+        );
     }
 
     // View is successfully created
@@ -189,48 +191,45 @@ bool View::init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
 //  Bind view                                                                 //
 //  return : True if the view is successfully binded                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool View::bind(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
-    Swapchain& swapchain, VulkanMemory& vulkanMemory,
-    GraphicsPipeline& pipeline, VkCommandPool& transferCommandPool,
-    VulkanQueue& transferQueue)
+bool View::bind(Renderer& renderer)
 {
     // Check physical device
-    if (!physicalDevice)
+    if (!renderer.m_physicalDevice)
     {
         // Invalid physical device
         return false;
     }
 
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!renderer.m_vulkanDevice)
     {
         // Invalid Vulkan device
         return false;
     }
 
     // Check swapchain handle
-    if (!swapchain.handle)
+    if (!renderer.m_swapchain.handle)
     {
         // Invalid swapchain handle
         return false;
     }
 
     // Check pipeline handle
-    if (!pipeline.handle)
+    if (!renderer.m_pipeline.handle)
     {
         // Invalid pipeline handle
         return false;
     }
 
-    // Check commands pool
-    if (!transferCommandPool)
+    // Check transfer commands pool
+    if (!renderer.m_transferCommandPool)
     {
-        // Invalid commands pool
+        // Invalid transfer commands pool
         return false;
     }
 
     // Check transfer queue
-    if (!transferQueue.handle)
+    if (!renderer.m_transferQueue.handle)
     {
         // Invalid transfer queue
         return false;
@@ -238,7 +237,8 @@ bool View::bind(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
 
     // Update matrices
     m_projMatrix.setOrthographic(
-        -swapchain.ratio, swapchain.ratio, 1.0f, -1.0f, -2.0f, 2.0f
+        -renderer.m_swapchain.ratio, renderer.m_swapchain.ratio,
+        1.0f, -1.0f, -2.0f, 2.0f
     );
     m_projMatrix.translateZ(-1.0f);
 
@@ -250,9 +250,10 @@ bool View::bind(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
     memcpy(uniformData.viewMatrix, m_viewMatrix.mat, sizeof(m_viewMatrix.mat));
 
     // Update uniform buffer
-    if (!m_uniformBuffers[swapchain.current].updateBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory, transferCommandPool,
-        transferQueue, &uniformData, sizeof(uniformData)))
+    if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
+        renderer.m_physicalDevice, renderer.m_vulkanDevice,
+        renderer.m_vulkanMemory, renderer.m_transferCommandPool,
+        renderer.m_transferQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
         return false;
@@ -260,9 +261,9 @@ bool View::bind(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
 
     // Bind matrices descriptor set
     vkCmdBindDescriptorSets(
-        swapchain.commandBuffers[swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, DESC_MATRICES, 1,
-        &m_descriptorSets[swapchain.current], 0, 0
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_pipeline.layout,
+        DESC_MATRICES, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
     );
 
     // View successfully binded
@@ -272,12 +273,14 @@ bool View::bind(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy view                                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void View::destroyView(VkDevice& vulkanDevice, VulkanMemory& vulkanMemory)
+void View::destroyView(Renderer& renderer)
 {
     // Destroy uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        m_uniformBuffers[i].destroyBuffer(vulkanDevice, vulkanMemory);
+        m_uniformBuffers[i].destroyBuffer(
+            renderer.m_vulkanDevice, renderer.m_vulkanMemory
+        );
         m_descriptorSets[i] = 0;
     }
     m_viewMatrix.reset();

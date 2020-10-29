@@ -43,12 +43,13 @@
 #define VOS_RENDERER_TEXTURE_HEADER
 
     #include "Vulkan.h"
-    #include "VulkanMemory.h"
-    #include "VulkanQueue.h"
     #include "Swapchain.h"
-    #include "VulkanBuffer.h"
-    #include "GraphicsPipeline.h"
-    #include "Renderer.h"
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

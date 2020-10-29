@@ -278,8 +278,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Init default view
-    if (!m_view.init(m_physicalDevice, m_vulkanDevice, m_vulkanMemory,
-        m_pipeline, m_transferCommandPool, m_transferQueue))
+    if (!m_view.init(*this))
     {
         // Could not init default view
         return false;
@@ -438,8 +437,7 @@ bool Renderer::startFrame()
     );
 
     // Bind default view
-    if (!m_view.bind(m_physicalDevice, m_vulkanDevice, m_swapchain,
-        m_vulkanMemory, m_pipeline, m_transferCommandPool, m_transferQueue))
+    if (!m_view.bind(*this))
     {
         // Could not bind default view
         m_rendererReady = false;
@@ -608,7 +606,7 @@ void Renderer::cleanup()
         if (waitDeviceIdle())
         {
             // Destroy default view
-            m_view.destroyView(m_vulkanDevice, m_vulkanMemory);
+            m_view.destroyView(*this);
 
             // Destroy vertex buffer
             m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);

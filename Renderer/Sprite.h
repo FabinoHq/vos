@@ -42,13 +42,16 @@
 #ifndef VOS_RENDERER_SPRITE_HEADER
 #define VOS_RENDERER_SPRITE_HEADER
 
-    #include "Vulkan.h"
     #include "Texture.h"
-    #include "GraphicsPipeline.h"
-    #include "Renderer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////
