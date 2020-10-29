@@ -64,22 +64,6 @@
 !Math/Vector3.h
 !Math/Matrix4x4.h
 
-!Renderer/
-!Renderer/Vulkan.h
-!Renderer/Vulkan.cpp
-!Renderer/VulkanMemory.h
-!Renderer/VulkanMemory.cpp
-!Renderer/VulkanQueue.h
-!Renderer/VulkanQueue.cpp
-!Renderer/Swapchain.h
-!Renderer/Swapchain.cpp
-!Renderer/VulkanBuffer.h
-!Renderer/VulkanBuffer.cpp
-!Renderer/VertexBuffer.h
-!Renderer/VertexBuffer.cpp
-!Renderer/UniformBuffer.h
-!Renderer/UniformBuffer.cpp
-!Renderer/Vulkan/
 !Renderer/Vulkan/Vulkan.h
 !Renderer/Vulkan/Vulkan.cpp
 !Renderer/Vulkan/VulkanMemory.h
@@ -100,13 +84,6 @@
 !Renderer/Texture.cpp
 !Renderer/Shader.h
 !Renderer/Shader.cpp
-!Renderer/Shaders/
-!Renderer/Shaders/Sources/
-!Renderer/Shaders/Sources/Default.vert
-!Renderer/Shaders/Sources/Default.frag
-!Renderer/Shaders/Default.h
-!Renderer/GraphicsPipeline.h
-!Renderer/GraphicsPipeline.cpp
 !Renderer/View.h
 !Renderer/View.cpp
 !Renderer/Sprite.h
@@ -114,6 +91,8 @@
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
 
-!Renderer/Images/
-!Renderer/Images/Embedded
+!Renderer/Shaders/Sources/Default.vert
+!Renderer/Shaders/Sources/Default.frag
+!Renderer/Shaders/Default.h
+
 !Renderer/Images/Embedded/Cursor.h
