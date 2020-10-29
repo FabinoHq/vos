@@ -106,7 +106,7 @@
             View& operator=(const View&) = delete;
 
 
-        public:
+        private:
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
             UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
             Matrix4x4           m_projMatrix;       // Projection matrix

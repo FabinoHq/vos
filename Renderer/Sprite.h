@@ -170,7 +170,7 @@
             Sprite& operator=(const Sprite&) = delete;
 
 
-        public:
+        private:
             Texture*            m_texture;          // Sprite texture pointer
             Matrix4x4           m_modelMatrix;      // Sprite model matrix
             Vector2             m_position;         // Sprite position

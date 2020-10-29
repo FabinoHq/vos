@@ -236,15 +236,10 @@ bool View::bind(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice,
         return false;
     }
 
-    // Compute ratio
-    float ratio = 1.0f;
-    if ((swapchain.extent.width > 0) && (swapchain.extent.height > 0))
-    {
-        ratio = (swapchain.extent.width*1.0f) / (swapchain.extent.height*1.0f);
-    }
-
     // Update matrices
-    m_projMatrix.setOrthographic(-ratio, ratio, 1.0f, -1.0f, -2.0f, 2.0f);
+    m_projMatrix.setOrthographic(
+        -swapchain.ratio, swapchain.ratio, 1.0f, -1.0f, -2.0f, 2.0f
+    );
     m_projMatrix.translateZ(-1.0f);
 
     m_viewMatrix.setIdentity();

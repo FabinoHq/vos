@@ -491,14 +491,8 @@ void Renderer::endFrame()
     );
 
     // Render test sprite
-    float ratio = 1.0f;
-    if ((m_swapchain.extent.width > 0) && (m_swapchain.extent.height > 0))
-    {
-        ratio = (m_swapchain.extent.width*1.0f) /
-            (m_swapchain.extent.height*1.0f);
-    }
-    m_sprite.setSize(ratio*2.0f, 2.0f);
-    m_sprite.setPosition(-ratio, -1.0f);
+    m_sprite.setSize(m_swapchain.ratio*2.0f, 2.0f);
+    m_sprite.setPosition(-m_swapchain.ratio, -1.0f);
     m_sprite.render(
         m_swapchain.commandBuffers[m_swapchain.current],
         m_pipeline, m_swapchain.current
@@ -661,6 +655,34 @@ void Renderer::cleanup()
     m_transferCommandPool = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get renderer width                                                        //
+//  return : Renderer width                                                   //
+////////////////////////////////////////////////////////////////////////////////
+uint32_t Renderer::getWidth()
+{
+    return m_swapchain.extent.width;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get renderer height                                                       //
+//  return : Renderer height                                                  //
+////////////////////////////////////////////////////////////////////////////////
+uint32_t Renderer::getHeight()
+{
+    return m_swapchain.extent.height;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get renderer aspect ratio                                                 //
+//  return : Renderer aspect ratio                                            //
+////////////////////////////////////////////////////////////////////////////////
+float Renderer::getRatio()
+{
+    return m_swapchain.ratio;
 }
 
 

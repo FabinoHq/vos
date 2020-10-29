@@ -52,7 +52,8 @@ extent(),
 renderPass(0),
 commandsPool(0),
 frames(0),
-current(0)
+current(0),
+ratio(0.0f)
 {
     extent.width = 0;
     extent.height = 0;
@@ -83,6 +84,7 @@ Swapchain::~Swapchain()
         views[i]= 0;
         images[i] = 0;
     }
+    ratio = 0.0f;
     current = 0;
     frames = 0;
     commandsPool = 0;
@@ -459,6 +461,13 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Set swapchain extent
     extent.width = swapchainExtent.width;
     extent.height = swapchainExtent.height;
+
+    // Set swapchain aspect ratio
+    ratio = 1.0f;
+    if ((extent.width > 0) && (extent.height > 0))
+    {
+        ratio = (extent.width*1.0f) / (extent.height*1.0f);
+    }
 
     // Create swapchain images views
     VkComponentMapping components;
@@ -1046,6 +1055,13 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     extent.width = swapchainExtent.width;
     extent.height = swapchainExtent.height;
 
+    // Set swapchain aspect ratio
+    ratio = 1.0f;
+    if ((extent.width > 0) && (extent.height > 0))
+    {
+        ratio = (extent.width*1.0f) / (extent.height*1.0f);
+    }
+
     // Create swapchain images views
     VkComponentMapping components;
     components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -1237,6 +1253,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
         views[i]= 0;
         images[i] = 0;
     }
+    ratio = 0.0f;
     current = 0;
     frames = 0;
     commandsPool = 0;

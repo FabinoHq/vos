@@ -109,7 +109,8 @@
             VkRenderPass        renderPass;     // Render pass
             VkCommandPool       commandsPool;   // Command pool
             uint32_t            frames;         // Swapchain frames count
-            uint32_t            current;        // swapchain current frame
+            uint32_t            current;        // Swapchain current frame
+            float               ratio;          // Swapchain aspect ratio
 
             VkImage             images[RendererMaxSwapchainFrames];
             VkImageView         views[RendererMaxSwapchainFrames];
