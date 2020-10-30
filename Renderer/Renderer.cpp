@@ -650,6 +650,43 @@ void Renderer::cleanup()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set renderer default view                                                 //
+//  return : True if the default view is successfully set                     //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::setDefaultView()
+{
+    // Bind default view
+    if (!m_view.bind(*this))
+    {
+        // Could not bind default view
+        m_rendererReady = false;
+        return false;
+    }
+
+    // Default view successfully set
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set renderer view                                                         //
+//  return : True if the view is successfully set                             //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::setView(View& view)
+{
+    // Bind view
+    if (!view.bind(*this))
+    {
+        // Could not bind view
+        m_rendererReady = false;
+        return false;
+    }
+
+    // View successfully set
+    return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Get renderer ready state                                                  //
 //  return : True if the renderer is ready, false otherwise                   //
 ////////////////////////////////////////////////////////////////////////////////

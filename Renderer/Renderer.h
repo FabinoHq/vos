@@ -119,6 +119,19 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Set renderer default view                                     //
+            //  return : True if the default view is successfully set         //
+            ////////////////////////////////////////////////////////////////////
+            bool setDefaultView();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set renderer view                                             //
+            //  return : True if the view is successfully set                 //
+            ////////////////////////////////////////////////////////////////////
+            bool setView(View& view);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Get renderer ready state                                      //
             //  return : True if the renderer is ready, false otherwise       //
             ////////////////////////////////////////////////////////////////////
