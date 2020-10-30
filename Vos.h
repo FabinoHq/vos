@@ -99,6 +99,9 @@
             Renderer        m_renderer;     // VOS renderer
             Texture         m_texture;      // Cursor texture
             Sprite          m_cursor;       // Cursor sprite
+
+            float           m_mouseX;       // Mouse X position
+            float           m_mouseY;       // Mouse Y position
     };
 
 

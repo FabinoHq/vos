@@ -50,6 +50,7 @@ SysWindow* VOSGlobalWindow = 0;
 SysWindow::SysWindow() :
 m_instance(0),
 m_handle(0),
+m_systemMode(),
 m_width(0),
 m_height(0)
 {
@@ -80,8 +81,7 @@ bool SysWindow::create()
     m_instance = GetModuleHandle(0);
 
     // Get the system display mode
-    SysDisplayMode displayMode;
-    if (!displayMode.getSystemMode())
+    if (!m_systemMode.getSystemMode())
     {
         // Invalid system mode
         SysMessage::box() << "[0x2001] Invalid system display mode\n";
@@ -122,8 +122,8 @@ bool SysWindow::create()
     LONG windowHeight = m_height;
 
     // Center the window
-    int centerX = (displayMode.getWidth() / 2) - (windowWidth / 2);
-    int centerY = (displayMode.getHeight() / 2) - (windowHeight / 2);
+    int centerX = (m_systemMode.getWidth() / 2) - (m_width / 2);
+    int centerY = (m_systemMode.getHeight() / 2) - (m_height / 2);
 
     // Create the window
     m_handle = CreateWindow(
@@ -138,9 +138,20 @@ bool SysWindow::create()
         return false;
     }
 
+    // Register raw mouse input
+    RAWINPUTDEVICE rawmouse;
+    rawmouse.usUsagePage = HID_USAGE_PAGE_GENERIC;
+    rawmouse.usUsage = HID_USAGE_GENERIC_MOUSE;
+    rawmouse.dwFlags = RIDEV_INPUTSINK;
+    rawmouse.hwndTarget = m_handle;
+    RegisterRawInputDevices(&rawmouse, 1, sizeof(rawmouse));
+
+    // Center mouse
+    SetCursorPos(m_systemMode.getWidth()/2, m_systemMode.getHeight()/2);
+
     // Enable the window
     UpdateWindow(m_handle);
-    ShowCursor(TRUE);
+    ShowCursor(FALSE);
     SetActiveWindow(m_handle);
     SetFocus(m_handle);
     ShowWindow(m_handle, SW_SHOW);
@@ -165,6 +176,24 @@ void SysWindow::close()
     m_handle = 0;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window width                                                          //
+//  return : Window width                                                     //
+////////////////////////////////////////////////////////////////////////////////
+int SysWindow::getWidth()
+{
+    return m_width;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window height                                                         //
+//  return : Window height                                                    //
+////////////////////////////////////////////////////////////////////////////////
+int SysWindow::getHeight()
+{
+    return m_height;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get window event                                                          //
@@ -277,6 +306,37 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                 event.key = transcriptKey(wparam);
                 m_events.push(event);
                 break;
+
+            // Raw inputs
+            case WM_INPUT:
+            {
+                UINT dwsize = sizeof(RAWINPUT);
+                static BYTE lpb[sizeof(RAWINPUT)];
+                GetRawInputData(
+                    (HRAWINPUT)lparam, RID_INPUT, lpb,
+                    &dwsize, sizeof(RAWINPUTHEADER)
+                );
+                RAWINPUT* raw = (RAWINPUT*)lpb;
+
+                switch (raw->header.dwType)
+                {
+                    // Mouse input
+                    case RIM_TYPEMOUSE:
+                        event.type = EVENT_MOUSEMOVED;
+                        event.mouse.x = raw->data.mouse.lLastX;
+                        event.mouse.y = raw->data.mouse.lLastY;
+                        m_events.push(event);
+                        SetCursorPos(
+                            m_systemMode.getWidth()/2,
+                            m_systemMode.getHeight()/2
+                        );
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+            }
 
             default:
                 break;

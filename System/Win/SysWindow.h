@@ -43,6 +43,7 @@
 #define VOS_SYSTEM_WIN_SYSWINDOW_HEADER
 
     #include <windows.h>
+    #include <hidusage.h>
     #include <queue>
 
     #include "../SysMessage.h"
@@ -84,6 +85,18 @@
             ////////////////////////////////////////////////////////////////////
             void close();
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get window width                                              //
+            //  return : Window width                                         //
+            ////////////////////////////////////////////////////////////////////
+            int getWidth();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get window height                                             //
+            //  return : Window height                                        //
+            ////////////////////////////////////////////////////////////////////
+            int getHeight();
 
             ////////////////////////////////////////////////////////////////////
             //  Get window event                                              //
@@ -139,6 +152,7 @@
             HINSTANCE           m_instance;     // Window instance
             HWND                m_handle;       // Window handle
 
+            SysDisplayMode      m_systemMode;   // System display mode
             int                 m_width;        // Window width
             int                 m_height;       // Window height
 
