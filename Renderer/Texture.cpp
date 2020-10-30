@@ -50,6 +50,7 @@ Texture::Texture() :
 m_handle(0),
 m_sampler(0),
 m_view(0),
+m_descriptorPool(0),
 m_memorySize(0),
 m_memoryOffset(0),
 m_width(0),
@@ -70,6 +71,7 @@ Texture::~Texture()
     m_width = 0;
     m_memoryOffset = 0;
     m_memorySize = 0;
+    m_descriptorPool = 0;
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         m_descriptorSets[i] = 0;
@@ -223,11 +225,36 @@ bool Texture::createTexture(Renderer& renderer,
         return false;
     }
 
+    // Create texture descriptor pool
+    VkDescriptorPoolSize poolSize;
+    poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    poolSize.descriptorCount = RendererMaxSwapchainFrames;
+
+    VkDescriptorPoolCreateInfo poolInfo;
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.pNext = 0;
+    poolInfo.flags = 0;
+    poolInfo.maxSets = RendererMaxSwapchainFrames;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+
+    if (vkCreateDescriptorPool(
+        renderer.m_vulkanDevice, &poolInfo, 0, &m_descriptorPool) != VK_SUCCESS)
+    {
+        // Could not create texture descriptor pool
+        return false;
+    }
+    if (!m_descriptorPool)
+    {
+        // Invalid texture descriptor pool
+        return false;
+    }
+
     // Create texture descriptor sets
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = renderer.m_pipeline.descPools[DESC_TEXTURE];
+    descriptorInfo.descriptorPool = m_descriptorPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
     descriptorInfo.pSetLayouts = &renderer.m_pipeline.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames
@@ -528,6 +555,14 @@ void Texture::destroyTexture(Renderer& renderer)
 {
     if (renderer.m_vulkanDevice)
     {
+        // Destroy descriptor pool
+        if (m_descriptorPool && vkDestroyDescriptorPool)
+        {
+            vkDestroyDescriptorPool(
+                renderer.m_vulkanDevice, m_descriptorPool, 0
+            );
+        }
+
         // Destroy image view
         if (m_view && vkDestroyImageView)
         {
@@ -556,6 +591,7 @@ void Texture::destroyTexture(Renderer& renderer)
     m_width = 0;
     m_memoryOffset = 0;
     m_memorySize = 0;
+    m_descriptorPool = 0;
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         m_descriptorSets[i] = 0;

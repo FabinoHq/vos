@@ -262,7 +262,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_pipeline.createPipeline(m_vulkanDevice, m_swapchain, m_shader))
     {
         // Could not create default pipeline
-        SysMessage::box() << "[0x3047] Could not create default pipeline\n";
+        SysMessage::box() << "[0x3046] Could not create default pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -272,7 +272,7 @@ bool Renderer::init(SysWindow* sysWindow)
         m_vulkanMemory, m_transferCommandPool, m_transferQueue))
     {
         // Could not create vertex buffer
-        SysMessage::box() << "[0x3048] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3047] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }

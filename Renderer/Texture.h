@@ -132,6 +132,7 @@
             VkImage             m_handle;           // Texture handle
             VkSampler           m_sampler;          // Texture sampler
             VkImageView         m_view;             // Texture view
+            VkDescriptorPool    m_descriptorPool;   // Descriptor pool
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
 
             VkDeviceSize        m_memorySize;       // Memory size

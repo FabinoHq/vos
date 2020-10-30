@@ -88,12 +88,6 @@
                 Shader& shader);
 
             ////////////////////////////////////////////////////////////////////
-            //  Create descriptor pools                                       //
-            //  return : True if descriptor pool is successfully created      //
-            ////////////////////////////////////////////////////////////////////
-            bool createDescriptorPools(VkDevice& vulkanDevice);
-
-            ////////////////////////////////////////////////////////////////////
             //  Create descriptor set layouts                                 //
             //  return : True if descriptor layout is successfully created    //
             ////////////////////////////////////////////////////////////////////
@@ -126,9 +120,6 @@
         public:
             VkPipeline              handle;             // Pipeline handle
             VkPipelineLayout        layout;             // Pipeline layout
-
-            // Descriptor pools
-            VkDescriptorPool        descPools[DESC_SETS_COUNT];
 
             // Descriptor set layouts
             VkDescriptorSetLayout   descSetLayouts[DESC_SETS_COUNT];

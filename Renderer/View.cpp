@@ -47,6 +47,7 @@
 //  View default constructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 View::View() :
+m_descriptorPool(0),
 m_projMatrix(),
 m_viewMatrix(),
 m_position(0.0f, 0.0f),
@@ -75,6 +76,7 @@ View::~View()
     {
         m_descriptorSets[i] = 0;
     }
+    m_descriptorPool = 0;
 }
 
 
@@ -152,12 +154,36 @@ bool View::init(Renderer& renderer)
         }
     }
 
+    // Create matrices descriptor pool
+    VkDescriptorPoolSize poolSize;
+    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize.descriptorCount = RendererMaxSwapchainFrames;
+
+    VkDescriptorPoolCreateInfo poolInfo;
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.pNext = 0;
+    poolInfo.flags = 0;
+    poolInfo.maxSets = RendererMaxSwapchainFrames;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+
+    if (vkCreateDescriptorPool(
+        renderer.m_vulkanDevice, &poolInfo, 0, &m_descriptorPool) != VK_SUCCESS)
+    {
+        // Could not create matrices descriptor pool
+        return false;
+    }
+    if (!m_descriptorPool)
+    {
+        // Invalid matrices descriptor pool
+        return false;
+    }
+
     // Create matrices descriptor set
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool =
-        renderer.m_pipeline.descPools[DESC_MATRICES];
+    descriptorInfo.descriptorPool = m_descriptorPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
     descriptorInfo.pSetLayouts = &renderer.m_pipeline.swapSetLayouts[
         DESC_MATRICES*RendererMaxSwapchainFrames
@@ -305,11 +331,18 @@ void View::destroyView(Renderer& renderer)
         m_descriptorSets[i] = 0;
     }
 
-    m_viewMatrix.reset();
-    m_projMatrix.reset();
+    // Destroy descriptor pool
+    if (m_descriptorPool && vkDestroyDescriptorPool)
+    {
+        vkDestroyDescriptorPool(renderer.m_vulkanDevice, m_descriptorPool, 0);
+    }
+
     m_angle = 0.0f;
     m_size.reset();
     m_position.reset();
+    m_viewMatrix.reset();
+    m_projMatrix.reset();
+    m_descriptorPool = 0;
 }
 
 

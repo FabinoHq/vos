@@ -51,7 +51,6 @@ layout(0)
 {
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
-        descPools[i] = 0;
         descSetLayouts[i] = 0;
     }
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DESC_SETS_COUNT; ++i)
@@ -72,7 +71,6 @@ GraphicsPipeline::~GraphicsPipeline()
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         descSetLayouts[i] = 0;
-        descPools[i] = 0;
     }
     layout = 0;
     handle = 0;
@@ -100,20 +98,11 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Create descriptor pools
-    if (!createDescriptorPools(vulkanDevice))
-    {
-        // Could not create descriptor pools
-        SysMessage::box() << "[0x3044] Could not create descriptor pools\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
     // Create descriptor set layouts
     if (!createDescriptorSetLayouts(vulkanDevice))
     {
         // Could not create descriptor set layouts
-        SysMessage::box() << "[0x3045] Could not create descriptor layouts\n";
+        SysMessage::box() << "[0x3044] Could not create descriptor layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -122,7 +111,7 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
     if (!createPipelineLayouts(vulkanDevice))
     {
         // Could not create pipeline layouts
-        SysMessage::box() << "[0x3046] Could not create pipeline layouts\n";
+        SysMessage::box() << "[0x3045] Could not create pipeline layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -294,71 +283,6 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create descriptor pools                                                   //
-//  return : True if descriptor pool is successfully created                  //
-////////////////////////////////////////////////////////////////////////////////
-bool GraphicsPipeline::createDescriptorPools(VkDevice& vulkanDevice)
-{
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Create matrices descriptor pool
-    VkDescriptorPoolSize poolSize;
-    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSize.descriptorCount = RendererMaxSwapchainFrames;
-
-    VkDescriptorPoolCreateInfo poolInfo;
-    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    poolInfo.pNext = 0;
-    poolInfo.flags = 0;
-    poolInfo.maxSets = RendererMaxSwapchainFrames;
-    poolInfo.poolSizeCount = 1;
-    poolInfo.pPoolSizes = &poolSize;
-
-    if (vkCreateDescriptorPool(vulkanDevice, &poolInfo, 0,
-        &descPools[DESC_MATRICES]) != VK_SUCCESS)
-    {
-        // Could not create matrices descriptor pool
-        return false;
-    }
-    if (!descPools[DESC_MATRICES])
-    {
-        // Invalid matrices descriptor pool
-        return false;
-    }
-
-    // Create texture descriptor pool
-    poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSize.descriptorCount = RendererMaxSwapchainFrames;
-
-    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    poolInfo.pNext = 0;
-    poolInfo.flags = 0;
-    poolInfo.maxSets = RendererMaxSwapchainFrames;
-    poolInfo.poolSizeCount = 1;
-    poolInfo.pPoolSizes = &poolSize;
-
-    if (vkCreateDescriptorPool(vulkanDevice, &poolInfo, 0,
-        &descPools[DESC_TEXTURE]) != VK_SUCCESS)
-    {
-        // Could not create texture descriptor pool
-        return false;
-    }
-    if (!descPools[DESC_TEXTURE])
-    {
-        // Invalid texture descriptor pool
-        return false;
-    }
-
-    // Descriptor pools successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Create descriptor set layouts                                             //
 //  return : True if descriptor layout is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
@@ -516,12 +440,6 @@ void GraphicsPipeline::destroyPipeline(VkDevice& vulkanDevice)
                     vulkanDevice, descSetLayouts[i], 0
                 );
             }
-
-            // Destroy descriptor pool
-            if (descPools[i] && vkDestroyDescriptorPool)
-            {
-                vkDestroyDescriptorPool(vulkanDevice, descPools[i], 0);
-            }
         }
 
         // Destroy pipeline layout
@@ -544,7 +462,6 @@ void GraphicsPipeline::destroyPipeline(VkDevice& vulkanDevice)
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         descSetLayouts[i] = 0;
-        descPools[i] = 0;
     }
     layout = 0;
     handle = 0;
