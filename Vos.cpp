@@ -138,7 +138,7 @@ void Vos::run()
                         case EVENT_KEY_ESCAPE:
                             m_running = false;
                             break;
-                            
+
                         default:
                             break;
                     }
@@ -153,10 +153,11 @@ void Vos::run()
         {
             // Get renderer aspect ratio
             float ratio = m_renderer.getRatio();
+            float cursorSize = 64.0f/(m_renderer.getHeight()*1.0f);
 
             // Draw cursor
-            m_cursor.setSize(ratio*2.0f, 2.0f);
-            m_cursor.setPosition(-ratio, -1.0f);
+            m_cursor.setSize(cursorSize, cursorSize);
+            m_cursor.setPosition(0.0f, -cursorSize);
             m_cursor.render(m_renderer);
 
             // End rendering
