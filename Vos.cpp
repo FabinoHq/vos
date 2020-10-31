@@ -152,8 +152,18 @@ void Vos::run()
 
                 // Mouse moved
                 case EVENT_MOUSEMOVED:
-                    m_mouseX += event.mouse.x*0.002f;
-                    m_mouseY -= event.mouse.y*0.002f;
+                    if (m_renderer.getHeight() > 0)
+                    {
+                        m_mouseX +=
+                            (event.mouse.x*1.0f)/(m_renderer.getHeight()*0.5f);
+                        m_mouseY -=
+                            (event.mouse.y*1.0f)/(m_renderer.getHeight()*0.5f);
+                    }
+                    else
+                    {
+                        m_mouseX += event.mouse.x*2.0f;
+                        m_mouseY -= event.mouse.y*2.0f;
+                    }
                     if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
                     if (m_mouseX >= ratio) { m_mouseX = ratio; }
                     if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
