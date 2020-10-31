@@ -46,6 +46,7 @@
     #include <X11/Xutil.h>
     #include <queue>
 
+    #include "../SysSleep.h"
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"
     #include "../../Event.h"
@@ -79,6 +80,18 @@
             ////////////////////////////////////////////////////////////////////
             void close();
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get window width                                              //
+            //  return : Window width                                         //
+            ////////////////////////////////////////////////////////////////////
+            int getWidth();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get window height                                             //
+            //  return : Window height                                        //
+            ////////////////////////////////////////////////////////////////////
+            int getHeight();
 
             ////////////////////////////////////////////////////////////////////
             //  Get window event                                              //
@@ -117,6 +130,11 @@
             ////////////////////////////////////////////////////////////////////
             void processEvent(XEvent msg);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Transcript key event                                          //
+            ////////////////////////////////////////////////////////////////////
+            EventKey transcriptKey(KeySym key);
+
 
         private:
             Display*            m_display;      // Display handle
@@ -126,6 +144,9 @@
 
             int                 m_width;        // Window width
             int                 m_height;       // Window height
+            int                 m_lastMouseX;   // Last mouse X position
+            int                 m_lastMouseY;   // Last mouse Y position
+            Cursor              m_hiddenCursor; // Hiden cursor
 
             std::queue<Event>   m_events;       // Events FIFO queue
     };

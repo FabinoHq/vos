@@ -51,7 +51,10 @@ m_handle(0),
 m_screen(0),
 m_closeMsg(0),
 m_width(0),
-m_height(0)
+m_height(0),
+m_lastMouseX(0),
+m_lastMouseY(0),
+m_hiddenCursor(0)
 {
 
 }
@@ -113,19 +116,18 @@ bool SysWindow::create()
         return false;
     }
 
-    // Get window delete message
-    wmCloseMsg = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
-
     // Set window properties
     XSetStandardProperties(m_display, m_handle, "VOS", "VOS", None, 0, 0, 0);
 
     // Select window inputs
     XSelectInput(
         m_display, m_handle,
-        ExposureMask|ButtonPressMask|KeyPressMask|StructureNotifyMask
+        ExposureMask | ButtonPressMask | ButtonReleaseMask |
+        KeyPressMask | KeyReleaseMask | StructureNotifyMask
     );
 
     // Set window delete message
+    wmCloseMsg = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
     XSetWMProtocols(m_display, m_handle, &wmCloseMsg, 1);
     m_closeMsg = static_cast<long int>(wmCloseMsg);
 
@@ -133,6 +135,67 @@ bool SysWindow::create()
     XClearWindow(m_display, m_handle);
     XMapRaised(m_display, m_handle);
     XFlush(m_display);
+
+    // Grab mouse pointer
+    bool pointerGrabbed = false;
+    for (unsigned int i = 0; i < 1000; ++i)
+    {
+        if (XGrabPointer(m_display, m_handle, True, None, GrabModeAsync,
+            GrabModeAsync, m_handle, None, CurrentTime) == GrabSuccess)
+        {
+            pointerGrabbed = true;
+            break;
+        }
+        else
+        {
+            SysSleep(0.01);
+        }
+    }
+
+    if (!pointerGrabbed)
+    {
+        // Unable to grab the mouse pointer
+        SysMessage::box() << "[0x2103] Unable to grab the mouse pointer\n";
+        SysMessage::box() << "Mouse pointer must be grabbed";
+        return false;
+    }
+
+    // Get window center position
+    XWindowAttributes xwa;
+    XGetWindowAttributes(m_display, m_handle, &xwa);
+    int centerX = (xwa.width/2)-xwa.x;
+    int centerY = (xwa.height/2)-xwa.y;
+
+    // Center mouse
+    XWarpPointer(m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY);
+
+    // Raw mouse initial position
+    Window root;
+    int mouseX = 0;
+    int mouseY = 0;
+    unsigned int mask = 0;
+    XQueryPointer(
+        m_display, m_handle, &root, &root,
+        &mouseX, &mouseY, &mouseX, &mouseY, &mask
+    );
+    m_lastMouseX = mouseX;
+    m_lastMouseY = mouseY;
+
+    // Hide mouse cursor
+    Pixmap cursorPixmap = XCreatePixmap(m_display, m_handle, 1, 1, 1);
+    GC graphicsContext = XCreateGC(m_display, cursorPixmap, 0, 0);
+    XDrawPoint(m_display, cursorPixmap, graphicsContext, 0, 0);
+    XFreeGC(m_display, graphicsContext);
+    XColor color;
+    color.flags = DoRed | DoGreen | DoBlue;
+    color.red = 0;
+    color.blue = 0;
+    color.green = 0;
+    m_hiddenCursor = XCreatePixmapCursor(
+        m_display, cursorPixmap, cursorPixmap, &color, &color, 0, 0
+    );
+    XDefineCursor(m_display, m_handle, m_hiddenCursor);
+    XFreePixmap(m_display, cursorPixmap);
 
     // System window successfully created
     return true;
@@ -151,6 +214,9 @@ void SysWindow::close()
 
     if (m_display)
     {
+        // Destroy hidden cursor
+        XFreeCursor(m_display, m_hiddenCursor);
+
         // Release the display
         XCloseDisplay(m_display);
     }
@@ -159,6 +225,24 @@ void SysWindow::close()
     m_display = 0;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window width                                                          //
+//  return : Window width                                                     //
+////////////////////////////////////////////////////////////////////////////////
+int SysWindow::getWidth()
+{
+    return m_width;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window height                                                         //
+//  return : Window height                                                    //
+////////////////////////////////////////////////////////////////////////////////
+int SysWindow::getHeight()
+{
+    return m_height;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get window event                                                          //
@@ -173,6 +257,42 @@ bool SysWindow::getEvent(Event& event)
         XNextEvent(m_display, &msg);
         processEvent(msg);
     }
+
+    // Raw mouse input
+    Window root;
+    int mouseX = 0;
+    int mouseY = 0;
+    unsigned int mask = 0;
+    XQueryPointer(
+        m_display, m_handle, &root, &root,
+        &mouseX, &mouseY, &mouseX, &mouseY, &mask
+    );
+
+    if ((mouseX != m_lastMouseX) || (mouseY != m_lastMouseY))
+    {
+        Event rawMouse;
+        rawMouse.type = EVENT_MOUSEMOVED;
+        rawMouse.mouse.x = mouseX-m_lastMouseX;
+        rawMouse.mouse.y = mouseY-m_lastMouseY;
+        m_events.push(rawMouse);
+    }
+    m_lastMouseX = mouseX;
+    m_lastMouseY = mouseY;
+
+    // Get window center position
+    XWindowAttributes xwa;
+    XGetWindowAttributes(m_display, m_handle, &xwa);
+    int centerX = (xwa.width/2)-xwa.x;
+    int centerY = (xwa.height/2)-xwa.y;
+
+    // Center mouse
+    XWarpPointer(m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY);
+    XQueryPointer(
+        m_display, m_handle, &root, &root,
+        &mouseX, &mouseY, &mouseX, &mouseY, &mask
+    );
+    m_lastMouseX = mouseX;
+    m_lastMouseY = mouseY;
 
     // Get event in the FIFO queue
     event.type = EVENT_NONE;
@@ -243,8 +363,39 @@ void SysWindow::processEvent(XEvent msg)
                 }
                 break;
 
+            // Keys events
+            case KeyPress:
+                event.type = EVENT_KEYPRESSED;
+                event.key = transcriptKey(XLookupKeysym(&msg.xkey, 0));
+                m_events.push(event);
+                break;
+
+            case KeyRelease:
+                event.type = EVENT_KEYRELEASED;
+                event.key = transcriptKey(XLookupKeysym(&msg.xkey, 0));
+                m_events.push(event);
+                break;
+
             default:
                 break;
         }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Transcript key event                                                      //
+////////////////////////////////////////////////////////////////////////////////
+EventKey SysWindow::transcriptKey(KeySym key)
+{
+    switch (key)
+    {
+        case XK_Escape:
+            return EVENT_KEY_ESCAPE;
+
+        case XK_Return:
+            return EVENT_KEY_RETURN;
+
+        default:
+            return EVENT_KEY_NONE;
     }
 }

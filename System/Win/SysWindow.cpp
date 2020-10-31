@@ -320,7 +320,7 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 
                 switch (raw->header.dwType)
                 {
-                    // Mouse input
+                    // Mouse events
                     case RIM_TYPEMOUSE:
                         event.type = EVENT_MOUSEMOVED;
                         event.mouse.x = raw->data.mouse.lLastX;

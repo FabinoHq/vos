@@ -148,6 +148,7 @@ void Vos::run()
                         default:
                             break;
                     }
+                    break;
 
                 // Mouse moved
                 case EVENT_MOUSEMOVED:
