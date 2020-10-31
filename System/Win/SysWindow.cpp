@@ -299,10 +299,12 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
             // Focus events
             case WM_SETFOCUS:
                 m_hasFocus = true;
+                ShowCursor(FALSE);
                 break;
 
             case WM_KILLFOCUS:
                 m_hasFocus = false;
+                ShowCursor(TRUE);
                 break;
 
             // Keys events
