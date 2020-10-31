@@ -151,6 +151,7 @@
         private:
             HINSTANCE           m_instance;     // Window instance
             HWND                m_handle;       // Window handle
+            bool                m_hasFocus;     // Window has focus
 
             SysDisplayMode      m_systemMode;   // System display mode
             int                 m_width;        // Window width

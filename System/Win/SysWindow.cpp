@@ -50,6 +50,7 @@ SysWindow* VOSGlobalWindow = 0;
 SysWindow::SysWindow() :
 m_instance(0),
 m_handle(0),
+m_hasFocus(false),
 m_systemMode(),
 m_width(0),
 m_height(0)
@@ -155,6 +156,7 @@ bool SysWindow::create()
     SetActiveWindow(m_handle);
     SetFocus(m_handle);
     ShowWindow(m_handle, SW_SHOW);
+    m_hasFocus = true;
 
     // System window successfully created
     return true;
@@ -294,6 +296,15 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                 m_events.push(event);
                 break;
 
+            // Focus events
+            case WM_SETFOCUS:
+                m_hasFocus = true;
+                break;
+
+            case WM_KILLFOCUS:
+                m_hasFocus = false;
+                break;
+
             // Keys events
             case WM_KEYDOWN:
                 event.type = EVENT_KEYPRESSED;
@@ -309,34 +320,35 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 
             // Raw inputs
             case WM_INPUT:
-            {
-                UINT dwsize = sizeof(RAWINPUT);
-                static BYTE lpb[sizeof(RAWINPUT)];
-                GetRawInputData(
-                    (HRAWINPUT)lparam, RID_INPUT, lpb,
-                    &dwsize, sizeof(RAWINPUTHEADER)
-                );
-                RAWINPUT* raw = (RAWINPUT*)lpb;
-
-                switch (raw->header.dwType)
+                if (m_hasFocus)
                 {
-                    // Mouse events
-                    case RIM_TYPEMOUSE:
-                        event.type = EVENT_MOUSEMOVED;
-                        event.mouse.x = raw->data.mouse.lLastX;
-                        event.mouse.y = raw->data.mouse.lLastY;
-                        m_events.push(event);
-                        SetCursorPos(
-                            m_systemMode.getWidth()/2,
-                            m_systemMode.getHeight()/2
-                        );
-                        break;
+                    UINT dwsize = sizeof(RAWINPUT);
+                    static BYTE lpb[sizeof(RAWINPUT)];
+                    GetRawInputData(
+                        (HRAWINPUT)lparam, RID_INPUT, lpb,
+                        &dwsize, sizeof(RAWINPUTHEADER)
+                    );
+                    RAWINPUT* raw = (RAWINPUT*)lpb;
 
-                    default:
-                        break;
+                    switch (raw->header.dwType)
+                    {
+                        // Mouse events
+                        case RIM_TYPEMOUSE:
+                            event.type = EVENT_MOUSEMOVED;
+                            event.mouse.x = raw->data.mouse.lLastX;
+                            event.mouse.y = raw->data.mouse.lLastY;
+                            m_events.push(event);
+                            SetCursorPos(
+                                m_systemMode.getWidth()/2,
+                                m_systemMode.getHeight()/2
+                            );
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
                 break;
-            }
 
             default:
                 break;
