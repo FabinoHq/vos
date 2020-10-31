@@ -100,8 +100,8 @@ bool SysWindow::create()
     white = WhitePixel(m_display, m_screen);
 
     // Window size
-    m_width = 1024;
-    m_height = 768;
+    m_width = 1760;
+    m_height = 990;
 
     // Create the window
     m_handle = XCreateSimpleWindow(

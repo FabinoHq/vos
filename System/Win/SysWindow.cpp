@@ -111,8 +111,8 @@ bool SysWindow::create()
     }
 
     // Window size
-    m_width = 1024;
-    m_height = 768;
+    m_width = 1760;
+    m_height = 990;
 
     // Define the window settings
     DWORD windowStyle = (
