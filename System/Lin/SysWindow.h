@@ -53,6 +53,12 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  SysWindow grab pointer attemps                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    const unsigned int SysWindowGrabPointerAttempts = 500;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  SysWindow class definition                                            //
     ////////////////////////////////////////////////////////////////////////////
     class SysWindow
@@ -141,6 +147,7 @@
             Window              m_handle;       // Window handle
             int                 m_screen;       // Screen handle
             long int            m_closeMsg;     // Close message
+            bool                m_hasFocus;     // Window has focus
 
             int                 m_width;        // Window width
             int                 m_height;       // Window height

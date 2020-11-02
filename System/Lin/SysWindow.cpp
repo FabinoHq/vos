@@ -50,6 +50,7 @@ m_display(0),
 m_handle(0),
 m_screen(0),
 m_closeMsg(0),
+m_hasFocus(false),
 m_width(0),
 m_height(0),
 m_lastMouseX(0),
@@ -122,7 +123,7 @@ bool SysWindow::create()
     // Select window inputs
     XSelectInput(
         m_display, m_handle,
-        ExposureMask | ButtonPressMask | ButtonReleaseMask |
+        ExposureMask | FocusChangeMask | ButtonPressMask | ButtonReleaseMask |
         KeyPressMask | KeyReleaseMask | StructureNotifyMask
     );
 
@@ -135,29 +136,20 @@ bool SysWindow::create()
     XClearWindow(m_display, m_handle);
     XMapRaised(m_display, m_handle);
     XFlush(m_display);
+    m_hasFocus = true;
 
     // Grab mouse pointer
-    bool pointerGrabbed = false;
-    for (unsigned int i = 0; i < 1000; ++i)
+    for (unsigned int i = 0; i < SysWindowGrabPointerAttempts; ++i)
     {
         if (XGrabPointer(m_display, m_handle, True, None, GrabModeAsync,
             GrabModeAsync, m_handle, None, CurrentTime) == GrabSuccess)
         {
-            pointerGrabbed = true;
             break;
         }
         else
         {
             SysSleep(0.01);
         }
-    }
-
-    if (!pointerGrabbed)
-    {
-        // Unable to grab the mouse pointer
-        SysMessage::box() << "[0x2103] Unable to grab the mouse pointer\n";
-        SysMessage::box() << "Mouse pointer must be grabbed";
-        return false;
     }
 
     // Get window center position
@@ -258,41 +250,46 @@ bool SysWindow::getEvent(Event& event)
         processEvent(msg);
     }
 
-    // Raw mouse input
-    Window root;
-    int mouseX = 0;
-    int mouseY = 0;
-    unsigned int mask = 0;
-    XQueryPointer(
-        m_display, m_handle, &root, &root,
-        &mouseX, &mouseY, &mouseX, &mouseY, &mask
-    );
-
-    if ((mouseX != m_lastMouseX) || (mouseY != m_lastMouseY))
+    if (m_hasFocus)
     {
-        Event rawMouse;
-        rawMouse.type = EVENT_MOUSEMOVED;
-        rawMouse.mouse.x = mouseX-m_lastMouseX;
-        rawMouse.mouse.y = mouseY-m_lastMouseY;
-        m_events.push(rawMouse);
+        // Raw mouse input
+        Window root;
+        int mouseX = 0;
+        int mouseY = 0;
+        unsigned int mask = 0;
+        XQueryPointer(
+            m_display, m_handle, &root, &root,
+            &mouseX, &mouseY, &mouseX, &mouseY, &mask
+        );
+
+        if ((mouseX != m_lastMouseX) || (mouseY != m_lastMouseY))
+        {
+            Event rawMouse;
+            rawMouse.type = EVENT_MOUSEMOVED;
+            rawMouse.mouse.x = mouseX-m_lastMouseX;
+            rawMouse.mouse.y = mouseY-m_lastMouseY;
+            m_events.push(rawMouse);
+        }
+        m_lastMouseX = mouseX;
+        m_lastMouseY = mouseY;
+
+        // Get window center position
+        XWindowAttributes xwa;
+        XGetWindowAttributes(m_display, m_handle, &xwa);
+        int centerX = (xwa.width/2)-xwa.x;
+        int centerY = (xwa.height/2)-xwa.y;
+
+        // Center mouse
+        XWarpPointer(
+            m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY
+        );
+        XQueryPointer(
+            m_display, m_handle, &root, &root,
+            &mouseX, &mouseY, &mouseX, &mouseY, &mask
+        );
+        m_lastMouseX = mouseX;
+        m_lastMouseY = mouseY;
     }
-    m_lastMouseX = mouseX;
-    m_lastMouseY = mouseY;
-
-    // Get window center position
-    XWindowAttributes xwa;
-    XGetWindowAttributes(m_display, m_handle, &xwa);
-    int centerX = (xwa.width/2)-xwa.x;
-    int centerY = (xwa.height/2)-xwa.y;
-
-    // Center mouse
-    XWarpPointer(m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY);
-    XQueryPointer(
-        m_display, m_handle, &root, &root,
-        &mouseX, &mouseY, &mouseX, &mouseY, &mask
-    );
-    m_lastMouseX = mouseX;
-    m_lastMouseY = mouseY;
 
     // Get event in the FIFO queue
     event.type = EVENT_NONE;
@@ -361,6 +358,31 @@ void SysWindow::processEvent(XEvent msg)
                     m_width = msg.xconfigure.width;
                     m_height = msg.xconfigure.height;
                 }
+                break;
+
+            // Focus events
+            case FocusIn:
+                m_hasFocus = true;
+                XDefineCursor(m_display, m_handle, m_hiddenCursor);
+                for (unsigned int i = 0; i < SysWindowGrabPointerAttempts; ++i)
+                {
+                    if (XGrabPointer(m_display, m_handle, True, None,
+                        GrabModeAsync, GrabModeAsync, m_handle,
+                        None, CurrentTime) == GrabSuccess)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        SysSleep(0.01);
+                    }
+                }
+                break;
+
+            case FocusOut:
+                m_hasFocus = false;
+                XDefineCursor(m_display, m_handle, None);
+                XUngrabPointer(m_display, CurrentTime);
                 break;
 
             // Keys events
