@@ -123,8 +123,7 @@ void Vos::run()
     m_running = true;
     while (m_running)
     {
-        float width = m_renderer.getWidth()*1.0f;
-        float height = m_renderer.getHeight()*1.0f;
+        float scale = m_renderer.getScale();
         float ratio = m_renderer.getRatio();
 
         // Get main window event
@@ -154,16 +153,8 @@ void Vos::run()
 
                 // Mouse moved
                 case EVENT_MOUSEMOVED:
-                    if (height > 0)
-                    {
-                        m_mouseX += (event.mouse.x*1.0f)/(height*0.5f);
-                        m_mouseY -= (event.mouse.y*1.0f)/(height*0.5f);
-                    }
-                    else
-                    {
-                        m_mouseX += event.mouse.x*2.0f;
-                        m_mouseY -= event.mouse.y*2.0f;
-                    }
+                    m_mouseX += event.mouse.x*scale*2.0f;
+                    m_mouseY -= event.mouse.y*scale*2.0f;
                     if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
                     if (m_mouseX >= ratio) { m_mouseX = ratio; }
                     if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
@@ -179,7 +170,7 @@ void Vos::run()
         if (m_renderer.startFrame())
         {
             // Get renderer aspect ratio
-            float cursorSize = 64.0f/height;
+            float cursorSize = 64.0f*scale;
 
             // Draw cursor
             m_cursor.setSize(cursorSize, cursorSize);

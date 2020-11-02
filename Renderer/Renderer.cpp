@@ -714,6 +714,19 @@ uint32_t Renderer::getHeight()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get renderer scale                                                        //
+//  return : Renderer scale (1/height)                                        //
+////////////////////////////////////////////////////////////////////////////////
+float Renderer::getScale()
+{
+    if (m_swapchain.extent.height > 0)
+    {
+        return 1.0f/(m_swapchain.extent.height*1.0f);
+    }
+    return 1.0f;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Get renderer aspect ratio                                                 //
 //  return : Renderer aspect ratio                                            //
 ////////////////////////////////////////////////////////////////////////////////
