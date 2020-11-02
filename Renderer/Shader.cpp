@@ -292,7 +292,7 @@ bool Shader::createShader(Renderer& renderer,
     pipelineInfo.pDepthStencilState = 0;
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
-    pipelineInfo.layout = renderer.m_pipeline.layout;
+    pipelineInfo.layout = renderer.m_layout.handle;
     pipelineInfo.renderPass = renderer.m_swapchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;

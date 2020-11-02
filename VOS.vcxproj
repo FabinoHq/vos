@@ -133,7 +133,7 @@
     <ClCompile Include="Renderer\Sprite.cpp" />
     <ClCompile Include="Renderer\Texture.cpp" />
     <ClCompile Include="Renderer\View.cpp" />
-    <ClCompile Include="Renderer\Vulkan\GraphicsPipeline.cpp" />
+    <ClCompile Include="Renderer\Vulkan\GraphicsLayout.cpp" />
     <ClCompile Include="Renderer\Vulkan\Swapchain.cpp" />
     <ClCompile Include="Renderer\Vulkan\UniformBuffer.cpp" />
     <ClCompile Include="Renderer\Vulkan\VertexBuffer.cpp" />
@@ -166,7 +166,7 @@
     <ClInclude Include="Renderer\Sprite.h" />
     <ClInclude Include="Renderer\Texture.h" />
     <ClInclude Include="Renderer\View.h" />
-    <ClInclude Include="Renderer\Vulkan\GraphicsPipeline.h" />
+    <ClInclude Include="Renderer\Vulkan\GraphicsLayout.h" />
     <ClInclude Include="Renderer\Vulkan\Swapchain.h" />
     <ClInclude Include="Renderer\Vulkan\UniformBuffer.h" />
     <ClInclude Include="Renderer\Vulkan\VertexBuffer.h" />

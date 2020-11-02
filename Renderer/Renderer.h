@@ -52,7 +52,7 @@
     #include "Vulkan/VulkanBuffer.h"
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/UniformBuffer.h"
-    #include "Vulkan/GraphicsPipeline.h"
+    #include "Vulkan/GraphicsLayout.h"
     #include "Shader.h"
     #include "Texture.h"
     #include "View.h"
@@ -210,7 +210,7 @@
             VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain
             VertexBuffer        m_vertexBuffer;         // Default vertex buffer
-            GraphicsPipeline    m_pipeline;             // Default pipeline
+            GraphicsLayout      m_layout;               // Graphics layout
             Shader              m_shader;               // Default shader
             View                m_view;                 // Default view
 

@@ -258,7 +258,7 @@ void Sprite::render(Renderer& renderer)
     // Push model matrix into command buffer
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT,
+        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         0, sizeof(Matrix4x4::mat), m_modelMatrix.mat
     );
 

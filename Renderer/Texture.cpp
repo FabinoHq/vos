@@ -256,7 +256,7 @@ bool Texture::createTexture(Renderer& renderer,
     descriptorInfo.pNext = 0;
     descriptorInfo.descriptorPool = m_descriptorPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_pipeline.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
@@ -543,7 +543,7 @@ void Texture::bind(Renderer& renderer)
     // Bind texture descriptor set
     vkCmdBindDescriptorSets(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_pipeline.layout,
+        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
         DESC_TEXTURE, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
     );
 }

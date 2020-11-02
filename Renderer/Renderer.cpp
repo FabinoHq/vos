@@ -61,7 +61,7 @@ m_transferCommandPool(0),
 m_vulkanMemory(),
 m_swapchain(),
 m_vertexBuffer(),
-m_pipeline(),
+m_layout(),
 m_shader(),
 m_view()
 {
@@ -247,11 +247,11 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create default pipeline
-    if (!m_pipeline.createPipeline(m_vulkanDevice, m_swapchain))
+    // Create default pipeline layout
+    if (!m_layout.createLayout(m_vulkanDevice, m_swapchain))
     {
-        // Could not create default pipeline
-        SysMessage::box() << "[0x3043] Could not create default pipeline\n";
+        // Could not create default pipeline layout
+        SysMessage::box() << "[0x3045] Could not create default layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -611,8 +611,8 @@ void Renderer::cleanup()
             // Destroy shader
             m_shader.destroyShader(*this);
 
-            // Destroy default pipeline
-            m_pipeline.destroyPipeline(m_vulkanDevice);
+            // Destroy default pipeline layout
+            m_layout.destroyLayout(m_vulkanDevice);
 
             // Destroy transfer commands pool
             if (m_transferCommandPool && vkDestroyCommandPool)

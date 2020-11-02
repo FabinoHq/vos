@@ -37,16 +37,16 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/GraphicsPipeline.cpp : Graphics pipeline management    //
+//     Renderer/Vulkan/GraphicsLayout.cpp : Graphics layout management        //
 ////////////////////////////////////////////////////////////////////////////////
-#include "GraphicsPipeline.h"
+#include "GraphicsLayout.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  GraphicsPipeline default constructor                                      //
+//  GraphicsLayout default constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
-GraphicsPipeline::GraphicsPipeline() :
-layout(0)
+GraphicsLayout::GraphicsLayout() :
+handle(0)
 {
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
@@ -59,9 +59,9 @@ layout(0)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  GraphicsPipeline destructor                                               //
+//  GraphicsLayout destructor                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-GraphicsPipeline::~GraphicsPipeline()
+GraphicsLayout::~GraphicsLayout()
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DESC_SETS_COUNT; ++i)
     {
@@ -71,16 +71,15 @@ GraphicsPipeline::~GraphicsPipeline()
     {
         descSetLayouts[i] = 0;
     }
-    layout = 0;
+    handle = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create graphics pipeline                                                  //
-//  return : True if graphics pipeline is successfully created                //
+//  Create graphics pipeline layout                                           //
+//  return : True if graphics layout is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
-    Swapchain& swapchain)
+bool GraphicsLayout::createLayout(VkDevice& vulkanDevice, Swapchain& swapchain)
 {
     // Check Vulkan device
     if (!vulkanDevice)
@@ -100,7 +99,7 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
     if (!createDescriptorSetLayouts(vulkanDevice))
     {
         // Could not create descriptor set layouts
-        SysMessage::box() << "[0x3044] Could not create descriptor layouts\n";
+        SysMessage::box() << "[0x3043] Could not create descriptor layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -109,7 +108,7 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
     if (!createPipelineLayouts(vulkanDevice))
     {
         // Could not create pipeline layouts
-        SysMessage::box() << "[0x3045] Could not create pipeline layouts\n";
+        SysMessage::box() << "[0x3044] Could not create pipeline layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -122,7 +121,7 @@ bool GraphicsPipeline::createPipeline(VkDevice& vulkanDevice,
 //  Create descriptor set layouts                                             //
 //  return : True if descriptor layout is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool GraphicsPipeline::createDescriptorSetLayouts(VkDevice& vulkanDevice)
+bool GraphicsLayout::createDescriptorSetLayouts(VkDevice& vulkanDevice)
 {
     // Check Vulkan device
     if (!vulkanDevice)
@@ -210,7 +209,7 @@ bool GraphicsPipeline::createDescriptorSetLayouts(VkDevice& vulkanDevice)
 //  Create pipeline layouts                                                   //
 //  return : True if pipeline layout is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool GraphicsPipeline::createPipelineLayouts(VkDevice& vulkanDevice)
+bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
 {
     // Check Vulkan device
     if (!vulkanDevice)
@@ -245,12 +244,12 @@ bool GraphicsPipeline::createPipelineLayouts(VkDevice& vulkanDevice)
     pipelineInfo.pPushConstantRanges = &pushConstantRange;
 
     if (vkCreatePipelineLayout(
-        vulkanDevice, &pipelineInfo, 0, &layout) != VK_SUCCESS)
+        vulkanDevice, &pipelineInfo, 0, &handle) != VK_SUCCESS)
     {
         // Could not create pipeline layout
         return false;
     }
-    if (!layout)
+    if (!handle)
     {
         // Invalid pipeline layout
         return false;
@@ -261,9 +260,9 @@ bool GraphicsPipeline::createPipelineLayouts(VkDevice& vulkanDevice)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy pipeline                                                          //
+//  Destroy pipeline layout                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void GraphicsPipeline::destroyPipeline(VkDevice& vulkanDevice)
+void GraphicsLayout::destroyLayout(VkDevice& vulkanDevice)
 {
     if (vulkanDevice)
     {
@@ -279,9 +278,9 @@ void GraphicsPipeline::destroyPipeline(VkDevice& vulkanDevice)
         }
 
         // Destroy pipeline layout
-        if (layout && vkDestroyPipelineLayout)
+        if (handle && vkDestroyPipelineLayout)
         {
-            vkDestroyPipelineLayout(vulkanDevice, layout, 0);
+            vkDestroyPipelineLayout(vulkanDevice, handle, 0);
         }
     }
 
@@ -293,5 +292,5 @@ void GraphicsPipeline::destroyPipeline(VkDevice& vulkanDevice)
     {
         descSetLayouts[i] = 0;
     }
-    layout = 0;
+    handle = 0;
 }

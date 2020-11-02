@@ -74,9 +74,6 @@
     <ClCompile Include="Renderer\View.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\GraphicsPipeline.cpp">
-      <Filter>Renderer\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Vulkan\Swapchain.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
@@ -96,6 +93,9 @@
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\Vulkan\VulkanQueue.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\GraphicsLayout.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
@@ -174,9 +174,6 @@
     <ClInclude Include="Renderer\View.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\GraphicsPipeline.h">
-      <Filter>Renderer\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Vulkan\Swapchain.h">
       <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
@@ -203,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Images\Embedded\Cursor.h">
       <Filter>Renderer\Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\GraphicsLayout.h">
+      <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

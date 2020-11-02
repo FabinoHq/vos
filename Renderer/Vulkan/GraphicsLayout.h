@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/GraphicsPipeline.h : Graphics pipeline management      //
+//     Renderer/Vulkan/GraphicsLayout.h : Graphics layout management          //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKAN_GRAPHICSPIPELINE_HEADER
-#define VOS_RENDERER_VULKAN_GRAPHICSPIPELINE_HEADER
+#ifndef VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
+#define VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
 
     #include "../../System/SysMessage.h"
     #include "Vulkan.h"
@@ -64,27 +64,27 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  GraphicsPipeline class definition                                     //
+    //  GraphicsLayout class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class GraphicsPipeline
+    class GraphicsLayout
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  GraphicsPipeline default constructor                          //
+            //  GraphicsLayout default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            GraphicsPipeline();
+            GraphicsLayout();
 
             ////////////////////////////////////////////////////////////////////
-            //  GraphicsPipeline destructor                                   //
+            //  GraphicsLayout destructor                                     //
             ////////////////////////////////////////////////////////////////////
-            ~GraphicsPipeline();
+            ~GraphicsLayout();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create graphics pipeline                                      //
-            //  return : True if graphics pipeline is successfully created    //
+            //  Create graphics pipeline layout                               //
+            //  return : True if graphics layout is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(VkDevice& vulkanDevice, Swapchain& swapchain);
+            bool createLayout(VkDevice& vulkanDevice, Swapchain& swapchain);
 
             ////////////////////////////////////////////////////////////////////
             //  Create descriptor set layouts                                 //
@@ -99,25 +99,25 @@
             bool createPipelineLayouts(VkDevice& vulkanDevice);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy pipeline                                              //
+            //  Destroy pipeline layout                                       //
             ////////////////////////////////////////////////////////////////////
-            void destroyPipeline(VkDevice& vulkanDevice);
+            void destroyLayout(VkDevice& vulkanDevice);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  GraphicsPipeline private copy constructor : Not copyable      //
+            //  GraphicsLayout private copy constructor : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            GraphicsPipeline(const GraphicsPipeline&) = delete;
+            GraphicsLayout(const GraphicsLayout&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  GraphicsPipeline private copy operator : Not copyable         //
+            //  GraphicsLayout private copy operator : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            GraphicsPipeline& operator=(const GraphicsPipeline&) = delete;
+            GraphicsLayout& operator=(const GraphicsLayout&) = delete;
 
 
         public:
-            VkPipelineLayout        layout;             // Pipeline layout
+            VkPipelineLayout        handle;         // Pipeline layout handle
 
             // Descriptor set layouts
             VkDescriptorSetLayout   descSetLayouts[DESC_SETS_COUNT];
@@ -126,4 +126,4 @@
     };
 
 
-#endif // VOS_RENDERER_VULKAN_GRAPHICSPIPELINE_HEADER
+#endif // VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER

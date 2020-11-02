@@ -64,6 +64,8 @@
 !Math/Vector3.h
 !Math/Matrix4x4.h
 
+!Renderer/
+!Renderer/Vulkan/
 !Renderer/Vulkan/Vulkan.h
 !Renderer/Vulkan/Vulkan.cpp
 !Renderer/Vulkan/VulkanMemory.h
@@ -78,6 +80,8 @@
 !Renderer/Vulkan/VertexBuffer.cpp
 !Renderer/Vulkan/UniformBuffer.h
 !Renderer/Vulkan/UniformBuffer.cpp
+!Renderer/Vulkan/GraphicsLayout.h
+!Renderer/Vulkan/GraphicsLayout.cpp
 !Renderer/Vulkan/GraphicsPipeline.h
 !Renderer/Vulkan/GraphicsPipeline.cpp
 !Renderer/Texture.h
