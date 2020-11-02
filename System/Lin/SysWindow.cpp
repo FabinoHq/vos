@@ -362,6 +362,7 @@ void SysWindow::processEvent(XEvent msg)
 
             // Focus events
             case FocusIn:
+            {
                 m_hasFocus = true;
                 XDefineCursor(m_display, m_handle, m_hiddenCursor);
                 for (unsigned int i = 0; i < SysWindowGrabPointerAttempts; ++i)
@@ -377,7 +378,18 @@ void SysWindow::processEvent(XEvent msg)
                         SysSleep(0.01);
                     }
                 }
+                Window root;
+                int mouseX = 0;
+                int mouseY = 0;
+                unsigned int mask = 0;
+                XQueryPointer(
+                    m_display, m_handle, &root, &root,
+                    &mouseX, &mouseY, &mouseX, &mouseY, &mask
+                );
+                m_lastMouseX = mouseX;
+                m_lastMouseY = mouseY;
                 break;
+            }
 
             case FocusOut:
                 m_hasFocus = false;
