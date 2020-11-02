@@ -210,8 +210,8 @@
             VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain
             VertexBuffer        m_vertexBuffer;         // Default vertex buffer
-            Shader              m_shader;               // Default shader
             GraphicsPipeline    m_pipeline;             // Default pipeline
+            Shader              m_shader;               // Default shader
             View                m_view;                 // Default view
 
             friend class        Shader;                 // Shader has access

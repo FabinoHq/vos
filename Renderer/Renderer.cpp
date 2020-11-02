@@ -61,8 +61,8 @@ m_transferCommandPool(0),
 m_vulkanMemory(),
 m_swapchain(),
 m_vertexBuffer(),
-m_shader(),
 m_pipeline(),
+m_shader(),
 m_view()
 {
 
@@ -247,22 +247,22 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create default pipeline
+    if (!m_pipeline.createPipeline(m_vulkanDevice, m_swapchain))
+    {
+        // Could not create default pipeline
+        SysMessage::box() << "[0x3043] Could not create default pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create default shaders
     if (!m_shader.createShader(*this,
         DefaultVertexShader, DefaultVertexShaderSize,
         DefaultFragmentShader, DefaultFragmentShaderSize))
     {
         // Could not create default shaders
-        SysMessage::box() << "[0x3043] Could not create default shaders\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create default pipeline
-    if (!m_pipeline.createPipeline(m_vulkanDevice, m_swapchain, m_shader))
-    {
-        // Could not create default pipeline
-        SysMessage::box() << "[0x3046] Could not create default pipeline\n";
+        SysMessage::box() << "[0x3046] Could not create default shaders\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -406,11 +406,8 @@ bool Renderer::startFrame()
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
-    // Bind graphics pipeline
-    vkCmdBindPipeline(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline.handle
-    );
+    // Bind default shader
+    m_shader.bind(*this);
 
     // Set viewport
     VkViewport viewport;
@@ -611,11 +608,11 @@ void Renderer::cleanup()
             // Destroy vertex buffer
             m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
 
-            // Destroy default pipeline
-            m_pipeline.destroyPipeline(m_vulkanDevice);
-
             // Destroy shader
             m_shader.destroyShader(*this);
+
+            // Destroy default pipeline
+            m_pipeline.destroyPipeline(m_vulkanDevice);
 
             // Destroy transfer commands pool
             if (m_transferCommandPool && vkDestroyCommandPool)

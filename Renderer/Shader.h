@@ -77,6 +77,11 @@
                 const uint32_t* fragmentSource, const size_t fragmentSize);
 
             ////////////////////////////////////////////////////////////////////
+            //  Bind Shader                                                   //
+            ////////////////////////////////////////////////////////////////////
+            void bind(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy Shader                                                //
             ////////////////////////////////////////////////////////////////////
             void destroyShader(Renderer& renderer);
@@ -87,12 +92,6 @@
             //  return : True if the shader is valid                          //
             ////////////////////////////////////////////////////////////////////
             bool isValid();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get shader stages info                                        //
-            ////////////////////////////////////////////////////////////////////
-            void getShaderStagesInfo(
-                VkPipelineShaderStageCreateInfo* shaderStageCreateInfo);
 
 
         private:
@@ -108,6 +107,7 @@
 
 
         private:
+            VkPipeline          m_pipeline;             // Pipeline handle
             VkShaderModule      m_vertexShader;         // Vertex shader
             VkShaderModule      m_fragmentShader;       // Fragment shader
     };

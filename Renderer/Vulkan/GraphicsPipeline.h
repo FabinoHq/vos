@@ -84,8 +84,7 @@
             //  Create graphics pipeline                                      //
             //  return : True if graphics pipeline is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(VkDevice& vulkanDevice, Swapchain& swapchain,
-                Shader& shader);
+            bool createPipeline(VkDevice& vulkanDevice, Swapchain& swapchain);
 
             ////////////////////////////////////////////////////////////////////
             //  Create descriptor set layouts                                 //
@@ -118,7 +117,6 @@
 
 
         public:
-            VkPipeline              handle;             // Pipeline handle
             VkPipelineLayout        layout;             // Pipeline layout
 
             // Descriptor set layouts

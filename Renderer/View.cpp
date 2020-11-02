@@ -100,13 +100,6 @@ bool View::init(Renderer& renderer)
         return false;
     }
 
-    // Check pipeline handle
-    if (!renderer.m_pipeline.handle)
-    {
-        // Invalid pipeline handle
-        return false;
-    }
-
     // Check transfer commands pool
     if (!renderer.m_transferCommandPool)
     {
@@ -252,13 +245,6 @@ bool View::bind(Renderer& renderer)
     if (!renderer.m_swapchain.handle)
     {
         // Invalid swapchain handle
-        return false;
-    }
-
-    // Check pipeline handle
-    if (!renderer.m_pipeline.handle)
-    {
-        // Invalid pipeline handle
         return false;
     }
 
