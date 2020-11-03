@@ -98,6 +98,9 @@
     <ClCompile Include="Renderer\Vulkan\GraphicsLayout.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\ProcSprite.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -203,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Vulkan\GraphicsLayout.h">
       <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\ProcSprite.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

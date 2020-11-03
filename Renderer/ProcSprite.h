@@ -37,190 +37,141 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Renderer.h : Renderer management                              //
+//     Renderer/ProcSprite.h : Procedural sprite management                   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_RENDERER_HEADER
-#define VOS_RENDERER_RENDERER_HEADER
+#ifndef VOS_RENDERER_PROCSPRITE_HEADER
+#define VOS_RENDERER_PROCSPRITE_HEADER
 
-    #include "../System/SysMessage.h"
-    #include "../System/SysWindow.h"
-    #include "../System/SysVulkan.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/VulkanMemory.h"
-    #include "Vulkan/VulkanQueue.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/VulkanBuffer.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "Vulkan/UniformBuffer.h"
-    #include "Vulkan/GraphicsLayout.h"
-    #include "Shader.h"
-    #include "Texture.h"
-    #include "View.h"
-    #include "Sprite.h"
-    #include "ProcSprite.h"
     #include "../Math/Math.h"
+    #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"
 
-    #include "Shaders/Default.h"
 
-    #include <vector>
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer clear color                                                  //
+    //  ProcSprite class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
-    const VkClearValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class definition                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer
+    class ProcSprite
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Renderer default constructor                                  //
+            //  ProcSprite default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Renderer();
+            ProcSprite();
 
             ////////////////////////////////////////////////////////////////////
-            //  Renderer destructor                                           //
+            //  ProcSprite destructor                                         //
             ////////////////////////////////////////////////////////////////////
-            ~Renderer();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init renderer                                                 //
-            //  return : True if the renderer is successfully loaded          //
-            ////////////////////////////////////////////////////////////////////
-            bool init(SysWindow* sysWindow);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Start rendering frame                                         //
-            //  return : True if the rendering frame is ready                 //
-            ////////////////////////////////////////////////////////////////////
-            bool startFrame();
-
-            ////////////////////////////////////////////////////////////////////
-            //  End rendering frame                                           //
-            //  return : True if the frame is rendering                       //
-            ////////////////////////////////////////////////////////////////////
-            bool endFrame();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Wait renderer device for idle state                           //
-            //  return : True if the renderer device is in idle state         //
-            ////////////////////////////////////////////////////////////////////
-            bool waitDeviceIdle();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Cleanup renderer                                              //
-            ////////////////////////////////////////////////////////////////////
-            void cleanup();
+            ~ProcSprite();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set renderer default view                                     //
-            //  return : True if the default view is successfully set         //
+            //  Init procedural sprite                                        //
+            //  return : True if the proc sprite is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool setDefaultView();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer view                                             //
-            //  return : True if the view is successfully set                 //
-            ////////////////////////////////////////////////////////////////////
-            bool setView(View& view);
+            bool init(float width, float height);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer ready state                                      //
-            //  return : True if the renderer is ready, false otherwise       //
+            //  Set procedural sprite position                                //
             ////////////////////////////////////////////////////////////////////
-            bool isReady();
+            void setPosition(float x, float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer width                                            //
-            //  return : Renderer width                                       //
+            //  Set procedural sprite position                                //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getWidth();
+            void setPosition(Vector2& position);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer height                                           //
-            //  return : Renderer height                                      //
+            //  Set procedural sprite X position                              //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getHeight();
+            void setX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer scale                                            //
-            //  return : Renderer scale (1/height)                            //
+            //  Set procedural sprite Y position                              //
             ////////////////////////////////////////////////////////////////////
-            float getScale();
+            void setY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer aspect ratio                                     //
-            //  return : Renderer aspect ratio                                //
+            //  Translate procedural sprite                                   //
             ////////////////////////////////////////////////////////////////////
-            float getRatio();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy constructor : Not copyable              //
-            ////////////////////////////////////////////////////////////////////
-            Renderer(const Renderer&) = delete;
+            void move(float x, float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy operator : Not copyable                 //
+            //  Translate procedural sprite                                   //
             ////////////////////////////////////////////////////////////////////
-            Renderer& operator=(const Renderer&) = delete;
+            void move(Vector2& vector);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Translate procedural sprite on X axis                         //
+            ////////////////////////////////////////////////////////////////////
+            void moveX(float x);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Translate procedural sprite on Y axis                         //
+            ////////////////////////////////////////////////////////////////////
+            void moveY(float y);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite size                                    //
+            ////////////////////////////////////////////////////////////////////
+            void setSize(float width, float height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite size                                    //
+            ////////////////////////////////////////////////////////////////////
+            void setSize(Vector2& size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite width                                   //
+            ////////////////////////////////////////////////////////////////////
+            void setWidth(float width);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite height                                  //
+            ////////////////////////////////////////////////////////////////////
+            void setHeight(float height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite rotation angle                          //
+            ////////////////////////////////////////////////////////////////////
+            void setAngle(float angle);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Rotate procedural sprite                                      //
+            ////////////////////////////////////////////////////////////////////
+            void rotate(float angle);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan instance                                        //
-            //  return : True if Vulkan instance is successfully created      //
+            //  Render procedural sprite                                      //
             ////////////////////////////////////////////////////////////////////
-            bool createVulkanInstance();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Select Vulkan device                                          //
-            //  return : True if Vulkan device is successfully selected       //
-            ////////////////////////////////////////////////////////////////////
-            bool selectVulkanDevice();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Resize renderer frame                                         //
-            //  return : True if the renderer is successfully resized         //
-            ////////////////////////////////////////////////////////////////////
-            bool resize();
+            void render(Renderer& renderer);
 
 
         private:
-            bool                m_rendererReady;        // Renderer ready state
-            uint32_t            m_frameIndex;           // Current frame index
-            SysWindow*          m_sysWindow;            // SysWindow pointer
-            VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
-            VkInstance          m_vulkanInstance;       // Vulkan instance
-            VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
-            VkPhysicalDevice    m_physicalDevice;       // Physical device
-            VkDevice            m_vulkanDevice;         // Vulkan device
-            VulkanQueue         m_graphicsQueue;        // Graphics queue
-            VulkanQueue         m_surfaceQueue;         // Surface queue
-            VulkanQueue         m_transferQueue;        // Transfer queue
-            VkCommandPool       m_transferCommandPool;  // Transfer command pool
+            ////////////////////////////////////////////////////////////////////
+            //  ProcSprite private copy constructor : Not copyable            //
+            ////////////////////////////////////////////////////////////////////
+            ProcSprite(const ProcSprite&) = delete;
 
-            VulkanMemory        m_vulkanMemory;         // Vulkan memory
-            Swapchain           m_swapchain;            // Swapchain
-            VertexBuffer        m_vertexBuffer;         // Default vertex buffer
-            GraphicsLayout      m_layout;               // Graphics layout
-            Shader              m_shader;               // Default shader
-            View                m_view;                 // Default view
+            ////////////////////////////////////////////////////////////////////
+            //  ProcSprite private copy operator : Not copyable               //
+            ////////////////////////////////////////////////////////////////////
+            ProcSprite& operator=(const ProcSprite&) = delete;
 
-            friend class        Shader;                 // Shader has access
-            friend class        Texture;                // Texture has access
-            friend class        View;                   // View has access
-            friend class        Sprite;                 // Sprite has access
-            friend class        ProcSprite;             // ProcSprite has access
+
+        private:
+            Matrix4x4           m_modelMatrix;      // Sprite model matrix
+            Vector2             m_position;         // Sprite position
+            Vector2             m_size;             // Sprite size
+            float               m_angle;            // Sprite angle
     };
 
 
-#endif // VOS_RENDERER_RENDERER_HEADER
+#endif // VOS_RENDERER_PROCSPRITE_HEADER

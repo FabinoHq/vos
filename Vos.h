@@ -48,6 +48,7 @@
     #include "System/SysWindow.h"
     #include "Renderer/Renderer.h"
     #include "Renderer/Sprite.h"
+    #include "Renderer/ProcSprite.h"
     #include "Event.h"
 
     #include "Renderer/Images/Embedded/Cursor.h"
