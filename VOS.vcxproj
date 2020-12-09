@@ -165,6 +165,7 @@
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\Shader.h" />
     <ClInclude Include="Renderer\Shaders\Default.h" />
+    <ClInclude Include="Renderer\Shaders\DefaultProc.h" />
     <ClInclude Include="Renderer\Sprite.h" />
     <ClInclude Include="Renderer\Texture.h" />
     <ClInclude Include="Renderer\View.h" />

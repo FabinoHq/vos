@@ -244,6 +244,9 @@ void Sprite::rotate(float angle)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::render(Renderer& renderer)
 {
+    // Bind default shader
+    renderer.bindDefaultShader();
+
     // Bind sprite texture
     m_texture->bind(renderer);
 

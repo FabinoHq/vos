@@ -37,74 +37,34 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Renderer/Shaders/Sources/DefaultProc.vert : Procedural vertex shader   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#version 450
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysMemory.h"
-    #include "System/SysWindow.h"
-    #include "Renderer/Renderer.h"
-    #include "Renderer/Sprite.h"
-    #include "Renderer/ProcSprite.h"
-    #include "Event.h"
+// Matrices buffer (projection and view)
+layout(set = 0, binding = 0) uniform MatricesBuffer
+{
+    mat4 proj;
+    mat4 view;
+} mats;
 
-    #include "Renderer/Images/Embedded/Cursor.h"
+// Model matrix (push constant)
+layout(push_constant) uniform ModelMatrix
+{
+    mat4 model;
+} matrix;
 
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    class Vos
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
-            ////////////////////////////////////////////////////////////////////
-            Vos();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
-            ////////////////////////////////////////////////////////////////////
-            ~Vos();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
-            ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
-            ////////////////////////////////////////////////////////////////////
-            void run();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
-            ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
-
-        private:
-            bool            m_running;      // VOS running state
-            SysWindow       m_window;       // VOS main window
-            Renderer        m_renderer;     // VOS renderer
-            Texture         m_texture;      // Cursor texture
-            Sprite          m_cursor;       // Cursor sprite
-            ProcSprite      m_procsprite;   // Procedural sprite
-
-            float           m_mouseX;       // Mouse X position
-            float           m_mouseY;       // Mouse Y position
-    };
-
-
-#endif // VOS_VOS_HEADER
+// Input and output position and texture coordinates
+layout(location = 0) in vec3 i_Position;
+layout(location = 1) in vec2 i_TexCoords;
+layout(location = 0) out vec2 texCoords;
+out gl_PerVertex
+{
+    vec4 gl_Position;
+};
+void main()
+{
+    // Compute vertex position
+    texCoords = i_TexCoords;
+    gl_Position = mats.proj * mats.view * matrix.model * vec4(i_Position, 1.0);
+}

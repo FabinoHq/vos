@@ -261,8 +261,8 @@ bool Renderer::init(SysWindow* sysWindow)
         DefaultVertexShader, DefaultVertexShaderSize,
         DefaultFragmentShader, DefaultFragmentShaderSize))
     {
-        // Could not create default shaders
-        SysMessage::box() << "[0x3046] Could not create default shaders\n";
+        // Could not create default shader
+        SysMessage::box() << "[0x3046] Could not create default shader\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -645,6 +645,14 @@ void Renderer::cleanup()
     m_vulkanSurface = 0;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer default shader                                              //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindDefaultShader()
+{
+    m_shader.bind(*this);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set renderer default view                                                 //

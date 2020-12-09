@@ -42,9 +42,12 @@
 #ifndef VOS_RENDERER_PROCSPRITE_HEADER
 #define VOS_RENDERER_PROCSPRITE_HEADER
 
+    #include "Shader.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"
+
+    #include "Shaders/DefaultProc.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -74,7 +77,14 @@
             //  Init procedural sprite                                        //
             //  return : True if the proc sprite is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool init(float width, float height);
+            bool init(Renderer& renderer, const uint32_t* vertexSource,
+                const size_t vertexSize, const uint32_t* fragmentSource,
+                const size_t fragmentSize, float width, float height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy procedural sprite                                     //
+            ////////////////////////////////////////////////////////////////////
+            void destroyProcSprite(Renderer& renderer);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -167,6 +177,7 @@
 
 
         private:
+            Shader              m_shader;           // Procedural sprite shader
             Matrix4x4           m_modelMatrix;      // Sprite model matrix
             Vector2             m_position;         // Sprite position
             Vector2             m_size;             // Sprite size

@@ -49,7 +49,9 @@ Vos::Vos() :
 m_running(false),
 m_window(),
 m_renderer(),
+m_texture(),
 m_cursor(),
+m_procsprite(),
 m_mouseX(0.0f),
 m_mouseY(0.0f)
 {
@@ -104,6 +106,13 @@ bool Vos::launch()
     if (!m_cursor.init(m_texture, 1.0f, 1.0f))
     {
         // Could not init test sprite
+        return false;
+    }
+
+    // Init procedural sprite
+    if (!m_procsprite.init(m_renderer, 0, 0, 0, 0, 1.0f, 1.0f))
+    {
+        // Could not init procedural sprite
         return false;
     }
 
@@ -172,6 +181,11 @@ void Vos::run()
             // Get renderer aspect ratio
             float cursorSize = 64.0f*scale;
 
+            // Draw procedural sprite
+            m_procsprite.setSize(1.0f, 1.0f);
+            m_procsprite.setPosition(-0.5f, -0.5f);
+            m_procsprite.render(m_renderer);
+
             // Draw cursor
             m_cursor.setSize(cursorSize, cursorSize);
             m_cursor.setPosition(m_mouseX, m_mouseY-cursorSize);
@@ -185,6 +199,9 @@ void Vos::run()
     // Wait for renderer device idle state
     if (m_renderer.waitDeviceIdle())
     {
+        // Destroy procedural sprite
+        m_procsprite.destroyProcSprite(m_renderer);
+
         // Destroy cursor texture
         m_texture.destroyTexture(m_renderer);
     }

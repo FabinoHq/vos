@@ -47,6 +47,7 @@
 //  ProcSprite default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
 ProcSprite::ProcSprite() :
+m_shader(),
 m_modelMatrix(),
 m_position(0.0f, 0.0f),
 m_size(1.0f, 1.0f),
@@ -71,8 +72,34 @@ ProcSprite::~ProcSprite()
 //  Init procedural sprite                                                    //
 //  return : True if the proc sprite is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool ProcSprite::init(float width, float height)
+bool ProcSprite::init(Renderer& renderer, const uint32_t* vertexSource,
+    const size_t vertexSize, const uint32_t* fragmentSource,
+    const size_t fragmentSize, float width, float height)
 {
+    bool shaderCreated = false;
+    if (vertexSource && (vertexSize > 0) &&
+        fragmentSource && (fragmentSize > 0))
+    {
+        // Create procedural sprite shader
+        if (m_shader.createShader(renderer,
+            vertexSource, vertexSize, fragmentSource, fragmentSize))
+        {
+            shaderCreated = true;
+        }
+    }
+
+    if (!shaderCreated)
+    {
+        // Create default procedural sprite shader
+        if (!m_shader.createShader(renderer,
+            DefaultProcVertexShader, DefaultProcVertexShaderSize,
+            DefaultProcFragmentShader, DefaultProcFragmentShaderSize))
+        {
+            // Could not create default procedural sprite shader
+            return false;
+        }
+    }
+
     // Reset procedural sprite model matrix
     m_modelMatrix.setIdentity();
 
@@ -87,6 +114,18 @@ bool ProcSprite::init(float width, float height)
 
     // Procedural sprite successfully created
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy procedural sprite                                                 //
+////////////////////////////////////////////////////////////////////////////////
+void ProcSprite::destroyProcSprite(Renderer& renderer)
+{
+    m_angle = 0.0f;
+    m_size.reset();
+    m_position.reset();
+    m_modelMatrix.reset();
+    m_shader.destroyShader(renderer);
 }
 
 
@@ -214,6 +253,9 @@ void ProcSprite::rotate(float angle)
 ////////////////////////////////////////////////////////////////////////////////
 void ProcSprite::render(Renderer& renderer)
 {
+    // Bind procedural sprite shader
+    m_shader.bind(renderer);
+
     // Set procedural sprite model matrix
     m_modelMatrix.setIdentity();
     m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);

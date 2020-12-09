@@ -94,8 +94,13 @@
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
 
+!Renderer/Shaders/
+!Renderer/Shaders/Sources/
 !Renderer/Shaders/Sources/Default.vert
 !Renderer/Shaders/Sources/Default.frag
+!Renderer/Shaders/Sources/DefaultProc.vert
+!Renderer/Shaders/Sources/DefaultProc.frag
 !Renderer/Shaders/Default.h
+!Renderer/Shaders/DefaultProc.h
 
 !Renderer/Images/Embedded/Cursor.h

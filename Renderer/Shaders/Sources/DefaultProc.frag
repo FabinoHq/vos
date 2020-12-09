@@ -37,74 +37,15 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Renderer/Shaders/Sources/DefaultProc.frag : Procedural fragment shader //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#version 450
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysMemory.h"
-    #include "System/SysWindow.h"
-    #include "Renderer/Renderer.h"
-    #include "Renderer/Sprite.h"
-    #include "Renderer/ProcSprite.h"
-    #include "Event.h"
-
-    #include "Renderer/Images/Embedded/Cursor.h"
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    class Vos
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
-            ////////////////////////////////////////////////////////////////////
-            Vos();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
-            ////////////////////////////////////////////////////////////////////
-            ~Vos();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
-            ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
-            ////////////////////////////////////////////////////////////////////
-            void run();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
-            ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
-
-        private:
-            bool            m_running;      // VOS running state
-            SysWindow       m_window;       // VOS main window
-            Renderer        m_renderer;     // VOS renderer
-            Texture         m_texture;      // Cursor texture
-            Sprite          m_cursor;       // Cursor sprite
-            ProcSprite      m_procsprite;   // Procedural sprite
-
-            float           m_mouseX;       // Mouse X position
-            float           m_mouseY;       // Mouse Y position
-    };
-
-
-#endif // VOS_VOS_HEADER
+// Input texture coordinates and output color
+layout(location = 0) in vec2 texCoords;
+layout(location = 0) out vec4 o_Color;
+void main()
+{
+    // Compute output color
+    o_Color = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+}

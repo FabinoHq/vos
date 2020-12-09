@@ -319,10 +319,13 @@ bool Shader::createShader(Renderer& renderer,
 ////////////////////////////////////////////////////////////////////////////////
 void Shader::bind(Renderer& renderer)
 {
-    vkCmdBindPipeline(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
-    );
+    if (m_pipeline)
+    {
+        vkCmdBindPipeline(
+            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+            VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
+        );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
