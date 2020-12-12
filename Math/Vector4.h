@@ -37,93 +37,100 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Math/Vector3.h : 3 components vector management                        //
+//     Math/Vector4.h : 4 components vector management                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_MATH_VECTOR3_HEADER
-#define VOS_MATH_VECTOR3_HEADER
+#ifndef VOS_MATH_VECTOR4_HEADER
+#define VOS_MATH_VECTOR4_HEADER
 
     #include "Math.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Vector3 class definition                                              //
+    //  Vector4 class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
-    class Vector3
+    class Vector4
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 default constructor                                   //
+            //  Vector4 default constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            Vector3()
+            Vector4()
             {
                 vec[0] = 0.0f;
                 vec[1] = 0.0f;
                 vec[2] = 0.0f;
+                vec[3] = 0.0f;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 copy constructor                                      //
+            //  Vector4 copy constructor                                      //
             ////////////////////////////////////////////////////////////////////
-            Vector3(const Vector3& vector)
+            Vector4(const Vector4& vector)
             {
                 vec[0] = vector.vec[0];
                 vec[1] = vector.vec[1];
                 vec[2] = vector.vec[2];
+                vec[3] = vector.vec[3];
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 components constructor                                //
+            //  Vector4 components constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Vector3(float x, float y, float z)
+            Vector4(float x, float y, float z, float w)
             {
                 vec[0] = x;
                 vec[1] = y;
                 vec[2] = z;
+                vec[3] = w;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 destructor                                            //
+            //  Vector4 destructor                                            //
             ////////////////////////////////////////////////////////////////////
-            ~Vector3()
+            ~Vector4()
             {
                 vec[0] = 0.0f;
                 vec[1] = 0.0f;
                 vec[2] = 0.0f;
+                vec[3] = 0.0f;
             }
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Reset Vector3 to zero                                         //
+            //  Reset Vector4 to zero                                         //
             ////////////////////////////////////////////////////////////////////
             inline void reset()
             {
                 vec[0] = 0.0f;
                 vec[1] = 0.0f;
                 vec[2] = 0.0f;
+                vec[3] = 0.0f;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 components from a vector                          //
+            //  Set Vector4 components from a vector                          //
             ////////////////////////////////////////////////////////////////////
-            inline void set(const Vector3& vector)
+            inline void set(const Vector4& vector)
             {
                 vec[0] = vector.vec[0];
                 vec[1] = vector.vec[1];
                 vec[2] = vector.vec[2];
+                vec[3] = vector.vec[3];
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 components from X, Y and Z components             //
+            //  Set Vector4 components from X, Y, Z and W components          //
             ////////////////////////////////////////////////////////////////////
-            inline void set(float x, float y, float z)
+            inline void set(float x, float y, float z, float w)
             {
                 vec[0] = x;
                 vec[1] = y;
                 vec[2] = z;
+                vec[3] = w;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 X component                                       //
+            //  Set Vector4 X component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setX(float x)
             {
@@ -131,7 +138,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 Y component                                       //
+            //  Set Vector4 Y component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setY(float y)
             {
@@ -139,7 +146,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 Z component                                       //
+            //  Set Vector4 Z component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setZ(float z)
             {
@@ -147,18 +154,27 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vector3 length                                            //
+            //  Set Vector4 W component                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline void setW(float w)
+            {
+                vec[3] = w;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector4 length                                            //
             ////////////////////////////////////////////////////////////////////
             inline float length()
             {
                 float result = std::sqrt(
-                    (vec[0]*vec[0])+(vec[1]*vec[1])+(vec[2]*vec[2])
+                    (vec[0]*vec[0])+(vec[1]*vec[1])+
+                    (vec[2]*vec[2])+(vec[3]*vec[3])
                 );
                 return result;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Normalize Vector3                                             //
+            //  Normalize Vector4                                             //
             ////////////////////////////////////////////////////////////////////
             inline void normalize()
             {
@@ -169,12 +185,13 @@
                     vec[0] *= invLength;
                     vec[1] *= invLength;
                     vec[2] *= invLength;
+                    vec[3] *= invLength;
                 }
             }
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vector3 x component                                       //
+            //  Get Vector4 x component                                       //
             //  return : X component of the vector                            //
             ////////////////////////////////////////////////////////////////////
             inline float& x()
@@ -183,7 +200,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vector3 y component                                       //
+            //  Get Vector4 y component                                       //
             //  return : Y component of the vector                            //
             ////////////////////////////////////////////////////////////////////
             inline float& y()
@@ -192,7 +209,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vector3 z component                                       //
+            //  Get Vector4 z component                                       //
             //  return : Z component of the vector                            //
             ////////////////////////////////////////////////////////////////////
             inline float& z()
@@ -200,99 +217,113 @@
                 return vec[2];
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector4 w component                                       //
+            //  return : W component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline float& w()
+            {
+                return vec[3];
+            }
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 affectation operator                                  //
+            //  Vector4 affectation operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator=(const Vector3& vector)
+            inline Vector4& operator=(const Vector4& vector)
             {
                 vec[0] = vector.vec[0];
                 vec[1] = vector.vec[1];
                 vec[2] = vector.vec[2];
+                vec[3] = vector.vec[3];
                 return *this;
             }
 
-            inline Vector3& operator=(float val)
+            inline Vector4& operator=(float val)
             {
                 vec[0] = val;
                 vec[1] = val;
                 vec[2] = val;
+                vec[3] = val;
                 return *this;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 addition operator                                     //
+            //  Vector4 addition operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator+(const Vector3& vector)
+            inline Vector4 operator+(const Vector4& vector)
             {
-                Vector3 result;
+                Vector4 result;
                 result.vec[0] = vec[0]+vector.vec[0];
                 result.vec[1] = vec[1]+vector.vec[1];
                 result.vec[2] = vec[2]+vector.vec[2];
+                result.vec[3] = vec[3]+vector.vec[3];
                 return result;
             }
 
-            inline Vector3 operator+(float val)
+            inline Vector4 operator+(float val)
             {
-                return Vector3(vec[0]+val, vec[1]+val, vec[2]+val);
+                return Vector4(vec[0]+val, vec[1]+val, vec[2]+val, vec[3]+val);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 subtraction operator                                  //
+            //  Vector4 subtraction operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator-(const Vector3& vector)
+            inline Vector4 operator-(const Vector4& vector)
             {
-                Vector3 result;
+                Vector4 result;
                 result.vec[0] = vec[0]-vector.vec[0];
                 result.vec[1] = vec[1]-vector.vec[1];
                 result.vec[2] = vec[2]-vector.vec[2];
+                result.vec[3] = vec[3]-vector.vec[3];
                 return result;
             }
 
-            inline Vector3 operator-(float val)
+            inline Vector4 operator-(float val)
             {
-                return Vector3(vec[0]-val, vec[1]-val, vec[2]-val);
+                return Vector4(vec[0]-val, vec[1]-val, vec[2]-val, vec[3]-val);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 unary plus operator                                   //
+            //  Vector4 unary plus operator                                   //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator+()
+            inline Vector4 operator+()
             {
-                return Vector3(*this);
+                return Vector4(*this);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 unary minus operator                                  //
+            //  Vector4 unary minus operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator-()
+            inline Vector4 operator-()
             {
-                return Vector3(-vec[0], -vec[1], -vec[2]);
+                return Vector4(-vec[0], -vec[1], -vec[2], -vec[3]);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 multiplication operator                               //
+            //  Vector4 multiplication operator                               //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator*(const Vector3& vector)
+            inline Vector4 operator*(const Vector4& vector)
             {
-                Vector3 result;
+                Vector4 result;
                 result.vec[0] = vec[0]*vector.vec[0];
                 result.vec[1] = vec[1]*vector.vec[1];
                 result.vec[2] = vec[2]*vector.vec[2];
+                result.vec[3] = vec[3]*vector.vec[3];
                 return result;
             }
 
-            inline Vector3 operator*(float val)
+            inline Vector4 operator*(float val)
             {
-                return Vector3(vec[0]*val, vec[1]*val, vec[2]*val);
+                return Vector4(vec[0]*val, vec[1]*val, vec[2]*val, vec[3]*val);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 division operator                                     //
+            //  Vector4 division operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator/(const Vector3& vector)
+            inline Vector4 operator/(const Vector4& vector)
             {
-                Vector3 result(*this);
+                Vector4 result(*this);
                 if (vector.vec[0] != 0.0f)
                 {
                     result.vec[0] /= vector.vec[0];
@@ -305,120 +336,133 @@
                 {
                     result.vec[2] /= vector.vec[2];
                 }
+                if (vector.vec[3] != 0.0f)
+                {
+                    result.vec[3] /= vector.vec[3];
+                }
                 return result;
             }
 
-            inline Vector3 operator/(float val)
+            inline Vector4 operator/(float val)
             {
-                Vector3 result(*this);
+                Vector4 result(*this);
                 if (val != 0.0f)
                 {
                     result.vec[0] /= val;
                     result.vec[1] /= val;
                     result.vec[2] /= val;
+                    result.vec[3] /= val;
                 }
                 return result;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 prefix increment operator                             //
+            //  Vector4 prefix increment operator                             //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator++()
+            inline Vector4& operator++()
             {
                 ++vec[0];
                 ++vec[1];
                 ++vec[2];
+                ++vec[3];
                 return *this;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 postfix increment operator                            //
+            //  Vector4 postfix increment operator                            //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator++(int)
+            inline Vector4 operator++(int)
             {
-                return Vector3(vec[0]++, vec[1]++, vec[2]++);
+                return Vector4(vec[0]++, vec[1]++, vec[2]++, vec[3]++);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 prefix decrement operator                             //
+            //  Vector4 prefix decrement operator                             //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator--()
+            inline Vector4& operator--()
             {
                 --vec[0];
                 --vec[1];
                 --vec[2];
+                --vec[3];
                 return *this;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 postfix decrement operator                            //
+            //  Vector4 postfix decrement operator                            //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator--(int)
+            inline Vector4 operator--(int)
             {
-                return Vector3(vec[0]--, vec[1]--, vec[2]--);
+                return Vector4(vec[0]--, vec[1]--, vec[2]--, vec[3]--);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 addition assignment operator                          //
+            //  Vector4 addition assignment operator                          //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator+=(const Vector3& vector)
+            inline Vector4& operator+=(const Vector4& vector)
             {
                 vec[0] += vector.vec[0];
                 vec[1] += vector.vec[1];
                 vec[2] += vector.vec[2];
+                vec[3] += vector.vec[3];
                 return *this;
             }
 
-            inline Vector3& operator+=(float val)
+            inline Vector4& operator+=(float val)
             {
                 vec[0] += val;
                 vec[1] += val;
                 vec[2] += val;
+                vec[3] += val;
                 return *this;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 subtraction assignment operator                       //
+            //  Vector4 subtraction assignment operator                       //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator-=(const Vector3& vector)
+            inline Vector4& operator-=(const Vector4& vector)
             {
                 vec[0] -= vector.vec[0];
                 vec[1] -= vector.vec[1];
                 vec[2] -= vector.vec[2];
+                vec[3] -= vector.vec[3];
                 return *this;
             }
 
-            inline Vector3& operator-=(float val)
+            inline Vector4& operator-=(float val)
             {
                 vec[0] -= val;
                 vec[1] -= val;
                 vec[2] -= val;
+                vec[3] -= val;
                 return *this;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 multiplication assignment operator                    //
+            //  Vector4 multiplication assignment operator                    //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator*=(const Vector3& vector)
+            inline Vector4& operator*=(const Vector4& vector)
             {
                 vec[0] *= vector.vec[0];
                 vec[1] *= vector.vec[1];
                 vec[2] *= vector.vec[2];
+                vec[3] *= vector.vec[3];
                 return *this;
             }
 
-            inline Vector3& operator*=(float val)
+            inline Vector4& operator*=(float val)
             {
                 vec[0] *= val;
                 vec[1] *= val;
                 vec[2] *= val;
+                vec[3] *= val;
                 return *this;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 division assignment operator                          //
+            //  Vector4 division assignment operator                          //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator/=(const Vector3& vector)
+            inline Vector4& operator/=(const Vector4& vector)
             {
                 if (vector.vec[0] != 0.0f)
                 {
@@ -432,46 +476,53 @@
                 {
                     vec[2] *= vector.vec[2];
                 }
+                if (vector.vec[3] != 0.0f)
+                {
+                    vec[3] *= vector.vec[3];
+                }
                 return *this;
             }
 
-            inline Vector3& operator/=(float val)
+            inline Vector4& operator/=(float val)
             {
                 if (val != 0.0f)
                 {
                     vec[0] *= val;
                     vec[1] *= val;
                     vec[2] *= val;
+                    vec[3] *= val;
                 }
                 return *this;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 equal to operator                                     //
+            //  Vector4 equal to operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator==(const Vector3& vector)
+            inline bool operator==(const Vector4& vector)
             {
                 bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
                     Math::areEqual(vec[1], vector.vec[1]) &&
-                    Math::areEqual(vec[2], vector.vec[2]);
+                    Math::areEqual(vec[2], vector.vec[2]) &&
+                    Math::areEqual(vec[3], vector.vec[3]);
                 return areEqual;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 not equal to operator                                 //
+            //  Vector4 not equal to operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator!=(const Vector3& vector)
+            inline bool operator!=(const Vector4& vector)
             {
                 bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
                     Math::areEqual(vec[1], vector.vec[1]) &&
-                    Math::areEqual(vec[2], vector.vec[2]);
+                    Math::areEqual(vec[2], vector.vec[2]) &&
+                    Math::areEqual(vec[3], vector.vec[3]);
                 return !areEqual;
             }
 
 
         public:
-            float   vec[3];     // 3 components vector representation
+            float   vec[4];     // 4 components vector representation
     };
 
 
-#endif // VOS_MATH_VECTOR3_HEADER
+#endif // VOS_MATH_VECTOR4_HEADER

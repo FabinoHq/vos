@@ -160,6 +160,7 @@
     <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Renderer\Images\Embedded\Cursor.h" />
     <ClInclude Include="Renderer\ProcSprite.h" />
     <ClInclude Include="Renderer\Renderer.h" />

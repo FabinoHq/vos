@@ -213,5 +213,8 @@
     <ClInclude Include="Renderer\Shaders\DefaultProc.h">
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Vector4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
