@@ -51,7 +51,8 @@ m_texture(0),
 m_modelMatrix(),
 m_position(0.0f, 0.0f),
 m_size(1.0f, 1.0f),
-m_angle(0.0f)
+m_angle(0.0f),
+m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
     m_modelMatrix.reset();
 }
@@ -61,6 +62,7 @@ m_angle(0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 Sprite::~Sprite()
 {
+    m_color.reset();
     m_angle = 0.0f;
     m_size.reset();
     m_position.reset();
@@ -240,6 +242,61 @@ void Sprite::rotate(float angle)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set sprite color                                                          //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setColor(Vector4 color)
+{
+    m_color.vec[0] = color.vec[0];
+    m_color.vec[1] = color.vec[1];
+    m_color.vec[2] = color.vec[2];
+    m_color.vec[3] = color.vec[3];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite color                                                          //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setColor(float red, float green, float blue, float alpha)
+{
+    m_color.vec[0] = red;
+    m_color.vec[1] = green;
+    m_color.vec[2] = blue;
+    m_color.vec[3] = alpha;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite red channel                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setRed(float red)
+{
+    m_color.vec[0] = red;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite green channel                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setGreen(float green)
+{
+    m_color.vec[1] = green;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite blue channel                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setBlue(float blue)
+{
+    m_color.vec[2] = blue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite alpha channel                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setAlpha(float alpha)
+{
+    m_color.vec[3] = alpha;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render sprite                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::render(Renderer& renderer)
@@ -267,10 +324,10 @@ void Sprite::render(Renderer& renderer)
 
     // Push constants into command buffer
     PushConstantData pushConstants;
-    pushConstants.color[0] = 1.0f;
-    pushConstants.color[1] = 1.0f;
-    pushConstants.color[2] = 1.0f;
-    pushConstants.color[3] = 1.0f;
+    pushConstants.color[0] = m_color.vec[0];
+    pushConstants.color[1] = m_color.vec[1];
+    pushConstants.color[2] = m_color.vec[2];
+    pushConstants.color[3] = m_color.vec[3];
     pushConstants.offset[0] = 0.0f;
     pushConstants.offset[1] = 0.0f;
     pushConstants.size[0] = 1.0f;
