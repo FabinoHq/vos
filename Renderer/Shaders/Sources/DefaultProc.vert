@@ -40,6 +40,8 @@
 //     Renderer/Shaders/Sources/DefaultProc.vert : Procedural vertex shader   //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
+precision mediump float;
+precision highp int;
 
 // Matrices buffer (projection and view)
 layout(set = 0, binding = 0) uniform MatricesBuffer

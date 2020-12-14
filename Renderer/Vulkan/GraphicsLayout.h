@@ -62,6 +62,17 @@
         DESC_SETS_COUNT = 2
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  PushConstant data structure                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    struct PushConstantData
+    {
+        float   color[4];
+        float   offset[2];
+        float   size[2];
+        float   time;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  GraphicsLayout class definition                                       //

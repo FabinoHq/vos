@@ -40,6 +40,18 @@
 //     Renderer/Shaders/Sources/DefaultProc.frag : Procedural fragment shader //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
+precision mediump float;
+precision highp int;
+
+// Color, position, offset, and time (push constant)
+layout(push_constant) uniform Constants
+{
+	layout(offset = 64)
+    vec4 color;
+    vec2 offset;
+    vec2 size;
+    float time;
+} constants;
 
 // Input texture coordinates and output color
 layout(location = 0) in vec2 texCoords;
@@ -47,5 +59,5 @@ layout(location = 0) out vec4 o_Color;
 void main()
 {
     // Compute output color
-    o_Color = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    o_Color = vec4(0.0, 0.0, 0.0, 0.0);
 }

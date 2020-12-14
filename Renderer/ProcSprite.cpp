@@ -271,6 +271,24 @@ void ProcSprite::render(Renderer& renderer)
         0, sizeof(Matrix4x4::mat), m_modelMatrix.mat
     );
 
+    // Push constants into command buffer
+    PushConstantData pushConstants;
+    pushConstants.color[0] = 1.0f;
+    pushConstants.color[1] = 1.0f;
+    pushConstants.color[2] = 1.0f;
+    pushConstants.color[3] = 1.0f;
+    pushConstants.offset[0] = 0.0f;
+    pushConstants.offset[1] = 0.0f;
+    pushConstants.size[0] = 1.0f;
+    pushConstants.size[1] = 1.0f;
+    pushConstants.time = 0.0f;
+
+    vkCmdPushConstants(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        sizeof(Matrix4x4::mat), sizeof(PushConstantData), &pushConstants
+    );
+
     // Draw procedural sprite triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],

@@ -229,10 +229,15 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
     }
 
     // Create pipeline layout
-    VkPushConstantRange pushConstantRange;
-    pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    pushConstantRange.offset = 0;
-    pushConstantRange.size = sizeof(Matrix4x4::mat);
+    VkPushConstantRange pushConstantRange[2];
+
+    pushConstantRange[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    pushConstantRange[0].offset = 0;
+    pushConstantRange[0].size = sizeof(Matrix4x4::mat);
+
+    pushConstantRange[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    pushConstantRange[1].offset = sizeof(Matrix4x4::mat);
+    pushConstantRange[1].size = sizeof(PushConstantData);
 
     VkPipelineLayoutCreateInfo pipelineInfo;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -240,8 +245,8 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
     pipelineInfo.flags = 0;
     pipelineInfo.setLayoutCount = DESC_SETS_COUNT;
     pipelineInfo.pSetLayouts = descSetLayouts;
-    pipelineInfo.pushConstantRangeCount = 1;
-    pipelineInfo.pPushConstantRanges = &pushConstantRange;
+    pipelineInfo.pushConstantRangeCount = 2;
+    pipelineInfo.pPushConstantRanges = pushConstantRange;
 
     if (vkCreatePipelineLayout(
         vulkanDevice, &pipelineInfo, 0, &handle) != VK_SUCCESS)
