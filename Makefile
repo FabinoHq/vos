@@ -71,7 +71,7 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Shader.o Renderer/Texture.o Renderer/View.o Renderer/Sprite.o \
-	Renderer/ProcSprite.o Renderer/Renderer.o \
+	Renderer/ProcSprite.o Renderer/Shapes/Rectangle.o Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
 main.o: main.cpp
@@ -156,6 +156,10 @@ Renderer/Sprite.o: Renderer/Sprite.cpp
 
 Renderer/ProcSprite.o: Renderer/ProcSprite.cpp
 	$(CC) -o Renderer/ProcSprite.o -c Renderer/ProcSprite.cpp $(CFLAGS)
+
+Renderer/Shapes/Rectangle.o: Renderer/Shapes/Rectangle.cpp
+	$(CC) -o Renderer/Shapes/Rectangle.o -c \
+	Renderer/Shapes/Rectangle.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

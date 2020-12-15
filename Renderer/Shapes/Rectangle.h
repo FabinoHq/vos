@@ -37,196 +37,149 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Renderer.h : Renderer management                              //
+//     Renderer/Shapes/Rectangle.h : Rectangle shape management               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_RENDERER_HEADER
-#define VOS_RENDERER_RENDERER_HEADER
+#ifndef VOS_RENDERER_SHAPES_RECTANGLE_HEADER
+#define VOS_RENDERER_SHAPES_RECTANGLE_HEADER
 
-    #include "../System/SysMessage.h"
-    #include "../System/SysWindow.h"
-    #include "../System/SysVulkan.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/VulkanMemory.h"
-    #include "Vulkan/VulkanQueue.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/VulkanBuffer.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "Vulkan/UniformBuffer.h"
-    #include "Vulkan/GraphicsLayout.h"
-    #include "Shader.h"
-    #include "Texture.h"
-    #include "View.h"
-    #include "Sprite.h"
-    #include "ProcSprite.h"
-    #include "../Math/Math.h"
-    #include "../Math/Matrix4x4.h"
+    #include "../Shader.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
+    #include "../../Math/Matrix4x4.h"
 
-    #include "Shaders/Default.h"
-
-    #include <vector>
+    #include "../Shaders/Rectangle.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer clear color                                                  //
+    //  Renderer class declaration                                            //
     ////////////////////////////////////////////////////////////////////////////
-    const VkClearValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class definition                                             //
+    //  Rectangle class definition                                            //
     ////////////////////////////////////////////////////////////////////////////
-    class Renderer
+    class Rectangle
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Renderer default constructor                                  //
+            //  Rectangle default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            Renderer();
+            Rectangle();
 
             ////////////////////////////////////////////////////////////////////
-            //  Renderer destructor                                           //
+            //  Rectangle destructor                                          //
             ////////////////////////////////////////////////////////////////////
-            ~Renderer();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init renderer                                                 //
-            //  return : True if the renderer is successfully loaded          //
-            ////////////////////////////////////////////////////////////////////
-            bool init(SysWindow* sysWindow);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Start rendering frame                                         //
-            //  return : True if the rendering frame is ready                 //
-            ////////////////////////////////////////////////////////////////////
-            bool startFrame();
-
-            ////////////////////////////////////////////////////////////////////
-            //  End rendering frame                                           //
-            //  return : True if the frame is rendering                       //
-            ////////////////////////////////////////////////////////////////////
-            bool endFrame();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Wait renderer device for idle state                           //
-            //  return : True if the renderer device is in idle state         //
-            ////////////////////////////////////////////////////////////////////
-            bool waitDeviceIdle();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Cleanup renderer                                              //
-            ////////////////////////////////////////////////////////////////////
-            void cleanup();
+            ~Rectangle();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer default shader                                  //
+            //  Init rectangle                                                //
+            //  return : True if the rectangle is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            void bindDefaultShader();
+            bool init(float width, float height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set renderer default view                                     //
-            //  return : True if the default view is successfully set         //
+            //  Destroy rectangle                                             //
             ////////////////////////////////////////////////////////////////////
-            bool setDefaultView();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer view                                             //
-            //  return : True if the view is successfully set                 //
-            ////////////////////////////////////////////////////////////////////
-            bool setView(View& view);
+            void destroyRectangle(Renderer& renderer);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer ready state                                      //
-            //  return : True if the renderer is ready, false otherwise       //
+            //  Set rectangle position                                        //
             ////////////////////////////////////////////////////////////////////
-            bool isReady();
+            void setPosition(float x, float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer width                                            //
-            //  return : Renderer width                                       //
+            //  Set rectanglee position                                       //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getWidth();
+            void setPosition(Vector2& position);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer height                                           //
-            //  return : Renderer height                                      //
+            //  Set rectangle X position                                      //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getHeight();
+            void setX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer scale                                            //
-            //  return : Renderer scale (1/height)                            //
+            //  Set rectangle Y position                                      //
             ////////////////////////////////////////////////////////////////////
-            float getScale();
+            void setY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer aspect ratio                                     //
-            //  return : Renderer aspect ratio                                //
+            //  Translate rectangle                                           //
             ////////////////////////////////////////////////////////////////////
-            float getRatio();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy constructor : Not copyable              //
-            ////////////////////////////////////////////////////////////////////
-            Renderer(const Renderer&) = delete;
+            void move(float x, float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy operator : Not copyable                 //
+            //  Translate rectangle                                           //
             ////////////////////////////////////////////////////////////////////
-            Renderer& operator=(const Renderer&) = delete;
+            void move(Vector2& vector);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Translate rectangle on X axis                                 //
+            ////////////////////////////////////////////////////////////////////
+            void moveX(float x);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Translate rectangle on Y axis                                 //
+            ////////////////////////////////////////////////////////////////////
+            void moveY(float y);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rectangle size                                            //
+            ////////////////////////////////////////////////////////////////////
+            void setSize(float width, float height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rectangle size                                            //
+            ////////////////////////////////////////////////////////////////////
+            void setSize(Vector2& size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rectangle width                                           //
+            ////////////////////////////////////////////////////////////////////
+            void setWidth(float width);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rectangle height                                          //
+            ////////////////////////////////////////////////////////////////////
+            void setHeight(float height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rectangle rotation angle                                  //
+            ////////////////////////////////////////////////////////////////////
+            void setAngle(float angle);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Rotate rectangle                                              //
+            ////////////////////////////////////////////////////////////////////
+            void rotate(float angle);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan instance                                        //
-            //  return : True if Vulkan instance is successfully created      //
+            //  Render rectangle                                              //
             ////////////////////////////////////////////////////////////////////
-            bool createVulkanInstance();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Select Vulkan device                                          //
-            //  return : True if Vulkan device is successfully selected       //
-            ////////////////////////////////////////////////////////////////////
-            bool selectVulkanDevice();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Resize renderer frame                                         //
-            //  return : True if the renderer is successfully resized         //
-            ////////////////////////////////////////////////////////////////////
-            bool resize();
+            void render(Renderer& renderer);
 
 
         private:
-            bool                m_rendererReady;        // Renderer ready state
-            uint32_t            m_frameIndex;           // Current frame index
-            SysWindow*          m_sysWindow;            // SysWindow pointer
-            VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
-            VkInstance          m_vulkanInstance;       // Vulkan instance
-            VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
-            VkPhysicalDevice    m_physicalDevice;       // Physical device
-            VkDevice            m_vulkanDevice;         // Vulkan device
-            VulkanQueue         m_graphicsQueue;        // Graphics queue
-            VulkanQueue         m_surfaceQueue;         // Surface queue
-            VulkanQueue         m_transferQueue;        // Transfer queue
-            VkCommandPool       m_transferCommandPool;  // Transfer command pool
+            ////////////////////////////////////////////////////////////////////
+            //  Rectangle private copy constructor : Not copyable             //
+            ////////////////////////////////////////////////////////////////////
+            Rectangle(const Rectangle&) = delete;
 
-            VulkanMemory        m_vulkanMemory;         // Vulkan memory
-            Swapchain           m_swapchain;            // Swapchain
-            VertexBuffer        m_vertexBuffer;         // Default vertex buffer
-            GraphicsLayout      m_layout;               // Graphics layout
-            Shader              m_shader;               // Default shader
-            View                m_view;                 // Default view
+            ////////////////////////////////////////////////////////////////////
+            //  Rectangle private copy operator : Not copyable                //
+            ////////////////////////////////////////////////////////////////////
+            Rectangle& operator=(const Rectangle&) = delete;
 
-            friend class        Shader;                 // Shader has access
-            friend class        Texture;                // Texture has access
-            friend class        View;                   // View has access
-            friend class        Sprite;                 // Sprite has access
-            friend class        ProcSprite;             // ProcSprite has access
-            friend class        Rectangle;              // Rectangle has access
+
+        private:
+            Matrix4x4           m_modelMatrix;      // Rectangle model matrix
+            Vector2             m_position;         // Rectangle position
+            Vector2             m_size;             // Rectangle size
+            float               m_angle;            // Rectangle angle
     };
 
 
-#endif // VOS_RENDERER_RENDERER_HEADER
+#endif // VOS_RENDERER_SHAPES_RECTANGLE_HEADER

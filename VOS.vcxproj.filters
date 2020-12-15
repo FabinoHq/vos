@@ -25,6 +25,9 @@
     <Filter Include="Renderer\Images\Embedded">
       <UniqueIdentifier>{04cb918c-840c-4879-af04-128f2ebb3f51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\Shapes">
+      <UniqueIdentifier>{da9bebd6-c287-4c94-bf66-2debaa11b853}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -100,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="Renderer\ProcSprite.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Shapes\Rectangle.cpp">
+      <Filter>Renderer\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +221,12 @@
     </ClInclude>
     <ClInclude Include="Math\Vector4.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\Rectangle.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shapes\Rectangle.h">
+      <Filter>Renderer\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
