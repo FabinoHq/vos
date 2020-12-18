@@ -63,6 +63,7 @@ m_swapchain(),
 m_vertexBuffer(),
 m_layout(),
 m_shader(),
+m_rectShader(),
 m_view()
 {
 
@@ -267,12 +268,23 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create rect shader
+    if (!m_rectShader.createShader(*this,
+        RectVertexShader, RectVertexShaderSize,
+        RectFragmentShader, RectFragmentShaderSize))
+    {
+        // Could not create rect shader
+        SysMessage::box() << "[0x3047] Could not create rect shader\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create vertex buffer
     if (!m_vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
         m_vulkanMemory, m_transferCommandPool, m_transferQueue))
     {
         // Could not create vertex buffer
-        SysMessage::box() << "[0x3047] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3048] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -608,7 +620,10 @@ void Renderer::cleanup()
             // Destroy vertex buffer
             m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
 
-            // Destroy shader
+            // Destroy rect shader
+            m_rectShader.destroyShader(*this);
+
+            // Destroy default shader
             m_shader.destroyShader(*this);
 
             // Destroy default pipeline layout
@@ -652,6 +667,14 @@ void Renderer::cleanup()
 void Renderer::bindDefaultShader()
 {
     m_shader.bind(*this);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer rect shader                                                 //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindRectShader()
+{
+    m_rectShader.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

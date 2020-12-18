@@ -274,6 +274,9 @@ void Rect::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 void Rect::render(Renderer& renderer)
 {
+    // Bind rect shader
+    renderer.bindRectShader();
+
     // Set rect model matrix
     m_modelMatrix.setIdentity();
     m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);

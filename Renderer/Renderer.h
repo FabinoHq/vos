@@ -62,6 +62,7 @@
     #include "../Math/Matrix4x4.h"
 
     #include "Shaders/Default.h"
+    #include "Shaders/Rect.h"
 
     #include <vector>
 
@@ -123,6 +124,11 @@
             //  Bind renderer default shader                                  //
             ////////////////////////////////////////////////////////////////////
             void bindDefaultShader();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer rect shader                                     //
+            ////////////////////////////////////////////////////////////////////
+            void bindRectShader();
 
             ////////////////////////////////////////////////////////////////////
             //  Set renderer default view                                     //
@@ -218,6 +224,7 @@
             VertexBuffer        m_vertexBuffer;         // Default vertex buffer
             GraphicsLayout      m_layout;               // Graphics layout
             Shader              m_shader;               // Default shader
+            Shader              m_rectShader;           // Rect shader
             View                m_view;                 // Default view
 
             friend class        Shader;                 // Shader has access
