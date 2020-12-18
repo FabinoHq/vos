@@ -37,17 +37,18 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shapes/Rectangle.h : Rectangle shape management               //
+//     Renderer/Shapes/Rect.h : Rectangle shape management                    //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHAPES_RECTANGLE_HEADER
-#define VOS_RENDERER_SHAPES_RECTANGLE_HEADER
+#ifndef VOS_RENDERER_SHAPES_RECT_HEADER
+#define VOS_RENDERER_SHAPES_RECT_HEADER
 
     #include "../Shader.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
+    #include "../../Math/Vector4.h"
     #include "../../Math/Matrix4x4.h"
 
-    #include "../Shaders/Rectangle.h"
+    #include "../Shaders/Rect.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -57,129 +58,156 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Rectangle class definition                                            //
+    //  Rect class definition                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    class Rectangle
+    class Rect
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Rectangle default constructor                                 //
+            //  Rect default constructor                                      //
             ////////////////////////////////////////////////////////////////////
-            Rectangle();
+            Rect();
 
             ////////////////////////////////////////////////////////////////////
-            //  Rectangle destructor                                          //
+            //  Rect destructor                                               //
             ////////////////////////////////////////////////////////////////////
-            ~Rectangle();
+            ~Rect();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init rectangle                                                //
-            //  return : True if the rectangle is successfully created        //
+            //  Init rect                                                     //
+            //  return : True if the rect is successfully created             //
             ////////////////////////////////////////////////////////////////////
             bool init(float width, float height);
 
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy rectangle                                             //
-            ////////////////////////////////////////////////////////////////////
-            void destroyRectangle(Renderer& renderer);
-
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectangle position                                        //
+            //  Set rect position                                             //
             ////////////////////////////////////////////////////////////////////
             void setPosition(float x, float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectanglee position                                       //
+            //  Set rect position                                             //
             ////////////////////////////////////////////////////////////////////
             void setPosition(Vector2& position);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectangle X position                                      //
+            //  Set rect X position                                           //
             ////////////////////////////////////////////////////////////////////
             void setX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectangle Y position                                      //
+            //  Set rect Y position                                           //
             ////////////////////////////////////////////////////////////////////
             void setY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate rectangle                                           //
+            //  Translate rect                                                //
             ////////////////////////////////////////////////////////////////////
             void move(float x, float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate rectangle                                           //
+            //  Translate rect                                                //
             ////////////////////////////////////////////////////////////////////
             void move(Vector2& vector);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate rectangle on X axis                                 //
+            //  Translate rect on X axis                                      //
             ////////////////////////////////////////////////////////////////////
             void moveX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate rectangle on Y axis                                 //
+            //  Translate rect on Y axis                                      //
             ////////////////////////////////////////////////////////////////////
             void moveY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectangle size                                            //
+            //  Set rect size                                                 //
             ////////////////////////////////////////////////////////////////////
             void setSize(float width, float height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectangle size                                            //
+            //  Set rect size                                                 //
             ////////////////////////////////////////////////////////////////////
             void setSize(Vector2& size);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectangle width                                           //
+            //  Set rect width                                                //
             ////////////////////////////////////////////////////////////////////
             void setWidth(float width);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectangle height                                          //
+            //  Set rect height                                               //
             ////////////////////////////////////////////////////////////////////
             void setHeight(float height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rectangle rotation angle                                  //
+            //  Set rect rotation angle                                       //
             ////////////////////////////////////////////////////////////////////
             void setAngle(float angle);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate rectangle                                              //
+            //  Rotate rect                                                   //
             ////////////////////////////////////////////////////////////////////
             void rotate(float angle);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Render rectangle                                              //
+            //  Set rect color                                                //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(Vector4 color);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rect color                                                //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(float red, float green, float blue, float alpha);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rect red channel                                          //
+            ////////////////////////////////////////////////////////////////////
+            void setRed(float red);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rect green channel                                        //
+            ////////////////////////////////////////////////////////////////////
+            void setGreen(float green);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rect blue channel                                         //
+            ////////////////////////////////////////////////////////////////////
+            void setBlue(float blue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set rect alpha channel                                        //
+            ////////////////////////////////////////////////////////////////////
+            void setAlpha(float alpha);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render rect                                                  //
             ////////////////////////////////////////////////////////////////////
             void render(Renderer& renderer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Rectangle private copy constructor : Not copyable             //
+            //  Rect private copy constructor : Not copyable                  //
             ////////////////////////////////////////////////////////////////////
-            Rectangle(const Rectangle&) = delete;
+            Rect(const Rect&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Rectangle private copy operator : Not copyable                //
+            //  Rect private copy operator : Not copyable                     //
             ////////////////////////////////////////////////////////////////////
-            Rectangle& operator=(const Rectangle&) = delete;
+            Rect& operator=(const Rect&) = delete;
 
 
         private:
-            Matrix4x4           m_modelMatrix;      // Rectangle model matrix
-            Vector2             m_position;         // Rectangle position
-            Vector2             m_size;             // Rectangle size
-            float               m_angle;            // Rectangle angle
+            Matrix4x4           m_modelMatrix;      // Rect model matrix
+            Vector2             m_position;         // Rect position
+            Vector2             m_size;             // Rect size
+            float               m_angle;            // Rect angle
+            Vector4             m_color;            // Rect color
     };
 
 
-#endif // VOS_RENDERER_SHAPES_RECTANGLE_HEADER
+#endif // VOS_RENDERER_SHAPES_RECT_HEADER

@@ -225,7 +225,7 @@
             friend class        View;                   // View has access
             friend class        Sprite;                 // Sprite has access
             friend class        ProcSprite;             // ProcSprite has access
-            friend class        Rectangle;              // Rectangle has access
+            friend class        Rect;                   // Rect has access
     };
 
 

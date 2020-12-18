@@ -211,7 +211,6 @@
             Vector2             m_position;         // Sprite position
             Vector2             m_size;             // Sprite size
             float               m_angle;            // Sprite angle
-
             Vector4             m_color;            // Sprite color
     };
 

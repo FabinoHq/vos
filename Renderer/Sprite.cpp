@@ -99,6 +99,9 @@ bool Sprite::init(Texture& texture, float width, float height)
     // Reset sprite angle
     m_angle = 0.0f;
 
+    // Reset sprite color
+    m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
+
     // Sprite successfully created
     return true;
 }

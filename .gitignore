@@ -104,12 +104,17 @@
 !Renderer/Shaders/Sources/DefaultProc.frag
 !Renderer/Shaders/Sources/Rectangle.vert
 !Renderer/Shaders/Sources/Rectangle.frag
+!Renderer/Shaders/Sources/Rect.vert
+!Renderer/Shaders/Sources/Rect.frag
 !Renderer/Shaders/Default.h
 !Renderer/Shaders/DefaultProc.h
 !Renderer/Shaders/Rectangle.h
+!Renderer/Shaders/Rect.h
 
 !Renderer/Shapes/
 !Renderer/Shapes/Rectangle.h
 !Renderer/Shapes/Rectangle.cpp
+!Renderer/Shapes/Rect.h
+!Renderer/Shapes/Rect.cpp
 
 !Renderer/Images/Embedded/Cursor.h

@@ -52,6 +52,7 @@ m_renderer(),
 m_texture(),
 m_cursor(),
 m_procsprite(),
+m_rect(),
 m_mouseX(0.0f),
 m_mouseY(0.0f)
 {
@@ -113,6 +114,13 @@ bool Vos::launch()
     if (!m_procsprite.init(m_renderer, 0, 0, 0, 0, 1.0f, 1.0f))
     {
         // Could not init procedural sprite
+        return false;
+    }
+
+    // Init rect shape
+    if (!m_rect.init(1.0f, 1.0f))
+    {
+        // Could not init rect shape
         return false;
     }
 
@@ -182,9 +190,14 @@ void Vos::run()
             float cursorSize = 64.0f*scale;
 
             // Draw procedural sprite
-            m_procsprite.setSize(1.0f, 1.0f);
+            /*m_procsprite.setSize(1.0f, 1.0f);
             m_procsprite.setPosition(-0.5f, -0.5f);
-            m_procsprite.render(m_renderer);
+            m_procsprite.render(m_renderer);*/
+
+            // Draw rectangle
+            m_rect.setSize(1.0f, 1.0f);
+            m_rect.setPosition(-0.5f, -0.5f);
+            m_rect.render(m_renderer);
 
             // Draw cursor
             m_cursor.setSize(cursorSize, cursorSize);

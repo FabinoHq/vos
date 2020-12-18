@@ -37,29 +37,31 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shapes/Rectangle.cpp : Rectangle shape management             //
+//     Renderer/Shapes/Rect.cpp : Rectangle shape management                  //
 ////////////////////////////////////////////////////////////////////////////////
-#include "Rectangle.h"
+#include "Rect.h"
 #include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Rectangle default constructor                                             //
+//  Rect default constructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-Rectangle::Rectangle() :
+Rect::Rect() :
 m_modelMatrix(),
 m_position(0.0f, 0.0f),
 m_size(1.0f, 1.0f),
-m_angle(0.0f)
+m_angle(0.0f),
+m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
     m_modelMatrix.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Rectangle destructor                                                      //
+//  Rect destructor                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-Rectangle::~Rectangle()
+Rect::~Rect()
 {
+    m_color.reset();
     m_angle = 0.0f;
     m_size.reset();
     m_position.reset();
@@ -68,164 +70,211 @@ Rectangle::~Rectangle()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init rectangle                                                            //
-//  return : True if the rectangle is successfully created                    //
+//  Init rect                                                                 //
+//  return : True if the rect is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool Rectangle::init(float width, float height)
+bool Rect::init(float width, float height)
 {
-    // Reset rectangle model matrix
+    // Reset rect model matrix
     m_modelMatrix.setIdentity();
 
-    // Reset rectangle position
+    // Reset rect position
     m_position.reset();
 
-    // Set rectangle size
+    // Set rect size
     m_size.set(width, height);
 
-    // Reset rectangle angle
+    // Reset rect angle
     m_angle = 0.0f;
 
-    // Rectangle successfully created
+    // Reset rect color
+    m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Rect successfully created
     return true;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy rectangle                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Rectangle::destroyRectangle(Renderer& renderer)
-{
-    m_angle = 0.0f;
-    m_size.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle position                                                    //
+//  Set rect position                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setPosition(float x, float y)
+void Rect::setPosition(float x, float y)
 {
     m_position.vec[0] = x;
     m_position.vec[1] = y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle position                                                    //
+//  Set rect position                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setPosition(Vector2& position)
+void Rect::setPosition(Vector2& position)
 {
     m_position.vec[0] = position.vec[0];
     m_position.vec[1] = position.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle X position                                                  //
+//  Set rect X position                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setX(float x)
+void Rect::setX(float x)
 {
     m_position.vec[0] = x;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle Y position                                                  //
+//  Set rect Y position                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setY(float y)
+void Rect::setY(float y)
 {
     m_position.vec[1] = y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Translate rectangle                                                       //
+//  Translate rect                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::move(float x, float y)
+void Rect::move(float x, float y)
 {
     m_position.vec[0] += x;
     m_position.vec[1] += y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Translate rectangle                                                       //
+//  Translate rect                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::move(Vector2& vector)
+void Rect::move(Vector2& vector)
 {
     m_position.vec[0] += vector.vec[0];
     m_position.vec[1] += vector.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Translate rectangle on X axis                                             //
+//  Translate rect on X axis                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::moveX(float x)
+void Rect::moveX(float x)
 {
     m_position.vec[0] += x;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Translate rectangle on Y axis                                             //
+//  Translate rect on Y axis                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::moveY(float y)
+void Rect::moveY(float y)
 {
     m_position.vec[1] += y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle size                                                        //
+//  Set rect size                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setSize(float width, float height)
+void Rect::setSize(float width, float height)
 {
     m_size.vec[0] = width;
     m_size.vec[1] = height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle size                                                        //
+//  Set rect size                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setSize(Vector2& size)
+void Rect::setSize(Vector2& size)
 {
     m_size.vec[0] = size.vec[0];
     m_size.vec[1] = size.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle width                                                       //
+//  Set rect width                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setWidth(float width)
+void Rect::setWidth(float width)
 {
     m_size.vec[0] = width;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle height                                                      //
+//  Set rect height                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setHeight(float height)
+void Rect::setHeight(float height)
 {
     m_size.vec[1] = height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rectangle rotation angle                                              //
+//  Set rect rotation angle                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::setAngle(float angle)
+void Rect::setAngle(float angle)
 {
     m_angle = angle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Rotate rectangle                                                          //
+//  Rotate rect                                                               //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::rotate(float angle)
+void Rect::rotate(float angle)
 {
     m_angle += angle;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render rectangle                                                          //
+//  Set rect color                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Rectangle::render(Renderer& renderer)
+void Rect::setColor(Vector4 color)
 {
-    // Set rectangle model matrix
+    m_color.vec[0] = color.vec[0];
+    m_color.vec[1] = color.vec[1];
+    m_color.vec[2] = color.vec[2];
+    m_color.vec[3] = color.vec[3];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set rect color                                                            //
+////////////////////////////////////////////////////////////////////////////////
+void Rect::setColor(float red, float green, float blue, float alpha)
+{
+    m_color.vec[0] = red;
+    m_color.vec[1] = green;
+    m_color.vec[2] = blue;
+    m_color.vec[3] = alpha;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set rect red channel                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void Rect::setRed(float red)
+{
+    m_color.vec[0] = red;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set rect green channel                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void Rect::setGreen(float green)
+{
+    m_color.vec[1] = green;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set rect blue channel                                                     //
+////////////////////////////////////////////////////////////////////////////////
+void Rect::setBlue(float blue)
+{
+    m_color.vec[2] = blue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set rect alpha channel                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void Rect::setAlpha(float alpha)
+{
+    m_color.vec[3] = alpha;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Render rect                                                          //
+////////////////////////////////////////////////////////////////////////////////
+void Rect::render(Renderer& renderer)
+{
+    // Set rect model matrix
     m_modelMatrix.setIdentity();
     m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
     m_modelMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
@@ -242,10 +291,10 @@ void Rectangle::render(Renderer& renderer)
 
     // Push constants into command buffer
     PushConstantData pushConstants;
-    pushConstants.color[0] = 1.0f;
-    pushConstants.color[1] = 1.0f;
-    pushConstants.color[2] = 1.0f;
-    pushConstants.color[3] = 1.0f;
+    pushConstants.color[0] = m_color.vec[0];
+    pushConstants.color[1] = m_color.vec[1];
+    pushConstants.color[2] = m_color.vec[2];
+    pushConstants.color[3] = m_color.vec[3];
     pushConstants.offset[0] = 0.0f;
     pushConstants.offset[1] = 0.0f;
     pushConstants.size[0] = 1.0f;
@@ -258,7 +307,7 @@ void Rectangle::render(Renderer& renderer)
         sizeof(Matrix4x4::mat), sizeof(PushConstantData), &pushConstants
     );
 
-    // Draw rectangle triangles
+    // Draw rect triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         6, 1, 0, 0, 0

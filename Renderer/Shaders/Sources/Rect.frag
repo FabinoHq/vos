@@ -37,36 +37,27 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/Rectangle.vert : Rectangle vertex shader      //
+//     Renderer/Shaders/Sources/Rect.frag : Rectangle fragment shader         //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision mediump float;
 precision highp int;
 
-// Matrices buffer (projection and view)
-layout(set = 0, binding = 0) uniform MatricesBuffer
+// Color, position, offset, and time (push constant)
+layout(push_constant) uniform Constants
 {
-    mat4 proj;
-    mat4 view;
-} mats;
+	layout(offset = 64)
+    vec4 color;
+    vec2 offset;
+    vec2 size;
+    float time;
+} constants;
 
-// Model matrix (push constant)
-layout(push_constant) uniform ModelMatrix
-{
-    mat4 model;
-} matrix;
-
-// Input and output position and texture coordinates
-layout(location = 0) in vec3 i_Position;
-layout(location = 1) in vec2 i_TexCoords;
-layout(location = 0) out vec2 texCoords;
-out gl_PerVertex
-{
-    vec4 gl_Position;
-};
+// Input texture coordinates and output color
+layout(location = 0) in vec2 texCoords;
+layout(location = 0) out vec4 o_Color;
 void main()
 {
-    // Compute vertex position
-    texCoords = i_TexCoords;
-    gl_Position = mats.proj * mats.view * matrix.model * vec4(i_Position, 1.0);
+    // Compute output color
+    o_Color = constants.color;
 }

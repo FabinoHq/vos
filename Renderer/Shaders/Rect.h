@@ -37,17 +37,17 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Rectangle.h : Rectangle shape shader                  //
+//     Renderer/Shaders/Rect.h : Rectangle shape shader                       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHADERS_RECTANGLE_HEADER
-#define VOS_RENDERER_SHADERS_RECTANGLE_HEADER
+#ifndef VOS_RENDERER_SHADERS_RECT_HEADER
+#define VOS_RENDERER_SHADERS_RECT_HEADER
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Rectangle vertex shader                                               //
+    //  Rect vertex shader                                                    //
     ////////////////////////////////////////////////////////////////////////////
-    const size_t RectangleVertexShaderSize = 1724;
-    const uint32_t RectangleVertexShader[] =
+    const size_t RectVertexShaderSize = 1724;
+    const uint32_t RectVertexShader[] =
     {
         0x07230203u, 0x00010000u, 0x00080000u, 0x00000031u,
         0x00000000u, 0x00020011u, 0x00000001u, 0x0006000Bu,
@@ -160,10 +160,10 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Rectangle fragment shader                                             //
+    //  Rect fragment shader                                                  //
     ////////////////////////////////////////////////////////////////////////////
-    const size_t RectangleFragmentShaderSize = 828;
-    const uint32_t RectangleFragmentShader[] =
+    const size_t RectFragmentShaderSize = 828;
+    const uint32_t RectFragmentShader[] =
     {
         0x07230203u, 0x00010000u, 0x00080000u, 0x00000015u,
         0x00000000u, 0x00020011u, 0x00000001u, 0x0006000Bu,
@@ -220,4 +220,4 @@
     };
 
 
-#endif // VOS_RENDERER_SHADERS_RECTANGLE_HEADER
+#endif // VOS_RENDERER_SHADERS_RECT_HEADER

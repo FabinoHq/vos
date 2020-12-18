@@ -49,6 +49,7 @@
     #include "Renderer/Renderer.h"
     #include "Renderer/Sprite.h"
     #include "Renderer/ProcSprite.h"
+    #include "Renderer/Shapes/Rect.h"
     #include "Event.h"
 
     #include "Renderer/Images/Embedded/Cursor.h"
@@ -101,6 +102,7 @@
             Texture         m_texture;      // Cursor texture
             Sprite          m_cursor;       // Cursor sprite
             ProcSprite      m_procsprite;   // Procedural sprite
+            Rect            m_rect;         // Rect shape
 
             float           m_mouseX;       // Mouse X position
             float           m_mouseY;       // Mouse Y position
