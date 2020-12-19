@@ -53,6 +53,7 @@ m_texture(),
 m_cursor(),
 m_procsprite(),
 m_rect(),
+m_oval(),
 m_mouseX(0.0f),
 m_mouseY(0.0f)
 {
@@ -121,6 +122,13 @@ bool Vos::launch()
     if (!m_rect.init(1.0f, 1.0f))
     {
         // Could not init rect shape
+        return false;
+    }
+
+    // Init oval shape
+    if (!m_oval.init(1.0f, 1.0f))
+    {
+        // Could not init oval shape
         return false;
     }
 
@@ -195,9 +203,14 @@ void Vos::run()
             m_procsprite.render(m_renderer);*/
 
             // Draw rectangle
-            m_rect.setSize(1.0f, 1.0f);
+            /*m_rect.setSize(1.0f, 1.0f);
             m_rect.setPosition(-0.5f, -0.5f);
-            m_rect.render(m_renderer);
+            m_rect.render(m_renderer);*/
+
+            // Draw ellipse
+            m_oval.setSize(1.0f, 1.0f);
+            m_oval.setPosition(-0.5f, -0.5f);
+            m_oval.render(m_renderer);
 
             // Draw cursor
             m_cursor.setSize(cursorSize, cursorSize);

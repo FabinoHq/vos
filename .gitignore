@@ -104,12 +104,17 @@
 !Renderer/Shaders/Sources/DefaultProc.frag
 !Renderer/Shaders/Sources/Rect.vert
 !Renderer/Shaders/Sources/Rect.frag
+!Renderer/Shaders/Sources/Oval.vert
+!Renderer/Shaders/Sources/Oval.frag
 !Renderer/Shaders/Default.h
 !Renderer/Shaders/DefaultProc.h
 !Renderer/Shaders/Rect.h
+!Renderer/Shaders/Oval.h
 
 !Renderer/Shapes/
 !Renderer/Shapes/Rect.h
 !Renderer/Shapes/Rect.cpp
+!Renderer/Shapes/Oval.h
+!Renderer/Shapes/Oval.cpp
 
 !Renderer/Images/Embedded/Cursor.h

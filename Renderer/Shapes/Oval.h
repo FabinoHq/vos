@@ -37,211 +37,177 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Renderer.h : Renderer management                              //
+//     Renderer/Shapes/Oval.h : Ellipse shape management                      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_RENDERER_HEADER
-#define VOS_RENDERER_RENDERER_HEADER
+#ifndef VOS_RENDERER_SHAPES_OVAL_HEADER
+#define VOS_RENDERER_SHAPES_OVAL_HEADER
 
-    #include "../System/SysMessage.h"
-    #include "../System/SysWindow.h"
-    #include "../System/SysVulkan.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/VulkanMemory.h"
-    #include "Vulkan/VulkanQueue.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/VulkanBuffer.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "Vulkan/UniformBuffer.h"
-    #include "Vulkan/GraphicsLayout.h"
-    #include "Shader.h"
-    #include "Texture.h"
-    #include "View.h"
-    #include "Sprite.h"
-    #include "ProcSprite.h"
-    #include "../Math/Math.h"
-    #include "../Math/Matrix4x4.h"
+    #include "../Shader.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
+    #include "../../Math/Vector4.h"
+    #include "../../Math/Matrix4x4.h"
 
-    #include "Shaders/Default.h"
-    #include "Shaders/Rect.h"
-    #include "Shaders/Oval.h"
-
-    #include <vector>
+    #include "../Shaders/Oval.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer clear color                                                  //
+    //  Renderer class declaration                                            //
     ////////////////////////////////////////////////////////////////////////////
-    const VkClearValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class definition                                             //
+    //  Oval class definition                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    class Renderer
+    class Oval
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Renderer default constructor                                  //
+            //  Oval default constructor                                      //
             ////////////////////////////////////////////////////////////////////
-            Renderer();
+            Oval();
 
             ////////////////////////////////////////////////////////////////////
-            //  Renderer destructor                                           //
+            //  Oval destructor                                               //
             ////////////////////////////////////////////////////////////////////
-            ~Renderer();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init renderer                                                 //
-            //  return : True if the renderer is successfully loaded          //
-            ////////////////////////////////////////////////////////////////////
-            bool init(SysWindow* sysWindow);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Start rendering frame                                         //
-            //  return : True if the rendering frame is ready                 //
-            ////////////////////////////////////////////////////////////////////
-            bool startFrame();
-
-            ////////////////////////////////////////////////////////////////////
-            //  End rendering frame                                           //
-            //  return : True if the frame is rendering                       //
-            ////////////////////////////////////////////////////////////////////
-            bool endFrame();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Wait renderer device for idle state                           //
-            //  return : True if the renderer device is in idle state         //
-            ////////////////////////////////////////////////////////////////////
-            bool waitDeviceIdle();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Cleanup renderer                                              //
-            ////////////////////////////////////////////////////////////////////
-            void cleanup();
+            ~Oval();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer default shader                                  //
+            //  Init oval                                                     //
+            //  return : True if the oval is successfully created             //
             ////////////////////////////////////////////////////////////////////
-            void bindDefaultShader();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer rect shader                                     //
-            ////////////////////////////////////////////////////////////////////
-            void bindRectShader();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer oval shader                                     //
-            ////////////////////////////////////////////////////////////////////
-            void bindOvalShader();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer default view                                     //
-            //  return : True if the default view is successfully set         //
-            ////////////////////////////////////////////////////////////////////
-            bool setDefaultView();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer view                                             //
-            //  return : True if the view is successfully set                 //
-            ////////////////////////////////////////////////////////////////////
-            bool setView(View& view);
+            bool init(float width, float height);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer ready state                                      //
-            //  return : True if the renderer is ready, false otherwise       //
+            //  Set oval position                                             //
             ////////////////////////////////////////////////////////////////////
-            bool isReady();
+            void setPosition(float x, float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer width                                            //
-            //  return : Renderer width                                       //
+            //  Set oval position                                             //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getWidth();
+            void setPosition(Vector2& position);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer height                                           //
-            //  return : Renderer height                                      //
+            //  Set oval X position                                           //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getHeight();
+            void setX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer scale                                            //
-            //  return : Renderer scale (1/height)                            //
+            //  Set oval Y position                                           //
             ////////////////////////////////////////////////////////////////////
-            float getScale();
+            void setY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get renderer aspect ratio                                     //
-            //  return : Renderer aspect ratio                                //
+            //  Translate oval                                                //
             ////////////////////////////////////////////////////////////////////
-            float getRatio();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy constructor : Not copyable              //
-            ////////////////////////////////////////////////////////////////////
-            Renderer(const Renderer&) = delete;
+            void move(float x, float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy operator : Not copyable                 //
+            //  Translate oval                                                //
             ////////////////////////////////////////////////////////////////////
-            Renderer& operator=(const Renderer&) = delete;
+            void move(Vector2& vector);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Translate oval on X axis                                      //
+            ////////////////////////////////////////////////////////////////////
+            void moveX(float x);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Translate oval on Y axis                                      //
+            ////////////////////////////////////////////////////////////////////
+            void moveY(float y);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set oval size                                                 //
+            ////////////////////////////////////////////////////////////////////
+            void setSize(float width, float height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set oval size                                                 //
+            ////////////////////////////////////////////////////////////////////
+            void setSize(Vector2& size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set oval width                                                //
+            ////////////////////////////////////////////////////////////////////
+            void setWidth(float width);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set oval height                                               //
+            ////////////////////////////////////////////////////////////////////
+            void setHeight(float height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set oval rotation angle                                       //
+            ////////////////////////////////////////////////////////////////////
+            void setAngle(float angle);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Rotate oval                                                   //
+            ////////////////////////////////////////////////////////////////////
+            void rotate(float angle);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan instance                                        //
-            //  return : True if Vulkan instance is successfully created      //
+            //  Set oval color                                                //
             ////////////////////////////////////////////////////////////////////
-            bool createVulkanInstance();
+            void setColor(Vector4 color);
 
             ////////////////////////////////////////////////////////////////////
-            //  Select Vulkan device                                          //
-            //  return : True if Vulkan device is successfully selected       //
+            //  Set oval color                                                //
             ////////////////////////////////////////////////////////////////////
-            bool selectVulkanDevice();
+            void setColor(float red, float green, float blue, float alpha);
 
             ////////////////////////////////////////////////////////////////////
-            //  Resize renderer frame                                         //
-            //  return : True if the renderer is successfully resized         //
+            //  Set oval red channel                                          //
             ////////////////////////////////////////////////////////////////////
-            bool resize();
+            void setRed(float red);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set oval green channel                                        //
+            ////////////////////////////////////////////////////////////////////
+            void setGreen(float green);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set oval blue channel                                         //
+            ////////////////////////////////////////////////////////////////////
+            void setBlue(float blue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set oval alpha channel                                        //
+            ////////////////////////////////////////////////////////////////////
+            void setAlpha(float alpha);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render oval                                                  //
+            ////////////////////////////////////////////////////////////////////
+            void render(Renderer& renderer);
 
 
         private:
-            bool                m_rendererReady;        // Renderer ready state
-            uint32_t            m_frameIndex;           // Current frame index
-            SysWindow*          m_sysWindow;            // SysWindow pointer
-            VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
-            VkInstance          m_vulkanInstance;       // Vulkan instance
-            VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
-            VkPhysicalDevice    m_physicalDevice;       // Physical device
-            VkDevice            m_vulkanDevice;         // Vulkan device
-            VulkanQueue         m_graphicsQueue;        // Graphics queue
-            VulkanQueue         m_surfaceQueue;         // Surface queue
-            VulkanQueue         m_transferQueue;        // Transfer queue
-            VkCommandPool       m_transferCommandPool;  // Transfer command pool
+            ////////////////////////////////////////////////////////////////////
+            //  Oval private copy constructor : Not copyable                  //
+            ////////////////////////////////////////////////////////////////////
+            Oval(const Oval&) = delete;
 
-            VulkanMemory        m_vulkanMemory;         // Vulkan memory
-            Swapchain           m_swapchain;            // Swapchain
-            VertexBuffer        m_vertexBuffer;         // Default vertex buffer
-            GraphicsLayout      m_layout;               // Graphics layout
-            Shader              m_shader;               // Default shader
-            Shader              m_rectShader;           // Rect shader
-            Shader              m_ovalShader;           // Oval shader
-            View                m_view;                 // Default view
+            ////////////////////////////////////////////////////////////////////
+            //  Oval private copy operator : Not copyable                     //
+            ////////////////////////////////////////////////////////////////////
+            Oval& operator=(const Oval&) = delete;
 
-            friend class        Shader;                 // Shader has access
-            friend class        Texture;                // Texture has access
-            friend class        View;                   // View has access
-            friend class        Sprite;                 // Sprite has access
-            friend class        ProcSprite;             // ProcSprite has access
-            friend class        Rect;                   // Rect has access
-            friend class        Oval;                   // Oval has access
+
+        private:
+            Matrix4x4           m_modelMatrix;      // Oval model matrix
+            Vector2             m_position;         // Oval position
+            Vector2             m_size;             // Oval size
+            float               m_angle;            // Oval angle
+            Vector4             m_color;            // Oval color
     };
 
 
-#endif // VOS_RENDERER_RENDERER_HEADER
+#endif // VOS_RENDERER_SHAPES_OVAL_HEADER

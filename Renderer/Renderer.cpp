@@ -64,6 +64,7 @@ m_vertexBuffer(),
 m_layout(),
 m_shader(),
 m_rectShader(),
+m_ovalShader(),
 m_view()
 {
 
@@ -279,12 +280,23 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create oval shader
+    if (!m_ovalShader.createShader(*this,
+        OvalVertexShader, OvalVertexShaderSize,
+        OvalFragmentShader, OvalFragmentShaderSize))
+    {
+        // Could not create oval shader
+        SysMessage::box() << "[0x3048] Could not create oval shader\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create vertex buffer
     if (!m_vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
         m_vulkanMemory, m_transferCommandPool, m_transferQueue))
     {
         // Could not create vertex buffer
-        SysMessage::box() << "[0x3048] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3049] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -620,6 +632,9 @@ void Renderer::cleanup()
             // Destroy vertex buffer
             m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
 
+            // Destroy oval shader
+            m_ovalShader.destroyShader(*this);
+
             // Destroy rect shader
             m_rectShader.destroyShader(*this);
 
@@ -675,6 +690,14 @@ void Renderer::bindDefaultShader()
 void Renderer::bindRectShader()
 {
     m_rectShader.bind(*this);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer oval shader                                                 //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindOvalShader()
+{
+    m_ovalShader.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

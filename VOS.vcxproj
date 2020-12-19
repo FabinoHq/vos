@@ -131,6 +131,7 @@
     <ClCompile Include="Renderer\ProcSprite.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\Shader.cpp" />
+    <ClCompile Include="Renderer\Shapes\Oval.cpp" />
     <ClCompile Include="Renderer\Shapes\Rect.cpp" />
     <ClCompile Include="Renderer\Sprite.cpp" />
     <ClCompile Include="Renderer\Texture.cpp" />
@@ -168,7 +169,9 @@
     <ClInclude Include="Renderer\Shader.h" />
     <ClInclude Include="Renderer\Shaders\Default.h" />
     <ClInclude Include="Renderer\Shaders\DefaultProc.h" />
+    <ClInclude Include="Renderer\Shaders\Oval.h" />
     <ClInclude Include="Renderer\Shaders\Rect.h" />
+    <ClInclude Include="Renderer\Shapes\Oval.h" />
     <ClInclude Include="Renderer\Shapes\Rect.h" />
     <ClInclude Include="Renderer\Sprite.h" />
     <ClInclude Include="Renderer\Texture.h" />
