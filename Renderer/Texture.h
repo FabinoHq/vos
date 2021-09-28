@@ -44,6 +44,7 @@
 
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Swapchain.h"
+    #include "Vulkan/VulkanBuffer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -74,7 +75,7 @@
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
             bool createTexture(Renderer& renderer,
-                uint32_t texWidth, uint32_t texHeight);
+                uint32_t texWidth, uint32_t texHeight, uint32_t texDepth);
 
             ////////////////////////////////////////////////////////////////////
             //  Update texture                                                //
@@ -135,11 +136,13 @@
             VkDescriptorPool    m_descriptorPool;   // Descriptor pool
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
 
+            VulkanBuffer        m_stagingBuffer;    // Stagging buffer
             VkDeviceSize        m_memorySize;       // Memory size
             VkDeviceSize        m_memoryOffset;     // Memory offset
 
             uint32_t            m_width;            // Texture width
-            uint32_t            m_height;           // texture height
+            uint32_t            m_height;           // Texture height
+            uint32_t            m_depth;            // Texture depth
     };
 
 #endif // VOS_RENDERER_TEXTURE_HEADER

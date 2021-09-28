@@ -127,8 +127,10 @@
 
 
         public:
-            VulkanBuffer    vertexBuffer;   // Vertex buffer
-            VulkanBuffer    indexBuffer;    // Index buffer
+            VulkanBuffer    vertexBuffer;           // Vertex buffer
+            VulkanBuffer    vertexStagingBuffer;    // Vertex staging buffer
+            VulkanBuffer    indexBuffer;            // Index buffer
+            VulkanBuffer    indexStagingBuffer;     // Index staging buffer
     };
 
 

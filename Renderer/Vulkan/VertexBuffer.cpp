@@ -105,9 +105,8 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
 
-    // Create staging buffer
-    VulkanBuffer stagingBuffer;
-    if (!stagingBuffer.createBuffer(
+    // Create vertex staging buffer
+    if (!vertexStagingBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_HOST, sizeof(DefaultVertices)))
@@ -118,7 +117,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Write vertices into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, stagingBuffer, DefaultVertices))
+        vulkanDevice, vertexStagingBuffer, DefaultVertices))
     {
         // Could not write vertices into staging buffer memory
         return false;
@@ -168,10 +167,10 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     VkBufferCopy bufferCopy;
     bufferCopy.srcOffset = 0;
     bufferCopy.dstOffset = 0;
-    bufferCopy.size = stagingBuffer.size;
+    bufferCopy.size = vertexStagingBuffer.size;
 
     vkCmdCopyBuffer(
-        commandBuffer, stagingBuffer.handle,
+        commandBuffer, vertexStagingBuffer.handle,
         vertexBuffer.handle, 1, &bufferCopy
     );
 
@@ -236,11 +235,11 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     {
         vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
-    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 
 
-    // Create staging buffer
-    if (!stagingBuffer.createBuffer(
+    // Create index staging buffer
+    indexStagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    if (!indexStagingBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_HOST, sizeof(DefaultIndices)))
@@ -251,7 +250,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Write indices into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, stagingBuffer, DefaultIndices))
+        vulkanDevice, indexStagingBuffer, DefaultIndices))
     {
         // Could not write indices into staging buffer memory
         return false;
@@ -299,10 +298,10 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     bufferCopy.srcOffset = 0;
     bufferCopy.dstOffset = 0;
-    bufferCopy.size = stagingBuffer.size;
+    bufferCopy.size = indexStagingBuffer.size;
 
     vkCmdCopyBuffer(
-        commandBuffer, stagingBuffer.handle,
+        commandBuffer, indexStagingBuffer.handle,
         indexBuffer.handle, 1, &bufferCopy
     );
 
@@ -364,7 +363,6 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     {
         vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
     }
-    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 
     // Vertex buffer successfully created
     return true;
@@ -376,6 +374,8 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 void VertexBuffer::destroyBuffer(VkDevice& vulkanDevice,
     VulkanMemory& vulkanMemory)
 {
+    indexStagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
     indexBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    vertexStagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
     vertexBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
 }

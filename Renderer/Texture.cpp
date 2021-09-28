@@ -51,10 +51,12 @@ m_handle(0),
 m_sampler(0),
 m_view(0),
 m_descriptorPool(0),
+m_stagingBuffer(),
 m_memorySize(0),
 m_memoryOffset(0),
 m_width(0),
-m_height(0)
+m_height(0),
+m_depth(0)
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -67,6 +69,7 @@ m_height(0)
 ////////////////////////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
+    m_depth = 0;
     m_height = 0;
     m_width = 0;
     m_memoryOffset = 0;
@@ -87,7 +90,7 @@ Texture::~Texture()
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::createTexture(Renderer& renderer,
-    uint32_t texWidth, uint32_t texHeight)
+    uint32_t texWidth, uint32_t texHeight, uint32_t texDepth)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -104,7 +107,7 @@ bool Texture::createTexture(Renderer& renderer,
     }
 
     // Check texture size
-    if (texWidth == 0 || texHeight == 0)
+    if (texWidth == 0 || texHeight == 0 || texDepth == 0)
     {
         // Invalid texture size
         return false;
@@ -120,6 +123,7 @@ bool Texture::createTexture(Renderer& renderer,
     // Set texture size
     m_width = texWidth;
     m_height = texHeight;
+    m_depth = texDepth;
 
     // Create image
     VkImageCreateInfo imageInfo;
@@ -159,6 +163,17 @@ bool Texture::createTexture(Renderer& renderer,
         renderer.m_vulkanDevice, *this))
     {
         // Could not allocate texture memory
+        return false;
+    }
+
+    // Create staging buffer
+    uint32_t textureSize = m_width * m_height * m_depth;
+    if (!m_stagingBuffer.createBuffer(
+        renderer.m_physicalDevice, renderer.m_vulkanDevice,
+        renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VULKAN_MEMORY_HOST, textureSize))
+    {
+        // Could not create staging buffer
         return false;
     }
 
@@ -341,29 +356,17 @@ bool Texture::updateTexture(Renderer& renderer, uint32_t texWidth,
     }
 
     // Check current texture
-    if (!m_handle || (texWidth != m_width) || (texHeight != m_height))
+    if (!m_handle || (texWidth != m_width) ||
+        (texHeight != m_height) || (texDepth != m_depth))
     {
         // Recreate texture
         destroyTexture(renderer);
-        createTexture(renderer, texWidth, texHeight);
-    }
-
-    uint32_t textureSize = m_width * m_height * texDepth;
-
-    // Create staging buffer
-    VulkanBuffer stagingBuffer;
-    if (!stagingBuffer.createBuffer(
-        renderer.m_physicalDevice, renderer.m_vulkanDevice,
-        renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_HOST, textureSize))
-    {
-        // Could not create staging buffer
-        return false;
+        createTexture(renderer, texWidth, texHeight, texDepth);
     }
 
     // Write data into staging buffer memory
     if (!renderer.m_vulkanMemory.writeBufferMemory(
-        renderer.m_vulkanDevice, stagingBuffer, data))
+        renderer.m_vulkanDevice, m_stagingBuffer, data))
     {
         // Could not write data into staging buffer memory
         return false;
@@ -452,7 +455,7 @@ bool Texture::updateTexture(Renderer& renderer, uint32_t texWidth,
     imageCopy.imageExtent.depth = 1;
 
     vkCmdCopyBufferToImage(
-        commandBuffer, stagingBuffer.handle, m_handle,
+        commandBuffer, m_stagingBuffer.handle, m_handle,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
     );
 
@@ -527,9 +530,6 @@ bool Texture::updateTexture(Renderer& renderer, uint32_t texWidth,
             renderer.m_swapchain.commandsPool, 1, &commandBuffer
         );
     }
-    stagingBuffer.destroyBuffer(
-        renderer.m_vulkanDevice, renderer.m_vulkanMemory
-    );
 
     // Texture successfully loaded
     return true;
@@ -580,6 +580,11 @@ void Texture::destroyTexture(Renderer& renderer)
         {
             vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
         }
+
+        // Destroy staging buffer
+        m_stagingBuffer.destroyBuffer(
+            renderer.m_vulkanDevice, renderer.m_vulkanMemory
+        );
 
         // Free texture memory
         renderer.m_vulkanMemory.freeTextureMemory(
