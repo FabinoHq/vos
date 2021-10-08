@@ -39,9 +39,9 @@
 ##    VOS : Virtual Operating System                                          ##
 ##     Makefile : Linux make compilation file                                 ##
 ################################################################################
-CC=g++
+CC=g++ -std=c++17
 CFLAGS=-W -Wall
-LDFLAGS=-std=c++17 -pthread -lX11 -ldl
+LDFLAGS=-pthread -lX11 -ldl
 
 all: VOS
 

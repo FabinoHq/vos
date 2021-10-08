@@ -45,11 +45,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Standard program entry point                                              //
-//  param argc : Program arguments count                                      //
-//  param argv : Program arguments vector                                     //
 //  return : Main program return code                                         //
 ////////////////////////////////////////////////////////////////////////////////
-int main(int argc, char* argv[])
+int main()
 {
     try
     {

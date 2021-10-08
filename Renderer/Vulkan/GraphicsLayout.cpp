@@ -99,7 +99,7 @@ bool GraphicsLayout::createLayout(VkDevice& vulkanDevice, Swapchain& swapchain)
     if (!createDescriptorSetLayouts(vulkanDevice))
     {
         // Could not create descriptor set layouts
-        SysMessage::box() << "[0x3043] Could not create descriptor layouts\n";
+        SysMessage::box() << "[0x3044] Could not create descriptor layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -108,7 +108,7 @@ bool GraphicsLayout::createLayout(VkDevice& vulkanDevice, Swapchain& swapchain)
     if (!createPipelineLayouts(vulkanDevice))
     {
         // Could not create pipeline layouts
-        SysMessage::box() << "[0x3044] Could not create pipeline layouts\n";
+        SysMessage::box() << "[0x3045] Could not create pipeline layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
