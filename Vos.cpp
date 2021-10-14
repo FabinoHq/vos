@@ -196,6 +196,7 @@ void Vos::run()
         {
             // Get renderer aspect ratio
             float cursorSize = 64.0f*scale;
+            float cursorOffset = 2.0f*scale;
 
             // Draw procedural sprite
             /*m_procsprite.setSize(1.0f, 1.0f);
@@ -214,7 +215,9 @@ void Vos::run()
 
             // Draw cursor
             m_cursor.setSize(cursorSize, cursorSize);
-            m_cursor.setPosition(m_mouseX, m_mouseY-cursorSize);
+            m_cursor.setPosition(
+                m_mouseX-cursorOffset, m_mouseY-cursorSize+cursorOffset
+            );
             m_cursor.render(m_renderer);
 
             // End rendering
