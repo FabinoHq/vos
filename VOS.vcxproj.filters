@@ -110,6 +110,9 @@
     <ClCompile Include="Renderer\Shapes\Oval.cpp">
       <Filter>Renderer\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Pipeline.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -236,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shapes\Oval.h">
       <Filter>Renderer\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Pipeline.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

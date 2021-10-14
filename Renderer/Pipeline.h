@@ -37,12 +37,13 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shader.h : Shader management                                  //
+//     Renderer/Pipeline.h : Graphics pipeline management                     //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHADER_HEADER
-#define VOS_RENDERER_SHADER_HEADER
+#ifndef VOS_RENDERER_PIPELINE_HEADER
+#define VOS_RENDERER_PIPELINE_HEADER
 
     #include "Vulkan/Vulkan.h"
+    #include "Shader.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -52,59 +53,65 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Shader class definition                                               //
+    //  Pipeline class definition                                             //
     ////////////////////////////////////////////////////////////////////////////
-    class Shader
+    class Pipeline
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Shader default constructor                                    //
+            //  Pipeline default constructor                                  //
             ////////////////////////////////////////////////////////////////////
-            Shader();
+            Pipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Shader destructor                                             //
+            //  Pipeline destructor                                           //
             ////////////////////////////////////////////////////////////////////
-            ~Shader();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create Shader                                                 //
-            //  return : True if Shader is successfully created               //
-            ////////////////////////////////////////////////////////////////////
-            bool createShader(Renderer& renderer,
-                const uint32_t* source, const size_t size);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy Shader                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyShader(Renderer& renderer);
+            ~Pipeline();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Check if the shader is valid                                  //
-            //  return : True if the shader is valid                          //
+            //  Create Pipeline                                               //
+            //  return : True if Pipeline is successfully created             //
+            ////////////////////////////////////////////////////////////////////
+            bool createPipeline(Renderer& renderer,
+                const uint32_t* vertexSource, const size_t vertexSize,
+                const uint32_t* fragmentSource, const size_t fragmentSize);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind Pipeline                                                 //
+            ////////////////////////////////////////////////////////////////////
+            void bind(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy Pipeline                                              //
+            ////////////////////////////////////////////////////////////////////
+            void destroyPipeline(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if the pipeline is valid                                //
+            //  return : True if the pipeline is valid                        //
             ////////////////////////////////////////////////////////////////////
             bool isValid();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Shader private copy constructor : Not copyable                //
+            //  Pipeline private copy constructor : Not copyable              //
             ////////////////////////////////////////////////////////////////////
-            Shader(const Shader&) = delete;
+            Pipeline(const Pipeline&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Shader private copy operator : Not copyable                   //
+            //  Pipeline private copy operator : Not copyable                 //
             ////////////////////////////////////////////////////////////////////
-            Shader& operator=(const Shader&) = delete;
+            Pipeline& operator=(const Pipeline&) = delete;
 
 
         private:
-            VkShaderModule      m_shader;       // Shader handle
-
-            friend class        Pipeline;       // Pipeline has access
+            VkPipeline      m_pipeline;         // Pipeline handle
+            Shader          m_vertexShader;     // Vertex shader
+            Shader          m_fragmentShader;   // Fragment shader
     };
 
 
-#endif // VOS_RENDERER_SHADER_HEADER
+#endif // VOS_RENDERER_PIPELINE_HEADER

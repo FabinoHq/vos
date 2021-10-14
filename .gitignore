@@ -83,10 +83,12 @@
 !Renderer/Vulkan/UniformBuffer.cpp
 !Renderer/Vulkan/GraphicsLayout.h
 !Renderer/Vulkan/GraphicsLayout.cpp
-!Renderer/Texture.h
-!Renderer/Texture.cpp
+!Renderer/Pipeline.h
+!Renderer/Pipeline.cpp
 !Renderer/Shader.h
 !Renderer/Shader.cpp
+!Renderer/Texture.h
+!Renderer/Texture.cpp
 !Renderer/View.h
 !Renderer/View.cpp
 !Renderer/Sprite.h

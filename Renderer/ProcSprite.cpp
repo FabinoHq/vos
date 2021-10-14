@@ -47,7 +47,7 @@
 //  ProcSprite default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
 ProcSprite::ProcSprite() :
-m_shader(),
+m_pipeline(),
 m_modelMatrix(),
 m_position(0.0f, 0.0f),
 m_size(1.0f, 1.0f),
@@ -80,8 +80,8 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* vertexSource,
     if (vertexSource && (vertexSize > 0) &&
         fragmentSource && (fragmentSize > 0))
     {
-        // Create procedural sprite shader
-        if (m_shader.createShader(renderer,
+        // Create procedural sprite pipeline
+        if (m_pipeline.createPipeline(renderer,
             vertexSource, vertexSize, fragmentSource, fragmentSize))
         {
             shaderCreated = true;
@@ -90,12 +90,12 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* vertexSource,
 
     if (!shaderCreated)
     {
-        // Create default procedural sprite shader
-        if (!m_shader.createShader(renderer,
+        // Create default procedural sprite pipeline
+        if (!m_pipeline.createPipeline(renderer,
             DefaultProcVertexShader, DefaultProcVertexShaderSize,
             DefaultProcFragmentShader, DefaultProcFragmentShaderSize))
         {
-            // Could not create default procedural sprite shader
+            // Could not create default procedural sprite pipeline
             return false;
         }
     }
@@ -125,7 +125,7 @@ void ProcSprite::destroyProcSprite(Renderer& renderer)
     m_size.reset();
     m_position.reset();
     m_modelMatrix.reset();
-    m_shader.destroyShader(renderer);
+    m_pipeline.destroyPipeline(renderer);
 }
 
 
@@ -254,7 +254,7 @@ void ProcSprite::rotate(float angle)
 void ProcSprite::render(Renderer& renderer)
 {
     // Bind procedural sprite shader
-    m_shader.bind(renderer);
+    m_pipeline.bind(renderer);
 
     // Set procedural sprite model matrix
     m_modelMatrix.setIdentity();

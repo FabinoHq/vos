@@ -53,6 +53,7 @@
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/UniformBuffer.h"
     #include "Vulkan/GraphicsLayout.h"
+    #include "Pipeline.h"
     #include "Shader.h"
     #include "Texture.h"
     #include "View.h"
@@ -122,19 +123,19 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer default shader                                  //
+            //  Bind renderer default pipeline                                //
             ////////////////////////////////////////////////////////////////////
-            void bindDefaultShader();
+            void bindDefaultPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer rect shader                                     //
+            //  Bind renderer rect pipeline                                   //
             ////////////////////////////////////////////////////////////////////
-            void bindRectShader();
+            void bindRectPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer oval shader                                     //
+            //  Bind renderer oval pipeline                                   //
             ////////////////////////////////////////////////////////////////////
-            void bindOvalShader();
+            void bindOvalPipeline();
 
             ////////////////////////////////////////////////////////////////////
             //  Set renderer default view                                     //
@@ -229,11 +230,12 @@
             Swapchain           m_swapchain;            // Swapchain
             VertexBuffer        m_vertexBuffer;         // Default vertex buffer
             GraphicsLayout      m_layout;               // Graphics layout
-            Shader              m_shader;               // Default shader
-            Shader              m_rectShader;           // Rect shader
-            Shader              m_ovalShader;           // Oval shader
+            Pipeline            m_pipeline;             // Default pipeline
+            Pipeline            m_rectPipeline;         // Rect pipeline
+            Pipeline            m_ovalPipeline;         // Oval pipeline
             View                m_view;                 // Default view
 
+            friend class        Pipeline;               // Pipeline has access
             friend class        Shader;                 // Shader has access
             friend class        Texture;                // Texture has access
             friend class        View;                   // View has access

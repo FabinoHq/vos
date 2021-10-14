@@ -274,8 +274,8 @@ void Oval::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 void Oval::render(Renderer& renderer)
 {
-    // Bind oval shader
-    renderer.bindOvalShader();
+    // Bind oval pipeline
+    renderer.bindOvalPipeline();
 
     // Set oval model matrix
     m_modelMatrix.setIdentity();

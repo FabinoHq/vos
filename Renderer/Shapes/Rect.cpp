@@ -270,12 +270,12 @@ void Rect::setAlpha(float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render rect                                                          //
+//  Render rect                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 void Rect::render(Renderer& renderer)
 {
-    // Bind rect shader
-    renderer.bindRectShader();
+    // Bind rect pipeline
+    renderer.bindRectPipeline();
 
     // Set rect model matrix
     m_modelMatrix.setIdentity();

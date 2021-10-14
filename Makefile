@@ -56,8 +56,9 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
-	Renderer/Shader.o Renderer/Texture.o Renderer/View.o Renderer/Sprite.o \
-	Renderer/ProcSprite.o Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
+	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
+	Renderer/View.o Renderer/Sprite.o Renderer/ProcSprite.o \
+	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
 	Renderer/Renderer.o
 
 	$(CC) -o VOS \
@@ -71,8 +72,9 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
-	Renderer/Shader.o Renderer/Texture.o Renderer/View.o Renderer/Sprite.o \
-	Renderer/ProcSprite.o Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
+	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
+	Renderer/View.o Renderer/Sprite.o Renderer/ProcSprite.o \
+	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -143,6 +145,9 @@ Renderer/Vulkan/UniformBuffer.o: Renderer/Vulkan/UniformBuffer.cpp
 Renderer/Vulkan/GraphicsLayout.o: Renderer/Vulkan/GraphicsLayout.cpp
 	$(CC) -o Renderer/Vulkan/GraphicsLayout.o -c \
 	Renderer/Vulkan/GraphicsLayout.cpp $(CFLAGS)
+
+Renderer/Pipeline.o: Renderer/Pipeline.cpp
+	$(CC) -o Renderer/Pipeline.o -c Renderer/Pipeline.cpp $(CFLAGS)
 
 Renderer/Shader.o: Renderer/Shader.cpp
 	$(CC) -o Renderer/Shader.o -c Renderer/Shader.cpp $(CFLAGS)

@@ -42,7 +42,7 @@
 #ifndef VOS_RENDERER_PROCSPRITE_HEADER
 #define VOS_RENDERER_PROCSPRITE_HEADER
 
-    #include "Shader.h"
+    #include "Pipeline.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"
@@ -177,7 +177,7 @@
 
 
         private:
-            Shader              m_shader;           // Procedural sprite shader
+            Pipeline            m_pipeline;         // Procedural sprite pipeline
             Matrix4x4           m_modelMatrix;      // Sprite model matrix
             Vector2             m_position;         // Sprite position
             Vector2             m_size;             // Sprite size

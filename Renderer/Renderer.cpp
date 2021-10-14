@@ -62,9 +62,9 @@ m_vulkanMemory(),
 m_swapchain(),
 m_vertexBuffer(),
 m_layout(),
-m_shader(),
-m_rectShader(),
-m_ovalShader(),
+m_pipeline(),
+m_rectPipeline(),
+m_ovalPipeline(),
 m_view()
 {
 
@@ -258,35 +258,35 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create default shaders
-    if (!m_shader.createShader(*this,
+    // Create default pipeline
+    if (!m_pipeline.createPipeline(*this,
         DefaultVertexShader, DefaultVertexShaderSize,
         DefaultFragmentShader, DefaultFragmentShaderSize))
     {
-        // Could not create default shader
-        SysMessage::box() << "[0x3047] Could not create default shader\n";
+        // Could not create default pipeline
+        SysMessage::box() << "[0x3047] Could not create default pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
-    // Create rect shader
-    if (!m_rectShader.createShader(*this,
+    // Create rect pipeline
+    if (!m_rectPipeline.createPipeline(*this,
         RectVertexShader, RectVertexShaderSize,
         RectFragmentShader, RectFragmentShaderSize))
     {
-        // Could not create rect shader
-        SysMessage::box() << "[0x3048] Could not create rect shader\n";
+        // Could not create rect pipeline
+        SysMessage::box() << "[0x3048] Could not create rect pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
-    // Create oval shader
-    if (!m_ovalShader.createShader(*this,
+    // Create oval pipeline
+    if (!m_ovalPipeline.createPipeline(*this,
         OvalVertexShader, OvalVertexShaderSize,
         OvalFragmentShader, OvalFragmentShaderSize))
     {
-        // Could not create oval shader
-        SysMessage::box() << "[0x3049] Could not create oval shader\n";
+        // Could not create oval pipeline
+        SysMessage::box() << "[0x3049] Could not create oval pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -430,8 +430,8 @@ bool Renderer::startFrame()
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
-    // Bind default shader
-    m_shader.bind(*this);
+    // Bind default pipeline
+    m_pipeline.bind(*this);
 
     // Set viewport
     VkViewport viewport;
@@ -632,14 +632,14 @@ void Renderer::cleanup()
             // Destroy vertex buffer
             m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
 
-            // Destroy oval shader
-            m_ovalShader.destroyShader(*this);
+            // Destroy oval pipeline
+            m_ovalPipeline.destroyPipeline(*this);
 
-            // Destroy rect shader
-            m_rectShader.destroyShader(*this);
+            // Destroy rect pipeline
+            m_rectPipeline.destroyPipeline(*this);
 
-            // Destroy default shader
-            m_shader.destroyShader(*this);
+            // Destroy default pipeline
+            m_pipeline.destroyPipeline(*this);
 
             // Destroy default pipeline layout
             m_layout.destroyLayout(m_vulkanDevice);
@@ -677,27 +677,27 @@ void Renderer::cleanup()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer default shader                                              //
+//  Bind renderer default pipeline                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindDefaultShader()
+void Renderer::bindDefaultPipeline()
 {
-    m_shader.bind(*this);
+    m_pipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer rect shader                                                 //
+//  Bind renderer rect pipeline                                               //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindRectShader()
+void Renderer::bindRectPipeline()
 {
-    m_rectShader.bind(*this);
+    m_rectPipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer oval shader                                                 //
+//  Bind renderer oval pipeline                                               //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindOvalShader()
+void Renderer::bindOvalPipeline()
 {
-    m_ovalShader.bind(*this);
+    m_ovalPipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
