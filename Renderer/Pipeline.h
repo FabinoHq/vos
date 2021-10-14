@@ -70,12 +70,25 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Create vertex shader                                          //
+            //  return : True if the vertex shader is successfully created    //
+            ////////////////////////////////////////////////////////////////////
+            bool createVertexShader(Renderer& renderer,
+                const uint32_t* vertexSource, const size_t vertexSize);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create fragment shader                                        //
+            //  return : True if the fragment shader is successfully created  //
+            ////////////////////////////////////////////////////////////////////
+            bool createFragmentShader(Renderer& renderer,
+                const uint32_t* fragmentSource, const size_t fragmentSize);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Create Pipeline                                               //
             //  return : True if Pipeline is successfully created             //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(Renderer& renderer,
-                const uint32_t* vertexSource, const size_t vertexSize,
-                const uint32_t* fragmentSource, const size_t fragmentSize);
+            bool createPipeline(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind Pipeline                                                 //

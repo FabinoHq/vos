@@ -64,12 +64,59 @@ Pipeline::~Pipeline()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Create vertex shader                                                      //
+//  return : True if the vertex shader is successfully created                //
+////////////////////////////////////////////////////////////////////////////////
+bool Pipeline::createVertexShader(Renderer& renderer,
+    const uint32_t* vertexSource, const size_t vertexSize)
+{
+    // Destroy previous vertex shader
+    if (m_vertexShader.isValid())
+    {
+        m_vertexShader.destroyShader(renderer);
+    }
+
+    // Create vertex shader
+    if (!m_vertexShader.createShader(renderer, vertexSource, vertexSize))
+    {
+        // Invalid vertex shader
+        return false;
+    }
+
+    // Vertex shader successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create fragment shader                                                    //
+//  return : True if the fragment shader is successfully created              //
+////////////////////////////////////////////////////////////////////////////////
+bool Pipeline::createFragmentShader(Renderer& renderer,
+    const uint32_t* fragmentSource, const size_t fragmentSize)
+{
+    // Destroy previous fragment shader
+    if (m_fragmentShader.isValid())
+    {
+        m_fragmentShader.destroyShader(renderer);
+    }
+
+    // Create fragment shader
+    if (!m_fragmentShader.createShader(renderer, fragmentSource, fragmentSize))
+    {
+        // Invalid fragment shader
+        return false;
+    }
+
+    // Fragment shader successfully created
+    return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Create Pipeline                                                           //
 //  return : True if Pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createPipeline(Renderer& renderer,
-    const uint32_t* vertexSource, const size_t vertexSize,
-    const uint32_t* fragmentSource, const size_t fragmentSize)
+bool Pipeline::createPipeline(Renderer& renderer)
 {
     // Check Vulkan device
     if (!renderer.m_vulkanDevice)
@@ -87,16 +134,16 @@ bool Pipeline::createPipeline(Renderer& renderer,
         return false;
     }
 
-    // Create vertex shader
-    if (!m_vertexShader.createShader(renderer, vertexSource, vertexSize))
+    // Check vertex shader
+    if (!m_vertexShader.isValid())
     {
         // Invalid vertex shader
         m_pipeline = 0;
         return false;
     }
 
-    // Create fragment shader
-    if (!m_fragmentShader.createShader(renderer, fragmentSource, fragmentSize))
+    // Check fragment shader
+    if (!m_fragmentShader.isValid())
     {
         // Invalid fragment shader
         m_pipeline = 0;

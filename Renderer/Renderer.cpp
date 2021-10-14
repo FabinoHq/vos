@@ -259,9 +259,13 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create default pipeline
-    if (!m_pipeline.createPipeline(*this,
-        DefaultVertexShader, DefaultVertexShaderSize,
-        DefaultFragmentShader, DefaultFragmentShaderSize))
+    m_pipeline.createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pipeline.createFragmentShader(
+        *this, DefaultFragmentShader, DefaultFragmentShaderSize
+    );
+    if (!m_pipeline.createPipeline(*this))
     {
         // Could not create default pipeline
         SysMessage::box() << "[0x3047] Could not create default pipeline\n";
@@ -270,9 +274,13 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create rect pipeline
-    if (!m_rectPipeline.createPipeline(*this,
-        RectVertexShader, RectVertexShaderSize,
-        RectFragmentShader, RectFragmentShaderSize))
+    m_rectPipeline.createVertexShader(
+        *this, RectVertexShader, RectVertexShaderSize
+    );
+    m_rectPipeline.createFragmentShader(
+        *this, RectFragmentShader, RectFragmentShaderSize
+    );
+    if (!m_rectPipeline.createPipeline(*this))
     {
         // Could not create rect pipeline
         SysMessage::box() << "[0x3048] Could not create rect pipeline\n";
@@ -281,9 +289,13 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create oval pipeline
-    if (!m_ovalPipeline.createPipeline(*this,
-        OvalVertexShader, OvalVertexShaderSize,
-        OvalFragmentShader, OvalFragmentShaderSize))
+    m_ovalPipeline.createVertexShader(
+        *this, OvalVertexShader, OvalVertexShaderSize
+    );
+    m_ovalPipeline.createFragmentShader(
+        *this, OvalFragmentShader, OvalFragmentShaderSize
+    );
+    if (!m_ovalPipeline.createPipeline(*this))
     {
         // Could not create oval pipeline
         SysMessage::box() << "[0x3049] Could not create oval pipeline\n";
