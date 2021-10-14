@@ -97,6 +97,14 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    // Check VertexData size
+    size_t vertexDataSize = sizeof(VertexData);
+    if (vertexDataSize != (sizeof(float)*5))
+    {
+        // Invalid VertexData size
+        return false;
+    }
+
     // Check current buffers
     if (vertexBuffer.handle || indexBuffer.handle)
     {

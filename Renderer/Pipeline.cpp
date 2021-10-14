@@ -117,7 +117,7 @@ bool Pipeline::createFragmentShader(Renderer& renderer,
 //  return : True if Pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
 bool Pipeline::createPipeline(Renderer& renderer,
-    VertexInputsType vertexInputsType)
+    VertexInputsType vertexInputsType, bool backFaceCulling)
 {
     // Check Vulkan device
     if (!renderer.m_vulkanDevice)
@@ -152,25 +152,9 @@ bool Pipeline::createPipeline(Renderer& renderer,
     }
 
     // Shader stages
-    VkPipelineShaderStageCreateInfo shaderStages[2];
-
-    // Vertex shader
-    shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStages[0].pNext = 0;
-    shaderStages[0].flags = 0;
-    shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
-    shaderStages[0].module = m_vertexShader.m_shader;
-    shaderStages[0].pName = "main";
-    shaderStages[0].pSpecializationInfo = 0;
-
-    // Fragment shader
-    shaderStages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStages[1].pNext = 0;
-    shaderStages[1].flags = 0;
-    shaderStages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-    shaderStages[1].module = m_fragmentShader.m_shader;
-    shaderStages[1].pName = "main";
-    shaderStages[1].pSpecializationInfo = 0;
+    VkPipelineShaderStageCreateInfo shaderStages[MaxShadersStages];
+    uint32_t stagesCount = 2;
+    setShaderStages(shaderStages, &stagesCount);
 
     // Vertex attributes
     VkVertexInputBindingDescription vertexBinding;
@@ -219,7 +203,14 @@ bool Pipeline::createPipeline(Renderer& renderer,
     rasterizerInfo.depthClampEnable = VK_FALSE;
     rasterizerInfo.rasterizerDiscardEnable = VK_FALSE;
     rasterizerInfo.polygonMode = VK_POLYGON_MODE_FILL;
-    rasterizerInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+    if (backFaceCulling)
+    {
+        rasterizerInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+    }
+    else
+    {
+        rasterizerInfo.cullMode = VK_CULL_MODE_NONE;
+    }
     rasterizerInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizerInfo.depthBiasEnable = VK_FALSE;
     rasterizerInfo.depthBiasConstantFactor = 0.0f;
@@ -364,6 +355,34 @@ bool Pipeline::isValid()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set shader stages                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void Pipeline::setShaderStages(VkPipelineShaderStageCreateInfo* shaderStages,
+    uint32_t* stagesCount)
+{
+    // Default stages count
+    *stagesCount = 2;
+
+    // Vertex shader
+    shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStages[0].pNext = 0;
+    shaderStages[0].flags = 0;
+    shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
+    shaderStages[0].module = m_vertexShader.m_shader;
+    shaderStages[0].pName = "main";
+    shaderStages[0].pSpecializationInfo = 0;
+
+    // Fragment shader
+    shaderStages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStages[1].pNext = 0;
+    shaderStages[1].flags = 0;
+    shaderStages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+    shaderStages[1].module = m_fragmentShader.m_shader;
+    shaderStages[1].pName = "main";
+    shaderStages[1].pSpecializationInfo = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Set vertex inputs                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 void Pipeline::setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
@@ -372,27 +391,16 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
 {
     // Input binding
     vertexBinding->binding = 0;
-    vertexBinding->stride = sizeof(VertexData);
+    vertexBinding->stride = sizeof(float)*5;
     vertexBinding->inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-    // Vertex attribute
-    switch (vertexInputsType)
-    {
-        case VERTEX_INPUTS_DEFAULT:
-            *vertexInputsCount = 2;
-            break;
-
-        default:
-            *vertexInputsCount = 2;
-            break;
-    }
-
+    // Vertex attributes
     switch (vertexInputsType)
     {
         case VERTEX_INPUTS_DEFAULT:
         {
             // Vertex binding stride
-            vertexBinding->stride = sizeof(VertexData);
+            vertexBinding->stride = sizeof(float)*5;
 
             // Position
             vertexAttributes[0].location = 0;
@@ -404,14 +412,17 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
             vertexAttributes[1].location = 1;
             vertexAttributes[1].binding = vertexBinding->binding;
             vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
-            vertexAttributes[1].offset = sizeof(float) * 3;
+            vertexAttributes[1].offset = sizeof(float)*3;
+
+            // Vertex inputs count
+            *vertexInputsCount = 2;
             break;
         }
 
         default:
         {
             // Vertex binding stride
-            vertexBinding->stride = sizeof(VertexData);
+            vertexBinding->stride = sizeof(float)*5;
 
             // Position
             vertexAttributes[0].location = 0;
@@ -423,7 +434,10 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
             vertexAttributes[1].location = 1;
             vertexAttributes[1].binding = vertexBinding->binding;
             vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
-            vertexAttributes[1].offset = sizeof(float) * 3;
+            vertexAttributes[1].offset = sizeof(float)*3;
+
+            // Vertex inputs count
+            *vertexInputsCount = 2;
             break;
         }
     }
