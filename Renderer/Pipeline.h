@@ -45,6 +45,8 @@
     #include "Vulkan/Vulkan.h"
     #include "Shader.h"
 
+    #include <vector>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class declaration                                            //
@@ -59,16 +61,6 @@
     {
         VERTEX_INPUTS_DEFAULT
     };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Maximum Vertex inputs                                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t MaxVertexInputs = 5;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Maximum Shader stages                                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t MaxShadersStages = 5;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -144,15 +136,15 @@
             ////////////////////////////////////////////////////////////////////
             //  Set shader stages                                             //
             ////////////////////////////////////////////////////////////////////
-            void setShaderStages(VkPipelineShaderStageCreateInfo* shaderStages,
-                uint32_t* stagesCount);
+            void setShaderStages(
+                std::vector<VkPipelineShaderStageCreateInfo>& shaderStages);
 
             ////////////////////////////////////////////////////////////////////
             //  Set vertex inputs                                             //
             ////////////////////////////////////////////////////////////////////
-            void setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
-                VkVertexInputAttributeDescription* vertexAttributes,
-                uint32_t* vertexInputsCount, VertexInputsType vertexInputsType);
+            void setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
+                std::vector<VkVertexInputAttributeDescription>& vertexAttribs,
+                VertexInputsType vertexInputsType);
 
 
         private:

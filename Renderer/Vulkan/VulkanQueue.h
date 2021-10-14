@@ -44,6 +44,8 @@
 
     #include "Vulkan.h"
 
+    #include <vector>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VulkanQueue class definition                                          //

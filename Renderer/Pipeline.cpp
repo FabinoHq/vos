@@ -152,16 +152,14 @@ bool Pipeline::createPipeline(Renderer& renderer,
     }
 
     // Shader stages
-    VkPipelineShaderStageCreateInfo shaderStages[MaxShadersStages];
-    uint32_t stagesCount = 2;
-    setShaderStages(shaderStages, &stagesCount);
+    std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+    setShaderStages(shaderStages);
 
     // Vertex attributes
     VkVertexInputBindingDescription vertexBinding;
-    VkVertexInputAttributeDescription vertexAttributes[MaxVertexInputs];
-    uint32_t vertexInputsCount = 2;
+    std::vector<VkVertexInputAttributeDescription> vertexAttributes;
     setVertexInputs(
-        &vertexBinding, vertexAttributes, &vertexInputsCount, vertexInputsType
+        vertexBinding, vertexAttributes, vertexInputsType
     );
 
     // Vertex input
@@ -172,8 +170,10 @@ bool Pipeline::createPipeline(Renderer& renderer,
     vertexInput.flags = 0;
     vertexInput.vertexBindingDescriptionCount = 1;
     vertexInput.pVertexBindingDescriptions = &vertexBinding;
-    vertexInput.vertexAttributeDescriptionCount = vertexInputsCount;
-    vertexInput.pVertexAttributeDescriptions = vertexAttributes;
+    vertexInput.vertexAttributeDescriptionCount = static_cast<uint32_t>(
+        vertexAttributes.size()
+    );
+    vertexInput.pVertexAttributeDescriptions = vertexAttributes.data();
 
     // Input assembly
     VkPipelineInputAssemblyStateCreateInfo inputAssembly;
@@ -274,8 +274,8 @@ bool Pipeline::createPipeline(Renderer& renderer,
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.pNext = 0;
     pipelineInfo.flags = 0;
-    pipelineInfo.stageCount = 2;
-    pipelineInfo.pStages = shaderStages;
+    pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
+    pipelineInfo.pStages = shaderStages.data();
     pipelineInfo.pVertexInputState = &vertexInput;
     pipelineInfo.pInputAssemblyState = &inputAssembly;
     pipelineInfo.pTessellationState = 0;
@@ -357,13 +357,11 @@ bool Pipeline::isValid()
 ////////////////////////////////////////////////////////////////////////////////
 //  Set shader stages                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Pipeline::setShaderStages(VkPipelineShaderStageCreateInfo* shaderStages,
-    uint32_t* stagesCount)
+void Pipeline::setShaderStages(
+    std::vector<VkPipelineShaderStageCreateInfo>& shaderStages)
 {
-    // Default stages count
-    *stagesCount = 2;
-
     // Vertex shader
+    shaderStages.push_back(VkPipelineShaderStageCreateInfo());
     shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[0].pNext = 0;
     shaderStages[0].flags = 0;
@@ -373,6 +371,7 @@ void Pipeline::setShaderStages(VkPipelineShaderStageCreateInfo* shaderStages,
     shaderStages[0].pSpecializationInfo = 0;
 
     // Fragment shader
+    shaderStages.push_back(VkPipelineShaderStageCreateInfo());
     shaderStages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[1].pNext = 0;
     shaderStages[1].flags = 0;
@@ -385,14 +384,14 @@ void Pipeline::setShaderStages(VkPipelineShaderStageCreateInfo* shaderStages,
 ////////////////////////////////////////////////////////////////////////////////
 //  Set vertex inputs                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Pipeline::setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
-    VkVertexInputAttributeDescription* vertexAttributes,
-    uint32_t* vertexInputsCount, VertexInputsType vertexInputsType)
+void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
+    std::vector<VkVertexInputAttributeDescription>& vertexAttribs,
+    VertexInputsType vertexInputsType)
 {
     // Input binding
-    vertexBinding->binding = 0;
-    vertexBinding->stride = sizeof(float)*5;
-    vertexBinding->inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+    vertexBinding.binding = 0;
+    vertexBinding.stride = sizeof(float)*5;
+    vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
     // Vertex attributes
     switch (vertexInputsType)
@@ -400,44 +399,42 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
         case VERTEX_INPUTS_DEFAULT:
         {
             // Vertex binding stride
-            vertexBinding->stride = sizeof(float)*5;
+            vertexBinding.stride = sizeof(float)*5;
 
             // Position
-            vertexAttributes[0].location = 0;
-            vertexAttributes[0].binding = vertexBinding->binding;
-            vertexAttributes[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-            vertexAttributes[0].offset = 0;
+            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[0].location = 0;
+            vertexAttribs[0].binding = vertexBinding.binding;
+            vertexAttribs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+            vertexAttribs[0].offset = 0;
 
             // Texcoords
-            vertexAttributes[1].location = 1;
-            vertexAttributes[1].binding = vertexBinding->binding;
-            vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
-            vertexAttributes[1].offset = sizeof(float)*3;
-
-            // Vertex inputs count
-            *vertexInputsCount = 2;
+            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[1].location = 1;
+            vertexAttribs[1].binding = vertexBinding.binding;
+            vertexAttribs[1].format = VK_FORMAT_R32G32_SFLOAT;
+            vertexAttribs[1].offset = sizeof(float)*3;
             break;
         }
 
         default:
         {
             // Vertex binding stride
-            vertexBinding->stride = sizeof(float)*5;
+            vertexBinding.stride = sizeof(float)*5;
 
             // Position
-            vertexAttributes[0].location = 0;
-            vertexAttributes[0].binding = vertexBinding->binding;
-            vertexAttributes[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-            vertexAttributes[0].offset = 0;
+            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[0].location = 0;
+            vertexAttribs[0].binding = vertexBinding.binding;
+            vertexAttribs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+            vertexAttribs[0].offset = 0;
 
             // Texcoords
-            vertexAttributes[1].location = 1;
-            vertexAttributes[1].binding = vertexBinding->binding;
-            vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
-            vertexAttributes[1].offset = sizeof(float)*3;
-
-            // Vertex inputs count
-            *vertexInputsCount = 2;
+            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[1].location = 1;
+            vertexAttribs[1].binding = vertexBinding.binding;
+            vertexAttribs[1].format = VK_FORMAT_R32G32_SFLOAT;
+            vertexAttribs[1].offset = sizeof(float)*3;
             break;
         }
     }
