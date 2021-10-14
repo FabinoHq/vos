@@ -99,7 +99,7 @@ bool Shader::createShader(Renderer& renderer,
         destroyShader(renderer);
     }
 
-    // Create vertex shader
+    // Create shader
     VkShaderModuleCreateInfo shaderInfo;
     shaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     shaderInfo.pNext = 0;
@@ -110,13 +110,14 @@ bool Shader::createShader(Renderer& renderer,
     if (vkCreateShaderModule(renderer.m_vulkanDevice,
         &shaderInfo, 0, &m_shader) != VK_SUCCESS)
     {
-        // Could not create vertex shader
+        // Could not create shader
         m_shader = 0;
         return false;
     }
     if (!m_shader)
     {
-        // Invalid vertex shader
+        // Invalid shader
+        m_shader = 0;
         return false;
     }
 
@@ -142,7 +143,7 @@ void Shader::destroyShader(Renderer& renderer)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Check if the vertex and fragment shaders are valids                       //
+//  Check if the shader is valid                                              //
 //  return : True if the shader is valid                                      //
 ////////////////////////////////////////////////////////////////////////////////
 bool Shader::isValid()

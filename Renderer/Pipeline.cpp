@@ -116,7 +116,8 @@ bool Pipeline::createFragmentShader(Renderer& renderer,
 //  Create Pipeline                                                           //
 //  return : True if Pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createPipeline(Renderer& renderer)
+bool Pipeline::createPipeline(Renderer& renderer,
+    VertexInputsType vertexInputsType)
 {
     // Check Vulkan device
     if (!renderer.m_vulkanDevice)
@@ -152,6 +153,8 @@ bool Pipeline::createPipeline(Renderer& renderer)
 
     // Shader stages
     VkPipelineShaderStageCreateInfo shaderStages[2];
+
+    // Vertex shader
     shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[0].pNext = 0;
     shaderStages[0].flags = 0;
@@ -160,6 +163,7 @@ bool Pipeline::createPipeline(Renderer& renderer)
     shaderStages[0].pName = "main";
     shaderStages[0].pSpecializationInfo = 0;
 
+    // Fragment shader
     shaderStages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[1].pNext = 0;
     shaderStages[1].flags = 0;
@@ -168,24 +172,13 @@ bool Pipeline::createPipeline(Renderer& renderer)
     shaderStages[1].pName = "main";
     shaderStages[1].pSpecializationInfo = 0;
 
-    // Input binding
+    // Vertex attributes
     VkVertexInputBindingDescription vertexBinding;
-    vertexBinding.binding = 0;
-    vertexBinding.stride = sizeof(VertexData);
-    vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-    // Vertex attribute
-    VkVertexInputAttributeDescription vertexAttributes[2];
-
-    vertexAttributes[0].location = 0;
-    vertexAttributes[0].binding = vertexBinding.binding;
-    vertexAttributes[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-    vertexAttributes[0].offset = 0;
-
-    vertexAttributes[1].location = 1;
-    vertexAttributes[1].binding = vertexBinding.binding;
-    vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
-    vertexAttributes[1].offset = sizeof(float) * 3;
+    VkVertexInputAttributeDescription vertexAttributes[MaxVertexInputs];
+    uint32_t vertexInputsCount = 2;
+    setVertexInputs(
+        &vertexBinding, vertexAttributes, &vertexInputsCount, vertexInputsType
+    );
 
     // Vertex input
     VkPipelineVertexInputStateCreateInfo vertexInput;
@@ -195,7 +188,7 @@ bool Pipeline::createPipeline(Renderer& renderer)
     vertexInput.flags = 0;
     vertexInput.vertexBindingDescriptionCount = 1;
     vertexInput.pVertexBindingDescriptions = &vertexBinding;
-    vertexInput.vertexAttributeDescriptionCount = 2;
+    vertexInput.vertexAttributeDescriptionCount = vertexInputsCount;
     vertexInput.pVertexAttributeDescriptions = vertexAttributes;
 
     // Input assembly
@@ -367,4 +360,71 @@ void Pipeline::destroyPipeline(Renderer& renderer)
 bool Pipeline::isValid()
 {
     return m_pipeline;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set vertex inputs                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void Pipeline::setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
+    VkVertexInputAttributeDescription* vertexAttributes,
+    uint32_t* vertexInputsCount, VertexInputsType vertexInputsType)
+{
+    // Input binding
+    vertexBinding->binding = 0;
+    vertexBinding->stride = sizeof(VertexData);
+    vertexBinding->inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+    // Vertex attribute
+    switch (vertexInputsType)
+    {
+        case VERTEX_INPUTS_DEFAULT:
+            *vertexInputsCount = 2;
+            break;
+
+        default:
+            *vertexInputsCount = 2;
+            break;
+    }
+
+    switch (vertexInputsType)
+    {
+        case VERTEX_INPUTS_DEFAULT:
+        {
+            // Vertex binding stride
+            vertexBinding->stride = sizeof(VertexData);
+
+            // Position
+            vertexAttributes[0].location = 0;
+            vertexAttributes[0].binding = vertexBinding->binding;
+            vertexAttributes[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+            vertexAttributes[0].offset = 0;
+
+            // Texcoords
+            vertexAttributes[1].location = 1;
+            vertexAttributes[1].binding = vertexBinding->binding;
+            vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
+            vertexAttributes[1].offset = sizeof(float) * 3;
+            break;
+        }
+
+        default:
+        {
+            // Vertex binding stride
+            vertexBinding->stride = sizeof(VertexData);
+
+            // Position
+            vertexAttributes[0].location = 0;
+            vertexAttributes[0].binding = vertexBinding->binding;
+            vertexAttributes[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+            vertexAttributes[0].offset = 0;
+
+            // Texcoords
+            vertexAttributes[1].location = 1;
+            vertexAttributes[1].binding = vertexBinding->binding;
+            vertexAttributes[1].format = VK_FORMAT_R32G32_SFLOAT;
+            vertexAttributes[1].offset = sizeof(float) * 3;
+            break;
+        }
+    }
 }

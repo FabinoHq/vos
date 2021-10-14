@@ -53,6 +53,20 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Vertex inputs types enumeration                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VertexInputsType
+    {
+        VERTEX_INPUTS_DEFAULT
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Maximum Vertex inputs                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t MaxVertexInputs = 4;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Pipeline class definition                                             //
     ////////////////////////////////////////////////////////////////////////////
     class Pipeline
@@ -88,7 +102,8 @@
             //  Create Pipeline                                               //
             //  return : True if Pipeline is successfully created             //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(Renderer& renderer);
+            bool createPipeline(Renderer& renderer,
+                VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind Pipeline                                                 //
@@ -118,6 +133,14 @@
             //  Pipeline private copy operator : Not copyable                 //
             ////////////////////////////////////////////////////////////////////
             Pipeline& operator=(const Pipeline&) = delete;
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set vertex inputs                                             //
+            ////////////////////////////////////////////////////////////////////
+            void setVertexInputs(VkVertexInputBindingDescription* vertexBinding,
+                VkVertexInputAttributeDescription* vertexAttributes,
+                uint32_t* vertexInputsCount, VertexInputsType vertexInputsType);
 
 
         private:
