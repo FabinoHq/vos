@@ -102,11 +102,8 @@
 !Renderer/Shaders/Sources/
 !Renderer/Shaders/Sources/Default.vert
 !Renderer/Shaders/Sources/Default.frag
-!Renderer/Shaders/Sources/DefaultProc.vert
 !Renderer/Shaders/Sources/DefaultProc.frag
-!Renderer/Shaders/Sources/Rect.vert
 !Renderer/Shaders/Sources/Rect.frag
-!Renderer/Shaders/Sources/Oval.vert
 !Renderer/Shaders/Sources/Oval.frag
 !Renderer/Shaders/Default.h
 !Renderer/Shaders/DefaultProc.h
