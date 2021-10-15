@@ -289,25 +289,20 @@ void Rect::render(Renderer& renderer)
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        0, sizeof(Matrix4x4::mat), m_modelMatrix.mat
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_modelMatrix.mat
     );
 
     // Push constants into command buffer
-    PushConstantDefault pushConstants;
+    PushConstantData pushConstants;
     pushConstants.color[0] = m_color.vec[0];
     pushConstants.color[1] = m_color.vec[1];
     pushConstants.color[2] = m_color.vec[2];
     pushConstants.color[3] = m_color.vec[3];
-    pushConstants.offset[0] = 0.0f;
-    pushConstants.offset[1] = 0.0f;
-    pushConstants.size[0] = 1.0f;
-    pushConstants.size[1] = 1.0f;
-    pushConstants.time = 0.0f;
 
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        sizeof(Matrix4x4::mat), sizeof(PushConstantDefault), &pushConstants
+        PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
     // Draw rect triangles

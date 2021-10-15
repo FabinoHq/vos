@@ -51,7 +51,8 @@ m_pipeline(),
 m_modelMatrix(),
 m_position(0.0f, 0.0f),
 m_size(1.0f, 1.0f),
-m_angle(0.0f)
+m_angle(0.0f),
+m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
     m_modelMatrix.reset();
 }
@@ -61,6 +62,7 @@ m_angle(0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 ProcSprite::~ProcSprite()
 {
+    m_color.reset();
     m_angle = 0.0f;
     m_size.reset();
     m_position.reset();
@@ -119,6 +121,9 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
     // Reset procedural sprite angle
     m_angle = 0.0f;
 
+    // Reset procedural sprite color
+    m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
+
     // Procedural sprite successfully created
     return true;
 }
@@ -128,6 +133,7 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
 ////////////////////////////////////////////////////////////////////////////////
 void ProcSprite::destroyProcSprite(Renderer& renderer)
 {
+    m_color.reset();
     m_angle = 0.0f;
     m_size.reset();
     m_position.reset();
@@ -256,6 +262,61 @@ void ProcSprite::rotate(float angle)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set procedural sprite color                                               //
+////////////////////////////////////////////////////////////////////////////////
+void ProcSprite::setColor(Vector4 color)
+{
+    m_color.vec[0] = color.vec[0];
+    m_color.vec[1] = color.vec[1];
+    m_color.vec[2] = color.vec[2];
+    m_color.vec[3] = color.vec[3];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set procedural sprite color                                               //
+////////////////////////////////////////////////////////////////////////////////
+void ProcSprite::setColor(float red, float green, float blue, float alpha)
+{
+    m_color.vec[0] = red;
+    m_color.vec[1] = green;
+    m_color.vec[2] = blue;
+    m_color.vec[3] = alpha;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set procedural sprite red channel                                         //
+////////////////////////////////////////////////////////////////////////////////
+void ProcSprite::setRed(float red)
+{
+    m_color.vec[0] = red;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set procedural sprite green channel                                       //
+////////////////////////////////////////////////////////////////////////////////
+void ProcSprite::setGreen(float green)
+{
+    m_color.vec[1] = green;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set procedural sprite blue channel                                        //
+////////////////////////////////////////////////////////////////////////////////
+void ProcSprite::setBlue(float blue)
+{
+    m_color.vec[2] = blue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set procedural sprite alpha channel                                       //
+////////////////////////////////////////////////////////////////////////////////
+void ProcSprite::setAlpha(float alpha)
+{
+    m_color.vec[3] = alpha;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render procedural sprite                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 void ProcSprite::render(Renderer& renderer)
@@ -275,15 +336,15 @@ void ProcSprite::render(Renderer& renderer)
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        0, sizeof(Matrix4x4::mat), m_modelMatrix.mat
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_modelMatrix.mat
     );
 
     // Push constants into command buffer
-    PushConstantDefault pushConstants;
-    pushConstants.color[0] = 1.0f;
-    pushConstants.color[1] = 1.0f;
-    pushConstants.color[2] = 1.0f;
-    pushConstants.color[3] = 1.0f;
+    PushConstantData pushConstants;
+    pushConstants.color[0] = m_color.vec[0];
+    pushConstants.color[1] = m_color.vec[1];
+    pushConstants.color[2] = m_color.vec[2];
+    pushConstants.color[3] = m_color.vec[3];
     pushConstants.offset[0] = 0.0f;
     pushConstants.offset[1] = 0.0f;
     pushConstants.size[0] = 1.0f;
@@ -293,7 +354,7 @@ void ProcSprite::render(Renderer& renderer)
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        sizeof(Matrix4x4::mat), sizeof(PushConstantDefault), &pushConstants
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
     // Draw procedural sprite triangles

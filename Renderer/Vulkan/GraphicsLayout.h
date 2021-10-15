@@ -67,21 +67,35 @@
     ////////////////////////////////////////////////////////////////////////////
     enum PushConstantType
     {
-        PUSH_CONSTANT_MATRIX = 0,
-        PUSH_CONSTANT_DEFAULT = 1,
+        PUSH_CONSTANT_VERTEX = 0,
+        PUSH_CONSTANT_FRAGMENT = 1,
         PUSH_CONSTANT_COUNT = 2
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  PushConstant default data structure                                   //
+    //  PushConstant data structure                                           //
     ////////////////////////////////////////////////////////////////////////////
-    struct PushConstantDefault
+    struct PushConstantData
     {
         float   color[4];
         float   offset[2];
         float   size[2];
         float   time;
     };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Push constants offsets and sizes                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t PushConstantMatrixOffset = 0;
+    const uint32_t PushConstantMatrixSize = sizeof(float)*16;
+    const uint32_t PushConstantDataOffset = sizeof(float)*16;
+    const uint32_t PushConstantDataSize = sizeof(float)*9;
+    const uint32_t PushConstantColorOffset = sizeof(float)*16;
+    const uint32_t PushConstantColorSize = sizeof(float)*4;
+    const uint32_t PushConstantOffsetSizeOffset = sizeof(float)*20;
+    const uint32_t PushConstantOffsetSizeSize = sizeof(float)*4;
+    const uint32_t PushConstantTimeOffset = sizeof(float)*24;
+    const uint32_t PushConstantTimeSize = sizeof(float)*1;
 
 
     ////////////////////////////////////////////////////////////////////////////

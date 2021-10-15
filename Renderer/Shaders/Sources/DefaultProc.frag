@@ -59,5 +59,5 @@ layout(location = 0) out vec4 o_color;
 void main()
 {
     // Compute output color
-    o_color = vec4(0.0, 0.0, 0.0, 0.0);
+    o_color = vec4(constants.color);
 }

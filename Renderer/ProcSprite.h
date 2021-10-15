@@ -45,6 +45,7 @@
     #include "Pipeline.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
+    #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
 
     #include "Shaders/DefaultProc.h"
@@ -158,6 +159,37 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite color                                   //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(Vector4 color);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite color                                   //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(float red, float green, float blue, float alpha);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite red channel                             //
+            ////////////////////////////////////////////////////////////////////
+            void setRed(float red);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite green channel                           //
+            ////////////////////////////////////////////////////////////////////
+            void setGreen(float green);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite blue channel                            //
+            ////////////////////////////////////////////////////////////////////
+            void setBlue(float blue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set procedural sprite alpha channel                           //
+            ////////////////////////////////////////////////////////////////////
+            void setAlpha(float alpha);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Render procedural sprite                                      //
             ////////////////////////////////////////////////////////////////////
             void render(Renderer& renderer);
@@ -176,11 +208,12 @@
 
 
         private:
-            Pipeline            m_pipeline;         // Procedural sprite pipeline
-            Matrix4x4           m_modelMatrix;      // Sprite model matrix
-            Vector2             m_position;         // Sprite position
-            Vector2             m_size;             // Sprite size
-            float               m_angle;            // Sprite angle
+            Pipeline            m_pipeline;         // ProcSprite pipeline
+            Matrix4x4           m_modelMatrix;      // ProcSprite model matrix
+            Vector2             m_position;         // ProcSprite position
+            Vector2             m_size;             // ProcSprite size
+            float               m_angle;            // ProcSprite angle
+            Vector4             m_color;            // ProcSprite color
     };
 
 

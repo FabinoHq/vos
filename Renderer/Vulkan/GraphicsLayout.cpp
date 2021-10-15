@@ -219,28 +219,28 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
         }
     }
 
-    // Check PushConstantDefault size
-    size_t pushConstantDefaultDataSize = sizeof(PushConstantDefault);
-    if (pushConstantDefaultDataSize != (sizeof(float)*9))
+    // Check PushConstantData size
+    size_t pushConstantDataSize = sizeof(PushConstantData);
+    if (pushConstantDataSize != (sizeof(float)*9))
     {
-        // Invalid PushConstantDefault size
+        // Invalid PushConstantData size
         return false;
     }
 
     // Set push constant range
     VkPushConstantRange pushConstantRange[PUSH_CONSTANT_COUNT];
 
-    // Matrix push constant
-    pushConstantRange[PUSH_CONSTANT_MATRIX].stageFlags =
+    // Vertex push constant
+    pushConstantRange[PUSH_CONSTANT_VERTEX].stageFlags =
         VK_SHADER_STAGE_VERTEX_BIT;
-    pushConstantRange[PUSH_CONSTANT_MATRIX].offset = 0;
-    pushConstantRange[PUSH_CONSTANT_MATRIX].size = sizeof(Matrix4x4::mat);
+    pushConstantRange[PUSH_CONSTANT_VERTEX].offset = PushConstantMatrixOffset;
+    pushConstantRange[PUSH_CONSTANT_VERTEX].size = PushConstantMatrixSize;
 
-    // Default push constants
-    pushConstantRange[PUSH_CONSTANT_DEFAULT].stageFlags =
+    // Fragment push constants
+    pushConstantRange[PUSH_CONSTANT_FRAGMENT].stageFlags =
         VK_SHADER_STAGE_FRAGMENT_BIT;
-    pushConstantRange[PUSH_CONSTANT_DEFAULT].offset = sizeof(Matrix4x4::mat);
-    pushConstantRange[PUSH_CONSTANT_DEFAULT].size = sizeof(PushConstantDefault);
+    pushConstantRange[PUSH_CONSTANT_FRAGMENT].offset = PushConstantDataOffset;
+    pushConstantRange[PUSH_CONSTANT_FRAGMENT].size = PushConstantDataSize;
 
     // Create pipeline layout
     VkPipelineLayoutCreateInfo pipelineInfo;
@@ -249,7 +249,7 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
     pipelineInfo.flags = 0;
     pipelineInfo.setLayoutCount = DESC_SETS_COUNT;
     pipelineInfo.pSetLayouts = descSetLayouts;
-    pipelineInfo.pushConstantRangeCount = 2;
+    pipelineInfo.pushConstantRangeCount = PUSH_CONSTANT_COUNT;
     pipelineInfo.pPushConstantRanges = pushConstantRange;
 
     if (vkCreatePipelineLayout(

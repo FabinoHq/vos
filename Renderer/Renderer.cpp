@@ -489,6 +489,32 @@ bool Renderer::startFrame()
         m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
     );
 
+    // Push default model matrix into command buffer
+    Matrix4x4 defaultMatrix;
+    defaultMatrix.setIdentity();
+    vkCmdPushConstants(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
+    );
+
+    // Push default constants into command buffer
+    PushConstantData pushConstants;
+    pushConstants.color[0] = 1.0f;
+    pushConstants.color[1] = 1.0f;
+    pushConstants.color[2] = 1.0f;
+    pushConstants.color[3] = 1.0f;
+    pushConstants.offset[0] = 0.0f;
+    pushConstants.offset[1] = 0.0f;
+    pushConstants.size[0] = 1.0f;
+    pushConstants.size[1] = 1.0f;
+    pushConstants.time = 0.0f;
+    vkCmdPushConstants(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
+    );
+
     // Rendering frame is ready
     return true;
 }
