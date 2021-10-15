@@ -275,7 +275,7 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create rect pipeline
     m_rectPipeline.createVertexShader(
-        *this, RectVertexShader, RectVertexShaderSize
+        *this, DefaultVertexShader, DefaultVertexShaderSize
     );
     m_rectPipeline.createFragmentShader(
         *this, RectFragmentShader, RectFragmentShaderSize
@@ -290,7 +290,7 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create oval pipeline
     m_ovalPipeline.createVertexShader(
-        *this, OvalVertexShader, OvalVertexShaderSize
+        *this, DefaultVertexShader, DefaultVertexShaderSize
     );
     m_ovalPipeline.createFragmentShader(
         *this, OvalFragmentShader, OvalFragmentShaderSize

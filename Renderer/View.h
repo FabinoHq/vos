@@ -179,6 +179,7 @@
             UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
             Matrix4x4           m_projMatrix;       // Projection matrix
             Matrix4x4           m_viewMatrix;       // View matrix
+            Matrix4x4           m_projViewMatrix;   // Projview matrix
             Vector2             m_position;         // View position
             Vector2             m_size;             // View size
             float               m_angle;            // View angle

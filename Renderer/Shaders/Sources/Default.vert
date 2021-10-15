@@ -46,8 +46,7 @@ precision highp int;
 // Matrices buffer (projection and view)
 layout(set = 0, binding = 0) uniform MatricesBuffer
 {
-    mat4 proj;
-    mat4 view;
+    mat4 projview;
 } mats;
 
 // Model matrix (push constant)
@@ -57,9 +56,9 @@ layout(push_constant) uniform ModelMatrix
 } matrix;
 
 // Input and output position and texture coordinates
-layout(location = 0) in vec3 i_Position;
-layout(location = 1) in vec2 i_TexCoords;
-layout(location = 0) out vec2 texCoords;
+layout(location = 0) in vec3 i_position;
+layout(location = 1) in vec2 i_texCoords;
+layout(location = 0) out vec2 o_texCoords;
 out gl_PerVertex
 {
     vec4 gl_Position;
@@ -67,6 +66,6 @@ out gl_PerVertex
 void main()
 {
     // Compute vertex position
-    texCoords = i_TexCoords;
-    gl_Position = mats.proj * mats.view * matrix.model * vec4(i_Position, 1.0);
+    o_texCoords = i_texCoords;
+    gl_Position = mats.projview*matrix.model*vec4(i_position, 1.0);
 }

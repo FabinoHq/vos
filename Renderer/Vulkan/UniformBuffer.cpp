@@ -82,6 +82,14 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
+    // Check UniformData size
+    size_t uniformDataSize = sizeof(UniformData);
+    if (uniformDataSize != (sizeof(float)*16))
+    {
+        // Invalid UniformData size
+        return false;
+    }
+
     // Check current buffer
     if (uniformBuffer.handle)
     {

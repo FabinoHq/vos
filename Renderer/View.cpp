@@ -50,6 +50,7 @@ View::View() :
 m_descriptorPool(0),
 m_projMatrix(),
 m_viewMatrix(),
+m_projViewMatrix(),
 m_position(0.0f, 0.0f),
 m_size(1.0f, 1.0f),
 m_angle(0.0f)
@@ -60,6 +61,7 @@ m_angle(0.0f)
     }
     m_projMatrix.reset();
     m_viewMatrix.reset();
+    m_projViewMatrix.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,6 +72,7 @@ View::~View()
     m_angle = 0.0f;
     m_size.reset();
     m_position.reset();
+    m_projViewMatrix.reset();
     m_viewMatrix.reset();
     m_projMatrix.reset();
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
@@ -129,10 +132,15 @@ bool View::init(Renderer& renderer)
 
     m_viewMatrix.setIdentity();
 
+    // Compute projview matrix
+    m_projViewMatrix.set(m_projMatrix);
+    m_projViewMatrix *= m_viewMatrix;
+
     // Copy matrices data into uniform data
     UniformData uniformData;
-    memcpy(uniformData.projMatrix, m_projMatrix.mat, sizeof(m_projMatrix.mat));
-    memcpy(uniformData.viewMatrix, m_viewMatrix.mat, sizeof(m_viewMatrix.mat));
+    memcpy(
+        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
 
     // Create uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
@@ -277,10 +285,15 @@ bool View::bind(Renderer& renderer)
     m_viewMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
     m_viewMatrix.scale(m_size.vec[0], m_size.vec[1]);
 
+    // Compute projview matrix
+    m_projViewMatrix.set(m_projMatrix);
+    m_projViewMatrix *= m_viewMatrix;
+
     // Copy matrices data into uniform data
     UniformData uniformData;
-    memcpy(uniformData.projMatrix, m_projMatrix.mat, sizeof(m_projMatrix.mat));
-    memcpy(uniformData.viewMatrix, m_viewMatrix.mat, sizeof(m_viewMatrix.mat));
+    memcpy(
+        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
 
     // Update uniform buffer
     if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
@@ -326,6 +339,7 @@ void View::destroyView(Renderer& renderer)
     m_angle = 0.0f;
     m_size.reset();
     m_position.reset();
+    m_projViewMatrix.reset();
     m_viewMatrix.reset();
     m_projMatrix.reset();
     m_descriptorPool = 0;

@@ -54,10 +54,10 @@ layout(push_constant) uniform Constants
 } constants;
 
 // Input texture coordinates and output color
-layout(location = 0) in vec2 texCoords;
-layout(location = 0) out vec4 o_Color;
+layout(location = 0) in vec2 i_texCoords;
+layout(location = 0) out vec4 o_color;
 void main()
 {
     // Compute output color
-    o_Color = constants.color;
+    o_color = constants.color;
 }

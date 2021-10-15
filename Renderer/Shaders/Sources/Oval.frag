@@ -54,10 +54,11 @@ layout(push_constant) uniform Constants
 } constants;
 
 // Input texture coordinates and output color
-layout(location = 0) in vec2 texCoords;
-layout(location = 0) out vec4 o_Color;
+layout(location = 0) in vec2 i_texCoords;
+layout(location = 0) out vec4 o_color;
 void main()
 {
     // Compute output color
-    o_Color = constants.color*vec4(step(length(vec2(0.5, 0.5)-texCoords), 0.5));
+    vec4 ovalShape = vec4(step(length(vec2(0.5, 0.5)-i_texCoords), 0.5));
+    o_color = constants.color*ovalShape;
 }

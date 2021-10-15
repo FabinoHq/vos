@@ -112,7 +112,7 @@ bool Vos::launch()
     }
 
     // Init procedural sprite
-    if (!m_procsprite.init(m_renderer, 0, 0, 0, 0, 1.0f, 1.0f))
+    if (!m_procsprite.init(m_renderer, 0, 0, 1.0f, 1.0f))
     {
         // Could not init procedural sprite
         return false;
