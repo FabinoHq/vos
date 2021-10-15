@@ -84,6 +84,12 @@ bool SysMemoryCheck()
         return false;
     }
 
+    if (!SysMemoryCheckMaths())
+    {
+        // Invalid maths memory
+        return false;
+    }
+
     // System memory is ready
     return true;
 }
@@ -666,5 +672,52 @@ bool SysMemoryCheckEndianness()
     }
 
     // System memory is little-endian
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory Maths representations                                 //
+//  return : True if the system memory Maths representations are correct      //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheckMaths()
+{
+    // Check Vector2 memory
+    std::size_t vector2size = sizeof(Vector2::vec);
+    if (vector2size != (sizeof(float)*2))
+    {
+        // Vector 2 memory representation is invalid
+        SysMessage::box() << "[0x1038] Invalid Vector2 memory size\n";
+        SysMessage::box() << "Vector2 memory size should be 64bits (8 bytes)";
+        return false;
+    }
+
+    // Check Vector3 memory
+    std::size_t vector3size = sizeof(Vector3::vec);
+    if (vector3size != (sizeof(float)*3))
+    {
+        SysMessage::box() << "[0x1039] Invalid Vector3 memory size\n";
+        SysMessage::box() << "Vector3 memory size should be 96bits (12 bytes)";
+        return false;
+    }
+
+    // Check Vector4 memory
+    std::size_t vector4size = sizeof(Vector4::vec);
+    if (vector4size != (sizeof(float)*4))
+    {
+        SysMessage::box() << "[0x103A] Invalid Vector4 memory size\n";
+        SysMessage::box() << "Vector4 memory size should be 128bits (16 bytes)";
+        return false;
+    }
+
+    // Check Matrix4x4 memory
+    std::size_t matrix4size = sizeof(Matrix4x4::mat);
+    if (matrix4size != (sizeof(float)*16))
+    {
+        SysMessage::box() << "[0x103B] Invalid Matrix4 memory size\n";
+        SysMessage::box() << "Matrix4 memory size should be 512bits (64 bytes)";
+        return false;
+    }
+
+    // System memory maths representations are correct
     return true;
 }

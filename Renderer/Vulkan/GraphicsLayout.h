@@ -63,9 +63,19 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  PushConstant data structure                                           //
+    //  Push constant types                                                   //
     ////////////////////////////////////////////////////////////////////////////
-    struct PushConstantData
+    enum PushConstantType
+    {
+        PUSH_CONSTANT_MATRIX = 0,
+        PUSH_CONSTANT_DEFAULT = 1,
+        PUSH_CONSTANT_COUNT = 2
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  PushConstant default data structure                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    struct PushConstantDefault
     {
         float   color[4];
         float   offset[2];

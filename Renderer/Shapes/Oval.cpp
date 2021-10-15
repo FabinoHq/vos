@@ -293,7 +293,7 @@ void Oval::render(Renderer& renderer)
     );
 
     // Push constants into command buffer
-    PushConstantData pushConstants;
+    PushConstantDefault pushConstants;
     pushConstants.color[0] = m_color.vec[0];
     pushConstants.color[1] = m_color.vec[1];
     pushConstants.color[2] = m_color.vec[2];
@@ -307,7 +307,7 @@ void Oval::render(Renderer& renderer)
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        sizeof(Matrix4x4::mat), sizeof(PushConstantData), &pushConstants
+        sizeof(Matrix4x4::mat), sizeof(PushConstantDefault), &pushConstants
     );
 
     // Draw oval triangles

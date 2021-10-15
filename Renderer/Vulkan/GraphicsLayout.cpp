@@ -130,7 +130,7 @@ bool GraphicsLayout::createDescriptorSetLayouts(VkDevice& vulkanDevice)
         return false;
     }
 
-    // Create descriptor set layouts
+    // Descriptor sets bindings
     VkDescriptorSetLayoutBinding descriptorSetBindings[DESC_SETS_COUNT];
 
     descriptorSetBindings[DESC_MATRICES].binding = 0;
@@ -149,51 +149,42 @@ bool GraphicsLayout::createDescriptorSetLayouts(VkDevice& vulkanDevice)
         VK_SHADER_STAGE_FRAGMENT_BIT;
     descriptorSetBindings[DESC_TEXTURE].pImmutableSamplers = 0;
 
-    VkDescriptorSetLayoutCreateInfo descriptorSetInfo;
-    descriptorSetInfo.sType =
+    // Descriptor sets infos
+    VkDescriptorSetLayoutCreateInfo descriptorSetInfo[DESC_SETS_COUNT];
+
+    descriptorSetInfo[DESC_MATRICES].sType =
         VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    descriptorSetInfo.pNext = 0;
-    descriptorSetInfo.flags = 0;
-    descriptorSetInfo.bindingCount = 1;
-    descriptorSetInfo.pBindings = &descriptorSetBindings[DESC_MATRICES];
+    descriptorSetInfo[DESC_MATRICES].pNext = 0;
+    descriptorSetInfo[DESC_MATRICES].flags = 0;
+    descriptorSetInfo[DESC_MATRICES].bindingCount = 1;
+    descriptorSetInfo[DESC_MATRICES].pBindings =
+        &descriptorSetBindings[DESC_MATRICES];
 
-    VkDescriptorSetLayoutCreateInfo descriptorSetInfo2;
-    descriptorSetInfo2.sType =
+    descriptorSetInfo[DESC_TEXTURE].sType =
         VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    descriptorSetInfo2.pNext = 0;
-    descriptorSetInfo2.flags = 0;
-    descriptorSetInfo2.bindingCount = 1;
-    descriptorSetInfo2.pBindings = &descriptorSetBindings[DESC_TEXTURE];
+    descriptorSetInfo[DESC_TEXTURE].pNext = 0;
+    descriptorSetInfo[DESC_TEXTURE].flags = 0;
+    descriptorSetInfo[DESC_TEXTURE].bindingCount = 1;
+    descriptorSetInfo[DESC_TEXTURE].pBindings =
+        &descriptorSetBindings[DESC_TEXTURE];
 
-    // Create matrices descriptor set layout
-    if (vkCreateDescriptorSetLayout(vulkanDevice, &descriptorSetInfo, 0,
-        &descSetLayouts[DESC_MATRICES]) != VK_SUCCESS)
-    {
-        // Could not create matrices descriptor set layout
-        return false;
-    }
-    if (!descSetLayouts[DESC_MATRICES])
-    {
-        // Invalid matrices descriptor set layout
-        return false;
-    }
-
-    // Create texture descriptor set layout
-    if (vkCreateDescriptorSetLayout(vulkanDevice, &descriptorSetInfo2, 0,
-        &descSetLayouts[DESC_TEXTURE]) != VK_SUCCESS)
-    {
-        // Could not create texture descriptor set layout
-        return false;
-    }
-    if (!descSetLayouts[DESC_TEXTURE])
-    {
-        // Invalid texture descriptor set layout
-        return false;
-    }
-
-    // Copy descriptor set layouts to match swapchain frames count
+    // Create descriptor sets layouts
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
+        // Create current descriptor set layout
+        if (vkCreateDescriptorSetLayout(vulkanDevice, &descriptorSetInfo[i], 0,
+            &descSetLayouts[i]) != VK_SUCCESS)
+        {
+            // Could not create descriptor set layout
+            return false;
+        }
+        if (!descSetLayouts[i])
+        {
+            // Invalid descriptor set layout
+            return false;
+        }
+
+        // Copy descriptor set layouts to match swapchain frames count
         for (uint32_t j = 0; j < RendererMaxSwapchainFrames; ++j)
         {
             swapSetLayouts[(i*RendererMaxSwapchainFrames)+j] =
@@ -228,17 +219,30 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
         }
     }
 
+    // Check PushConstantDefault size
+    size_t pushConstantDefaultDataSize = sizeof(PushConstantDefault);
+    if (pushConstantDefaultDataSize != (sizeof(float)*9))
+    {
+        // Invalid PushConstantDefault size
+        return false;
+    }
+
+    // Set push constant range
+    VkPushConstantRange pushConstantRange[PUSH_CONSTANT_COUNT];
+
+    // Matrix push constant
+    pushConstantRange[PUSH_CONSTANT_MATRIX].stageFlags =
+        VK_SHADER_STAGE_VERTEX_BIT;
+    pushConstantRange[PUSH_CONSTANT_MATRIX].offset = 0;
+    pushConstantRange[PUSH_CONSTANT_MATRIX].size = sizeof(Matrix4x4::mat);
+
+    // Default push constants
+    pushConstantRange[PUSH_CONSTANT_DEFAULT].stageFlags =
+        VK_SHADER_STAGE_FRAGMENT_BIT;
+    pushConstantRange[PUSH_CONSTANT_DEFAULT].offset = sizeof(Matrix4x4::mat);
+    pushConstantRange[PUSH_CONSTANT_DEFAULT].size = sizeof(PushConstantDefault);
+
     // Create pipeline layout
-    VkPushConstantRange pushConstantRange[2];
-
-    pushConstantRange[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    pushConstantRange[0].offset = 0;
-    pushConstantRange[0].size = sizeof(Matrix4x4::mat);
-
-    pushConstantRange[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-    pushConstantRange[1].offset = sizeof(Matrix4x4::mat);
-    pushConstantRange[1].size = sizeof(PushConstantData);
-
     VkPipelineLayoutCreateInfo pipelineInfo;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineInfo.pNext = 0;

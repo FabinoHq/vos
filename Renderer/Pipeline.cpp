@@ -390,7 +390,7 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
 {
     // Input binding
     vertexBinding.binding = 0;
-    vertexBinding.stride = sizeof(float)*5;
+    vertexBinding.stride = sizeof(VertexData);
     vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
     // Vertex attributes
@@ -399,7 +399,7 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
         case VERTEX_INPUTS_DEFAULT:
         {
             // Vertex binding stride
-            vertexBinding.stride = sizeof(float)*5;
+            vertexBinding.stride = sizeof(VertexData);
 
             // Position
             vertexAttribs.push_back(VkVertexInputAttributeDescription());
@@ -420,7 +420,7 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
         default:
         {
             // Vertex binding stride
-            vertexBinding.stride = sizeof(float)*5;
+            vertexBinding.stride = sizeof(VertexData);
 
             // Position
             vertexAttribs.push_back(VkVertexInputAttributeDescription());

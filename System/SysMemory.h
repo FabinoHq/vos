@@ -48,6 +48,10 @@
     #include "System.h"
     #include "SysMessage.h"
     #include "../Math/Math.h"
+    #include "../Math/Vector2.h"
+    #include "../Math/Vector3.h"
+    #include "../Math/Vector4.h"
+    #include "../Math/Matrix4x4.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -91,6 +95,12 @@
     //  return : True if the system memory is little-endian                   //
     ////////////////////////////////////////////////////////////////////////////
     bool SysMemoryCheckEndianness();
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Check system memory Maths representations                             //
+    //  return : True if the system memory Maths representations are correct  //
+    ////////////////////////////////////////////////////////////////////////////
+    bool SysMemoryCheckMaths();
 
 
 #endif // VOS_SYSTEM_SYSMEMORY_HEADER
