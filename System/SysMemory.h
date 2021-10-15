@@ -97,8 +97,8 @@
     bool SysMemoryCheckEndianness();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory Maths representations                             //
-    //  return : True if the system memory Maths representations are correct  //
+    //  Check system memory maths representations                             //
+    //  return : True if the system memory maths representations are correct  //
     ////////////////////////////////////////////////////////////////////////////
     bool SysMemoryCheckMaths();
 
