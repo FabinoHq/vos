@@ -74,6 +74,16 @@
     ////////////////////////////////////////////////////////////////////////////
     const VkClearValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer max uniforms descriptor sets                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t RendererMaxUniformsDesc = 4*RendererMaxSwapchainFrames;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer max textures descriptor sets                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t RendererMaxTexturesDesc = 2048*RendererMaxSwapchainFrames;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
@@ -225,6 +235,8 @@
             VulkanQueue         m_surfaceQueue;         // Surface queue
             VulkanQueue         m_transferQueue;        // Transfer queue
             VkCommandPool       m_transferCommandPool;  // Transfer command pool
+            VkDescriptorPool    m_uniformsDescPool;     // Uniforms desc pool
+            VkDescriptorPool    m_texturesDescPool;     // Textures desc pool
 
             VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain

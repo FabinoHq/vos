@@ -174,7 +174,6 @@
 
 
         private:
-            VkDescriptorPool    m_descriptorPool;   // Descriptor pool
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
             UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
             Matrix4x4           m_projMatrix;       // Projection matrix
