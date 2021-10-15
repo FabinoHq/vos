@@ -101,18 +101,18 @@ bool SysMemoryCheck()
 bool SysMemoryCheckChar()
 {
     // Check char representation
-    std::size_t charsize = sizeof(char);
-    std::size_t signedcharsize = sizeof(signed char);
+    size_t charsize = sizeof(char);
+    size_t signedcharsize = sizeof(signed char);
     signed char signedcharunderflow = -128;
     --signedcharunderflow;
     signed char signedcharoverflow = 127;
     ++signedcharoverflow;
-    std::size_t unsignedcharsize = sizeof(unsigned char);
+    size_t unsignedcharsize = sizeof(unsigned char);
     unsigned char unsignedcharunderflow = 0;
     --unsignedcharunderflow;
     unsigned char unsignedcharoverflow = 255;
     ++unsignedcharoverflow;
-    std::size_t wchartsize = sizeof(wchar_t);
+    size_t wchartsize = sizeof(wchar_t);
 
     if (charsize != 1)
     {
@@ -218,7 +218,7 @@ bool SysMemoryCheckChar()
 bool SysMemoryCheckBool()
 {
     // Check bool representation
-    std::size_t boolsize = sizeof(bool);
+    size_t boolsize = sizeof(bool);
     bool booltrue = true;
     bool boolfalse = false;
 
@@ -257,43 +257,43 @@ bool SysMemoryCheckBool()
 bool SysMemoryCheckInt()
 {
     // Check int representation
-    std::size_t intsize = sizeof(int);
-    std::size_t signedintsize = sizeof(signed int);
-    std::size_t unsignedintsize = sizeof(unsigned int);
+    size_t intsize = sizeof(int);
+    size_t signedintsize = sizeof(signed int);
+    size_t unsignedintsize = sizeof(unsigned int);
 
-    std::size_t int8tsize = sizeof(int8_t);
+    size_t int8tsize = sizeof(int8_t);
     int8_t int8tunderflow = -128;
     --int8tunderflow;
     int8_t int8toverflow = 127;
     ++int8toverflow;
-    std::size_t uint8tsize = sizeof(uint8_t);
+    size_t uint8tsize = sizeof(uint8_t);
     uint8_t uint8tunderflow = 0;
     --uint8tunderflow;
     uint8_t uint8toverflow = 255;
     ++uint8toverflow;
-    std::size_t int16tsize = sizeof(int16_t);
+    size_t int16tsize = sizeof(int16_t);
     int16_t int16tunderflow = -32768;
     --int16tunderflow;
     int16_t int16toverflow = 32767;
     ++int16toverflow;
-    std::size_t uint16tsize = sizeof(uint16_t);
+    size_t uint16tsize = sizeof(uint16_t);
     uint16_t uint16tunderflow = 0;
     --uint16tunderflow;
     uint16_t uint16toverflow = 65535;
     ++uint16toverflow;
-    std::size_t int32tsize = sizeof(int32_t);
+    size_t int32tsize = sizeof(int32_t);
     int32_t int32tunderflow = -2147483648;
     --int32tunderflow;
     int32_t int32toverflow = 2147483647;
     ++int32toverflow;
-    std::size_t uint32tsize = sizeof(uint32_t);
+    size_t uint32tsize = sizeof(uint32_t);
     uint32_t uint32tunderflow = 0;
     --uint32tunderflow;
     uint32_t uint32toverflow = 4294967295;
     ++uint32toverflow;
-    std::size_t int64tsize = sizeof(int64_t);
-    std::size_t uint64tsize = sizeof(uint64_t);
-    std::size_t sizetsize = sizeof(size_t);
+    size_t int64tsize = sizeof(int64_t);
+    size_t uint64tsize = sizeof(uint64_t);
+    size_t sizetsize = sizeof(size_t);
 
     if (intsize < 2)
     {
@@ -599,7 +599,7 @@ bool SysMemoryCheckInt()
 bool SysMemoryCheckFloat()
 {
     // Check float representation
-    std::size_t floatsize = sizeof(float);
+    size_t floatsize = sizeof(float);
 
     if (floatsize != 4)
     {
@@ -628,7 +628,7 @@ bool SysMemoryCheckFloat()
 bool SysMemoryCheckDouble()
 {
     // Check double representation
-    std::size_t doublesize = sizeof(double);
+    size_t doublesize = sizeof(double);
 
     if (doublesize != 8)
     {
@@ -682,7 +682,7 @@ bool SysMemoryCheckEndianness()
 bool SysMemoryCheckMaths()
 {
     // Check Vector2 memory
-    std::size_t vector2size = sizeof(Vector2::vec);
+    size_t vector2size = sizeof(Vector2::vec);
     if (vector2size != (sizeof(float)*2))
     {
         // Vector 2 memory representation is invalid
@@ -692,7 +692,7 @@ bool SysMemoryCheckMaths()
     }
 
     // Check Vector3 memory
-    std::size_t vector3size = sizeof(Vector3::vec);
+    size_t vector3size = sizeof(Vector3::vec);
     if (vector3size != (sizeof(float)*3))
     {
         SysMessage::box() << "[0x1039] Invalid Vector3 memory size\n";
@@ -701,7 +701,7 @@ bool SysMemoryCheckMaths()
     }
 
     // Check Vector4 memory
-    std::size_t vector4size = sizeof(Vector4::vec);
+    size_t vector4size = sizeof(Vector4::vec);
     if (vector4size != (sizeof(float)*4))
     {
         SysMessage::box() << "[0x103A] Invalid Vector4 memory size\n";
@@ -710,7 +710,7 @@ bool SysMemoryCheckMaths()
     }
 
     // Check Matrix4x4 memory
-    std::size_t matrix4size = sizeof(Matrix4x4::mat);
+    size_t matrix4size = sizeof(Matrix4x4::mat);
     if (matrix4size != (sizeof(float)*16))
     {
         SysMessage::box() << "[0x103B] Invalid Matrix4 memory size\n";
