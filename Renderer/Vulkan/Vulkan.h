@@ -2295,6 +2295,22 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDisplayPlaneCapabilitiesKHR data structure                          //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDisplayPlaneCapabilitiesKHR
+    {
+        VkDisplayPlaneAlphaFlagsKHR     supportedAlpha;
+        VkOffset2D                      minSrcPosition;
+        VkOffset2D                      maxSrcPosition;
+        VkExtent2D                      minSrcExtent;
+        VkExtent2D                      maxSrcExtent;
+        VkOffset2D                      minDstPosition;
+        VkOffset2D                      maxDstPosition;
+        VkExtent2D                      minDstExtent;
+        VkExtent2D                      maxDstExtent;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceCapabilitiesKHR data structure                               //
     ////////////////////////////////////////////////////////////////////////////
     struct VkSurfaceCapabilitiesKHR
@@ -4197,6 +4213,16 @@
         const VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode
     );
     extern PFN_vkCreateDisplayModeKHR vkCreateDisplayModeKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDisplayPlaneCapabilitiesKHR function                             //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetDisplayPlaneCapabilitiesKHR)(
+        VkPhysicalDevice physicalDevice, VkDisplayModeKHR mode,
+        uint32_t planeIndex, VkDisplayPlaneCapabilitiesKHR* pCapabilities
+    );
+    extern PFN_vkGetDisplayPlaneCapabilitiesKHR
+        vkGetDisplayPlaneCapabilitiesKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
