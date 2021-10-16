@@ -2251,6 +2251,24 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDisplayModeParametersKHR data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDisplayModeParametersKHR
+    {
+        VkExtent2D  visibleRegion;
+        uint32_t    refreshRate;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDisplayModePropertiesKHR data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDisplayModePropertiesKHR
+    {
+        VkDisplayModeKHR            displayMode;
+        VkDisplayModeParametersKHR  parameters;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceCapabilitiesKHR data structure                               //
     ////////////////////////////////////////////////////////////////////////////
     struct VkSurfaceCapabilitiesKHR
@@ -4134,6 +4152,16 @@
     );
     extern PFN_vkGetDisplayPlaneSupportedDisplaysKHR
         vkGetDisplayPlaneSupportedDisplaysKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDisplayModePropertiesKHR function                                //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetDisplayModePropertiesKHR)(
+        VkPhysicalDevice physicalDevice, VkDisplayKHR display,
+        uint32_t* pPropertyCount, VkDisplayModePropertiesKHR* pProperties
+    );
+    extern PFN_vkGetDisplayModePropertiesKHR
+        vkGetDisplayModePropertiesKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////

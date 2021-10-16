@@ -119,6 +119,9 @@ PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
 PFN_vkGetDisplayPlaneSupportedDisplaysKHR
     vkGetDisplayPlaneSupportedDisplaysKHR = 0;
 
+// vkGetDisplayModePropertiesKHR function
+PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR = 0;
+
 
 // vkDestroySurfaceKHR function
 PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR = 0;
@@ -867,6 +870,16 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     if (!vkGetDisplayPlaneSupportedDisplaysKHR)
     {
         // Could not load vkGetDisplayPlaneSupportedDisplaysKHR
+        return false;
+    }
+
+    // Load vkGetDisplayModePropertiesKHR
+    vkGetDisplayModePropertiesKHR = (PFN_vkGetDisplayModePropertiesKHR)
+        vkGetInstanceProcAddr(vulkanInstance, "vkGetDisplayModePropertiesKHR"
+    );
+    if (!vkGetDisplayModePropertiesKHR)
+    {
+        // Could not load vkGetDisplayModePropertiesKHR
         return false;
     }
 
@@ -2694,6 +2707,7 @@ void FreeVulkanFunctions()
     vkGetPhysicalDeviceSurfaceSupportKHR = 0;
     vkDestroySurfaceKHR = 0;
 
+    vkGetDisplayModePropertiesKHR = 0;
     vkGetDisplayPlaneSupportedDisplaysKHR = 0;
     vkGetPhysicalDeviceDisplayPlanePropertiesKHR = 0;
     vkGetPhysicalDeviceDisplayPropertiesKHR = 0;
