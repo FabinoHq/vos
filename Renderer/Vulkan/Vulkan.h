@@ -1119,21 +1119,6 @@
     typedef VkFlags VkSparseMemoryBindFlags;
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VkDisplayPlaneAlphaFlagBitsKHR                                        //
-    ////////////////////////////////////////////////////////////////////////////
-    enum VkDisplayPlaneAlphaFlagBitsKHR
-    {
-        VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = 0x00000001,
-        VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = 0x00000002,
-        VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = 0x00000004,
-        VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = 0x00000008,
-        VK_DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR = 0x7FFFFFFF
-    };
-    typedef VkFlags VkDisplayPlaneAlphaFlagsKHR;
-    typedef VkFlags VkDisplayModeCreateFlagsKHR;
-    typedef VkFlags VkDisplaySurfaceCreateFlagsKHR;
-
-    ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceTransformFlagsKHR                                            //
     ////////////////////////////////////////////////////////////////////////////
     enum VkSurfaceTransformFlagBitsKHR
@@ -2240,91 +2225,6 @@
         VkPipelineDynamicStateCreateFlags   flags;
         uint32_t                            dynamicStateCount;
         const VkDynamicState*               pDynamicStates;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkDisplayPropertiesKHR data structure                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VkDisplayPropertiesKHR
-    {
-        VkDisplayKHR                display;
-        const char*                 displayName;
-        VkExtent2D                  physicalDimensions;
-        VkExtent2D                  physicalResolution;
-        VkSurfaceTransformFlagsKHR  supportedTransforms;
-        VkBool32                    planeReorderPossible;
-        VkBool32                    persistentContent;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkDisplayPlanePropertiesKHR data structure                            //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VkDisplayPlanePropertiesKHR
-    {
-        VkDisplayKHR    currentDisplay;
-        uint32_t        currentStackIndex;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkDisplayModeParametersKHR data structure                             //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VkDisplayModeParametersKHR
-    {
-        VkExtent2D  visibleRegion;
-        uint32_t    refreshRate;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkDisplayModePropertiesKHR data structure                             //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VkDisplayModePropertiesKHR
-    {
-        VkDisplayModeKHR            displayMode;
-        VkDisplayModeParametersKHR  parameters;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkDisplayModeCreateInfoKHR data structure                             //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VkDisplayModeCreateInfoKHR
-    {
-        VkStructureType                 sType;
-        const void*                     pNext;
-        VkDisplayModeCreateFlagsKHR     flags;
-        VkDisplayModeParametersKHR      parameters;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkDisplayPlaneCapabilitiesKHR data structure                          //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VkDisplayPlaneCapabilitiesKHR
-    {
-        VkDisplayPlaneAlphaFlagsKHR     supportedAlpha;
-        VkOffset2D                      minSrcPosition;
-        VkOffset2D                      maxSrcPosition;
-        VkExtent2D                      minSrcExtent;
-        VkExtent2D                      maxSrcExtent;
-        VkOffset2D                      minDstPosition;
-        VkOffset2D                      maxDstPosition;
-        VkExtent2D                      minDstExtent;
-        VkExtent2D                      maxDstExtent;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VkDisplaySurfaceCreateInfoKHR data structure                          //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VkDisplaySurfaceCreateInfoKHR
-    {
-        VkStructureType                 sType;
-        const void*                     pNext;
-        VkDisplaySurfaceCreateFlagsKHR  flags;
-        VkDisplayModeKHR                displayMode;
-        uint32_t                        planeIndex;
-        uint32_t                        planeStackIndex;
-        VkSurfaceTransformFlagBitsKHR   transform;
-        float                           globalAlpha;
-        VkDisplayPlaneAlphaFlagBitsKHR  alphaMode;
-        VkExtent2D                      imageExtent;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -4179,76 +4079,6 @@
         VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties
     );
     extern PFN_vkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroups;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkGetPhysicalDeviceDisplayPropertiesKHR function                      //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkGetPhysicalDeviceDisplayPropertiesKHR)(
-        VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount,
-        VkDisplayPropertiesKHR* pProperties
-    );
-    extern PFN_vkGetPhysicalDeviceDisplayPropertiesKHR
-        vkGetPhysicalDeviceDisplayPropertiesKHR;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkGetPhysicalDeviceDisplayPlanePropertiesKHR function                 //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef
-        VkResult (VOSVK_PTR *PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR)(
-        VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount,
-        VkDisplayPlanePropertiesKHR* pProperties
-    );
-    extern PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
-        vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkGetDisplayPlaneSupportedDisplaysKHR function                        //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkGetDisplayPlaneSupportedDisplaysKHR)(
-        VkPhysicalDevice physicalDevice, uint32_t planeIndex,
-        uint32_t* pDisplayCount, VkDisplayKHR* pDisplays
-    );
-    extern PFN_vkGetDisplayPlaneSupportedDisplaysKHR
-        vkGetDisplayPlaneSupportedDisplaysKHR;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkGetDisplayModePropertiesKHR function                                //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkGetDisplayModePropertiesKHR)(
-        VkPhysicalDevice physicalDevice, VkDisplayKHR display,
-        uint32_t* pPropertyCount, VkDisplayModePropertiesKHR* pProperties
-    );
-    extern PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkCreateDisplayModeKHR function                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkCreateDisplayModeKHR)(
-        VkPhysicalDevice physicalDevice, VkDisplayKHR display,
-        const VkDisplayModeCreateInfoKHR* pCreateInfo,
-        const VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode
-    );
-    extern PFN_vkCreateDisplayModeKHR vkCreateDisplayModeKHR;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkGetDisplayPlaneCapabilitiesKHR function                             //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkGetDisplayPlaneCapabilitiesKHR)(
-        VkPhysicalDevice physicalDevice, VkDisplayModeKHR mode,
-        uint32_t planeIndex, VkDisplayPlaneCapabilitiesKHR* pCapabilities
-    );
-    extern PFN_vkGetDisplayPlaneCapabilitiesKHR
-        vkGetDisplayPlaneCapabilitiesKHR;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkCreateDisplayPlaneSurfaceKHR function                               //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkCreateDisplayPlaneSurfaceKHR)(
-        VkInstance instance, const VkDisplaySurfaceCreateInfoKHR* pCreateInfo,
-        const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface
-    );
-    extern PFN_vkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////

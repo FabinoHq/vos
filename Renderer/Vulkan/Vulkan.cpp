@@ -107,31 +107,6 @@ PFN_vkGetPhysicalDeviceSparseImageFormatProperties
 PFN_vkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroups = 0;
 
 
-// vkGetPhysicalDeviceDisplayPropertiesKHR function
-PFN_vkGetPhysicalDeviceDisplayPropertiesKHR
-    vkGetPhysicalDeviceDisplayPropertiesKHR = 0;
-
-// vkGetPhysicalDeviceDisplayPlanePropertiesKHR function
-PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
-    vkGetPhysicalDeviceDisplayPlanePropertiesKHR = 0;
-
-// vkGetDisplayPlaneSupportedDisplaysKHR function
-PFN_vkGetDisplayPlaneSupportedDisplaysKHR
-    vkGetDisplayPlaneSupportedDisplaysKHR = 0;
-
-// vkGetDisplayModePropertiesKHR function
-PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR = 0;
-
-// vkCreateDisplayModeKHR function
-PFN_vkCreateDisplayModeKHR vkCreateDisplayModeKHR = 0;
-
-// vkGetDisplayPlaneCapabilitiesKHR function
-PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR = 0;
-
-// vkCreateDisplayPlaneSurfaceKHR function
-PFN_vkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHR = 0;
-
-
 // vkDestroySurfaceKHR function
 PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR = 0;
 
@@ -845,80 +820,6 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     if (!vkEnumeratePhysicalDeviceGroups)
     {
         // Could not load vkEnumeratePhysicalDeviceGroups
-        return false;
-    }
-
-
-    // Load vkGetPhysicalDeviceDisplayPropertiesKHR
-    vkGetPhysicalDeviceDisplayPropertiesKHR =
-        (PFN_vkGetPhysicalDeviceDisplayPropertiesKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceDisplayPropertiesKHR"
-    );
-    if (!vkGetPhysicalDeviceDisplayPropertiesKHR)
-    {
-        // Could not load vkGetPhysicalDeviceDisplayPropertiesKHR
-        return false;
-    }
-
-    // Load vkGetPhysicalDeviceDisplayPlanePropertiesKHR
-    vkGetPhysicalDeviceDisplayPlanePropertiesKHR =
-        (PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceDisplayPlanePropertiesKHR"
-    );
-    if (!vkGetPhysicalDeviceDisplayPlanePropertiesKHR)
-    {
-        // Could not load vkGetPhysicalDeviceDisplayPlanePropertiesKHR
-        return false;
-    }
-
-    // Load vkGetDisplayPlaneSupportedDisplaysKHR
-    vkGetDisplayPlaneSupportedDisplaysKHR =
-        (PFN_vkGetDisplayPlaneSupportedDisplaysKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetDisplayPlaneSupportedDisplaysKHR"
-    );
-    if (!vkGetDisplayPlaneSupportedDisplaysKHR)
-    {
-        // Could not load vkGetDisplayPlaneSupportedDisplaysKHR
-        return false;
-    }
-
-    // Load vkGetDisplayModePropertiesKHR
-    vkGetDisplayModePropertiesKHR = (PFN_vkGetDisplayModePropertiesKHR)
-        vkGetInstanceProcAddr(vulkanInstance, "vkGetDisplayModePropertiesKHR"
-    );
-    if (!vkGetDisplayModePropertiesKHR)
-    {
-        // Could not load vkGetDisplayModePropertiesKHR
-        return false;
-    }
-
-    // Load vkCreateDisplayModeKHR
-    vkCreateDisplayModeKHR = (PFN_vkCreateDisplayModeKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkCreateDisplayModeKHR"
-    );
-    if (!vkCreateDisplayModeKHR)
-    {
-        // Could not load vkCreateDisplayModeKHR
-        return false;
-    }
-
-    // Load vkGetDisplayPlaneCapabilitiesKHR
-    vkGetDisplayPlaneCapabilitiesKHR = (PFN_vkGetDisplayPlaneCapabilitiesKHR)
-        vkGetInstanceProcAddr(vulkanInstance, "vkGetDisplayPlaneCapabilitiesKHR"
-    );
-    if (!vkGetDisplayPlaneCapabilitiesKHR)
-    {
-        // Could not load vkGetDisplayPlaneCapabilitiesKHR
-        return false;
-    }
-
-    // Load vkCreateDisplayPlaneSurfaceKHR
-    vkCreateDisplayPlaneSurfaceKHR = (PFN_vkCreateDisplayPlaneSurfaceKHR)
-        vkGetInstanceProcAddr(vulkanInstance, "vkCreateDisplayPlaneSurfaceKHR"
-    );
-    if (!vkCreateDisplayPlaneSurfaceKHR)
-    {
-        // Could not load vkCreateDisplayPlaneSurfaceKHR
         return false;
     }
 
@@ -2745,14 +2646,6 @@ void FreeVulkanFunctions()
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR = 0;
     vkGetPhysicalDeviceSurfaceSupportKHR = 0;
     vkDestroySurfaceKHR = 0;
-
-    vkCreateDisplayPlaneSurfaceKHR = 0;
-    vkGetDisplayPlaneCapabilitiesKHR = 0;
-    vkCreateDisplayModeKHR = 0;
-    vkGetDisplayModePropertiesKHR = 0;
-    vkGetDisplayPlaneSupportedDisplaysKHR = 0;
-    vkGetPhysicalDeviceDisplayPlanePropertiesKHR = 0;
-    vkGetPhysicalDeviceDisplayPropertiesKHR = 0;
 
     vkEnumeratePhysicalDeviceGroups = 0;
     vkGetPhysicalDeviceSparseImageFormatProperties = 0;
