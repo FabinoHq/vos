@@ -111,9 +111,13 @@ PFN_vkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroups = 0;
 PFN_vkGetPhysicalDeviceDisplayPropertiesKHR
     vkGetPhysicalDeviceDisplayPropertiesKHR = 0;
 
-//  vkGetPhysicalDeviceDisplayPlanePropertiesKHR function
+// vkGetPhysicalDeviceDisplayPlanePropertiesKHR function
 PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
     vkGetPhysicalDeviceDisplayPlanePropertiesKHR = 0;
+
+// vkGetDisplayPlaneSupportedDisplaysKHR function
+PFN_vkGetDisplayPlaneSupportedDisplaysKHR
+    vkGetDisplayPlaneSupportedDisplaysKHR = 0;
 
 
 // vkDestroySurfaceKHR function
@@ -852,6 +856,17 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     if (!vkGetPhysicalDeviceDisplayPlanePropertiesKHR)
     {
         // Could not load vkGetPhysicalDeviceDisplayPlanePropertiesKHR
+        return false;
+    }
+
+    // Load vkGetDisplayPlaneSupportedDisplaysKHR
+    vkGetDisplayPlaneSupportedDisplaysKHR =
+        (PFN_vkGetDisplayPlaneSupportedDisplaysKHR)vkGetInstanceProcAddr(
+        vulkanInstance, "vkGetDisplayPlaneSupportedDisplaysKHR"
+    );
+    if (!vkGetDisplayPlaneSupportedDisplaysKHR)
+    {
+        // Could not load vkGetDisplayPlaneSupportedDisplaysKHR
         return false;
     }
 
@@ -2679,6 +2694,7 @@ void FreeVulkanFunctions()
     vkGetPhysicalDeviceSurfaceSupportKHR = 0;
     vkDestroySurfaceKHR = 0;
 
+    vkGetDisplayPlaneSupportedDisplaysKHR = 0;
     vkGetPhysicalDeviceDisplayPlanePropertiesKHR = 0;
     vkGetPhysicalDeviceDisplayPropertiesKHR = 0;
 

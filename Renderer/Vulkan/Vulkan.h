@@ -4125,6 +4125,16 @@
     extern PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
         vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetDisplayPlaneSupportedDisplaysKHR function                        //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkGetDisplayPlaneSupportedDisplaysKHR)(
+        VkPhysicalDevice physicalDevice, uint32_t planeIndex,
+        uint32_t* pDisplayCount, VkDisplayKHR* pDisplays
+    );
+    extern PFN_vkGetDisplayPlaneSupportedDisplaysKHR
+        vkGetDisplayPlaneSupportedDisplaysKHR;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  vkDestroySurfaceKHR function                                          //
