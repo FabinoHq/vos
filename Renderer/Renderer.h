@@ -224,6 +224,7 @@
 
         private:
             bool                m_rendererReady;        // Renderer ready state
+            bool                m_fullscreenSupport;    // Fullscreen support
             uint32_t            m_frameIndex;           // Current frame index
             SysWindow*          m_sysWindow;            // SysWindow pointer
             VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
