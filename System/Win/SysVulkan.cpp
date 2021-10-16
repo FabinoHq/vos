@@ -54,10 +54,10 @@ const char* VulkanExtensions[] =
 ////////////////////////////////////////////////////////////////////////////////
 //  Vulkan device extensions for Windows                                      //
 ////////////////////////////////////////////////////////////////////////////////
-const uint32_t VulkanDeviceExtensionsSize = 2;
+const uint32_t VulkanDeviceExtensionsSize = 1;
 const char* VulkanDeviceExtensions[] =
 {
-    "VK_KHR_swapchain", "VK_EXT_full_screen_exclusive"
+    "VK_KHR_swapchain"
 };
 
 

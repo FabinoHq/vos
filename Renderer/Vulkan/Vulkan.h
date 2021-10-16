@@ -5571,25 +5571,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  vkAcquireFullScreenExclusiveModeEXT function                          //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkAcquireFullScreenExclusiveModeEXT)(
-        VkDevice device, VkSwapchainKHR swapchain
-    );
-    extern PFN_vkAcquireFullScreenExclusiveModeEXT
-        vkAcquireFullScreenExclusiveModeEXT;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  vkReleaseFullScreenExclusiveModeEXT function                          //
-    ////////////////////////////////////////////////////////////////////////////
-    typedef VkResult (VOSVK_PTR *PFN_vkReleaseFullScreenExclusiveModeEXT)(
-        VkDevice device, VkSwapchainKHR swapchain
-    );
-    extern PFN_vkReleaseFullScreenExclusiveModeEXT
-        vkReleaseFullScreenExclusiveModeEXT;
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan global functions                                          //
     //  return : True if Vulkan global functions are successfully loaded      //
     ////////////////////////////////////////////////////////////////////////////
@@ -5606,12 +5587,6 @@
     //  return : True if Vulkan device functions are successfully loaded      //
     ////////////////////////////////////////////////////////////////////////////
     bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice);
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Load Vulkan FullScreen functions                                      //
-    //  return : True if Vulkan FullScreen functions are loaded               //
-    ////////////////////////////////////////////////////////////////////////////
-    bool LoadVulkanFullScreenFunctions(VkDevice& vulkanDevice);
 
 
     ////////////////////////////////////////////////////////////////////////////

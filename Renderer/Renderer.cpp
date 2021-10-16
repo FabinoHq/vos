@@ -47,7 +47,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::Renderer() :
 m_rendererReady(false),
-m_fullscreenSupport(false),
 m_frameIndex(0),
 m_sysWindow(0),
 m_vulkanLibHandle(0),
@@ -103,7 +102,6 @@ Renderer::~Renderer()
 bool Renderer::init(SysWindow* sysWindow)
 {
     m_rendererReady = false;
-    m_fullscreenSupport = false;
 
     // Check SysWindow
     if (!sysWindow)
@@ -191,13 +189,6 @@ bool Renderer::init(SysWindow* sysWindow)
         SysMessage::box() << "[0x301D] Could not load device functions\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
-    }
-
-    // Load Vulkan FullScreen functions
-    if (LoadVulkanFullScreenFunctions(m_vulkanDevice))
-    {
-        // FullScreen supported
-        m_fullscreenSupport = true;
     }
 
     // Init Vulkan memory

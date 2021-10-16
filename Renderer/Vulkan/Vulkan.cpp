@@ -609,12 +609,6 @@ PFN_vkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplate = 0;
 // vkGetDescriptorSetLayoutSupport function
 PFN_vkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupport = 0;
 
-// vkAcquireFullScreenExclusiveModeEXT function
-PFN_vkAcquireFullScreenExclusiveModeEXT vkAcquireFullScreenExclusiveModeEXT = 0;
-
-// vkReleaseFullScreenExclusiveModeEXT function
-PFN_vkReleaseFullScreenExclusiveModeEXT vkReleaseFullScreenExclusiveModeEXT = 0;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Load Vulkan global functions                                              //
@@ -2478,45 +2472,6 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     return true;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Load Vulkan FullScreen functions                                          //
-//  return : True if Vulkan FullScreen functions are loaded                   //
-////////////////////////////////////////////////////////////////////////////////
-bool LoadVulkanFullScreenFunctions(VkDevice& vulkanDevice)
-{
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Vulkan device is invalid
-        return false;
-    }
-
-    // Load vkAcquireFullScreenExclusiveModeEXT
-    vkAcquireFullScreenExclusiveModeEXT =
-        (PFN_vkAcquireFullScreenExclusiveModeEXT)vkGetDeviceProcAddr(
-        vulkanDevice, "vkAcquireFullScreenExclusiveModeEXT"
-    );
-    if (!vkAcquireFullScreenExclusiveModeEXT)
-    {
-        // Could not load vkAcquireFullScreenExclusiveModeEXT
-        return false;
-    }
-
-    // Load vkReleaseFullScreenExclusiveModeEXT
-    vkReleaseFullScreenExclusiveModeEXT =
-        (PFN_vkReleaseFullScreenExclusiveModeEXT)vkGetDeviceProcAddr(
-        vulkanDevice, "vkReleaseFullScreenExclusiveModeEXT"
-    );
-    if (!vkReleaseFullScreenExclusiveModeEXT)
-    {
-        // Could not load vkReleaseFullScreenExclusiveModeEXT
-        return false;
-    }
-
-    // Vulkan fullscreen functions are supported
-    return true;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Free Vulkan functions                                                     //
@@ -2524,9 +2479,6 @@ bool LoadVulkanFullScreenFunctions(VkDevice& vulkanDevice)
 void FreeVulkanFunctions()
 {
     // Free all Vulkan functions
-    vkReleaseFullScreenExclusiveModeEXT = 0;
-    vkAcquireFullScreenExclusiveModeEXT = 0;
-
     vkGetDescriptorSetLayoutSupport = 0;
     vkUpdateDescriptorSetWithTemplate = 0;
     vkDestroyDescriptorUpdateTemplate = 0;
