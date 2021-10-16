@@ -2242,6 +2242,15 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDisplayPlanePropertiesKHR data structure                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDisplayPlanePropertiesKHR
+    {
+        VkDisplayKHR    currentDisplay;
+        uint32_t        currentStackIndex;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceCapabilitiesKHR data structure                               //
     ////////////////////////////////////////////////////////////////////////////
     struct VkSurfaceCapabilitiesKHR
@@ -4104,6 +4113,17 @@
     );
     extern PFN_vkGetPhysicalDeviceDisplayPropertiesKHR
         vkGetPhysicalDeviceDisplayPropertiesKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkGetPhysicalDeviceDisplayPlanePropertiesKHR function                 //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef
+        VkResult (VOSVK_PTR *PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR)(
+        VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount,
+        VkDisplayPlanePropertiesKHR* pProperties
+    );
+    extern PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
+        vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
