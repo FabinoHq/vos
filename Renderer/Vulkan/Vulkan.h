@@ -2311,6 +2311,23 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDisplaySurfaceCreateInfoKHR data structure                          //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDisplaySurfaceCreateInfoKHR
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkDisplaySurfaceCreateFlagsKHR  flags;
+        VkDisplayModeKHR                displayMode;
+        uint32_t                        planeIndex;
+        uint32_t                        planeStackIndex;
+        VkSurfaceTransformFlagBitsKHR   transform;
+        float                           globalAlpha;
+        VkDisplayPlaneAlphaFlagBitsKHR  alphaMode;
+        VkExtent2D                      imageExtent;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceCapabilitiesKHR data structure                               //
     ////////////////////////////////////////////////////////////////////////////
     struct VkSurfaceCapabilitiesKHR
@@ -4223,6 +4240,15 @@
     );
     extern PFN_vkGetDisplayPlaneCapabilitiesKHR
         vkGetDisplayPlaneCapabilitiesKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateDisplayPlaneSurfaceKHR function                               //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateDisplayPlaneSurfaceKHR)(
+        VkInstance instance, const VkDisplaySurfaceCreateInfoKHR* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface
+    );
+    extern PFN_vkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
