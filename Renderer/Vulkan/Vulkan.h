@@ -1119,6 +1119,21 @@
     typedef VkFlags VkSparseMemoryBindFlags;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VkDisplayPlaneAlphaFlagBitsKHR                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VkDisplayPlaneAlphaFlagBitsKHR
+    {
+        VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = 0x00000001,
+        VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = 0x00000002,
+        VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = 0x00000004,
+        VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = 0x00000008,
+        VK_DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR = 0x7FFFFFFF
+    };
+    typedef VkFlags VkDisplayPlaneAlphaFlagsKHR;
+    typedef VkFlags VkDisplayModeCreateFlagsKHR;
+    typedef VkFlags VkDisplaySurfaceCreateFlagsKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VkSurfaceTransformFlagsKHR                                            //
     ////////////////////////////////////////////////////////////////////////////
     enum VkSurfaceTransformFlagBitsKHR
@@ -2266,6 +2281,17 @@
     {
         VkDisplayModeKHR            displayMode;
         VkDisplayModeParametersKHR  parameters;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VkDisplayModeCreateInfoKHR data structure                             //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VkDisplayModeCreateInfoKHR
+    {
+        VkStructureType                 sType;
+        const void*                     pNext;
+        VkDisplayModeCreateFlagsKHR     flags;
+        VkDisplayModeParametersKHR      parameters;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -4160,8 +4186,17 @@
         VkPhysicalDevice physicalDevice, VkDisplayKHR display,
         uint32_t* pPropertyCount, VkDisplayModePropertiesKHR* pProperties
     );
-    extern PFN_vkGetDisplayModePropertiesKHR
-        vkGetDisplayModePropertiesKHR;
+    extern PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  vkCreateDisplayModeKHR function                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    typedef VkResult (VOSVK_PTR *PFN_vkCreateDisplayModeKHR)(
+        VkPhysicalDevice physicalDevice, VkDisplayKHR display,
+        const VkDisplayModeCreateInfoKHR* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode
+    );
+    extern PFN_vkCreateDisplayModeKHR vkCreateDisplayModeKHR;
 
 
     ////////////////////////////////////////////////////////////////////////////
