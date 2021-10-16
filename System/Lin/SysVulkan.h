@@ -93,6 +93,8 @@
     typedef VkFlags                     VkXlibSurfaceCreateFlagsKHR;
 
     #ifdef VOS_64BITS
+        typedef struct VkDisplayKHR_T*              VkDisplayKHR;
+        typedef struct VkDisplayModeKHR_T*          VkDisplayModeKHR;
         typedef struct VkSurfaceKHR_T*              VkSurfaceKHR;
         typedef struct VkSwapchainKHR_T*            VkSwapchainKHR;
         typedef struct VkDeviceMemory_T*            VkDeviceMemory;
@@ -119,6 +121,8 @@
         typedef struct VkSamplerYcbcrConversion_T*   VkSamplerYcbcrConversion;
         typedef struct VkDescriptorUpdateTemplate_T* VkDescriptorUpdateTemplate;
     #else
+        typedef uint64_t                            VkDisplayKHR;
+        typedef uint64_t                            VkDisplayModeKHR;
         typedef uint64_t                            VkSurfaceKHR;
         typedef uint64_t                            VkSwapchainKHR;
         typedef uint64_t                            VkDeviceMemory;
