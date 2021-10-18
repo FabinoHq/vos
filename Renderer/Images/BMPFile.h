@@ -42,6 +42,9 @@
 #ifndef VOS_RENDERER_IMAGES_BMPFILE_HEADER
 #define VOS_RENDERER_IMAGES_BMPFILE_HEADER
 
+    #include <string>
+    #include <fstream>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  BMPFile class definition                                              //
@@ -60,6 +63,55 @@
             ~BMPFile();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Load BMP file                                                 //
+            //  return : True if BMP file is successfully loaded              //
+            ////////////////////////////////////////////////////////////////////
+            bool loadImage(const std::string& filepath);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Save BMP file                                                 //
+            //  return : True if BMP file is successfully saved               //
+            ////////////////////////////////////////////////////////////////////
+            bool saveImage(const std::string& filepath);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy BMP image                                             //
+            ////////////////////////////////////////////////////////////////////
+            void destroyImage();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get BMP file loaded state                                     //
+            //  return : True if BMP file is loaded                           //
+            ////////////////////////////////////////////////////////////////////
+            bool isLoaded();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get BMP file image data                                       //
+            //  return : BMP file image data                                  //
+            ////////////////////////////////////////////////////////////////////
+            unsigned char* getData();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get BMP file image width                                      //
+            //  return : BMP file image width in pixels                       //
+            ////////////////////////////////////////////////////////////////////
+            uint32_t getWidth();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get BMP file image height                                     //
+            //  return : BMP file image height in pixels                      //
+            ////////////////////////////////////////////////////////////////////
+            uint32_t getHeight();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get BMP file image depth                                      //
+            //  return : BMP file image depth in bits per pixels              //
+            ////////////////////////////////////////////////////////////////////
+            uint32_t getDepth();
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  BMPFile private copy constructor : Not copyable               //
@@ -73,6 +125,11 @@
 
 
         private:
+            bool                m_loaded;       // Image loaded state
+            unsigned char*      m_image;        // Image data
+            uint32_t            m_width;        // Image width
+            uint32_t            m_height;       // Image height
+            uint32_t            m_depth;        // Image depth
     };
 
 

@@ -45,7 +45,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  BMPFile default constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
-BMPFile::BMPFile()
+BMPFile::BMPFile() :
+m_loaded(false),
+m_image(0),
+m_width(0),
+m_height(0),
+m_depth(0)
 {
 
 }
@@ -55,5 +60,134 @@ BMPFile::BMPFile()
 ////////////////////////////////////////////////////////////////////////////////
 BMPFile::~BMPFile()
 {
+    if (m_image)
+    {
+        delete[] m_image;
+    }
+    m_depth = 0;
+    m_height = 0;
+    m_width = 0;
+    m_image = 0;
+    m_loaded = false;
+}
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load BMP file                                                             //
+//  return : True if BMP file is successfully loaded                          //
+////////////////////////////////////////////////////////////////////////////////
+bool BMPFile::loadImage(const std::string& filepath)
+{
+    // Check image loaded state
+    if (m_loaded)
+    {
+        // Destroy current image
+        destroyImage();
+    }
+
+    // Load BMP file
+    std::ifstream bmpfile;
+    bmpfile.open(filepath.c_str(), std::ios::in | std::ios::binary);
+    if (!bmpfile.is_open())
+    {
+        // Could not load BMP file
+        m_loaded = false;
+        return false;
+    }
+
+    // BMP file is successfully loaded
+    m_loaded = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Save BMP file                                                             //
+//  return : True if BMP file is successfully saved                           //
+////////////////////////////////////////////////////////////////////////////////
+bool BMPFile::saveImage(const std::string& filepath)
+{
+    // Check image loaded state
+    if (!m_loaded)
+    {
+        // No current image to save
+        return false;
+    }
+
+    // Save BMP file
+    std::ofstream bmpfile;
+    bmpfile.open(
+        filepath.c_str(), std::ios::out | std::ios::trunc | std::ios::binary
+    );
+    if (!bmpfile.is_open())
+    {
+        // Could not save BMP file
+        m_loaded = false;
+        return false;
+    }
+
+    // BMP file is successfully saved
+    m_loaded = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy BMP image                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void BMPFile::destroyImage()
+{
+    if (m_image)
+    {
+        delete[] m_image;
+    }
+    m_depth = 0;
+    m_height = 0;
+    m_width = 0;
+    m_image = 0;
+    m_loaded = false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get BMP file loaded state                                                 //
+//  return : True if BMP file is loaded                                       //
+////////////////////////////////////////////////////////////////////////////////
+bool BMPFile::isLoaded()
+{
+    return m_loaded;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get BMP file image data                                                   //
+//  return : BMP file image data                                              //
+////////////////////////////////////////////////////////////////////////////////
+unsigned char* BMPFile::getData()
+{
+    return m_image;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get BMP file image width                                                  //
+//  return : BMP file image width in pixels                                   //
+////////////////////////////////////////////////////////////////////////////////
+uint32_t BMPFile::getWidth()
+{
+    return m_width;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get BMP file image height                                                 //
+//  return : BMP file image height in pixels                                  //
+////////////////////////////////////////////////////////////////////////////////
+uint32_t BMPFile::getHeight()
+{
+    return m_height;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get BMP file image depth                                                  //
+//  return : BMP file image depth in bits per pixels                          //
+////////////////////////////////////////////////////////////////////////////////
+uint32_t BMPFile::getDepth()
+{
+    return m_depth;
 }
