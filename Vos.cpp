@@ -97,7 +97,7 @@ bool Vos::launch()
     }
 
     // Load cursor texture
-    if (!m_texture.updateTexture(m_renderer,
+    if (!m_texture.updateTexture(m_renderer, TEXTURE_FORMAT_RGBA32,
         CursorImageWidth, CursorImageHeight, CursorImageDepth, CursorImage))
     {
         // Could not load cursor texture

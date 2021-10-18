@@ -53,6 +53,7 @@ m_view(0),
 m_stagingBuffer(),
 m_memorySize(0),
 m_memoryOffset(0),
+m_format(TEXTURE_FORMAT_RGBA32),
 m_width(0),
 m_height(0),
 m_depth(0)
@@ -71,6 +72,7 @@ Texture::~Texture()
     m_depth = 0;
     m_height = 0;
     m_width = 0;
+    m_format = TEXTURE_FORMAT_RGBA32;
     m_memoryOffset = 0;
     m_memorySize = 0;
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
@@ -87,8 +89,8 @@ Texture::~Texture()
 //  Create texture                                                            //
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::createTexture(Renderer& renderer,
-    uint32_t texWidth, uint32_t texHeight, uint32_t texDepth)
+bool Texture::createTexture(Renderer& renderer, TextureFormat format,
+    uint32_t width, uint32_t height, uint32_t depth)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -105,7 +107,7 @@ bool Texture::createTexture(Renderer& renderer,
     }
 
     // Check texture size
-    if (texWidth == 0 || texHeight == 0 || texDepth == 0)
+    if (width == 0 || height == 0 || depth == 0)
     {
         // Invalid texture size
         return false;
@@ -118,10 +120,11 @@ bool Texture::createTexture(Renderer& renderer,
         destroyTexture(renderer);
     }
 
-    // Set texture size
-    m_width = texWidth;
-    m_height = texHeight;
-    m_depth = texDepth;
+    // Set texture parameters
+    m_format = format;
+    m_width = width;
+    m_height = height;
+    m_depth = depth;
 
     // Create image
     VkImageCreateInfo imageInfo;
@@ -129,7 +132,18 @@ bool Texture::createTexture(Renderer& renderer,
     imageInfo.pNext = 0;
     imageInfo.flags = 0;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
-    imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+    switch (m_format)
+    {
+        case TEXTURE_FORMAT_RGBA32:
+            imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+            break;
+        case TEXTURE_FORMAT_RGB24:
+            imageInfo.format = VK_FORMAT_R8G8B8_UNORM;
+            break;
+        default:
+            imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+            break;
+    }
     imageInfo.extent.width = m_width;
     imageInfo.extent.height = m_height;
     imageInfo.extent.depth = 1;
@@ -215,7 +229,18 @@ bool Texture::createTexture(Renderer& renderer,
     viewInfo.flags = 0;
     viewInfo.image = m_handle;
     viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+    switch (m_format)
+    {
+        case TEXTURE_FORMAT_RGBA32:
+            viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+            break;
+        case TEXTURE_FORMAT_RGB24:
+            viewInfo.format = VK_FORMAT_R8G8B8_UNORM;
+            break;
+        default:
+            viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+            break;
+    }
     viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
     viewInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -290,8 +315,8 @@ bool Texture::createTexture(Renderer& renderer,
 //  Update texture                                                            //
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::updateTexture(Renderer& renderer, uint32_t texWidth,
-    uint32_t texHeight, uint32_t texDepth, const unsigned char* data)
+bool Texture::updateTexture(Renderer& renderer, TextureFormat format,
+    uint32_t width, uint32_t height, uint32_t depth, const unsigned char* data)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -322,19 +347,19 @@ bool Texture::updateTexture(Renderer& renderer, uint32_t texWidth,
     }
 
     // Check texture size
-    if (texWidth == 0 || texHeight == 0 || texDepth == 0)
+    if (width == 0 || height == 0 || depth == 0)
     {
         // Invalid texture size
         return false;
     }
 
     // Check current texture
-    if (!m_handle || (texWidth != m_width) ||
-        (texHeight != m_height) || (texDepth != m_depth))
+    if (!m_handle || (format != m_format) ||
+        (width != m_width) || (height != m_height) || (depth != m_depth))
     {
         // Recreate texture
         destroyTexture(renderer);
-        createTexture(renderer, texWidth, texHeight, texDepth);
+        createTexture(renderer, format, width, height, depth);
     }
 
     // Write data into staging buffer memory
