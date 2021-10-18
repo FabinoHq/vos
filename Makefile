@@ -59,6 +59,7 @@ VOS: main.o \
 	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
 	Renderer/View.o Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
+	Renderer/Images/BMPFile.o \
 	Renderer/Renderer.o
 
 	$(CC) -o VOS \
@@ -75,6 +76,7 @@ VOS: main.o \
 	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
 	Renderer/View.o Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
+	Renderer/Images/BMPFile.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -169,6 +171,9 @@ Renderer/Shapes/Rect.o: Renderer/Shapes/Rect.cpp
 
 Renderer/Shapes/Oval.o: Renderer/Shapes/Oval.cpp
 	$(CC) -o Renderer/Shapes/Oval.o -c Renderer/Shapes/Oval.cpp $(CFLAGS)
+
+Renderer/Images/BMPFile.o: Renderer/Images/BMPFile.cpp
+	$(CC) -o Renderer/Images/BMPFile.o -c Renderer/Images/BMPFile.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

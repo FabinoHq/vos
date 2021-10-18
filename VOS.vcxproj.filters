@@ -113,6 +113,9 @@
     <ClCompile Include="Renderer\Pipeline.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Images\BMPFile.cpp">
+      <Filter>Renderer\Images</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -242,6 +245,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Pipeline.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Images\BMPFile.h">
+      <Filter>Renderer\Images</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

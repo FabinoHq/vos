@@ -116,4 +116,7 @@
 !Renderer/Shapes/Oval.h
 !Renderer/Shapes/Oval.cpp
 
+!Renderer/Images/
 !Renderer/Images/Embedded/Cursor.h
+!Renderer/Images/BMPFile.h
+!Renderer/Images/BMPFile.cpp
