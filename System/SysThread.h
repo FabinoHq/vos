@@ -42,6 +42,7 @@
 #ifndef VOS_SYSTEM_SYSTHREAD_HEADER
 #define VOS_SYSTEM_SYSTHREAD_HEADER
 
+    #include <exception>
     #include <thread>
 
     #include "SysSleep.h"

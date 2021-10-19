@@ -133,6 +133,85 @@ bool BMPFile::loadImage(const std::string& filepath)
         return false;
     }
 
+    // Load BMP raw image data
+    size_t rawDataSize = m_width*m_height*3;
+    unsigned char* rawData = 0;
+    try
+    {
+        // Allocate raw image data
+        rawData = new unsigned char[rawDataSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+    if (!rawData)
+    {
+        // Invalid raw image data
+        return false;
+    }
+
+    // Read BMP raw image data
+    bmpfile.seekg(bmpHeader.dataOffset);
+    bmpfile.read((char*)rawData, rawDataSize);
+    if (!bmpfile)
+    {
+        // Could not read BMP raw image data
+        return false;
+    }
+
+    // Close bmp file
+    bmpfile.close();
+
+    // Load BMP image data
+    size_t imageSize = m_width*m_height*4;
+    try
+    {
+        // Allocate raw image data
+        m_image = new unsigned char[imageSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    if (!m_image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Convert bmp image data
+    for (uint32_t i = 0; i < m_width; ++i)
+    {
+        for (uint32_t j = 0; j < m_height; ++j)
+        {
+            size_t index = (j*m_height)+i;
+            size_t rawIndex = ((m_height-j-1)*m_height)+i;
+            m_image[(index*4)+0] = rawData[(rawIndex*3)+2]; // R component
+            m_image[(index*4)+1] = rawData[(rawIndex*3)+1]; // G component
+            m_image[(index*4)+2] = rawData[(rawIndex*3)+0]; // B component
+            m_image[(index*4)+3] = 255;                     // A component
+        }
+    }
+
+    // Destroy raw image data
+    if (rawData)
+    {
+        delete[] rawData;
+    }
+
     // BMP file is successfully loaded
     m_loaded = true;
     return true;

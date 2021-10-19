@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_IMAGES_BMPFILE_HEADER
 #define VOS_RENDERER_IMAGES_BMPFILE_HEADER
 
+    #include <exception>
     #include <string>
     #include <fstream>
 

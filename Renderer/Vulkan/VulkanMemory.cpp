@@ -198,7 +198,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     VkMemoryAllocateInfo allocateInfo;
     allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocateInfo.pNext = 0;
-    allocateInfo.allocationSize = 1048576;
+    allocateInfo.allocationSize = 16777216;
     allocateInfo.memoryTypeIndex = m_deviceMemoryIndex;
 
     if (vkAllocateMemory(
@@ -213,7 +213,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     // Allocate host memory
     allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocateInfo.pNext = 0;
-    allocateInfo.allocationSize = 1048576;
+    allocateInfo.allocationSize = 16777216;
     allocateInfo.memoryTypeIndex = m_hostMemoryIndex;
 
     if (vkAllocateMemory(

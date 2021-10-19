@@ -42,6 +42,7 @@
 #ifndef VOS_SYSTEM_SYSMUTEXLOCKER_HEADER
 #define VOS_SYSTEM_SYSMUTEXLOCKER_HEADER
 
+    #include <exception>
     #include <thread>
     #include <mutex>
 
