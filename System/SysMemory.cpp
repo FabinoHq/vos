@@ -90,6 +90,12 @@ bool SysMemoryCheck()
         return false;
     }
 
+    if (!SysMemoryCheckImages())
+    {
+        // Invalid images memory represantion
+        return false;
+    }
+
     // System memory is ready
     return true;
 }
@@ -719,5 +725,35 @@ bool SysMemoryCheckMaths()
     }
 
     // System memory maths representations are correct
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check system memory images representations                                //
+//  return : True if the system memory images representations are correct     //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemoryCheckImages()
+{
+    // Check BMPFileHeader memory
+    size_t bmpFileHeaderSize = sizeof(BMPFileHeader);
+    if (bmpFileHeaderSize != 12)
+    {
+        // BMPFileHeader memory representation is invalid
+        SysMessage::box() << "[0x103C] Invalid BMPFileHeader memory size\n";
+        SysMessage::box() << "BMPFileHeader memory size should be 12 bytes";
+        return false;
+    }
+
+    // Check BMPFileInfo memory
+    size_t bmpFileInfoSize = sizeof(BMPFileInfo);
+    if (bmpFileInfoSize != 40)
+    {
+        // BMPFileInfo memory representation is invalid
+        SysMessage::box() << "[0x103D] Invalid BMPFileInfo memory size\n";
+        SysMessage::box() << "BMPFileInfo memory size should be 40 bytes";
+        return false;
+    }
+
+    // System memory images representations are correct
     return true;
 }

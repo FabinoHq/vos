@@ -95,6 +95,46 @@ bool BMPFile::loadImage(const std::string& filepath)
         return false;
     }
 
+    // Read BMP file signature
+    char bmpSignature[2] = {0};
+    bmpfile.read(bmpSignature, 2);
+    if (bmpSignature[0] != 'B' || bmpSignature[1] != 'M')
+    {
+        // Invalid BMP file signature
+        m_loaded = false;
+        return false;
+    }
+
+    // Read BMP file header
+    BMPFileHeader bmpHeader;
+    bmpHeader.fileSize = 0;
+    bmpHeader.reserved = 0;
+    bmpHeader.dataOffset = 0;
+    bmpfile.read((char*)&bmpHeader, sizeof(BMPFileHeader));
+
+    // Read BMP file info
+    BMPFileInfo bmpInfo;
+    bmpInfo.infoSize = 0;
+    bmpInfo.width = 0;
+    bmpInfo.height = 0;
+    bmpInfo.planes = 0;
+    bmpInfo.bitsPerPixel = 0;
+    bmpInfo.compression = 0;
+    bmpInfo.imageSize = 0;
+    bmpInfo.xResolution = 0;
+    bmpInfo.yResolution = 0;
+    bmpInfo.usedColors = 0;
+    bmpInfo.importantColors = 0;
+    bmpfile.read((char*)&bmpInfo, sizeof(BMPFileInfo));
+
+    // Set BMP image settings
+    if (!setBMPImageSettings(bmpInfo))
+    {
+        // Could not set BMP image settings
+        m_loaded = false;
+        return false;
+    }
+
     // BMP file is successfully loaded
     m_loaded = true;
     return true;
@@ -190,4 +230,92 @@ uint32_t BMPFile::getWidth()
 uint32_t BMPFile::getHeight()
 {
     return m_height;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set BMP file image settings from BMPFileInfo                              //
+//  return : True if BMP file image settings are successfully set             //
+////////////////////////////////////////////////////////////////////////////////
+bool BMPFile::setBMPImageSettings(BMPFileInfo& bmpInfo)
+{
+    // Check BMP file info size
+    if (bmpInfo.infoSize != sizeof(BMPFileInfo))
+    {
+        // Invalid BMP file info size
+        return false;
+    }
+
+    // Check BMP file image size
+    if ((bmpInfo.width <= 0) || (bmpInfo.height <= 0) ||
+        (bmpInfo.width > BMPFileMaxImageWidth) ||
+        (bmpInfo.height > BMPFileMaxImageHeight))
+    {
+        // Invalid BMP file image size
+        return false;
+    }
+
+    // Check BMP file image planes
+    if (bmpInfo.planes != 1)
+    {
+        // Invalid BMP file image planes
+        return false;
+    }
+
+    // Check BMP file bits per pixel
+    uint32_t numColors = 0;
+    switch (bmpInfo.bitsPerPixel)
+    {
+        case 1:
+            // Monochrome palette
+            numColors = 1;
+            // Unsupported BMP file bits per pixel
+            return false;
+        case 4:
+            // 4 bits palletized
+            numColors = 16;
+            // Unsupported BMP file bits per pixel
+            return false;
+        case 8:
+            // 8 bits palletized
+            numColors = 256;
+            // Unsupported BMP file bits per pixel
+            return false;
+        case 16:
+            // 16 bits RGB
+            numColors = 65536;
+            // Unsupported BMP file bits per pixel
+            return false;
+        case 24:
+            // 24 bits RGB
+            numColors = 16777216;
+            break;
+        default:
+            // Invalid BMP file bits per pixel
+            return false;
+    }
+
+    // Check BMP file compression
+    switch (bmpInfo.compression)
+    {
+        case 0:
+            // No compression
+            break;
+        case 1:
+            // 8bit RLE encoding
+            // Unsupported BMP compression
+            return false;
+        case 2:
+            // 4bit RLE encoding
+            // Unsupported BMP compression
+            return false;
+    }
+
+    // Set BMP file format and size
+    m_format = TEXTURE_FORMAT_RGB24;
+    m_width = bmpInfo.width;
+    m_height = bmpInfo.height;
+
+    // BMP file image settings are successfully set
+    return true;
 }

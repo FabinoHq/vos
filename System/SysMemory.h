@@ -52,6 +52,7 @@
     #include "../Math/Vector3.h"
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
+    #include "../Renderer/Images/BMPFile.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -101,6 +102,12 @@
     //  return : True if the system memory maths representations are correct  //
     ////////////////////////////////////////////////////////////////////////////
     bool SysMemoryCheckMaths();
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Check system memory images representations                            //
+    //  return : True if the system memory images representations are correct //
+    ////////////////////////////////////////////////////////////////////////////
+    bool SysMemoryCheckImages();
 
 
 #endif // VOS_SYSTEM_SYSMEMORY_HEADER

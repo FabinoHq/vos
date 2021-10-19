@@ -47,6 +47,42 @@
     #include <string>
     #include <fstream>
 
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //  BMPFile image settings                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t BMPFileMaxImageWidth = 4096;
+    const uint32_t BMPFileMaxImageHeight = 4096;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  BMPFile header structure                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    struct BMPFileHeader
+    {
+        uint32_t    fileSize;
+        uint32_t    reserved;
+        uint32_t    dataOffset;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  BMPFile info structure                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    struct BMPFileInfo
+    {
+        uint32_t    infoSize;
+        uint32_t    width;
+        uint32_t    height;
+        uint16_t    planes;
+        uint16_t    bitsPerPixel;
+        uint32_t    compression;
+        uint32_t    imageSize;
+        uint32_t    xResolution;
+        uint32_t    yResolution;
+        uint32_t    usedColors;
+        uint32_t    importantColors;
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  BMPFile class definition                                              //
@@ -124,6 +160,13 @@
             //  BMPFile private copy operator : Not copyable                  //
             ////////////////////////////////////////////////////////////////////
             BMPFile& operator=(const BMPFile&) = delete;
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set BMP file image settings from BMPFileInfo                  //
+            //  return : True if BMP file image settings are successfully set //
+            ////////////////////////////////////////////////////////////////////
+            bool setBMPImageSettings(BMPFileInfo& bmpInfo);
 
 
         private:

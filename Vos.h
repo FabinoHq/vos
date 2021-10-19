@@ -54,6 +54,7 @@
     #include "Event.h"
 
     #include "Renderer/Images/Embedded/Cursor.h"
+    #include "Renderer/Images/BMPFile.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
