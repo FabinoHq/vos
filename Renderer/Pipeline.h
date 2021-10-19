@@ -42,10 +42,10 @@
 #ifndef VOS_RENDERER_PIPELINE_HEADER
 #define VOS_RENDERER_PIPELINE_HEADER
 
+    #include <vector>
+
     #include "Vulkan/Vulkan.h"
     #include "Shader.h"
-
-    #include <vector>
 
 
     ////////////////////////////////////////////////////////////////////////////

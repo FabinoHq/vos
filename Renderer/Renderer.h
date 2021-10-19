@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_RENDERER_HEADER
 #define VOS_RENDERER_RENDERER_HEADER
 
+    #include <vector>
+
     #include "../System/SysMessage.h"
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"
@@ -65,8 +67,6 @@
     #include "Shaders/Default.h"
     #include "Shaders/Rect.h"
     #include "Shaders/Oval.h"
-
-    #include <vector>
 
 
     ////////////////////////////////////////////////////////////////////////////

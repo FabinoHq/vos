@@ -42,9 +42,9 @@
 #ifndef VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
 #define VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
 
-    #include "Vulkan.h"
-
     #include <vector>
+
+    #include "Vulkan.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

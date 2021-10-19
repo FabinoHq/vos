@@ -44,6 +44,7 @@
 
     #include <exception>
     #include <string>
+    #include <cstring>
     #include <fstream>
 
     
@@ -112,6 +113,13 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Set BMP file image                                            //
+            //  return : True if BMP file image is successfully set           //
+            ////////////////////////////////////////////////////////////////////
+            bool setImage(uint32_t width, uint32_t height,
+                const unsigned char* image);
+
+            ////////////////////////////////////////////////////////////////////
             //  Load BMP file                                                 //
             //  return : True if BMP file is successfully loaded              //
             ////////////////////////////////////////////////////////////////////
@@ -155,6 +163,15 @@
             uint32_t getHeight();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Save BMP image                                                //
+            //  return : True if BMP image is successfully saved              //
+            ////////////////////////////////////////////////////////////////////
+            static bool saveBMPImage(const std::string& filepath,
+                uint32_t width, uint32_t height, const unsigned char* image,
+                BMPFileImageFormat format = BMP_FILE_BGR_24BITS);
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  BMPFile private copy constructor : Not copyable               //
@@ -178,7 +195,9 @@
             //  Save 24bits BMP file image data                               //
             //  return : True if BMP file image data is successfully saved    //
             ////////////////////////////////////////////////////////////////////
-            bool saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize);
+            static bool saveBMP24Bits(std::ofstream& bmpFile,
+                uint32_t imageSize, uint32_t width, uint32_t height,
+                const unsigned char* image);
 
             ////////////////////////////////////////////////////////////////////
             //  Load 16bits BMP file image data                               //
@@ -191,7 +210,9 @@
             //  Save 16bits BMP file image data                               //
             //  return : True if BMP file image data is successfully saved    //
             ////////////////////////////////////////////////////////////////////
-            bool saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize);
+            static bool saveBMP16Bits(std::ofstream& bmpFile,
+                uint32_t imageSize, uint32_t width, uint32_t height,
+                const unsigned char* image);
 
 
         private:

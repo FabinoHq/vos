@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_VULKAN_VULKANMEMORY_HEADER
 #define VOS_RENDERER_VULKAN_VULKANMEMORY_HEADER
 
+    #include <cstring>
+
     #include "Vulkan.h"
 
 

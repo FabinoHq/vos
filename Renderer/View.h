@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_VIEW_HEADER
 #define VOS_RENDERER_VIEW_HEADER
 
+    #include <cstring>
+
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/UniformBuffer.h"

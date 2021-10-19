@@ -71,6 +71,64 @@ BMPFile::~BMPFile()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set BMP file image                                                        //
+//  return : True if BMP file image is successfully set                       //
+////////////////////////////////////////////////////////////////////////////////
+bool BMPFile::setImage(uint32_t width, uint32_t height,
+    const unsigned char* image)
+{
+    // Check image loaded state
+    if (m_loaded)
+    {
+        // Destroy current image
+        destroyImage();
+    }
+
+    // Check image size
+    if ((width <= 0) || (height <= 0) ||
+        (width > BMPFileMaxImageWidth) ||
+        (height > BMPFileMaxImageHeight))
+    {
+        // Invalid image size
+        return false;
+    }
+
+    // Set BMP image data
+    size_t imageSize = width*height*4;
+    try
+    {
+        // Allocate raw image data
+        m_image = new unsigned char[imageSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    if (!m_image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Copy image data
+    memcpy(m_image, image, imageSize);
+
+    // Set image size
+    m_width = width;
+    m_height = height;
+
+    // BMP file image is successfully set
+    m_loaded = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Load BMP file                                                             //
 //  return : True if BMP file is successfully loaded                          //
 ////////////////////////////////////////////////////////////////////////////////
@@ -228,115 +286,11 @@ bool BMPFile::saveImage(const std::string& filepath, BMPFileImageFormat format)
     }
 
     // Save BMP file
-    std::ofstream bmpFile;
-    bmpFile.open(
-        filepath.c_str(), std::ios::out | std::ios::trunc | std::ios::binary
-    );
-    if (!bmpFile.is_open())
+    if (!saveBMPImage(filepath, m_width, m_height, m_image, format))
     {
         // Could not save BMP file
         return false;
     }
-
-    // Write BMP file signature
-    char bmpSignature[2] = {0};
-    bmpSignature[0] = 'B';
-    bmpSignature[1] = 'M';
-    bmpFile.write(bmpSignature, 2);
-    if (!bmpFile)
-    {
-        // Could not write BMP file signature
-        return false;
-    }
-
-    // Set BMP image format
-    uint32_t fileSize = 0;
-    uint32_t dataOffset = 0;
-    uint32_t imageSize = 0;
-    uint16_t bitsPerPixel = 0;
-    switch (format)
-    {
-        case BMP_FILE_BGR_24BITS:
-            // 24 bits uncompressed BMP file
-            imageSize = (m_width*m_height*3);
-            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
-            bitsPerPixel = 24;
-            break;
-        case BMP_FILE_BGR_16BITS:
-            // 16 bits uncompressed BMP file
-            imageSize = (m_width*m_height*2);
-            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
-            bitsPerPixel = 16;
-            break;
-        default:
-            // 24 bits uncompressed BMP file
-            imageSize = (m_width*m_height*3);
-            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
-            bitsPerPixel = 24;
-            break;
-    }
-    fileSize = dataOffset+imageSize;
-
-    // Write BMP file header
-    BMPFileHeader bmpHeader;
-    bmpHeader.fileSize = fileSize;
-    bmpHeader.reserved = 0;
-    bmpHeader.dataOffset = dataOffset;
-    bmpFile.write((char*)&bmpHeader, sizeof(BMPFileHeader));
-    if (!bmpFile)
-    {
-        // Could not write BMP file header
-        return false;
-    }
-
-    // Read BMP file info
-    BMPFileInfo bmpInfo;
-    bmpInfo.infoSize = sizeof(BMPFileInfo);
-    bmpInfo.width = m_width;
-    bmpInfo.height = m_height;
-    bmpInfo.planes = 1;
-    bmpInfo.bitsPerPixel = bitsPerPixel;
-    bmpInfo.compression = 0;
-    bmpInfo.imageSize = imageSize;
-    bmpInfo.xResolution = BMPFileDefaultXResolution;
-    bmpInfo.yResolution = BMPFileDefaultYResolution;
-    bmpInfo.usedColors = 0;
-    bmpInfo.importantColors = 0;
-    bmpFile.write((char*)&bmpInfo, sizeof(BMPFileInfo));
-    if (!bmpFile)
-    {
-        // Could not write BMP file info
-        return false;
-    }
-
-    // Save BMP image data
-    switch (format)
-    {
-        case BMP_FILE_BGR_24BITS:
-            // 24 bits uncompressed BMP file
-            if (!saveBMP24Bits(bmpFile, imageSize))
-            {
-                return false;
-            }
-            break;
-        case BMP_FILE_BGR_16BITS:
-            // 16 bits uncompressed BMP file
-            if (!saveBMP16Bits(bmpFile, imageSize))
-            {
-                return false;
-            }
-            break;
-        default:
-            // 24 bits uncompressed BMP file
-            if (!saveBMP24Bits(bmpFile, imageSize))
-            {
-                return false;
-            }
-            break;
-    }
-
-    // Close BMP file
-    bmpFile.close();
 
     // BMP file is successfully saved
     return true;
@@ -392,6 +346,146 @@ uint32_t BMPFile::getWidth()
 uint32_t BMPFile::getHeight()
 {
     return m_height;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Save BMP image                                                            //
+//  return : True if BMP image is successfully saved                          //
+////////////////////////////////////////////////////////////////////////////////
+bool BMPFile::saveBMPImage(const std::string& filepath,
+    uint32_t width, uint32_t height, const unsigned char* image,
+    BMPFileImageFormat format)
+{
+    // Check image data
+    if (!image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Check image size
+    if ((width <= 0) || (height <= 0) ||
+        (width > BMPFileMaxImageWidth) ||
+        (height > BMPFileMaxImageHeight))
+    {
+        // Invalid image size
+        return false;
+    }
+
+    // Save BMP file
+    std::ofstream bmpFile;
+    bmpFile.open(
+        filepath.c_str(), std::ios::out | std::ios::trunc | std::ios::binary
+    );
+    if (!bmpFile.is_open())
+    {
+        // Could not save BMP file
+        return false;
+    }
+
+    // Write BMP file signature
+    char bmpSignature[2] = {0};
+    bmpSignature[0] = 'B';
+    bmpSignature[1] = 'M';
+    bmpFile.write(bmpSignature, 2);
+    if (!bmpFile)
+    {
+        // Could not write BMP file signature
+        return false;
+    }
+
+    // Set BMP image format
+    uint32_t fileSize = 0;
+    uint32_t dataOffset = 0;
+    uint32_t imageSize = 0;
+    uint16_t bitsPerPixel = 0;
+    switch (format)
+    {
+        case BMP_FILE_BGR_24BITS:
+            // 24 bits uncompressed BMP file
+            imageSize = (width*height*3);
+            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
+            bitsPerPixel = 24;
+            break;
+        case BMP_FILE_BGR_16BITS:
+            // 16 bits uncompressed BMP file
+            imageSize = (width*height*2);
+            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
+            bitsPerPixel = 16;
+            break;
+        default:
+            // 24 bits uncompressed BMP file
+            imageSize = (width*height*3);
+            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
+            bitsPerPixel = 24;
+            break;
+    }
+    fileSize = dataOffset+imageSize;
+
+    // Write BMP file header
+    BMPFileHeader bmpHeader;
+    bmpHeader.fileSize = fileSize;
+    bmpHeader.reserved = 0;
+    bmpHeader.dataOffset = dataOffset;
+    bmpFile.write((char*)&bmpHeader, sizeof(BMPFileHeader));
+    if (!bmpFile)
+    {
+        // Could not write BMP file header
+        return false;
+    }
+
+    // Read BMP file info
+    BMPFileInfo bmpInfo;
+    bmpInfo.infoSize = sizeof(BMPFileInfo);
+    bmpInfo.width = width;
+    bmpInfo.height = height;
+    bmpInfo.planes = 1;
+    bmpInfo.bitsPerPixel = bitsPerPixel;
+    bmpInfo.compression = 0;
+    bmpInfo.imageSize = imageSize;
+    bmpInfo.xResolution = BMPFileDefaultXResolution;
+    bmpInfo.yResolution = BMPFileDefaultYResolution;
+    bmpInfo.usedColors = 0;
+    bmpInfo.importantColors = 0;
+    bmpFile.write((char*)&bmpInfo, sizeof(BMPFileInfo));
+    if (!bmpFile)
+    {
+        // Could not write BMP file info
+        return false;
+    }
+
+    // Save BMP image data
+    switch (format)
+    {
+        case BMP_FILE_BGR_24BITS:
+            // 24 bits uncompressed BMP file
+            if (!saveBMP24Bits(bmpFile, imageSize, width, height, image))
+            {
+                return false;
+            }
+            break;
+        case BMP_FILE_BGR_16BITS:
+            // 16 bits uncompressed BMP file
+            if (!saveBMP16Bits(bmpFile, imageSize, width, height, image))
+            {
+                return false;
+            }
+            break;
+        default:
+            // 24 bits uncompressed BMP file
+            if (!saveBMP24Bits(bmpFile, imageSize, width, height, image))
+            {
+                return false;
+            }
+            break;
+    }
+
+    // Close BMP file
+    bmpFile.close();
+
+    // BMP image is successfully saved
+    return true;
 }
 
 
@@ -487,8 +581,26 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 //  Save 24bits BMP file image data                                           //
 //  return : True if BMP file image data is successfully saved                //
 ////////////////////////////////////////////////////////////////////////////////
-bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize)
+bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize,
+    uint32_t width, uint32_t height, const unsigned char* image)
 {
+    // Check image data size
+    size_t rawDataSize = width*height*3;
+    if (imageSize != rawDataSize)
+    {
+        // Invalid image data size
+        return false;
+    }
+
+    // Check image size
+    if ((width <= 0) || (height <= 0) ||
+        (width > BMPFileMaxImageWidth) ||
+        (height > BMPFileMaxImageHeight))
+    {
+        // Invalid image size
+        return false;
+    }
+
     // Allocate raw image data
     unsigned char* rawData = 0;
     try
@@ -513,16 +625,16 @@ bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize)
     }
 
     // Convert 24bits BMP image data
-    for (uint32_t i = 0; i < m_width; ++i)
+    for (uint32_t i = 0; i < width; ++i)
     {
-        for (uint32_t j = 0; j < m_height; ++j)
+        for (uint32_t j = 0; j < height; ++j)
         {
-            size_t index = (j*m_width)+i;
-            size_t rawIndex = ((m_height-j-1)*m_width)+i;
+            size_t index = (j*width)+i;
+            size_t rawIndex = ((height-j-1)*width)+i;
 
-            rawData[(rawIndex*3)+0] = m_image[(index*4)+2]; // B component
-            rawData[(rawIndex*3)+1] = m_image[(index*4)+1]; // G component
-            rawData[(rawIndex*3)+2] = m_image[(index*4)+0]; // R component
+            rawData[(rawIndex*3)+0] = image[(index*4)+2];   // B component
+            rawData[(rawIndex*3)+1] = image[(index*4)+1];   // G component
+            rawData[(rawIndex*3)+2] = image[(index*4)+0];   // R component
         }
     }
 
@@ -644,8 +756,26 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 //  Save 16bits BMP file image data                                           //
 //  return : True if BMP file image data is successfully saved                //
 ////////////////////////////////////////////////////////////////////////////////
-bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize)
+bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize,
+    uint32_t width, uint32_t height, const unsigned char* image)
 {
+    // Check image data size
+    size_t rawDataSize = width*height*2;
+    if (imageSize != rawDataSize)
+    {
+        // Invalid image data size
+        return false;
+    }
+
+    // Check image size
+    if ((width <= 0) || (height <= 0) ||
+        (width > BMPFileMaxImageWidth) ||
+        (height > BMPFileMaxImageHeight))
+    {
+        // Invalid image size
+        return false;
+    }
+
     // Allocate raw image data
     uint16_t* rawData = 0;
     try
@@ -670,16 +800,16 @@ bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize)
     }
 
     // Convert 16bits BMP image data
-    for (uint32_t i = 0; i < m_width; ++i)
+    for (uint32_t i = 0; i < width; ++i)
     {
-        for (uint32_t j = 0; j < m_height; ++j)
+        for (uint32_t j = 0; j < height; ++j)
         {
-            size_t index = (j*m_width)+i;
-            size_t rawIndex = ((m_height-j-1)*m_width)+i;
+            size_t index = (j*width)+i;
+            size_t rawIndex = ((height-j-1)*width)+i;
             rawData[rawIndex] =
-                (m_image[(index*4)+2]/8) |          // B component
-                ((m_image[(index*4)+1]/8) << 5) |   // G component
-                ((m_image[(index*4)+0]/8) << 10);   // R component
+                (image[(index*4)+2]/8) |            // B component
+                ((image[(index*4)+1]/8) << 5) |     // G component
+                ((image[(index*4)+0]/8) << 10);     // R component
         }
     }
 
