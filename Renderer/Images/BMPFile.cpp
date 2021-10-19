@@ -200,7 +200,7 @@ bool BMPFile::isLoaded()
 //  Get BMP file image data                                                   //
 //  return : BMP file image data                                              //
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char* BMPFile::getData()
+unsigned char* BMPFile::getImage()
 {
     return m_image;
 }
@@ -307,6 +307,9 @@ bool BMPFile::setBMPImageSettings(BMPFileInfo& bmpInfo)
             return false;
         case 2:
             // 4bit RLE encoding
+            // Unsupported BMP compression
+            return false;
+        default:
             // Unsupported BMP compression
             return false;
     }

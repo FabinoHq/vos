@@ -129,7 +129,7 @@
             //  Get BMP file image data                                       //
             //  return : BMP file image data                                  //
             ////////////////////////////////////////////////////////////////////
-            unsigned char* getData();
+            unsigned char* getImage();
 
             ////////////////////////////////////////////////////////////////////
             //  Get BMP file image format                                     //
