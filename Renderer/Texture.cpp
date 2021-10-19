@@ -55,8 +55,7 @@ m_memorySize(0),
 m_memoryOffset(0),
 m_format(TEXTURE_FORMAT_RGBA32),
 m_width(0),
-m_height(0),
-m_depth(0)
+m_height(0)
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -69,7 +68,6 @@ m_depth(0)
 ////////////////////////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
-    m_depth = 0;
     m_height = 0;
     m_width = 0;
     m_format = TEXTURE_FORMAT_RGBA32;
@@ -90,7 +88,7 @@ Texture::~Texture()
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::createTexture(Renderer& renderer, TextureFormat format,
-    uint32_t width, uint32_t height, uint32_t depth)
+    uint32_t width, uint32_t height)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -107,7 +105,7 @@ bool Texture::createTexture(Renderer& renderer, TextureFormat format,
     }
 
     // Check texture size
-    if (width == 0 || height == 0 || depth == 0)
+    if (width == 0 || height == 0)
     {
         // Invalid texture size
         return false;
@@ -124,7 +122,6 @@ bool Texture::createTexture(Renderer& renderer, TextureFormat format,
     m_format = format;
     m_width = width;
     m_height = height;
-    m_depth = depth;
 
     // Create image
     VkImageCreateInfo imageInfo;
@@ -179,7 +176,19 @@ bool Texture::createTexture(Renderer& renderer, TextureFormat format,
     }
 
     // Create staging buffer
-    uint32_t textureSize = m_width * m_height * m_depth;
+    uint32_t textureSize = m_width * m_height;
+    switch (m_format)
+    {
+        case TEXTURE_FORMAT_RGBA32:
+            textureSize *= 4;
+            break;
+        case TEXTURE_FORMAT_RGB24:
+            textureSize *= 3;
+            break;
+        default:
+            textureSize *= 4;
+            break;
+    }
     if (!m_stagingBuffer.createBuffer(
         renderer.m_physicalDevice, renderer.m_vulkanDevice,
         renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -316,7 +325,7 @@ bool Texture::createTexture(Renderer& renderer, TextureFormat format,
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::updateTexture(Renderer& renderer, TextureFormat format,
-    uint32_t width, uint32_t height, uint32_t depth, const unsigned char* data)
+    uint32_t width, uint32_t height, const unsigned char* data)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -347,7 +356,7 @@ bool Texture::updateTexture(Renderer& renderer, TextureFormat format,
     }
 
     // Check texture size
-    if (width == 0 || height == 0 || depth == 0)
+    if (width == 0 || height == 0)
     {
         // Invalid texture size
         return false;
@@ -355,11 +364,11 @@ bool Texture::updateTexture(Renderer& renderer, TextureFormat format,
 
     // Check current texture
     if (!m_handle || (format != m_format) ||
-        (width != m_width) || (height != m_height) || (depth != m_depth))
+        (width != m_width) || (height != m_height))
     {
         // Recreate texture
         destroyTexture(renderer);
-        createTexture(renderer, format, width, height, depth);
+        createTexture(renderer, format, width, height);
     }
 
     // Write data into staging buffer memory

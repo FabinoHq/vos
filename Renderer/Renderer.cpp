@@ -254,13 +254,15 @@ bool Renderer::init(SysWindow* sysWindow)
     // Create uniforms descriptor pool
     VkDescriptorPoolSize uniformsPoolSize;
     uniformsPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    uniformsPoolSize.descriptorCount = RendererMaxUniformsDesc;
+    uniformsPoolSize.descriptorCount =
+        RendererMaxUniformsDesc*RendererMaxSwapchainFrames;
 
     VkDescriptorPoolCreateInfo uniformsPoolInfo;
     uniformsPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     uniformsPoolInfo.pNext = 0;
     uniformsPoolInfo.flags = 0;
-    uniformsPoolInfo.maxSets = RendererMaxUniformsDesc;
+    uniformsPoolInfo.maxSets =
+        RendererMaxUniformsDesc*RendererMaxSwapchainFrames;
     uniformsPoolInfo.poolSizeCount = 1;
     uniformsPoolInfo.pPoolSizes = &uniformsPoolSize;
 
@@ -283,13 +285,15 @@ bool Renderer::init(SysWindow* sysWindow)
     // Create textures descriptor pool
     VkDescriptorPoolSize texturesPoolSize;
     texturesPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    texturesPoolSize.descriptorCount = RendererMaxTexturesDesc;
+    texturesPoolSize.descriptorCount =
+        RendererMaxTexturesDesc*RendererMaxSwapchainFrames;
 
     VkDescriptorPoolCreateInfo texturesPoolInfo;
     texturesPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     texturesPoolInfo.pNext = 0;
     texturesPoolInfo.flags = 0;
-    texturesPoolInfo.maxSets = RendererMaxTexturesDesc;
+    texturesPoolInfo.maxSets =
+        RendererMaxTexturesDesc*RendererMaxSwapchainFrames;
     texturesPoolInfo.poolSizeCount = 1;
     texturesPoolInfo.pPoolSizes = &texturesPoolSize;
 

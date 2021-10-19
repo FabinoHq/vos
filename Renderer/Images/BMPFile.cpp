@@ -48,9 +48,9 @@
 BMPFile::BMPFile() :
 m_loaded(false),
 m_image(0),
+m_format(TEXTURE_FORMAT_RGBA32),
 m_width(0),
-m_height(0),
-m_depth(0)
+m_height(0)
 {
 
 }
@@ -64,9 +64,9 @@ BMPFile::~BMPFile()
     {
         delete[] m_image;
     }
-    m_depth = 0;
     m_height = 0;
     m_width = 0;
+    m_format = TEXTURE_FORMAT_RGBA32;
     m_image = 0;
     m_loaded = false;
 }
@@ -139,9 +139,9 @@ void BMPFile::destroyImage()
     {
         delete[] m_image;
     }
-    m_depth = 0;
     m_height = 0;
     m_width = 0;
+    m_format = TEXTURE_FORMAT_RGBA32;
     m_image = 0;
     m_loaded = false;
 }
@@ -166,6 +166,15 @@ unsigned char* BMPFile::getData()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get BMP file image format                                                 //
+//  return : BMP file image format                                            //
+////////////////////////////////////////////////////////////////////////////////
+TextureFormat BMPFile::getFormat()
+{
+    return m_format;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Get BMP file image width                                                  //
 //  return : BMP file image width in pixels                                   //
 ////////////////////////////////////////////////////////////////////////////////
@@ -181,13 +190,4 @@ uint32_t BMPFile::getWidth()
 uint32_t BMPFile::getHeight()
 {
     return m_height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get BMP file image depth                                                  //
-//  return : BMP file image depth in bits per pixels                          //
-////////////////////////////////////////////////////////////////////////////////
-uint32_t BMPFile::getDepth()
-{
-    return m_depth;
 }

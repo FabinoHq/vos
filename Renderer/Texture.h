@@ -85,15 +85,14 @@
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
             bool createTexture(Renderer& renderer, TextureFormat format,
-                uint32_t width, uint32_t height, uint32_t depth);
+                uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
             //  Update texture                                                //
             //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
             bool updateTexture(Renderer& renderer, TextureFormat format,
-                uint32_t width, uint32_t height, uint32_t depth,
-                const unsigned char* data);
+                uint32_t width, uint32_t height, const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture                                                  //
@@ -152,7 +151,6 @@
             TextureFormat       m_format;           // Texture format
             uint32_t            m_width;            // Texture width
             uint32_t            m_height;           // Texture height
-            uint32_t            m_depth;            // Texture depth
     };
 
 #endif // VOS_RENDERER_TEXTURE_HEADER
