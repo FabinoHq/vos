@@ -1157,6 +1157,59 @@ bool Renderer::selectVulkanDevice()
             m_graphicsQueue, m_surfaceQueue, m_transferQueue))
         {
             // Current device supports graphics, surface, and transfer queues
+            VkFormatProperties formatProperties;
+            formatProperties.linearTilingFeatures = 0;
+            formatProperties.optimalTilingFeatures = 0;
+            formatProperties.bufferFeatures = 0;
+
+            // Check for internal RGBA32 format support
+            vkGetPhysicalDeviceFormatProperties(
+                physicalDevices[i], VK_FORMAT_R8G8B8A8_UNORM, &formatProperties
+            );
+            if (!(formatProperties.optimalTilingFeatures &
+                VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT))
+            {
+                // Read-only sampled RGBA32 is not supported by the device
+                continue;
+            }
+            if (!(formatProperties.optimalTilingFeatures &
+                VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT))
+            {
+                // Read-write RGBA32 is not supported by the device
+                continue;
+            }
+            if (!(formatProperties.optimalTilingFeatures &
+                VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
+            {
+                // Color attachment RGBA32 is not supported by the device
+                continue;
+            }
+            if (!(formatProperties.optimalTilingFeatures &
+                VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT))
+            {
+                // Colod attachment blend RGBA32 is not supported by the device
+                continue;
+            }
+            if (!(formatProperties.optimalTilingFeatures &
+                VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
+            {
+                // Linear filtered RGBA32 is not supported by the device
+                continue;
+            }
+            if (!(formatProperties.optimalTilingFeatures &
+                VK_FORMAT_FEATURE_TRANSFER_SRC_BIT))
+            {
+                // Transfer source RGBA32 is not supported by the device
+                continue;
+            }
+            if (!(formatProperties.optimalTilingFeatures &
+                VK_FORMAT_FEATURE_TRANSFER_DST_BIT))
+            {
+                // Transfer destination RGBA32 is not supported by the device
+                continue;
+            }
+
+            // Current device supports RGBA32 format
             deviceIndex = i;
             deviceFound = true;
             break;

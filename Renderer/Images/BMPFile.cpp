@@ -48,7 +48,6 @@
 BMPFile::BMPFile() :
 m_loaded(false),
 m_image(0),
-m_format(TEXTURE_FORMAT_RGBA32),
 m_width(0),
 m_height(0)
 {
@@ -66,7 +65,6 @@ BMPFile::~BMPFile()
     }
     m_height = 0;
     m_width = 0;
-    m_format = TEXTURE_FORMAT_RGBA32;
     m_image = 0;
     m_loaded = false;
 }
@@ -181,7 +179,6 @@ void BMPFile::destroyImage()
     }
     m_height = 0;
     m_width = 0;
-    m_format = TEXTURE_FORMAT_RGBA32;
     m_image = 0;
     m_loaded = false;
 }
@@ -203,15 +200,6 @@ bool BMPFile::isLoaded()
 unsigned char* BMPFile::getImage()
 {
     return m_image;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get BMP file image format                                                 //
-//  return : BMP file image format                                            //
-////////////////////////////////////////////////////////////////////////////////
-TextureFormat BMPFile::getFormat()
-{
-    return m_format;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -315,7 +303,6 @@ bool BMPFile::setBMPImageSettings(BMPFileInfo& bmpInfo)
     }
 
     // Set BMP file format and size
-    m_format = TEXTURE_FORMAT_RGB24;
     m_width = bmpInfo.width;
     m_height = bmpInfo.height;
 

@@ -42,8 +42,6 @@
 #ifndef VOS_RENDERER_IMAGES_BMPFILE_HEADER
 #define VOS_RENDERER_IMAGES_BMPFILE_HEADER
 
-    #include "../Texture.h"
-
     #include <string>
     #include <fstream>
 
@@ -132,12 +130,6 @@
             unsigned char* getImage();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get BMP file image format                                     //
-            //  return : BMP file image format                                //
-            ////////////////////////////////////////////////////////////////////
-            TextureFormat getFormat();
-
-            ////////////////////////////////////////////////////////////////////
             //  Get BMP file image width                                      //
             //  return : BMP file image width in pixels                       //
             ////////////////////////////////////////////////////////////////////
@@ -172,7 +164,6 @@
         private:
             bool                m_loaded;       // Image loaded state
             unsigned char*      m_image;        // Image data
-            TextureFormat       m_format;       // Image format
             uint32_t            m_width;        // Image width
             uint32_t            m_height;       // Image height
     };

@@ -54,16 +54,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Texture formats enumeration                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    enum TextureFormat
-    {
-        TEXTURE_FORMAT_RGBA32,
-        TEXTURE_FORMAT_RGB24
-    };
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Texture class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
     class Texture
@@ -84,14 +74,14 @@
             //  Create texture                                                //
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createTexture(Renderer& renderer, TextureFormat format,
+            bool createTexture(Renderer& renderer,
                 uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
             //  Update texture                                                //
             //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
-            bool updateTexture(Renderer& renderer, TextureFormat format,
+            bool updateTexture(Renderer& renderer,
                 uint32_t width, uint32_t height, const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
@@ -148,7 +138,6 @@
             VkDeviceSize        m_memorySize;       // Memory size
             VkDeviceSize        m_memoryOffset;     // Memory offset
 
-            TextureFormat       m_format;           // Texture format
             uint32_t            m_width;            // Texture width
             uint32_t            m_height;           // Texture height
     };
