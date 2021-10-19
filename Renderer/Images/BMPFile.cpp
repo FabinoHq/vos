@@ -123,19 +123,88 @@ bool BMPFile::loadImage(const std::string& filepath)
     bmpInfo.importantColors = 0;
     bmpFile.read((char*)&bmpInfo, sizeof(BMPFileInfo));
 
-    // Set BMP image settings
-    if (!setBMPImageSettings(bmpInfo))
+    // Check BMP file info size
+    if (bmpInfo.infoSize != sizeof(BMPFileInfo))
     {
-        // Could not set BMP image settings
+        // Invalid BMP file info size
         return false;
     }
 
-    // Load 24 bits BMP image data
-    if (!loadBMP24Bits(bmpFile, bmpHeader.dataOffset))
+    // Check BMP file image size
+    if ((bmpInfo.width <= 0) || (bmpInfo.height <= 0) ||
+        (bmpInfo.width > BMPFileMaxImageWidth) ||
+        (bmpInfo.height > BMPFileMaxImageHeight))
     {
-        // Could not load 24 bits BMP image data
+        // Invalid BMP file image size
         return false;
     }
+
+    // Check BMP file image planes
+    if (bmpInfo.planes != 1)
+    {
+        // Invalid BMP file image planes
+        return false;
+    }
+
+    // Check BMP file bits per pixel
+    switch (bmpInfo.bitsPerPixel)
+    {
+        case 1:
+            // Monochrome palette
+            // Unsupported BMP file bits per pixel
+            return false;
+        case 4:
+            // 4 bits palletized
+            // Unsupported BMP file bits per pixel
+            return false;
+        case 8:
+            // 8 bits palletized
+            // Unsupported BMP file bits per pixel
+            return false;
+        case 16:
+            // 16 bits BGR
+            if (bmpInfo.compression == 0)
+            {
+                // Load 16 bits uncompressed BMP image data
+                if (!loadBMP16Bits(bmpFile, bmpHeader.dataOffset,
+                    bmpInfo.width, bmpInfo.height))
+                {
+                    // Could not load 16 bits BMP image data
+                    return false;
+                }
+            }
+            else
+            {
+                // Unsupported 16 bits compression
+                return false;
+            }
+            break;
+        case 24:
+            // 24 bits BGR
+            if (bmpInfo.compression == 0)
+            {
+                // Load 24 bits uncompressed BMP image data
+                if (!loadBMP24Bits(bmpFile, bmpHeader.dataOffset,
+                    bmpInfo.width, bmpInfo.height))
+                {
+                    // Could not load 24 bits BMP image data
+                    return false;
+                }
+            }
+            else
+            {
+                // Unsupported 24 bits compression
+                return false;
+            }
+            break;
+        default:
+            // Invalid BMP file bits per pixel
+            return false;
+    }
+
+    // Set image size
+    m_width = bmpInfo.width;
+    m_height = bmpInfo.height;
 
     // Close BMP file
     bmpFile.close();
@@ -227,102 +296,14 @@ uint32_t BMPFile::getHeight()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set BMP file image settings from BMPFileInfo                              //
-//  return : True if BMP file image settings are successfully set             //
-////////////////////////////////////////////////////////////////////////////////
-bool BMPFile::setBMPImageSettings(BMPFileInfo& bmpInfo)
-{
-    // Check BMP file info size
-    if (bmpInfo.infoSize != sizeof(BMPFileInfo))
-    {
-        // Invalid BMP file info size
-        return false;
-    }
-
-    // Check BMP file image size
-    if ((bmpInfo.width <= 0) || (bmpInfo.height <= 0) ||
-        (bmpInfo.width > BMPFileMaxImageWidth) ||
-        (bmpInfo.height > BMPFileMaxImageHeight))
-    {
-        // Invalid BMP file image size
-        return false;
-    }
-
-    // Check BMP file image planes
-    if (bmpInfo.planes != 1)
-    {
-        // Invalid BMP file image planes
-        return false;
-    }
-
-    // Check BMP file bits per pixel
-    uint32_t numColors = 0;
-    switch (bmpInfo.bitsPerPixel)
-    {
-        case 1:
-            // Monochrome palette
-            numColors = 1;
-            // Unsupported BMP file bits per pixel
-            return false;
-        case 4:
-            // 4 bits palletized
-            numColors = 16;
-            // Unsupported BMP file bits per pixel
-            return false;
-        case 8:
-            // 8 bits palletized
-            numColors = 256;
-            // Unsupported BMP file bits per pixel
-            return false;
-        case 16:
-            // 16 bits RGB
-            numColors = 65536;
-            // Unsupported BMP file bits per pixel
-            return false;
-        case 24:
-            // 24 bits RGB
-            numColors = 16777216;
-            break;
-        default:
-            // Invalid BMP file bits per pixel
-            return false;
-    }
-
-    // Check BMP file compression
-    switch (bmpInfo.compression)
-    {
-        case 0:
-            // No compression
-            break;
-        case 1:
-            // 8bit RLE encoding
-            // Unsupported BMP compression
-            return false;
-        case 2:
-            // 4bit RLE encoding
-            // Unsupported BMP compression
-            return false;
-        default:
-            // Unsupported BMP compression
-            return false;
-    }
-
-    // Set BMP file format and size
-    m_width = bmpInfo.width;
-    m_height = bmpInfo.height;
-
-    // BMP file image settings are successfully set
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Load 24bits BMP file image data                                           //
 //  return : True if BMP file image data is successfully loaded               //
 ////////////////////////////////////////////////////////////////////////////////
-bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset)
+bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
+    uint32_t width, uint32_t height)
 {
     // Load BMP raw image data
-    size_t rawDataSize = m_width*m_height*3;
+    size_t rawDataSize = width*height*3;
     unsigned char* rawData = 0;
     try
     {
@@ -355,7 +336,7 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset)
     }
 
     // Load BMP image data
-    size_t imageSize = m_width*m_height*4;
+    size_t imageSize = width*height*4;
     try
     {
         // Allocate raw image data
@@ -378,17 +359,113 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset)
     }
 
     // Convert 24bits BMP image data
-    for (uint32_t i = 0; i < m_width; ++i)
+    for (uint32_t i = 0; i < width; ++i)
     {
-        for (uint32_t j = 0; j < m_height; ++j)
+        for (uint32_t j = 0; j < height; ++j)
         {
-            size_t index = (j*m_width)+i;
-            size_t rawIndex = ((m_height-j-1)*m_width)+i;
+            size_t index = (j*width)+i;
+            size_t rawIndex = ((height-j-1)*width)+i;
 
             m_image[(index*4)+0] = rawData[(rawIndex*3)+2]; // R component
             m_image[(index*4)+1] = rawData[(rawIndex*3)+1]; // G component
             m_image[(index*4)+2] = rawData[(rawIndex*3)+0]; // B component
             m_image[(index*4)+3] = 255;                     // A component
+        }
+    }
+
+    // Destroy raw image data
+    if (rawData)
+    {
+        delete[] rawData;
+    }
+
+    // BMP file image data is successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load 16bits BMP file image data                                           //
+//  return : True if BMP file image data is successfully loaded               //
+////////////////////////////////////////////////////////////////////////////////
+bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
+    uint32_t width, uint32_t height)
+{
+    // Load BMP raw image data
+    size_t rawDataSize = width*height*2;
+    unsigned char* rawData = 0;
+    try
+    {
+        // Allocate raw image data
+        rawData = new unsigned char[rawDataSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+    if (!rawData)
+    {
+        // Invalid raw image data
+        return false;
+    }
+
+    // Read BMP raw image data
+    bmpFile.seekg(dataOffset);
+    bmpFile.read((char*)rawData, rawDataSize);
+    if (!bmpFile)
+    {
+        // Could not read BMP raw image data
+        return false;
+    }
+
+    // Load BMP image data
+    size_t imageSize = width*height*4;
+    try
+    {
+        // Allocate raw image data
+        m_image = new unsigned char[imageSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    if (!m_image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Convert 16bits BMP image data
+    for (uint32_t i = 0; i < width; ++i)
+    {
+        for (uint32_t j = 0; j < height; ++j)
+        {
+            size_t index = (j*width)+i;
+            size_t rawIndex = ((height-j-1)*width)+i;
+            uint16_t rawPixel =
+                (rawData[(rawIndex*2)+1] << 8) + rawData[(rawIndex*2)];
+
+            m_image[(index*4)+0] = static_cast<unsigned char>(  // R component
+                ((rawPixel&0x7C00) >> 10) * 8
+            );
+            m_image[(index*4)+1] = static_cast<unsigned char>(  // G component
+                ((rawPixel&0x03E0) >> 5) * 8
+            );
+            m_image[(index*4)+2] = static_cast<unsigned char>(  // B component
+                ((rawPixel&0x001F)) * 8
+            );
+            m_image[(index*4)+3] = 255;                         // A component
         }
     }
 

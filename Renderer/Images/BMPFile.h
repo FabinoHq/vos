@@ -53,6 +53,15 @@
     const uint32_t BMPFileMaxImageWidth = 4096;
     const uint32_t BMPFileMaxImageHeight = 4096;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  BMPFile image format                                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    enum BMPFileImageFormat
+    {
+        BMP_FILE_BGR_24BITS,
+        BMP_FILE_BGR_16BITS
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  BMPFile header structure                                              //
@@ -156,16 +165,18 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set BMP file image settings from BMPFileInfo                  //
-            //  return : True if BMP file image settings are successfully set //
-            ////////////////////////////////////////////////////////////////////
-            bool setBMPImageSettings(BMPFileInfo& bmpInfo);
-
-            ////////////////////////////////////////////////////////////////////
             //  Load 24bits BMP file image data                               //
             //  return : True if BMP file image data is successfully loaded   //
             ////////////////////////////////////////////////////////////////////
-            bool loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset);
+            bool loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
+                uint32_t width, uint32_t height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Load 16bits BMP file image data                               //
+            //  return : True if BMP file image data is successfully loaded   //
+            ////////////////////////////////////////////////////////////////////
+            bool loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
+                uint32_t width, uint32_t height);
 
 
         private:
