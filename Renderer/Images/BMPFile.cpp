@@ -84,22 +84,20 @@ bool BMPFile::loadImage(const std::string& filepath)
     }
 
     // Load BMP file
-    std::ifstream bmpfile;
-    bmpfile.open(filepath.c_str(), std::ios::in | std::ios::binary);
-    if (!bmpfile.is_open())
+    std::ifstream bmpFile;
+    bmpFile.open(filepath.c_str(), std::ios::in | std::ios::binary);
+    if (!bmpFile.is_open())
     {
         // Could not load BMP file
-        m_loaded = false;
         return false;
     }
 
     // Read BMP file signature
     char bmpSignature[2] = {0};
-    bmpfile.read(bmpSignature, 2);
+    bmpFile.read(bmpSignature, 2);
     if (bmpSignature[0] != 'B' || bmpSignature[1] != 'M')
     {
         // Invalid BMP file signature
-        m_loaded = false;
         return false;
     }
 
@@ -108,7 +106,7 @@ bool BMPFile::loadImage(const std::string& filepath)
     bmpHeader.fileSize = 0;
     bmpHeader.reserved = 0;
     bmpHeader.dataOffset = 0;
-    bmpfile.read((char*)&bmpHeader, sizeof(BMPFileHeader));
+    bmpFile.read((char*)&bmpHeader, sizeof(BMPFileHeader));
 
     // Read BMP file info
     BMPFileInfo bmpInfo;
@@ -123,94 +121,24 @@ bool BMPFile::loadImage(const std::string& filepath)
     bmpInfo.yResolution = 0;
     bmpInfo.usedColors = 0;
     bmpInfo.importantColors = 0;
-    bmpfile.read((char*)&bmpInfo, sizeof(BMPFileInfo));
+    bmpFile.read((char*)&bmpInfo, sizeof(BMPFileInfo));
 
     // Set BMP image settings
     if (!setBMPImageSettings(bmpInfo))
     {
         // Could not set BMP image settings
-        m_loaded = false;
         return false;
     }
 
-    // Load BMP raw image data
-    size_t rawDataSize = m_width*m_height*3;
-    unsigned char* rawData = 0;
-    try
+    // Load 24 bits BMP image data
+    if (!loadBMP24Bits(bmpFile, bmpHeader.dataOffset))
     {
-        // Allocate raw image data
-        rawData = new unsigned char[rawDataSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    if (!rawData)
-    {
-        // Invalid raw image data
+        // Could not load 24 bits BMP image data
         return false;
     }
 
-    // Read BMP raw image data
-    bmpfile.seekg(bmpHeader.dataOffset);
-    bmpfile.read((char*)rawData, rawDataSize);
-    if (!bmpfile)
-    {
-        // Could not read BMP raw image data
-        return false;
-    }
-
-    // Close bmp file
-    bmpfile.close();
-
-    // Load BMP image data
-    size_t imageSize = m_width*m_height*4;
-    try
-    {
-        // Allocate raw image data
-        m_image = new unsigned char[imageSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    if (!m_image)
-    {
-        // Invalid image data
-        return false;
-    }
-
-    // Convert bmp image data
-    for (uint32_t i = 0; i < m_width; ++i)
-    {
-        for (uint32_t j = 0; j < m_height; ++j)
-        {
-            size_t index = (j*m_height)+i;
-            size_t rawIndex = ((m_height-j-1)*m_height)+i;
-            m_image[(index*4)+0] = rawData[(rawIndex*3)+2]; // R component
-            m_image[(index*4)+1] = rawData[(rawIndex*3)+1]; // G component
-            m_image[(index*4)+2] = rawData[(rawIndex*3)+0]; // B component
-            m_image[(index*4)+3] = 255;                     // A component
-        }
-    }
-
-    // Destroy raw image data
-    if (rawData)
-    {
-        delete[] rawData;
-    }
+    // Close BMP file
+    bmpFile.close();
 
     // BMP file is successfully loaded
     m_loaded = true;
@@ -231,19 +159,17 @@ bool BMPFile::saveImage(const std::string& filepath)
     }
 
     // Save BMP file
-    std::ofstream bmpfile;
-    bmpfile.open(
+    std::ofstream bmpFile;
+    bmpFile.open(
         filepath.c_str(), std::ios::out | std::ios::trunc | std::ios::binary
     );
-    if (!bmpfile.is_open())
+    if (!bmpFile.is_open())
     {
         // Could not save BMP file
-        m_loaded = false;
         return false;
     }
 
     // BMP file is successfully saved
-    m_loaded = true;
     return true;
 }
 
@@ -386,5 +312,92 @@ bool BMPFile::setBMPImageSettings(BMPFileInfo& bmpInfo)
     m_height = bmpInfo.height;
 
     // BMP file image settings are successfully set
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load 24bits BMP file image data                                           //
+//  return : True if BMP file image data is successfully loaded               //
+////////////////////////////////////////////////////////////////////////////////
+bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset)
+{
+    // Load BMP raw image data
+    size_t rawDataSize = m_width*m_height*3;
+    unsigned char* rawData = 0;
+    try
+    {
+        // Allocate raw image data
+        rawData = new unsigned char[rawDataSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+    if (!rawData)
+    {
+        // Invalid raw image data
+        return false;
+    }
+
+    // Read BMP raw image data
+    bmpFile.seekg(dataOffset);
+    bmpFile.read((char*)rawData, rawDataSize);
+    if (!bmpFile)
+    {
+        // Could not read BMP raw image data
+        return false;
+    }
+
+    // Load BMP image data
+    size_t imageSize = m_width*m_height*4;
+    try
+    {
+        // Allocate raw image data
+        m_image = new unsigned char[imageSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    if (!m_image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Convert 24bits BMP image data
+    for (uint32_t i = 0; i < m_width; ++i)
+    {
+        for (uint32_t j = 0; j < m_height; ++j)
+        {
+            size_t index = (j*m_width)+i;
+            size_t rawIndex = ((m_height-j-1)*m_width)+i;
+
+            m_image[(index*4)+0] = rawData[(rawIndex*3)+2]; // R component
+            m_image[(index*4)+1] = rawData[(rawIndex*3)+1]; // G component
+            m_image[(index*4)+2] = rawData[(rawIndex*3)+0]; // B component
+            m_image[(index*4)+3] = 255;                     // A component
+        }
+    }
+
+    // Destroy raw image data
+    if (rawData)
+    {
+        delete[] rawData;
+    }
+
+    // BMP file image data is successfully loaded
     return true;
 }

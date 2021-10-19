@@ -161,6 +161,12 @@
             ////////////////////////////////////////////////////////////////////
             bool setBMPImageSettings(BMPFileInfo& bmpInfo);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Load 24bits BMP file image data                               //
+            //  return : True if BMP file image data is successfully loaded   //
+            ////////////////////////////////////////////////////////////////////
+            bool loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset);
+
 
         private:
             bool                m_loaded;       // Image loaded state
