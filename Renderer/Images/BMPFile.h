@@ -52,6 +52,8 @@
     ////////////////////////////////////////////////////////////////////////////
     const uint32_t BMPFileMaxImageWidth = 4096;
     const uint32_t BMPFileMaxImageHeight = 4096;
+    const uint32_t BMPFileDefaultXResolution = 2835;
+    const uint32_t BMPFileDefaultYResolution = 2835;
 
     ////////////////////////////////////////////////////////////////////////////
     //  BMPFile image format                                                  //
@@ -119,7 +121,8 @@
             //  Save BMP file                                                 //
             //  return : True if BMP file is successfully saved               //
             ////////////////////////////////////////////////////////////////////
-            bool saveImage(const std::string& filepath);
+            bool saveImage(const std::string& filepath,
+                BMPFileImageFormat format = BMP_FILE_BGR_24BITS);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy BMP image                                             //
@@ -172,11 +175,23 @@
                 uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
+            //  Save 24bits BMP file image data                               //
+            //  return : True if BMP file image data is successfully saved    //
+            ////////////////////////////////////////////////////////////////////
+            bool saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize);
+
+            ////////////////////////////////////////////////////////////////////
             //  Load 16bits BMP file image data                               //
             //  return : True if BMP file image data is successfully loaded   //
             ////////////////////////////////////////////////////////////////////
             bool loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
                 uint32_t width, uint32_t height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Save 16bits BMP file image data                               //
+            //  return : True if BMP file image data is successfully saved    //
+            ////////////////////////////////////////////////////////////////////
+            bool saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize);
 
 
         private:
