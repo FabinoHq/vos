@@ -151,7 +151,7 @@ bool PNGFile::loadImage(const std::string& filepath)
     }
 
     // Read PNG file signature
-    unsigned char pngSignature[8] = {0};
+    unsigned char pngSignature[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     pngFile.read((char*)pngSignature, 8);
     if (!pngFile)
     {
@@ -174,7 +174,7 @@ bool PNGFile::loadImage(const std::string& filepath)
     }
 
     // Read PNG file IHDR chunk header
-    PNGFileChunkHeader pngIHDRChunkHeader = {0};
+    PNGFileChunkHeader pngIHDRChunkHeader = {0, {0, 0, 0, 0}};
     pngFile.read((char*)&pngIHDRChunkHeader, PNGFileChunkHeaderSize);
     if (!pngFile)
     {
@@ -201,13 +201,39 @@ bool PNGFile::loadImage(const std::string& filepath)
     }
 
     // Read PNG file IHDR chunk
-    PNGFileIHDRChunk pngIHDRChunk = {0};
+    PNGFileIHDRChunk pngIHDRChunk = {0, 0, 0, 0, 0, 0, 0};
     pngFile.read((char*)&pngIHDRChunk, PNGFileIHDRChunkSize);
     if (!pngFile)
     {
         // Could not read PNG file IHDR chunk
         return false;
     }
+
+    // Read PNG file IHDR chunk CRC
+    uint32_t pngIHDRChunkCRC = 0;
+    pngFile.read((char*)&pngIHDRChunkCRC, 4);
+    if (!pngFile)
+    {
+        // Could not read PNG file IHDR chunk CRC
+        return false;
+    }
+    pngIHDRChunkCRC = SysSwapEndianness(pngIHDRChunkCRC);
+
+    // Check PNG file IHDR chunk CRC
+    uint32_t checkIHDRChunkCRC = 0xFFFFFFFFu;
+    checkIHDRChunkCRC = SysMemoryUpdateCRC(
+        checkIHDRChunkCRC, pngIHDRChunkHeader.type, 4
+    );
+    checkIHDRChunkCRC = SysMemoryUpdateCRC(
+        checkIHDRChunkCRC, (unsigned char*)&pngIHDRChunk, PNGFileIHDRChunkSize
+    );
+    if ((checkIHDRChunkCRC^0xFFFFFFFFu) != pngIHDRChunkCRC)
+    {
+        // Invalid PNG file IHDR chunk CRC
+        return false;
+    }
+
+    // Swap PNG file IHDR chunk byte endianness
     pngIHDRChunk.width = SysSwapEndianness(pngIHDRChunk.width);
     pngIHDRChunk.height = SysSwapEndianness(pngIHDRChunk.height);
 

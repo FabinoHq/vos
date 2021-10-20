@@ -151,7 +151,7 @@ bool BMPFile::loadImage(const std::string& filepath)
     }
 
     // Read BMP file signature
-    unsigned char bmpSignature[2] = {0};
+    unsigned char bmpSignature[2] = {0, 0};
     bmpFile.read((char*)bmpSignature, 2);
     if (!bmpFile)
     {
@@ -168,7 +168,7 @@ bool BMPFile::loadImage(const std::string& filepath)
     }
 
     // Read BMP file header
-    BMPFileHeader bmpHeader = {0};
+    BMPFileHeader bmpHeader = {0, 0, 0};
     bmpFile.read((char*)&bmpHeader, BMPFileHeaderSize);
     if (!bmpFile)
     {
@@ -177,7 +177,7 @@ bool BMPFile::loadImage(const std::string& filepath)
     }
 
     // Read BMP file info
-    BMPFileInfo bmpInfo = {0};
+    BMPFileInfo bmpInfo = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     bmpFile.read((char*)&bmpInfo, BMPFileInfoSize);
     if (!bmpFile)
     {
