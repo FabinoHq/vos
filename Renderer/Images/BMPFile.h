@@ -51,7 +51,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  BMPFile image settings                                                //
     ////////////////////////////////////////////////////////////////////////////
-    const char BMPFileSignature[2] = {0x42, 0x4D};
+    const unsigned char BMPFileSignature[2] = {0x42, 0x4D};
     const uint32_t BMPFileMaxImageWidth = 4096;
     const uint32_t BMPFileMaxImageHeight = 4096;
     const uint32_t BMPFileDefaultXResolution = 2835;

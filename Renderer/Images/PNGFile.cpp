@@ -150,6 +150,22 @@ bool PNGFile::loadImage(const std::string& filepath)
         return false;
     }
 
+    // Read PNG file signature
+    unsigned char pngSignature[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    pngFile.read((char*)pngSignature, 8);
+    if ((pngSignature[0] != PNGFileSignature[0]) ||
+        (pngSignature[1] != PNGFileSignature[1]) ||
+        (pngSignature[2] != PNGFileSignature[2]) ||
+        (pngSignature[3] != PNGFileSignature[3]) ||
+        (pngSignature[4] != PNGFileSignature[4]) ||
+        (pngSignature[5] != PNGFileSignature[5]) ||
+        (pngSignature[6] != PNGFileSignature[6]) ||
+        (pngSignature[7] != PNGFileSignature[7]))
+    {
+        // Invalid PNG file signature
+        return false;
+    }
+
     // Close PNG file
     pngFile.close();
 
@@ -266,6 +282,14 @@ bool PNGFile::savePNGImage(const std::string& filepath,
     if (!pngFile.is_open())
     {
         // Could not save PNG file
+        return false;
+    }
+
+    // Write PNG file signature
+    pngFile.write((char*)PNGFileSignature, 8);
+    if (!pngFile)
+    {
+        // Could not write PNG file signature
         return false;
     }
 
