@@ -120,3 +120,5 @@
 !Renderer/Images/Embedded/Cursor.h
 !Renderer/Images/BMPFile.h
 !Renderer/Images/BMPFile.cpp
+!Renderer/Images/PNGFile.h
+!Renderer/Images/PNGFile.cpp

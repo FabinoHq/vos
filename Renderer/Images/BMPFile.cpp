@@ -151,9 +151,10 @@ bool BMPFile::loadImage(const std::string& filepath)
     }
 
     // Read BMP file signature
-    char bmpSignature[2] = {0};
+    char bmpSignature[2] = {0, 0};
     bmpFile.read(bmpSignature, 2);
-    if (bmpSignature[0] != 'B' || bmpSignature[1] != 'M')
+    if ((bmpSignature[0] != BMPFileSignature[0]) ||
+        (bmpSignature[1] != BMPFileSignature[1]))
     {
         // Invalid BMP file signature
         return false;
@@ -385,10 +386,7 @@ bool BMPFile::saveBMPImage(const std::string& filepath,
     }
 
     // Write BMP file signature
-    char bmpSignature[2] = {0};
-    bmpSignature[0] = 'B';
-    bmpSignature[1] = 'M';
-    bmpFile.write(bmpSignature, 2);
+    bmpFile.write(BMPFileSignature, 2);
     if (!bmpFile)
     {
         // Could not write BMP file signature

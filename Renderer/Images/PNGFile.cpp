@@ -1,0 +1,277 @@
+////////////////////////////////////////////////////////////////////////////////
+//     _______                       ____________________________________     //
+//     \\ .   \            _________/ . . . . . . . . . . . . . . . .   /     //
+//      \\ .   \       ___/ . . . . .    ______________________________/      //
+//       \\ .   \   __/. . .   _________/     /    // .  __________/          //
+//        \\ .   \_//      ___/ .  _____     /    // .  /______               //
+//         \\ .   \/     _/ // .  /    \\    |    \\  .        \              //
+//          \\ .        /   || .  |    ||    |     \\______     \             //
+//           \\ .      /    || .  \____//    |  _________//     /             //
+//            \\ .    /     //  .            / // . . . .      /              //
+//             \\____/     //_______________/ //______________/               //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+//   This is free and unencumbered software released into the public domain.  //
+//                                                                            //
+//   Anyone is free to copy, modify, publish, use, compile, sell, or          //
+//   distribute this software, either in source code form or as a compiled    //
+//   binary, for any purpose, commercial or non-commercial, and by any        //
+//   means.                                                                   //
+//                                                                            //
+//   In jurisdictions that recognize copyright laws, the author or authors    //
+//   of this software dedicate any and all copyright interest in the          //
+//   software to the public domain. We make this dedication for the benefit   //
+//   of the public at large and to the detriment of our heirs and             //
+//   successors. We intend this dedication to be an overt act of              //
+//   relinquishment in perpetuity of all present and future rights to this    //
+//   software under copyright law.                                            //
+//                                                                            //
+//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,          //
+//   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF       //
+//   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   //
+//   IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR        //
+//   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,    //
+//   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR    //
+//   OTHER DEALINGS IN THE SOFTWARE.                                          //
+//                                                                            //
+//   For more information, please refer to <http://unlicense.org>             //
+////////////////////////////////////////////////////////////////////////////////
+//    VOS : Virtual Operating System                                          //
+//     Renderer/Images/PNGFile.cpp : PNGFile image management                 //
+////////////////////////////////////////////////////////////////////////////////
+#include "PNGFile.h"
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  PNGFile default constructor                                               //
+////////////////////////////////////////////////////////////////////////////////
+PNGFile::PNGFile() :
+m_loaded(false),
+m_image(0),
+m_width(0),
+m_height(0)
+{
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  PNGFile destructor                                                        //
+////////////////////////////////////////////////////////////////////////////////
+PNGFile::~PNGFile()
+{
+    if (m_image)
+    {
+        delete[] m_image;
+    }
+    m_height = 0;
+    m_width = 0;
+    m_image = 0;
+    m_loaded = false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set PNG file image                                                        //
+//  return : True if PNG file image is successfully set                       //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::setImage(uint32_t width, uint32_t height,
+    const unsigned char* image)
+{
+    // Check image loaded state
+    if (m_loaded)
+    {
+        // Destroy current image
+        destroyImage();
+    }
+
+    // Check image size
+    if ((width <= 0) || (height <= 0) ||
+        (width > PNGFileMaxImageWidth) ||
+        (height > PNGFileMaxImageHeight))
+    {
+        // Invalid image size
+        return false;
+    }
+
+    // Set PNG image data
+    size_t imageSize = width*height*4;
+    try
+    {
+        // Allocate raw image data
+        m_image = new unsigned char[imageSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    if (!m_image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Copy image data
+    memcpy(m_image, image, imageSize);
+
+    // Set image size
+    m_width = width;
+    m_height = height;
+
+    // PNG file image is successfully set
+    m_loaded = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load PNG file                                                             //
+//  return : True if PNG file is successfully loaded                          //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::loadImage(const std::string& filepath)
+{
+    // Check image loaded state
+    if (m_loaded)
+    {
+        // Destroy current image
+        destroyImage();
+    }
+
+    // Load PNG file
+    std::ifstream pngFile;
+    pngFile.open(filepath.c_str(), std::ios::in | std::ios::binary);
+    if (!pngFile.is_open())
+    {
+        // Could not load PNG file
+        return false;
+    }
+
+    // Close PNG file
+    pngFile.close();
+
+    // PNG file is successfully loaded
+    m_loaded = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Save PNG file                                                             //
+//  return : True if PNG file is successfully saved                           //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::saveImage(const std::string& filepath)
+{
+    // Check image loaded state
+    if (!m_loaded)
+    {
+        // No current image to save
+        return false;
+    }
+
+    // Save PNG file
+    if (!savePNGImage(filepath, m_width, m_height, m_image))
+    {
+        // Could not save PNG file
+        return false;
+    }
+
+    // PNG file is successfully saved
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy PNG image                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void PNGFile::destroyImage()
+{
+    if (m_image)
+    {
+        delete[] m_image;
+    }
+    m_height = 0;
+    m_width = 0;
+    m_image = 0;
+    m_loaded = false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get PNG file loaded state                                                 //
+//  return : True if PNG file is loaded                                       //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::isLoaded()
+{
+    return m_loaded;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get PNG file image data                                                   //
+//  return : PNG file image data                                              //
+////////////////////////////////////////////////////////////////////////////////
+unsigned char* PNGFile::getImage()
+{
+    return m_image;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get PNG file image width                                                  //
+//  return : PNG file image width in pixels                                   //
+////////////////////////////////////////////////////////////////////////////////
+uint32_t PNGFile::getWidth()
+{
+    return m_width;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get PNG file image height                                                 //
+//  return : PNG file image height in pixels                                  //
+////////////////////////////////////////////////////////////////////////////////
+uint32_t PNGFile::getHeight()
+{
+    return m_height;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Save PNG image                                                            //
+//  return : True if PNG image is successfully saved                          //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::savePNGImage(const std::string& filepath,
+    uint32_t width, uint32_t height, const unsigned char* image)
+{
+    // Check image data
+    if (!image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Check image size
+    if ((width <= 0) || (height <= 0) ||
+        (width > PNGFileMaxImageWidth) ||
+        (height > PNGFileMaxImageHeight))
+    {
+        // Invalid image size
+        return false;
+    }
+
+    // Save PNG file
+    std::ofstream pngFile;
+    pngFile.open(
+        filepath.c_str(), std::ios::out | std::ios::trunc | std::ios::binary
+    );
+    if (!pngFile.is_open())
+    {
+        // Could not save PNG file
+        return false;
+    }
+
+    // Close PNG file
+    pngFile.close();
+
+    // PNG image is successfully saved
+    return true;
+}

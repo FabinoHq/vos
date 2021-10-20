@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Images/BMPFile.h : BMPFile image management                   //
+//     Renderer/Images/PNGFile.h : PNGFile image management                   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_IMAGES_BMPFILE_HEADER
-#define VOS_RENDERER_IMAGES_BMPFILE_HEADER
+#ifndef VOS_RENDERER_IMAGES_PNGFILE_HEADER
+#define VOS_RENDERER_IMAGES_PNGFILE_HEADER
 
     #include <exception>
     #include <string>
@@ -49,171 +49,97 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  BMPFile image settings                                                //
+    //  PNGFile image settings                                                //
     ////////////////////////////////////////////////////////////////////////////
-    const char BMPFileSignature[2] = {0x42, 0x4D};
-    const uint32_t BMPFileMaxImageWidth = 4096;
-    const uint32_t BMPFileMaxImageHeight = 4096;
-    const uint32_t BMPFileDefaultXResolution = 2835;
-    const uint32_t BMPFileDefaultYResolution = 2835;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  BMPFile image format                                                  //
-    ////////////////////////////////////////////////////////////////////////////
-    enum BMPFileImageFormat
-    {
-        BMP_FILE_BGR_24BITS,
-        BMP_FILE_BGR_16BITS
-    };
+    const uint32_t PNGFileMaxImageWidth = 4096;
+    const uint32_t PNGFileMaxImageHeight = 4096;
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  BMPFile header structure                                              //
+    //  PNGFile class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
-    struct BMPFileHeader
-    {
-        uint32_t    fileSize;
-        uint32_t    reserved;
-        uint32_t    dataOffset;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  BMPFile info structure                                                //
-    ////////////////////////////////////////////////////////////////////////////
-    struct BMPFileInfo
-    {
-        uint32_t    infoSize;
-        uint32_t    width;
-        uint32_t    height;
-        uint16_t    planes;
-        uint16_t    bitsPerPixel;
-        uint32_t    compression;
-        uint32_t    imageSize;
-        uint32_t    xResolution;
-        uint32_t    yResolution;
-        uint32_t    usedColors;
-        uint32_t    importantColors;
-    };
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  BMPFile class definition                                              //
-    ////////////////////////////////////////////////////////////////////////////
-    class BMPFile
+    class PNGFile
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  BMPFile default constructor                                   //
+            //  PNGFile default constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            BMPFile();
+            PNGFile();
 
             ////////////////////////////////////////////////////////////////////
-            //  BMPFile destructor                                            //
+            //  PNGFile destructor                                            //
             ////////////////////////////////////////////////////////////////////
-            ~BMPFile();
+            ~PNGFile();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set BMP file image                                            //
-            //  return : True if BMP file image is successfully set           //
+            //  Set PNG file image                                            //
+            //  return : True if PNG file image is successfully set           //
             ////////////////////////////////////////////////////////////////////
             bool setImage(uint32_t width, uint32_t height,
                 const unsigned char* image);
 
             ////////////////////////////////////////////////////////////////////
-            //  Load BMP file                                                 //
-            //  return : True if BMP file is successfully loaded              //
+            //  Load PNG file                                                 //
+            //  return : True if PNG file is successfully loaded              //
             ////////////////////////////////////////////////////////////////////
             bool loadImage(const std::string& filepath);
 
             ////////////////////////////////////////////////////////////////////
-            //  Save BMP file                                                 //
-            //  return : True if BMP file is successfully saved               //
+            //  Save PNG file                                                 //
+            //  return : True if PNG file is successfully saved               //
             ////////////////////////////////////////////////////////////////////
-            bool saveImage(const std::string& filepath,
-                BMPFileImageFormat format = BMP_FILE_BGR_24BITS);
+            bool saveImage(const std::string& filepath);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy BMP image                                             //
+            //  Destroy PNG image                                             //
             ////////////////////////////////////////////////////////////////////
             void destroyImage();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get BMP file loaded state                                     //
-            //  return : True if BMP file is loaded                           //
+            //  Get PNG file loaded state                                     //
+            //  return : True if PNG file is loaded                           //
             ////////////////////////////////////////////////////////////////////
             bool isLoaded();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get BMP file image data                                       //
-            //  return : BMP file image data                                  //
+            //  Get PNG file image data                                       //
+            //  return : PNG file image data                                  //
             ////////////////////////////////////////////////////////////////////
             unsigned char* getImage();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get BMP file image width                                      //
-            //  return : BMP file image width in pixels                       //
+            //  Get PNG file image width                                      //
+            //  return : PNG file image width in pixels                       //
             ////////////////////////////////////////////////////////////////////
             uint32_t getWidth();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get BMP file image height                                     //
-            //  return : BMP file image height in pixels                      //
+            //  Get PNG file image height                                     //
+            //  return : PNG file image height in pixels                      //
             ////////////////////////////////////////////////////////////////////
             uint32_t getHeight();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Save BMP image                                                //
-            //  return : True if BMP image is successfully saved              //
+            //  Save PNG image                                                //
+            //  return : True if PNG image is successfully saved              //
             ////////////////////////////////////////////////////////////////////
-            static bool saveBMPImage(const std::string& filepath,
-                uint32_t width, uint32_t height, const unsigned char* image,
-                BMPFileImageFormat format = BMP_FILE_BGR_24BITS);
+            static bool savePNGImage(const std::string& filepath,
+                uint32_t width, uint32_t height, const unsigned char* image);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  BMPFile private copy constructor : Not copyable               //
+            //  PNGFile private copy constructor : Not copyable               //
             ////////////////////////////////////////////////////////////////////
-            BMPFile(const BMPFile&) = delete;
+            PNGFile(const PNGFile&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  BMPFile private copy operator : Not copyable                  //
+            //  PNGFile private copy operator : Not copyable                  //
             ////////////////////////////////////////////////////////////////////
-            BMPFile& operator=(const BMPFile&) = delete;
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Load 24bits BMP file image data                               //
-            //  return : True if BMP file image data is successfully loaded   //
-            ////////////////////////////////////////////////////////////////////
-            bool loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
-                uint32_t width, uint32_t height);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Save 24bits BMP file image data                               //
-            //  return : True if BMP file image data is successfully saved    //
-            ////////////////////////////////////////////////////////////////////
-            static bool saveBMP24Bits(std::ofstream& bmpFile,
-                uint32_t imageSize, uint32_t width, uint32_t height,
-                const unsigned char* image);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Load 16bits BMP file image data                               //
-            //  return : True if BMP file image data is successfully loaded   //
-            ////////////////////////////////////////////////////////////////////
-            bool loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
-                uint32_t width, uint32_t height);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Save 16bits BMP file image data                               //
-            //  return : True if BMP file image data is successfully saved    //
-            ////////////////////////////////////////////////////////////////////
-            static bool saveBMP16Bits(std::ofstream& bmpFile,
-                uint32_t imageSize, uint32_t width, uint32_t height,
-                const unsigned char* image);
+            PNGFile& operator=(const PNGFile&) = delete;
 
 
         private:
@@ -224,4 +150,4 @@
     };
 
 
-#endif // VOS_RENDERER_IMAGES_BMPFILE_HEADER
+#endif // VOS_RENDERER_IMAGES_PNGFILE_HEADER
