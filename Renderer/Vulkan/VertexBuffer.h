@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_VULKAN_VERTEXBUFFER_HEADER
 #define VOS_RENDERER_VULKAN_VERTEXBUFFER_HEADER
 
+    #include <cstdint>
+
     #include "Vulkan.h"
     #include "VulkanMemory.h"
     #include "VulkanQueue.h"

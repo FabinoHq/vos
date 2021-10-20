@@ -151,8 +151,15 @@ bool BMPFile::loadImage(const std::string& filepath)
     }
 
     // Read BMP file signature
-    unsigned char bmpSignature[2] = {0, 0};
+    unsigned char bmpSignature[2] = {0};
     bmpFile.read((char*)bmpSignature, 2);
+    if (!bmpFile)
+    {
+        // Could not read BMP file signature
+        return false;
+    }
+
+    // Check BMP file signature
     if ((bmpSignature[0] != BMPFileSignature[0]) ||
         (bmpSignature[1] != BMPFileSignature[1]))
     {
@@ -161,29 +168,25 @@ bool BMPFile::loadImage(const std::string& filepath)
     }
 
     // Read BMP file header
-    BMPFileHeader bmpHeader;
-    bmpHeader.fileSize = 0;
-    bmpHeader.reserved = 0;
-    bmpHeader.dataOffset = 0;
-    bmpFile.read((char*)&bmpHeader, sizeof(BMPFileHeader));
+    BMPFileHeader bmpHeader = {0};
+    bmpFile.read((char*)&bmpHeader, BMPFileHeaderSize);
+    if (!bmpFile)
+    {
+        // Could not read BMP file header
+        return false;
+    }
 
     // Read BMP file info
-    BMPFileInfo bmpInfo;
-    bmpInfo.infoSize = 0;
-    bmpInfo.width = 0;
-    bmpInfo.height = 0;
-    bmpInfo.planes = 0;
-    bmpInfo.bitsPerPixel = 0;
-    bmpInfo.compression = 0;
-    bmpInfo.imageSize = 0;
-    bmpInfo.xResolution = 0;
-    bmpInfo.yResolution = 0;
-    bmpInfo.usedColors = 0;
-    bmpInfo.importantColors = 0;
-    bmpFile.read((char*)&bmpInfo, sizeof(BMPFileInfo));
+    BMPFileInfo bmpInfo = {0};
+    bmpFile.read((char*)&bmpInfo, BMPFileInfoSize);
+    if (!bmpFile)
+    {
+        // Could not read BMP file info
+        return false;
+    }
 
     // Check BMP file info size
-    if (bmpInfo.infoSize != sizeof(BMPFileInfo))
+    if (bmpInfo.infoSize != BMPFileInfoSize)
     {
         // Invalid BMP file info size
         return false;
@@ -403,19 +406,19 @@ bool BMPFile::saveBMPImage(const std::string& filepath,
         case BMP_FILE_BGR_24BITS:
             // 24 bits uncompressed BMP file
             imageSize = (width*height*3);
-            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
+            dataOffset = 2+BMPFileHeaderSize+BMPFileInfoSize;
             bitsPerPixel = 24;
             break;
         case BMP_FILE_BGR_16BITS:
             // 16 bits uncompressed BMP file
             imageSize = (width*height*2);
-            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
+            dataOffset = 2+BMPFileHeaderSize+BMPFileInfoSize;
             bitsPerPixel = 16;
             break;
         default:
             // 24 bits uncompressed BMP file
             imageSize = (width*height*3);
-            dataOffset = 2+sizeof(BMPFileHeader)+sizeof(BMPFileInfo);
+            dataOffset = 2+BMPFileHeaderSize+BMPFileInfoSize;
             bitsPerPixel = 24;
             break;
     }
@@ -426,7 +429,7 @@ bool BMPFile::saveBMPImage(const std::string& filepath,
     bmpHeader.fileSize = fileSize;
     bmpHeader.reserved = 0;
     bmpHeader.dataOffset = dataOffset;
-    bmpFile.write((char*)&bmpHeader, sizeof(BMPFileHeader));
+    bmpFile.write((char*)&bmpHeader, BMPFileHeaderSize);
     if (!bmpFile)
     {
         // Could not write BMP file header
@@ -435,7 +438,7 @@ bool BMPFile::saveBMPImage(const std::string& filepath,
 
     // Read BMP file info
     BMPFileInfo bmpInfo;
-    bmpInfo.infoSize = sizeof(BMPFileInfo);
+    bmpInfo.infoSize = BMPFileInfoSize;
     bmpInfo.width = width;
     bmpInfo.height = height;
     bmpInfo.planes = 1;
@@ -446,7 +449,7 @@ bool BMPFile::saveBMPImage(const std::string& filepath,
     bmpInfo.yResolution = BMPFileDefaultYResolution;
     bmpInfo.usedColors = 0;
     bmpInfo.importantColors = 0;
-    bmpFile.write((char*)&bmpInfo, sizeof(BMPFileInfo));
+    bmpFile.write((char*)&bmpInfo, BMPFileInfoSize);
     if (!bmpFile)
     {
         // Could not write BMP file info

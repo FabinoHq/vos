@@ -53,6 +53,7 @@
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
     #include "../Renderer/Images/BMPFile.h"
+    #include "../Renderer/Images/PNGFile.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -108,6 +109,26 @@
     //  return : True if the system memory images representations are correct //
     ////////////////////////////////////////////////////////////////////////////
     bool SysMemoryCheckImages();
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Swap 2 bytes unsigned integer endianness                              //
+    //  return : Swapped 2 bytes unsigned integer                             //
+    ////////////////////////////////////////////////////////////////////////////
+    inline uint16_t SysSwapEndianness(uint16_t bytes)
+    {
+        return (((bytes & 0x00FF) << 8) | ((bytes & 0xFF00) >> 8));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Swap 4 bytes unsigned integer endianness                              //
+    //  return : Swapped 4 bytes unsigned integer                             //
+    ////////////////////////////////////////////////////////////////////////////
+    inline uint32_t SysSwapEndianness(uint32_t bytes)
+    {
+        return (((bytes & 0x000000FF) << 24) | ((bytes & 0x0000FF00) << 8) |
+            ((bytes & 0x00FF0000) >> 8) | ((bytes & 0xFF000000) >> 24));
+    }
 
 
 #endif // VOS_SYSTEM_SYSMEMORY_HEADER

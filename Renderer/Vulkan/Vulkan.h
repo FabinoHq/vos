@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_VULKAN_VULKAN_HEADER
 #define VOS_RENDERER_VULKAN_VULKAN_HEADER
 
+    #include <cstdint>
+
     #include "../../System/SysVulkan.h"
 
 

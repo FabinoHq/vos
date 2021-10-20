@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
 #define VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
 
+    #include <cstdint>
     #include <vector>
 
     #include "Vulkan.h"

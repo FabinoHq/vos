@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_SHADERS_DEFAULT_HEADER
 #define VOS_RENDERER_SHADERS_DEFAULT_HEADER
 
+    #include <cstdint>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Default vertex shader                                                 //

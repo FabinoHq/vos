@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_SHADERS_RECT_HEADER
 #define VOS_RENDERER_SHADERS_RECT_HEADER
 
+    #include <cstdint>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Rect fragment shader                                                  //

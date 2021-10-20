@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_VIEW_HEADER
 #define VOS_RENDERER_VIEW_HEADER
 
+    #include <cstdint>
     #include <cstring>
 
     #include "Vulkan/Vulkan.h"

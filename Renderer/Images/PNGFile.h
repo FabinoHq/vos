@@ -43,9 +43,12 @@
 #define VOS_RENDERER_IMAGES_PNGFILE_HEADER
 
     #include <exception>
-    #include <string>
+    #include <cstdint>
     #include <cstring>
+    #include <string>
     #include <fstream>
+
+    #include "../../System/SysMemory.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -55,6 +58,33 @@
         {0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
     const uint32_t PNGFileMaxImageWidth = 4096;
     const uint32_t PNGFileMaxImageHeight = 4096;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  PNGFile Chunk header structure                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    struct PNGFileChunkHeader
+    {
+        uint32_t        length;
+        unsigned char   type[4];
+    };
+    const size_t PNGFileChunkHeaderSize = 8;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  PNGFile IHDR chunk structure                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    const unsigned char PNGFileIHDRChunkType[4] = {0x49, 0x48, 0x44, 0x52};
+    struct PNGFileIHDRChunk
+    {
+        uint32_t    width;
+        uint32_t    height;
+        uint8_t     bitDepth;
+        uint8_t     colorType;
+        uint8_t     compression;
+        uint8_t     filter;
+        uint8_t     interlace;
+    };
+    const size_t PNGFileIHDRChunkSize = 13;
 
 
     ////////////////////////////////////////////////////////////////////////////

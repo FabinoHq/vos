@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_RENDERER_HEADER
 #define VOS_RENDERER_RENDERER_HEADER
 
+    #include <cstdint>
     #include <vector>
 
     #include "../System/SysMessage.h"

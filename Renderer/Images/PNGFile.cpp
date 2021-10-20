@@ -151,8 +151,15 @@ bool PNGFile::loadImage(const std::string& filepath)
     }
 
     // Read PNG file signature
-    unsigned char pngSignature[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    unsigned char pngSignature[8] = {0};
     pngFile.read((char*)pngSignature, 8);
+    if (!pngFile)
+    {
+        // Could not read PNG file signature
+        return false;
+    }
+
+    // Check PNG file signature
     if ((pngSignature[0] != PNGFileSignature[0]) ||
         (pngSignature[1] != PNGFileSignature[1]) ||
         (pngSignature[2] != PNGFileSignature[2]) ||
@@ -163,6 +170,53 @@ bool PNGFile::loadImage(const std::string& filepath)
         (pngSignature[7] != PNGFileSignature[7]))
     {
         // Invalid PNG file signature
+        return false;
+    }
+
+    // Read PNG file IHDR chunk header
+    PNGFileChunkHeader pngIHDRChunkHeader = {0};
+    pngFile.read((char*)&pngIHDRChunkHeader, PNGFileChunkHeaderSize);
+    if (!pngFile)
+    {
+        // Could not read PNG file IHDR chunk header
+        return false;
+    }
+    pngIHDRChunkHeader.length = SysSwapEndianness(pngIHDRChunkHeader.length);
+
+    // Check PNG file IHDR chunk type
+    if ((pngIHDRChunkHeader.type[0] != PNGFileIHDRChunkType[0]) ||
+        (pngIHDRChunkHeader.type[1] != PNGFileIHDRChunkType[1]) ||
+        (pngIHDRChunkHeader.type[2] != PNGFileIHDRChunkType[2]) ||
+        (pngIHDRChunkHeader.type[3] != PNGFileIHDRChunkType[3]))
+    {
+        // Invalid PNG file IHDR chunk type
+        return false;
+    }
+
+    // Check PNG file IHDR chunk length
+    if (pngIHDRChunkHeader.length != PNGFileIHDRChunkSize)
+    {
+        // Invalid PNG file IHDR chunk length
+        return false;
+    }
+
+    // Read PNG file IHDR chunk
+    PNGFileIHDRChunk pngIHDRChunk = {0};
+    pngFile.read((char*)&pngIHDRChunk, PNGFileIHDRChunkSize);
+    if (!pngFile)
+    {
+        // Could not read PNG file IHDR chunk
+        return false;
+    }
+    pngIHDRChunk.width = SysSwapEndianness(pngIHDRChunk.width);
+    pngIHDRChunk.height = SysSwapEndianness(pngIHDRChunk.height);
+
+    // Check PNG file image size
+    if ((pngIHDRChunk.width <= 0) || (pngIHDRChunk.height <= 0) ||
+        (pngIHDRChunk.width > PNGFileMaxImageWidth) ||
+        (pngIHDRChunk.height > PNGFileMaxImageHeight))
+    {
+        // Invalid PNG file image size
         return false;
     }
 

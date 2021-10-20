@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_VULKAN_VULKANBUFFER_HEADER
 #define VOS_RENDERER_VULKAN_VULKANBUFFER_HEADER
 
+    #include <cstdint>
+
     #include "Vulkan.h"
     #include "VulkanMemory.h"
 

@@ -736,21 +736,46 @@ bool SysMemoryCheckImages()
 {
     // Check BMPFileHeader memory
     size_t bmpFileHeaderSize = sizeof(BMPFileHeader);
-    if (bmpFileHeaderSize != 12)
+    if (bmpFileHeaderSize < BMPFileHeaderSize)
     {
         // BMPFileHeader memory representation is invalid
         SysMessage::box() << "[0x103C] Invalid BMPFileHeader memory size\n";
-        SysMessage::box() << "BMPFileHeader memory size should be 12 bytes";
+        SysMessage::box() << "BMPFileHeader memory size should be " <<
+            BMPFileHeaderSize << " bytes";
         return false;
     }
 
     // Check BMPFileInfo memory
     size_t bmpFileInfoSize = sizeof(BMPFileInfo);
-    if (bmpFileInfoSize != 40)
+    if (bmpFileInfoSize < BMPFileInfoSize)
     {
         // BMPFileInfo memory representation is invalid
         SysMessage::box() << "[0x103D] Invalid BMPFileInfo memory size\n";
-        SysMessage::box() << "BMPFileInfo memory size should be 40 bytes";
+        SysMessage::box() << "BMPFileInfo memory size should be " <<
+            BMPFileInfoSize << " bytes";
+        return false;
+    }
+
+    // Check PNGFileChunkHeader memory
+    size_t pngFileChunkHeader = sizeof(PNGFileChunkHeader);
+    if (pngFileChunkHeader < PNGFileChunkHeaderSize)
+    {
+        // PNGFileChunkHeader memory representation is invalid
+        SysMessage::box() <<
+            "[0x103E] Invalid PNGFileChunkHeader memory size\n";
+        SysMessage::box() << "PNGFileChunkHeader memory size should be " <<
+            PNGFileChunkHeaderSize << " bytes";
+        return false;
+    }
+
+    // Check PNGFileIHDRChunk memory
+    size_t pngFileIHDRChunk = sizeof(PNGFileIHDRChunk);
+    if (pngFileIHDRChunk < PNGFileIHDRChunkSize)
+    {
+        // PNGFileIHDRChunk memory representation is invalid
+        SysMessage::box() << "[0x103F] Invalid PNGFileIHDRChunk memory size\n";
+        SysMessage::box() << "PNGFileIHDRChunk memory size should be " <<
+            PNGFileIHDRChunkSize << " bytes";
         return false;
     }
 

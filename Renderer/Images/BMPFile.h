@@ -43,8 +43,9 @@
 #define VOS_RENDERER_IMAGES_BMPFILE_HEADER
 
     #include <exception>
-    #include <string>
+    #include <cstdint>
     #include <cstring>
+    #include <string>
     #include <fstream>
 
 
@@ -76,6 +77,7 @@
         uint32_t    reserved;
         uint32_t    dataOffset;
     };
+    const size_t BMPFileHeaderSize = 12;
 
     ////////////////////////////////////////////////////////////////////////////
     //  BMPFile info structure                                                //
@@ -94,6 +96,7 @@
         uint32_t    usedColors;
         uint32_t    importantColors;
     };
+    const size_t BMPFileInfoSize = 40;
 
 
     ////////////////////////////////////////////////////////////////////////////

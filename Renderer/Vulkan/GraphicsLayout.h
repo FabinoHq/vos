@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
 #define VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
 
+    #include <cstdint>
+
     #include "../../System/SysMessage.h"
     #include "Vulkan.h"
     #include "Swapchain.h"

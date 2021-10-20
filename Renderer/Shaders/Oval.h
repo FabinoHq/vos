@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_SHADERS_OVAL_HEADER
 #define VOS_RENDERER_SHADERS_OVAL_HEADER
 
+    #include <cstdint>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Oval fragment shader                                                  //
