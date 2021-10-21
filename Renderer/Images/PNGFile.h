@@ -69,6 +69,8 @@
         unsigned char   type[4];
     };
     const size_t PNGFileChunkHeaderSize = 8;
+    const size_t PNGFileChunkHeaderTypeSize = 4;
+    const size_t PNGFileChunkCRCSize = 4;
 
     ////////////////////////////////////////////////////////////////////////////
     //  PNGFile IHDR chunk structure                                          //
@@ -85,6 +87,11 @@
         uint8_t     interlace;
     };
     const size_t PNGFileIHDRChunkSize = 13;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  PNGFile IDAT chunk structure                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    const unsigned char PNGFileIDATChunkType[4] = {0x49, 0x44, 0x41, 0x54};
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -172,6 +179,14 @@
             //  PNGFile private copy operator : Not copyable                  //
             ////////////////////////////////////////////////////////////////////
             PNGFile& operator=(const PNGFile&) = delete;
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Load 32bits PNG file image data                               //
+            //  return : True if PNG file image data is successfully loaded   //
+            ////////////////////////////////////////////////////////////////////
+            bool loadPNG32bits(std::ifstream& pngFile,
+                uint32_t width, uint32_t height);
 
 
         private:

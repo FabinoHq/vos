@@ -211,7 +211,7 @@ bool PNGFile::loadImage(const std::string& filepath)
 
     // Read PNG file IHDR chunk CRC
     uint32_t pngIHDRChunkCRC = 0;
-    pngFile.read((char*)&pngIHDRChunkCRC, 4);
+    pngFile.read((char*)&pngIHDRChunkCRC, PNGFileChunkCRCSize);
     if (!pngFile)
     {
         // Could not read PNG file IHDR chunk CRC
@@ -222,7 +222,7 @@ bool PNGFile::loadImage(const std::string& filepath)
     // Check PNG file IHDR chunk CRC
     uint32_t checkIHDRChunkCRC = 0xFFFFFFFFu;
     checkIHDRChunkCRC = SysMemoryUpdateCRC(
-        checkIHDRChunkCRC, pngIHDRChunkHeader.type, 4
+        checkIHDRChunkCRC, pngIHDRChunkHeader.type, PNGFileChunkHeaderTypeSize
     );
     checkIHDRChunkCRC = SysMemoryUpdateCRC(
         checkIHDRChunkCRC, (unsigned char*)&pngIHDRChunk, PNGFileIHDRChunkSize
@@ -244,6 +244,65 @@ bool PNGFile::loadImage(const std::string& filepath)
     {
         // Invalid PNG file image size
         return false;
+    }
+
+    // Check PNG file bit depth
+    if (pngIHDRChunk.bitDepth != 8)
+    {
+        // Unsupported PNG file bit depth
+        return false;
+    }
+
+    // Check PNG file compression
+    if (pngIHDRChunk.compression != 0)
+    {
+        // Unsupported PNG file compression
+        return false;
+    }
+
+    // Check PNG file filter
+    if (pngIHDRChunk.filter != 0)
+    {
+        // Unsupported PNG file filter
+        return false;
+    }
+
+    // Check PNG file interlace
+    if (pngIHDRChunk.interlace != 0)
+    {
+        // Unsupported PNG file interlace
+        return false;
+    }
+
+    // Check PNG file color type
+    switch (pngIHDRChunk.colorType)
+    {
+        case 0:
+            // Greyscale color type
+            // Unsupported PNG file color type
+            return false;
+        case 2:
+            // RGB color type
+            break;
+        case 3:
+            // Palette index color type
+            // Unsupported PNG file color type
+            return false;
+        case 4:
+            // Greyscale with alpha color type
+            // Unsupported PNG file color type
+            return false;
+        case 6:
+            // Load 32bits RGBA PNG
+            if (!loadPNG32bits(
+                pngFile, pngIHDRChunk.width, pngIHDRChunk.height))
+            {
+                return false;
+            }
+            break;
+        default:
+            // Unsupported PNG file color type
+            return false;
     }
 
     // Close PNG file
@@ -377,5 +436,111 @@ bool PNGFile::savePNGImage(const std::string& filepath,
     pngFile.close();
 
     // PNG image is successfully saved
+    return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load 32bits PNG file image data                                           //
+//  return : True if PNG file image data is successfully loaded               //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
+    uint32_t width, uint32_t height)
+{
+    // Read PNG file IDAT chunk header
+    PNGFileChunkHeader pngIDATChunkHeader = {0, {0, 0, 0, 0}};
+    bool pngIDATChunkFound = false;
+    while (!pngIDATChunkFound)
+    {
+        pngFile.read((char*)&pngIDATChunkHeader, PNGFileChunkHeaderSize);
+        if (!pngFile)
+        {
+            // Could not read PNG file chunk header
+            return false;
+        }
+        pngIDATChunkHeader.length = SysSwapEndianness(
+            pngIDATChunkHeader.length
+        );
+        if ((pngIDATChunkHeader.type[0] != PNGFileIDATChunkType[0]) ||
+            (pngIDATChunkHeader.type[1] != PNGFileIDATChunkType[1]) ||
+            (pngIDATChunkHeader.type[2] != PNGFileIDATChunkType[2]) ||
+            (pngIDATChunkHeader.type[3] != PNGFileIDATChunkType[3]))
+        {
+            pngFile.ignore(pngIDATChunkHeader.length + PNGFileChunkCRCSize);
+        }
+        else
+        {
+            // PNG file IDAT chunk header found
+            pngIDATChunkFound = true;
+        }
+    }
+    if (!pngIDATChunkFound)
+    {
+        // Could not find PNG file IDAT chunk header
+        return false;
+    }
+
+    // Allocate raw image data
+    unsigned char* rawData = 0;
+    try
+    {
+        // Allocate raw image data
+        rawData = new unsigned char[pngIDATChunkHeader.length];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+    if (!rawData)
+    {
+        // Invalid raw image data
+        return false;
+    }
+
+    // Read PNG file raw image data
+    pngFile.read((char*)rawData, pngIDATChunkHeader.length);
+    if (!pngFile)
+    {
+        // Could not read PNG raw image data
+        return false;
+    }
+
+    // Read PNG file IDAT chunk CRC
+    uint32_t pngIDATChunkCRC = 0;
+    pngFile.read((char*)&pngIDATChunkCRC, PNGFileChunkCRCSize);
+    if (!pngFile)
+    {
+        // Could not read PNG file IDAT chunk CRC
+        return false;
+    }
+    pngIDATChunkCRC = SysSwapEndianness(pngIDATChunkCRC);
+
+    // Check PNG file IDAT chunk CRC
+    uint32_t checkIDATChunkCRC = 0xFFFFFFFFu;
+    checkIDATChunkCRC = SysMemoryUpdateCRC(
+        checkIDATChunkCRC, pngIDATChunkHeader.type, PNGFileChunkHeaderTypeSize
+    );
+    checkIDATChunkCRC = SysMemoryUpdateCRC(
+        checkIDATChunkCRC, rawData, pngIDATChunkHeader.length
+    );
+    if ((checkIDATChunkCRC^0xFFFFFFFFu) != pngIDATChunkCRC)
+    {
+        // Invalid PNG file IDAT chunk CRC
+        return false;
+    }
+
+    // Destroy raw image data
+    if (rawData)
+    {
+        delete[] rawData;
+    }
+
+    // PNG file image data is successfully loaded
     return true;
 }
