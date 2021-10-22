@@ -53,8 +53,9 @@
     #include "Renderer/Shapes/Oval.h"
     #include "Event.h"
 
-    #include "Renderer/Images/Embedded/Cursor.h"
-    #include "Renderer/Images/BMPFile.h"
+    #include "Images/Embedded/Cursor.h"
+    #include "Images/BMPFile.h"
+    #include "Images/PNGFile.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

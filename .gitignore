@@ -68,6 +68,14 @@
 !Math/Vector4.h
 !Math/Matrix4x4.h
 
+!Images/
+!Images/Embedded/
+!Images/Embedded/Cursor.h
+!Images/BMPFile.h
+!Images/BMPFile.cpp
+!Images/PNGFile.h
+!Images/PNGFile.cpp
+
 !Renderer/
 !Renderer/Vulkan/Vulkan.h
 !Renderer/Vulkan/Vulkan.cpp

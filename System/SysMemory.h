@@ -52,8 +52,8 @@
     #include "../Math/Vector3.h"
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
-    #include "../Renderer/Images/BMPFile.h"
-    #include "../Renderer/Images/PNGFile.h"
+    #include "../Images/BMPFile.h"
+    #include "../Images/PNGFile.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

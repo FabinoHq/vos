@@ -19,14 +19,14 @@
     <Filter Include="Renderer\Shaders">
       <UniqueIdentifier>{cd23c501-6888-4864-a87b-c358aaeb870b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\Images">
-      <UniqueIdentifier>{d95861b1-5c28-46e7-b8aa-eb01b9bd0dd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Images\Embedded">
-      <UniqueIdentifier>{04cb918c-840c-4879-af04-128f2ebb3f51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer\Shapes">
       <UniqueIdentifier>{da9bebd6-c287-4c94-bf66-2debaa11b853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{ec8ca15e-1685-44f9-81a0-3001cec78990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images\Embedded">
+      <UniqueIdentifier>{3caf441d-e46a-4174-b302-a9265e8221f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,11 +113,11 @@
     <ClCompile Include="Renderer\Pipeline.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Images\BMPFile.cpp">
-      <Filter>Renderer\Images</Filter>
+    <ClCompile Include="Images\BMPFile.cpp">
+      <Filter>Images</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Images\PNGFile.cpp">
-      <Filter>Renderer\Images</Filter>
+    <ClCompile Include="Images\PNGFile.cpp">
+      <Filter>Images</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -219,9 +219,6 @@
     <ClInclude Include="Renderer\Shaders\Default.h">
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Images\Embedded\Cursor.h">
-      <Filter>Renderer\Images\Embedded</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Vulkan\GraphicsLayout.h">
       <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
@@ -249,14 +246,17 @@
     <ClInclude Include="Renderer\Pipeline.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Images\BMPFile.h">
-      <Filter>Renderer\Images</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Images\PNGFile.h">
-      <Filter>Renderer\Images</Filter>
-    </ClInclude>
     <ClInclude Include="System\SysCRC.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\BMPFile.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\PNGFile.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Embedded\Cursor.h">
+      <Filter>Images\Embedded</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

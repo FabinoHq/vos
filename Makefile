@@ -52,6 +52,7 @@ VOS: main.o \
 	System/SysClock.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
+	Images/BMPFile.o Images/PNGFile.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
@@ -59,7 +60,6 @@ VOS: main.o \
 	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
 	Renderer/View.o Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
-	Renderer/Images/BMPFile.o Renderer/Images/PNGFile.o \
 	Renderer/Renderer.o
 
 	$(CC) -o VOS \
@@ -69,6 +69,7 @@ VOS: main.o \
 	System/SysClock.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
+	Images/BMPFile.o Images/PNGFile.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
@@ -76,7 +77,6 @@ VOS: main.o \
 	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
 	Renderer/View.o Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
-	Renderer/Images/BMPFile.o Renderer/Images/PNGFile.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -116,6 +116,14 @@ System/Lin/SysWindow.o: System/Lin/SysWindow.cpp
 
 System/Lin/SysVulkan.o: System/Lin/SysVulkan.cpp
 	$(CC) -o System/Lin/SysVulkan.o -c System/Lin/SysVulkan.cpp $(CFLAGS)
+
+
+Images/BMPFile.o: Images/BMPFile.cpp
+	$(CC) -o Images/BMPFile.o -c Images/BMPFile.cpp $(CFLAGS)
+
+Images/PNGFile.o: Images/PNGFile.cpp
+	$(CC) -o Images/PNGFile.o -c Images/PNGFile.cpp $(CFLAGS)
+
 
 Renderer/Vulkan/Vulkan.o: Renderer/Vulkan/Vulkan.cpp
 	$(CC) -o Renderer/Vulkan/Vulkan.o -c Renderer/Vulkan/Vulkan.cpp $(CFLAGS)
@@ -172,12 +180,6 @@ Renderer/Shapes/Rect.o: Renderer/Shapes/Rect.cpp
 Renderer/Shapes/Oval.o: Renderer/Shapes/Oval.cpp
 	$(CC) -o Renderer/Shapes/Oval.o -c Renderer/Shapes/Oval.cpp $(CFLAGS)
 
-Renderer/Images/BMPFile.o: Renderer/Images/BMPFile.cpp
-	$(CC) -o Renderer/Images/BMPFile.o -c Renderer/Images/BMPFile.cpp $(CFLAGS)
-
-Renderer/Images/PNGFile.o: Renderer/Images/PNGFile.cpp
-	$(CC) -o Renderer/Images/PNGFile.o -c Renderer/Images/PNGFile.cpp $(CFLAGS)
-
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
 
@@ -185,8 +187,10 @@ clean:
 	rm -rf *.o
 	rm -rf System/*.o
 	rm -rf System/Lin/*.o
+	rm -rf Images/*.o
 	rm -rf Renderer/*.o
 	rm -rf Renderer/Vulkan/*.o
+	rm -rf Renderer/Shapes/*.o
 
 mrproper: clean 
 	rm -rf VOS
