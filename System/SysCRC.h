@@ -146,4 +146,36 @@
     }
 
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Adler32 default value                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t SysAdler32Default = 0x00000001u;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Update Adler32 with bytes from a buffer                               //
+    //  return : Updated Adler32                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    inline uint32_t SysUpdateAdler32(
+        uint32_t adler32, unsigned char* buffer, size_t size)
+    {
+        uint32_t a = (adler32 & 0x0000FFFF);
+        uint32_t b = (adler32 & 0xFFFF0000) >> 16;
+        for (size_t i = 0; i < size; ++i)
+        {
+            a = (a + buffer[i]) % 65521;
+            b = (a + b) % 65521;
+        }
+        return ((b << 16) | a);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Compute Adler32 with bytes from a buffer                              //
+    //  return : Computed Adler32                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    inline uint32_t SysAdler32(unsigned char* buffer, size_t size)
+    {
+        return SysUpdateAdler32(SysAdler32Default, buffer, size);
+    }
+
+
 #endif // VOS_SYSTEM_SYSCRC_HEADER
