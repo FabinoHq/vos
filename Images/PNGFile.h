@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Images/PNGFile.h : PNGFile image management                   //
+//     Images/PNGFile.h : PNGFile image management                            //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_IMAGES_PNGFILE_HEADER
-#define VOS_RENDERER_IMAGES_PNGFILE_HEADER
+#ifndef VOS_IMAGES_PNGFILE_HEADER
+#define VOS_IMAGES_PNGFILE_HEADER
 
     #include <exception>
     #include <cstdint>
@@ -198,4 +198,4 @@
     };
 
 
-#endif // VOS_RENDERER_IMAGES_PNGFILE_HEADER
+#endif // VOS_IMAGES_PNGFILE_HEADER

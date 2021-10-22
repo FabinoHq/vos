@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Images/BMPFile.h : BMPFile image management                   //
+//     Images/BMPFile.h : BMPFile image management                            //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_IMAGES_BMPFILE_HEADER
-#define VOS_RENDERER_IMAGES_BMPFILE_HEADER
+#ifndef VOS_IMAGES_BMPFILE_HEADER
+#define VOS_IMAGES_BMPFILE_HEADER
 
     #include <exception>
     #include <cstdint>
@@ -227,4 +227,4 @@
     };
 
 
-#endif // VOS_RENDERER_IMAGES_BMPFILE_HEADER
+#endif // VOS_IMAGES_BMPFILE_HEADER

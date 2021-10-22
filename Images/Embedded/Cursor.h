@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Images/Embedded/Cursor.h : Cursor embedded image              //
+//     Images/Embedded/Cursor.h : Cursor embedded image                       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_IMAGES_EMBEDDED_CURSOR_HEADER
-#define VOS_RENDERER_IMAGES_EMBEDDED_CURSOR_HEADER
+#ifndef VOS_IMAGES_EMBEDDED_CURSOR_HEADER
+#define VOS_IMAGES_EMBEDDED_CURSOR_HEADER
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -395,4 +395,4 @@
     };
 
 
-#endif // VOS_RENDERER_IMAGES_EMBEDDED_CURSOR_HEADER
+#endif // VOS_IMAGES_EMBEDDED_CURSOR_HEADER

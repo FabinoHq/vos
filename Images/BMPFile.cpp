@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Images/BMPFile.cpp : BMPFile image management                 //
+//     Images/BMPFile.cpp : BMPFile image management                          //
 ////////////////////////////////////////////////////////////////////////////////
 #include "BMPFile.h"
 
