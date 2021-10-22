@@ -535,6 +535,44 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
         return false;
     }
 
+    // Allocate decompressed data
+    size_t decompDataSize = (width*height*4)+height;
+    unsigned char* decompData = 0;
+    try
+    {
+        // Allocate decompressed data
+        decompData = new unsigned char[decompDataSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate decompressed data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate decompressed data
+        return false;
+    }
+    if (!decompData)
+    {
+        // Invalid decompressed data
+        return false;
+    }
+
+    // Decompress deflate data
+    if (!ZLibDeflateDecompress(
+        rawData, pngIDATChunkHeader.length, decompData, decompDataSize))
+    {
+        // Could not decompress deflate data
+        return false;
+    }
+
+    // Destroy decompressed data
+    if (decompData)
+    {
+        delete[] decompData;
+    }
+
     // Destroy raw image data
     if (rawData)
     {

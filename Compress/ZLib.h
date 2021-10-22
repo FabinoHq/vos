@@ -47,4 +47,12 @@
     #include "../System/SysCRC.h"
 
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Decompress ZLib deflate data                                          //
+    //  return : True if the data is successfully decompressed                //
+    ////////////////////////////////////////////////////////////////////////////
+    bool ZLibDeflateDecompress(
+        unsigned char* in, size_t inSize, unsigned char* out, size_t outSize);
+
+
 #endif // VOS_COMPRESS_ZLIB_HEADER

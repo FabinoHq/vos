@@ -40,3 +40,30 @@
 //     Compress/ZLib.cpp : ZLib compression management                        //
 ////////////////////////////////////////////////////////////////////////////////
 #include "ZLib.h"
+#include <iostream>
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Decompress ZLib deflate data                                              //
+//  return : True if the data is successfully decompressed                    //
+////////////////////////////////////////////////////////////////////////////////
+bool ZLibDeflateDecompress(
+	unsigned char* in, size_t inSize, unsigned char* out, size_t outSize)
+{
+	// Check data buffers
+	if (!in || (inSize <= 2) || !out || (outSize <= 2))
+	{
+		// Invalid data buffers
+		return false;
+	}
+
+	// Check ZLib header
+	uint16_t zlibHeader = ((*in++) << 8) | (*in++);
+	if ((zlibHeader % 31) != 0) return false;
+	if (((zlibHeader >> 8) & 0x000F) != 8) return false;
+	if ((zlibHeader >> 12) != 7) return false;
+	if ((zlibHeader >> 5) & 0x0001) return false;
+
+	// Data is successfully decompressed
+	return true;
+}
