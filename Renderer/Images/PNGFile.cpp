@@ -220,14 +220,14 @@ bool PNGFile::loadImage(const std::string& filepath)
     pngIHDRChunkCRC = SysSwapEndianness(pngIHDRChunkCRC);
 
     // Check PNG file IHDR chunk CRC
-    uint32_t checkIHDRChunkCRC = 0xFFFFFFFFu;
-    checkIHDRChunkCRC = SysMemoryUpdateCRC(
+    uint32_t checkIHDRChunkCRC = SysCRC32Default;
+    checkIHDRChunkCRC = SysUpdateCRC32(
         checkIHDRChunkCRC, pngIHDRChunkHeader.type, PNGFileChunkHeaderTypeSize
     );
-    checkIHDRChunkCRC = SysMemoryUpdateCRC(
+    checkIHDRChunkCRC = SysUpdateCRC32(
         checkIHDRChunkCRC, (unsigned char*)&pngIHDRChunk, PNGFileIHDRChunkSize
     );
-    if ((checkIHDRChunkCRC^0xFFFFFFFFu) != pngIHDRChunkCRC)
+    if ((checkIHDRChunkCRC^SysCRC32Final) != pngIHDRChunkCRC)
     {
         // Invalid PNG file IHDR chunk CRC
         return false;
@@ -522,14 +522,14 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
     pngIDATChunkCRC = SysSwapEndianness(pngIDATChunkCRC);
 
     // Check PNG file IDAT chunk CRC
-    uint32_t checkIDATChunkCRC = 0xFFFFFFFFu;
-    checkIDATChunkCRC = SysMemoryUpdateCRC(
+    uint32_t checkIDATChunkCRC = SysCRC32Default;
+    checkIDATChunkCRC = SysUpdateCRC32(
         checkIDATChunkCRC, pngIDATChunkHeader.type, PNGFileChunkHeaderTypeSize
     );
-    checkIDATChunkCRC = SysMemoryUpdateCRC(
+    checkIDATChunkCRC = SysUpdateCRC32(
         checkIDATChunkCRC, rawData, pngIDATChunkHeader.length
     );
-    if ((checkIDATChunkCRC^0xFFFFFFFFu) != pngIDATChunkCRC)
+    if ((checkIDATChunkCRC^SysCRC32Final) != pngIDATChunkCRC)
     {
         // Invalid PNG file IDAT chunk CRC
         return false;

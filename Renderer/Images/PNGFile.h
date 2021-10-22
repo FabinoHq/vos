@@ -49,6 +49,7 @@
     #include <fstream>
 
     #include "../../System/SysMemory.h"
+    #include "../../System/SysCRC.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -89,7 +90,7 @@
     const size_t PNGFileIHDRChunkSize = 13;
 
     ////////////////////////////////////////////////////////////////////////////
-    //  PNGFile IDAT chunk structure                                          //
+    //  PNGFile IDAT chunk type                                               //
     ////////////////////////////////////////////////////////////////////////////
     const unsigned char PNGFileIDATChunkType[4] = {0x49, 0x44, 0x41, 0x54};
 

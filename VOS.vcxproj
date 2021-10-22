@@ -191,6 +191,7 @@
     <ClInclude Include="Renderer\Vulkan\VulkanMemory.h" />
     <ClInclude Include="Renderer\Vulkan\VulkanQueue.h" />
     <ClInclude Include="System\SysClock.h" />
+    <ClInclude Include="System\SysCRC.h" />
     <ClInclude Include="System\SysDisplayMode.h" />
     <ClInclude Include="System\SysMemory.h" />
     <ClInclude Include="System\SysMessage.h" />

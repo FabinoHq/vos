@@ -255,5 +255,8 @@
     <ClInclude Include="Renderer\Images\PNGFile.h">
       <Filter>Renderer\Images</Filter>
     </ClInclude>
+    <ClInclude Include="System\SysCRC.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
