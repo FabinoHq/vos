@@ -93,11 +93,10 @@ bool BMPFile::setImage(uint32_t width, uint32_t height,
         return false;
     }
 
-    // Set BMP image data
+    // Allocate image data
     size_t imageSize = width*height*4;
     try
     {
-        // Allocate raw image data
         m_image = new unsigned char[imageSize];
     }
     catch (const std::bad_alloc&)
@@ -211,23 +210,19 @@ bool BMPFile::loadImage(const std::string& filepath)
     // Check BMP file bits per pixel
     switch (bmpInfo.bitsPerPixel)
     {
-        case 1:
-            // Monochrome palette
+        case BMPFILE_BITSPERPIXEL_MONOCHROME:
             // Unsupported BMP file bits per pixel
             return false;
-        case 4:
-            // 4 bits palletized
+        case BMPFILE_BITSPERPIXEL_4BITS_PALETTE:
             // Unsupported BMP file bits per pixel
             return false;
-        case 8:
-            // 8 bits palletized
+        case BMPFILE_BITSPERPIXEL_8BITS_PALETTE:
             // Unsupported BMP file bits per pixel
             return false;
-        case 16:
-            // 16 bits BGR
+        case BMPFILE_BITSPERPIXEL_16BITS_BGR:
+            // Load 16 bits uncompressed BMP image data
             if (bmpInfo.compression == 0)
             {
-                // Load 16 bits uncompressed BMP image data
                 if (!loadBMP16Bits(bmpFile, bmpHeader.dataOffset,
                     bmpInfo.width, bmpInfo.height))
                 {
@@ -241,11 +236,10 @@ bool BMPFile::loadImage(const std::string& filepath)
                 return false;
             }
             break;
-        case 24:
-            // 24 bits BGR
+        case BMPFILE_BITSPERPIXEL_24BITS_BGR:
+            // Load 24 bits uncompressed BMP image data
             if (bmpInfo.compression == 0)
             {
-                // Load 24 bits uncompressed BMP image data
                 if (!loadBMP24Bits(bmpFile, bmpHeader.dataOffset,
                     bmpInfo.width, bmpInfo.height))
                 {
@@ -530,11 +524,10 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
         return false;
     }
 
-    // Load BMP image data
+    // Allocate image data
     size_t imageSize = width*height*4;
     try
     {
-        // Allocate raw image data
         m_image = new unsigned char[imageSize];
     }
     catch (const std::bad_alloc&)
@@ -697,11 +690,10 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
         return false;
     }
 
-    // Load BMP image data
+    // Allocate image data
     size_t imageSize = width*height*4;
     try
     {
-        // Allocate raw image data
         m_image = new unsigned char[imageSize];
     }
     catch (const std::bad_alloc&)
@@ -781,7 +773,6 @@ bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize,
     uint16_t* rawData = 0;
     try
     {
-        // Allocate raw image data
         rawData = new uint16_t[imageSize/2];
     }
     catch (const std::bad_alloc&)

@@ -95,6 +95,30 @@
     ////////////////////////////////////////////////////////////////////////////
     const unsigned char PNGFileIDATChunkType[4] = {0x49, 0x44, 0x41, 0x54};
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  PNGFile color type enumeration                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum PNGFileColorType
+    {
+        PNGFILE_COLOR_GREYSCALE = 0,
+        PNGFILE_COLOR_RGB = 2,
+        PNGFILE_COLOR_PALETTE = 3,
+        PNGFILE_COLOR_GREYSCALE_ALPHA = 4,
+        PNGFILE_COLOR_RGBA = 6
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  PNGFile filter type enumeration                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum PNGFileFilterType
+    {
+        PNGFILE_FILTER_NONE = 0,
+        PNGFILE_FILTER_SUB = 1,
+        PNGFILE_FILTER_UP = 2,
+        PNGFILE_FILTER_AVERAGE = 3,
+        PNGFILE_FILTER_PAETH = 4
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  PNGFile class definition                                              //

@@ -277,26 +277,24 @@ bool PNGFile::loadImage(const std::string& filepath)
     // Check PNG file color type
     switch (pngIHDRChunk.colorType)
     {
-        case 0:
-            // Greyscale color type
+        case PNGFILE_COLOR_GREYSCALE:
             // Unsupported PNG file color type
             return false;
-        case 2:
-            // RGB color type
-            break;
-        case 3:
-            // Palette index color type
+        case PNGFILE_COLOR_RGB:
             // Unsupported PNG file color type
             return false;
-        case 4:
-            // Greyscale with alpha color type
+        case PNGFILE_COLOR_PALETTE:
             // Unsupported PNG file color type
             return false;
-        case 6:
+        case PNGFILE_COLOR_GREYSCALE_ALPHA:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGBA:
             // Load 32bits RGBA PNG
-            if (!loadPNG32bits(
-                pngFile, pngIHDRChunk.width, pngIHDRChunk.height))
+            if (!loadPNG32bits(pngFile,
+                pngIHDRChunk.width, pngIHDRChunk.height))
             {
+                // Could not load 32bits RGBA PNG
                 return false;
             }
             break;
@@ -484,7 +482,6 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
     unsigned char* rawData = 0;
     try
     {
-        // Allocate raw image data
         rawData = new unsigned char[pngIDATChunkHeader.length];
     }
     catch (const std::bad_alloc&)
@@ -540,7 +537,6 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
     unsigned char* decompData = 0;
     try
     {
-        // Allocate decompressed data
         decompData = new unsigned char[decompDataSize];
     }
     catch (const std::bad_alloc&)
@@ -567,6 +563,60 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
         return false;
     }
 
+    // Allocate image data
+    size_t imageSize = width*height*4;
+    try
+    {
+        m_image = new unsigned char[imageSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate image data
+        return false;
+    }
+    if (!m_image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Set image data
+    uint32_t inIndex = 0;
+    uint32_t outIndex = 0;
+    uint32_t scanlineSize = width*4;
+    for (uint32_t j = 0; j < height; ++j)
+    {
+        // Check scanline filter type
+        switch (decompData[inIndex++])
+        {
+            case PNGFILE_FILTER_NONE:
+                memcpy(&m_image[outIndex], &decompData[inIndex], scanlineSize);
+                outIndex += scanlineSize;
+                inIndex += scanlineSize;
+                break;
+            case PNGFILE_FILTER_SUB:
+                // Unsupported filter type
+                return false;
+            case PNGFILE_FILTER_UP:
+                // Unsupported filter type
+                return false;
+            case PNGFILE_FILTER_AVERAGE:
+                // Unsupported filter type
+                return false;
+            case PNGFILE_FILTER_PAETH:
+                // Unsupported filter type
+                return false;
+            default:
+                // Invalid filter type
+                return false;
+        }
+    }
+
     // Destroy decompressed data
     if (decompData)
     {
@@ -578,6 +628,10 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
     {
         delete[] rawData;
     }
+
+    // Set image size
+    m_width = width;
+    m_height = height;
 
     // PNG file image data is successfully loaded
     return true;

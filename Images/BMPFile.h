@@ -98,6 +98,18 @@
     };
     const size_t BMPFileInfoSize = 40;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  BMPFile bits per pixel formats                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    enum BMPFileBitsPerPixel
+    {
+        BMPFILE_BITSPERPIXEL_MONOCHROME = 1,
+        BMPFILE_BITSPERPIXEL_4BITS_PALETTE = 4,
+        BMPFILE_BITSPERPIXEL_8BITS_PALETTE = 8,
+        BMPFILE_BITSPERPIXEL_16BITS_BGR = 16,
+        BMPFILE_BITSPERPIXEL_24BITS_BGR = 24
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  BMPFile class definition                                              //
