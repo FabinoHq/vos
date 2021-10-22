@@ -48,8 +48,8 @@
     #include <string>
     #include <fstream>
 
-    #include "../../System/SysMemory.h"
-    #include "../../System/SysCRC.h"
+    #include "../System/SysMemory.h"
+    #include "../System/SysCRC.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
