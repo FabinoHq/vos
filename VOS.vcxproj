@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Compress\ZLib.cpp" />
     <ClCompile Include="Images\BMPFile.cpp" />
     <ClCompile Include="Images\PNGFile.cpp" />
     <ClCompile Include="main.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Vos.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Compress\ZLib.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Images\BMPFile.h" />
     <ClInclude Include="Images\Embedded\Cursor.h" />

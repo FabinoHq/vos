@@ -28,6 +28,9 @@
     <Filter Include="Images\Embedded">
       <UniqueIdentifier>{3caf441d-e46a-4174-b302-a9265e8221f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Compress">
+      <UniqueIdentifier>{ca543703-05c4-456c-99c0-e4b70133d34b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="Images\PNGFile.cpp">
       <Filter>Images</Filter>
+    </ClCompile>
+    <ClCompile Include="Compress\ZLib.cpp">
+      <Filter>Compress</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -257,6 +263,9 @@
     </ClInclude>
     <ClInclude Include="Images\Embedded\Cursor.h">
       <Filter>Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Compress\ZLib.h">
+      <Filter>Compress</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

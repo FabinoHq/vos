@@ -50,6 +50,7 @@
 
     #include "../System/SysMemory.h"
     #include "../System/SysCRC.h"
+    #include "../Compress/ZLib.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
