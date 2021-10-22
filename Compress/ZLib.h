@@ -43,9 +43,20 @@
 #define VOS_COMPRESS_ZLIB_HEADER
 
     #include <cstdint>
+    #include <cstring>
 
     #include "../System/SysCRC.h"
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  ZLib deflate block types enumeration                                  //
+    ////////////////////////////////////////////////////////////////////////////
+    enum ZLibDeflateBlockType
+    {
+        ZLIB_DEFLATE_BLOCK_UNCOMPRESSED = 0,
+        ZLIB_DEFLATE_BLOCK_STATIC_HUFFMAN = 1,
+        ZLIB_DEFLATE_BLOCK_DYNAMIC_HUFFMAN = 2
+    };
 
     ////////////////////////////////////////////////////////////////////////////
     //  Decompress ZLib deflate data                                          //
