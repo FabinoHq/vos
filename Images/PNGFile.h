@@ -214,6 +214,13 @@
             bool loadPNG32bits(std::ifstream& pngFile,
                 uint32_t width, uint32_t height);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Decode PNG scanlines data                                     //
+            //  return : True if PNG file scanlines are successfully decoded  //
+            ////////////////////////////////////////////////////////////////////
+            bool decodePNGscanlines(unsigned char* data,
+                uint32_t width, uint32_t height, uint32_t bpp);
+
 
         private:
             bool                m_loaded;       // Image loaded state

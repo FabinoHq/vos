@@ -585,114 +585,11 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
         return false;
     }
 
-    // Set image data
-    size_t inIndex = 0;
-    size_t outIndex = 0;
-    size_t scanlineSize = width*4;
-    for (uint32_t j = 0; j < height; ++j)
+    // Decode PNG scanlines
+    if (!decodePNGscanlines(decompData, width, height, 4))
     {
-        // Check scanline filter type
-        switch (decompData[inIndex++])
-        {
-            case PNGFILE_FILTER_NONE:
-            {
-                // No filter
-                memcpy(&m_image[outIndex], &decompData[inIndex], scanlineSize);
-                outIndex += scanlineSize;
-                inIndex += scanlineSize;
-                break;
-            }
-            case PNGFILE_FILTER_SUB:
-            {
-                // Sub filter
-                size_t prevIndex = inIndex;
-                memcpy(&m_image[outIndex], &decompData[inIndex], 4);
-                inIndex += 4;
-                outIndex += 4;
-                for (size_t i = 4; i < scanlineSize; ++i)
-                {
-                    m_image[outIndex++] =
-                        (decompData[inIndex++] += decompData[prevIndex++]);
-                }
-                break;
-            }
-            case PNGFILE_FILTER_UP:
-            {
-                // Up filter
-                size_t prevIndex = inIndex-scanlineSize-1;
-                bool firstLine = false;
-                unsigned char prevData = 0;
-                if (j <= 0) firstLine = true;
-                for (size_t i = 0; i < scanlineSize; ++i)
-                {
-                    if (!firstLine) prevData = decompData[prevIndex];
-                    m_image[outIndex++] = (decompData[inIndex++] += prevData);
-                    ++prevIndex;
-                }
-                break;
-            }
-            case PNGFILE_FILTER_AVERAGE:
-            {
-                // Average filter
-                size_t prevIndex = inIndex-scanlineSize-1;
-                size_t prevIndex2 = inIndex;
-                bool firstLine = false;
-                unsigned char prevData = 0;
-                if (j <= 0) firstLine = true;
-                for (size_t i = 0; i < 4; ++i)
-                {
-                    if (!firstLine) prevData = (decompData[prevIndex]/2);
-                    m_image[outIndex++] = (decompData[inIndex++] += prevData);
-                    ++prevIndex;
-                }
-                for (size_t i = 0; i < scanlineSize-4; ++i)
-                {
-                    if (!firstLine) prevData = decompData[prevIndex];
-                    m_image[outIndex++] = (decompData[inIndex++] +=
-                        ((prevData + decompData[prevIndex2++])/2));
-                    ++prevIndex;
-                }
-                break;
-            }
-            case PNGFILE_FILTER_PAETH:
-            {
-                // Paeth multibyte filter
-                size_t prevIndex = inIndex-scanlineSize-1;
-                size_t prevIndex2 = prevIndex;
-                size_t prevIndex3 = inIndex;
-                bool firstLine = false;
-                unsigned char currentData = 0;
-                unsigned char prevData = 0;
-                unsigned char prevData2 = 0;
-                int p = 0, pa = 0, pb = 0, pc = 0;
-                for (size_t i = 0; i < 4; ++i)
-                {
-                    if (!firstLine) prevData = decompData[prevIndex];
-                    m_image[outIndex++] = (decompData[inIndex++] += prevData);
-                    ++prevIndex;
-                }
-                for (size_t i = 0; i < scanlineSize-4; ++i)
-                {
-                    currentData = decompData[prevIndex3++];
-                    if (!firstLine) prevData = decompData[prevIndex];
-                    prevData2 = decompData[prevIndex2++];
-                    p = prevData - prevData2;
-                    pc = currentData - prevData2;
-                    pa = (p < 0) ? -p : p;
-                    pb = (pc < 0) ? -pc : pc;
-                    pc = ((p + pc) < 0) ? -(p + pc) : (p + pc);
-                    if (pb < pa) { pa = pb; currentData = prevData; }
-                    if (pc < pa) { currentData = prevData2; }
-                    m_image[outIndex++] =
-                        (decompData[inIndex++] += currentData);
-                    ++prevIndex;
-                }
-                break;
-            }
-            default:
-                // Invalid filter type
-                return false;
-        }
+        // Could not decode PNG scanlines
+        return false;
     }
 
     // Destroy decompressed data
@@ -713,4 +610,120 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
 
     // PNG file image data is successfully loaded
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Decode PNG scanlines data                                                 //
+//  return : True if PNG file scanlines are successfully decoded              //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::decodePNGscanlines(unsigned char* data,
+    uint32_t width, uint32_t height, uint32_t bpp)
+{
+    size_t inIndex = 0;
+    size_t outIndex = 0;
+    size_t scanlineSize = width*bpp;
+    for (uint32_t j = 0; j < height; ++j)
+    {
+        // Check scanline filter type
+        switch (data[inIndex++])
+        {
+            case PNGFILE_FILTER_NONE:
+            {
+                // No filter
+                memcpy(&m_image[outIndex], &data[inIndex], scanlineSize);
+                outIndex += scanlineSize;
+                inIndex += scanlineSize;
+                break;
+            }
+            case PNGFILE_FILTER_SUB:
+            {
+                // Sub filter
+                size_t prevIndex = inIndex;
+                memcpy(&m_image[outIndex], &data[inIndex], bpp);
+                inIndex += bpp;
+                outIndex += bpp;
+                for (size_t i = bpp; i < scanlineSize; ++i)
+                {
+                    m_image[outIndex++] =
+                        (data[inIndex++] += data[prevIndex++]);
+                }
+                break;
+            }
+            case PNGFILE_FILTER_UP:
+            {
+                // Up filter
+                size_t prevIndex = inIndex-scanlineSize-1;
+                bool firstLine = false;
+                unsigned char prevData = 0;
+                if (j <= 0) firstLine = true;
+                for (size_t i = 0; i < scanlineSize; ++i)
+                {
+                    if (!firstLine) prevData = data[prevIndex];
+                    m_image[outIndex++] = (data[inIndex++] += prevData);
+                    ++prevIndex;
+                }
+                break;
+            }
+            case PNGFILE_FILTER_AVERAGE:
+            {
+                // Average filter
+                size_t prevIndex = inIndex-scanlineSize-1;
+                size_t prevIndex2 = inIndex;
+                bool firstLine = false;
+                unsigned char prevData = 0;
+                if (j <= 0) firstLine = true;
+                for (size_t i = 0; i < bpp; ++i)
+                {
+                    if (!firstLine) prevData = (data[prevIndex]/2);
+                    m_image[outIndex++] = (data[inIndex++] += prevData);
+                    ++prevIndex;
+                }
+                for (size_t i = 0; i < scanlineSize-bpp; ++i)
+                {
+                    if (!firstLine) prevData = data[prevIndex];
+                    m_image[outIndex++] = (data[inIndex++] +=
+                        ((prevData + data[prevIndex2++])/2));
+                    ++prevIndex;
+                }
+                break;
+            }
+            case PNGFILE_FILTER_PAETH:
+            {
+                // Paeth multibyte filter
+                size_t prevIndex = inIndex-scanlineSize-1;
+                size_t prevIndex2 = prevIndex;
+                size_t prevIndex3 = inIndex;
+                bool firstLine = false;
+                unsigned char currentData = 0;
+                unsigned char prevData = 0;
+                unsigned char prevData2 = 0;
+                int p = 0, pa = 0, pb = 0, pc = 0;
+                for (size_t i = 0; i < bpp; ++i)
+                {
+                    if (!firstLine) prevData = data[prevIndex];
+                    m_image[outIndex++] = (data[inIndex++] += prevData);
+                    ++prevIndex;
+                }
+                for (size_t i = 0; i < scanlineSize-bpp; ++i)
+                {
+                    currentData = data[prevIndex3++];
+                    if (!firstLine) prevData = data[prevIndex];
+                    prevData2 = data[prevIndex2++];
+                    p = prevData - prevData2;
+                    pc = currentData - prevData2;
+                    pa = (p < 0) ? -p : p;
+                    pb = (pc < 0) ? -pc : pc;
+                    pc = ((p + pc) < 0) ? -(p + pc) : (p + pc);
+                    if (pb < pa) { pa = pb; currentData = prevData; }
+                    if (pc < pa) { currentData = prevData2; }
+                    m_image[outIndex++] = (data[inIndex++] += currentData);
+                    ++prevIndex;
+                }
+                break;
+            }
+            default:
+                // Invalid filter type
+                return false;
+        }
+    }
 }
