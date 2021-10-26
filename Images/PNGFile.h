@@ -208,18 +208,25 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Load 32bits PNG file image data                               //
+            //  Load PNG file image data                                      //
             //  return : True if PNG file image data is successfully loaded   //
             ////////////////////////////////////////////////////////////////////
-            bool loadPNG32bits(std::ifstream& pngFile,
+            bool loadPNGData(std::ifstream& pngFile,
+                PNGFileIHDRChunk& pngIHDRChunk);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Decode PNG 32 bits data                                       //
+            //  return : True if PNG 32 bits data are successfully decoded    //
+            ////////////////////////////////////////////////////////////////////
+            bool decodePNG32bits(unsigned char* data,
                 uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Decode PNG scanlines data                                     //
-            //  return : True if PNG file scanlines are successfully decoded  //
+            //  Decode PNG 24 bits data                                       //
+            //  return : True if PNG 24 bits data are successfully decoded    //
             ////////////////////////////////////////////////////////////////////
-            bool decodePNGscanlines(unsigned char* data,
-                uint32_t width, uint32_t height, uint32_t bpp);
+            bool decodePNG24bits(unsigned char* data,
+                uint32_t width, uint32_t height);
 
 
         private:

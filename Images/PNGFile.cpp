@@ -274,33 +274,11 @@ bool PNGFile::loadImage(const std::string& filepath)
         return false;
     }
 
-    // Check PNG file color type
-    switch (pngIHDRChunk.colorType)
+    // Load PNG file image data
+    if (!loadPNGData(pngFile, pngIHDRChunk))
     {
-        case PNGFILE_COLOR_GREYSCALE:
-            // Unsupported PNG file color type
-            return false;
-        case PNGFILE_COLOR_RGB:
-            // Unsupported PNG file color type
-            return false;
-        case PNGFILE_COLOR_PALETTE:
-            // Unsupported PNG file color type
-            return false;
-        case PNGFILE_COLOR_GREYSCALE_ALPHA:
-            // Unsupported PNG file color type
-            return false;
-        case PNGFILE_COLOR_RGBA:
-            // Load 32bits RGBA PNG
-            if (!loadPNG32bits(pngFile,
-                pngIHDRChunk.width, pngIHDRChunk.height))
-            {
-                // Could not load 32bits RGBA PNG
-                return false;
-            }
-            break;
-        default:
-            // Unsupported PNG file color type
-            return false;
+        // Could not load PNG image data
+        return false;
     }
 
     // Close PNG file
@@ -439,12 +417,36 @@ bool PNGFile::savePNGImage(const std::string& filepath,
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Load 32bits PNG file image data                                           //
+//  Load PNG file image data                                                  //
 //  return : True if PNG file image data is successfully loaded               //
 ////////////////////////////////////////////////////////////////////////////////
-bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
-    uint32_t width, uint32_t height)
+bool PNGFile::loadPNGData(std::ifstream& pngFile,
+    PNGFileIHDRChunk& pngIHDRChunk)
 {
+    // Set pixel depth
+    uint32_t pixelDepth = 0;
+    switch (pngIHDRChunk.colorType)
+    {
+        case PNGFILE_COLOR_GREYSCALE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGB:
+            pixelDepth = 3;
+            break;
+        case PNGFILE_COLOR_PALETTE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_GREYSCALE_ALPHA:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGBA:
+            pixelDepth = 4;
+            break;
+        default:
+            // Unsupported PNG file color type
+            return false;
+    }
+
     // Read PNG file IDAT chunk header
     PNGFileChunkHeader pngIDATChunkHeader = {0, {0, 0, 0, 0}};
     bool pngIDATChunkFound = false;
@@ -533,11 +535,12 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
     }
 
     // Allocate decompressed data
-    size_t decompDataSize = (width*height*4)+height;
-    unsigned char* decompData = 0;
+    size_t pngDataSize =
+        (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
+    unsigned char* pngData = 0;
     try
     {
-        decompData = new unsigned char[decompDataSize];
+        pngData = new unsigned char[pngDataSize];
     }
     catch (const std::bad_alloc&)
     {
@@ -549,7 +552,7 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
         // Could not allocate decompressed data
         return false;
     }
-    if (!decompData)
+    if (!pngData)
     {
         // Invalid decompressed data
         return false;
@@ -557,14 +560,14 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
 
     // Decompress deflate data
     if (!ZLibDeflateDecompress(
-        rawData, pngIDATChunkHeader.length, decompData, decompDataSize))
+        rawData, pngIDATChunkHeader.length, pngData, pngDataSize))
     {
         // Could not decompress deflate data
         return false;
     }
 
     // Allocate image data
-    size_t imageSize = width*height*4;
+    size_t imageSize = pngIHDRChunk.width*pngIHDRChunk.height*4;
     try
     {
         m_image = new unsigned char[imageSize];
@@ -585,17 +588,45 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
         return false;
     }
 
-    // Decode PNG scanlines
-    if (!decodePNGscanlines(decompData, width, height, 4))
+    // Decode PNG image data
+    switch (pngIHDRChunk.colorType)
     {
-        // Could not decode PNG scanlines
-        return false;
+        case PNGFILE_COLOR_GREYSCALE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGB:
+            // Decode 24 bits RGBA PNG
+            if (!decodePNG24bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height))
+            {
+                // Could not decode 24 bits RGBA PNG
+                return false;
+            }
+            break;
+        case PNGFILE_COLOR_PALETTE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_GREYSCALE_ALPHA:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGBA:
+            // Decode 32 bits RGBA PNG
+            if (!decodePNG32bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height))
+            {
+                // Could not decode 32 bits RGBA PNG
+                return false;
+            }
+            break;
+        default:
+            // Unsupported PNG file color type
+            return false;
     }
 
     // Destroy decompressed data
-    if (decompData)
+    if (pngData)
     {
-        delete[] decompData;
+        delete[] pngData;
     }
 
     // Destroy raw image data
@@ -605,23 +636,23 @@ bool PNGFile::loadPNG32bits(std::ifstream& pngFile,
     }
 
     // Set image size
-    m_width = width;
-    m_height = height;
+    m_width = pngIHDRChunk.width;
+    m_height = pngIHDRChunk.height;
 
     // PNG file image data is successfully loaded
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Decode PNG scanlines data                                                 //
-//  return : True if PNG file scanlines are successfully decoded              //
+//  Decode PNG 32 bits data                                                   //
+//  return : True if PNG 32 bits data are successfully decoded                //
 ////////////////////////////////////////////////////////////////////////////////
-bool PNGFile::decodePNGscanlines(unsigned char* data,
-    uint32_t width, uint32_t height, uint32_t bpp)
+bool PNGFile::decodePNG32bits(unsigned char* data,
+    uint32_t width, uint32_t height)
 {
     size_t inIndex = 0;
     size_t outIndex = 0;
-    size_t scanlineSize = width*bpp;
+    size_t scanlineSize = width*4;
     for (uint32_t j = 0; j < height; ++j)
     {
         // Check scanline filter type
@@ -639,10 +670,14 @@ bool PNGFile::decodePNGscanlines(unsigned char* data,
             {
                 // Sub filter
                 size_t prevIndex = inIndex;
-                memcpy(&m_image[outIndex], &data[inIndex], bpp);
-                inIndex += bpp;
-                outIndex += bpp;
-                for (size_t i = bpp; i < scanlineSize; ++i)
+
+                // Copy first pixel
+                memcpy(&m_image[outIndex], &data[inIndex], 4);
+                inIndex += 4;
+                outIndex += 4;
+
+                // Decode sub filtered scanline
+                for (size_t i = 4; i < scanlineSize; ++i)
                 {
                     m_image[outIndex++] =
                         (data[inIndex++] += data[prevIndex++]);
@@ -656,6 +691,8 @@ bool PNGFile::decodePNGscanlines(unsigned char* data,
                 bool firstLine = false;
                 unsigned char prevData = 0;
                 if (j <= 0) firstLine = true;
+
+                // Decode up filtered scanline
                 for (size_t i = 0; i < scanlineSize; ++i)
                 {
                     if (!firstLine) prevData = data[prevIndex];
@@ -672,13 +709,17 @@ bool PNGFile::decodePNGscanlines(unsigned char* data,
                 bool firstLine = false;
                 unsigned char prevData = 0;
                 if (j <= 0) firstLine = true;
-                for (size_t i = 0; i < bpp; ++i)
+
+                // Decode first pixel (up filtered)
+                for (size_t i = 0; i < 4; ++i)
                 {
                     if (!firstLine) prevData = (data[prevIndex]/2);
                     m_image[outIndex++] = (data[inIndex++] += prevData);
                     ++prevIndex;
                 }
-                for (size_t i = 0; i < scanlineSize-bpp; ++i)
+
+                // Decode avarage filtered scanline
+                for (size_t i = 0; i < scanlineSize-4; ++i)
                 {
                     if (!firstLine) prevData = data[prevIndex];
                     m_image[outIndex++] = (data[inIndex++] +=
@@ -698,13 +739,17 @@ bool PNGFile::decodePNGscanlines(unsigned char* data,
                 unsigned char prevData = 0;
                 unsigned char prevData2 = 0;
                 int p = 0, pa = 0, pb = 0, pc = 0;
-                for (size_t i = 0; i < bpp; ++i)
+
+                // Decode first pixel
+                for (size_t i = 0; i < 4; ++i)
                 {
                     if (!firstLine) prevData = data[prevIndex];
                     m_image[outIndex++] = (data[inIndex++] += prevData);
                     ++prevIndex;
                 }
-                for (size_t i = 0; i < scanlineSize-bpp; ++i)
+
+                // Decode paeth filtered scanline
+                for (size_t i = 0; i < scanlineSize-4; ++i)
                 {
                     currentData = data[prevIndex3++];
                     if (!firstLine) prevData = data[prevIndex];
@@ -726,4 +771,170 @@ bool PNGFile::decodePNGscanlines(unsigned char* data,
                 return false;
         }
     }
+
+    // PNG 32 bits data are successfully decoded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Decode PNG 24 bits data                                                   //
+//  return : True if PNG 24 bits data are successfully decoded                //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::decodePNG24bits(unsigned char* data,
+    uint32_t width, uint32_t height)
+{
+    size_t inIndex = 0;
+    size_t outIndex = 0;
+    size_t scanlineSize = width*3;
+    size_t alphaMod = 0;
+    for (uint32_t j = 0; j < height; ++j)
+    {
+        // Check scanline filter type
+        switch (data[inIndex++])
+        {
+            case PNGFILE_FILTER_NONE:
+            {
+                // No filter
+                alphaMod = 0;
+
+                // Decode unfiltered scanline
+                for (size_t i = 0; i < scanlineSize; ++i)
+                {
+                    // RGB channels
+                    m_image[outIndex++] = data[inIndex++];
+                    // Alpha channel
+                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                }
+                break;
+            }
+            case PNGFILE_FILTER_SUB:
+            {
+                // Sub filter
+                size_t prevIndex = inIndex;
+
+                // Copy first pixel
+                memcpy(&m_image[outIndex], &data[inIndex], 3);
+                inIndex += 3;
+                outIndex += 3;
+                // Add first pixel alpha channel
+                m_image[outIndex++] = 255;
+                alphaMod = 0;
+
+                // Decode sub filtered scanline
+                for (size_t i = 3; i < scanlineSize; ++i)
+                {
+                    // RGB channels
+                    m_image[outIndex++] =
+                        (data[inIndex++] += data[prevIndex++]);
+                    // Alpha channel
+                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                }
+                break;
+            }
+            case PNGFILE_FILTER_UP:
+            {
+                // Up filter
+                size_t prevIndex = inIndex-scanlineSize-1;
+                bool firstLine = false;
+                unsigned char prevData = 0;
+                if (j <= 0) firstLine = true;
+                alphaMod = 0;
+
+                // Decode up filtered scanline
+                for (size_t i = 0; i < scanlineSize; ++i)
+                {
+                    // RGB channels
+                    if (!firstLine) prevData = data[prevIndex];
+                    m_image[outIndex++] = (data[inIndex++] += prevData);
+                    ++prevIndex;
+                    // Alpha channel
+                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                }
+                break;
+            }
+            case PNGFILE_FILTER_AVERAGE:
+            {
+                // Average filter
+                size_t prevIndex = inIndex-scanlineSize-1;
+                size_t prevIndex2 = inIndex;
+                bool firstLine = false;
+                unsigned char prevData = 0;
+                if (j <= 0) firstLine = true;
+
+                // Decode first pixel (up filtered)
+                for (size_t i = 0; i < 3; ++i)
+                {
+                    if (!firstLine) prevData = (data[prevIndex]/2);
+                    m_image[outIndex++] = (data[inIndex++] += prevData);
+                    ++prevIndex;
+                }
+                // Add first pixel alpha channel
+                m_image[outIndex++] = 255;
+                alphaMod = 0;
+
+                // Decode average filtered scanline
+                for (size_t i = 0; i < scanlineSize-3; ++i)
+                {
+                    // RGB channels
+                    if (!firstLine) prevData = data[prevIndex];
+                    m_image[outIndex++] = (data[inIndex++] +=
+                        ((prevData + data[prevIndex2++])/2));
+                    ++prevIndex;
+                    // Alpha channel
+                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                }
+                break;
+            }
+            case PNGFILE_FILTER_PAETH:
+            {
+                // Paeth multibyte filter
+                size_t prevIndex = inIndex-scanlineSize-1;
+                size_t prevIndex2 = prevIndex;
+                size_t prevIndex3 = inIndex;
+                bool firstLine = false;
+                unsigned char currentData = 0;
+                unsigned char prevData = 0;
+                unsigned char prevData2 = 0;
+                int p = 0, pa = 0, pb = 0, pc = 0;
+
+                // Decode first pixel
+                for (size_t i = 0; i < 3; ++i)
+                {
+                    if (!firstLine) prevData = data[prevIndex];
+                    m_image[outIndex++] = (data[inIndex++] += prevData);
+                    ++prevIndex;
+                }
+                // Add first pixel alpha channel
+                m_image[outIndex++] = 255;
+                alphaMod = 0;
+
+                // Decode paeth filtered scanline
+                for (size_t i = 0; i < scanlineSize-3; ++i)
+                {
+                    // RGB channels
+                    currentData = data[prevIndex3++];
+                    if (!firstLine) prevData = data[prevIndex];
+                    prevData2 = data[prevIndex2++];
+                    p = prevData - prevData2;
+                    pc = currentData - prevData2;
+                    pa = (p < 0) ? -p : p;
+                    pb = (pc < 0) ? -pc : pc;
+                    pc = ((p + pc) < 0) ? -(p + pc) : (p + pc);
+                    if (pb < pa) { pa = pb; currentData = prevData; }
+                    if (pc < pa) { currentData = prevData2; }
+                    m_image[outIndex++] = (data[inIndex++] += currentData);
+                    ++prevIndex;
+                    // Alpha channel
+                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                }
+                break;
+            }
+            default:
+                // Invalid filter type
+                return false;
+        }
+    }
+
+    // PNG 24 bits data are successfully decoded
+    return true;
 }
