@@ -595,11 +595,11 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             // Unsupported PNG file color type
             return false;
         case PNGFILE_COLOR_RGB:
-            // Decode 24 bits RGBA PNG
+            // Decode 24 bits RGB PNG
             if (!decodePNG24bits(
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
-                // Could not decode 24 bits RGBA PNG
+                // Could not decode 24 bits RGB PNG
                 return false;
             }
             break;
