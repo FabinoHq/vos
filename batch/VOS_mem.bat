@@ -1,2 +1,2 @@
-"C:\Program Files (x86)\DrMemory\bin64\drmemory.exe" ..\x64\Release\VOS.exe
+"C:\Program Files (x86)\Dr. Memory\bin64\drmemory.exe" ..\x64\Release\VOS.exe
 pause
