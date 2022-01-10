@@ -60,6 +60,7 @@
     #include "Shader.h"
     #include "Texture.h"
     #include "View.h"
+    #include "Camera.h"
     #include "Sprite.h"
     #include "ProcSprite.h"
     #include "../Math/Math.h"
@@ -160,6 +161,12 @@
             ////////////////////////////////////////////////////////////////////
             bool setView(View& view);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set renderer camera                                           //
+            //  return : True if the camera is successfully set               //
+            ////////////////////////////////////////////////////////////////////
+            bool setCamera(Camera& camera);
+
 
             ////////////////////////////////////////////////////////////////////
             //  Get renderer ready state                                      //
@@ -252,6 +259,7 @@
             friend class        Shader;                 // Shader has access
             friend class        Texture;                // Texture has access
             friend class        View;                   // View has access
+            friend class        Camera;                 // Camera has access
             friend class        Sprite;                 // Sprite has access
             friend class        ProcSprite;             // ProcSprite has access
             friend class        Rect;                   // Rect has access

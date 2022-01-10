@@ -852,6 +852,24 @@ bool Renderer::setView(View& view)
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Set renderer camera                                                       //
+//  return : True if the camera is successfully set                           //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::setCamera(Camera& camera)
+{
+    // Bind camera
+    if (!camera.bind(*this))
+    {
+        // Could not bind view
+        m_rendererReady = false;
+        return false;
+    }
+
+    // Camera successfully set
+    return true;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get renderer ready state                                                  //

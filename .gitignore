@@ -105,6 +105,8 @@
 !Renderer/Texture.cpp
 !Renderer/View.h
 !Renderer/View.cpp
+!Renderer/Camera.h
+!Renderer/Camera.cpp
 !Renderer/Sprite.h
 !Renderer/Sprite.cpp
 !Renderer/ProcSprite.h

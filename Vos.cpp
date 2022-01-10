@@ -51,6 +51,8 @@ m_window(),
 m_renderer(),
 m_texture(),
 m_cursor(),
+m_view(),
+m_camera(),
 m_procsprite(),
 m_rect(),
 m_oval(),
@@ -110,6 +112,22 @@ bool Vos::launch()
         // Could not init test sprite
         return false;
     }
+
+
+    // Init view
+    if (!m_view.init(m_renderer))
+    {
+        // Could not init view
+        return false;
+    }
+
+    // Init camera
+    if (!m_camera.init(m_renderer))
+    {
+        // Could not init camera
+        return false;
+    }
+
 
     // Init procedural sprite
     if (!m_procsprite.init(m_renderer, 0, 0, 1.0f, 1.0f))
@@ -208,10 +226,19 @@ void Vos::run()
             m_rect.setPosition(-0.5f, -0.5f);
             m_rect.render(m_renderer);*/
 
+            // Set camera
+            m_camera.setZ(-1.0f);
+            m_renderer.setCamera(m_camera);
+
+            //m_renderer.setView(m_view);
+
             // Draw ellipse
             m_oval.setSize(1.0f, 1.0f);
             m_oval.setPosition(-0.5f, -0.5f);
             m_oval.render(m_renderer);
+
+            // Set default screen view
+            m_renderer.setDefaultView();
 
             // Draw cursor
             m_cursor.setSize(cursorSize, cursorSize);

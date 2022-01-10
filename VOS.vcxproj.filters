@@ -125,6 +125,7 @@
     <ClCompile Include="Compress\ZLib.cpp">
       <Filter>Compress</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -267,5 +268,6 @@
     <ClInclude Include="Compress\ZLib.h">
       <Filter>Compress</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Camera.h" />
   </ItemGroup>
 </Project>

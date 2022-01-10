@@ -47,6 +47,8 @@
     #include "System/SysMemory.h"
     #include "System/SysWindow.h"
     #include "Renderer/Renderer.h"
+    #include "Renderer/View.h"
+    #include "Renderer/Camera.h"
     #include "Renderer/Sprite.h"
     #include "Renderer/ProcSprite.h"
     #include "Renderer/Shapes/Rect.h"
@@ -104,6 +106,10 @@
             Renderer        m_renderer;     // VOS renderer
             Texture         m_texture;      // Cursor texture
             Sprite          m_cursor;       // Cursor sprite
+
+            View            m_view;         // View
+            Camera          m_camera;       // Camera
+
             ProcSprite      m_procsprite;   // Procedural sprite
             Rect            m_rect;         // Rect shape
             Oval            m_oval;         // Oval shape
