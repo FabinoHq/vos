@@ -54,7 +54,7 @@
         const double DoubleEpsilon = 5.0e-16;
 
         // Pi constants
-        const float Pi = 3.141592653589793238462643383279502884197169f;
+        const float Pi = 3.1415926535897932384626433832795f;
         const float TwoPi = Pi*2.0f;
         const float TwoPiThree = (Pi*2.0f)/3.0f;
         const float PiTwo = Pi*0.5f;
@@ -63,6 +63,9 @@
         const float PiEight = Pi*0.125f;
         const float DegToRad = Pi/180.0f;
         const float RadToDeg = 180.0f/Pi;
+
+        const float SqrtTwo = 1.4142135623730950488016887242097f;
+        const float OneSqrtTwo = 0.7071067811865475244008443621048f;
 
 
         ////////////////////////////////////////////////////////////////////////

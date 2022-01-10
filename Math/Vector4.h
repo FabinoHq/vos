@@ -162,15 +162,63 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Linear interpolation                                          //
+            ////////////////////////////////////////////////////////////////////
+            inline void linearInterp(Vector4& v1, Vector4& v2, float t)
+            {
+                vec[0] = v1.vec[0] + t*(v2.vec[0]-v1.vec[0]);
+                vec[1] = v1.vec[1] + t*(v2.vec[1]-v1.vec[1]);
+                vec[2] = v1.vec[2] + t*(v2.vec[2]-v1.vec[2]);
+                vec[3] = v1.vec[3] + t*(v2.vec[3]-v1.vec[3]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Cubic interpolation                                           //
+            ////////////////////////////////////////////////////////////////////
+            inline void cubicInterp(Vector4& v1, Vector4& v2, float t)
+            {
+                vec[0] = v1.vec[0] + (t*t*(3.0f-2.0f*t))*(v2.vec[0]-v1.vec[0]);
+                vec[1] = v1.vec[1] + (t*t*(3.0f-2.0f*t))*(v2.vec[1]-v1.vec[1]);
+                vec[2] = v1.vec[2] + (t*t*(3.0f-2.0f*t))*(v2.vec[2]-v1.vec[2]);
+                vec[3] = v1.vec[3] + (t*t*(3.0f-2.0f*t))*(v2.vec[3]-v1.vec[3]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Hermit interpolation                                          //
+            ////////////////////////////////////////////////////////////////////
+            inline void hermitInterp(
+                Vector4& v0, Vector4& v1, Vector4& v2, Vector4& v3, float t)
+            {
+                vec[0] = Math::hermitInterp(
+                    v0.vec[0], v1.vec[0], v2.vec[0], v3.vec[0], t
+                );
+                vec[1] = Math::hermitInterp(
+                    v0.vec[1], v1.vec[1], v2.vec[1], v3.vec[1], t
+                );
+                vec[2] = Math::hermitInterp(
+                    v0.vec[2], v1.vec[2], v2.vec[2], v3.vec[2], t
+                );
+                vec[3] = Math::hermitInterp(
+                    v0.vec[3], v1.vec[3], v2.vec[3], v3.vec[3], t
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  dotProduct : Get the dot product of this vector and another   //
+            ////////////////////////////////////////////////////////////////////
+            inline float dotProduct(Vector4& v)
+            {
+                return (vec[0]*v.vec[0] + vec[1]*v.vec[1] +
+                    vec[2]*v.vec[2] + vec[3]*v.vec[3]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Get Vector4 length                                            //
             ////////////////////////////////////////////////////////////////////
             inline float length()
             {
-                float result = std::sqrt(
-                    (vec[0]*vec[0])+(vec[1]*vec[1])+
-                    (vec[2]*vec[2])+(vec[3]*vec[3])
-                );
-                return result;
+                return std::sqrt((vec[0]*vec[0])+(vec[1]*vec[1])+
+                    (vec[2]*vec[2])+(vec[3]*vec[3]));
             }
 
             ////////////////////////////////////////////////////////////////////

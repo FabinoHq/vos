@@ -125,7 +125,12 @@
     <ClCompile Include="Compress\ZLib.cpp">
       <Filter>Compress</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Camera.cpp" />
+    <ClCompile Include="Renderer\Camera.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\FreeFlyCam.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -268,6 +273,11 @@
     <ClInclude Include="Compress\ZLib.h">
       <Filter>Compress</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Camera.h" />
+    <ClInclude Include="Renderer\Camera.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\FreeFlyCam.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

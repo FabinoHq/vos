@@ -61,6 +61,7 @@
     #include "Texture.h"
     #include "View.h"
     #include "Camera.h"
+    #include "FreeFlyCam.h"
     #include "Sprite.h"
     #include "ProcSprite.h"
     #include "../Math/Math.h"
@@ -260,6 +261,7 @@
             friend class        Texture;                // Texture has access
             friend class        View;                   // View has access
             friend class        Camera;                 // Camera has access
+            friend class        FreeFlyCam;             // FreeFlyCam has access
             friend class        Sprite;                 // Sprite has access
             friend class        ProcSprite;             // ProcSprite has access
             friend class        Rect;                   // Rect has access

@@ -132,6 +132,46 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Linear interpolation                                          //
+            ////////////////////////////////////////////////////////////////////
+            inline void linearInterp(Vector2& v1, Vector2& v2, float t)
+            {
+                vec[0] = v1.vec[0] + t*(v2.vec[0]-v1.vec[0]);
+                vec[1] = v1.vec[1] + t*(v2.vec[1]-v1.vec[1]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Cubic interpolation                                           //
+            ////////////////////////////////////////////////////////////////////
+            inline void cubicInterp(Vector2& v1, Vector2& v2, float t)
+            {
+                vec[0] = v1.vec[0] + (t*t*(3.0f-2.0f*t))*(v2.vec[0]-v1.vec[0]);
+                vec[1] = v1.vec[1] + (t*t*(3.0f-2.0f*t))*(v2.vec[1]-v1.vec[1]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Hermit interpolation                                          //
+            ////////////////////////////////////////////////////////////////////
+            inline void hermitInterp(
+                Vector2& v0, Vector2& v1, Vector2& v2, Vector2& v3, float t)
+            {
+                vec[0] = Math::hermitInterp(
+                    v0.vec[0], v1.vec[0], v2.vec[0], v3.vec[0], t
+                );
+                vec[1] = Math::hermitInterp(
+                    v0.vec[1], v1.vec[1], v2.vec[1], v3.vec[1], t
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get the dot product of this vector and another                //
+            ////////////////////////////////////////////////////////////////////
+            inline float dotProduct(Vector2& v)
+            {
+                return (vec[0]*v.vec[0] + vec[1]*v.vec[1]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Get Vector2 length                                            //
             ////////////////////////////////////////////////////////////////////
             inline float length()

@@ -140,6 +140,7 @@
     <ClCompile Include="Images\PNGFile.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
+    <ClCompile Include="Renderer\FreeFlyCam.cpp" />
     <ClCompile Include="Renderer\Pipeline.cpp" />
     <ClCompile Include="Renderer\ProcSprite.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Renderer\Camera.h" />
+    <ClInclude Include="Renderer\FreeFlyCam.h" />
     <ClInclude Include="Renderer\Pipeline.h" />
     <ClInclude Include="Renderer\ProcSprite.h" />
     <ClInclude Include="Renderer\Renderer.h" />

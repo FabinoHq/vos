@@ -59,7 +59,8 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
-	Renderer/View.o Renderer/Camera.o Renderer/Sprite.o Renderer/ProcSprite.o \
+	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
+	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
 	Renderer/Renderer.o
 
@@ -77,7 +78,8 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
-	Renderer/View.o Renderer/Camera.o Renderer/Sprite.o Renderer/ProcSprite.o \
+	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
+	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
@@ -176,6 +178,9 @@ Renderer/View.o: Renderer/View.cpp
 
 Renderer/Camera.o: Renderer/Camera.cpp
 	$(CC) -o Renderer/Camera.o -c Renderer/Camera.cpp $(CFLAGS)
+
+Renderer/FreeFlyCam.o: Renderer/FreeFlyCam.cpp
+	$(CC) -o Renderer/FreeFlyCam.o -c Renderer/FreeFlyCam.cpp $(CFLAGS)
 
 Renderer/Sprite.o: Renderer/Sprite.cpp
 	$(CC) -o Renderer/Sprite.o -c Renderer/Sprite.cpp $(CFLAGS)

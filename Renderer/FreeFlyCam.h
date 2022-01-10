@@ -37,87 +37,114 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Renderer/Camera.h : Free fly camera management                         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_RENDERER_FREEFLYCAM_HEADER
+#define VOS_RENDERER_FREEFLYCAM_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysMemory.h"
-    #include "System/SysWindow.h"
-    #include "Renderer/Renderer.h"
-    #include "Renderer/View.h"
-    #include "Renderer/Camera.h"
-    #include "Renderer/Sprite.h"
-    #include "Renderer/ProcSprite.h"
-    #include "Renderer/Shapes/Rect.h"
-    #include "Renderer/Shapes/Oval.h"
-    #include "Event.h"
+    #include <cstdint>
+    #include <cstring>
 
-    #include "Images/Embedded/Cursor.h"
-    #include "Images/BMPFile.h"
-    #include "Images/PNGFile.h"
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/UniformBuffer.h"
+    #include "../Math/Math.h"
+    #include "../Math/Vector3.h"
+    #include "../Math/Matrix4x4.h"
+
+    #include "Camera.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
+    //  Freefly camera default settings                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Vos
+    const float FreeflyCameraMouseFactor = 0.004f;
+    const float FreeflyCameraMinAngle = -(Math::PiTwo-0.001f);
+    const float FreeflyCameraMaxAngle = (Math::PiTwo-0.001f);
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  FreeFlyCam class definition                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    class FreeFlyCam : public Camera
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
+            //  FreeFlyCam default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Vos();
+            FreeFlyCam();
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
+            //  FreeFlyCam virtual destructor                                 //
             ////////////////////////////////////////////////////////////////////
-            ~Vos();
+            virtual ~FreeFlyCam();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
+            //  Compute freefly camera                                        //
             ////////////////////////////////////////////////////////////////////
-            bool launch();
+            virtual void compute(Renderer& renderer, float frametime);
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
+            //  Set freefly camera speed                                      //
             ////////////////////////////////////////////////////////////////////
-            void run();
+            void setSpeed(float speed);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set freefly camera forward key state                          //
+            ////////////////////////////////////////////////////////////////////
+            void setForward(bool forward);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set freefly camera backward key state                         //
+            ////////////////////////////////////////////////////////////////////
+            void setBackward(bool backward);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set freefly camera leftward key state                         //
+            ////////////////////////////////////////////////////////////////////
+            void setLeftward(bool leftward);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set freefly camera rightward key state                        //
+            ////////////////////////////////////////////////////////////////////
+            void setRightward(bool rightward);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle mouse move event                                       //
+            ////////////////////////////////////////////////////////////////////
+            void mouseMove(float mouseDx, float mouseDy);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
+            //  FreeFlyCam private copy constructor : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
+            FreeFlyCam(const FreeFlyCam&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
+            //  FreeFlyCam private copy operator : Not copyable               //
             ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
+            FreeFlyCam& operator=(const FreeFlyCam&) = delete;
+
 
         private:
-            bool            m_running;      // VOS running state
-            SysWindow       m_window;       // VOS main window
-            Renderer        m_renderer;     // VOS renderer
-            Texture         m_texture;      // Cursor texture
-            Sprite          m_cursor;       // Cursor sprite
+            Vector3     m_cross;        // Freeflycam cross product
 
-            View            m_view;         // View
-            Camera          m_camera;       // Camera
-            FreeFlyCam      m_freeflycam;   // Freefly camera
+            float       m_speed;        // Freeflycam speed
 
-            ProcSprite      m_procsprite;   // Procedural sprite
-            Rect            m_rect;         // Rect shape
-            Oval            m_oval;         // Oval shape
-
-            float           m_mouseX;       // Mouse X position
-            float           m_mouseY;       // Mouse Y position
+            bool        m_forward;      // Forward key state
+            bool        m_backward;     // Backward key state
+            bool        m_leftward;     // Leftward key state
+            bool        m_rightward;    // Rightward key state
     };
 
 
-#endif // VOS_VOS_HEADER
+#endif // VOS_RENDERER_FREEFLYCAM_HEADER

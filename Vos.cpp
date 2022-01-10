@@ -53,6 +53,7 @@ m_texture(),
 m_cursor(),
 m_view(),
 m_camera(),
+m_freeflycam(),
 m_procsprite(),
 m_rect(),
 m_oval(),
@@ -129,6 +130,15 @@ bool Vos::launch()
     }
     m_camera.setZ(1.0f);
 
+    // Init freefly camera
+    if (!m_freeflycam.init(m_renderer))
+    {
+        // Could not init freefly camera
+        return false;
+    }
+    m_freeflycam.setZ(1.0f);
+    m_freeflycam.setSpeed(10.0f);
+
 
     // Init procedural sprite
     if (!m_procsprite.init(m_renderer, 0, 0, 1.0f, 1.0f))
@@ -186,16 +196,20 @@ void Vos::run()
                 case EVENT_KEYPRESSED:
                     switch (event.key)
                     {
-                        case EVENT_KEY_UP:
+                        case EVENT_KEY_Z:
+                            m_freeflycam.setForward(true);
                             break;
 
-                        case EVENT_KEY_DOWN:
+                        case EVENT_KEY_S:
+                            m_freeflycam.setBackward(true);
                             break;
 
-                        case EVENT_KEY_LEFT:
+                        case EVENT_KEY_Q:
+                            m_freeflycam.setLeftward(true);
                             break;
 
-                        case EVENT_KEY_RIGHT:
+                        case EVENT_KEY_D:
+                            m_freeflycam.setRightward(true);
                             break;
 
                         default:
@@ -211,6 +225,22 @@ void Vos::run()
                             m_running = false;
                             break;
 
+                        case EVENT_KEY_Z:
+                            m_freeflycam.setForward(false);
+                            break;
+
+                        case EVENT_KEY_S:
+                            m_freeflycam.setBackward(false);
+                            break;
+
+                        case EVENT_KEY_Q:
+                            m_freeflycam.setLeftward(false);
+                            break;
+
+                        case EVENT_KEY_D:
+                            m_freeflycam.setRightward(false);
+                            break;
+
                         default:
                             break;
                     }
@@ -224,6 +254,9 @@ void Vos::run()
                     if (m_mouseX >= ratio) { m_mouseX = ratio; }
                     if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
                     if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
+                    m_freeflycam.mouseMove(
+                        event.mouse.x*1.0f, event.mouse.y*1.0f
+                    );
                     break;
 
                 default:
@@ -234,6 +267,7 @@ void Vos::run()
         // Compute frame
         m_view.compute(m_renderer);
         m_camera.compute(m_renderer);
+        m_freeflycam.compute(m_renderer, 0.001f);
 
         // Render frame
         if (m_renderer.startFrame())
@@ -243,9 +277,9 @@ void Vos::run()
             float cursorOffset = 2.0f*scale;
 
             // Set camera
+            //m_renderer.setView(m_view);
             //m_renderer.setCamera(m_camera);
-
-            m_renderer.setView(m_view);
+            m_renderer.setCamera(m_freeflycam);
 
             // Draw rectangle
             m_rect.setSize(1.0f, 1.0f);
