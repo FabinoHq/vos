@@ -66,6 +66,25 @@
 
 
         ////////////////////////////////////////////////////////////////////////
+        //  Get number sign (-1 or +1)                                        //
+        //  return : Sign of the number (-1 or +1)                            //
+        ////////////////////////////////////////////////////////////////////////
+        inline int sign(int x)
+        {
+            return (x >= 0) ? 1 : -1;
+        }
+
+        inline float sign(float x)
+        {
+            return (x >= 0.0f) ? 1.0f : -1.0f;
+        }
+
+        inline double sign(double x)
+        {
+            return (x >= 0.0) ? 1.0 : -1.0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Get the absolute value of x                                       //
         //  return : Absolute value of x                                      //
         ////////////////////////////////////////////////////////////////////////
@@ -114,17 +133,55 @@
         ////////////////////////////////////////////////////////////////////////
         inline int linearInterp(int x, int y, int t)
         {
-            return (1-t)*x + t*y;
+            return x + t*(y-x);
         }
 
         inline float linearInterp(float x, float y, float t)
         {
-            return (1.0f-t)*x + t*y;
+            return x + t*(y-x);
         }
 
         inline double linearInterp(double x, double y, double t)
         {
-            return (1.0-t)*x + t*y;
+            return x + t*(y-x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Cubic interpolation                                               //
+        //  return : Interpolated value                                       //
+        ////////////////////////////////////////////////////////////////////////
+        inline int cubicInterp(int x, int y, int t)
+        {
+            return x + (t*t*(3-2*t))*(y-x);
+        }
+
+        inline float cubicInterp(float x, float y, float t)
+        {
+            return x + (t*t*(3.0f-2.0f*t))*(y-x);
+        }
+
+        inline double cubicInterp(double x, double y, double t)
+        {
+            return x + (t*t*(3.0-2.0*t))*(y-x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Hermit interpolation                                              //
+        //  return : Interpolated value                                       //
+        ////////////////////////////////////////////////////////////////////////
+        inline float hermitInterp(float w, float x, float y, float z, float t)
+        {
+            return (x + (t*t*(3.0f-2.0f*t))*(y-x) +
+                (0.5f*(x-w)+0.5f*(y-x))*(t*t*t-2.0f*t*t+t) +
+                (0.5f*(y-x)+0.5f*(z-y))*(t*t*t-t*t));
+        }
+
+        inline double hermitInterp(
+            double w, double x, double y, double z, double t)
+        {
+            return (x + (t*t*(3.0-2.0*t))*(y-x) +
+                (0.5*(x-w)+0.5*(y-x))*(t*t*t-2.0*t*t+t) +
+                (0.5*(y-x)+0.5*(z-y))*(t*t*t-t*t));
         }
 
         ////////////////////////////////////////////////////////////////////////
