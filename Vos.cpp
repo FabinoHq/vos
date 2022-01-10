@@ -127,6 +127,7 @@ bool Vos::launch()
         // Could not init camera
         return false;
     }
+    m_camera.setZ(1.0f);
 
 
     // Init procedural sprite
@@ -230,6 +231,10 @@ void Vos::run()
             }
         }
 
+        // Compute frame
+        m_view.compute(m_renderer);
+        m_camera.compute(m_renderer);
+
         // Render frame
         if (m_renderer.startFrame())
         {
@@ -237,26 +242,25 @@ void Vos::run()
             float cursorSize = 64.0f*scale;
             float cursorOffset = 2.0f*scale;
 
+            // Set camera
+            //m_renderer.setCamera(m_camera);
+
+            m_renderer.setView(m_view);
+
+            // Draw rectangle
+            m_rect.setSize(1.0f, 1.0f);
+            m_rect.setPosition(-0.5f, -0.5f);
+            m_rect.render(m_renderer);
+
+            // Draw ellipse
+            /*m_oval.setSize(1.0f, 1.0f);
+            m_oval.setPosition(-0.5f, -0.5f);
+            m_oval.render(m_renderer);*/
+
             // Draw procedural sprite
             /*m_procsprite.setSize(1.0f, 1.0f);
             m_procsprite.setPosition(-0.5f, -0.5f);
             m_procsprite.render(m_renderer);*/
-
-            // Draw rectangle
-            /*m_rect.setSize(1.0f, 1.0f);
-            m_rect.setPosition(-0.5f, -0.5f);
-            m_rect.render(m_renderer);*/
-
-            // Set camera
-            m_camera.setZ(-1.0f);
-            m_renderer.setCamera(m_camera);
-
-            //m_renderer.setView(m_view);
-
-            // Draw ellipse
-            m_oval.setSize(1.0f, 1.0f);
-            m_oval.setPosition(-0.5f, -0.5f);
-            m_oval.render(m_renderer);
 
             // Set default screen view
             m_renderer.setDefaultView();

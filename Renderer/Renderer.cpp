@@ -822,6 +822,9 @@ void Renderer::bindOvalPipeline()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::setDefaultView()
 {
+    // Compute default view
+    m_view.compute(*this);
+
     // Bind default view
     if (!m_view.bind(*this))
     {

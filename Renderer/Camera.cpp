@@ -223,6 +223,36 @@ bool Camera::init(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Compute camera                                                            //
+////////////////////////////////////////////////////////////////////////////////
+void Camera::compute(Renderer& renderer)
+{
+    // Compute camera target
+    m_target.vec[0] = std::cos(m_angles.vec[0]);
+    m_target.vec[0] *= std::sin(m_angles.vec[1]);
+    m_target.vec[1] = std::sin(m_angles.vec[0]);
+    m_target.vec[2] = std::sin(m_angles.vec[0]);
+    m_target.vec[2] *= std::cos(m_angles.vec[1]);
+    m_target.normalize();
+
+    // Compute projection matrix
+    m_projMatrix.setPerspective(
+        m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
+    );
+
+    // Compute view matrix
+    m_viewMatrix.setIdentity();
+    m_viewMatrix.rotateX(-m_angles.vec[0]);
+    m_viewMatrix.rotateY(-m_angles.vec[1]);
+    m_viewMatrix.rotateZ(-m_angles.vec[2]);
+    m_viewMatrix.translate(-m_position);
+
+    // Compute projview matrix
+    m_projViewMatrix.set(m_projMatrix);
+    m_projViewMatrix *= m_viewMatrix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Bind camera                                                               //
 //  return : True if the camera is successfully binded                        //
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,30 +292,6 @@ bool Camera::bind(Renderer& renderer)
         // Invalid transfer queue
         return false;
     }
-
-    // Compute camera target
-    m_target.vec[0] = std::cos(m_angles.vec[0]);
-    m_target.vec[0] *= std::sin(m_angles.vec[1]);
-    m_target.vec[1] = std::sin(m_angles.vec[0]);
-    m_target.vec[2] = std::sin(m_angles.vec[0]);
-    m_target.vec[2] *= std::cos(m_angles.vec[1]);
-    m_target.normalize();
-
-    // Compute projection matrix
-    m_projMatrix.setPerspective(
-        m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
-    );
-
-    // Compute view matrix
-    m_viewMatrix.setIdentity();
-    m_viewMatrix.rotateX(m_angles.vec[0]);
-    m_viewMatrix.rotateY(m_angles.vec[1]);
-    m_viewMatrix.rotateZ(m_angles.vec[2]);
-    m_viewMatrix.translate(m_position);
-
-    // Compute projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_viewMatrix;
 
     // Copy matrices data into uniform data
     UniformData uniformData;

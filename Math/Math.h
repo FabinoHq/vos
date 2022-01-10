@@ -53,8 +53,16 @@
         // Double precision epsilon
         const double DoubleEpsilon = 5.0e-16;
 
-        // Pi constant
+        // Pi constants
         const float Pi = 3.141592653589793238462643383279502884197169f;
+        const float TwoPi = Pi*2.0f;
+        const float TwoPiThree = (Pi*2.0f)/3.0f;
+        const float PiTwo = Pi*0.5f;
+        const float PiThree = Pi/3.0f;
+        const float PiFour = Pi*0.25f;
+        const float PiEight = Pi*0.125f;
+        const float DegToRad = Pi/180.0f;
+        const float RadToDeg = 180.0f/Pi;
 
 
         ////////////////////////////////////////////////////////////////////////

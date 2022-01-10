@@ -204,6 +204,31 @@ bool View::init(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Compute view                                                              //
+////////////////////////////////////////////////////////////////////////////////
+void View::compute(Renderer& renderer)
+{
+    // Compute projection matrix
+    m_projMatrix.setOrthographic(
+        -renderer.m_swapchain.ratio, renderer.m_swapchain.ratio,
+        1.0f, -1.0f, -2.0f, 2.0f
+    );
+    m_projMatrix.translateZ(-1.0f);
+
+    // Compute view matrix
+    m_viewMatrix.setIdentity();
+    m_viewMatrix.translate(-m_position.vec[0], -m_position.vec[1]);
+    m_viewMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
+    m_viewMatrix.rotateZ(m_angle);
+    m_viewMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
+    m_viewMatrix.scale(m_size.vec[0], m_size.vec[1]);
+
+    // Compute projview matrix
+    m_projViewMatrix.set(m_projMatrix);
+    m_projViewMatrix *= m_viewMatrix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Bind view                                                                 //
 //  return : True if the view is successfully binded                          //
 ////////////////////////////////////////////////////////////////////////////////
@@ -223,13 +248,6 @@ bool View::bind(Renderer& renderer)
         return false;
     }
 
-    // Check swapchain handle
-    if (!renderer.m_swapchain.handle)
-    {
-        // Invalid swapchain handle
-        return false;
-    }
-
     // Check transfer commands pool
     if (!renderer.m_transferCommandPool)
     {
@@ -244,24 +262,12 @@ bool View::bind(Renderer& renderer)
         return false;
     }
 
-    // Compute projection matrix
-    m_projMatrix.setOrthographic(
-        -renderer.m_swapchain.ratio, renderer.m_swapchain.ratio,
-        1.0f, -1.0f, -2.0f, 2.0f
-    );
-    m_projMatrix.translateZ(-1.0f);
-
-    // Compute view matrix
-    m_viewMatrix.setIdentity();
-    m_viewMatrix.translate(m_position.vec[0], m_position.vec[1]);
-    m_viewMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
-    m_viewMatrix.rotateZ(m_angle);
-    m_viewMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
-    m_viewMatrix.scale(m_size.vec[0], m_size.vec[1]);
-
-    // Compute projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_viewMatrix;
+    // Check swapchain handle
+    if (!renderer.m_swapchain.handle)
+    {
+        // Invalid swapchain handle
+        return false;
+    }
 
     // Copy matrices data into uniform data
     UniformData uniformData;
