@@ -181,6 +181,27 @@ void Vos::run()
                     m_running = false;
                     break;
 
+                // Key pressed
+                case EVENT_KEYPRESSED:
+                    switch (event.key)
+                    {
+                        case EVENT_KEY_UP:
+                            break;
+
+                        case EVENT_KEY_DOWN:
+                            break;
+
+                        case EVENT_KEY_LEFT:
+                            break;
+
+                        case EVENT_KEY_RIGHT:
+                            break;
+
+                        default:
+                            break;
+                    }
+                    break;
+
                 // Key released
                 case EVENT_KEYRELEASED:
                     switch (event.key)
