@@ -304,9 +304,6 @@ void Sprite::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::render(Renderer& renderer)
 {
-    // Bind default pipeline
-    renderer.bindDefaultPipeline();
-
     // Bind sprite texture
     m_texture->bind(renderer);
 

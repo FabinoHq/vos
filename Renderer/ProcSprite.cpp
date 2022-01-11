@@ -317,13 +317,19 @@ void ProcSprite::setAlpha(float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind procedural sprite pipeline                                           //
+////////////////////////////////////////////////////////////////////////////////
+void ProcSprite::bindPipeline(Renderer& renderer)
+{
+    // Bind procedural sprite shader
+    m_pipeline.bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render procedural sprite                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 void ProcSprite::render(Renderer& renderer)
 {
-    // Bind procedural sprite shader
-    m_pipeline.bind(renderer);
-
     // Set procedural sprite model matrix
     m_modelMatrix.setIdentity();
     m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);

@@ -447,13 +447,10 @@ void StaticMesh::rotateZ(float angleZ)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render static mesh                                                        //
+//  Bind static mesh vertex buffer                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::render(Renderer& renderer)
+void StaticMesh::bindVertexBuffer(Renderer& renderer)
 {
-    // Bind default pipeline
-    renderer.bindStaticMeshPipeline();
-
     // Bind vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
@@ -465,7 +462,13 @@ void StaticMesh::render(Renderer& renderer)
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
     );
+}
 
+////////////////////////////////////////////////////////////////////////////////
+//  Render static mesh                                                        //
+////////////////////////////////////////////////////////////////////////////////
+void StaticMesh::render(Renderer& renderer)
+{
     // Bind static mesh texture
     m_texture->bind(renderer);
 

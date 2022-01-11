@@ -301,13 +301,12 @@ void Vos::run()
             float cursorSize = 64.0f*scale;
             float cursorOffset = 2.0f*scale;
 
-
-            // Set camera
-            //m_renderer.setView(m_view);
-            //m_renderer.setCamera(m_camera);
+            // Set freefly camera
             m_renderer.setCamera(m_freeflycam);
 
             // Render static mesh
+            m_renderer.bindStaticMeshPipeline();
+            m_staticmesh.bindVertexBuffer(m_renderer);
             m_staticmesh.render(m_renderer);
 
 
@@ -318,22 +317,26 @@ void Vos::run()
             m_renderer.bindDefaultVertexBuffer();
 
             // Render rectangle
-            /*m_rect.setSize(1.0f, 1.0f);
+            /*m_renderer.bindRectPipeline();
+            m_rect.setSize(1.0f, 1.0f);
             m_rect.setPosition(-0.5f, -0.5f);
             m_rect.render(m_renderer);*/
 
             // Render ellipse
-            /*m_oval.setSize(1.0f, 1.0f);
+            /*m_renderer.bindOvalPipeline();
+            m_oval.setSize(1.0f, 1.0f);
             m_oval.setPosition(-0.5f, -0.5f);
             m_oval.render(m_renderer);*/
 
             // Render procedural sprite
-            /*m_procsprite.setSize(1.0f, 1.0f);
+            /*m_procsprite.bindPipeline(m_renderer);
+            m_procsprite.setSize(1.0f, 1.0f);
             m_procsprite.setPosition(-0.5f, -0.5f);
             m_procsprite.render(m_renderer);*/
 
             // Draw cursor
-            /*m_cursor.setSize(cursorSize, cursorSize);
+            /*m_renderer.bindDefaultPipeline();
+            m_cursor.setSize(cursorSize, cursorSize);
             m_cursor.setPosition(
                 m_mouseX-cursorOffset, m_mouseY-cursorSize+cursorOffset
             );

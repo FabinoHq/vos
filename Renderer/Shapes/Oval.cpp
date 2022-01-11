@@ -274,9 +274,6 @@ void Oval::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 void Oval::render(Renderer& renderer)
 {
-    // Bind oval pipeline
-    renderer.bindOvalPipeline();
-
     // Set oval model matrix
     m_modelMatrix.setIdentity();
     m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
