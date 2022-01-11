@@ -166,7 +166,7 @@ bool Vos::launch()
 
     // Load mesh texture
     PNGFile pngfile;
-    if (!pngfile.loadImage("testtexture.png"))
+    if (!pngfile.loadImage("Textures/testsprite.png"))
     {
         return false;
     }
@@ -178,7 +178,8 @@ bool Vos::launch()
     pngfile.destroyImage();
 
     // Init static mesh
-    if (!m_staticmesh.init(m_renderer, m_testtexture))
+    if (!m_staticmesh.loadVMSH(
+        m_renderer, m_testtexture, "Models/testmodel.vmsh"))
     {
         // Could not init static mesh
         return false;

@@ -48,6 +48,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 StaticMesh::StaticMesh() :
 m_vertexBuffer(),
+m_indicesCount(0),
 m_texture(0),
 m_modelMatrix(),
 m_position(0.0f, 0.0f, 0.0f),
@@ -65,6 +66,7 @@ StaticMesh::~StaticMesh()
     m_position.reset();
     m_modelMatrix.reset();
     m_texture = 0;
+    m_indicesCount = 0;
 }
 
 
@@ -72,22 +74,18 @@ StaticMesh::~StaticMesh()
 //  Init static mesh                                                          //
 //  return : True if the static mesh is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool StaticMesh::init(Renderer& renderer, Texture& texture)
+bool StaticMesh::init(Renderer& renderer, Texture& texture,
+    const float* vertices, const uint16_t* indices,
+    uint32_t verticesCount, uint32_t indicesCount)
 {
-    float verts[] = {
-        0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f
-    };
-
     // Create vertex buffer
     if (!renderer.createVertexBuffer(
-        m_vertexBuffer, verts, DefaultIndices, 32, 6))
+        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
         return false;
     }
+    m_indicesCount = indicesCount;
 
     // Check texture handle
     if (!texture.isValid())
@@ -113,6 +111,133 @@ bool StaticMesh::init(Renderer& renderer, Texture& texture)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Load static mesh from VMSH file                                           //
+//  return : True if the static mesh is successfully loaded                   //
+////////////////////////////////////////////////////////////////////////////////
+bool StaticMesh::loadVMSH(Renderer& renderer,
+    Texture& texture, const std::string& filepath)
+{
+    // Init mesh data
+    float* vertices = 0;
+    uint16_t* indices = 0;
+    uint32_t verticesCount = 0;
+    uint32_t indicesCount = 0;
+
+    // Load mesh data from file
+    std::ifstream file;
+    file.open(filepath.c_str(), std::ios::in | std::ios::binary);
+    if (file.is_open())
+    {
+        // Read VMSH header
+        char header[4] = {0};
+        char majorVersion = 0;
+        char minorVersion = 0;
+        file.read(header, sizeof(char)*4);
+        file.read(&majorVersion, sizeof(char));
+        file.read(&minorVersion, sizeof(char));
+
+        // Check VMSH header
+        if ((header[0] != 'V') || (header[1] != 'M') ||
+            (header[2] != 'S') || (header[3] != 'H'))
+        {
+            // Invalid VMSH header
+            return false;
+        }
+
+        // Check VMSH version
+        if ((majorVersion != 1) || (minorVersion != 0))
+        {
+            // Invalid VMSH header
+            return false;
+        }
+
+        // Read VMSH file type
+        char type = 0;
+        file.read(&type, sizeof(char));
+        if (type != 0)
+        {
+            // Invalid VMSH type
+            return false;
+        }
+
+        // Read vertices and indices count
+        file.read((char*)&verticesCount, sizeof(uint32_t));
+        file.read((char*)&indicesCount, sizeof(uint32_t));
+        if ((verticesCount <= 0) || (indicesCount <= 0))
+        {
+            // Invalid vertices or indices count
+            return false;
+        }
+
+        // Allocate vertices and indices
+        try
+        {
+            vertices = new float[verticesCount];
+            indices = new uint16_t[indicesCount];
+        }
+        catch (const std::bad_alloc&)
+        {
+            vertices = 0;
+            indices = 0;
+        }
+        catch (...)
+        {
+            vertices = 0;
+            indices = 0;
+        }
+        if (!vertices || !indices)
+        {
+            // Invalid vertices or indices pointer
+            return false;
+        }
+
+        // Read vertices
+        file.read((char*)vertices, sizeof(float)*verticesCount);
+
+        // Read indices
+        file.read((char*)indices, sizeof(uint16_t)*indicesCount);
+
+        // Close file
+        file.close();
+    }
+
+    // Create vertex buffer
+    if (!renderer.createVertexBuffer(
+        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
+    {
+        // Could not create vertex buffer
+        return false;
+    }
+    m_indicesCount = indicesCount;
+
+    // Destroy mesh data
+    if (vertices) { delete[] vertices; }
+    if (indices) { delete[] indices; }
+
+    // Check texture handle
+    if (!texture.isValid())
+    {
+        // Invalid texture handle
+        return false;
+    }
+
+    // Set static mesh texture pointer
+    m_texture = &texture;
+
+    // Reset static mesh model matrix
+    m_modelMatrix.setIdentity();
+
+    // Reset static mesh position
+    m_position.reset();
+
+    // Reset static mesh angles
+    m_angles.reset();
+
+    // Static mesh successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy static mesh                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 void StaticMesh::destroyStaticMesh(Renderer& renderer)
@@ -121,6 +246,7 @@ void StaticMesh::destroyStaticMesh(Renderer& renderer)
     m_position.reset();
     m_modelMatrix.reset();
     m_texture = 0;
+    m_indicesCount = 0;
     renderer.destroyVertexBuffer(m_vertexBuffer);
 }
 
@@ -358,6 +484,6 @@ void StaticMesh::render(Renderer& renderer)
     // Draw static mesh triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        6, 1, 0, 0, 0
+        m_indicesCount, 1, 0, 0, 0
     );
 }

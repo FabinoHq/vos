@@ -138,3 +138,11 @@
 !Renderer/Shapes/Rect.cpp
 !Renderer/Shapes/Oval.h
 !Renderer/Shapes/Oval.cpp
+
+# Textures files
+!Textures/
+!textures/testsprite.png
+
+# Models files
+!Models/
+!models/testmodel.vmsh

@@ -49,6 +49,10 @@
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
 
+    #include <fstream>
+    #include <exception>
+    #include <ctype.h>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class declaration                                            //
@@ -77,7 +81,16 @@
             //  Init static mesh                                              //
             //  return : True if the static mesh is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer, Texture& texture);
+            bool init(Renderer& renderer, Texture& texture,
+                const float* vertices, const uint16_t* indices,
+                uint32_t verticesCount, uint32_t indicesCount);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Load static mesh from VMSH file                               //
+            //  return : True if the static mesh is successfully loaded       //
+            ////////////////////////////////////////////////////////////////////
+            bool loadVMSH(Renderer& renderer,
+                Texture& texture, const std::string& filepath);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy static mesh                                           //
@@ -212,6 +225,7 @@
 
         private:
             VertexBuffer    m_vertexBuffer;     // Static mesh vertex buffer
+            uint32_t        m_indicesCount;     // Static mesh indices count
             Texture*        m_texture;          // Static mesh texture pointer
             Matrix4x4       m_modelMatrix;      // Static mesh model matrix
             Vector3         m_position;         // Static mesh position

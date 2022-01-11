@@ -375,7 +375,8 @@ bool Renderer::init(SysWindow* sysWindow)
     m_staticMeshPipeline.createFragmentShader(
         *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
-    if (!m_staticMeshPipeline.createPipeline(*this, VERTEX_INPUTS_STATICMESH))
+    if (!m_staticMeshPipeline.createPipeline(
+        *this, VERTEX_INPUTS_STATICMESH, true))
     {
         // Could not create static mesh pipeline
         SysMessage::box() << "[0x304E] Could not create static mesh pipeline\n";
@@ -818,12 +819,12 @@ void Renderer::cleanup()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::createVertexBuffer(VertexBuffer& vertexBuffer,
     const float* vertices, const uint16_t* indices,
-    uint32_t vertSize, uint32_t indSize)
+    uint32_t verticesCount, uint32_t indicesCount)
 {
     // Create vertex buffer
     return (vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
         m_vulkanMemory, m_transferCommandPool, m_transferQueue,
-        vertices, indices, vertSize, indSize));
+        vertices, indices, verticesCount, indicesCount));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

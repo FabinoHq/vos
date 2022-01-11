@@ -144,7 +144,7 @@
             ////////////////////////////////////////////////////////////////////
             bool createVertexBuffer(VertexBuffer& vertexBuffer,
                 const float* vertices, const uint16_t* indices,
-                uint32_t vertSize, uint32_t indSize);
+                uint32_t verticesCount, uint32_t indicesCount);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy vertex buffer                                         //
