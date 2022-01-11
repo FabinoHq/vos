@@ -60,7 +60,8 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VertexInputsType
     {
-        VERTEX_INPUTS_DEFAULT
+        VERTEX_INPUTS_DEFAULT,
+        VERTEX_INPUTS_STATICMESH
     };
 
 

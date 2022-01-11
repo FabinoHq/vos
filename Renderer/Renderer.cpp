@@ -67,6 +67,7 @@ m_layout(),
 m_pipeline(),
 m_rectPipeline(),
 m_ovalPipeline(),
+m_staticMeshPipeline(),
 m_view()
 {
 
@@ -367,12 +368,29 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create vertex buffer
-    if (!m_vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
-        m_vulkanMemory, m_transferCommandPool, m_transferQueue))
+    // Create static mesh pipeline
+    m_staticMeshPipeline.createVertexShader(
+        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
+    );
+    m_staticMeshPipeline.createFragmentShader(
+        *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
+    );
+    if (!m_staticMeshPipeline.createPipeline(*this, VERTEX_INPUTS_STATICMESH))
     {
-        // Could not create vertex buffer
-        SysMessage::box() << "[0x304E] Could not create vertex buffer\n";
+        // Could not create static mesh pipeline
+        SysMessage::box() << "[0x304E] Could not create static mesh pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create default vertex buffer
+    if (!m_vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
+        m_vulkanMemory, m_transferCommandPool, m_transferQueue,
+        DefaultVertices, DefaultIndices,
+        DefaultVerticesCount, DefaultIndicesCount))
+    {
+        // Could not create default vertex buffer
+        SysMessage::box() << "[0x304F] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -734,6 +752,9 @@ void Renderer::cleanup()
             // Destroy vertex buffer
             m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
 
+            // Destroy static mesh pipeline
+            m_staticMeshPipeline.destroyPipeline(*this);
+
             // Destroy oval pipeline
             m_ovalPipeline.destroyPipeline(*this);
 
@@ -793,6 +814,29 @@ void Renderer::cleanup()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Create vertex buffer                                                      //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::createVertexBuffer(VertexBuffer& vertexBuffer,
+    const float* vertices, const uint16_t* indices,
+    uint32_t vertSize, uint32_t indSize)
+{
+    // Create vertex buffer
+    return (vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
+        m_vulkanMemory, m_transferCommandPool, m_transferQueue,
+        vertices, indices, vertSize, indSize));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy vertex buffer                                                     //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::destroyVertexBuffer(VertexBuffer& vertexBuffer)
+{
+    // Destroy vertex buffer
+    vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Bind renderer default pipeline                                            //
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::bindDefaultPipeline()
@@ -815,6 +859,34 @@ void Renderer::bindOvalPipeline()
 {
     m_ovalPipeline.bind(*this);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer static mesh pipeline                                        //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindStaticMeshPipeline()
+{
+    m_staticMeshPipeline.bind(*this);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer default vertex buffer                                       //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindDefaultVertexBuffer()
+{
+    // Bind default vertex buffer
+    VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        0, 1, &m_vertexBuffer.vertexBuffer.handle, &offset
+    );
+
+    vkCmdBindIndexBuffer(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+    );
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set renderer default view                                                 //

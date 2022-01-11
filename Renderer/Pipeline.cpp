@@ -390,7 +390,6 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
 {
     // Input binding
     vertexBinding.binding = 0;
-    vertexBinding.stride = sizeof(VertexData);
     vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
     // Vertex attributes
@@ -399,7 +398,7 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
         case VERTEX_INPUTS_DEFAULT:
         {
             // Vertex binding stride
-            vertexBinding.stride = sizeof(VertexData);
+            vertexBinding.stride = sizeof(float)*5;
 
             // Position
             vertexAttribs.push_back(VkVertexInputAttributeDescription());
@@ -417,10 +416,38 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
             break;
         }
 
+        case VERTEX_INPUTS_STATICMESH:
+        {
+            // Vertex binding stride
+            vertexBinding.stride = sizeof(float)*8;
+
+            // Position
+            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[0].location = 0;
+            vertexAttribs[0].binding = vertexBinding.binding;
+            vertexAttribs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+            vertexAttribs[0].offset = 0;
+
+            // Texcoords
+            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[1].location = 1;
+            vertexAttribs[1].binding = vertexBinding.binding;
+            vertexAttribs[1].format = VK_FORMAT_R32G32_SFLOAT;
+            vertexAttribs[1].offset = sizeof(float)*3;
+
+            // Normals
+            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[2].location = 2;
+            vertexAttribs[2].binding = vertexBinding.binding;
+            vertexAttribs[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+            vertexAttribs[2].offset = sizeof(float)*5;
+            break;
+        }
+
         default:
         {
             // Vertex binding stride
-            vertexBinding.stride = sizeof(VertexData);
+            vertexBinding.stride = sizeof(float)*5;
 
             // Position
             vertexAttribs.push_back(VkVertexInputAttributeDescription());

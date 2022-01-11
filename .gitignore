@@ -113,6 +113,8 @@
 !Renderer/Sprite.cpp
 !Renderer/ProcSprite.h
 !Renderer/ProcSprite.cpp
+!Renderer/StaticMesh.h
+!Renderer/StaticMesh.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
 
@@ -123,10 +125,13 @@
 !Renderer/Shaders/Sources/DefaultProc.frag
 !Renderer/Shaders/Sources/Rect.frag
 !Renderer/Shaders/Sources/Oval.frag
+!Renderer/Shaders/Sources/StaticMesh.vert
+!Renderer/Shaders/Sources/StaticMesh.frag
 !Renderer/Shaders/Default.h
 !Renderer/Shaders/DefaultProc.h
 !Renderer/Shaders/Rect.h
 !Renderer/Shaders/Oval.h
+!Renderer/Shaders/StaticMesh.h
 
 !Renderer/Shapes/
 !Renderer/Shapes/Rect.h

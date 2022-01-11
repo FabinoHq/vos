@@ -37,28 +37,17 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Camera.h : Camera management                                  //
+//     Renderer/StaticMesh.h : Static mesh management                         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_CAMERA_HEADER
-#define VOS_RENDERER_CAMERA_HEADER
+#ifndef VOS_RENDERER_STATICMESH_HEADER
+#define VOS_RENDERER_STATICMESH_HEADER
 
-    #include <cstdint>
-    #include <cstring>
-
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/UniformBuffer.h"
+    #include "Vulkan/VertexBuffer.h"
+    #include "Texture.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
+    #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Camera default settings                                               //
-    ////////////////////////////////////////////////////////////////////////////
-    const float CameraDefaultFovy = 90.0f;
-    const float CameraDefaultNearPlane = 0.01f;
-    const float CameraDefaultFarPlane = 100.0f;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -68,219 +57,166 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Camera class definition                                               //
+    //  StaticMesh class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
-    class Camera
+    class StaticMesh
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Camera default constructor                                    //
+            //  StaticMesh default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Camera();
+            StaticMesh();
 
             ////////////////////////////////////////////////////////////////////
-            //  Camera virtual destructor                                     //
+            //  StaticMesh destructor                                         //
             ////////////////////////////////////////////////////////////////////
-            virtual ~Camera();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init camera                                                   //
-            //  return : True if the camera is successfully created           //
-            ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute camera                                                //
-            ////////////////////////////////////////////////////////////////////
-            virtual void compute(Renderer& renderer);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind camera                                                   //
-            //  return : True if the camera is successfully binded            //
-            ////////////////////////////////////////////////////////////////////
-            bool bind(Renderer& renderer);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy camera                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyCamera(Renderer& renderer);
+            ~StaticMesh();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera position                                           //
+            //  Init static mesh                                              //
+            //  return : True if the static mesh is successfully created      //
+            ////////////////////////////////////////////////////////////////////
+            bool init(Renderer& renderer, Texture& texture);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy static mesh                                           //
+            ////////////////////////////////////////////////////////////////////
+            void destroyStaticMesh(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set static mesh texture                                       //
+            //  return : True if static mesh texture is successfully set      //
+            ////////////////////////////////////////////////////////////////////
+            bool setTexture(Texture& texture);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set static mesh position                                      //
             ////////////////////////////////////////////////////////////////////
             void setPosition(float x, float y, float z);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera position                                           //
+            //  Set static mesh position                                      //
             ////////////////////////////////////////////////////////////////////
             void setPosition(Vector3& position);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera X position                                         //
+            //  Set static mesh X position                                    //
             ////////////////////////////////////////////////////////////////////
             void setX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera Y position                                         //
+            //  Set static mesh Y position                                    //
             ////////////////////////////////////////////////////////////////////
             void setY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera Z position                                         //
+            //  Set static mesh Z position                                    //
             ////////////////////////////////////////////////////////////////////
             void setZ(float z);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate camera                                              //
+            //  Translate static mesh                                         //
             ////////////////////////////////////////////////////////////////////
             void move(float x, float y, float z);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate camera                                              //
+            //  Translate static mesh                                         //
             ////////////////////////////////////////////////////////////////////
             void move(Vector3& vector);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate camera on X axis                                    //
+            //  Translate static mesh on X axis                               //
             ////////////////////////////////////////////////////////////////////
             void moveX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate camera on Y axis                                    //
+            //  Translate static mesh on Y axis                               //
             ////////////////////////////////////////////////////////////////////
             void moveY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate camera on Z axis                                    //
+            //  Translate static mesh on Z axis                               //
             ////////////////////////////////////////////////////////////////////
             void moveZ(float z);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera angles                                             //
+            //  Set mesh rotation angles                                      //
             ////////////////////////////////////////////////////////////////////
             void setAngles(float angleX, float angleY, float angleZ);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera angles                                             //
+            //  Set mesh rotation angles                                      //
             ////////////////////////////////////////////////////////////////////
             void setAngles(Vector3& angles);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera X angle                                            //
+            //  Set static mesh X rotation angle                              //
             ////////////////////////////////////////////////////////////////////
             void setAngleX(float angleX);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera Y angle                                            //
+            //  Set static mesh Y rotation angle                              //
             ////////////////////////////////////////////////////////////////////
             void setAngleY(float angleY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera Z angle                                            //
+            //  Set static mesh Z rotation angle                              //
             ////////////////////////////////////////////////////////////////////
             void setAngleZ(float angleZ);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate camera                                                 //
+            //  Rotate static mesh                                            //
             ////////////////////////////////////////////////////////////////////
             void rotate(float angleX, float angleY, float angleZ);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate camera                                                 //
+            //  Rotate static mesh                                            //
             ////////////////////////////////////////////////////////////////////
             void rotate(Vector3& angles);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate camera around the X axis                               //
+            //  Rotate static mesh around the X axis                          //
             ////////////////////////////////////////////////////////////////////
             void rotateX(float angleX);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate camera around the Y axis                               //
+            //  Rotate static mesh around the Y axis                          //
             ////////////////////////////////////////////////////////////////////
             void rotateY(float angleY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate camera around the Z axis                               //
+            //  Rotate static mesh around the Z axis                          //
             ////////////////////////////////////////////////////////////////////
             void rotateZ(float angleZ);
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set camera fovy angle                                         //
-            ////////////////////////////////////////////////////////////////////
-            void setFovy(float fovy);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set camera near plane                                         //
+            //  Render static mesh                                            //
             ////////////////////////////////////////////////////////////////////
-            void setNearPlane(float nearPlane);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set camera far plane                                          //
-            ////////////////////////////////////////////////////////////////////
-            void setFarPlane(float farPlane);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get camera X position                                         //
-            ////////////////////////////////////////////////////////////////////
-            float getX();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get camera Y position                                         //
-            ////////////////////////////////////////////////////////////////////
-            float getY();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get camera Z position                                         //
-            ////////////////////////////////////////////////////////////////////
-            float getZ();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get camera X rotation angle                                   //
-            ////////////////////////////////////////////////////////////////////
-            float getAngleX();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get camera Y rotation angle                                   //
-            ////////////////////////////////////////////////////////////////////
-            float getAngleY();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get camera Z rotation angle                                   //
-            ////////////////////////////////////////////////////////////////////
-            float getAngleZ();
+            void render(Renderer& renderer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Camera private copy constructor : Not copyable                //
+            //  StaticMesh private copy constructor : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            Camera(const Camera&) = delete;
+            StaticMesh(const StaticMesh&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Camera private copy operator : Not copyable                   //
+            //  StaticMesh private copy operator : Not copyable               //
             ////////////////////////////////////////////////////////////////////
-            Camera& operator=(const Camera&) = delete;
+            StaticMesh& operator=(const StaticMesh&) = delete;
 
 
-        protected:
-            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
-            UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
-            Matrix4x4           m_projMatrix;       // Projection matrix
-            Matrix4x4           m_viewMatrix;       // View matrix
-            Matrix4x4           m_projViewMatrix;   // Projview matrix
-
-            Vector3             m_position;         // Camera position
-            Vector3             m_angles;           // Camera angles
-            Vector3             m_target;           // Camera target vector
-            Vector3             m_upward;           // Camera upward vector
-            float               m_fovy;             // Camera fovy
-            float               m_nearPlane;        // Camera near plane
-            float               m_farPlane;         // Camera far plane
+        private:
+            VertexBuffer    m_vertexBuffer;     // Static mesh vertex buffer
+            Texture*        m_texture;          // Static mesh texture pointer
+            Matrix4x4       m_modelMatrix;      // Static mesh model matrix
+            Vector3         m_position;         // Static mesh position
+            Vector3         m_angles;           // Static mesh angles
     };
 
 
-#endif // VOS_RENDERER_CAMERA_HEADER
+#endif // VOS_RENDERER_SPRITE_HEADER

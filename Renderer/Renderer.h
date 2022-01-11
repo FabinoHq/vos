@@ -64,12 +64,16 @@
     #include "FreeFlyCam.h"
     #include "Sprite.h"
     #include "ProcSprite.h"
+    #include "Shapes/Rect.h"
+    #include "Shapes/Oval.h"
+    #include "StaticMesh.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
 
     #include "Shaders/Default.h"
     #include "Shaders/Rect.h"
     #include "Shaders/Oval.h"
+    #include "Shaders/StaticMesh.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -136,6 +140,19 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Create vertex buffer                                          //
+            ////////////////////////////////////////////////////////////////////
+            bool createVertexBuffer(VertexBuffer& vertexBuffer,
+                const float* vertices, const uint16_t* indices,
+                uint32_t vertSize, uint32_t indSize);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy vertex buffer                                         //
+            ////////////////////////////////////////////////////////////////////
+            void destroyVertexBuffer(VertexBuffer& vertexBuffer);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Bind renderer default pipeline                                //
             ////////////////////////////////////////////////////////////////////
             void bindDefaultPipeline();
@@ -149,6 +166,18 @@
             //  Bind renderer oval pipeline                                   //
             ////////////////////////////////////////////////////////////////////
             void bindOvalPipeline();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer static mesh pipeline                            //
+            ////////////////////////////////////////////////////////////////////
+            void bindStaticMeshPipeline();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer default vertex buffer                           //
+            ////////////////////////////////////////////////////////////////////
+            void bindDefaultVertexBuffer();
+
 
             ////////////////////////////////////////////////////////////////////
             //  Set renderer default view                                     //
@@ -254,6 +283,7 @@
             Pipeline            m_pipeline;             // Default pipeline
             Pipeline            m_rectPipeline;         // Rect pipeline
             Pipeline            m_ovalPipeline;         // Oval pipeline
+            Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
             View                m_view;                 // Default view
 
             friend class        Pipeline;               // Pipeline has access
@@ -266,6 +296,7 @@
             friend class        ProcSprite;             // ProcSprite has access
             friend class        Rect;                   // Rect has access
             friend class        Oval;                   // Oval has access
+            friend class        StaticMesh;             // StaticMesh has access
     };
 
 

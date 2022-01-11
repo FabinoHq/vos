@@ -131,6 +131,9 @@
     <ClCompile Include="Renderer\FreeFlyCam.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\StaticMesh.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -278,6 +281,12 @@
     </ClInclude>
     <ClInclude Include="Renderer\FreeFlyCam.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\StaticMesh.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\StaticMesh.h">
+      <Filter>Renderer\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -57,6 +57,8 @@ m_freeflycam(),
 m_procsprite(),
 m_rect(),
 m_oval(),
+m_testtexture(),
+m_staticmesh(),
 m_mouseX(0.0f),
 m_mouseY(0.0f)
 {
@@ -160,6 +162,28 @@ bool Vos::launch()
         // Could not init oval shape
         return false;
     }
+
+
+    // Load mesh texture
+    PNGFile pngfile;
+    if (!pngfile.loadImage("testtexture.png"))
+    {
+        return false;
+    }
+    if (!m_testtexture.updateTexture(m_renderer,
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage()))
+    {
+        return false;
+    }
+    pngfile.destroyImage();
+
+    // Init static mesh
+    if (!m_staticmesh.init(m_renderer, m_testtexture))
+    {
+        // Could not init static mesh
+        return false;
+    }
+
 
     // Run VOS
     run();
@@ -276,35 +300,43 @@ void Vos::run()
             float cursorSize = 64.0f*scale;
             float cursorOffset = 2.0f*scale;
 
+
             // Set camera
             //m_renderer.setView(m_view);
             //m_renderer.setCamera(m_camera);
             m_renderer.setCamera(m_freeflycam);
 
-            // Draw rectangle
-            m_rect.setSize(1.0f, 1.0f);
-            m_rect.setPosition(-0.5f, -0.5f);
-            m_rect.render(m_renderer);
+            // Render static mesh
+            m_staticmesh.render(m_renderer);
 
-            // Draw ellipse
-            /*m_oval.setSize(1.0f, 1.0f);
-            m_oval.setPosition(-0.5f, -0.5f);
-            m_oval.render(m_renderer);*/
-
-            // Draw procedural sprite
-            /*m_procsprite.setSize(1.0f, 1.0f);
-            m_procsprite.setPosition(-0.5f, -0.5f);
-            m_procsprite.render(m_renderer);*/
 
             // Set default screen view
             m_renderer.setDefaultView();
 
+            // Bind default vertex buffer
+            m_renderer.bindDefaultVertexBuffer();
+
+            // Render rectangle
+            /*m_rect.setSize(1.0f, 1.0f);
+            m_rect.setPosition(-0.5f, -0.5f);
+            m_rect.render(m_renderer);*/
+
+            // Render ellipse
+            /*m_oval.setSize(1.0f, 1.0f);
+            m_oval.setPosition(-0.5f, -0.5f);
+            m_oval.render(m_renderer);*/
+
+            // Render procedural sprite
+            /*m_procsprite.setSize(1.0f, 1.0f);
+            m_procsprite.setPosition(-0.5f, -0.5f);
+            m_procsprite.render(m_renderer);*/
+
             // Draw cursor
-            m_cursor.setSize(cursorSize, cursorSize);
+            /*m_cursor.setSize(cursorSize, cursorSize);
             m_cursor.setPosition(
                 m_mouseX-cursorOffset, m_mouseY-cursorSize+cursorOffset
             );
-            m_cursor.render(m_renderer);
+            m_cursor.render(m_renderer);*/
 
             // End rendering
             m_renderer.endFrame();
@@ -314,6 +346,12 @@ void Vos::run()
     // Wait for renderer device idle state
     if (m_renderer.waitDeviceIdle())
     {
+        // Destroy static mesh
+        m_staticmesh.destroyStaticMesh(m_renderer);
+
+        // Destroy test texture
+        m_testtexture.destroyTexture(m_renderer);
+
         // Destroy procedural sprite
         m_procsprite.destroyProcSprite(m_renderer);
 

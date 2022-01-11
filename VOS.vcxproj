@@ -148,6 +148,7 @@
     <ClCompile Include="Renderer\Shapes\Oval.cpp" />
     <ClCompile Include="Renderer\Shapes\Rect.cpp" />
     <ClCompile Include="Renderer\Sprite.cpp" />
+    <ClCompile Include="Renderer\StaticMesh.cpp" />
     <ClCompile Include="Renderer\Texture.cpp" />
     <ClCompile Include="Renderer\View.cpp" />
     <ClCompile Include="Renderer\Vulkan\GraphicsLayout.cpp" />
@@ -191,9 +192,11 @@
     <ClInclude Include="Renderer\Shaders\DefaultProc.h" />
     <ClInclude Include="Renderer\Shaders\Oval.h" />
     <ClInclude Include="Renderer\Shaders\Rect.h" />
+    <ClInclude Include="Renderer\Shaders\StaticMesh.h" />
     <ClInclude Include="Renderer\Shapes\Oval.h" />
     <ClInclude Include="Renderer\Shapes\Rect.h" />
     <ClInclude Include="Renderer\Sprite.h" />
+    <ClInclude Include="Renderer\StaticMesh.h" />
     <ClInclude Include="Renderer\Texture.h" />
     <ClInclude Include="Renderer\View.h" />
     <ClInclude Include="Renderer\Vulkan\GraphicsLayout.h" />

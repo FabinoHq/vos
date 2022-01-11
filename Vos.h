@@ -115,6 +115,9 @@
             Rect            m_rect;         // Rect shape
             Oval            m_oval;         // Oval shape
 
+            Texture         m_testtexture;  // Test texture
+            StaticMesh      m_staticmesh;   // Static mesh
+
             float           m_mouseX;       // Mouse X position
             float           m_mouseY;       // Mouse Y position
     };

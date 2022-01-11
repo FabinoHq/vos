@@ -51,22 +51,10 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VertexData structure                                                  //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VertexData
-    {
-        float   x;
-        float   y;
-        float   z;
-
-        float   u;
-        float   v;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Default vertex buffer vertices                                        //
     ////////////////////////////////////////////////////////////////////////////
-    const VertexData DefaultVertices[4] =
+    const uint32_t DefaultVerticesCount = 20;
+    const float DefaultVertices[DefaultVerticesCount] =
     {
         0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
         1.0f, 0.0f, 0.0f,  1.0f, 1.0f,
@@ -77,7 +65,8 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Default vertex buffer indices                                         //
     ////////////////////////////////////////////////////////////////////////////
-    const uint16_t DefaultIndices[6] =
+    const uint32_t DefaultIndicesCount = 6;
+    const uint16_t DefaultIndices[DefaultIndicesCount] =
     {
         0, 1, 2,
         2, 3, 0
@@ -107,7 +96,9 @@
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkCommandPool& commandsPool, VulkanQueue& transferQueue);
+                VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+                const float* vertices, const uint16_t* indices,
+                uint32_t vertSize, uint32_t indSize);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Vertex buffer                                         //

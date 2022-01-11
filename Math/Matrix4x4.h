@@ -294,14 +294,6 @@
             ////////////////////////////////////////////////////////////////////
             //  Translate Matrix4x4                                           //
             ////////////////////////////////////////////////////////////////////
-            void translate(float x, float y, float z)
-            {
-                mat[12] += (mat[0]*x + mat[4]*y + mat[8]*z);
-                mat[13] += (mat[1]*x + mat[5]*y + mat[9]*z);
-                mat[14] += (mat[2]*x + mat[6]*y + mat[10]*z);
-                mat[15] += (mat[3]*x + mat[7]*y + mat[11]*z);
-            }
-
             void translate(float x, float y)
             {
                 mat[12] += (mat[0]*x + mat[4]*y);
@@ -316,6 +308,14 @@
                 mat[13] += (mat[1]*vector.vec[0] + mat[5]*vector.vec[1]);
                 mat[14] += (mat[2]*vector.vec[0] + mat[6]*vector.vec[1]);
                 mat[15] += (mat[3]*vector.vec[0] + mat[7]*vector.vec[1]);
+            }
+
+            void translate(float x, float y, float z)
+            {
+                mat[12] += (mat[0]*x + mat[4]*y + mat[8]*z);
+                mat[13] += (mat[1]*x + mat[5]*y + mat[9]*z);
+                mat[14] += (mat[2]*x + mat[6]*y + mat[10]*z);
+                mat[15] += (mat[3]*x + mat[7]*y + mat[11]*z);
             }
 
             void translate(const Vector3& vector)
@@ -418,12 +418,41 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Rotate Matrix4x4                                              //
+            ////////////////////////////////////////////////////////////////////
+            void rotate(float angleX, float angleY)
+            {
+                rotateX(angleX);
+                rotateY(angleY);
+            }
+
+            void rotate(Vector2& angles)
+            {
+                rotateX(angles.vec[0]);
+                rotateY(angles.vec[1]);
+            }
+
+            void rotate(float angleX, float angleY, float angleZ)
+            {
+                rotateX(angleX);
+                rotateY(angleY);
+                rotateZ(angleZ);
+            }
+
+            void rotate(Vector3& angles)
+            {
+                rotateX(angles.vec[0]);
+                rotateY(angles.vec[1]);
+                rotateZ(angles.vec[2]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Rotate Matrix4x4 arround X axis                               //
             ////////////////////////////////////////////////////////////////////
-            void rotateX(float angle)
+            void rotateX(float angleX)
             {
-                float sinAngle = std::sin(-angle);
-                float cosAngle = std::cos(-angle);
+                float sinAngle = std::sin(-angleX);
+                float cosAngle = std::cos(-angleX);
                 float rotMat4 = (mat[4]*cosAngle + mat[8]*-sinAngle);
                 float rotMat5 = (mat[5]*cosAngle + mat[9]*-sinAngle);
                 float rotMat6 = (mat[6]*cosAngle + mat[10]*-sinAngle);
@@ -445,10 +474,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Rotate Matrix4x4 arround Y axis                               //
             ////////////////////////////////////////////////////////////////////
-            void rotateY(float angle)
+            void rotateY(float angleY)
             {
-                float sinAngle = std::sin(-angle);
-                float cosAngle = std::cos(-angle);
+                float sinAngle = std::sin(-angleY);
+                float cosAngle = std::cos(-angleY);
                 float rotMat0 = (mat[0]*cosAngle + mat[8]*sinAngle);
                 float rotMat1 = (mat[1]*cosAngle + mat[9]*sinAngle);
                 float rotMat2 = (mat[2]*cosAngle + mat[10]*sinAngle);
@@ -470,10 +499,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Rotate Matrix4x4 arround Z axis                               //
             ////////////////////////////////////////////////////////////////////
-            void rotateZ(float angle)
+            void rotateZ(float angleZ)
             {
-                float sinAngle = std::sin(-angle);
-                float cosAngle = std::cos(-angle);
+                float sinAngle = std::sin(-angleZ);
+                float cosAngle = std::cos(-angleZ);
                 float rotMat0 = (mat[0]*cosAngle + mat[4]*-sinAngle);
                 float rotMat1 = (mat[1]*cosAngle + mat[5]*-sinAngle);
                 float rotMat2 = (mat[2]*cosAngle + mat[6]*-sinAngle);
