@@ -40,7 +40,7 @@
 //     Renderer/Shaders/Sources/Default.vert : Default vertex shader          //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
-precision mediump float;
+precision highp float;
 precision highp int;
 
 // Matrices buffer (projection and view)

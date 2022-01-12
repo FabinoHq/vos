@@ -40,7 +40,7 @@
 //     Renderer/Shaders/Sources/Default.frag : Default fragment shader        //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
-precision mediump float;
+precision highp float;
 precision highp int;
 
 // Texture sampler

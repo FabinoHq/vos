@@ -40,7 +40,7 @@
 //     Renderer/Shaders/Sources/Oval.frag : Ellipse fragment shader           //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
-precision mediump float;
+precision highp float;
 precision highp int;
 
 // Color, position, offset, and time (push constant)
