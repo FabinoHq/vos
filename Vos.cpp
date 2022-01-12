@@ -49,7 +49,7 @@ Vos::Vos() :
 m_running(false),
 m_window(),
 m_renderer(),
-m_texture(),
+m_cursorTexture(),
 m_cursor(),
 m_view(),
 m_camera(),
@@ -102,7 +102,7 @@ bool Vos::launch()
     }
 
     // Load cursor texture
-    if (!m_texture.updateTexture(m_renderer,
+    if (!m_cursorTexture.updateTexture(m_renderer,
         CursorImageWidth, CursorImageHeight, CursorImage))
     {
         // Could not load cursor texture
@@ -110,7 +110,7 @@ bool Vos::launch()
     }
 
     // Init cursor sprite
-    if (!m_cursor.init(m_texture, 1.0f, 1.0f))
+    if (!m_cursor.init(m_cursorTexture, 1.0f, 1.0f))
     {
         // Could not init test sprite
         return false;
@@ -359,8 +359,18 @@ void Vos::run()
         // Destroy procedural sprite
         m_procsprite.destroyProcSprite(m_renderer);
 
+
+        // Destroy freefly camera
+        m_freeflycam.destroyCamera(m_renderer);
+
+        // Destroy camera
+        m_camera.destroyCamera(m_renderer);
+
+        // Destroy view
+        m_view.destroyView(m_renderer);
+
         // Destroy cursor texture
-        m_texture.destroyTexture(m_renderer);
+        m_cursorTexture.destroyTexture(m_renderer);
     }
 
     // Close VOS

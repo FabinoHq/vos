@@ -101,11 +101,11 @@
             Vos& operator=(const Vos&) = delete;
 
         private:
-            bool            m_running;      // VOS running state
-            SysWindow       m_window;       // VOS main window
-            Renderer        m_renderer;     // VOS renderer
-            Texture         m_texture;      // Cursor texture
-            Sprite          m_cursor;       // Cursor sprite
+            bool            m_running;          // VOS running state
+            SysWindow       m_window;           // VOS main window
+            Renderer        m_renderer;         // VOS renderer
+            Texture         m_cursorTexture;    // Cursor texture
+            Sprite          m_cursor;           // Cursor sprite
 
             View            m_view;         // View
             Camera          m_camera;       // Camera
