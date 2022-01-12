@@ -323,10 +323,10 @@ void Vos::run()
             m_rect.render(m_renderer);*/
 
             // Render ellipse
-            m_renderer.bindOvalPipeline();
+            /*m_renderer.bindOvalPipeline();
             m_oval.setSize(1.0f, 1.0f);
             m_oval.setPosition(-0.5f, -0.5f);
-            m_oval.render(m_renderer);
+            m_oval.render(m_renderer);*/
 
             // Render procedural sprite
             /*m_procsprite.bindPipeline(m_renderer);
@@ -335,12 +335,12 @@ void Vos::run()
             m_procsprite.render(m_renderer);*/
 
             // Draw cursor
-            m_renderer.bindDefaultPipeline();
+            /*m_renderer.bindDefaultPipeline();
             m_cursor.setSize(cursorSize, cursorSize);
             m_cursor.setPosition(
                 m_mouseX-cursorOffset, m_mouseY-cursorSize+cursorOffset
             );
-            m_cursor.render(m_renderer);
+            m_cursor.render(m_renderer);*/
 
             // End rendering
             m_renderer.endFrame();

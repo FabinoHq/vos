@@ -56,7 +56,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Camera default settings                                               //
     ////////////////////////////////////////////////////////////////////////////
-    const float CameraDefaultFovy = 90.0f;
+    const float CameraDefaultFovy = Math::PiTwo;
     const float CameraDefaultNearPlane = 0.01f;
     const float CameraDefaultFarPlane = 100.0f;
 
