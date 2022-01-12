@@ -46,6 +46,7 @@
     #include <vector>
 
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -78,14 +79,15 @@
             ////////////////////////////////////////////////////////////////////
             bool createSwapchain(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                uint32_t surfaceQueueIndex);
+                uint32_t surfaceQueueIndex, VulkanMemory& vulkanMemory);
 
             ////////////////////////////////////////////////////////////////////
             //  Resize swapchain                                              //
             //  return : True if swapchain is successfully resized            //
             ////////////////////////////////////////////////////////////////////
             bool resizeSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface);
+                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
+                VulkanMemory& vulkanMemory);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy swapchain                                             //
@@ -116,7 +118,9 @@
             float               ratio;          // Swapchain aspect ratio
 
             VkImage             images[RendererMaxSwapchainFrames];
+            VkImage             depthImages[RendererMaxSwapchainFrames];
             VkImageView         views[RendererMaxSwapchainFrames];
+            VkImageView         depthViews[RendererMaxSwapchainFrames];
             VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
             VkSemaphore         renderReady[RendererMaxSwapchainFrames];
             VkSemaphore         renderFinished[RendererMaxSwapchainFrames];

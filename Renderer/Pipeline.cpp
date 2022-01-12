@@ -117,7 +117,7 @@ bool Pipeline::createFragmentShader(Renderer& renderer,
 //  return : True if Pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
 bool Pipeline::createPipeline(Renderer& renderer,
-    VertexInputsType vertexInputsType, bool backFaceCulling)
+    VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling)
 {
     // Check Vulkan device
     if (!renderer.m_vulkanDevice)
@@ -231,6 +231,40 @@ bool Pipeline::createPipeline(Renderer& renderer,
     multisampleInfo.alphaToCoverageEnable = VK_FALSE;
     multisampleInfo.alphaToOneEnable = VK_FALSE;
 
+    // Depth stencil
+    VkStencilOpState stencilOpFront;
+    stencilOpFront.failOp = VK_STENCIL_OP_ZERO;
+    stencilOpFront.passOp = VK_STENCIL_OP_ZERO;
+    stencilOpFront.depthFailOp = VK_STENCIL_OP_ZERO;
+    stencilOpFront.compareOp = VK_COMPARE_OP_NEVER;
+    stencilOpFront.compareMask = 0;
+    stencilOpFront.writeMask = 0;
+    stencilOpFront.reference = 0;
+
+    VkStencilOpState stencilOpBack;
+    stencilOpBack.failOp = VK_STENCIL_OP_ZERO;
+    stencilOpBack.passOp = VK_STENCIL_OP_ZERO;
+    stencilOpBack.depthFailOp = VK_STENCIL_OP_ZERO;
+    stencilOpBack.compareOp = VK_COMPARE_OP_NEVER;
+    stencilOpBack.compareMask = 0;
+    stencilOpBack.writeMask = 0;
+    stencilOpBack.reference = 0;
+
+    VkPipelineDepthStencilStateCreateInfo depthStencil;
+    depthStencil.sType =
+        VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    depthStencil.pNext = 0;
+    depthStencil.flags = 0;
+    depthStencil.depthTestEnable = VK_TRUE;
+    depthStencil.depthWriteEnable = VK_TRUE;
+    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+    depthStencil.depthBoundsTestEnable = VK_FALSE;
+    depthStencil.stencilTestEnable = VK_FALSE;
+    depthStencil.front = stencilOpFront;
+    depthStencil.back = stencilOpBack;
+    depthStencil.minDepthBounds = 0.0f;
+    depthStencil.maxDepthBounds = 1.0f;
+
     // Blend
     VkPipelineColorBlendAttachmentState colorBlend;
     colorBlend.blendEnable = VK_TRUE;
@@ -282,7 +316,10 @@ bool Pipeline::createPipeline(Renderer& renderer,
     pipelineInfo.pViewportState = &viewportInfo;
     pipelineInfo.pRasterizationState = &rasterizerInfo;
     pipelineInfo.pMultisampleState = &multisampleInfo;
-    pipelineInfo.pDepthStencilState = 0;
+
+    if (depthTest) { pipelineInfo.pDepthStencilState = &depthStencil; }
+    else { pipelineInfo.pDepthStencilState = 0; }
+
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = renderer.m_layout.handle;

@@ -119,6 +119,18 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Allocate swapchain image memory                               //
+            //  return : True if swapchain image is successfully allocated    //
+            ////////////////////////////////////////////////////////////////////
+            bool allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Reset swapchain image memory                                  //
+            ////////////////////////////////////////////////////////////////////
+            void resetSwapchainMemory();
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Allocate texture memory                                       //
             //  return : True if texture memory is successfully allocated     //
             ////////////////////////////////////////////////////////////////////
@@ -149,10 +161,13 @@
             uint32_t        m_hostMemoryIndex;      // Host memory type index
             uint32_t        m_maxAllocationCount;   // Maximum allocation count
             VkDeviceSize    m_memoryAlignment;      // Memory alignment
-            VkDeviceMemory  m_deviceMemory;         // Device memory
-            VkDeviceSize    m_deviceMemoryOffset;   // Device memory offset
-            VkDeviceMemory  m_hostMemory;           // Host memory
-            VkDeviceSize    m_hostMemoryOffset;     // Host memory offset
+
+            VkDeviceMemory  m_swapchainMemory;          // Swapchain memory
+            VkDeviceSize    m_swapchainMemoryOffset;    // Swapchain offset
+            VkDeviceMemory  m_deviceMemory;             // Device memory
+            VkDeviceSize    m_deviceMemoryOffset;       // Device offset
+            VkDeviceMemory  m_hostMemory;               // Host memory
+            VkDeviceSize    m_hostMemoryOffset;         // Host offset
     };
 
 

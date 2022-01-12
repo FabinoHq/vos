@@ -220,8 +220,8 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create Vulkan swapchain
-    if (!m_swapchain.createSwapchain(m_physicalDevice,
-        m_vulkanDevice, m_vulkanSurface, m_surfaceQueue.index))
+    if (!m_swapchain.createSwapchain(m_physicalDevice, m_vulkanDevice,
+        m_vulkanSurface, m_surfaceQueue.index, m_vulkanMemory))
     {
         // Could not create Vulkan swapchain
         return false;
@@ -376,7 +376,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_staticMeshPipeline.createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true))
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
         SysMessage::box() << "[0x304E] Could not create static mesh pipeline\n";
@@ -507,6 +507,11 @@ bool Renderer::startFrame()
         0, 0, 0, 0, 0, 1, &presentToDraw
     );
 
+    // Set clear values
+    VkClearValue clearValues[2];
+    clearValues[0].color = RendererClearColor;
+    clearValues[1].depthStencil = RendererClearDepth;
+
     // Begin render pass
     VkRenderPassBeginInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -517,8 +522,8 @@ bool Renderer::startFrame()
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
     renderPassInfo.renderArea.extent.height = m_swapchain.extent.height;
-    renderPassInfo.clearValueCount = 1;
-    renderPassInfo.pClearValues = &RendererClearColor;
+    renderPassInfo.clearValueCount = 2;
+    renderPassInfo.pClearValues = clearValues;
 
     vkCmdBeginRenderPass(
         m_swapchain.commandBuffers[m_swapchain.current],
@@ -1415,7 +1420,7 @@ bool Renderer::resize()
 
     // Resize swapchain
     if (!m_swapchain.resizeSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface))
+        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_vulkanMemory))
     {
         return false;
     }

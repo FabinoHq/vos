@@ -79,7 +79,8 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer clear color                                                  //
     ////////////////////////////////////////////////////////////////////////////
-    const VkClearValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+    const VkClearColorValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+    const VkClearDepthStencilValue RendererClearDepth = {1.0f, 0};
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer max uniforms descriptor sets                                 //

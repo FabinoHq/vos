@@ -60,7 +60,9 @@ ratio(0.0f)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         images[i] = 0;
-        views[i]= 0;
+        depthImages[i] = 0;
+        views[i] = 0;
+        depthViews[i] = 0;
         framebuffers[i] = 0;
         renderReady[i] = 0;
         renderFinished[i] = 0;
@@ -81,7 +83,9 @@ Swapchain::~Swapchain()
         renderFinished[i] = 0;
         renderReady[i] = 0;
         framebuffers[i] = 0;
+        depthViews[i] = 0;
         views[i]= 0;
+        depthImages[i] = 0;
         images[i] = 0;
     }
     ratio = 0.0f;
@@ -102,7 +106,7 @@ Swapchain::~Swapchain()
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-    uint32_t surfaceQueueIndex)
+    uint32_t surfaceQueueIndex, VulkanMemory& vulkanMemory)
 {
     // Check physical device
     if (!physicalDevice)
@@ -469,6 +473,49 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         ratio = (extent.width*1.0f) / (extent.height*1.0f);
     }
 
+    // Create swapchain depth images
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        // Create depth image
+        VkImageCreateInfo imageInfo;
+        imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imageInfo.pNext = 0;
+        imageInfo.flags = 0;
+        imageInfo.imageType = VK_IMAGE_TYPE_2D;
+        imageInfo.format = VK_FORMAT_D32_SFLOAT;
+        imageInfo.extent.width = extent.width;
+        imageInfo.extent.height = extent.height;
+        imageInfo.extent.depth = 1;
+        imageInfo.mipLevels = 1;
+        imageInfo.arrayLayers = 1;
+        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+        imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.queueFamilyIndexCount = 0;
+        imageInfo.pQueueFamilyIndices = 0;
+        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+        if (vkCreateImage(vulkanDevice,
+            &imageInfo, 0, &depthImages[i]) != VK_SUCCESS)
+        {
+            // Could not create depth image
+            return false;
+        }
+        if (!depthImages[i])
+        {
+            // Invalid depth image
+            return false;
+        }
+
+        // Allocate depth image memory
+        if (!vulkanMemory.allocateSwapchainImage(vulkanDevice, depthImages[i]))
+        {
+            // Could not allocate depth image memory
+            return false;
+        }
+    }
+
     // Create swapchain images views
     VkComponentMapping components;
     components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -506,31 +553,86 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         }
     }
 
+    // Create swapchain depth images views
+    VkComponentMapping depthComponents;
+    depthComponents.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthComponents.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthComponents.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthComponents.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    VkImageSubresourceRange depthSubresource;
+    depthSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    depthSubresource.baseMipLevel = 0;
+    depthSubresource.levelCount = 1;
+    depthSubresource.baseArrayLayer = 0;
+    depthSubresource.layerCount = 1;
+
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        // Create depth image view
+        VkImageViewCreateInfo depthImageView;
+        depthImageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        depthImageView.pNext = 0;
+        depthImageView.flags = 0;
+        depthImageView.image = depthImages[i];
+        depthImageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        depthImageView.format = VK_FORMAT_D32_SFLOAT;
+        depthImageView.components = depthComponents;
+        depthImageView.subresourceRange = depthSubresource;
+
+        if (vkCreateImageView(
+            vulkanDevice, &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
+        {
+            // Could not create swapchain depth image view
+            SysMessage::box() << "[0x3035] Could not create swapchain view\n";
+            SysMessage::box() << "Please update your graphics drivers";
+            return false;
+        }
+    }
+
+    // Set color attachment
+    VkAttachmentDescription attachmentDescription[2];
+    attachmentDescription[0].flags = 0;
+    attachmentDescription[0].format = format;
+    attachmentDescription[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachmentDescription[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachmentDescription[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachmentDescription[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachmentDescription[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachmentDescription[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentReference colorAttachmentReference;
+    colorAttachmentReference.attachment = 0;
+    colorAttachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    // Set depth attachment
+    attachmentDescription[1].flags = 0;
+    attachmentDescription[1].format = VK_FORMAT_D32_SFLOAT;
+    attachmentDescription[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachmentDescription[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachmentDescription[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachmentDescription[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachmentDescription[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachmentDescription[1].finalLayout =
+        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference depthAttachmentReference;
+    depthAttachmentReference.attachment = 1;
+    depthAttachmentReference.layout =
+        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
     // Create render pass
-    VkAttachmentDescription attachmentDescription;
-    attachmentDescription.flags = 0;
-    attachmentDescription.format = format;
-    attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
-    attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-    VkAttachmentReference attachmentReference;
-    attachmentReference.attachment = 0;
-    attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
     VkSubpassDescription subpassDescription;
     subpassDescription.flags = 0;
     subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpassDescription.inputAttachmentCount = 0;
     subpassDescription.pInputAttachments = 0;
     subpassDescription.colorAttachmentCount = 1;
-    subpassDescription.pColorAttachments = &attachmentReference;
+    subpassDescription.pColorAttachments = &colorAttachmentReference;
     subpassDescription.pResolveAttachments = 0;
-    subpassDescription.pDepthStencilAttachment = 0;
+    subpassDescription.pDepthStencilAttachment = &depthAttachmentReference;
     subpassDescription.preserveAttachmentCount = 0;
     subpassDescription.pPreserveAttachments = 0;
 
@@ -560,8 +662,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.pNext = 0;
     renderPassInfo.flags = 0;
-    renderPassInfo.attachmentCount = 1;
-    renderPassInfo.pAttachments = &attachmentDescription;
+    renderPassInfo.attachmentCount = 2;
+    renderPassInfo.pAttachments = attachmentDescription;
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpassDescription;
     renderPassInfo.dependencyCount = 2;
@@ -586,13 +688,17 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Create framebuffers
     for (uint32_t i = 0; i < frames; ++i)
     {
+        VkImageView imageViews[2];
+        imageViews[0] = views[i];
+        imageViews[1] = depthViews[i];
+
         VkFramebufferCreateInfo framebufferInfo;
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferInfo.pNext = 0;
         framebufferInfo.flags = 0;
         framebufferInfo.renderPass = renderPass;
-        framebufferInfo.attachmentCount = 1;
-        framebufferInfo.pAttachments = &views[i];
+        framebufferInfo.attachmentCount = 2;
+        framebufferInfo.pAttachments = imageViews;
         framebufferInfo.width = extent.width;
         framebufferInfo.height = extent.height;
         framebufferInfo.layers = 1;
@@ -728,7 +834,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 //  return : True if swapchain is successfully resized                        //
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface)
+    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
+    VulkanMemory& vulkanMemory)
 {
     // Recreate swapchain
     if (vulkanDevice)
@@ -752,11 +859,22 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
                         vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
                     }
 
+                    // Destroy swapchain depth images views
+                    if (depthViews[i] && vkDestroyImageView)
+                    {
+                        vkDestroyImageView(vulkanDevice, depthViews[i], 0);
+                    }
+
                     // Destroy swapchain images views
                     if (views[i] && vkDestroyImageView)
                     {
-                        // Destroy image view
                         vkDestroyImageView(vulkanDevice, views[i], 0);
+                    }
+
+                    // Destroy swapchain depth images
+                    if (depthImages[i] && vkDestroyImage)
+                    {
+                        vkDestroyImage(vulkanDevice, depthImages[i], 0);
                     }
                 }
             }
@@ -773,6 +891,9 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         framebuffers[i] = 0;
         views[i] = 0;
     }
+
+    // Reset swapchain memory
+    vulkanMemory.resetSwapchainMemory();
 
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
@@ -1062,7 +1183,50 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         ratio = (extent.width*1.0f) / (extent.height*1.0f);
     }
 
-    // Create swapchain images views
+    // Recreate swapchain depth images
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        // Recreate depth image
+        VkImageCreateInfo imageInfo;
+        imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imageInfo.pNext = 0;
+        imageInfo.flags = 0;
+        imageInfo.imageType = VK_IMAGE_TYPE_2D;
+        imageInfo.format = VK_FORMAT_D32_SFLOAT;
+        imageInfo.extent.width = extent.width;
+        imageInfo.extent.height = extent.height;
+        imageInfo.extent.depth = 1;
+        imageInfo.mipLevels = 1;
+        imageInfo.arrayLayers = 1;
+        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+        imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.queueFamilyIndexCount = 0;
+        imageInfo.pQueueFamilyIndices = 0;
+        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+        if (vkCreateImage(vulkanDevice,
+            &imageInfo, 0, &depthImages[i]) != VK_SUCCESS)
+        {
+            // Could not create depth image
+            return false;
+        }
+        if (!depthImages[i])
+        {
+            // Invalid depth image
+            return false;
+        }
+
+        // Allocate depth image memory
+        if (!vulkanMemory.allocateSwapchainImage(vulkanDevice, depthImages[i]))
+        {
+            // Could not allocate depth image memory
+            return false;
+        }
+    }
+
+    // Recreate swapchain images views
     VkComponentMapping components;
     components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -1078,7 +1242,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
 
     for (uint32_t i = 0; i < frames; ++i)
     {
-        // Create image view
+        // Recreate image view
         VkImageViewCreateInfo imageView;
         imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         imageView.pNext = 0;
@@ -1092,7 +1256,42 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         if (vkCreateImageView(
             vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
         {
-            // Could not create swapchain image view
+            // Could not recreate swapchain image view
+            return false;
+        }
+    }
+
+    // Recreate swapchain depth images views
+    VkComponentMapping depthComponents;
+    depthComponents.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthComponents.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthComponents.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthComponents.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    VkImageSubresourceRange depthSubresource;
+    depthSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    depthSubresource.baseMipLevel = 0;
+    depthSubresource.levelCount = 1;
+    depthSubresource.baseArrayLayer = 0;
+    depthSubresource.layerCount = 1;
+
+    for (uint32_t i = 0; i < frames; ++i)
+    {
+        // Recreate depth image view
+        VkImageViewCreateInfo depthImageView;
+        depthImageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        depthImageView.pNext = 0;
+        depthImageView.flags = 0;
+        depthImageView.image = depthImages[i];
+        depthImageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        depthImageView.format = VK_FORMAT_D32_SFLOAT;
+        depthImageView.components = depthComponents;
+        depthImageView.subresourceRange = depthSubresource;
+
+        if (vkCreateImageView(
+            vulkanDevice, &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
+        {
+            // Could not recreate swapchain depth image view
             return false;
         }
     }
@@ -1100,13 +1299,17 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     // Recreate framebuffers
     for (uint32_t i = 0; i < frames; ++i)
     {
+        VkImageView imageViews[2];
+        imageViews[0] = views[i];
+        imageViews[1] = depthViews[i];
+
         VkFramebufferCreateInfo framebufferInfo;
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferInfo.pNext = 0;
         framebufferInfo.flags = 0;
         framebufferInfo.renderPass = renderPass;
-        framebufferInfo.attachmentCount = 1;
-        framebufferInfo.pAttachments = &views[i];
+        framebufferInfo.attachmentCount = 2;
+        framebufferInfo.pAttachments = imageViews;
         framebufferInfo.width = extent.width;
         framebufferInfo.height = extent.height;
         framebufferInfo.layers = 1;
@@ -1114,7 +1317,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         if (vkCreateFramebuffer(
             vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
         {
-            // Could not create framebuffer
+            // Could not recreate framebuffer
             return false;
         }
         if (!framebuffers[i])
@@ -1135,7 +1338,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         if (vkCreateFence(
             vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
         {
-            // Could not create fence
+            // Could not recreate fence
             return false;
         }
         if (!fences[i])
@@ -1183,12 +1386,9 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
                     }
 
                     // Destroy fences
-                    if (vkDestroyFence)
+                    if (fences[i] && vkDestroyFence)
                     {
-                        if (fences[i])
-                        {
-                            vkDestroyFence(vulkanDevice, fences[i], 0);
-                        }
+                        vkDestroyFence(vulkanDevice, fences[i], 0);
                     }
 
                     // Destroy semaphores
@@ -1207,24 +1407,31 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
                     }
 
                     // Destroy framebuffers
-                    if (vkDestroyFramebuffer)
+                    if (framebuffers[i] && vkDestroyFramebuffer)
                     {
-                        if (framebuffers[i])
-                        {
-                            vkDestroyFramebuffer(
-                                vulkanDevice, framebuffers[i], 0
-                            );
-                        }
+                        vkDestroyFramebuffer(
+                            vulkanDevice, framebuffers[i], 0
+                        );
+                    }
+
+                    // Destroy swapchain depth images views
+                    if (depthViews[i] && vkDestroyImageView)
+                    {
+                        // Destroy image view
+                        vkDestroyImageView(vulkanDevice, depthViews[i], 0);
                     }
 
                     // Destroy swapchain images views
-                    if (vkDestroyImageView)
+                    if (views[i] && vkDestroyImageView)
                     {
-                        if (views[i])
-                        {
-                            // Destroy image view
-                            vkDestroyImageView(vulkanDevice, views[i], 0);
-                        }
+                        // Destroy image view
+                        vkDestroyImageView(vulkanDevice, views[i], 0);
+                    }
+
+                    // Destroy swapchain depth images
+                    if (depthImages[i] && vkDestroyImage)
+                    {
+                        vkDestroyImage(vulkanDevice, depthImages[i], 0);
                     }
                 }
 

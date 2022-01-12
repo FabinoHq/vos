@@ -278,7 +278,7 @@ bool Texture::createTexture(Renderer& renderer, uint32_t width, uint32_t height)
         );
     }
 
-    // Vulkan Texture successfully created
+    // Texture successfully created
     return true;
 }
 
