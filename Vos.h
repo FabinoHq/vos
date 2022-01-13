@@ -46,6 +46,7 @@
     #include "System/SysMessage.h"
     #include "System/SysMemory.h"
     #include "System/SysWindow.h"
+    #include "System/SysClock.h"
     #include "Renderer/Renderer.h"
     #include "Renderer/View.h"
     #include "Renderer/Camera.h"
@@ -104,6 +105,7 @@
             bool            m_running;          // VOS running state
             SysWindow       m_window;           // VOS main window
             Renderer        m_renderer;         // VOS renderer
+            SysClock        m_clock;            // VOS clock
             Texture         m_cursorTexture;    // Cursor texture
             Sprite          m_cursor;           // Cursor sprite
 

@@ -71,11 +71,13 @@
             //  Get elapsed time since last reset in seconds                  //
             ////////////////////////////////////////////////////////////////////
             double getElapsedTime();
+            float getElapsedTimeF();
 
             ////////////////////////////////////////////////////////////////////
             //  Get elapsed time in seconds and reset the clock               //
             ////////////////////////////////////////////////////////////////////
             double getAndReset();
+            float getAndResetF();
 
 
         private:

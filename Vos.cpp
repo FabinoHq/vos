@@ -49,6 +49,7 @@ Vos::Vos() :
 m_running(false),
 m_window(),
 m_renderer(),
+m_clock(),
 m_cursorTexture(),
 m_cursor(),
 m_view(),
@@ -139,7 +140,7 @@ bool Vos::launch()
         return false;
     }
     m_freeflycam.setZ(1.0f);
-    m_freeflycam.setSpeed(10.0f);
+    m_freeflycam.setSpeed(5.0f);
 
 
     // Init procedural sprite
@@ -199,6 +200,7 @@ bool Vos::launch()
 void Vos::run()
 {
     // Run VOS
+    m_clock.reset();
     m_running = true;
     while (m_running)
     {
@@ -289,10 +291,12 @@ void Vos::run()
             }
         }
 
+        float frametime = m_clock.getAndResetF();
+
         // Compute frame
         m_view.compute(m_renderer);
         m_camera.compute(m_renderer);
-        m_freeflycam.compute(m_renderer, 0.001f);
+        m_freeflycam.compute(m_renderer, frametime);
 
         // Render frame
         if (m_renderer.startFrame())

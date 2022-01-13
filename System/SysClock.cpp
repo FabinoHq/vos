@@ -78,6 +78,13 @@ double SysClock::getElapsedTime()
     return elapsedTime;
 }
 
+float SysClock::getElapsedTimeF()
+{
+    float elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>
+        (std::chrono::steady_clock::now()-m_start).count()*0.000000001f;
+    return elapsedTime;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Get elapsed time in seconds and reset the clock                           //
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,6 +92,14 @@ double SysClock::getAndReset()
 {
     double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>
         (std::chrono::steady_clock::now() - m_start).count()*0.000000001;
+    m_start = std::chrono::steady_clock::now();
+    return elapsedTime;
+}
+
+float SysClock::getAndResetF()
+{
+    float elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>
+        (std::chrono::steady_clock::now() - m_start).count()*0.000000001f;
     m_start = std::chrono::steady_clock::now();
     return elapsedTime;
 }
