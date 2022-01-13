@@ -50,6 +50,12 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Texture settings                                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint64_t TextureFenceTimeout = 100000000000;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Renderer class declaration                                            //
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
@@ -77,14 +83,15 @@
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
             bool createTexture(Renderer& renderer,
-                uint32_t width, uint32_t height);
+                uint32_t width, uint32_t height, bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////
             //  Update texture                                                //
             //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
             bool updateTexture(Renderer& renderer,
-                uint32_t width, uint32_t height, const unsigned char* data);
+                uint32_t width, uint32_t height, const unsigned char* data,
+                bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture                                                  //

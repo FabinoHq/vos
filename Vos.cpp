@@ -172,7 +172,7 @@ bool Vos::launch()
         return false;
     }
     if (!m_testtexture.updateTexture(m_renderer,
-        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage()))
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(), false))
     {
         return false;
     }
@@ -204,6 +204,7 @@ void Vos::run()
     m_running = true;
     while (m_running)
     {
+        float frametime = m_clock.getAndResetF();
         float scale = m_renderer.getScale();
         float ratio = m_renderer.getRatio();
 
@@ -290,8 +291,6 @@ void Vos::run()
                     break;
             }
         }
-
-        float frametime = m_clock.getAndResetF();
 
         // Compute frame
         m_view.compute(m_renderer);

@@ -257,8 +257,8 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(
-        vulkanDevice, 1, &fence, VK_FALSE, 100000000000) != VK_SUCCESS)
+    if (vkWaitForFences(vulkanDevice, 1,
+        &fence, VK_FALSE, UniformBufferFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
         return false;

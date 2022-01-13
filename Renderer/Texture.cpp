@@ -85,7 +85,8 @@ Texture::~Texture()
 //  Create texture                                                            //
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::createTexture(Renderer& renderer, uint32_t width, uint32_t height)
+bool Texture::createTexture(Renderer& renderer,
+    uint32_t width, uint32_t height, bool smooth)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -176,8 +177,16 @@ bool Texture::createTexture(Renderer& renderer, uint32_t width, uint32_t height)
     samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
     samplerInfo.pNext = 0;
     samplerInfo.flags = 0;
-    samplerInfo.magFilter = VK_FILTER_NEAREST;
-    samplerInfo.minFilter = VK_FILTER_NEAREST;
+    if (smooth)
+    {
+        samplerInfo.magFilter = VK_FILTER_LINEAR;
+        samplerInfo.minFilter = VK_FILTER_LINEAR;
+    }
+    else
+    {
+        samplerInfo.magFilter = VK_FILTER_NEAREST;
+        samplerInfo.minFilter = VK_FILTER_NEAREST;
+    }
     samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
     samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
     samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
@@ -287,7 +296,7 @@ bool Texture::createTexture(Renderer& renderer, uint32_t width, uint32_t height)
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::updateTexture(Renderer& renderer,
-    uint32_t width, uint32_t height, const unsigned char* data)
+    uint32_t width, uint32_t height, const unsigned char* data, bool smooth)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -329,7 +338,7 @@ bool Texture::updateTexture(Renderer& renderer,
     {
         // Recreate texture
         destroyTexture(renderer);
-        createTexture(renderer, width, height);
+        createTexture(renderer, width, height, smooth);
     }
 
     // Write data into staging buffer memory
@@ -479,7 +488,7 @@ bool Texture::updateTexture(Renderer& renderer,
 
     // Wait for transfer to finish
     if (vkWaitForFences(renderer.m_vulkanDevice, 1,
-        &fence, VK_FALSE, 100000000000) != VK_SUCCESS)
+        &fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
         return false;
