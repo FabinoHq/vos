@@ -115,6 +115,8 @@
 !Renderer/ProcSprite.cpp
 !Renderer/StaticMesh.h
 !Renderer/StaticMesh.cpp
+!Renderer/HeightMapChunk.h
+!Renderer/HeightMapChunk.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
 

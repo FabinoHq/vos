@@ -62,7 +62,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
-	Renderer/StaticMesh.o \
+	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o
 
 	$(CC) -o VOS \
@@ -82,7 +82,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
-	Renderer/StaticMesh.o \
+	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
 
@@ -198,6 +198,9 @@ Renderer/Shapes/Oval.o: Renderer/Shapes/Oval.cpp
 
 Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 	$(CC) -o Renderer/StaticMesh.o -c Renderer/StaticMesh.cpp $(CFLAGS)
+
+Renderer/HeightMapChunk.o: Renderer/HeightMapChunk.cpp
+	$(CC) -o Renderer/HeightMapChunk.o -c Renderer/HeightMapChunk.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

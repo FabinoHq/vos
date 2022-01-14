@@ -134,6 +134,9 @@
     <ClCompile Include="Renderer\StaticMesh.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\HeightMapChunk.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -287,6 +290,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\StaticMesh.h">
       <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMapChunk.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

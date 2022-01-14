@@ -54,6 +54,8 @@
     #include "Renderer/ProcSprite.h"
     #include "Renderer/Shapes/Rect.h"
     #include "Renderer/Shapes/Oval.h"
+    #include "Renderer/StaticMesh.h"
+    #include "Renderer/HeightMapChunk.h"
     #include "Event.h"
 
     #include "Images/Embedded/Cursor.h"
@@ -109,19 +111,21 @@
             Texture         m_cursorTexture;    // Cursor texture
             Sprite          m_cursor;           // Cursor sprite
 
-            View            m_view;         // View
-            Camera          m_camera;       // Camera
-            FreeFlyCam      m_freeflycam;   // Freefly camera
+            View            m_view;             // View
+            Camera          m_camera;           // Camera
+            FreeFlyCam      m_freeflycam;       // Freefly camera
 
-            ProcSprite      m_procsprite;   // Procedural sprite
-            Rect            m_rect;         // Rect shape
-            Oval            m_oval;         // Oval shape
+            ProcSprite      m_procSprite;       // Procedural sprite
+            Rect            m_rect;             // Rect shape
+            Oval            m_oval;             // Oval shape
 
-            Texture         m_testtexture;  // Test texture
-            StaticMesh      m_staticmesh;   // Static mesh
+            Texture         m_testTexture;      // Test texture
+            StaticMesh      m_staticMesh;       // Static mesh
 
-            float           m_mouseX;       // Mouse X position
-            float           m_mouseY;       // Mouse Y position
+            HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
+
+            float           m_mouseX;           // Mouse X position
+            float           m_mouseY;           // Mouse Y position
     };
 
 

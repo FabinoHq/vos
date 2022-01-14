@@ -55,11 +55,12 @@ m_cursor(),
 m_view(),
 m_camera(),
 m_freeflycam(),
-m_procsprite(),
+m_procSprite(),
 m_rect(),
 m_oval(),
-m_testtexture(),
-m_staticmesh(),
+m_testTexture(),
+m_staticMesh(),
+m_heightMapChunk(),
 m_mouseX(0.0f),
 m_mouseY(0.0f)
 {
@@ -144,7 +145,7 @@ bool Vos::launch()
 
 
     // Init procedural sprite
-    if (!m_procsprite.init(m_renderer, 0, 0, 1.0f, 1.0f))
+    if (!m_procSprite.init(m_renderer, 0, 0, 1.0f, 1.0f))
     {
         // Could not init procedural sprite
         return false;
@@ -165,13 +166,13 @@ bool Vos::launch()
     }
 
 
-    // Load mesh texture
+    // Load test texture
     PNGFile pngfile;
     if (!pngfile.loadImage("Textures/testsprite.png"))
     {
         return false;
     }
-    if (!m_testtexture.updateTexture(m_renderer,
+    if (!m_testTexture.updateTexture(m_renderer,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(), false))
     {
         return false;
@@ -179,10 +180,17 @@ bool Vos::launch()
     pngfile.destroyImage();
 
     // Init static mesh
-    if (!m_staticmesh.loadVMSH(
-        m_renderer, m_testtexture, "Models/testmodel.vmsh"))
+    if (!m_staticMesh.loadVMSH(
+        m_renderer, m_testTexture, "Models/testmodel.vmsh"))
     {
         // Could not init static mesh
+        return false;
+    }
+
+    // Init heightmap chunk
+    if (!m_heightMapChunk.generateFlat(m_renderer, m_testTexture))
+    {
+        // Could not init heightmap chunk
         return false;
     }
 
@@ -308,9 +316,14 @@ void Vos::run()
             m_renderer.setCamera(m_freeflycam);
 
             // Render static mesh
+            /*m_renderer.bindStaticMeshPipeline();
+            m_staticMesh.bindVertexBuffer(m_renderer);
+            m_staticMesh.render(m_renderer);*/
+
+            // Render heightmap chunk
             m_renderer.bindStaticMeshPipeline();
-            m_staticmesh.bindVertexBuffer(m_renderer);
-            m_staticmesh.render(m_renderer);
+            m_heightMapChunk.bindVertexBuffer(m_renderer);
+            m_heightMapChunk.render(m_renderer);
 
 
             // Set default screen view
@@ -332,10 +345,10 @@ void Vos::run()
             m_oval.render(m_renderer);*/
 
             // Render procedural sprite
-            /*m_procsprite.bindPipeline(m_renderer);
-            m_procsprite.setSize(1.0f, 1.0f);
-            m_procsprite.setPosition(-0.5f, -0.5f);
-            m_procsprite.render(m_renderer);*/
+            /*m_procSprite.bindPipeline(m_renderer);
+            m_procSprite.setSize(1.0f, 1.0f);
+            m_procSprite.setPosition(-0.5f, -0.5f);
+            m_procSprite.render(m_renderer);*/
 
             // Draw cursor
             /*m_renderer.bindDefaultPipeline();
@@ -353,14 +366,17 @@ void Vos::run()
     // Wait for renderer device idle state
     if (m_renderer.waitDeviceIdle())
     {
+        // Destroy heightmap chunk
+        m_heightMapChunk.destroyHeightMapChunk(m_renderer);
+
         // Destroy static mesh
-        m_staticmesh.destroyStaticMesh(m_renderer);
+        m_staticMesh.destroyStaticMesh(m_renderer);
 
         // Destroy test texture
-        m_testtexture.destroyTexture(m_renderer);
+        m_testTexture.destroyTexture(m_renderer);
 
         // Destroy procedural sprite
-        m_procsprite.destroyProcSprite(m_renderer);
+        m_procSprite.destroyProcSprite(m_renderer);
 
 
         // Destroy freefly camera

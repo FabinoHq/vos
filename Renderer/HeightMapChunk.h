@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/StaticMesh.h : Static mesh management                         //
+//     Renderer/HeightMapChunk.h : HeightMap chunk management                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_STATICMESH_HEADER
-#define VOS_RENDERER_STATICMESH_HEADER
+#ifndef VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
+#define VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
 
     #include "Vulkan/VertexBuffer.h"
     #include "Texture.h"
@@ -61,181 +61,187 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  StaticMesh class definition                                           //
+    //  HeightMapChunk class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class StaticMesh
+    class HeightMapChunk
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  StaticMesh default constructor                                //
+            //  HeightMapChunk default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            StaticMesh();
+            HeightMapChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  StaticMesh destructor                                         //
+            //  HeightMapChunk destructor                                     //
             ////////////////////////////////////////////////////////////////////
-            ~StaticMesh();
+            ~HeightMapChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init static mesh                                              //
-            //  return : True if the static mesh is successfully created      //
+            //  Init heightmap chunk                                          //
+            //  return : True if the heightmap chunk is successfully created  //
             ////////////////////////////////////////////////////////////////////
             bool init(Renderer& renderer, Texture& texture,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 
             ////////////////////////////////////////////////////////////////////
-            //  Load static mesh from VMSH file                               //
-            //  return : True if the static mesh is successfully loaded       //
+            //  Generate flat heightmap chunk                                 //
+            //  return : True if the float heightmap chunk is generated       //
+            ////////////////////////////////////////////////////////////////////
+            bool generateFlat(Renderer& renderer, Texture& texture);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Load heightmap chunk from VMSH file                           //
+            //  return : True if the heightmap chunk is successfully loaded   //
             ////////////////////////////////////////////////////////////////////
             bool loadVMSH(Renderer& renderer,
                 Texture& texture, const std::string& filepath);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy static mesh                                           //
+            //  Destroy heightmap chunk                                       //
             ////////////////////////////////////////////////////////////////////
-            void destroyStaticMesh(Renderer& renderer);
+            void destroyHeightMapChunk(Renderer& renderer);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh texture                                       //
-            //  return : True if static mesh texture is successfully set      //
+            //  Set heightmap chunk texture                                   //
+            //  return : True if heightmap chunk texture is successfully set  //
             ////////////////////////////////////////////////////////////////////
             bool setTexture(Texture& texture);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh position                                      //
+            //  Set heightmap chunk position                                  //
             ////////////////////////////////////////////////////////////////////
             void setPosition(float x, float y, float z);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh position                                      //
+            //  Set heightmap chunk position                                  //
             ////////////////////////////////////////////////////////////////////
             void setPosition(Vector3& position);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh X position                                    //
+            //  Set heightmap chunk X position                                //
             ////////////////////////////////////////////////////////////////////
             void setX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh Y position                                    //
+            //  Set heightmap chunk Y position                                //
             ////////////////////////////////////////////////////////////////////
             void setY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh Z position                                    //
+            //  Set heightmap chunk Z position                                //
             ////////////////////////////////////////////////////////////////////
             void setZ(float z);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate static mesh                                         //
+            //  Translate heightmap chunk                                     //
             ////////////////////////////////////////////////////////////////////
             void move(float x, float y, float z);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate static mesh                                         //
+            //  Translate heightmap chunk                                     //
             ////////////////////////////////////////////////////////////////////
             void move(Vector3& vector);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate static mesh on X axis                               //
+            //  Translate heightmap chunk on X axis                           //
             ////////////////////////////////////////////////////////////////////
             void moveX(float x);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate static mesh on Y axis                               //
+            //  Translate heightmap chunk on Y axis                           //
             ////////////////////////////////////////////////////////////////////
             void moveY(float y);
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate static mesh on Z axis                               //
+            //  Translate heightmap chunk on Z axis                           //
             ////////////////////////////////////////////////////////////////////
             void moveZ(float z);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh rotation angles                               //
+            //  Set heightmap chunk rotation angles                           //
             ////////////////////////////////////////////////////////////////////
             void setAngles(float angleX, float angleY, float angleZ);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh rotation angles                               //
+            //  Set heightmap chunk rotation angles                           //
             ////////////////////////////////////////////////////////////////////
             void setAngles(Vector3& angles);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh X rotation angle                              //
+            //  Set heightmap chunk chunk X rotation angle                    //
             ////////////////////////////////////////////////////////////////////
             void setAngleX(float angleX);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh Y rotation angle                              //
+            //  Set heightmap chunk Y rotation angle                          //
             ////////////////////////////////////////////////////////////////////
             void setAngleY(float angleY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set static mesh Z rotation angle                              //
+            //  Set heightmap chunk Z rotation angle                          //
             ////////////////////////////////////////////////////////////////////
             void setAngleZ(float angleZ);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate static mesh                                            //
+            //  Rotate heightmap chunk                                        //
             ////////////////////////////////////////////////////////////////////
             void rotate(float angleX, float angleY, float angleZ);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate static mesh                                            //
+            //  Rotate heightmap chunk                                        //
             ////////////////////////////////////////////////////////////////////
             void rotate(Vector3& angles);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate static mesh around the X axis                          //
+            //  Rotate heightmap chunk around the X axis                      //
             ////////////////////////////////////////////////////////////////////
             void rotateX(float angleX);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate static mesh around the Y axis                          //
+            //  Rotate heightmap chunk around the Y axis                      //
             ////////////////////////////////////////////////////////////////////
             void rotateY(float angleY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate static mesh around the Z axis                          //
+            //  Rotate heightmap chunk around the Z axis                      //
             ////////////////////////////////////////////////////////////////////
             void rotateZ(float angleZ);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind static mesh vertex buffer                                //
+            //  Bind heightmap chunk vertex buffer                            //
             ////////////////////////////////////////////////////////////////////
             void bindVertexBuffer(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render static mesh                                            //
+            //  Render heightmap chunk                                        //
             ////////////////////////////////////////////////////////////////////
             void render(Renderer& renderer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  StaticMesh private copy constructor : Not copyable            //
+            //  HeightMapChunk private copy constructor : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            StaticMesh(const StaticMesh&) = delete;
+            HeightMapChunk(const HeightMapChunk&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  StaticMesh private copy operator : Not copyable               //
+            //  HeightMapChunk private copy operator : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            StaticMesh& operator=(const StaticMesh&) = delete;
+            HeightMapChunk& operator=(const HeightMapChunk&) = delete;
 
 
         private:
-            VertexBuffer    m_vertexBuffer;     // Static mesh vertex buffer
-            uint32_t        m_indicesCount;     // Static mesh indices count
-            Texture*        m_texture;          // Static mesh texture pointer
-            Matrix4x4       m_modelMatrix;      // Static mesh model matrix
-            Vector3         m_position;         // Static mesh position
-            Vector3         m_angles;           // Static mesh angles
+            VertexBuffer    m_vertexBuffer;     // Heightmap chunk vertex buffer
+            uint32_t        m_indicesCount;     // Heightmap chunk indices count
+            Texture*        m_texture;          // Heightmap chunk texture ptr
+            Matrix4x4       m_modelMatrix;      // Heightmap chunk model matrix
+            Vector3         m_position;         // Heightmap chunk position
+            Vector3         m_angles;           // Heightmap chunk angles
     };
 
 
-#endif // VOS_RENDERER_SPRITE_HEADER
+#endif // VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
