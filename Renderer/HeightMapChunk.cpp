@@ -214,9 +214,15 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
         m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
+        if (vertices) { delete[] vertices; }
+        if (indices) { delete[] indices; }
         return false;
     }
     m_indicesCount = indicesCount;
+
+    // Destroy mesh data
+    if (vertices) { delete[] vertices; }
+    if (indices) { delete[] indices; }
 
     // Check texture handle
     if (!texture.isValid())
@@ -228,9 +234,14 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
     // Set heightmap chunk texture pointer
     m_texture = &texture;
 
-    // Destroy mesh data
-    if (vertices) { delete[] vertices; }
-    if (indices) { delete[] indices; }
+    // Reset heightmap chunk model matrix
+    m_modelMatrix.setIdentity();
+
+    // Reset heightmap chunk position
+    m_position.reset();
+
+    // Reset heightmap chunk angles
+    m_angles.reset();
 
     // Heightmap chunk successfully generated
     return true;
@@ -332,6 +343,8 @@ bool HeightMapChunk::loadVMSH(Renderer& renderer,
         m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
+        if (vertices) { delete[] vertices; }
+        if (indices) { delete[] indices; }
         return false;
     }
     m_indicesCount = indicesCount;

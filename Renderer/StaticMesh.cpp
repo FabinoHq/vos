@@ -206,6 +206,8 @@ bool StaticMesh::loadVMSH(Renderer& renderer,
         m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
+        if (vertices) { delete[] vertices; }
+        if (indices) { delete[] indices; }
         return false;
     }
     m_indicesCount = indicesCount;
