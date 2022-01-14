@@ -87,7 +87,7 @@
 
             ////////////////////////////////////////////////////////////////////
             //  Generate flat heightmap chunk                                 //
-            //  return : True if the float heightmap chunk is generated       //
+            //  return : True if the flat heightmap chunk is generated        //
             ////////////////////////////////////////////////////////////////////
             bool generateFlat(Renderer& renderer, Texture& texture);
 

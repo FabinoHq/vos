@@ -112,7 +112,7 @@ bool HeightMapChunk::init(Renderer& renderer, Texture& texture,
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Generate flat heightmap chunk                                             //
-//  return : True if the float heightmap chunk is generated                   //
+//  return : True if the flat heightmap chunk is generated                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
 {
