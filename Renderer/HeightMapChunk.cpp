@@ -120,16 +120,10 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
     float* vertices = 0;
     uint16_t* indices = 0;
 
-    uint32_t hmWidth = 64;
-    uint32_t hmHeight = 64;
-    uint16_t hmWidthP1 = static_cast<uint16_t>(hmWidth+1);
-    uint16_t hmHeightP1 = static_cast<uint16_t>(hmHeight+1);
-
-    if (hmWidth <= 0) return false;
-    if (hmHeight <= 0) return false;
-
-    uint32_t verticesCount = ((hmWidth+1)*hmHeightP1*8);
-    uint32_t indicesCount = (6*hmWidth*hmHeight);
+    uint16_t hmWidthP1 = (HeightMapChunkWidth+1);
+    uint16_t hmHeightP1 = (HeightMapChunkHeight+1);
+    uint32_t verticesCount = ((HeightMapChunkWidth+1)*hmHeightP1*8);
+    uint32_t indicesCount = (6*HeightMapChunkWidth*HeightMapChunkHeight);
 
     // Allocate vertices and indices
     try
@@ -154,8 +148,8 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
     }
 
     // Generate vertices data
-    float texCoordIncX = 1.0f/(hmWidth*1.0f);
-    float texCoordIncY = 1.0f/(hmHeight*1.0f);
+    float texCoordIncX = 1.0f/(HeightMapChunkWidth*1.0f);
+    float texCoordIncY = 1.0f/(HeightMapChunkHeight*1.0f);
     float vertX = 0.0f;
     float vertZ = 0.0f;
     float texCoordX = 0.0f;
@@ -164,12 +158,12 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
     uint32_t iIndex = 0;
     uint16_t iOffset = 0;
 
-    for (uint32_t j = 0; j <= hmHeight; ++j)
+    for (uint32_t j = 0; j <= HeightMapChunkHeight; ++j)
     {
         vertX = 0.0f;
         texCoordX = 0.0f;
 
-        for (uint32_t i = 0; i <= hmWidth; ++i)
+        for (uint32_t i = 0; i <= HeightMapChunkWidth; ++i)
         {
             vertices[vIndex+0] = vertX;
             vertices[vIndex+1] = 0.0f;
@@ -183,18 +177,18 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
             vertices[vIndex+7] = 0.0f;
 
             vIndex += 8;
-            vertX += 1.0f;
+            vertX += HeightMapChunkPlaneWidth;
             texCoordX += texCoordIncX;
         }
 
-        vertZ += 1.0f;
+        vertZ += HeightMapChunkPlaneHeight;
         texCoordY += texCoordIncY;
     }
 
     // Generate indices data
-    for (uint32_t j = 0; j < hmHeight; ++j)
+    for (uint32_t j = 0; j < HeightMapChunkHeight; ++j)
     {
-        for (uint32_t i = 0; i < hmWidth; ++i)
+        for (uint32_t i = 0; i < HeightMapChunkWidth; ++i)
         {
             indices[iIndex+0] = iOffset+hmWidthP1;
             indices[iIndex+1] = iOffset+hmWidthP1+1;
