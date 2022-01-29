@@ -148,8 +148,10 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
     }
 
     // Generate vertices data
-    float texCoordIncX = 1.0f/(HeightMapChunkWidth*1.0f);
-    float texCoordIncY = 1.0f/(HeightMapChunkHeight*1.0f);
+    float texCoordIncX = HeightMapChunkTexcoordsWidth /
+        (HeightMapChunkWidth * 1.0f);
+    float texCoordIncY = HeightMapChunkTexcoordsHeight /
+        (HeightMapChunkHeight * 1.0f);
     float vertX = 0.0f;
     float vertZ = 0.0f;
     float texCoordX = 0.0f;

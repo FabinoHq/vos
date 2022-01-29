@@ -86,7 +86,7 @@ Texture::~Texture()
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::createTexture(Renderer& renderer,
-    uint32_t width, uint32_t height, bool smooth)
+    uint32_t width, uint32_t height, bool smooth, bool repeat)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -188,8 +188,16 @@ bool Texture::createTexture(Renderer& renderer,
         samplerInfo.minFilter = VK_FILTER_NEAREST;
     }
     samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    if (repeat)
+    {
+        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+    }
+    else
+    {
+        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    }
     samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
     samplerInfo.mipLodBias = 0.0f;
     samplerInfo.anisotropyEnable = VK_FALSE;
@@ -296,7 +304,8 @@ bool Texture::createTexture(Renderer& renderer,
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::updateTexture(Renderer& renderer,
-    uint32_t width, uint32_t height, const unsigned char* data, bool smooth)
+    uint32_t width, uint32_t height, const unsigned char* data,
+    bool smooth, bool repeat)
 {
     // Check physical device
     if (!renderer.m_physicalDevice)
@@ -338,7 +347,7 @@ bool Texture::updateTexture(Renderer& renderer,
     {
         // Recreate texture
         destroyTexture(renderer);
-        createTexture(renderer, width, height, smooth);
+        createTexture(renderer, width, height, smooth, repeat);
     }
 
     // Write data into staging buffer memory

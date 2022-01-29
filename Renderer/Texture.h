@@ -83,7 +83,8 @@
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
             bool createTexture(Renderer& renderer,
-                uint32_t width, uint32_t height, bool smooth = true);
+                uint32_t width, uint32_t height,
+                bool smooth = true, bool repeat = false);
 
             ////////////////////////////////////////////////////////////////////
             //  Update texture                                                //
@@ -91,7 +92,7 @@
             ////////////////////////////////////////////////////////////////////
             bool updateTexture(Renderer& renderer,
                 uint32_t width, uint32_t height, const unsigned char* data,
-                bool smooth = true);
+                bool smooth = true, bool repeat = false);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture                                                  //

@@ -173,7 +173,7 @@ bool Vos::launch()
         return false;
     }
     if (!m_testTexture.updateTexture(m_renderer,
-        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(), false))
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(), false, true))
     {
         return false;
     }
