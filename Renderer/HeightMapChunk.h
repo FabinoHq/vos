@@ -103,6 +103,13 @@
             bool generateFlat(Renderer& renderer, Texture& texture);
 
             ////////////////////////////////////////////////////////////////////
+            //  Generate heightmap chunk                                      //
+            //  return : True if the heightmap chunk is generated             //
+            ////////////////////////////////////////////////////////////////////
+            bool generate(Renderer& renderer, Texture& texture,
+                float* heightmap);
+
+            ////////////////////////////////////////////////////////////////////
             //  Load heightmap chunk from VMSH file                           //
             //  return : True if the heightmap chunk is successfully loaded   //
             ////////////////////////////////////////////////////////////////////

@@ -187,8 +187,39 @@ bool Vos::launch()
         return false;
     }
 
+    // Allocate heightmap data
+    float* heightmap = 0;
+    try
+    {
+        heightmap = new float[(HeightMapChunkWidth+3)*(HeightMapChunkHeight+3)];
+    }
+    catch (const std::bad_alloc&)
+    {
+        heightmap = 0;
+    }
+    catch (...)
+    {
+        heightmap = 0;
+    }
+    if (!heightmap)
+    {
+        // Could not allocate heightmap data
+        return false;
+    }
+
+    // Generate heightmap data
+    size_t heightmapIndex = 0;
+    for (uint32_t j = 0; j <= (HeightMapChunkHeight+2); ++j)
+    {
+        for (uint32_t i = 0; i <= (HeightMapChunkWidth+2); ++i)
+        {
+            heightmapIndex = (j * (HeightMapChunkWidth+3)) + i;
+            heightmap[heightmapIndex] = 0.0f;
+        }
+    }
+
     // Init heightmap chunk
-    if (!m_heightMapChunk.generateFlat(m_renderer, m_testTexture))
+    if (!m_heightMapChunk.generate(m_renderer, m_testTexture, heightmap))
     {
         // Could not init heightmap chunk
         return false;
