@@ -225,6 +225,9 @@ bool Vos::launch()
         return false;
     }
 
+    // Cleanup heightmap data
+    if (heightmap) { delete[] heightmap; }
+
 
     // Run VOS
     run();

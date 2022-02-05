@@ -59,10 +59,10 @@
     ////////////////////////////////////////////////////////////////////////////
     const uint16_t HeightMapChunkWidth = 64;
     const uint16_t HeightMapChunkHeight = 64;
-    const float HeightMapChunkPlaneWidth = 1.0f;
-    const float HeightMapChunkPlaneHeight = 1.0f;
-    const float HeightMapChunkTexcoordsWidth = 1.0f;
-    const float HeightMapChunkTexcoordsHeight = 1.0f;
+    const float HeightMapChunkPlaneWidth = 2.0f;
+    const float HeightMapChunkPlaneHeight = 2.0f;
+    const float HeightMapChunkTexcoordsWidth = 4.0f;
+    const float HeightMapChunkTexcoordsHeight = 4.0f;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -108,6 +108,12 @@
             ////////////////////////////////////////////////////////////////////
             bool generate(Renderer& renderer, Texture& texture,
                 float* heightmap);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update heightmap chunk                                        //
+            //  return : True if the heightmap chunk is updated               //
+            ////////////////////////////////////////////////////////////////////
+            bool update(Renderer& renderer, float* heightmap);
 
             ////////////////////////////////////////////////////////////////////
             //  Load heightmap chunk from VMSH file                           //

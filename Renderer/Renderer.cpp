@@ -833,6 +833,19 @@ bool Renderer::createVertexBuffer(VertexBuffer& vertexBuffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Update vertex buffer                                                      //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::updateVertexBuffer(VertexBuffer& vertexBuffer,
+    const float* vertices, const uint16_t* indices,
+    uint32_t verticesCount, uint32_t indicesCount)
+{
+    // Update vertex buffer
+    return (vertexBuffer.updateBuffer(m_physicalDevice, m_vulkanDevice,
+        m_vulkanMemory, m_transferCommandPool, m_transferQueue,
+        vertices, indices, verticesCount, indicesCount));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy vertex buffer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::destroyVertexBuffer(VertexBuffer& vertexBuffer)

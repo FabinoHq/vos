@@ -406,6 +406,147 @@ bool HeightMapChunk::generate(Renderer& renderer, Texture& texture,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Update heightmap chunk                                                    //
+//  return : True if the heightmap chunk is updated                           //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapChunk::update(Renderer& renderer, float* heightmap)
+{
+    // Init heightmap chunk data
+    float* vertices = 0;
+    uint16_t* indices = 0;
+
+    uint16_t hmWidthP1 = (HeightMapChunkWidth+1);
+    uint16_t hmHeightP1 = (HeightMapChunkHeight+1);
+    uint32_t verticesCount = ((HeightMapChunkWidth+1)*hmHeightP1*8);
+    uint32_t indicesCount = (6*HeightMapChunkWidth*HeightMapChunkHeight);
+
+    // Check heightmap pointer
+    if (!heightmap)
+    {
+        return false;
+    }
+
+    // Allocate vertices and indices
+    try
+    {
+        vertices = new float[verticesCount];
+        indices = new uint16_t[indicesCount];
+    }
+    catch (const std::bad_alloc&)
+    {
+        vertices = 0;
+        indices = 0;
+    }
+    catch (...)
+    {
+        vertices = 0;
+        indices = 0;
+    }
+    if (!vertices || !indices)
+    {
+        // Invalid vertices or indices pointer
+        return false;
+    }
+
+    // Generate vertices data
+    float texCoordIncX = HeightMapChunkTexcoordsWidth /
+        (HeightMapChunkWidth * 1.0f);
+    float texCoordIncY = HeightMapChunkTexcoordsHeight /
+        (HeightMapChunkHeight * 1.0f);
+    float vertX = 0.0f;
+    float vertZ = 0.0f;
+    float texCoordX = 0.0f;
+    float texCoordY = 0.0f;
+    uint32_t vIndex = 0;
+    uint32_t iIndex = 0;
+    uint16_t iOffset = 0;
+
+    float top = 0.0f;
+    float bot = 0.0f;
+    float left = 0.0f;
+    float right = 0.0f;
+    Vector3 normal(0.0, 0.0, 0.0);
+
+    size_t heightmapIndex = 0;
+    for (uint32_t j = 0; j <= HeightMapChunkHeight; ++j)
+    {
+        vertX = 0.0f;
+        texCoordX = 0.0f;
+
+        for (uint32_t i = 0; i <= HeightMapChunkWidth; ++i)
+        {
+            heightmapIndex = ((j+1) * (HeightMapChunkWidth+3)) + (i+1);
+
+            // Set heightmap based on height data
+            vertices[vIndex+0] = vertX;
+            vertices[vIndex+1] = heightmap[heightmapIndex];
+            vertices[vIndex+2] = vertZ;
+
+            vertices[vIndex+3] = texCoordX;
+            vertices[vIndex+4] = texCoordY;
+
+            // Compute normal vector
+            top = heightmap[((j+0) * (HeightMapChunkWidth+3)) + (i+1)];
+            bot = heightmap[((j+2) * (HeightMapChunkWidth+3)) + (i+1)];
+            left = heightmap[((j+1) * (HeightMapChunkWidth+3)) + (i+0)];
+            right = heightmap[((j+1) * (HeightMapChunkWidth+3)) + (i+2)];
+            normal.vec[0] = left-right;
+            normal.vec[1] = 2.0;
+            normal.vec[2] = top-bot;
+            normal.normalize();
+
+            // Set normal vector
+            vertices[vIndex+5] = normal.vec[0];
+            vertices[vIndex+6] = normal.vec[1];
+            vertices[vIndex+7] = normal.vec[2];
+
+            vIndex += 8;
+            vertX += HeightMapChunkPlaneWidth;
+            texCoordX += texCoordIncX;
+        }
+
+        vertZ += HeightMapChunkPlaneHeight;
+        texCoordY += texCoordIncY;
+    }
+
+    // Generate indices data
+    for (uint32_t j = 0; j < HeightMapChunkHeight; ++j)
+    {
+        for (uint32_t i = 0; i < HeightMapChunkWidth; ++i)
+        {
+            indices[iIndex+0] = iOffset+hmWidthP1;
+            indices[iIndex+1] = iOffset+hmWidthP1+1;
+            indices[iIndex+2] = iOffset+1;
+            indices[iIndex+3] = iOffset+1;
+            indices[iIndex+4] = iOffset;
+            indices[iIndex+5] = iOffset+hmWidthP1;
+
+            iIndex += 6;
+            ++iOffset;
+        }
+        ++iOffset;
+    }
+
+    // Update vertex buffer
+    if (!renderer.updateVertexBuffer(
+        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
+    {
+        // Could not create vertex buffer
+        if (vertices) { delete[] vertices; }
+        if (indices) { delete[] indices; }
+        return false;
+    }
+    m_indicesCount = indicesCount;
+
+    // Destroy mesh data
+    if (vertices) { delete[] vertices; }
+    if (indices) { delete[] indices; }
+
+    // Heightmap chunk successfully updated
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Load heightmap chunk from VMSH file                                       //
 //  return : True if the heightmap chunk is successfully loaded               //
 ////////////////////////////////////////////////////////////////////////////////

@@ -106,6 +106,16 @@
                 uint32_t verticesCount, uint32_t indicesCount);
 
             ////////////////////////////////////////////////////////////////////
+            //  Update Vertex buffer                                          //
+            //  return : True if Vertex buffer is successfully updated        //
+            ////////////////////////////////////////////////////////////////////
+            bool updateBuffer(VkPhysicalDevice& physicalDevice,
+                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
+                VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+                const float* vertices, const uint16_t* indices,
+                uint32_t verticesCount, uint32_t indicesCount);
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy Vertex buffer                                         //
             ////////////////////////////////////////////////////////////////////
             void destroyBuffer(VkDevice& vulkanDevice,

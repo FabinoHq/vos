@@ -130,6 +130,29 @@
             return ((x%n)+n)%n;
         }
 
+        inline float modulus(float x, float n)
+        {
+            return (std::fmod((std::fmod(x,n)+n),n));
+        }
+
+        inline double modulus(double x, double n)
+        {
+            return (std::fmod((std::fmod(x,n)+n),n));
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Integer division                                                  //
+        //  param x : Left operand                                            //
+        //  param n : Right operand                                           //
+        //  return : Integer division (x / n)                                 //
+        ////////////////////////////////////////////////////////////////////////
+        inline int divide(int x, int n)
+        {
+            if (n == 0) return 0;
+            if (x < 0) x -= (n-1);
+            return (x/n);
+        }
+
         ////////////////////////////////////////////////////////////////////////
         //  Linear interpolation                                              //
         //  return : Interpolated value                                       //

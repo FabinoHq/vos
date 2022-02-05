@@ -60,7 +60,7 @@ int main()
             return 1;
         }
     }
-    catch (std::exception&)
+    catch (const std::exception&)
     {
         // Standard exception occured
         SysMessage::box() << "[0x0001] Unknown error occured\n";
