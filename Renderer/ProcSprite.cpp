@@ -131,7 +131,7 @@ void ProcSprite::destroyProcSprite(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Set procedural sprite color                                               //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setColor(Vector4 color)
+void ProcSprite::setColor(const Vector4& color)
 {
     m_color.vec[0] = color.vec[0];
     m_color.vec[1] = color.vec[1];

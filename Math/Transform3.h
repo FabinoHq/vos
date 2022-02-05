@@ -37,42 +37,42 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Math/Transform2.h : 2D transformations                                 //
+//     Math/Transform3.h : 3D transformations                                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_MATH_TRANSFORM2_HEADER
-#define VOS_MATH_TRANSFORM2_HEADER
+#ifndef VOS_MATH_TRANSFORM3_HEADER
+#define VOS_MATH_TRANSFORM3_HEADER
 
     #include "Math.h"
-    #include "Vector2.h"
+    #include "Vector3.h"
     #include "Matrix4x4.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Transform2 class definition                                           //
+    //  Transform3 class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
-    class Transform2
+    class Transform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Transform2 default constructor                                //
+            //  Transform3 default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Transform2() :
+            Transform3() :
             m_matrix(),
-            m_origin(0.0f, 0.0f),
-            m_position(0.0f, 0.0f),
-            m_size(1.0f, 1.0f),
-            m_angle(0.0f)
+            m_origin(0.0f, 0.0f, 0.0f),
+            m_position(0.0f, 0.0f, 0.0f),
+            m_scale(1.0f),
+            m_angles(0.0f, 0.0f, 0.0f)
             {
                 m_matrix.reset();
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Transform2 virtual destructor                                 //
+            //  Transform3 virtual destructor                                 //
             ////////////////////////////////////////////////////////////////////
-            virtual ~Transform2()
+            virtual ~Transform3()
             {
-                m_angle = 0.0f;
-                m_size.reset();
+                m_angles.reset();
+                m_scale = 0.0f;
                 m_position.reset();
                 m_origin.reset();
                 m_matrix.reset();
@@ -87,26 +87,28 @@
                 m_matrix.setIdentity();
                 m_origin.reset();
                 m_position.reset();
-                m_size.reset();
-                m_angle = 0.0f;
+                m_scale = 1.0f;
+                m_angles.reset();
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set origin                                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setOrigin(float x, float y)
+            inline void setOrigin(float x, float y, float z)
             {
                 m_origin.vec[0] = x;
                 m_origin.vec[1] = y;
+                m_origin.vec[2] = z;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set origin                                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setOrigin(const Vector2& origin)
+            inline void setOrigin(const Vector3& origin)
             {
                 m_origin.vec[0] = origin.vec[0];
                 m_origin.vec[1] = origin.vec[1];
+                m_origin.vec[2] = origin.vec[2];
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -126,21 +128,31 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate origin                                              //
+            //  Set Z origin                                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void moveOrigin(float x, float y)
+            inline void setOriginZ(float z)
             {
-                m_origin.vec[0] += x;
-                m_origin.vec[1] += y;
+                m_origin.vec[2] = z;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Translate origin                                              //
             ////////////////////////////////////////////////////////////////////
-            inline void moveOrigin(const Vector2& vector)
+            inline void moveOrigin(float x, float y, float z)
+            {
+                m_origin.vec[0] += x;
+                m_origin.vec[1] += y;
+                m_origin.vec[2] += z;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Translate origin                                              //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveOrigin(const Vector3& vector)
             {
                 m_origin.vec[0] += vector.vec[0];
                 m_origin.vec[1] += vector.vec[1];
+                m_origin.vec[2] += vector.vec[2];
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -160,21 +172,31 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set position                                                  //
+            //  Translate origin on Z axis                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(float x, float y)
+            inline void moveOriginZ(float z)
             {
-                m_position.vec[0] = x;
-                m_position.vec[1] = y;
+                m_origin.vec[2] += z;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set position                                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(const Vector2& position)
+            inline void setPosition(float x, float y, float z)
+            {
+                m_position.vec[0] = x;
+                m_position.vec[1] = y;
+                m_position.vec[2] = z;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set position                                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline void setPosition(const Vector3& position)
             {
                 m_position.vec[0] = position.vec[0];
                 m_position.vec[1] = position.vec[1];
+                m_position.vec[2] = position.vec[2];
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -194,21 +216,31 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Translate                                                     //
+            //  Set Z position                                                //
             ////////////////////////////////////////////////////////////////////
-            inline void move(float x, float y)
+            inline void setZ(float z)
             {
-                m_position.vec[0] += x;
-                m_position.vec[1] += y;
+                m_position.vec[2] = z;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Translate                                                     //
             ////////////////////////////////////////////////////////////////////
-            inline void move(const Vector2& vector)
+            inline void move(float x, float y, float z)
+            {
+                m_position.vec[0] += x;
+                m_position.vec[1] += y;
+                m_position.vec[2] += z;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Translate                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void move(const Vector3& vector)
             {
                 m_position.vec[0] += vector.vec[0];
                 m_position.vec[1] += vector.vec[1];
+                m_position.vec[2] += vector.vec[2];
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -228,37 +260,19 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set size                                                      //
+            //  Translate on Z axis                                           //
             ////////////////////////////////////////////////////////////////////
-            inline void setSize(float width, float height)
+            inline void moveZ(float z)
             {
-                m_size.vec[0] = width;
-                m_size.vec[1] = height;
+                m_position.vec[2] += z;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set size                                                      //
+            //  Set scale                                                     //
             ////////////////////////////////////////////////////////////////////
-            inline void setSize(const Vector2& size)
+            inline void setScale(float scale)
             {
-                m_size.vec[0] = size.vec[0];
-                m_size.vec[1] = size.vec[1];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set width                                                     //
-            ////////////////////////////////////////////////////////////////////
-            inline void setWidth(float width)
-            {
-                m_size.vec[0] = width;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set height                                                    //
-            ////////////////////////////////////////////////////////////////////
-            inline void setHeight(float height)
-            {
-                m_size.vec[1] = height;
+                m_scale = scale;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -266,31 +280,102 @@
             ////////////////////////////////////////////////////////////////////
             inline void scale(float scale)
             {
-                m_size.vec[0] *= scale;
-                m_size.vec[1] *= scale;
+                m_scale *= scale;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set angle                                                     //
+            //  Set angles                                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setAngle(float angle)
+            inline void setAngles(float angleX, float angleY, float angleZ)
             {
-                m_angle = angle;
+                m_angles.vec[0] = angleX;
+                m_angles.vec[1] = angleY;
+                m_angles.vec[2] = angleZ;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set angles                                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAngles(const Vector3& angles)
+            {
+                m_angles.vec[0] = angles.vec[0];
+                m_angles.vec[1] = angles.vec[1];
+                m_angles.vec[2] = angles.vec[2];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set angle X                                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAngleX(float angleX)
+            {
+                m_angles.vec[0] = angleX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set angle Y                                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAngleY(float angleY)
+            {
+                m_angles.vec[1] = angleY;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set angle Z                                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAngleZ(float angleZ)
+            {
+                m_angles.vec[2] = angleZ;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Rotate                                                        //
             ////////////////////////////////////////////////////////////////////
-            inline void rotate(float angle)
+            inline void rotate(float angleX, float angleY, float angleZ)
             {
-                m_angle += angle;
+                m_angles.vec[0] += angleX;
+                m_angles.vec[1] += angleY;
+                m_angles.vec[2] += angleZ;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Rotate                                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline void rotate(const Vector3& angles)
+            {
+                m_angles.vec[0] += angles.vec[0];
+                m_angles.vec[1] += angles.vec[1];
+                m_angles.vec[2] += angles.vec[2];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Rotate X                                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void rotateX(float angleX)
+            {
+                m_angles.vec[0] += angleX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Rotate Y                                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void rotateY(float angleY)
+            {
+                m_angles.vec[1] += angleY;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Rotate Z                                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void rotateZ(float angleZ)
+            {
+                m_angles.vec[2] += angleZ;
             }
 
 
             ////////////////////////////////////////////////////////////////////
             //  Get origin                                                    //
             ////////////////////////////////////////////////////////////////////
-            inline Vector2 getOrigin()
+            inline Vector3 getOrigin()
             {
                 return m_origin;
             }
@@ -312,9 +397,17 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get Z origin                                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline float getOriginZ()
+            {
+                return m_origin.vec[2];
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Get position                                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector2 getPosition()
+            inline Vector3 getPosition()
             {
                 return m_position;
             }
@@ -336,35 +429,51 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get size                                                      //
+            //  Get Z position                                                //
             ////////////////////////////////////////////////////////////////////
-            inline Vector2 getSize()
+            inline float getZ()
             {
-                return m_size;
+                return m_position.vec[2];
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get width                                                     //
+            //  Get scale                                                     //
             ////////////////////////////////////////////////////////////////////
-            inline float getWidth()
+            inline float getScale()
             {
-                return m_size.vec[0];
+                return m_scale;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get height                                                    //
+            //  Get angles                                                    //
             ////////////////////////////////////////////////////////////////////
-            inline float getHeight()
+            inline Vector3 getAngles()
             {
-                return m_size.vec[1];
+                return m_angles;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get angle                                                     //
+            //  Get angle X                                                   //
             ////////////////////////////////////////////////////////////////////
-            inline float getAngle()
+            inline float getAngleX()
             {
-                m_angle;
+                return m_angles.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get angle Y                                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline float getAngleY()
+            {
+                return m_angles.vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get angle Z                                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline float getAngleZ()
+            {
+                return m_angles.vec[2];
             }
 
 
@@ -375,31 +484,31 @@
             {
                 m_matrix.setIdentity();
                 m_matrix.translate(m_position);
-                m_matrix.rotateZ(m_angle);
+                m_matrix.rotate(m_angles);
                 m_matrix.translate(-m_origin);
-                m_matrix.scale(m_size);
+                m_matrix.scale(m_scale);
             }
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Transform2 private copy constructor : Not copyable            //
+            //  Transform3 private copy constructor : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            Transform2(const Transform2&) = delete;
+            Transform3(const Transform3&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Transform2 private copy operator : Not copyable               //
+            //  Transform3 private copy operator : Not copyable               //
             ////////////////////////////////////////////////////////////////////
-            Transform2& operator=(const Transform2&) = delete;
+            Transform3& operator=(const Transform3&) = delete;
 
 
         protected:
             Matrix4x4           m_matrix;           // Matrix
-            Vector2             m_origin;           // Origin (anchor)
-            Vector2             m_position;         // Position
-            Vector2             m_size;             // Size
-            float               m_angle;            // Angle
+            Vector3             m_origin;           // Origin (anchor)
+            Vector3             m_position;         // Position
+            float               m_scale;            // Scale
+            Vector3             m_angles;           // Angles
     };
 
 
-#endif // VOS_MATH_TRANSFORM2_HEADER
+#endif // VOS_MATH_TRANSFORM3_HEADER

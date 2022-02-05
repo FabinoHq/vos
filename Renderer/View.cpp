@@ -220,11 +220,11 @@ void View::compute(Renderer& renderer)
 
     // Compute view matrix
     m_matrix.setIdentity();
-    m_matrix.translate(-m_position.vec[0], -m_position.vec[1]);
-    m_matrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
+    m_matrix.translate(-m_position);
+    m_matrix.translate(m_size*0.5f);
     m_matrix.rotateZ(m_angle);
-    m_matrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
-    m_matrix.scale(m_size.vec[0], m_size.vec[1]);
+    m_matrix.translate(-m_size*0.5f);
+    m_matrix.scale(m_size);
 
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);

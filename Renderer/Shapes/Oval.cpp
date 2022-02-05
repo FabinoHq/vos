@@ -87,7 +87,7 @@ bool Oval::init(float width, float height)
 ////////////////////////////////////////////////////////////////////////////////
 //  Set oval color                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Oval::setColor(Vector4 color)
+void Oval::setColor(const Vector4& color)
 {
     m_color.vec[0] = color.vec[0];
     m_color.vec[1] = color.vec[1];

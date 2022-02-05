@@ -47,24 +47,19 @@
 //  StaticMesh default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
 StaticMesh::StaticMesh() :
+Transform3(),
 m_vertexBuffer(),
 m_indicesCount(0),
-m_texture(0),
-m_modelMatrix(),
-m_position(0.0f, 0.0f, 0.0f),
-m_angles(0.0f, 0.0f, 0.0f)
+m_texture(0)
 {
-    m_modelMatrix.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  StaticMesh destructor                                                     //
+//  StaticMesh virtual destructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
 StaticMesh::~StaticMesh()
 {
-    m_angles.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
     m_texture = 0;
     m_indicesCount = 0;
 }
@@ -94,17 +89,11 @@ bool StaticMesh::init(Renderer& renderer, Texture& texture,
         return false;
     }
 
+    // Reset static mesh transformations
+    resetTransforms();
+
     // Set static mesh texture pointer
     m_texture = &texture;
-
-    // Reset static mesh model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset static mesh position
-    m_position.reset();
-
-    // Reset static mesh angles
-    m_angles.reset();
 
     // Static mesh successfully created
     return true;
@@ -223,17 +212,11 @@ bool StaticMesh::loadVMSH(Renderer& renderer,
         return false;
     }
 
+    // Reset static mesh transformations
+    resetTransforms();
+
     // Set static mesh texture pointer
     m_texture = &texture;
-
-    // Reset static mesh model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset static mesh position
-    m_position.reset();
-
-    // Reset static mesh angles
-    m_angles.reset();
 
     // Static mesh successfully loaded
     return true;
@@ -244,12 +227,10 @@ bool StaticMesh::loadVMSH(Renderer& renderer,
 ////////////////////////////////////////////////////////////////////////////////
 void StaticMesh::destroyStaticMesh(Renderer& renderer)
 {
-    m_angles.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
     m_texture = 0;
     m_indicesCount = 0;
     renderer.destroyVertexBuffer(m_vertexBuffer);
+    resetTransforms();
 }
 
 
@@ -270,183 +251,6 @@ bool StaticMesh::setTexture(Texture& texture)
     m_texture = &texture;
     return true;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh position                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setPosition(float x, float y, float z)
-{
-    m_position.vec[0] = x;
-    m_position.vec[1] = y;
-    m_position.vec[2] = z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh position                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setPosition(Vector3& position)
-{
-    m_position.vec[0] = position.vec[0];
-    m_position.vec[1] = position.vec[1];
-    m_position.vec[2] = position.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh X position                                                //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setX(float x)
-{
-    m_position.vec[0] = x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh Y position                                                //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setY(float y)
-{
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh Z position                                                //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setZ(float z)
-{
-    m_position.vec[2] = z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate static mesh                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::move(float x, float y, float z)
-{
-    m_position.vec[0] += x;
-    m_position.vec[1] += y;
-    m_position.vec[2] += z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate static mesh                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::move(Vector3& vector)
-{
-    m_position.vec[0] += vector.vec[0];
-    m_position.vec[1] += vector.vec[1];
-    m_position.vec[2] += vector.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate static mesh on X axis                                           //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::moveX(float x)
-{
-    m_position.vec[0] += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate static mesh on Y axis                                           //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::moveY(float y)
-{
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate static mesh on Z axis                                           //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::moveZ(float z)
-{
-    m_position.vec[2] += z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh rotation angles                                           //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setAngles(float angleX, float angleY, float angleZ)
-{
-    m_angles.vec[0] = angleX;
-    m_angles.vec[1] = angleY;
-    m_angles.vec[2] = angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh rotation angles                                           //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setAngles(Vector3& angles)
-{
-    m_angles.vec[0] = angles.vec[0];
-    m_angles.vec[1] = angles.vec[1];
-    m_angles.vec[2] = angles.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh X rotation angle                                          //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setAngleX(float angleX)
-{
-    m_angles.vec[0] = angleX;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh Y rotation angle                                          //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setAngleY(float angleY)
-{
-    m_angles.vec[1] = angleY;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh Z rotation angle                                          //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setAngleZ(float angleZ)
-{
-    m_angles.vec[2] = angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate static mesh                                                        //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::rotate(float angleX, float angleY, float angleZ)
-{
-    m_angles.vec[0] += angleX;
-    m_angles.vec[1] += angleY;
-    m_angles.vec[2] += angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate static mesh                                                        //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::rotate(Vector3& angles)
-{
-    m_angles.vec[0] += angles.vec[0];
-    m_angles.vec[1] += angles.vec[1];
-    m_angles.vec[2] += angles.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate static mesh around the X axis                                      //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::rotateX(float angleX)
-{
-    m_angles.vec[0] += angleX;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate static mesh around the Y axis                                      //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::rotateY(float angleY)
-{
-    m_angles.vec[1] += angleY;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate static mesh around the Z axis                                      //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::rotateZ(float angleZ)
-{
-    m_angles.vec[2] += angleZ;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind static mesh vertex buffer                                            //
@@ -471,20 +275,18 @@ void StaticMesh::bindVertexBuffer(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void StaticMesh::render(Renderer& renderer)
 {
-    // Bind static mesh texture
-    m_texture->bind(renderer);
-
-    // Set static mesh model matrix
-    m_modelMatrix.setIdentity();
-    m_modelMatrix.translate(m_position);
-    m_modelMatrix.rotate(m_angles);
+    // Compute static mesh transformations
+    computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_modelMatrix.mat
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
+
+    // Bind static mesh texture
+    m_texture->bind(renderer);
 
     // Draw static mesh triangles
     vkCmdDrawIndexed(

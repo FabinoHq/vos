@@ -48,10 +48,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 Camera::Camera() :
 m_projMatrix(),
-m_viewMatrix(),
 m_projViewMatrix(),
-m_position(0.0f, 0.0f, 0.0f),
-m_angles(0.0f, 0.0f, 0.0f),
 m_target(0.0f, 0.0f, 0.0f),
 m_upward(0.0f, 0.0f, 0.0f),
 m_fovy(0.0f),
@@ -63,7 +60,6 @@ m_farPlane(0.0f)
         m_descriptorSets[i] = 0;
     }
     m_projMatrix.reset();
-    m_viewMatrix.reset();
     m_projViewMatrix.reset();
 }
 
@@ -77,10 +73,7 @@ Camera::~Camera()
     m_fovy = 0.0f;
     m_upward.reset();
     m_target.reset();
-    m_angles.reset();
-    m_position.reset();
     m_projViewMatrix.reset();
-    m_viewMatrix.reset();
     m_projMatrix.reset();
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -123,11 +116,8 @@ bool Camera::init(Renderer& renderer)
         return false;
     }
 
-    // Reset camera position
-    m_position.reset();
-
-    // Reset camera angles
-    m_angles.reset();
+    // Reset camera transforms
+    resetTransforms();
 
     // Reset camera target vector
     m_target.reset();
@@ -152,7 +142,7 @@ bool Camera::init(Renderer& renderer)
 
     // Reset projview matrix
     m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_viewMatrix;
+    m_projViewMatrix *= m_matrix;
 
     // Copy matrices data into uniform data
     UniformData uniformData;
@@ -223,6 +213,32 @@ bool Camera::init(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Destroy camera                                                            //
+////////////////////////////////////////////////////////////////////////////////
+void Camera::destroyCamera(Renderer& renderer)
+{
+    m_farPlane = 0.0f;
+    m_nearPlane = 0.0f;
+    m_fovy = 0.0f;
+    m_upward.reset();
+    m_target.reset();
+    m_angles.reset();
+    m_projViewMatrix.reset();
+    m_projMatrix.reset();
+
+    // Destroy uniform buffers
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_uniformBuffers[i].destroyBuffer(
+            renderer.m_vulkanDevice, renderer.m_vulkanMemory
+        );
+        m_descriptorSets[i] = 0;
+    }
+
+    resetTransforms();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Compute camera                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 void Camera::compute(Renderer& renderer)
@@ -241,15 +257,13 @@ void Camera::compute(Renderer& renderer)
     );
 
     // Compute view matrix
-    m_viewMatrix.setIdentity();
-    m_viewMatrix.rotateX(-m_angles.vec[0]);
-    m_viewMatrix.rotateY(-m_angles.vec[1]);
-    m_viewMatrix.rotateZ(-m_angles.vec[2]);
-    m_viewMatrix.translate(-m_position);
+    m_matrix.setIdentity();
+    m_matrix.rotate(-m_angles);
+    m_matrix.translate(-m_position);
 
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_viewMatrix;
+    m_projViewMatrix *= m_matrix;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -318,280 +332,4 @@ bool Camera::bind(Renderer& renderer)
 
     // Camera successfully binded
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy camera                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::destroyCamera(Renderer& renderer)
-{
-    // Destroy uniform buffers
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-    {
-        m_uniformBuffers[i].destroyBuffer(
-            renderer.m_vulkanDevice, renderer.m_vulkanMemory
-        );
-        m_descriptorSets[i] = 0;
-    }
-
-    m_farPlane = 0.0f;
-    m_nearPlane = 0.0f;
-    m_fovy = 0.0f;
-    m_upward.reset();
-    m_target.reset();
-    m_angles.reset();
-    m_position.reset();
-    m_projViewMatrix.reset();
-    m_viewMatrix.reset();
-    m_projMatrix.reset();
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setPosition(float x, float y, float z)
-{
-    m_position.vec[0] = x;
-    m_position.vec[1] = y;
-    m_position.vec[2] = z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setPosition(Vector3& position)
-{
-    m_position.vec[0] = position.vec[0];
-    m_position.vec[1] = position.vec[1];
-    m_position.vec[2] = position.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera X position                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setX(float x)
-{
-    m_position.vec[0] = x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera Y position                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setY(float y)
-{
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera Z position                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setZ(float z)
-{
-    m_position.vec[2] = z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate camera                                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::move(float x, float y, float z)
-{
-    m_position.vec[0] += x;
-    m_position.vec[1] += y;
-    m_position.vec[2] += z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate camera                                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::move(Vector3& vector)
-{
-    m_position.vec[0] += vector.vec[0];
-    m_position.vec[1] += vector.vec[1];
-    m_position.vec[2] += vector.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate camera on X axis                                                //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::moveX(float x)
-{
-    m_position.vec[0] += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate camera on Y axis                                                //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::moveY(float y)
-{
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate camera on Z axis                                                //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::moveZ(float z)
-{
-    m_position.vec[2] += z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera angles                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setAngles(float angleX, float angleY, float angleZ)
-{
-    m_angles.vec[0] = angleX;
-    m_angles.vec[1] = angleY;
-    m_angles.vec[2] = angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera angles                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setAngles(Vector3& angles)
-{
-    m_angles.vec[0] = angles.vec[0];
-    m_angles.vec[1] = angles.vec[1];
-    m_angles.vec[2] = angles.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera X angle                                                        //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setAngleX(float angleX)
-{
-    m_angles.vec[0] = angleX;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera Y angle                                                        //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setAngleY(float angleY)
-{
-    m_angles.vec[1] = angleY;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera Z angle                                                        //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setAngleZ(float angleZ)
-{
-    m_angles.vec[2] = angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate camera                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::rotate(float angleX, float angleY, float angleZ)
-{
-    m_angles.vec[0] += angleX;
-    m_angles.vec[1] += angleY;
-    m_angles.vec[2] += angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate camera                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::rotate(Vector3& angles)
-{
-    m_angles.vec[0] += angles.vec[0];
-    m_angles.vec[1] += angles.vec[1];
-    m_angles.vec[2] += angles.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate camera around the X axis                                           //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::rotateX(float angleX)
-{
-    m_angles.vec[0] += angleX;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate camera around the Y axis                                           //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::rotateY(float angleY)
-{
-    m_angles.vec[1] += angleY;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate camera around the Z axis                                           //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::rotateZ(float angleZ)
-{
-    m_angles.vec[2] += angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera fovy angle                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setFovy(float fovy)
-{
-    m_fovy = fovy;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera near plane                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setNearPlane(float nearPlane)
-{
-    m_nearPlane = nearPlane;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set camera far plane                                                      //
-////////////////////////////////////////////////////////////////////////////////
-void Camera::setFarPlane(float farPlane)
-{
-    m_farPlane = farPlane;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get camera X position                                                     //
-////////////////////////////////////////////////////////////////////////////////
-float Camera::getX()
-{
-    return m_position.vec[0];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get camera Y position                                                     //
-////////////////////////////////////////////////////////////////////////////////
-float Camera::getY()
-{
-    return m_position.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get camera Z position                                                     //
-////////////////////////////////////////////////////////////////////////////////
-float Camera::getZ()
-{
-    return m_position.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get camera X rotation angle                                               //
-////////////////////////////////////////////////////////////////////////////////
-float Camera::getAngleX()
-{
-    return m_angles.vec[0];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get camera Y rotation angle                                               //
-////////////////////////////////////////////////////////////////////////////////
-float Camera::getAngleY()
-{
-    return m_angles.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get camera Z rotation angle                                               //
-////////////////////////////////////////////////////////////////////////////////
-float Camera::getAngleZ()
-{
-    return m_angles.vec[2];
 }

@@ -62,6 +62,8 @@
     #include "Images/BMPFile.h"
     #include "Images/PNGFile.h"
 
+    #include <cstdint>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VOS main class definition                                             //

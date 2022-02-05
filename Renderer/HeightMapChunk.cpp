@@ -47,24 +47,19 @@
 //  HeightMapChunk default constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
 HeightMapChunk::HeightMapChunk() :
+Transform3(),
 m_vertexBuffer(),
 m_indicesCount(0),
-m_texture(0),
-m_modelMatrix(),
-m_position(0.0f, 0.0f, 0.0f),
-m_angles(0.0f, 0.0f, 0.0f)
+m_texture(0)
 {
-    m_modelMatrix.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  HeightMapChunk destructor                                                 //
+//  HeightMapChunk virtual destructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
 HeightMapChunk::~HeightMapChunk()
 {
-    m_angles.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
     m_texture = 0;
     m_indicesCount = 0;
 }
@@ -94,17 +89,11 @@ bool HeightMapChunk::init(Renderer& renderer, Texture& texture,
         return false;
     }
 
+    // Reset heightmap chunk transformations
+    resetTransforms();
+
     // Set heightmap chunk texture pointer
     m_texture = &texture;
-
-    // Reset heightmap chunk model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset heightmap chunk position
-    m_position.reset();
-
-    // Reset heightmap chunk angles
-    m_angles.reset();
 
     // Heightmap chunk successfully created
     return true;
@@ -228,17 +217,11 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
         return false;
     }
 
+    // Reset heightmap chunk transformations
+    resetTransforms();
+
     // Set heightmap chunk texture pointer
     m_texture = &texture;
-
-    // Reset heightmap chunk model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset heightmap chunk position
-    m_position.reset();
-
-    // Reset heightmap chunk angles
-    m_angles.reset();
 
     // Heightmap chunk successfully generated
     return true;
@@ -392,14 +375,8 @@ bool HeightMapChunk::generate(Renderer& renderer, Texture& texture,
     // Set heightmap chunk texture pointer
     m_texture = &texture;
 
-    // Reset heightmap chunk model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset heightmap chunk position
-    m_position.reset();
-
-    // Reset heightmap chunk angles
-    m_angles.reset();
+    // Reset heightmap chunk transformations
+    resetTransforms();
 
     // Heightmap chunk successfully generated
     return true;
@@ -659,17 +636,11 @@ bool HeightMapChunk::loadVMSH(Renderer& renderer,
         return false;
     }
 
+    // Reset heightmap chunk transformations
+    resetTransforms();
+
     // Set heightmap chunk texture pointer
     m_texture = &texture;
-
-    // Reset heightmap chunk model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset heightmap chunk position
-    m_position.reset();
-
-    // Reset heightmap chunk angles
-    m_angles.reset();
 
     // Heightmap chunk successfully loaded
     return true;
@@ -680,12 +651,10 @@ bool HeightMapChunk::loadVMSH(Renderer& renderer,
 ////////////////////////////////////////////////////////////////////////////////
 void HeightMapChunk::destroyHeightMapChunk(Renderer& renderer)
 {
-    m_angles.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
     m_texture = 0;
     m_indicesCount = 0;
     renderer.destroyVertexBuffer(m_vertexBuffer);
+    resetTransforms();
 }
 
 
@@ -706,183 +675,6 @@ bool HeightMapChunk::setTexture(Texture& texture)
     m_texture = &texture;
     return true;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk position                                              //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setPosition(float x, float y, float z)
-{
-    m_position.vec[0] = x;
-    m_position.vec[1] = y;
-    m_position.vec[2] = z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk position                                              //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setPosition(Vector3& position)
-{
-    m_position.vec[0] = position.vec[0];
-    m_position.vec[1] = position.vec[1];
-    m_position.vec[2] = position.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk X position                                            //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setX(float x)
-{
-    m_position.vec[0] = x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk Y position                                            //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setY(float y)
-{
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk Z position                                            //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setZ(float z)
-{
-    m_position.vec[2] = z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate heightmap chunk                                                 //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::move(float x, float y, float z)
-{
-    m_position.vec[0] += x;
-    m_position.vec[1] += y;
-    m_position.vec[2] += z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate heightmap chunk                                                 //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::move(Vector3& vector)
-{
-    m_position.vec[0] += vector.vec[0];
-    m_position.vec[1] += vector.vec[1];
-    m_position.vec[2] += vector.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate heightmap chunk on X axis                                       //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::moveX(float x)
-{
-    m_position.vec[0] += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate heightmap chunk on Y axis                                       //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::moveY(float y)
-{
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate heightmap chunk on Z axis                                       //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::moveZ(float z)
-{
-    m_position.vec[2] += z;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk rotation angles                                       //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setAngles(float angleX, float angleY, float angleZ)
-{
-    m_angles.vec[0] = angleX;
-    m_angles.vec[1] = angleY;
-    m_angles.vec[2] = angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk rotation angles                                       //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setAngles(Vector3& angles)
-{
-    m_angles.vec[0] = angles.vec[0];
-    m_angles.vec[1] = angles.vec[1];
-    m_angles.vec[2] = angles.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk X rotation angle                                      //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setAngleX(float angleX)
-{
-    m_angles.vec[0] = angleX;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk Y rotation angle                                      //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setAngleY(float angleY)
-{
-    m_angles.vec[1] = angleY;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk Z rotation angle                                      //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::setAngleZ(float angleZ)
-{
-    m_angles.vec[2] = angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate heightmap chunk                                                    //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::rotate(float angleX, float angleY, float angleZ)
-{
-    m_angles.vec[0] += angleX;
-    m_angles.vec[1] += angleY;
-    m_angles.vec[2] += angleZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate heightmap chunk                                                    //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::rotate(Vector3& angles)
-{
-    m_angles.vec[0] += angles.vec[0];
-    m_angles.vec[1] += angles.vec[1];
-    m_angles.vec[2] += angles.vec[2];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate heightmap chunk around the X axis                                  //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::rotateX(float angleX)
-{
-    m_angles.vec[0] += angleX;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate heightmap chunk around the Y axis                                  //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::rotateY(float angleY)
-{
-    m_angles.vec[1] += angleY;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate heightmap chunk around the Z axis                                  //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::rotateZ(float angleZ)
-{
-    m_angles.vec[2] += angleZ;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind heightmap chunk vertex buffer                                        //
@@ -907,20 +699,18 @@ void HeightMapChunk::bindVertexBuffer(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void HeightMapChunk::render(Renderer& renderer)
 {
-    // Bind heightmap chunk texture
-    m_texture->bind(renderer);
-
-    // Set heightmap chunk model matrix
-    m_modelMatrix.setIdentity();
-    m_modelMatrix.translate(m_position);
-    m_modelMatrix.rotate(m_angles);
+    // Compute heightmap chunk transformations
+    computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_modelMatrix.mat
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
+
+    // Bind heightmap chunk texture
+    m_texture->bind(renderer);
 
     // Draw heightmap chunk triangles
     vkCmdDrawIndexed(

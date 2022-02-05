@@ -44,7 +44,6 @@
 
     #include "../Shader.h"
     #include "../../Math/Math.h"
-    #include "../../Math/Vector2.h"
     #include "../../Math/Vector4.h"
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
@@ -84,7 +83,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set rect color                                                //
             ////////////////////////////////////////////////////////////////////
-            void setColor(Vector4 color);
+            void setColor(const Vector4& color);
 
             ////////////////////////////////////////////////////////////////////
             //  Set rect color                                                //

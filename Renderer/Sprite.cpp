@@ -116,7 +116,7 @@ bool Sprite::setTexture(Texture& texture)
 ////////////////////////////////////////////////////////////////////////////////
 //  Set sprite color                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void Sprite::setColor(Vector4 color)
+void Sprite::setColor(const Vector4& color)
 {
     m_color.vec[0] = color.vec[0];
     m_color.vec[1] = color.vec[1];

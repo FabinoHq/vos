@@ -87,7 +87,7 @@ bool Rect::init(float width, float height)
 ////////////////////////////////////////////////////////////////////////////////
 //  Set rect color                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Rect::setColor(Vector4 color)
+void Rect::setColor(const Vector4& color)
 {
     m_color.vec[0] = color.vec[0];
     m_color.vec[1] = color.vec[1];

@@ -426,7 +426,7 @@
                 rotateY(angleY);
             }
 
-            void rotate(Vector2& angles)
+            void rotate(const Vector2& angles)
             {
                 rotateX(angles.vec[0]);
                 rotateY(angles.vec[1]);
@@ -439,7 +439,7 @@
                 rotateZ(angleZ);
             }
 
-            void rotate(Vector3& angles)
+            void rotate(const Vector3& angles)
             {
                 rotateX(angles.vec[0]);
                 rotateY(angles.vec[1]);
@@ -550,6 +550,22 @@
                 mat[5] *= y;
                 mat[6] *= y;
                 mat[7] *= y;
+            }
+
+            void scale(float scale)
+            {
+                mat[0] *= scale;
+                mat[1] *= scale;
+                mat[2] *= scale;
+                mat[3] *= scale;
+                mat[4] *= scale;
+                mat[5] *= scale;
+                mat[6] *= scale;
+                mat[7] *= scale;
+                mat[8] *= scale;
+                mat[9] *= scale;
+                mat[10] *= scale;
+                mat[11] *= scale;
             }
 
             void scale(const Vector3& vector)
