@@ -173,7 +173,8 @@ bool Vos::launch()
         return false;
     }
     if (!m_testTexture.updateTexture(m_renderer,
-        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(), false, true))
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
+        false, true))
     {
         return false;
     }
@@ -343,8 +344,8 @@ void Vos::run()
         if (m_renderer.startFrame())
         {
             // Get renderer aspect ratio
-            float cursorSize = 64.0f*scale;
-            float cursorOffset = 2.0f*scale;
+            //float cursorSize = 64.0f*scale;
+            //float cursorOffset = 2.0f*scale;
 
             // Set freefly camera
             m_renderer.setCamera(m_freeflycam);
@@ -368,27 +369,22 @@ void Vos::run()
 
             // Render rectangle
             /*m_renderer.bindRectPipeline();
-            m_rect.setSize(1.0f, 1.0f);
-            m_rect.setPosition(-0.5f, -0.5f);
             m_rect.render(m_renderer);*/
 
             // Render ellipse
             /*m_renderer.bindOvalPipeline();
-            m_oval.setSize(1.0f, 1.0f);
-            m_oval.setPosition(-0.5f, -0.5f);
             m_oval.render(m_renderer);*/
 
             // Render procedural sprite
             /*m_procSprite.bindPipeline(m_renderer);
-            m_procSprite.setSize(1.0f, 1.0f);
-            m_procSprite.setPosition(-0.5f, -0.5f);
             m_procSprite.render(m_renderer);*/
 
             // Draw cursor
             /*m_renderer.bindDefaultPipeline();
             m_cursor.setSize(cursorSize, cursorSize);
+            m_cursor.setOrigin(0.0f, cursorSize);
             m_cursor.setPosition(
-                m_mouseX-cursorOffset, m_mouseY-cursorSize+cursorOffset
+                m_mouseX-cursorOffset, m_mouseY+cursorOffset
             );
             m_cursor.render(m_renderer);*/
 

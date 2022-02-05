@@ -47,25 +47,18 @@
 //  Rect default constructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 Rect::Rect() :
-m_modelMatrix(),
-m_position(0.0f, 0.0f),
-m_size(1.0f, 1.0f),
-m_angle(0.0f),
+Transform2(),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
-    m_modelMatrix.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Rect destructor                                                           //
+//  Rect virtual destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 Rect::~Rect()
 {
     m_color.reset();
-    m_angle = 0.0f;
-    m_size.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
 }
 
 
@@ -75,17 +68,14 @@ Rect::~Rect()
 ////////////////////////////////////////////////////////////////////////////////
 bool Rect::init(float width, float height)
 {
-    // Reset rect model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset rect position
-    m_position.reset();
+    // Reset rect transformations
+    resetTransforms();
 
     // Set rect size
-    m_size.set(width, height);
+    setSize(width, height);
 
-    // Reset rect angle
-    m_angle = 0.0f;
+    // Set rect origin (anchor)
+    setOrigin(width*0.5f, height*0.5f);
 
     // Reset rect color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -93,126 +83,6 @@ bool Rect::init(float width, float height)
     // Rect successfully created
     return true;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect position                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setPosition(float x, float y)
-{
-    m_position.vec[0] = x;
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect position                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setPosition(Vector2& position)
-{
-    m_position.vec[0] = position.vec[0];
-    m_position.vec[1] = position.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect X position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setX(float x)
-{
-    m_position.vec[0] = x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect Y position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setY(float y)
-{
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate rect                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::move(float x, float y)
-{
-    m_position.vec[0] += x;
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate rect                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::move(Vector2& vector)
-{
-    m_position.vec[0] += vector.vec[0];
-    m_position.vec[1] += vector.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate rect on X axis                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::moveX(float x)
-{
-    m_position.vec[0] += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate rect on Y axis                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::moveY(float y)
-{
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect size                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setSize(float width, float height)
-{
-    m_size.vec[0] = width;
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect size                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setSize(Vector2& size)
-{
-    m_size.vec[0] = size.vec[0];
-    m_size.vec[1] = size.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect width                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setWidth(float width)
-{
-    m_size.vec[0] = width;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect height                                                           //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setHeight(float height)
-{
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set rect rotation angle                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::setAngle(float angle)
-{
-    m_angle = angle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate rect                                                               //
-////////////////////////////////////////////////////////////////////////////////
-void Rect::rotate(float angle)
-{
-    m_angle += angle;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set rect color                                                            //
@@ -274,19 +144,14 @@ void Rect::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 void Rect::render(Renderer& renderer)
 {
-    // Set rect model matrix
-    m_modelMatrix.setIdentity();
-    m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
-    m_modelMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
-    m_modelMatrix.rotateZ(m_angle);
-    m_modelMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
-    m_modelMatrix.scale(m_size.vec[0], m_size.vec[1]);
+    // Compute rect transformations
+    computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_modelMatrix.mat
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
     // Push constants into command buffer

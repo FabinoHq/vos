@@ -294,5 +294,8 @@
     <ClInclude Include="Renderer\HeightMapChunk.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Transform2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

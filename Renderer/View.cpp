@@ -47,32 +47,24 @@
 //  View default constructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 View::View() :
+Transform2(),
 m_projMatrix(),
-m_viewMatrix(),
-m_projViewMatrix(),
-m_position(0.0f, 0.0f),
-m_size(1.0f, 1.0f),
-m_angle(0.0f)
+m_projViewMatrix()
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         m_descriptorSets[i] = 0;
     }
     m_projMatrix.reset();
-    m_viewMatrix.reset();
     m_projViewMatrix.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  View destructor                                                           //
+//  View virtual destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 View::~View()
 {
-    m_angle = 0.0f;
-    m_size.reset();
-    m_position.reset();
     m_projViewMatrix.reset();
-    m_viewMatrix.reset();
     m_projMatrix.reset();
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -115,25 +107,16 @@ bool View::init(Renderer& renderer)
         return false;
     }
 
-    // Reset view position
-    m_position.reset();
-
-    // Set view size
-    m_size.set(1.0f, 1.0f);
-
-    // Reset view angle
-    m_angle = 0.0f;
+    // Reset view transformations
+    resetTransforms();
 
     // Reset projection matrix
     m_projMatrix.setOrthographic(-1.0f, 1.0f, 1.0f, -1.0f, -2.0f, 2.0f);
     m_projMatrix.translateZ(-1.0f);
 
-    // Reset view matrix
-    m_viewMatrix.setIdentity();
-
     // Reset projview matrix
     m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_viewMatrix;
+    m_projViewMatrix *= m_matrix;
 
     // Copy matrices data into uniform data
     UniformData uniformData;
@@ -204,6 +187,26 @@ bool View::init(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Destroy view                                                              //
+////////////////////////////////////////////////////////////////////////////////
+void View::destroyView(Renderer& renderer)
+{
+    m_projViewMatrix.reset();
+    m_projMatrix.reset();
+
+    // Destroy uniform buffers
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_uniformBuffers[i].destroyBuffer(
+            renderer.m_vulkanDevice, renderer.m_vulkanMemory
+        );
+        m_descriptorSets[i] = 0;
+    }
+
+    resetTransforms();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Compute view                                                              //
 ////////////////////////////////////////////////////////////////////////////////
 void View::compute(Renderer& renderer)
@@ -216,16 +219,16 @@ void View::compute(Renderer& renderer)
     m_projMatrix.translateZ(-1.0f);
 
     // Compute view matrix
-    m_viewMatrix.setIdentity();
-    m_viewMatrix.translate(-m_position.vec[0], -m_position.vec[1]);
-    m_viewMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
-    m_viewMatrix.rotateZ(m_angle);
-    m_viewMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
-    m_viewMatrix.scale(m_size.vec[0], m_size.vec[1]);
+    m_matrix.setIdentity();
+    m_matrix.translate(-m_position.vec[0], -m_position.vec[1]);
+    m_matrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
+    m_matrix.rotateZ(m_angle);
+    m_matrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
+    m_matrix.scale(m_size.vec[0], m_size.vec[1]);
 
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_viewMatrix;
+    m_projViewMatrix *= m_matrix;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -294,145 +297,4 @@ bool View::bind(Renderer& renderer)
 
     // View successfully binded
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy view                                                              //
-////////////////////////////////////////////////////////////////////////////////
-void View::destroyView(Renderer& renderer)
-{
-    // Destroy uniform buffers
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-    {
-        m_uniformBuffers[i].destroyBuffer(
-            renderer.m_vulkanDevice, renderer.m_vulkanMemory
-        );
-        m_descriptorSets[i] = 0;
-    }
-
-    m_angle = 0.0f;
-    m_size.reset();
-    m_position.reset();
-    m_projViewMatrix.reset();
-    m_viewMatrix.reset();
-    m_projMatrix.reset();
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view position                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void View::setPosition(float x, float y)
-{
-    m_position.vec[0] = x;
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view position                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void View::setPosition(Vector2& position)
-{
-    m_position.vec[0] = position.vec[0];
-    m_position.vec[1] = position.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view X position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void View::setX(float x)
-{
-    m_position.vec[0] = x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view Y position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void View::setY(float y)
-{
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate view                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void View::move(float x, float y)
-{
-    m_position.vec[0] += x;
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate view                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void View::move(Vector2& vector)
-{
-    m_position.vec[0] += vector.vec[0];
-    m_position.vec[1] += vector.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate view on X axis                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void View::moveX(float x)
-{
-    m_position.vec[0] += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate view on Y axis                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void View::moveY(float y)
-{
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view size                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void View::setSize(float width, float height)
-{
-    m_size.vec[0] = width;
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view size                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void View::setSize(Vector2& size)
-{
-    m_size.vec[0] = size.vec[0];
-    m_size.vec[1] = size.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view width                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void View::setWidth(float width)
-{
-    m_size.vec[0] = width;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view height                                                           //
-////////////////////////////////////////////////////////////////////////////////
-void View::setHeight(float height)
-{
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set view rotation angle                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void View::setAngle(float angle)
-{
-    m_angle = angle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate view                                                               //
-////////////////////////////////////////////////////////////////////////////////
-void View::rotate(float angle)
-{
-    m_angle += angle;
 }

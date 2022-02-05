@@ -47,27 +47,19 @@
 //  Sprite default constructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
 Sprite::Sprite() :
+Transform2(),
 m_texture(0),
-m_modelMatrix(),
-m_position(0.0f, 0.0f),
-m_size(1.0f, 1.0f),
-m_angle(0.0f),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
-    m_modelMatrix.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Sprite destructor                                                         //
+//  Sprite virtual destructor                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 Sprite::~Sprite()
 {
     m_color.reset();
-    m_angle = 0.0f;
-    m_size.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
-    m_texture = 0;
 }
 
 
@@ -84,20 +76,17 @@ bool Sprite::init(Texture& texture, float width, float height)
         return false;
     }
 
-    // Set sprite texture pointer
-    m_texture = &texture;
-
-    // Reset sprite model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset sprite position
-    m_position.reset();
+    // Reset sprite transformations
+    resetTransforms();
 
     // Set sprite size
-    m_size.set(width, height);
+    setSize(width, height);
 
-    // Reset sprite angle
-    m_angle = 0.0f;
+    // Set sprite origin (anchor)
+    setOrigin(width*0.5f, height*0.5f);
+
+    // Set sprite texture pointer
+    m_texture = &texture;
 
     // Reset sprite color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -105,7 +94,6 @@ bool Sprite::init(Texture& texture, float width, float height)
     // Sprite successfully created
     return true;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set sprite texture                                                        //
@@ -124,125 +112,6 @@ bool Sprite::setTexture(Texture& texture)
     m_texture = &texture;
     return true;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setPosition(float x, float y)
-{
-    m_position.vec[0] = x;
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setPosition(Vector2& position)
-{
-    m_position.vec[0] = position.vec[0];
-    m_position.vec[1] = position.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite X position                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setX(float x)
-{
-    m_position.vec[0] = x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite Y position                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setY(float y)
-{
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate sprite                                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::move(float x, float y)
-{
-    m_position.vec[0] += x;
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate sprite                                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::move(Vector2& vector)
-{
-    m_position.vec[0] += vector.vec[0];
-    m_position.vec[1] += vector.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate sprite on X axis                                                //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::moveX(float x)
-{
-    m_position.vec[0] += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate sprite on Y axis                                                //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::moveY(float y)
-{
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite size                                                           //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setSize(float width, float height)
-{
-    m_size.vec[0] = width;
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite size                                                           //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setSize(Vector2& size)
-{
-    m_size.vec[0] = size.vec[0];
-    m_size.vec[1] = size.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite width                                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setWidth(float width)
-{
-    m_size.vec[0] = width;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite height                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setHeight(float height)
-{
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set sprite rotation angle                                                 //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::setAngle(float angle)
-{
-    m_angle = angle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate sprite                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void Sprite::rotate(float angle)
-{
-    m_angle += angle;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set sprite color                                                          //
@@ -304,22 +173,14 @@ void Sprite::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::render(Renderer& renderer)
 {
-    // Bind sprite texture
-    m_texture->bind(renderer);
-
-    // Set sprite model matrix
-    m_modelMatrix.setIdentity();
-    m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
-    m_modelMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
-    m_modelMatrix.rotateZ(m_angle);
-    m_modelMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
-    m_modelMatrix.scale(m_size.vec[0], m_size.vec[1]);
+    // Compute sprite transformations
+    computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_modelMatrix.mat
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
     // Push constants into command buffer
@@ -334,6 +195,9 @@ void Sprite::render(Renderer& renderer)
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
+
+    // Bind sprite texture
+    m_texture->bind(renderer);
 
     // Draw sprite triangles
     vkCmdDrawIndexed(

@@ -47,26 +47,19 @@
 //  ProcSprite default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
 ProcSprite::ProcSprite() :
+Transform2(),
 m_pipeline(),
-m_modelMatrix(),
-m_position(0.0f, 0.0f),
-m_size(1.0f, 1.0f),
-m_angle(0.0f),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
-    m_modelMatrix.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  ProcSprite destructor                                                     //
+//  ProcSprite virtual destructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
 ProcSprite::~ProcSprite()
 {
     m_color.reset();
-    m_angle = 0.0f;
-    m_size.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
 }
 
 
@@ -109,17 +102,14 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
         }
     }
 
-    // Reset procedural sprite model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset procedural sprite position
-    m_position.reset();
+    // Reset procedural sprite transformations
+    resetTransforms();
 
     // Set procedural sprite size
-    m_size.set(width, height);
+    setSize(width, height);
 
-    // Reset procedural sprite angle
-    m_angle = 0.0f;
+    // Set procedural sprite origin (anchor)
+    setOrigin(width*0.5f, height*0.5f);
 
     // Reset procedural sprite color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -134,132 +124,9 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
 void ProcSprite::destroyProcSprite(Renderer& renderer)
 {
     m_color.reset();
-    m_angle = 0.0f;
-    m_size.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
     m_pipeline.destroyPipeline(renderer);
+    resetTransforms();
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite position                                            //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setPosition(float x, float y)
-{
-    m_position.vec[0] = x;
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite position                                            //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setPosition(Vector2& position)
-{
-    m_position.vec[0] = position.vec[0];
-    m_position.vec[1] = position.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite X position                                          //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setX(float x)
-{
-    m_position.vec[0] = x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite Y position                                          //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setY(float y)
-{
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate procedural sprite                                               //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::move(float x, float y)
-{
-    m_position.vec[0] += x;
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate procedural sprite                                               //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::move(Vector2& vector)
-{
-    m_position.vec[0] += vector.vec[0];
-    m_position.vec[1] += vector.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate procedural sprite on X axis                                     //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::moveX(float x)
-{
-    m_position.vec[0] += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate procedural sprite on Y axis                                     //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::moveY(float y)
-{
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite size                                                //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setSize(float width, float height)
-{
-    m_size.vec[0] = width;
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite size                                                //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setSize(Vector2& size)
-{
-    m_size.vec[0] = size.vec[0];
-    m_size.vec[1] = size.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite width                                               //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setWidth(float width)
-{
-    m_size.vec[0] = width;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite height                                              //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setHeight(float height)
-{
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite rotation angle                                      //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setAngle(float angle)
-{
-    m_angle = angle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate procedural sprite                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::rotate(float angle)
-{
-    m_angle += angle;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set procedural sprite color                                               //
@@ -330,19 +197,14 @@ void ProcSprite::bindPipeline(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void ProcSprite::render(Renderer& renderer)
 {
-    // Set procedural sprite model matrix
-    m_modelMatrix.setIdentity();
-    m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
-    m_modelMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
-    m_modelMatrix.rotateZ(m_angle);
-    m_modelMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
-    m_modelMatrix.scale(m_size.vec[0], m_size.vec[1]);
+    // Compute sprite transformations
+    computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_modelMatrix.mat
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
     // Push constants into command buffer

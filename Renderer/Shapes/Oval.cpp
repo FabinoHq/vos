@@ -47,25 +47,18 @@
 //  Oval default constructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 Oval::Oval() :
-m_modelMatrix(),
-m_position(0.0f, 0.0f),
-m_size(1.0f, 1.0f),
-m_angle(0.0f),
+Transform2(),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
-    m_modelMatrix.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Oval destructor                                                           //
+//  Oval virtual destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 Oval::~Oval()
 {
     m_color.reset();
-    m_angle = 0.0f;
-    m_size.reset();
-    m_position.reset();
-    m_modelMatrix.reset();
 }
 
 
@@ -75,17 +68,14 @@ Oval::~Oval()
 ////////////////////////////////////////////////////////////////////////////////
 bool Oval::init(float width, float height)
 {
-    // Reset oval model matrix
-    m_modelMatrix.setIdentity();
-
-    // Reset oval position
-    m_position.reset();
+    // Reset oval transformations
+    resetTransforms();
 
     // Set oval size
-    m_size.set(width, height);
+    setSize(width, height);
 
-    // Reset oval angle
-    m_angle = 0.0f;
+    // Set oval origin (anchor)
+    setOrigin(width*0.5f, height*0.5f);
 
     // Reset oval color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -93,126 +83,6 @@ bool Oval::init(float width, float height)
     // Oval successfully created
     return true;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval position                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setPosition(float x, float y)
-{
-    m_position.vec[0] = x;
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval position                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setPosition(Vector2& position)
-{
-    m_position.vec[0] = position.vec[0];
-    m_position.vec[1] = position.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval X position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setX(float x)
-{
-    m_position.vec[0] = x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval Y position                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setY(float y)
-{
-    m_position.vec[1] = y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate oval                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::move(float x, float y)
-{
-    m_position.vec[0] += x;
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate oval                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::move(Vector2& vector)
-{
-    m_position.vec[0] += vector.vec[0];
-    m_position.vec[1] += vector.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate oval on X axis                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::moveX(float x)
-{
-    m_position.vec[0] += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Translate oval on Y axis                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::moveY(float y)
-{
-    m_position.vec[1] += y;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval size                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setSize(float width, float height)
-{
-    m_size.vec[0] = width;
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval size                                                             //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setSize(Vector2& size)
-{
-    m_size.vec[0] = size.vec[0];
-    m_size.vec[1] = size.vec[1];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval width                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setWidth(float width)
-{
-    m_size.vec[0] = width;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval height                                                           //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setHeight(float height)
-{
-    m_size.vec[1] = height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set oval rotation angle                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::setAngle(float angle)
-{
-    m_angle = angle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Rotate oval                                                               //
-////////////////////////////////////////////////////////////////////////////////
-void Oval::rotate(float angle)
-{
-    m_angle += angle;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set oval color                                                            //
@@ -270,23 +140,18 @@ void Oval::setAlpha(float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render oval                                                          //
+//  Render oval                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 void Oval::render(Renderer& renderer)
 {
-    // Set oval model matrix
-    m_modelMatrix.setIdentity();
-    m_modelMatrix.translate(m_position.vec[0], m_position.vec[1]);
-    m_modelMatrix.translate(m_size.vec[0]*0.5f, m_size.vec[1]*0.5f);
-    m_modelMatrix.rotateZ(m_angle);
-    m_modelMatrix.translate(-m_size.vec[0]*0.5f, -m_size.vec[1]*0.5f);
-    m_modelMatrix.scale(m_size.vec[0], m_size.vec[1]);
+    // Compute oval transformations
+    computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_modelMatrix.mat
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
     // Push constants into command buffer
