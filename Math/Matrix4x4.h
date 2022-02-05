@@ -213,11 +213,11 @@
                     mat[7] = 0.0f;
                     mat[8] = 0.0f;
                     mat[9] = 0.0f;
-                    mat[10] = -2.0f/farNear;
+                    mat[10] = -1.0f/farNear;
                     mat[11] = 0.0f;
                     mat[12] = -(right+left)/rightLeft;
                     mat[13] = -(top+bottom)/topBottom;
-                    mat[14] = -(zfar+znear)/farNear;
+                    mat[14] = -znear/farNear;
                     mat[15] = 1.0f;
                 }
             }
