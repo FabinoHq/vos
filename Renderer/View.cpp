@@ -110,6 +110,9 @@ bool View::init(Renderer& renderer)
     // Reset view transformations
     resetTransforms();
 
+    // Set view size
+    setSize(1.0f, 1.0f);
+
     // Reset projection matrix
     m_projMatrix.setOrthographic(-1.0f, 1.0f, 1.0f, -1.0f, -2.0f, 2.0f);
     m_projMatrix.translateZ(-1.0f);

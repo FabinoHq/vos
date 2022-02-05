@@ -344,8 +344,8 @@ void Vos::run()
         if (m_renderer.startFrame())
         {
             // Get renderer aspect ratio
-            //float cursorSize = 64.0f*scale;
-            //float cursorOffset = 2.0f*scale;
+            float cursorSize = 64.0f*scale;
+            float cursorOffset = 2.0f*scale;
 
             // Set freefly camera
             m_renderer.setCamera(m_freeflycam);
@@ -356,9 +356,9 @@ void Vos::run()
             m_staticMesh.render(m_renderer);*/
 
             // Render heightmap chunk
-            m_renderer.bindStaticMeshPipeline();
+            /*m_renderer.bindStaticMeshPipeline();
             m_heightMapChunk.bindVertexBuffer(m_renderer);
-            m_heightMapChunk.render(m_renderer);
+            m_heightMapChunk.render(m_renderer);*/
 
 
             // Set default screen view
@@ -368,8 +368,8 @@ void Vos::run()
             m_renderer.bindDefaultVertexBuffer();
 
             // Render rectangle
-            /*m_renderer.bindRectPipeline();
-            m_rect.render(m_renderer);*/
+            m_renderer.bindRectPipeline();
+            m_rect.render(m_renderer);
 
             // Render ellipse
             /*m_renderer.bindOvalPipeline();
@@ -380,13 +380,13 @@ void Vos::run()
             m_procSprite.render(m_renderer);*/
 
             // Draw cursor
-            /*m_renderer.bindDefaultPipeline();
+            m_renderer.bindDefaultPipeline();
             m_cursor.setSize(cursorSize, cursorSize);
             m_cursor.setOrigin(0.0f, cursorSize);
             m_cursor.setPosition(
                 m_mouseX-cursorOffset, m_mouseY+cursorOffset
             );
-            m_cursor.render(m_renderer);*/
+            m_cursor.render(m_renderer);
 
             // End rendering
             m_renderer.endFrame();
