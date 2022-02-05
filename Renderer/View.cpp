@@ -224,7 +224,7 @@ void View::compute(Renderer& renderer)
     // Compute view matrix
     m_matrix.setIdentity();
     m_matrix.translate(-m_position);
-    m_matrix.rotateZ(m_angle);
+    m_matrix.rotateZ(-m_angle);
     m_matrix.translate(m_origin);
     m_matrix.scale(m_size);
 
