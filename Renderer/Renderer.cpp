@@ -499,7 +499,7 @@ bool Renderer::startFrame()
     presentToDraw.dstQueueFamilyIndex = m_graphicsQueue.index;
     presentToDraw.image = m_swapchain.images[m_frameIndex];
     presentToDraw.subresourceRange = subresource;
-    
+
     vkCmdPipelineBarrier(
         m_swapchain.commandBuffers[m_swapchain.current],
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,

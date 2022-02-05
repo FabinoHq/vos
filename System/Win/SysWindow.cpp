@@ -173,7 +173,7 @@ void SysWindow::close()
         DestroyWindow(m_handle);
         UnregisterClass(VOSWindowClassName, m_instance);
     }
-    
+
     m_instance = 0;
     m_handle = 0;
 }

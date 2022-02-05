@@ -256,7 +256,7 @@ PFN_vkCreateFramebuffer vkCreateFramebuffer = 0;
 // vkDestroyFramebuffer function
 PFN_vkDestroyFramebuffer vkDestroyFramebuffer = 0;
 
-// vkCreateImageView function 
+// vkCreateImageView function
 PFN_vkCreateImageView vkCreateImageView = 0;
 
 // vkDestroyImageView function

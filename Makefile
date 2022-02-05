@@ -215,5 +215,5 @@ clean:
 	rm -rf Renderer/Vulkan/*.o
 	rm -rf Renderer/Shapes/*.o
 
-mrproper: clean 
+mrproper: clean
 	rm -rf VOS

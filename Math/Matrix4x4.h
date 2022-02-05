@@ -231,7 +231,9 @@
                 float rightLeft = right-left;
                 float topBottom = top-bottom;
                 float farNear = zfar-znear;
-                if (rightLeft != 0.0f && topBottom != 0.0f && farNear != 0.0f)
+                float nearFar = znear-zfar;
+                if (rightLeft != 0.0f && topBottom != 0.0f &&
+                    farNear != 0.0f && nearFar != 0.0f)
                 {
                     mat[0] = (2.0f*znear)/rightLeft;
                     mat[1] = 0.0f;
@@ -243,11 +245,11 @@
                     mat[7] = 0.0f;
                     mat[8] = (right+left)/rightLeft;
                     mat[9] = (top+bottom)/topBottom;
-                    mat[10] = -(zfar+znear)/farNear;
+                    mat[10] = zfar/nearFar;
                     mat[11] = -1.0f;
                     mat[12] = 0.0f;
                     mat[13] = 0.0f;
-                    mat[14] = -(2.0f*zfar*znear)/farNear;
+                    mat[14] = -(zfar*znear)/farNear;
                     mat[15] = 0.0f;
                 }
             }
@@ -265,12 +267,14 @@
                 float right = frustWidth;
                 float top = frustHeight;
                 float bottom = -frustHeight;
-                
+
                 // Set frustum matrix
                 float rightLeft = right-left;
                 float topBottom = top-bottom;
                 float farNear = zfar-znear;
-                if (rightLeft != 0.0f && topBottom != 0.0f && farNear != 0.0f)
+                float nearFar = znear-zfar;
+                if (rightLeft != 0.0f && topBottom != 0.0f &&
+                    farNear != 0.0f && nearFar != 0.0f)
                 {
                     mat[0] = (2.0f*znear)/rightLeft;
                     mat[1] = 0.0f;
@@ -282,11 +286,11 @@
                     mat[7] = 0.0f;
                     mat[8] = (right+left)/rightLeft;
                     mat[9] = (top+bottom)/topBottom;
-                    mat[10] = -(zfar+znear)/farNear;
+                    mat[10] = zfar/nearFar;
                     mat[11] = -1.0f;
                     mat[12] = 0.0f;
                     mat[13] = 0.0f;
-                    mat[14] = -(2.0f*zfar*znear)/farNear;
+                    mat[14] = -(zfar*znear)/farNear;
                     mat[15] = 0.0f;
                 }
             }
