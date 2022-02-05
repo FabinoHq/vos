@@ -141,6 +141,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
     <ClCompile Include="Renderer\FreeFlyCam.cpp" />
+    <ClCompile Include="Renderer\GUI\GUIPxText.cpp" />
     <ClCompile Include="Renderer\HeightMapChunk.cpp" />
     <ClCompile Include="Renderer\Pipeline.cpp" />
     <ClCompile Include="Renderer\ProcSprite.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="Images\BMPFile.h" />
     <ClInclude Include="Images\Embedded\Cursor.h" />
+    <ClInclude Include="Images\Embedded\PxFont.h" />
     <ClInclude Include="Images\PNGFile.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
@@ -187,6 +189,7 @@
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Renderer\Camera.h" />
     <ClInclude Include="Renderer\FreeFlyCam.h" />
+    <ClInclude Include="Renderer\GUI\GUIPxText.h" />
     <ClInclude Include="Renderer\HeightMapChunk.h" />
     <ClInclude Include="Renderer\Pipeline.h" />
     <ClInclude Include="Renderer\ProcSprite.h" />

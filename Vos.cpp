@@ -58,6 +58,8 @@ m_freeflycam(),
 m_procSprite(),
 m_rect(),
 m_oval(),
+m_pxFontTexture(),
+m_pxText(),
 m_testTexture(),
 m_staticMesh(),
 m_heightMapChunk(),
@@ -162,6 +164,21 @@ bool Vos::launch()
     if (!m_oval.init(1.0f, 1.0f))
     {
         // Could not init oval shape
+        return false;
+    }
+
+    // Load pixel font texture
+    if (!m_pxFontTexture.updateTexture(m_renderer,
+        PxFontImageWidth, PxFontImageHeight, PxFontImage))
+    {
+        // Could not load pixel font texture
+        return false;
+    }
+
+    // Init test pixel text
+    if (!m_pxText.init(m_pxFontTexture, 2.0f, 1.0f))
+    {
+        // Could not init test pixel text
         return false;
     }
 
@@ -368,8 +385,8 @@ void Vos::run()
             m_renderer.bindDefaultVertexBuffer();
 
             // Render rectangle
-            m_renderer.bindRectPipeline();
-            m_rect.render(m_renderer);
+            /*m_renderer.bindRectPipeline();
+            m_rect.render(m_renderer);*/
 
             // Render ellipse
             /*m_renderer.bindOvalPipeline();
@@ -378,6 +395,10 @@ void Vos::run()
             // Render procedural sprite
             /*m_procSprite.bindPipeline(m_renderer);
             m_procSprite.render(m_renderer);*/
+
+            // Render pixel text
+            m_renderer.bindDefaultPipeline();
+            m_pxText.render(m_renderer);
 
             // Draw cursor
             m_renderer.bindDefaultPipeline();

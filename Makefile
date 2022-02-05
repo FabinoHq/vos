@@ -62,6 +62,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
+	Renderer/GUI/GUIPxText.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o
 
@@ -82,6 +83,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
+	Renderer/GUI/GUIPxText.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
@@ -196,6 +198,9 @@ Renderer/Shapes/Rect.o: Renderer/Shapes/Rect.cpp
 Renderer/Shapes/Oval.o: Renderer/Shapes/Oval.cpp
 	$(CC) -o Renderer/Shapes/Oval.o -c Renderer/Shapes/Oval.cpp $(CFLAGS)
 
+Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
+	$(CC) -o Renderer/GUI/GUIPxText.o -c Renderer/GUI/GUIPxText.cpp $(CFLAGS)
+
 Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 	$(CC) -o Renderer/StaticMesh.o -c Renderer/StaticMesh.cpp $(CFLAGS)
 
@@ -214,6 +219,7 @@ clean:
 	rm -rf Renderer/*.o
 	rm -rf Renderer/Vulkan/*.o
 	rm -rf Renderer/Shapes/*.o
+	rm -rf Renderer/GUI/*.o
 
 mrproper: clean
 	rm -rf VOS

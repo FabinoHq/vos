@@ -77,6 +77,7 @@
 !Images/
 !Images/Embedded/
 !Images/Embedded/Cursor.h
+!Images/Embedded/PxFont.h
 !Images/BMPFile.h
 !Images/BMPFile.cpp
 !Images/PNGFile.h
@@ -142,6 +143,10 @@
 !Renderer/Shapes/Rect.cpp
 !Renderer/Shapes/Oval.h
 !Renderer/Shapes/Oval.cpp
+
+!Renderer/GUI/
+!Renderer/GUI/GUIPxText.h
+!Renderer/GUI/GUIPxText.cpp
 
 # Textures files
 !Textures/

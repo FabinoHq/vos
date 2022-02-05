@@ -31,6 +31,9 @@
     <Filter Include="Compress">
       <UniqueIdentifier>{ca543703-05c4-456c-99c0-e4b70133d34b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\GUI">
+      <UniqueIdentifier>{1eb5d3fc-a139-4af4-be95-c4e4e0790251}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="Renderer\HeightMapChunk.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUIPxText.cpp">
+      <Filter>Renderer\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,6 +305,12 @@
     </ClInclude>
     <ClInclude Include="Math\Transform3.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUIPxText.h">
+      <Filter>Renderer\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Embedded\PxFont.h">
+      <Filter>Images\Embedded</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

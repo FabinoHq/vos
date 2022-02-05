@@ -66,6 +66,7 @@
     #include "ProcSprite.h"
     #include "Shapes/Rect.h"
     #include "Shapes/Oval.h"
+    #include "GUI/GUIPxText.h"
     #include "StaticMesh.h"
     #include "HeightMapChunk.h"
     #include "../Math/Math.h"
@@ -305,6 +306,7 @@
             friend class        ProcSprite;         // ProcSprite has access
             friend class        Rect;               // Rect has access
             friend class        Oval;               // Oval has access
+            friend class        GUIPxText;          // GUIPxText has access
             friend class        StaticMesh;         // StaticMesh has access
             friend class        HeightMapChunk;     // HeightMapChunk has access
     };
