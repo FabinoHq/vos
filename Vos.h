@@ -47,6 +47,7 @@
     #include "System/SysMemory.h"
     #include "System/SysWindow.h"
     #include "System/SysClock.h"
+    #include "System/SysSleep.h"
     #include "Renderer/Renderer.h"
     #include "Renderer/View.h"
     #include "Renderer/Camera.h"

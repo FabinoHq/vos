@@ -265,6 +265,7 @@ bool Vos::launch()
 void Vos::run()
 {
     // Framerate
+    const float maxFramerate = 8000.0f;
     std::ostringstream framestr;
     framestr << "FPS : 0";
     float frameavg = 0.0f;
@@ -276,13 +277,32 @@ void Vos::run()
     while (m_running)
     {
         float frametime = m_clock.getAndResetF();
+        float framelimit = frametime;
         float scale = m_renderer.getScale();
         float ratio = m_renderer.getRatio();
+
+        // Framerate limiter
+        if (framelimit <= (1.0f/maxFramerate))
+        {
+            // Release some CPU
+            float remainingTime = ((1.0f/maxFramerate) - framelimit);
+            if (remainingTime >= 0.01f)
+            {
+                SysSleep(0.001);
+            }
+
+            // Stall to match target framerate
+            framelimit += m_clock.getElapsedTimeF();
+            while (framelimit <= (1.0f/maxFramerate))
+            {
+                framelimit = (m_clock.getElapsedTimeF()-framelimit);
+            }
+        }
 
         // Framerate display
         frameavg += frametime;
         framecnt += 1.0f;
-        if (frameavg >= 0.5f)
+        if ((frameavg >= 0.5f) && (framecnt >= 1.0f))
         {
             framestr.clear();
             framestr.str("");

@@ -51,8 +51,30 @@ bool SysSleep(double seconds)
     try
     {
         // Sleep for given time
-        long long int milliseconds = static_cast<long long int>(seconds*1000);
-        std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+        long long int microsec = static_cast<long long int>(seconds*1000000);
+        std::this_thread::sleep_for(std::chrono::microseconds(microsec));
+    }
+    catch (...)
+    {
+        // Unknown error
+        return false;
+    }
+
+    // Successfully slept
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Put current thread to sleep for given time in seconds                     //
+//  return : True if the thread has slept, false otherwise                    //
+////////////////////////////////////////////////////////////////////////////////
+bool SysSleep(float seconds)
+{
+    try
+    {
+        // Sleep for given time
+        long long int microsec = static_cast<long long int>(seconds*1000000);
+        std::this_thread::sleep_for(std::chrono::microseconds(microsec));
     }
     catch (...)
     {
