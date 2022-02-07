@@ -178,14 +178,14 @@ bool Vos::launch()
     }
 
     // Init test pixel text
-    if (!m_pxText.init(m_pxFontTexture, 0.1f))
+    if (!m_pxText.init(m_pxFontTexture, 0.04f))
     {
         // Could not init test pixel text
         return false;
     }
-    m_pxText.setSmooth(0.08f);
-    m_pxText.setText("Test text line");
-    m_pxText.centerOrigin();
+    m_pxText.setSmooth(0.2f);
+    m_pxText.setText("FPS : 0");
+    m_pxText.setOrigin(0.0f, m_pxText.getHeight()*0.5f);
 
 
     // Load test texture
@@ -264,6 +264,12 @@ bool Vos::launch()
 ////////////////////////////////////////////////////////////////////////////////
 void Vos::run()
 {
+    // Framerate
+    std::ostringstream framestr;
+    framestr << "FPS : 0";
+    float frameavg = 0.0f;
+    float framecnt = 0.0f;
+
     // Run VOS
     m_clock.reset();
     m_running = true;
@@ -272,6 +278,18 @@ void Vos::run()
         float frametime = m_clock.getAndResetF();
         float scale = m_renderer.getScale();
         float ratio = m_renderer.getRatio();
+
+        // Framerate display
+        frameavg += frametime;
+        framecnt += 1.0f;
+        if (frameavg >= 0.5f)
+        {
+            framestr.clear();
+            framestr.str("");
+            framestr << "FPS : " << (1.0f/(frameavg/framecnt));
+            frameavg = 0.0f;
+            framecnt = 0.0f;
+        }
 
         // Get main window event
         Event event;
@@ -366,8 +384,8 @@ void Vos::run()
         if (m_renderer.startFrame())
         {
             // Get renderer aspect ratio
-            float cursorSize = 64.0f*scale;
-            float cursorOffset = 2.0f*scale;
+            //float cursorSize = 64.0f*scale;
+            //float cursorOffset = 2.0f*scale;
 
             // Set freefly camera
             m_renderer.setCamera(m_freeflycam);
@@ -378,9 +396,9 @@ void Vos::run()
             m_staticMesh.render(m_renderer);*/
 
             // Render heightmap chunk
-            /*m_renderer.bindStaticMeshPipeline();
+            m_renderer.bindStaticMeshPipeline();
             m_heightMapChunk.bindVertexBuffer(m_renderer);
-            m_heightMapChunk.render(m_renderer);*/
+            m_heightMapChunk.render(m_renderer);
 
 
             // Set default screen view
@@ -401,18 +419,20 @@ void Vos::run()
             /*m_procSprite.bindPipeline(m_renderer);
             m_procSprite.render(m_renderer);*/
 
-            // Render pixel text
+            // Render pixel text (framerate)
             m_renderer.bindPxTextPipeline();
+            m_pxText.setText(framestr.str());
+            m_pxText.setPosition(-ratio, 1.0f-m_pxText.getHeight());
             m_pxText.render(m_renderer);
 
             // Draw cursor
-            m_renderer.bindDefaultPipeline();
+            /*m_renderer.bindDefaultPipeline();
             m_cursor.setSize(cursorSize, cursorSize);
             m_cursor.setOrigin(0.0f, cursorSize);
             m_cursor.setPosition(
                 m_mouseX-cursorOffset, m_mouseY+cursorOffset
             );
-            m_cursor.render(m_renderer);
+            m_cursor.render(m_renderer);*/
 
             // End rendering
             m_renderer.endFrame();
