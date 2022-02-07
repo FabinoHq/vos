@@ -60,6 +60,8 @@ m_rect(),
 m_oval(),
 m_pxFontTexture(),
 m_pxText(),
+m_windowTexture(),
+m_guiWindow(),
 m_testTexture(),
 m_staticMesh(),
 m_heightMapChunk(),
@@ -185,7 +187,23 @@ bool Vos::launch()
     }
     m_pxText.setSmooth(0.2f);
     m_pxText.setText("FPS : 0");
-    m_pxText.setOrigin(0.0f, m_pxText.getHeight()*0.5f);
+
+
+    // Load window texture
+    if (!m_windowTexture.updateTexture(m_renderer,
+        WindowImageWidth, WindowImageHeight, WindowImage,
+        true, false))
+    {
+        // Could not load window texture
+        return false;
+    }
+
+    // Init GUI window
+    if (!m_guiWindow.init(m_windowTexture, 1.0f, 1.0f, 3.75f))
+    {
+        // Could not init GUI window
+        return false;
+    }
 
 
     // Load test texture
@@ -404,8 +422,8 @@ void Vos::run()
         if (m_renderer.startFrame())
         {
             // Get renderer aspect ratio
-            //float cursorSize = 64.0f*scale;
-            //float cursorOffset = 2.0f*scale;
+            float cursorSize = 64.0f*scale;
+            float cursorOffset = 2.0f*scale;
 
             // Set freefly camera
             m_renderer.setCamera(m_freeflycam);
@@ -416,9 +434,9 @@ void Vos::run()
             m_staticMesh.render(m_renderer);*/
 
             // Render heightmap chunk
-            m_renderer.bindStaticMeshPipeline();
+            /*m_renderer.bindStaticMeshPipeline();
             m_heightMapChunk.bindVertexBuffer(m_renderer);
-            m_heightMapChunk.render(m_renderer);
+            m_heightMapChunk.render(m_renderer);*/
 
 
             // Set default screen view
@@ -439,20 +457,24 @@ void Vos::run()
             /*m_procSprite.bindPipeline(m_renderer);
             m_procSprite.render(m_renderer);*/
 
+            // Render window
+            m_renderer.bindNinePatchPipeline();
+            m_guiWindow.render(m_renderer);
+
             // Render pixel text (framerate)
             m_renderer.bindPxTextPipeline();
             m_pxText.setText(framestr.str());
-            m_pxText.setPosition(-ratio, 1.0f-m_pxText.getHeight());
+            m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
             m_pxText.render(m_renderer);
 
             // Draw cursor
-            /*m_renderer.bindDefaultPipeline();
+            m_renderer.bindDefaultPipeline();
             m_cursor.setSize(cursorSize, cursorSize);
             m_cursor.setOrigin(0.0f, cursorSize);
             m_cursor.setPosition(
                 m_mouseX-cursorOffset, m_mouseY+cursorOffset
             );
-            m_cursor.render(m_renderer);*/
+            m_cursor.render(m_renderer);
 
             // End rendering
             m_renderer.endFrame();
@@ -467,6 +489,12 @@ void Vos::run()
 
         // Destroy static mesh
         m_staticMesh.destroyStaticMesh(m_renderer);
+
+        // Destroy pixel font texture
+        m_pxFontTexture.destroyTexture(m_renderer);
+
+        // Destroy window texture
+        m_windowTexture.destroyTexture(m_renderer);
 
         // Destroy test texture
         m_testTexture.destroyTexture(m_renderer);

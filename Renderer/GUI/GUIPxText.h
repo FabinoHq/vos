@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/GUI/GUIPxText.h : Pixel text (distance field) management      //
+//     Renderer/GUI/GUIPxText.h : GUI PixelText (distance field) management   //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_RENDERER_GUI_GUIPXTEXT_HEADER
 #define VOS_RENDERER_GUI_GUIPXTEXT_HEADER

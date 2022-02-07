@@ -78,6 +78,7 @@
 !Images/Embedded/
 !Images/Embedded/Cursor.h
 !Images/Embedded/PxFont.h
+!Images/Embedded/Window.h
 !Images/BMPFile.h
 !Images/BMPFile.cpp
 !Images/PNGFile.h
@@ -128,6 +129,7 @@
 !Renderer/Shaders/Sources/Default.vert
 !Renderer/Shaders/Sources/Default.frag
 !Renderer/Shaders/Sources/DefaultProc.frag
+!Renderer/Shaders/Sources/NinePatch.frag
 !Renderer/Shaders/Sources/Rect.frag
 !Renderer/Shaders/Sources/Oval.frag
 !Renderer/Shaders/Sources/PxText.frag
@@ -135,6 +137,7 @@
 !Renderer/Shaders/Sources/StaticMesh.frag
 !Renderer/Shaders/Default.h
 !Renderer/Shaders/DefaultProc.h
+!Renderer/Shaders/NinePatch.h
 !Renderer/Shaders/Rect.h
 !Renderer/Shaders/Oval.h
 !Renderer/Shaders/PxText.h
@@ -149,6 +152,8 @@
 !Renderer/GUI/
 !Renderer/GUI/GUIPxText.h
 !Renderer/GUI/GUIPxText.cpp
+!Renderer/GUI/GUIWindow.h
+!Renderer/GUI/GUIWindow.cpp
 
 # Textures files
 !Textures/

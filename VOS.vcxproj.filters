@@ -143,6 +143,9 @@
     <ClCompile Include="Renderer\GUI\GUIPxText.cpp">
       <Filter>Renderer\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUIWindow.cpp">
+      <Filter>Renderer\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -313,6 +316,15 @@
       <Filter>Images\Embedded</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\PxText.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUIWindow.h">
+      <Filter>Renderer\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Embedded\Window.h">
+      <Filter>Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\NinePatch.h">
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
   </ItemGroup>

@@ -62,7 +62,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
-	Renderer/GUI/GUIPxText.o \
+	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o
 
@@ -83,7 +83,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
-	Renderer/GUI/GUIPxText.o \
+	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
@@ -200,6 +200,9 @@ Renderer/Shapes/Oval.o: Renderer/Shapes/Oval.cpp
 
 Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
 	$(CC) -o Renderer/GUI/GUIPxText.o -c Renderer/GUI/GUIPxText.cpp $(CFLAGS)
+
+Renderer/GUI/GUIWindow.o: Renderer/GUI/GUIWindow.cpp
+	$(CC) -o Renderer/GUI/GUIWindow.o -c Renderer/GUI/GUIWindow.cpp $(CFLAGS)
 
 Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 	$(CC) -o Renderer/StaticMesh.o -c Renderer/StaticMesh.cpp $(CFLAGS)

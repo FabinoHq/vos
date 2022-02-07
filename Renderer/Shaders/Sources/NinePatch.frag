@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/PxText.frag : GUI PixelText fragment shader   //
+//     Renderer/Shaders/Sources/NinePatch.frag : NinePatch fragment shader    //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision highp float;
@@ -61,15 +61,34 @@ layout(location = 0) in vec2 i_texCoords;
 layout(location = 0) out vec4 o_color;
 void main()
 {
-    // Compute distance field
-    float dist = texture(
-        texSampler, (i_texCoords*constants.size)+constants.offset
-    ).a;
+    // Compute ninepatch UVs (constants.time is the UVs factor)
+    vec2 patchSize = abs(constants.size*constants.time);
+    vec2 curCoord = i_texCoords*patchSize;
+    if (curCoord.x >= 0.25)
+    {
+        if (curCoord.x >= (patchSize.x-0.25))
+        {
+            curCoord.x -= (patchSize.x-0.25)-0.75;
+        }
+        else
+        {
+            curCoord.x = 0.25+mod(curCoord.x, 0.5);
+        }
+    }
+    if (curCoord.y >= 0.25)
+    {
+        if (curCoord.y >= (patchSize.y-0.25))
+        {
+            curCoord.y -= (patchSize.y-0.25)-0.75;
+        }
+        else
+        {
+            curCoord.y = 0.25+mod(curCoord.y, 0.5);
+        }
+    }
+    if (patchSize.x <= 0.5) { curCoord.x = i_texCoords.x; }
+    if (patchSize.y <= 0.5) { curCoord.y = i_texCoords.y; }
 
-    // Compute output color (constants.time is the smooth amount)
-    o_color = vec4(
-        constants.color.r, constants.color.g, constants.color.b,
-        smoothstep(0.5-constants.time, 0.5+constants.time, dist)*
-        constants.color.a
-    );
+    // Compute output color
+    o_color = texture(texSampler, curCoord)*constants.color;
 }

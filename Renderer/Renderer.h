@@ -67,12 +67,14 @@
     #include "Shapes/Rect.h"
     #include "Shapes/Oval.h"
     #include "GUI/GUIPxText.h"
+    #include "GUI/GUIWindow.h"
     #include "StaticMesh.h"
     #include "HeightMapChunk.h"
     #include "../Math/Math.h"
     #include "../Math/Matrix4x4.h"
 
     #include "Shaders/Default.h"
+    #include "Shaders/NinePatch.h"
     #include "Shaders/Rect.h"
     #include "Shaders/Oval.h"
     #include "Shaders/PxText.h"
@@ -167,6 +169,11 @@
             //  Bind renderer default pipeline                                //
             ////////////////////////////////////////////////////////////////////
             void bindDefaultPipeline();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer ninepatch pipeline                              //
+            ////////////////////////////////////////////////////////////////////
+            void bindNinePatchPipeline();
 
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer rect pipeline                                   //
@@ -297,6 +304,7 @@
             VertexBuffer        m_vertexBuffer;         // Default vertex buffer
             GraphicsLayout      m_layout;               // Graphics layout
             Pipeline            m_pipeline;             // Default pipeline
+            Pipeline            m_ninePatchPipeline;    // NinePatch pipeline
             Pipeline            m_rectPipeline;         // Rect pipeline
             Pipeline            m_ovalPipeline;         // Oval pipeline
             Pipeline            m_pxTextPipeline;       // Pixel text pipeline
@@ -314,6 +322,7 @@
             friend class        Rect;               // Rect has access
             friend class        Oval;               // Oval has access
             friend class        GUIPxText;          // GUIPxText has access
+            friend class        GUIWindow;          // GUIWindow has access
             friend class        StaticMesh;         // StaticMesh has access
             friend class        HeightMapChunk;     // HeightMapChunk has access
     };

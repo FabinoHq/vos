@@ -65,6 +65,7 @@ m_swapchain(),
 m_vertexBuffer(),
 m_layout(),
 m_pipeline(),
+m_ninePatchPipeline(),
 m_rectPipeline(),
 m_ovalPipeline(),
 m_pxTextPipeline(),
@@ -339,6 +340,21 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create ninepatch pipeline
+    m_ninePatchPipeline.createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_ninePatchPipeline.createFragmentShader(
+        *this, NinePatchFragmentShader, NinePatchFragmentShaderSize
+    );
+    if (!m_ninePatchPipeline.createPipeline(*this))
+    {
+        // Could not create ninepatch pipeline
+        SysMessage::box() << "[0x304C] Could not create ninepatch pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create rect pipeline
     m_rectPipeline.createVertexShader(
         *this, DefaultVertexShader, DefaultVertexShaderSize
@@ -349,7 +365,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_rectPipeline.createPipeline(*this))
     {
         // Could not create rect pipeline
-        SysMessage::box() << "[0x304C] Could not create rect pipeline\n";
+        SysMessage::box() << "[0x304D] Could not create rect pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -364,7 +380,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_ovalPipeline.createPipeline(*this))
     {
         // Could not create oval pipeline
-        SysMessage::box() << "[0x304D] Could not create oval pipeline\n";
+        SysMessage::box() << "[0x304E] Could not create oval pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -379,7 +395,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_pxTextPipeline.createPipeline(*this))
     {
         // Could not create pixel text pipeline
-        SysMessage::box() << "[0x304E] Could not create pixel text pipeline\n";
+        SysMessage::box() << "[0x304F] Could not create pixel text pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -395,7 +411,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
-        SysMessage::box() << "[0x304F] Could not create static mesh pipeline\n";
+        SysMessage::box() << "[0x3050] Could not create static mesh pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -407,7 +423,7 @@ bool Renderer::init(SysWindow* sysWindow)
         DefaultVerticesCount, DefaultIndicesCount))
     {
         // Could not create default vertex buffer
-        SysMessage::box() << "[0x3050] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3051] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -877,6 +893,14 @@ void Renderer::destroyVertexBuffer(VertexBuffer& vertexBuffer)
 void Renderer::bindDefaultPipeline()
 {
     m_pipeline.bind(*this);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer ninepatch pipeline                                          //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindNinePatchPipeline()
+{
+    m_ninePatchPipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

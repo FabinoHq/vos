@@ -37,109 +37,109 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Renderer/GUI/GUIWindow.h : GUI Window management                       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_RENDERER_GUI_GUIWINDOW_HEADER
+#define VOS_RENDERER_GUI_GUIWINDOW_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysMemory.h"
-    #include "System/SysWindow.h"
-    #include "System/SysClock.h"
-    #include "System/SysSleep.h"
-    #include "Renderer/Renderer.h"
-    #include "Renderer/View.h"
-    #include "Renderer/Camera.h"
-    #include "Renderer/Sprite.h"
-    #include "Renderer/ProcSprite.h"
-    #include "Renderer/Shapes/Rect.h"
-    #include "Renderer/Shapes/Oval.h"
-    #include "Renderer/GUI/GUIPxText.h"
-    #include "Renderer/GUI/GUIWindow.h"
-    #include "Renderer/StaticMesh.h"
-    #include "Renderer/HeightMapChunk.h"
-    #include "Event.h"
-
-    #include "Images/Embedded/Cursor.h"
-    #include "Images/Embedded/PxFont.h"
-    #include "Images/Embedded/Window.h"
-    #include "Images/BMPFile.h"
-    #include "Images/PNGFile.h"
-
-    #include <cstdint>
+    #include "../Texture.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
+    #include "../../Math/Vector4.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform2.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
+    //  Renderer class declaration                                            //
     ////////////////////////////////////////////////////////////////////////////
-    class Vos
+    class Renderer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  GUIWindow class definition                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class GUIWindow : public Transform2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
+            //  GUIWindow default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            Vos();
+            GUIWindow();
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
+            //  GUIWindow virtual destructor                                  //
             ////////////////////////////////////////////////////////////////////
-            ~Vos();
+            virtual ~GUIWindow();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
+            //  Init window                                                   //
+            //  return : True if the window is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool launch();
+            bool init(Texture& texture,
+                float width, float height, float uvFactor);
 
             ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
+            //  Set window texture                                            //
+            //  return : True if window texture is successfully set           //
             ////////////////////////////////////////////////////////////////////
-            void run();
+            bool setTexture(Texture& texture);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set window color                                          //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(const Vector4& color);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set window color                                          //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(float red, float green, float blue, float alpha);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set window red channel                                    //
+            ////////////////////////////////////////////////////////////////////
+            void setRed(float red);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set window green channel                                  //
+            ////////////////////////////////////////////////////////////////////
+            void setGreen(float green);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set window blue channel                                   //
+            ////////////////////////////////////////////////////////////////////
+            void setBlue(float blue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set window alpha channel                                      //
+            ////////////////////////////////////////////////////////////////////
+            void setAlpha(float alpha);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render window                                                 //
+            ////////////////////////////////////////////////////////////////////
+            void render(Renderer& renderer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
+            //  GUIWindow private copy constructor : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
+            GUIWindow(const GUIWindow&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
+            //  GUIWindow private copy operator : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
+            GUIWindow& operator=(const GUIWindow&) = delete;
+
 
         private:
-            bool            m_running;          // VOS running state
-            SysWindow       m_window;           // VOS main window
-            Renderer        m_renderer;         // VOS renderer
-            SysClock        m_clock;            // VOS clock
-            Texture         m_cursorTexture;    // Cursor texture
-            Sprite          m_cursor;           // Cursor sprite
-
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-
-            ProcSprite      m_procSprite;       // Procedural sprite
-            Rect            m_rect;             // Rect shape
-            Oval            m_oval;             // Oval shape
-
-            Texture         m_pxFontTexture;    // Pixel font texture
-            GUIPxText       m_pxText;           // Test pixel text
-
-            Texture         m_windowTexture;    // GUI Window texture
-            GUIWindow       m_guiWindow;        // GUI Window
-
-            Texture         m_testTexture;      // Test texture
-            StaticMesh      m_staticMesh;       // Static mesh
-
-            HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
+            Texture*            m_texture;          // Window texture pointer
+            Vector4             m_color;            // Window color
+            float               m_uvFactor;         // Ninepatch UV factor
     };
 
 
-#endif // VOS_VOS_HEADER
+#endif // VOS_RENDERER_GUI_GUIWINDOW_HEADER

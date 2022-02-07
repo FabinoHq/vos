@@ -74,8 +74,8 @@ bool Rect::init(float width, float height)
     // Set rect size
     setSize(width, height);
 
-    // Set rect origin (anchor)
-    setOrigin(width*0.5f, height*0.5f);
+    // Center rect origin (anchor)
+    centerOrigin();
 
     // Reset rect color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);

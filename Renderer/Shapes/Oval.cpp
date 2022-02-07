@@ -74,8 +74,8 @@ bool Oval::init(float width, float height)
     // Set oval size
     setSize(width, height);
 
-    // Set oval origin (anchor)
-    setOrigin(width*0.5f, height*0.5f);
+    // Center oval origin (anchor)
+    centerOrigin();
 
     // Reset oval color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);

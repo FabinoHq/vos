@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/PxText.h : Pixel text (distance field) shader         //
+//     Renderer/Shaders/PxText.h : GUI PixelText (distance field) shader      //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_RENDERER_SHADERS_PXTEXT_HEADER
 #define VOS_RENDERER_SHADERS_PXTEXT_HEADER

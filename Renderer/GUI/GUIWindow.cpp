@@ -37,101 +37,91 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/ProcSprite.cpp : Procedural sprite management                 //
+//     Renderer/GUI/GUIWindow.h : GUI Window management                       //
 ////////////////////////////////////////////////////////////////////////////////
-#include "ProcSprite.h"
-#include "Renderer.h"
+#include "GUIWindow.h"
+#include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  ProcSprite default constructor                                            //
+//  GUIWindow default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
-ProcSprite::ProcSprite() :
+GUIWindow::GUIWindow() :
 Transform2(),
-m_pipeline(),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_texture(0),
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_uvFactor(1.0f)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  ProcSprite virtual destructor                                             //
+//  GUIWindow virtual destructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
-ProcSprite::~ProcSprite()
+GUIWindow::~GUIWindow()
 {
     m_color.reset();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init procedural sprite                                                    //
-//  return : True if the proc sprite is successfully created                  //
+//  Init window                                                               //
+//  return : True if the window is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
-    const size_t fragmentSize, float width, float height)
+bool GUIWindow::init(Texture& texture,
+    float width, float height, float uvFactor)
 {
-    bool shaderCreated = false;
-    if (fragmentSource && (fragmentSize > 0))
+    // Check texture handle
+    if (!texture.isValid())
     {
-        // Create procedural sprite pipeline
-        m_pipeline.createVertexShader(
-            renderer, DefaultVertexShader, DefaultVertexShaderSize
-        );
-        m_pipeline.createFragmentShader(
-            renderer, fragmentSource, fragmentSize
-        );
-        if (m_pipeline.createPipeline(renderer))
-        {
-            shaderCreated = true;
-        }
+        // Invalid texture handle
+        return false;
     }
 
-    if (!shaderCreated)
-    {
-        // Create default procedural sprite pipeline
-        m_pipeline.createVertexShader(
-            renderer, DefaultVertexShader, DefaultVertexShaderSize
-        );
-        m_pipeline.createFragmentShader(
-            renderer, DefaultProcFragmentShader, DefaultProcFragmentShaderSize
-        );
-        if (!m_pipeline.createPipeline(renderer))
-        {
-            // Could not create default procedural sprite pipeline
-            return false;
-        }
-    }
-
-    // Reset procedural sprite transformations
+    // Reset window transformations
     resetTransforms();
 
-    // Set procedural sprite size
+    // Set window size
     setSize(width, height);
 
-    // Center procedural sprite origin (anchor)
+    // Center window origin (anchor)
     centerOrigin();
 
-    // Reset procedural sprite color
+    // Set window texture pointer
+    m_texture = &texture;
+
+    // Reset window color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 
-    // Procedural sprite successfully created
+    // Set ninepatch UV factor
+    m_uvFactor = uvFactor;
+
+    // Window successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy procedural sprite                                                 //
+//  Set window texture                                                        //
+//  return : True if window texture is successfully set                       //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::destroyProcSprite(Renderer& renderer)
+bool GUIWindow::setTexture(Texture& texture)
 {
-    m_color.reset();
-    m_pipeline.destroyPipeline(renderer);
-    resetTransforms();
+    // Check texture handle
+    if (!texture.isValid())
+    {
+        // Invalid texture handle
+        return false;
+    }
+
+    // Set window texture pointer
+    m_texture = &texture;
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite color                                               //
+//  Set window color                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setColor(const Vector4& color)
+void GUIWindow::setColor(const Vector4& color)
 {
     m_color.vec[0] = color.vec[0];
     m_color.vec[1] = color.vec[1];
@@ -140,9 +130,9 @@ void ProcSprite::setColor(const Vector4& color)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite color                                               //
+//  Set window color                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setColor(float red, float green, float blue, float alpha)
+void GUIWindow::setColor(float red, float green, float blue, float alpha)
 {
     m_color.vec[0] = red;
     m_color.vec[1] = green;
@@ -151,53 +141,44 @@ void ProcSprite::setColor(float red, float green, float blue, float alpha)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite red channel                                         //
+//  Set window red channel                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setRed(float red)
+void GUIWindow::setRed(float red)
 {
     m_color.vec[0] = red;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite green channel                                       //
+//  Set window green channel                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setGreen(float green)
+void GUIWindow::setGreen(float green)
 {
     m_color.vec[1] = green;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite blue channel                                        //
+//  Set window blue channel                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setBlue(float blue)
+void GUIWindow::setBlue(float blue)
 {
     m_color.vec[2] = blue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set procedural sprite alpha channel                                       //
+//  Set window alpha channel                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::setAlpha(float alpha)
+void GUIWindow::setAlpha(float alpha)
 {
     m_color.vec[3] = alpha;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind procedural sprite pipeline                                           //
+//  Render window                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::bindPipeline(Renderer& renderer)
+void GUIWindow::render(Renderer& renderer)
 {
-    // Bind procedural sprite shader
-    m_pipeline.bind(renderer);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Render procedural sprite                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::render(Renderer& renderer)
-{
-    // Compute sprite transformations
+    // Compute window transformations
     computeTransforms();
 
     // Push model matrix into command buffer
@@ -215,9 +196,9 @@ void ProcSprite::render(Renderer& renderer)
     pushConstants.color[3] = m_color.vec[3];
     pushConstants.offset[0] = 0.0f;
     pushConstants.offset[1] = 0.0f;
-    pushConstants.size[0] = 1.0f;
-    pushConstants.size[1] = 1.0f;
-    pushConstants.time = 0.0f;
+    pushConstants.size[0] = m_size.vec[0];
+    pushConstants.size[1] = m_size.vec[1];
+    pushConstants.time = m_uvFactor;
 
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
@@ -225,7 +206,10 @@ void ProcSprite::render(Renderer& renderer)
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
-    // Draw procedural sprite triangles
+    // Bind window texture
+    m_texture->bind(renderer);
+
+    // Draw window triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         6, 1, 0, 0, 0
