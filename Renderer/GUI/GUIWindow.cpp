@@ -50,7 +50,19 @@ GUIWindow::GUIWindow() :
 Transform2(),
 m_texture(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
-m_uvFactor(1.0f)
+m_uvFactor(1.0f),
+m_movable(true),
+m_resizable(true),
+m_minSize(0.2f, 0.2f),
+m_maxSize(3.5f, 1.9f),
+m_topBarSize(0.05f),
+m_resizeBarSize(0.01f),
+m_grabWindow(false),
+m_grabTop(false),
+m_grabBottom(false),
+m_grabLeft(false),
+m_grabRight(false),
+m_grabPosition(0.0f, 0.0f)
 {
 
 }
@@ -60,6 +72,19 @@ m_uvFactor(1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 GUIWindow::~GUIWindow()
 {
+    m_grabPosition.reset();
+    m_grabRight = false;
+    m_grabLeft = false;
+    m_grabBottom = false;
+    m_grabTop = false;
+    m_grabWindow = false;
+    m_resizeBarSize = 0.0f;
+    m_topBarSize = 0.0f;
+    m_maxSize.reset();
+    m_minSize.reset();
+    m_resizable = false;
+    m_movable = false;
+    m_uvFactor = 0.0f;
     m_color.reset();
 }
 
@@ -81,12 +106,6 @@ bool GUIWindow::init(Texture& texture,
     // Reset window transformations
     resetTransforms();
 
-    // Set window size
-    setSize(width, height);
-
-    // Center window origin (anchor)
-    centerOrigin();
-
     // Set window texture pointer
     m_texture = &texture;
 
@@ -95,6 +114,39 @@ bool GUIWindow::init(Texture& texture,
 
     // Set ninepatch UV factor
     m_uvFactor = uvFactor;
+
+    // Reset window movable state
+    m_movable = true;
+
+    // Reset window resizable state
+    m_resizable = true;
+
+    // Reset window minimum size
+    m_minSize.set(0.2f, 0.2f);
+
+    // Reset window maximum size
+    m_maxSize.set(3.5f, 1.9f);
+
+    // Reset window top bar size
+    m_topBarSize = 0.05f;
+
+    // Reset window resize bar size
+    m_resizeBarSize = 0.01f;
+
+    // Set window size
+    setSize(width, height);
+    clampWindowSize();
+
+    // Center window origin (anchor)
+    centerOrigin();
+
+    // Reset window grabbing states
+    m_grabWindow = false;
+    m_grabTop = false;
+    m_grabBottom = false;
+    m_grabLeft = false;
+    m_grabRight = false;
+    m_grabPosition.reset();
 
     // Window successfully created
     return true;
@@ -174,6 +226,442 @@ void GUIWindow::setAlpha(float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set window UV factor                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setUVFactor(float uvFactor)
+{
+    m_uvFactor = uvFactor;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set window movable state                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setMovable(bool movable)
+{
+    m_movable = movable;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set window resizable state                                                //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setResizable(bool resizable)
+{
+    m_resizable = resizable;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set window minimum size                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setMinSize(const Vector2& minSize)
+{
+    m_minSize.vec[0] = minSize.vec[0];
+    m_minSize.vec[1] = minSize.vec[1];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set window minimum size                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setMinSize(float minWidth, float minHeight)
+{
+    m_minSize.vec[0] = minWidth;
+    m_minSize.vec[1] = minHeight;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set window maximum size                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setMaxSize(const Vector2& maxSize)
+{
+    m_maxSize.vec[0] = maxSize.vec[0];
+    m_maxSize.vec[1] = maxSize.vec[1];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set window maximum size                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setMaxSize(float maxWidth, float maxHeight)
+{
+    m_maxSize.vec[0] = maxWidth;
+    m_maxSize.vec[1] = maxHeight;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set window top bar size                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setTopBarSize(float topBarSize)
+{
+    if (topBarSize <= 0.0f) { topBarSize = 0.0f; }
+    m_topBarSize = topBarSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set window resize bar size                                                //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::setResizeBarSize(float resizeBarSize)
+{
+    if (resizeBarSize <= 0.0f) { resizeBarSize = 0.0f; }
+    m_resizeBarSize = resizeBarSize;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window picking state                                                  //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::isPicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
+        (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
+    {
+        // Window is picking
+        return true;
+    }
+
+    // Window is not picking
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window top bar picking state                                          //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::isTopBarPicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
+        (mouseY >= (m_position.vec[1] - m_origin.vec[1] +
+            m_size.vec[1] - m_topBarSize)) &&
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
+    {
+        // Window top bar is picking
+        return true;
+    }
+
+    // Window top bar is not picking
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window top resize bar picking state                                   //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::isTopResizePicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
+        (mouseY >= (m_position.vec[1] - m_origin.vec[1] +
+            m_size.vec[1] - m_resizeBarSize)) &&
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
+    {
+        // Window top resize bar is picking
+        return true;
+    }
+
+    // Window top resize bar is not picking
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window bottom resize bar picking state                                //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::isBottomResizePicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
+        (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_resizeBarSize)))
+    {
+        // Window bottom resize bar is picking
+        return true;
+    }
+
+    // Window bottom resize bar is not picking
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window left resize bar picking state                                  //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::isLeftResizePicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_resizeBarSize)) &&
+        (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
+    {
+        // Window left resize bar is picking
+        return true;
+    }
+
+    // Window left resize bar is not picking
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get window right resize bar picking state                                 //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::isRightResizePicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= m_position.vec[0] - m_origin.vec[0] +
+            m_size.vec[0] - m_resizeBarSize) &&
+        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
+        (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
+    {
+        // Window right resize bar is picking
+        return true;
+    }
+
+    // Window right resize bar is not picking
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle window mouse press event                                           //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::mousePress(float mouseX, float mouseY)
+{
+    if (m_resizable)
+    {
+        if (isTopResizePicking(mouseX, mouseY) &&
+            isLeftResizePicking(mouseX, mouseY))
+        {
+            // Top Left resize
+            m_grabPosition.vec[0] = (m_size.vec[0] + mouseX);
+            m_grabPosition.vec[1] = (m_size.vec[1] - mouseY);
+            m_grabTop = true;
+            m_grabLeft = true;
+            m_grabWindow = false;
+            m_grabBottom = false;
+            m_grabRight = false;
+            return true;
+        }
+
+        if (isTopResizePicking(mouseX, mouseY) &&
+            isRightResizePicking(mouseX, mouseY))
+        {
+            // Top Right resize
+            m_grabPosition.vec[0] = (m_size.vec[0] - mouseX);
+            m_grabPosition.vec[1] = (m_size.vec[1] - mouseY);
+            m_grabTop = true;
+            m_grabRight = true;
+            m_grabWindow = false;
+            m_grabBottom = false;
+            m_grabLeft = false;
+            return true;
+        }
+
+        if (isBottomResizePicking(mouseX, mouseY) &&
+            isLeftResizePicking(mouseX, mouseY))
+        {
+            // Bottom Left resize
+            m_grabPosition.vec[0] = (m_size.vec[0] + mouseX);
+            m_grabPosition.vec[1] = (m_size.vec[1] + mouseY);
+            m_grabBottom = true;
+            m_grabLeft = true;
+            m_grabWindow = false;
+            m_grabTop = false;
+            m_grabRight = false;
+            return true;
+        }
+
+        if (isBottomResizePicking(mouseX, mouseY) &&
+            isRightResizePicking(mouseX, mouseY))
+        {
+            // Bottom Right resize
+            m_grabPosition.vec[0] = (m_size.vec[0] - mouseX);
+            m_grabPosition.vec[1] = (m_size.vec[1] + mouseY);
+            m_grabBottom = true;
+            m_grabRight = true;
+            m_grabWindow = false;
+            m_grabTop = false;
+            m_grabLeft = false;
+            return true;
+        }
+
+        if (isTopResizePicking(mouseX, mouseY))
+        {
+            // Top resize
+            m_grabPosition.vec[1] = (m_size.vec[1] - mouseY);
+            m_grabTop = true;
+            m_grabWindow = false;
+            m_grabBottom = false;
+            m_grabLeft = false;
+            m_grabRight = false;
+            return true;
+        }
+
+        if (isBottomResizePicking(mouseX, mouseY))
+        {
+            // Bottom resize
+            m_grabPosition.vec[1] = (m_size.vec[1] + mouseY);
+            m_grabBottom = true;
+            m_grabWindow = false;
+            m_grabTop = false;
+            m_grabLeft = false;
+            m_grabRight = false;
+            return true;
+        }
+
+        if (isLeftResizePicking(mouseX, mouseY))
+        {
+            // Left resize
+            m_grabPosition.vec[0] = (m_size.vec[0] + mouseX);
+            m_grabLeft = true;
+            m_grabWindow = false;
+            m_grabTop = false;
+            m_grabBottom = false;
+            m_grabRight = false;
+            return true;
+        }
+
+        if (isRightResizePicking(mouseX, mouseY))
+        {
+            // Right resize
+            m_grabPosition.vec[0] = (m_size.vec[0] - mouseX);
+            m_grabRight = true;
+            m_grabWindow = false;
+            m_grabTop = false;
+            m_grabBottom = false;
+            m_grabLeft = false;
+            return true;
+        }
+    }
+
+    if (m_movable && isTopBarPicking(mouseX, mouseY))
+    {
+        // Move window
+        m_grabPosition.vec[0] = (m_position.vec[0] - mouseX);
+        m_grabPosition.vec[1] = (m_position.vec[1] - mouseY);
+        m_grabWindow = true;
+        m_grabTop = false;
+        m_grabBottom = false;
+        m_grabLeft = false;
+        m_grabRight = false;
+        return true;
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle window mouse release event                                         //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::mouseRelease(float mouseX, float mouseY)
+{
+    m_grabWindow = false;
+    m_grabTop = false;
+    m_grabBottom = false;
+    m_grabLeft = false;
+    m_grabRight = false;
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle window mouse move event                                            //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::mouseMove(float mouseX, float mouseY)
+{
+    Vector2 moveOffset(0.0f, 0.0f);
+
+    if (m_grabTop && m_grabLeft)
+    {
+        // Resize top left window
+        moveOffset.vec[0] = m_size.vec[0];
+        m_size.vec[0] = (m_grabPosition.vec[0] - mouseX);
+        m_size.vec[1] = (m_grabPosition.vec[1] + mouseY);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0];
+        m_position.vec[0] += moveOffset.vec[0];
+        return true;
+    }
+
+    if (m_grabTop && m_grabRight)
+    {
+        // Resize top right window
+        m_size.vec[0] = (m_grabPosition.vec[0] + mouseX);
+        m_size.vec[1] = (m_grabPosition.vec[1] + mouseY);
+        clampWindowSize();
+        return true;
+    }
+
+    if (m_grabBottom && m_grabLeft)
+    {
+        // Resize bottom left window
+        moveOffset.vec[0] = m_size.vec[0];
+        moveOffset.vec[1] = m_size.vec[1];
+        m_size.vec[0] = (m_grabPosition.vec[0] - mouseX);
+        m_size.vec[1] = (m_grabPosition.vec[1] - mouseY);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0];
+        m_position.vec[0] += moveOffset.vec[0];
+        moveOffset.vec[1] -= m_size.vec[1];
+        m_position.vec[1] += moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabBottom && m_grabRight)
+    {
+        // Resize bottom right window
+        moveOffset.vec[1] = m_size.vec[1];
+        m_size.vec[0] = (m_grabPosition.vec[0] + mouseX);
+        m_size.vec[1] = (m_grabPosition.vec[1] - mouseY);
+        clampWindowSize();
+        moveOffset.vec[1] -= m_size.vec[1];
+        m_position.vec[1] += moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabTop)
+    {
+        // Resize top window
+        m_size.vec[1] = (m_grabPosition.vec[1] + mouseY);
+        clampWindowSize();
+        return true;
+    }
+
+    if (m_grabBottom)
+    {
+        // Resize bottom window
+        moveOffset.vec[1] = m_size.vec[1];
+        m_size.vec[1] = (m_grabPosition.vec[1] - mouseY);
+        clampWindowSize();
+        moveOffset.vec[1] -= m_size.vec[1];
+        m_position.vec[1] += moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabLeft)
+    {
+        // Resize left window
+        moveOffset.vec[0] = m_size.vec[0];
+        m_size.vec[0] = (m_grabPosition.vec[0] - mouseX);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0];
+        m_position.vec[0] += moveOffset.vec[0];
+        return true;
+    }
+
+    if (m_grabRight)
+    {
+        // Resize right window
+        m_size.vec[0] = (m_grabPosition.vec[0] + mouseX);
+        clampWindowSize();
+        return true;
+    }
+
+    if (m_grabWindow)
+    {
+        // Move window
+        m_position.vec[0] = (m_grabPosition.vec[0] + mouseX);
+        m_position.vec[1] = (m_grabPosition.vec[1] + mouseY);
+        return true;
+    }
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render window                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 void GUIWindow::render(Renderer& renderer)
@@ -214,4 +702,18 @@ void GUIWindow::render(Renderer& renderer)
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         6, 1, 0, 0, 0
     );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Clamp window size                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::clampWindowSize()
+{
+    // Clamp window width
+    if (m_size.vec[0] <= m_minSize.vec[0]) { m_size.vec[0] = m_minSize.vec[0]; }
+    if (m_size.vec[0] >= m_maxSize.vec[0]) { m_size.vec[0] = m_maxSize.vec[0]; }
+
+    // Clamp window height
+    if (m_size.vec[1] <= m_minSize.vec[1]) { m_size.vec[1] = m_minSize.vec[1]; }
+    if (m_size.vec[1] >= m_maxSize.vec[1]) { m_size.vec[1] = m_maxSize.vec[1]; }
 }

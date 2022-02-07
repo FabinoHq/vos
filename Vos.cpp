@@ -283,7 +283,7 @@ bool Vos::launch()
 void Vos::run()
 {
     // Framerate
-    const float maxFramerate = 8000.0f;
+    const float maxFramerate = 300.0f;
     std::ostringstream framestr;
     framestr << "FPS : 0";
     float frameavg = 0.0f;
@@ -406,6 +406,23 @@ void Vos::run()
                     m_freeflycam.mouseMove(
                         event.mouse.x*1.0f, event.mouse.y*1.0f
                     );
+                    m_guiWindow.mouseMove(m_mouseX, m_mouseY);
+                    break;
+
+                // Mouse button pressed
+                case EVENT_MOUSEPRESSED:
+                    if (event.mouse.button == EVENT_MOUSE_LEFT)
+                    {
+                        m_guiWindow.mousePress(m_mouseX, m_mouseY);
+                    }
+                    break;
+
+                // Mouse button released
+                case EVENT_MOUSERELEASED:
+                    if (event.mouse.button == EVENT_MOUSE_LEFT)
+                    {
+                        m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
+                    }
                     break;
 
                 default:

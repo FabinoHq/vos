@@ -336,6 +336,8 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                     {
                         // Mouse events
                         case RIM_TYPEMOUSE:
+                        {
+                            // Mouse move event
                             event.type = EVENT_MOUSEMOVED;
                             event.mouse.x = raw->data.mouse.lLastX;
                             event.mouse.y = raw->data.mouse.lLastY;
@@ -344,7 +346,48 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                                 m_systemMode.getWidth()/2,
                                 m_systemMode.getHeight()/2
                             );
+
+                            // Mouse pressed events
+                            if (raw->data.mouse.usButtonFlags &
+                                RI_MOUSE_LEFT_BUTTON_DOWN)
+                            {
+                                event.type = EVENT_MOUSEPRESSED;
+                                event.mouse.button = EVENT_MOUSE_LEFT;
+                                event.mouse.x = raw->data.mouse.lLastX;
+                                event.mouse.y = raw->data.mouse.lLastY;
+                                m_events.push(event);
+                            }
+                            if (raw->data.mouse.usButtonFlags &
+                                RI_MOUSE_RIGHT_BUTTON_DOWN)
+                            {
+                                event.type = EVENT_MOUSEPRESSED;
+                                event.mouse.button = EVENT_MOUSE_RIGHT;
+                                event.mouse.x = raw->data.mouse.lLastX;
+                                event.mouse.y = raw->data.mouse.lLastY;
+                                m_events.push(event);
+                            }
+
+                            // Mouse released events
+                            if (raw->data.mouse.usButtonFlags &
+                                RI_MOUSE_LEFT_BUTTON_UP)
+                            {
+                                event.type = EVENT_MOUSERELEASED;
+                                event.mouse.button = EVENT_MOUSE_LEFT;
+                                event.mouse.x = raw->data.mouse.lLastX;
+                                event.mouse.y = raw->data.mouse.lLastY;
+                                m_events.push(event);
+                            }
+                            if (raw->data.mouse.usButtonFlags &
+                                RI_MOUSE_RIGHT_BUTTON_UP)
+                            {
+                                event.type = EVENT_MOUSERELEASED;
+                                event.mouse.button = EVENT_MOUSE_RIGHT;
+                                event.mouse.x = raw->data.mouse.lLastX;
+                                event.mouse.y = raw->data.mouse.lLastY;
+                                m_events.push(event);
+                            }
                             break;
+                        }
 
                         default:
                             break;
