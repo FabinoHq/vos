@@ -67,6 +67,7 @@ m_layout(),
 m_pipeline(),
 m_rectPipeline(),
 m_ovalPipeline(),
+m_pxTextPipeline(),
 m_staticMeshPipeline(),
 m_view()
 {
@@ -368,6 +369,21 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create pixel text pipeline
+    m_pxTextPipeline.createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pxTextPipeline.createFragmentShader(
+        *this, PxTextFragmentShader, PxTextFragmentShaderSize
+    );
+    if (!m_pxTextPipeline.createPipeline(*this))
+    {
+        // Could not create pixel text pipeline
+        SysMessage::box() << "[0x304E] Could not create pixel text pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create static mesh pipeline
     m_staticMeshPipeline.createVertexShader(
         *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
@@ -379,7 +395,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
-        SysMessage::box() << "[0x304E] Could not create static mesh pipeline\n";
+        SysMessage::box() << "[0x304F] Could not create static mesh pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -391,7 +407,7 @@ bool Renderer::init(SysWindow* sysWindow)
         DefaultVerticesCount, DefaultIndicesCount))
     {
         // Could not create default vertex buffer
-        SysMessage::box() << "[0x304F] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3050] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -877,6 +893,14 @@ void Renderer::bindRectPipeline()
 void Renderer::bindOvalPipeline()
 {
     m_ovalPipeline.bind(*this);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer pixel text pipeline                                         //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindPxTextPipeline()
+{
+    m_pxTextPipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

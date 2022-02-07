@@ -75,6 +75,7 @@
     #include "Shaders/Default.h"
     #include "Shaders/Rect.h"
     #include "Shaders/Oval.h"
+    #include "Shaders/PxText.h"
     #include "Shaders/StaticMesh.h"
 
 
@@ -176,6 +177,11 @@
             //  Bind renderer oval pipeline                                   //
             ////////////////////////////////////////////////////////////////////
             void bindOvalPipeline();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer pixel text pipeline                             //
+            ////////////////////////////////////////////////////////////////////
+            void bindPxTextPipeline();
 
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer static mesh pipeline                            //
@@ -293,6 +299,7 @@
             Pipeline            m_pipeline;             // Default pipeline
             Pipeline            m_rectPipeline;         // Rect pipeline
             Pipeline            m_ovalPipeline;         // Oval pipeline
+            Pipeline            m_pxTextPipeline;       // Pixel text pipeline
             Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
             View                m_view;                 // Default view
 

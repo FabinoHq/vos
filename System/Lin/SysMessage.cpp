@@ -62,8 +62,8 @@ void SysMessage::display()
     locker.lock();
     if (m_display)
     {
-        std::wcerr << m_message.str();
-        std::wcerr << '\n';
+        std::cerr << m_message.str();
+        std::cerr << '\n';
     }
 }
 

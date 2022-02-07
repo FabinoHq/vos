@@ -44,9 +44,22 @@
 
     #include "../Texture.h"
     #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
     #include "../../Math/Vector4.h"
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
+
+    #include <string>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Pixel text default settings                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    const float PixelTextDefaultUVWidth = 0.0625f;
+    const float PixelTextDefaultUVHeight = 0.125f;
+    const float PixelTextDefaultXOffset = 0.44f;
+    const float PixelTextDefaultYOffset = 0.92f;
+    const float PixelTextDefaultSmoothFactor = 0.4f;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -76,13 +89,18 @@
             //  Init pixel text                                               //
             //  return : True if the pixel text is successfully created       //
             ////////////////////////////////////////////////////////////////////
-            bool init(Texture& texture, float width, float height);
+            bool init(Texture& texture, float height);
 
             ////////////////////////////////////////////////////////////////////
             //  Set pixel text texture                                        //
             //  return : True if pixel text texture is successfully set       //
             ////////////////////////////////////////////////////////////////////
             bool setTexture(Texture& texture);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set pixel text internal string                                //
+            ////////////////////////////////////////////////////////////////////
+            void setText(const std::string& text);
 
             ////////////////////////////////////////////////////////////////////
             //  Set pixel text color                                          //
@@ -114,6 +132,17 @@
             ////////////////////////////////////////////////////////////////////
             void setAlpha(float alpha);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set pixel text smooth amount                                  //
+            ////////////////////////////////////////////////////////////////////
+            void setSmooth(float smooth);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get pixel text length                                         //
+            ////////////////////////////////////////////////////////////////////
+            size_t getLength();
+
 
             ////////////////////////////////////////////////////////////////////
             //  Render pixel text                                             //
@@ -136,6 +165,9 @@
         private:
             Texture*            m_texture;          // PxText texture pointer
             Vector4             m_color;            // PxText color
+            float               m_smooth;           // PxText smooth amount
+
+            std::string         m_text;             // PxText internal string
     };
 
 

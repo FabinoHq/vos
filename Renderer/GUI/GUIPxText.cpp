@@ -49,7 +49,9 @@
 GUIPxText::GUIPxText() :
 Transform2(),
 m_texture(0),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_smooth(0.1f),
+m_text("")
 {
 
 }
@@ -59,6 +61,8 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 GUIPxText::~GUIPxText()
 {
+    m_text = "";
+    m_smooth = 0.0f;
     m_color.reset();
 }
 
@@ -67,7 +71,7 @@ GUIPxText::~GUIPxText()
 //  Init pixel text                                                           //
 //  return : True if the pixel text is successfully created                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool GUIPxText::init(Texture& texture, float width, float height)
+bool GUIPxText::init(Texture& texture, float height)
 {
     // Check texture handle
     if (!texture.isValid())
@@ -80,16 +84,19 @@ bool GUIPxText::init(Texture& texture, float width, float height)
     resetTransforms();
 
     // Set pixel text size
-    setSize(width, height);
-
-    // Set pixel text origin (anchor)
-    setOrigin(width*0.5f, height*0.5f);
+    setSize(0.0f, height);
 
     // Set pixel text texture pointer
     m_texture = &texture;
 
     // Reset pixel text color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Reset pixel text smooth amount
+    m_smooth = 0.1f;
+
+    // Reset pixel text internal string
+    m_text = "";
 
     // Pixel text successfully created
     return true;
@@ -111,6 +118,27 @@ bool GUIPxText::setTexture(Texture& texture)
     // Set pixel text texture pointer
     m_texture = &texture;
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set pixel text internal string                                            //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::setText(const std::string& text)
+{
+    // Set pixel text internal string
+    m_text = text;
+
+    // Update pixel text width
+    if (m_text.length() <= 0)
+    {
+        m_size.vec[0] = 0.0f;
+    }
+    else
+    {
+        m_size.vec[0] = (m_size.vec[1] +
+            (m_size.vec[1] * PixelTextDefaultXOffset * (m_text.length()-1))
+        );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,6 +195,28 @@ void GUIPxText::setAlpha(float alpha)
     m_color.vec[3] = alpha;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Set pixel text smooth amount                                              //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::setSmooth(float smooth)
+{
+    // Clamp smooth amount
+    if (smooth <= 0.0f) { smooth = 0.0f; }
+    if (smooth >= 1.0f) { smooth = 1.0f; }
+
+    // Set smooth amount
+    m_smooth = smooth;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get pixel text length                                                     //
+////////////////////////////////////////////////////////////////////////////////
+size_t GUIPxText::getLength()
+{
+    return m_text.length();
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render pixel text                                                         //
@@ -174,34 +224,72 @@ void GUIPxText::setAlpha(float alpha)
 void GUIPxText::render(Renderer& renderer)
 {
     // Compute pixel text transformations
-    computeTransforms();
+    m_matrix.setIdentity();
+    m_matrix.translate(m_position);
+    m_matrix.rotateZ(m_angle);
+    m_matrix.translate(-m_origin);
+    m_matrix.scale(m_size.vec[1], m_size.vec[1]);
 
-    // Push model matrix into command buffer
-    vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
-    );
-
-    // Push constants into command buffer
+    // Push UV constants into command buffer
     PushConstantData pushConstants;
     pushConstants.color[0] = m_color.vec[0];
     pushConstants.color[1] = m_color.vec[1];
     pushConstants.color[2] = m_color.vec[2];
     pushConstants.color[3] = m_color.vec[3];
+    pushConstants.offset[0] = 0.0f;
+    pushConstants.offset[1] = 0.0f;
+    pushConstants.size[0] = PixelTextDefaultUVWidth;
+    pushConstants.size[1] = PixelTextDefaultUVHeight;
+    pushConstants.time = m_smooth*PixelTextDefaultSmoothFactor;
 
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
     // Bind pixel text texture
     m_texture->bind(renderer);
 
-    // Draw pixel text triangles
-    vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        6, 1, 0, 0, 0
-    );
+    // Draw pixel text characters
+    for (size_t i = 0; i < m_text.length(); ++i)
+    {
+        // Get char code
+        char charCode = m_text[i]-32;
+        if (charCode < 0) { charCode = 31; }
+        if (charCode > 94) { charCode = 31; }
+        int charX = (charCode%16);
+        int charY = (charCode/16);
+        if (charX <= 0) { charX = 0; }
+        if (charX >= 15) { charX = 15; }
+        if (charY <= 0) { charY = 0; }
+        if (charY >= 5) { charY = 5; }
+
+        // Push model matrix into command buffer
+        vkCmdPushConstants(
+            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+            renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+            PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
+        );
+
+        // Push UV constants into command buffer
+        pushConstants.offset[0] = charX*PixelTextDefaultUVWidth;
+        pushConstants.offset[1] = charY*PixelTextDefaultUVHeight;
+
+        vkCmdPushConstants(
+            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+            renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+            PushConstantOffsetOffset, PushConstantOffsetSize,
+            &pushConstants.offset
+        );
+
+        // Draw current character triangles
+        vkCmdDrawIndexed(
+            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+            6, 1, 0, 0, 0
+        );
+
+        // Move to the next character
+        m_matrix.translateX(PixelTextDefaultXOffset);
+    }
 }

@@ -49,7 +49,9 @@
 Sprite::Sprite() :
 Transform2(),
 m_texture(0),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_uvOffset(0.0f, 0.0f),
+m_uvSize(1.0f, 1.0f)
 {
 
 }
@@ -59,6 +61,8 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 Sprite::~Sprite()
 {
+    m_uvSize.reset();
+    m_uvOffset.reset();
     m_color.reset();
 }
 
@@ -90,6 +94,12 @@ bool Sprite::init(Texture& texture, float width, float height)
 
     // Reset sprite color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Reset sprite UV offset
+    m_uvOffset.reset();
+
+    // Reset sprite UV size
+    m_uvSize.set(1.0f, 1.0f);
 
     // Sprite successfully created
     return true;
@@ -169,6 +179,97 @@ void Sprite::setAlpha(float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set sprite subrectangle                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setSubrect(const Vector2& offset, const Vector2& size)
+{
+    m_uvOffset.vec[0] = offset.vec[0];
+    m_uvOffset.vec[1] = offset.vec[1];
+    m_uvSize.vec[0] = size.vec[0];
+    m_uvSize.vec[1] = size.vec[1];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite subrectangle                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setSubrect(float uOffset, float vOffset, float uSize, float vSize)
+{
+    m_uvOffset.vec[0] = uOffset;
+    m_uvOffset.vec[1] = vOffset;
+    m_uvSize.vec[0] = uSize;
+    m_uvSize.vec[1] = vSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite UV offset                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setUVOffset(const Vector2& offset)
+{
+    m_uvOffset.vec[0] = offset.vec[0];
+    m_uvOffset.vec[1] = offset.vec[1];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite UV offset                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setUVOffset(float uOffset, float vOffset)
+{
+    m_uvOffset.vec[0] = uOffset;
+    m_uvOffset.vec[1] = vOffset;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite U offset                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setUOffset(float uOffset)
+{
+    m_uvOffset.vec[0] = uOffset;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite V offset                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setVOffset(float vOffset)
+{
+    m_uvOffset.vec[1] = vOffset;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite UV size                                                        //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setUVSize(const Vector2& size)
+{
+    m_uvSize.vec[0] = size.vec[0];
+    m_uvSize.vec[1] = size.vec[1];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite UV size                                                        //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setUVSize(float uSize, float vSize)
+{
+    m_uvSize.vec[0] = uSize;
+    m_uvSize.vec[1] = vSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite U size                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setUSize(float uSize)
+{
+    m_uvSize.vec[0] = uSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set sprite V size                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::setVSize(float vSize)
+{
+    m_uvSize.vec[1] = vSize;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render sprite                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::render(Renderer& renderer)
@@ -189,11 +290,15 @@ void Sprite::render(Renderer& renderer)
     pushConstants.color[1] = m_color.vec[1];
     pushConstants.color[2] = m_color.vec[2];
     pushConstants.color[3] = m_color.vec[3];
+    pushConstants.offset[0] = m_uvOffset.vec[0];
+    pushConstants.offset[1] = m_uvOffset.vec[1];
+    pushConstants.size[0] = m_uvSize.vec[0];
+    pushConstants.size[1] = m_uvSize.vec[1];
 
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
+        PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
     );
 
     // Bind sprite texture

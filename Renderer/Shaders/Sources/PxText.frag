@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/Default.frag : Default fragment shader        //
+//     Renderer/Shaders/Sources/PxText.frag : Pixel text fragment shader      //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision highp float;
@@ -61,8 +61,15 @@ layout(location = 0) in vec2 i_texCoords;
 layout(location = 0) out vec4 o_color;
 void main()
 {
-    // Compute output color
-    o_color = texture(
+    // Compute distance field
+    float dist = texture(
         texSampler, (i_texCoords*constants.size)+constants.offset
-    )*constants.color;
+    ).a;
+
+    // Compute output color (constants.time is the smooth amount)
+    o_color = vec4(
+        constants.color.r, constants.color.g, constants.color.b,
+        smoothstep(0.5-constants.time, 0.5+constants.time, dist)*
+        constants.color.a
+    );
 }

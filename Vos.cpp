@@ -107,7 +107,8 @@ bool Vos::launch()
 
     // Load cursor texture
     if (!m_cursorTexture.updateTexture(m_renderer,
-        CursorImageWidth, CursorImageHeight, CursorImage))
+        CursorImageWidth, CursorImageHeight, CursorImage,
+        false, false))
     {
         // Could not load cursor texture
         return false;
@@ -169,18 +170,22 @@ bool Vos::launch()
 
     // Load pixel font texture
     if (!m_pxFontTexture.updateTexture(m_renderer,
-        PxFontImageWidth, PxFontImageHeight, PxFontImage))
+        PxFontImageWidth, PxFontImageHeight, PxFontImage,
+        true, false))
     {
         // Could not load pixel font texture
         return false;
     }
 
     // Init test pixel text
-    if (!m_pxText.init(m_pxFontTexture, 2.0f, 1.0f))
+    if (!m_pxText.init(m_pxFontTexture, 0.1f))
     {
         // Could not init test pixel text
         return false;
     }
+    m_pxText.setSmooth(0.08f);
+    m_pxText.setText("Test text line");
+    m_pxText.centerOrigin();
 
 
     // Load test texture
@@ -397,7 +402,7 @@ void Vos::run()
             m_procSprite.render(m_renderer);*/
 
             // Render pixel text
-            m_renderer.bindDefaultPipeline();
+            m_renderer.bindPxTextPipeline();
             m_pxText.render(m_renderer);
 
             // Draw cursor

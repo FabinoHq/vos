@@ -108,9 +108,9 @@
 
 
         private:
-            SysMutex            m_mutex;        // System message mutex
-            bool                m_display;      // Display the system message
-            std::wostringstream m_message;      // Message to display
+            SysMutex                m_mutex;    // System message mutex
+            bool                    m_display;  // Display the system message
+            std::wostringstream     m_message;  // Message to display
     };
 
 

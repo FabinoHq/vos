@@ -44,6 +44,7 @@
 
     #include "Texture.h"
     #include "../Math/Math.h"
+    #include "../Math/Vector2.h"
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform2.h"
@@ -116,6 +117,58 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Set sprite subrectangle                                       //
+            ////////////////////////////////////////////////////////////////////
+            void setSubrect(const Vector2& offset, const Vector2& size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite subrectangle                                       //
+            ////////////////////////////////////////////////////////////////////
+            void setSubrect(
+                float uOffset, float vOffset, float uSize, float vSize);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite UV offset                                          //
+            ////////////////////////////////////////////////////////////////////
+            void setUVOffset(const Vector2& offset);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite UV offset                                          //
+            ////////////////////////////////////////////////////////////////////
+            void setUVOffset(float uOffset, float vOffset);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite U offset                                           //
+            ////////////////////////////////////////////////////////////////////
+            void setUOffset(float uOffset);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite V offset                                           //
+            ////////////////////////////////////////////////////////////////////
+            void setVOffset(float vOffset);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite UV size                                            //
+            ////////////////////////////////////////////////////////////////////
+            void setUVSize(const Vector2& size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite UV size                                            //
+            ////////////////////////////////////////////////////////////////////
+            void setUVSize(float uSize, float vSize);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite U size                                             //
+            ////////////////////////////////////////////////////////////////////
+            void setUSize(float uSize);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set sprite V size                                             //
+            ////////////////////////////////////////////////////////////////////
+            void setVSize(float vSize);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Render sprite                                                 //
             ////////////////////////////////////////////////////////////////////
             void render(Renderer& renderer);
@@ -136,6 +189,8 @@
         private:
             Texture*            m_texture;          // Sprite texture pointer
             Vector4             m_color;            // Sprite color
+            Vector2             m_uvOffset;         // Sprite UV offset
+            Vector2             m_uvSize;           // Sprite UV size
     };
 
 

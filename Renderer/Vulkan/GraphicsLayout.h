@@ -92,8 +92,13 @@
     const uint32_t PushConstantMatrixSize = sizeof(float)*16;
     const uint32_t PushConstantDataOffset = sizeof(float)*16;
     const uint32_t PushConstantDataSize = sizeof(float)*9;
+    const uint32_t PushConstantDataNoTimeSize = sizeof(float)*8;
     const uint32_t PushConstantColorOffset = sizeof(float)*16;
     const uint32_t PushConstantColorSize = sizeof(float)*4;
+    const uint32_t PushConstantOffsetOffset = sizeof(float)*20;
+    const uint32_t PushConstantOffsetSize = sizeof(float)*2;
+    const uint32_t PushConstantSizeOffset = sizeof(float)*22;
+    const uint32_t PushConstantSizeSize = sizeof(float)*2;
     const uint32_t PushConstantOffsetSizeOffset = sizeof(float)*20;
     const uint32_t PushConstantOffsetSizeSize = sizeof(float)*4;
     const uint32_t PushConstantTimeOffset = sizeof(float)*24;

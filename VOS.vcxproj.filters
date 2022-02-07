@@ -312,5 +312,8 @@
     <ClInclude Include="Images\Embedded\PxFont.h">
       <Filter>Images\Embedded</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Shaders\PxText.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

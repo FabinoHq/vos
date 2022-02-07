@@ -198,6 +198,7 @@
     <ClInclude Include="Renderer\Shaders\Default.h" />
     <ClInclude Include="Renderer\Shaders\DefaultProc.h" />
     <ClInclude Include="Renderer\Shaders\Oval.h" />
+    <ClInclude Include="Renderer\Shaders\PxText.h" />
     <ClInclude Include="Renderer\Shaders\Rect.h" />
     <ClInclude Include="Renderer\Shaders\StaticMesh.h" />
     <ClInclude Include="Renderer\Shapes\Oval.h" />
