@@ -134,8 +134,6 @@
 !Renderer/Shaders/Sources/Default.frag
 !Renderer/Shaders/Sources/DefaultProc.frag
 !Renderer/Shaders/Sources/NinePatch.frag
-!Renderer/Shaders/Sources/Rect.frag
-!Renderer/Shaders/Sources/Oval.frag
 !Renderer/Shaders/Sources/Rectangle.frag
 !Renderer/Shaders/Sources/Ellipse.frag
 !Renderer/Shaders/Sources/PxText.frag
@@ -144,18 +142,12 @@
 !Renderer/Shaders/Default.h
 !Renderer/Shaders/DefaultProc.h
 !Renderer/Shaders/NinePatch.h
-!Renderer/Shaders/Rect.h
-!Renderer/Shaders/Oval.h
 !Renderer/Shaders/Rectangle.h
 !Renderer/Shaders/Ellipse.h
 !Renderer/Shaders/PxText.h
 !Renderer/Shaders/StaticMesh.h
 
 !Renderer/Shapes/
-!Renderer/Shapes/Rect.h
-!Renderer/Shapes/Rect.cpp
-!Renderer/Shapes/Oval.h
-!Renderer/Shapes/Oval.cpp
 !Renderer/Shapes/RectangleShape.h
 !Renderer/Shapes/RectangleShape.cpp
 !Renderer/Shapes/EllipseShape.h

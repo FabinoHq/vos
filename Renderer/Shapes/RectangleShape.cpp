@@ -48,7 +48,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 RectangleShape::RectangleShape() :
 Transform2(),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_smooth(0.005f)
 {
 
 }
@@ -58,6 +59,7 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 RectangleShape::~RectangleShape()
 {
+    m_smooth = 0.0f;
     m_color.reset();
 }
 
@@ -79,6 +81,9 @@ bool RectangleShape::init(float width, float height)
 
     // Reset rectangle color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Reset rectangle smooth amount
+    m_smooth = 0.005f;
 
     // Rectangle successfully created
     return true;
@@ -138,6 +143,19 @@ void RectangleShape::setAlpha(float alpha)
     m_color.vec[3] = alpha;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Set rectangle smooth amount                                               //
+////////////////////////////////////////////////////////////////////////////////
+void RectangleShape::setSmooth(float smooth)
+{
+    // Clamp smooth amount
+    if (smooth <= 0.0f) { smooth = 0.0f; }
+    if (smooth >= 1.0f) { smooth = 1.0f; }
+
+    // Set smooth amount
+    m_smooth = smooth;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render rectangle                                                          //
@@ -160,11 +178,16 @@ void RectangleShape::render(Renderer& renderer)
     pushConstants.color[1] = m_color.vec[1];
     pushConstants.color[2] = m_color.vec[2];
     pushConstants.color[3] = m_color.vec[3];
+    pushConstants.offset[0] = 0.0f;
+    pushConstants.offset[1] = 0.0f;
+    pushConstants.size[0] = 1.0f;
+    pushConstants.size[1] = 1.0f;
+    pushConstants.time = m_smooth;
 
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
     // Draw rectangle triangles

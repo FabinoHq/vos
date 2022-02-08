@@ -110,6 +110,11 @@
             ////////////////////////////////////////////////////////////////////
             void setAlpha(float alpha);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set rectangle smooth amount                                   //
+            ////////////////////////////////////////////////////////////////////
+            void setSmooth(float smooth);
+
 
             ////////////////////////////////////////////////////////////////////
             //  Render rectangle                                              //
@@ -131,6 +136,7 @@
 
         private:
             Vector4             m_color;            // Rectangle color
+            float               m_smooth;           // Rectangle smooth amount
     };
 
 

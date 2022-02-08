@@ -58,6 +58,17 @@ layout(location = 0) in vec2 i_texCoords;
 layout(location = 0) out vec4 o_color;
 void main()
 {
+    // Compute rectangle shape (constants.time is the smooth amount)
+    vec2 bottomLeft = smoothstep(
+        vec2(0.0), vec2(constants.time), i_texCoords
+    );
+    vec2 topRight = smoothstep(
+        vec2(0.0), vec2(constants.time), 1.0-i_texCoords
+    );
+    vec4 rectangleShape = vec4(1.0, 1.0, 1.0,
+        (bottomLeft.x * bottomLeft.y * topRight.x * topRight.y)
+    );
+
     // Compute output color
-    o_color = constants.color;
+    o_color = constants.color*rectangleShape;
 }

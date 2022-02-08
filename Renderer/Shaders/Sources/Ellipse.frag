@@ -58,7 +58,11 @@ layout(location = 0) in vec2 i_texCoords;
 layout(location = 0) out vec4 o_color;
 void main()
 {
+    // Compute ellipse shape (constants.time is the smooth amount)
+    vec4 ellipseShape = vec4(1.0, 1.0, 1.0, smoothstep(
+        0.499, 0.498-constants.time, length(vec2(0.5, 0.5)-i_texCoords))
+    );
+
     // Compute output color
-    vec4 ellipseShape = vec4(step(length(vec2(0.5, 0.5)-i_texCoords), 0.5));
     o_color = constants.color*ellipseShape;
 }
