@@ -872,11 +872,17 @@ void Renderer::cleanup()
             // Destroy static mesh pipeline
             m_staticMeshPipeline.destroyPipeline(*this);
 
+            // Destroy pixel text pipeline
+            m_pxTextPipeline.destroyPipeline(*this);
+
             // Destroy oval pipeline
             m_ovalPipeline.destroyPipeline(*this);
 
             // Destroy rect pipeline
             m_rectPipeline.destroyPipeline(*this);
+
+            // Destroy ninepatch pipeline
+            m_ninePatchPipeline.destroyPipeline(*this);
 
             // Destroy default pipeline
             m_pipeline.destroyPipeline(*this);

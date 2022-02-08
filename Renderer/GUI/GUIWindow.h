@@ -55,7 +55,7 @@
     ////////////////////////////////////////////////////////////////////////////
     const Vector2 GUIWindowDefaultMinSize = Vector2(0.2f, 0.2f);
     const Vector2 GUIWindowDefaultMaxSize = Vector2(3.5f, 1.9f);
-    const float GUIWindowDefaultTopBarSize = 0.062f;
+    const float GUIWindowDefaultTopBarSize = 0.06f;
     const float GUIWindowDefaultResizeBarSize = 0.01f;
 
 
