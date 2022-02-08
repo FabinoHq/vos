@@ -42,8 +42,6 @@
 #ifndef VOS_RENDERER_PROCSPRITE_HEADER
 #define VOS_RENDERER_PROCSPRITE_HEADER
 
-    #include <cstdint>
-
     #include "Pipeline.h"
     #include "../Math/Math.h"
     #include "../Math/Vector4.h"
@@ -51,6 +49,8 @@
     #include "../Math/Transform2.h"
 
     #include "Shaders/DefaultProc.h"
+
+    #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////

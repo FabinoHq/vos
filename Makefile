@@ -62,6 +62,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
+	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o
@@ -83,6 +84,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
+	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
@@ -202,6 +204,10 @@ Renderer/Shapes/RectangleShape.o: Renderer/Shapes/RectangleShape.cpp
 Renderer/Shapes/EllipseShape.o: Renderer/Shapes/EllipseShape.cpp
 	$(CC) -o Renderer/Shapes/EllipseShape.o -c \
 	Renderer/Shapes/EllipseShape.cpp $(CFLAGS)
+
+Renderer/Shapes/CuboidShape.o: Renderer/Shapes/CuboidShape.cpp
+	$(CC) -o Renderer/Shapes/CuboidShape.o -c \
+	Renderer/Shapes/CuboidShape.cpp $(CFLAGS)
 
 
 Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp

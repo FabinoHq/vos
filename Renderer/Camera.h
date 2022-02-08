@@ -42,9 +42,6 @@
 #ifndef VOS_RENDERER_CAMERA_HEADER
 #define VOS_RENDERER_CAMERA_HEADER
 
-    #include <cstdint>
-    #include <cstring>
-
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/UniformBuffer.h"
@@ -52,6 +49,9 @@
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
+
+    #include <cstdint>
+    #include <cstring>
 
 
     ////////////////////////////////////////////////////////////////////////////

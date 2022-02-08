@@ -56,6 +56,7 @@ m_freeflycam(),
 m_procSprite(),
 m_rectanle(),
 m_ellipse(),
+m_cuboid(),
 m_pxFontTexture(),
 m_pxText(),
 m_windowTexture(),
@@ -149,6 +150,13 @@ bool Vos::launch()
     if (!m_ellipse.init(1.0f, 1.0f))
     {
         // Could not init ellipse shape
+        return false;
+    }
+
+    // Init cuboid shape
+    if (!m_cuboid.init(m_renderer, 1.0f, 1.0f, 1.0f))
+    {
+        // Could not init cuboid shape
         return false;
     }
 
@@ -424,6 +432,11 @@ void Vos::run()
             // Set freefly camera
             m_renderer.setCamera(m_freeflycam);
 
+            // Render cuboid shape
+            m_renderer.bindShapePipeline();
+            m_cuboid.bindVertexBuffer(m_renderer);
+            m_cuboid.render(m_renderer);
+
             // Render static mesh
             /*m_renderer.bindStaticMeshPipeline();
             m_staticMesh.bindVertexBuffer(m_renderer);
@@ -464,8 +477,8 @@ void Vos::run()
             m_pxText.render(m_renderer);
 
             // Render cursor
-            m_renderer.bindDefaultPipeline();
-            m_renderer.renderCursor(m_mouseX, m_mouseY);
+            /*m_renderer.bindDefaultPipeline();
+            m_renderer.renderCursor(m_mouseX, m_mouseY);*/
 
             // End rendering
             m_renderer.endFrame();
@@ -480,6 +493,9 @@ void Vos::run()
 
         // Destroy static mesh
         m_staticMesh.destroyStaticMesh(m_renderer);
+
+        // Destroy cuboid
+        m_cuboid.destroyCuboid(m_renderer);
 
         // Destroy pixel font texture
         m_pxFontTexture.destroyTexture(m_renderer);

@@ -152,6 +152,8 @@
 !Renderer/Shapes/RectangleShape.cpp
 !Renderer/Shapes/EllipseShape.h
 !Renderer/Shapes/EllipseShape.cpp
+!Renderer/Shapes/CuboidShape.h
+!Renderer/Shapes/CuboidShape.cpp
 
 !Renderer/GUI/
 !Renderer/GUI/GUIPxText.h

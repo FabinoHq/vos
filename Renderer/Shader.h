@@ -42,9 +42,9 @@
 #ifndef VOS_RENDERER_SHADER_HEADER
 #define VOS_RENDERER_SHADER_HEADER
 
-    #include <cstdint>
-
     #include "Vulkan/Vulkan.h"
+
+    #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////

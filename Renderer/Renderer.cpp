@@ -68,6 +68,7 @@ m_pipeline(),
 m_ninePatchPipeline(),
 m_rectanglePipeline(),
 m_ellipsePipeline(),
+m_shapePipeline(),
 m_pxTextPipeline(),
 m_staticMeshPipeline(),
 m_view(),
@@ -392,6 +393,22 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create shape pipeline
+    m_shapePipeline.createVertexShader(
+        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
+    );
+    m_shapePipeline.createFragmentShader(
+        *this, DefaultProcFragmentShader, DefaultProcFragmentShaderSize
+    );
+    if (!m_shapePipeline.createPipeline(
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
+    {
+        // Could not create shape pipeline
+        SysMessage::box() << "[0x304F] Could not create shape pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create pixel text pipeline
     m_pxTextPipeline.createVertexShader(
         *this, DefaultVertexShader, DefaultVertexShaderSize
@@ -402,7 +419,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_pxTextPipeline.createPipeline(*this))
     {
         // Could not create pixel text pipeline
-        SysMessage::box() << "[0x304F] Could not create pixel text pipeline\n";
+        SysMessage::box() << "[0x3050] Could not create pixel text pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -418,7 +435,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
-        SysMessage::box() << "[0x3050] Could not create static mesh pipeline\n";
+        SysMessage::box() << "[0x3051] Could not create static mesh pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -430,7 +447,7 @@ bool Renderer::init(SysWindow* sysWindow)
         DefaultVerticesCount, DefaultIndicesCount))
     {
         // Could not create default vertex buffer
-        SysMessage::box() << "[0x3051] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3052] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -1002,6 +1019,14 @@ void Renderer::bindRectanglePipeline()
 void Renderer::bindEllipsePipeline()
 {
     m_ellipsePipeline.bind(*this);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer shape pipeline                                              //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindShapePipeline()
+{
+    m_shapePipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -42,9 +42,6 @@
 #ifndef VOS_SYSTEM_SYSMEMORY_HEADER
 #define VOS_SYSTEM_SYSMEMORY_HEADER
 
-    #include <cstdint>
-    #include <limits>
-
     #include "System.h"
     #include "SysMessage.h"
     #include "../Math/Math.h"
@@ -54,6 +51,9 @@
     #include "../Math/Matrix4x4.h"
     #include "../Images/BMPFile.h"
     #include "../Images/PNGFile.h"
+
+    #include <cstdint>
+    #include <limits>
 
 
     ////////////////////////////////////////////////////////////////////////////

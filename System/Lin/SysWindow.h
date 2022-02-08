@@ -42,14 +42,14 @@
 #ifndef VOS_SYSTEM_LIN_SYSWINDOW_HEADER
 #define VOS_SYSTEM_LIN_SYSWINDOW_HEADER
 
-    #include <X11/Xlib.h>
-    #include <X11/Xutil.h>
-    #include <queue>
-
     #include "../SysSleep.h"
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"
     #include "../../Event.h"
+
+    #include <X11/Xlib.h>
+    #include <X11/Xutil.h>
+    #include <queue>
 
 
     ////////////////////////////////////////////////////////////////////////////

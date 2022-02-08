@@ -42,11 +42,11 @@
 #ifndef VOS_RENDERER_TEXTURE_HEADER
 #define VOS_RENDERER_TEXTURE_HEADER
 
-    #include <cstdint>
-
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/VulkanBuffer.h"
+
+    #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -42,12 +42,12 @@
 #ifndef VOS_SYSTEM_WIN_SYSMESSAGE_HEADER
 #define VOS_SYSTEM_WIN_SYSMESSAGE_HEADER
 
+    #include "../SysMutex.h"
+    #include "../SysMutexLocker.h"
+
     #include <windows.h>
     #include <string>
     #include <sstream>
-
-    #include "../SysMutex.h"
-    #include "../SysMutexLocker.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

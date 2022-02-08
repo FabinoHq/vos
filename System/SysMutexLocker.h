@@ -42,11 +42,11 @@
 #ifndef VOS_SYSTEM_SYSMUTEXLOCKER_HEADER
 #define VOS_SYSTEM_SYSMUTEXLOCKER_HEADER
 
+    #include "SysMutex.h"
+
     #include <exception>
     #include <thread>
     #include <mutex>
-
-    #include "SysMutex.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

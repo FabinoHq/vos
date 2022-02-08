@@ -42,10 +42,10 @@
 #ifndef VOS_COMPRESS_ZLIB_HEADER
 #define VOS_COMPRESS_ZLIB_HEADER
 
+    #include "../System/SysCRC.h"
+
     #include <cstdint>
     #include <cstring>
-
-    #include "../System/SysCRC.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

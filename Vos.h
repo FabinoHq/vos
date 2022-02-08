@@ -57,6 +57,7 @@
 
     #include "Renderer/Shapes/RectangleShape.h"
     #include "Renderer/Shapes/EllipseShape.h"
+    #include "Renderer/Shapes/CuboidShape.h"
 
     #include "Renderer/GUI/GUIPxText.h"
     #include "Renderer/GUI/GUIWindow.h"
@@ -127,6 +128,7 @@
             ProcSprite      m_procSprite;       // Procedural sprite
             RectangleShape  m_rectanle;         // Rectangle shape
             EllipseShape    m_ellipse;          // Ellipse shape
+            CuboidShape     m_cuboid;           // Cuboid shape
 
             Texture         m_pxFontTexture;    // Pixel font texture
             GUIPxText       m_pxText;           // Test pixel text

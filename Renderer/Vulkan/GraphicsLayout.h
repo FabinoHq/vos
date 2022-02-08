@@ -42,8 +42,6 @@
 #ifndef VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
 #define VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
 
-    #include <cstdint>
-
     #include "../../System/SysMessage.h"
     #include "Vulkan.h"
     #include "Swapchain.h"
@@ -52,6 +50,8 @@
     #include "../Shader.h"
     #include "../../Math/Math.h"
     #include "../../Math/Matrix4x4.h"
+
+    #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////

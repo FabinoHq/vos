@@ -508,7 +508,7 @@ bool HeightMapChunk::update(Renderer& renderer, float* heightmap)
     if (!renderer.updateVertexBuffer(
         m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
     {
-        // Could not create vertex buffer
+        // Could not update vertex buffer
         if (vertices) { delete[] vertices; }
         if (indices) { delete[] indices; }
         return false;

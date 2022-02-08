@@ -146,6 +146,9 @@
     <ClCompile Include="Renderer\Shapes\RectangleShape.cpp">
       <Filter>Renderer\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Shapes\CuboidShape.cpp">
+      <Filter>Renderer\Shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -337,6 +340,9 @@
       <Filter>Renderer\Shapes</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\Shapes\RectangleShape.h">
+      <Filter>Renderer\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shapes\CuboidShape.h">
       <Filter>Renderer\Shapes</Filter>
     </ClInclude>
   </ItemGroup>

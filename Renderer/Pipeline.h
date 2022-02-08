@@ -42,11 +42,11 @@
 #ifndef VOS_RENDERER_PIPELINE_HEADER
 #define VOS_RENDERER_PIPELINE_HEADER
 
-    #include <cstdint>
-    #include <vector>
-
     #include "Vulkan/Vulkan.h"
     #include "Shader.h"
+
+    #include <cstdint>
+    #include <vector>
 
 
     ////////////////////////////////////////////////////////////////////////////

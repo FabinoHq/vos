@@ -37,234 +37,119 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/StaticMesh.cpp : Static mesh management                       //
+//     Renderer/Shapes/CuboidShape.cpp : Cuboid shape management              //
 ////////////////////////////////////////////////////////////////////////////////
-#include "StaticMesh.h"
-#include "Renderer.h"
+#include "CuboidShape.h"
+#include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  StaticMesh default constructor                                            //
+//  CuboidShape default constructor                                           //
 ////////////////////////////////////////////////////////////////////////////////
-StaticMesh::StaticMesh() :
+CuboidShape::CuboidShape() :
 Transform3(),
 m_vertexBuffer(),
-m_indicesCount(0),
-m_texture(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  StaticMesh virtual destructor                                             //
+//  CuboidShape virtual destructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
-StaticMesh::~StaticMesh()
+CuboidShape::~CuboidShape()
 {
     m_color.reset();
-    m_texture = 0;
-    m_indicesCount = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init static mesh                                                          //
-//  return : True if the static mesh is successfully created                  //
+//  Init cuboid                                                               //
+//  return : True if the cuboid is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool StaticMesh::init(Renderer& renderer, Texture& texture,
-    const float* vertices, const uint16_t* indices,
-    uint32_t verticesCount, uint32_t indicesCount)
+bool CuboidShape::init(Renderer& renderer,
+    float width, float height, float depth)
 {
-    // Create vertex buffer
-    if (!renderer.createVertexBuffer(
-        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
-    {
-        // Could not create vertex buffer
-        return false;
-    }
-    m_indicesCount = indicesCount;
+    // Set cuboid vertices
+    memcpy(
+        m_vertices, CuboidShapeVertices, CuboidShapeVerticesCount*sizeof(float)
+    );
 
-    // Check texture handle
-    if (!texture.isValid())
+    // Set cuboid size
+    for (uint32_t i = 0; i < CuboidShapeVerticesCount; i+=8)
     {
-        // Invalid texture handle
-        return false;
+        m_vertices[i+0] *= width;
+        m_vertices[i+1] *= height;
+        m_vertices[i+2] *= depth;
     }
 
-    // Reset static mesh transformations
+    // Create cuboid vertex buffer
+    if (!renderer.createVertexBuffer(m_vertexBuffer,
+        m_vertices, CuboidShapeIndices,
+        CuboidShapeVerticesCount, CuboidShapeIndicesCount))
+    {
+        // Could not create cuboid vertex buffer
+        return false;
+    }
+
+    // Reset cuboid transformations
     resetTransforms();
 
-    // Set static mesh texture pointer
-    m_texture = &texture;
-
-    // Reset static mesh color
+    // Reset cuboid color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 
-    // Static mesh successfully created
+    // Cuboid successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Load static mesh from VMSH file                                           //
-//  return : True if the static mesh is successfully loaded                   //
+//  Set cuboid size                                                           //
+//  return : True if the cuboid is size is successfully set                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool StaticMesh::loadVMSH(Renderer& renderer,
-    Texture& texture, const std::string& filepath)
+bool CuboidShape::setSize(Renderer& renderer,
+    float width, float height, float depth)
 {
-    // Init mesh data
-    float* vertices = 0;
-    uint16_t* indices = 0;
-    uint32_t verticesCount = 0;
-    uint32_t indicesCount = 0;
+    // Set cuboid vertices
+    memcpy(
+        m_vertices, CuboidShapeVertices, CuboidShapeVerticesCount*sizeof(float)
+    );
 
-    // Load mesh data from file
-    std::ifstream file;
-    file.open(filepath.c_str(), std::ios::in | std::ios::binary);
-    if (file.is_open())
+    // Set cuboid size
+    for (uint32_t i = 0; i < CuboidShapeVerticesCount; i+=8)
     {
-        // Read VMSH header
-        char header[4] = {0};
-        char majorVersion = 0;
-        char minorVersion = 0;
-        file.read(header, sizeof(char)*4);
-        file.read(&majorVersion, sizeof(char));
-        file.read(&minorVersion, sizeof(char));
-
-        // Check VMSH header
-        if ((header[0] != 'V') || (header[1] != 'M') ||
-            (header[2] != 'S') || (header[3] != 'H'))
-        {
-            // Invalid VMSH header
-            return false;
-        }
-
-        // Check VMSH version
-        if ((majorVersion != 1) || (minorVersion != 0))
-        {
-            // Invalid VMSH header
-            return false;
-        }
-
-        // Read VMSH file type
-        char type = 0;
-        file.read(&type, sizeof(char));
-        if (type != 0)
-        {
-            // Invalid VMSH type
-            return false;
-        }
-
-        // Read vertices and indices count
-        file.read((char*)&verticesCount, sizeof(uint32_t));
-        file.read((char*)&indicesCount, sizeof(uint32_t));
-        if ((verticesCount <= 0) || (indicesCount <= 0))
-        {
-            // Invalid vertices or indices count
-            return false;
-        }
-
-        // Allocate vertices and indices
-        try
-        {
-            vertices = new float[verticesCount];
-            indices = new uint16_t[indicesCount];
-        }
-        catch (const std::bad_alloc&)
-        {
-            vertices = 0;
-            indices = 0;
-        }
-        catch (...)
-        {
-            vertices = 0;
-            indices = 0;
-        }
-        if (!vertices || !indices)
-        {
-            // Invalid vertices or indices pointer
-            return false;
-        }
-
-        // Read vertices
-        file.read((char*)vertices, sizeof(float)*verticesCount);
-
-        // Read indices
-        file.read((char*)indices, sizeof(uint16_t)*indicesCount);
-
-        // Close file
-        file.close();
+        m_vertices[i+0] *= width;
+        m_vertices[i+1] *= height;
+        m_vertices[i+2] *= depth;
     }
 
-    // Create vertex buffer
-    if (!renderer.createVertexBuffer(
-        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
+    // Update vertex buffer
+    if (!renderer.updateVertexBuffer(m_vertexBuffer,
+        m_vertices, CuboidShapeIndices,
+        CuboidShapeVerticesCount, CuboidShapeIndicesCount))
     {
-        // Could not create vertex buffer
-        if (vertices) { delete[] vertices; }
-        if (indices) { delete[] indices; }
-        return false;
-    }
-    m_indicesCount = indicesCount;
-
-    // Destroy mesh data
-    if (vertices) { delete[] vertices; }
-    if (indices) { delete[] indices; }
-
-    // Check texture handle
-    if (!texture.isValid())
-    {
-        // Invalid texture handle
+        // Could not update vertex buffer
         return false;
     }
 
-    // Reset static mesh transformations
-    resetTransforms();
-
-    // Set static mesh texture pointer
-    m_texture = &texture;
-
-    // Reset static mesh color
-    m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
-
-    // Static mesh successfully loaded
+    // Cuboid size successfully set
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy static mesh                                                       //
+//  Destroy cuboid                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::destroyStaticMesh(Renderer& renderer)
+void CuboidShape::destroyCuboid(Renderer& renderer)
 {
-    m_color.reset();
-    m_texture = 0;
-    m_indicesCount = 0;
     renderer.destroyVertexBuffer(m_vertexBuffer);
+    m_color.reset();
     resetTransforms();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh texture                                                   //
-//  return : True if static mesh texture is successfully set                  //
+//  Set cuboid color                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool StaticMesh::setTexture(Texture& texture)
-{
-    // Check texture handle
-    if (!texture.isValid())
-    {
-        // Invalid texture handle
-        return false;
-    }
-
-    // Set static mesh texture pointer
-    m_texture = &texture;
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh color                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setColor(const Vector4& color)
+void CuboidShape::setColor(const Vector4& color)
 {
     m_color.vec[0] = color.vec[0];
     m_color.vec[1] = color.vec[1];
@@ -273,9 +158,9 @@ void StaticMesh::setColor(const Vector4& color)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh color                                                     //
+//  Set cuboid color                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setColor(float red, float green, float blue, float alpha)
+void CuboidShape::setColor(float red, float green, float blue, float alpha)
 {
     m_color.vec[0] = red;
     m_color.vec[1] = green;
@@ -284,42 +169,42 @@ void StaticMesh::setColor(float red, float green, float blue, float alpha)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh red channel                                               //
+//  Set cuboid red channel                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setRed(float red)
+void CuboidShape::setRed(float red)
 {
     m_color.vec[0] = red;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh green channel                                             //
+//  Set cuboid green channel                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setGreen(float green)
+void CuboidShape::setGreen(float green)
 {
     m_color.vec[1] = green;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh blue channel                                              //
+//  Set cuboid blue channel                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setBlue(float blue)
+void CuboidShape::setBlue(float blue)
 {
     m_color.vec[2] = blue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh alpha channel                                             //
+//  Set cuboid alpha channel                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setAlpha(float alpha)
+void CuboidShape::setAlpha(float alpha)
 {
     m_color.vec[3] = alpha;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind static mesh vertex buffer                                            //
+//  Bind cuboid vertex buffer                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::bindVertexBuffer(Renderer& renderer)
+void CuboidShape::bindVertexBuffer(Renderer& renderer)
 {
     // Bind vertex buffer
     VkDeviceSize offset = 0;
@@ -335,11 +220,11 @@ void StaticMesh::bindVertexBuffer(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render static mesh                                                        //
+//  Render cuboid                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::render(Renderer& renderer)
+void CuboidShape::render(Renderer& renderer)
 {
-    // Compute static mesh transformations
+    // Compute cuboid transformations
     computeTransforms();
 
     // Push model matrix into command buffer
@@ -362,12 +247,9 @@ void StaticMesh::render(Renderer& renderer)
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
-    // Bind static mesh texture
-    m_texture->bind(renderer);
-
-    // Draw static mesh triangles
+    // Draw cuboid triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        m_indicesCount, 1, 0, 0, 0
+        CuboidShapeVerticesCount, 1, 0, 0, 0
     );
 }

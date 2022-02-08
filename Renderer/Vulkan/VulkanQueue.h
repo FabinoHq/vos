@@ -42,10 +42,10 @@
 #ifndef VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER
 #define VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER
 
+    #include "Vulkan.h"
+
     #include <cstdint>
     #include <vector>
-
-    #include "Vulkan.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

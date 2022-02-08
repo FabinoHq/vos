@@ -42,9 +42,6 @@
 #ifndef VOS_RENDERER_RENDERER_HEADER
 #define VOS_RENDERER_RENDERER_HEADER
 
-    #include <cstdint>
-    #include <vector>
-
     #include "../System/SysMessage.h"
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"
@@ -68,6 +65,7 @@
     #include "../Math/Matrix4x4.h"
 
     #include "Shaders/Default.h"
+    #include "Shaders/DefaultProc.h"
     #include "Shaders/NinePatch.h"
     #include "Shaders/Rectangle.h"
     #include "Shaders/Ellipse.h"
@@ -79,6 +77,9 @@
     #include "../Images/Embedded/EWCursor.h"
     #include "../Images/Embedded/NESWCursor.h"
     #include "../Images/Embedded/NWSECursor.h"
+
+    #include <cstdint>
+    #include <vector>
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -193,6 +194,11 @@
             //  Bind renderer ellipse pipeline                                //
             ////////////////////////////////////////////////////////////////////
             void bindEllipsePipeline();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer shape pipeline                                  //
+            ////////////////////////////////////////////////////////////////////
+            void bindShapePipeline();
 
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer pixel text pipeline                             //
@@ -352,6 +358,7 @@
             Pipeline            m_ninePatchPipeline;    // NinePatch pipeline
             Pipeline            m_rectanglePipeline;    // Rectangle pipeline
             Pipeline            m_ellipsePipeline;      // Ellipse pipeline
+            Pipeline            m_shapePipeline;        // Shape pipeline
             Pipeline            m_pxTextPipeline;       // Pixel text pipeline
             Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
             View                m_view;                 // Default view

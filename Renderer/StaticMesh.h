@@ -45,6 +45,7 @@
     #include "Vulkan/VertexBuffer.h"
     #include "Texture.h"
     #include "../Math/Math.h"
+    #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
 
@@ -104,6 +105,37 @@
             bool setTexture(Texture& texture);
 
             ////////////////////////////////////////////////////////////////////
+            //  Set static mesh color                                         //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(const Vector4& color);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set static mesh color                                         //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(float red, float green, float blue, float alpha);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set static mesh red channel                                   //
+            ////////////////////////////////////////////////////////////////////
+            void setRed(float red);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set static mesh green channel                                 //
+            ////////////////////////////////////////////////////////////////////
+            void setGreen(float green);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set static mesh blue channel                                  //
+            ////////////////////////////////////////////////////////////////////
+            void setBlue(float blue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set static mesh alpha channel                                 //
+            ////////////////////////////////////////////////////////////////////
+            void setAlpha(float alpha);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Bind static mesh vertex buffer                                //
             ////////////////////////////////////////////////////////////////////
             void bindVertexBuffer(Renderer& renderer);
@@ -130,6 +162,7 @@
             VertexBuffer    m_vertexBuffer;     // Static mesh vertex buffer
             uint32_t        m_indicesCount;     // Static mesh indices count
             Texture*        m_texture;          // Static mesh texture pointer
+            Vector4         m_color;            // Static mesh color
     };
 
 

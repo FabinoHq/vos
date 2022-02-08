@@ -37,128 +37,183 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/Win/SysWindow.h : Window management for Windows                 //
+//     Renderer/Shapes/CuboidShape.h : Cuboid shape management                //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SYSTEM_WIN_SYSWINDOW_HEADER
-#define VOS_SYSTEM_WIN_SYSWINDOW_HEADER
+#ifndef VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER
+#define VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER
 
-    #include "../SysMessage.h"
-    #include "SysDisplayMode.h"
-    #include "../../Event.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../Shader.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector4.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
 
-    #include <windows.h>
-    #include <hidusage.h>
-    #include <queue>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  SysWindow class name                                                  //
-    ////////////////////////////////////////////////////////////////////////////
-    const wchar_t VOSWindowClassName[] = L"VosWindow";
+    #include <cstdint>
+    #include <cstring>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SysWindow class definition                                            //
+    //  CuboidShape vertex buffer vertices                                    //
     ////////////////////////////////////////////////////////////////////////////
-    class SysWindow
+    const uint32_t CuboidShapeVerticesCount = 192;
+    const float CuboidShapeVertices[CuboidShapeVerticesCount] =
     {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  SysWindow default constructor                                 //
-            ////////////////////////////////////////////////////////////////////
-            SysWindow();
+        // Front face (+Z)
+        -0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.5f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -0.5f, 0.5f, 0.5f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        // Back face (-Z)
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f, 0.0f, -1.0f,
+        -0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+        0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+        // Top face (+Y)
+        -0.5f, 0.5f, 0.5f,  0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+        // Bottom face (-Y)
+        0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+        // Left face (-X)
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f,  1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+        // Right face (+X)
+        0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+        0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f,  0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+    };
 
-            ////////////////////////////////////////////////////////////////////
-            //  SysWindow destructor                                          //
-            ////////////////////////////////////////////////////////////////////
-            ~SysWindow();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create the window                                             //
-            //  return : True if the window is successfully created           //
-            ////////////////////////////////////////////////////////////////////
-            bool create();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Close the window                                              //
-            ////////////////////////////////////////////////////////////////////
-            void close();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get window width                                              //
-            //  return : Window width                                         //
-            ////////////////////////////////////////////////////////////////////
-            int getWidth();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get window height                                             //
-            //  return : Window height                                        //
-            ////////////////////////////////////////////////////////////////////
-            int getHeight();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get window event                                              //
-            //  return : True if an event occurred, false otherwise           //
-            ////////////////////////////////////////////////////////////////////
-            bool getEvent(Event& event);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get window instance                                           //
-            //  return : Reference to the window instance                     //
-            ////////////////////////////////////////////////////////////////////
-            HINSTANCE& getInstance();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get window handle                                             //
-            //  return : Reference to the window handle                       //
-            ////////////////////////////////////////////////////////////////////
-            HWND& getHandle();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  SysWindow private copy constructor : Not copyable             //
-            ////////////////////////////////////////////////////////////////////
-            SysWindow(const SysWindow&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  SysWindow private copy operator : Not copyable                //
-            ////////////////////////////////////////////////////////////////////
-            SysWindow& operator=(const SysWindow&) = delete;
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Window static event callback function                         //
-            ////////////////////////////////////////////////////////////////////
-            static LRESULT CALLBACK OnEvent(
-                HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
-            );
-
-            ////////////////////////////////////////////////////////////////////
-            //  Process window events                                         //
-            ////////////////////////////////////////////////////////////////////
-            void processEvent(UINT msg, WPARAM wparam, LPARAM lparam);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Transcript key event                                          //
-            ////////////////////////////////////////////////////////////////////
-            EventKey transcriptKey(WPARAM key);
-
-
-        private:
-            HINSTANCE           m_instance;     // Window instance
-            HWND                m_handle;       // Window handle
-            bool                m_hasFocus;     // Window has focus
-
-            SysDisplayMode      m_systemMode;   // System display mode
-            int                 m_width;        // Window width
-            int                 m_height;       // Window height
-
-            std::queue<Event>   m_events;       // Events FIFO queue
+    ////////////////////////////////////////////////////////////////////////////
+    //  CuboidShape vertex buffer indices                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t CuboidShapeIndicesCount = 36;
+    const uint16_t CuboidShapeIndices[CuboidShapeIndicesCount] =
+    {
+        0, 1, 2,
+        2, 3, 0,
+        4, 5, 6,
+        6, 7, 4,
+        8, 9, 10,
+        10, 11, 8,
+        12, 13, 14,
+        14, 15, 12,
+        16, 17, 18,
+        18, 19, 16,
+        20, 21, 22,
+        22, 23, 20
     };
 
 
-#endif // VOS_SYSTEM_WIN_SYSWINDOW_HEADER
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  CuboidShape class definition                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    class CuboidShape : public Transform3
+    {
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  CuboidShape default constructor                               //
+            ////////////////////////////////////////////////////////////////////
+            CuboidShape();
+
+            ////////////////////////////////////////////////////////////////////
+            //  CuboidShape virtual destructor                                //
+            ////////////////////////////////////////////////////////////////////
+            virtual ~CuboidShape();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Init cuboid                                                   //
+            //  return : True if the cuboid is successfully created           //
+            ////////////////////////////////////////////////////////////////////
+            bool init(Renderer& renderer,
+                float width, float height, float depth);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set cuboid size                                               //
+            //  return : True if the cuboid is size is successfully set       //
+            ////////////////////////////////////////////////////////////////////
+            bool setSize(Renderer& renderer,
+                float width, float height, float depth);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy cuboid                                                //
+            ////////////////////////////////////////////////////////////////////
+            void destroyCuboid(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set cuboid color                                              //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(const Vector4& color);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set cuboid color                                              //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(float red, float green, float blue, float alpha);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set cuboid red channel                                        //
+            ////////////////////////////////////////////////////////////////////
+            void setRed(float red);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set cuboid green channel                                      //
+            ////////////////////////////////////////////////////////////////////
+            void setGreen(float green);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set cuboid blue channel                                       //
+            ////////////////////////////////////////////////////////////////////
+            void setBlue(float blue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set cuboid alpha channel                                      //
+            ////////////////////////////////////////////////////////////////////
+            void setAlpha(float alpha);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind cuboid vertex buffer                                     //
+            ////////////////////////////////////////////////////////////////////
+            void bindVertexBuffer(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render cuboid                                                 //
+            ////////////////////////////////////////////////////////////////////
+            void render(Renderer& renderer);
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  CuboidShape private copy constructor : Not copyable           //
+            ////////////////////////////////////////////////////////////////////
+            CuboidShape(const CuboidShape&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  CuboidShape private copy operator : Not copyable              //
+            ////////////////////////////////////////////////////////////////////
+            CuboidShape& operator=(const CuboidShape&) = delete;
+
+
+        private:
+            float               m_vertices[CuboidShapeVerticesCount];
+            VertexBuffer        m_vertexBuffer;     // Cuboid vertex buffer
+            Vector4             m_color;            // Cuboid color
+    };
+
+
+#endif // VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER

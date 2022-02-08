@@ -48,8 +48,6 @@
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
 
-    #include "../Shaders/Ellipse.h"
-
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class declaration                                            //
