@@ -51,6 +51,7 @@
     #include "Renderer/Renderer.h"
     #include "Renderer/View.h"
     #include "Renderer/Camera.h"
+    #include "Renderer/FreeFlyCam.h"
     #include "Renderer/Sprite.h"
     #include "Renderer/ProcSprite.h"
     #include "Renderer/Shapes/Rect.h"
