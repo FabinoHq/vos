@@ -327,5 +327,17 @@
     <ClInclude Include="Renderer\Shaders\NinePatch.h">
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="Images\Embedded\EWCursor.h">
+      <Filter>Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Embedded\NESWCursor.h">
+      <Filter>Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Embedded\NSCursor.h">
+      <Filter>Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Embedded\NWSECursor.h">
+      <Filter>Images\Embedded</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

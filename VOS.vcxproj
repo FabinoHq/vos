@@ -179,6 +179,10 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="Images\BMPFile.h" />
     <ClInclude Include="Images\Embedded\Cursor.h" />
+    <ClInclude Include="Images\Embedded\EWCursor.h" />
+    <ClInclude Include="Images\Embedded\NESWCursor.h" />
+    <ClInclude Include="Images\Embedded\NSCursor.h" />
+    <ClInclude Include="Images\Embedded\NWSECursor.h" />
     <ClInclude Include="Images\Embedded\PxFont.h" />
     <ClInclude Include="Images\Embedded\Window.h" />
     <ClInclude Include="Images\PNGFile.h" />

@@ -53,10 +53,10 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_uvFactor(1.0f),
 m_movable(true),
 m_resizable(true),
-m_minSize(0.2f, 0.2f),
-m_maxSize(3.5f, 1.9f),
-m_topBarSize(0.05f),
-m_resizeBarSize(0.01f),
+m_minSize(GUIWindowDefaultMinSize),
+m_maxSize(GUIWindowDefaultMaxSize),
+m_topBarSize(GUIWindowDefaultTopBarSize),
+m_resizeBarSize(GUIWindowDefaultResizeBarSize),
 m_grabWindow(false),
 m_grabTop(false),
 m_grabBottom(false),
@@ -122,16 +122,16 @@ bool GUIWindow::init(Texture& texture,
     m_resizable = true;
 
     // Reset window minimum size
-    m_minSize.set(0.2f, 0.2f);
+    m_minSize.set(GUIWindowDefaultMinSize);
 
     // Reset window maximum size
-    m_maxSize.set(3.5f, 1.9f);
+    m_maxSize.set(GUIWindowDefaultMaxSize);
 
     // Reset window top bar size
-    m_topBarSize = 0.05f;
+    m_topBarSize = GUIWindowDefaultTopBarSize;
 
     // Reset window resize bar size
-    m_resizeBarSize = 0.01f;
+    m_resizeBarSize = GUIWindowDefaultResizeBarSize;
 
     // Set window size
     setSize(width, height);
@@ -662,6 +662,109 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
         return true;
     }
 
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Update renderer current cursor                                            //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::updateCursor(Renderer& renderer, float mouseX, float mouseY)
+{
+    if (m_resizable)
+    {
+        if (m_grabTop && m_grabLeft)
+        {
+            renderer.setNWSECursor();
+            return true;
+        }
+        if (m_grabTop && m_grabRight)
+        {
+            renderer.setNESWCursor();
+            return true;
+        }
+        if (m_grabBottom && m_grabLeft)
+        {
+            renderer.setNESWCursor();
+            return true;
+        }
+        if (m_grabBottom && m_grabRight)
+        {
+            renderer.setNWSECursor();
+            return true;
+        }
+        if (m_grabTop)
+        {
+            renderer.setNSCursor();
+            return true;
+        }
+        if (m_grabBottom)
+        {
+            renderer.setNSCursor();
+            return true;
+        }
+        if (m_grabLeft)
+        {
+            renderer.setEWCursor();
+            return true;
+        }
+        if (m_grabRight)
+        {
+            renderer.setEWCursor();
+            return true;
+        }
+        if (m_grabWindow)
+        {
+            renderer.setDefaultCursor();
+            return true;
+        }
+
+        if (isTopResizePicking(mouseX, mouseY) &&
+            isLeftResizePicking(mouseX, mouseY))
+        {
+            renderer.setNWSECursor();
+            return true;
+        }
+        if (isTopResizePicking(mouseX, mouseY) &&
+            isRightResizePicking(mouseX, mouseY))
+        {
+            renderer.setNESWCursor();
+            return true;
+        }
+        if (isBottomResizePicking(mouseX, mouseY) &&
+            isLeftResizePicking(mouseX, mouseY))
+        {
+            renderer.setNESWCursor();
+            return true;
+        }
+        if (isBottomResizePicking(mouseX, mouseY) &&
+            isRightResizePicking(mouseX, mouseY))
+        {
+            renderer.setNWSECursor();
+            return true;
+        }
+        if (isTopResizePicking(mouseX, mouseY))
+        {
+            renderer.setNSCursor();
+            return true;
+        }
+        if (isBottomResizePicking(mouseX, mouseY))
+        {
+            renderer.setNSCursor();
+            return true;
+        }
+        if (isLeftResizePicking(mouseX, mouseY))
+        {
+            renderer.setEWCursor();
+            return true;
+        }
+        if (isRightResizePicking(mouseX, mouseY))
+        {
+            renderer.setEWCursor();
+            return true;
+        }
+    }
+
+    renderer.setDefaultCursor();
     return false;
 }
 

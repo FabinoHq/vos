@@ -62,7 +62,6 @@
     #include "Renderer/HeightMapChunk.h"
     #include "Event.h"
 
-    #include "Images/Embedded/Cursor.h"
     #include "Images/Embedded/PxFont.h"
     #include "Images/Embedded/Window.h"
     #include "Images/BMPFile.h"
@@ -116,8 +115,6 @@
             SysWindow       m_window;           // VOS main window
             Renderer        m_renderer;         // VOS renderer
             SysClock        m_clock;            // VOS clock
-            Texture         m_cursorTexture;    // Cursor texture
-            Sprite          m_cursor;           // Cursor sprite
 
             View            m_view;             // View
             Camera          m_camera;           // Camera

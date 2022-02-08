@@ -62,7 +62,9 @@
     #include "View.h"
     #include "Camera.h"
     #include "FreeFlyCam.h"
+    #include "Sprite.h"
     #include "../Math/Math.h"
+    #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"
 
     #include "Shaders/Default.h"
@@ -71,6 +73,12 @@
     #include "Shaders/Oval.h"
     #include "Shaders/PxText.h"
     #include "Shaders/StaticMesh.h"
+
+    #include "../Images/Embedded/Cursor.h"
+    #include "../Images/Embedded/NSCursor.h"
+    #include "../Images/Embedded/EWCursor.h"
+    #include "../Images/Embedded/NESWCursor.h"
+    #include "../Images/Embedded/NWSECursor.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -88,6 +96,15 @@
     //  Renderer max textures descriptor sets                                 //
     ////////////////////////////////////////////////////////////////////////////
     const uint32_t RendererMaxTexturesDesc = 2048;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer cursors offsets                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    const Vector2 RendererDefaultCursorOffset = Vector2(2.0f, 2.0f);
+    const Vector2 RendererNSCursorOffset = Vector2(10.0f, 24.0f);
+    const Vector2 RendererEWCursorOffset = Vector2(24.0f, 10.0f);
+    const Vector2 RendererNESWCursorOffset = Vector2(18.0f, 18.0f);
+    const Vector2 RendererNWSECursorOffset = Vector2(18.0f, 18.0f);
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -214,6 +231,42 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Set renderer default cursor                                   //
+            ////////////////////////////////////////////////////////////////////
+            bool setDefaultCursor();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set renderer NS cursor                                        //
+            ////////////////////////////////////////////////////////////////////
+            bool setNSCursor();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set renderer EW cursor                                        //
+            ////////////////////////////////////////////////////////////////////
+            bool setEWCursor();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set renderer NE-SW cursor                                     //
+            ////////////////////////////////////////////////////////////////////
+            bool setNESWCursor();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set renderer NW-SE cursor                                     //
+            ////////////////////////////////////////////////////////////////////
+            bool setNWSECursor();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set renderer cursor texture                                   //
+            ////////////////////////////////////////////////////////////////////
+            bool setCursorTexture(Texture& texture, const Vector2& offset);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render mouse cursor                                           //
+            ////////////////////////////////////////////////////////////////////
+            void renderCursor(float mouseX, float mouseY);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Get renderer ready state                                      //
             //  return : True if the renderer is ready, false otherwise       //
             ////////////////////////////////////////////////////////////////////
@@ -302,6 +355,14 @@
             Pipeline            m_pxTextPipeline;       // Pixel text pipeline
             Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
             View                m_view;                 // Default view
+
+            Texture             m_cursorTexture;        // Cursor texture
+            Texture             m_nsCursorTexture;      // NS cursor texture
+            Texture             m_ewCursorTexture;      // EW cursor texture
+            Texture             m_neswCursorTexture;    // NE-SW cursor texture
+            Texture             m_nwseCursorTexture;    // NW-SE cursor texture
+            Vector2             m_cursorOffset;         // Cursor offset
+            Sprite              m_cursor;               // Cursor sprite
     };
 
 

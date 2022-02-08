@@ -77,6 +77,10 @@
 !Images/
 !Images/Embedded/
 !Images/Embedded/Cursor.h
+!Images/Embedded/NSCursor.h
+!Images/Embedded/EWCursor.h
+!Images/Embedded/NESWCursor.h
+!Images/Embedded/NWSECursor.h
 !Images/Embedded/PxFont.h
 !Images/Embedded/Window.h
 !Images/BMPFile.h

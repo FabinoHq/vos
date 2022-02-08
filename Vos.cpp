@@ -50,8 +50,6 @@ m_running(false),
 m_window(),
 m_renderer(),
 m_clock(),
-m_cursorTexture(),
-m_cursor(),
 m_view(),
 m_camera(),
 m_freeflycam(),
@@ -104,22 +102,6 @@ bool Vos::launch()
     if (!m_renderer.init(&m_window))
     {
         // Unable to init VOS renderer
-        return false;
-    }
-
-    // Load cursor texture
-    if (!m_cursorTexture.updateTexture(m_renderer,
-        CursorImageWidth, CursorImageHeight, CursorImage,
-        false, false))
-    {
-        // Could not load cursor texture
-        return false;
-    }
-
-    // Init cursor sprite
-    if (!m_cursor.init(m_cursorTexture, 1.0f, 1.0f))
-    {
-        // Could not init test sprite
         return false;
     }
 
@@ -407,6 +389,7 @@ void Vos::run()
                         event.mouse.x*1.0f, event.mouse.y*1.0f
                     );
                     m_guiWindow.mouseMove(m_mouseX, m_mouseY);
+                    m_guiWindow.updateCursor(m_renderer, m_mouseX, m_mouseY);
                     break;
 
                 // Mouse button pressed
@@ -438,10 +421,6 @@ void Vos::run()
         // Render frame
         if (m_renderer.startFrame())
         {
-            // Get renderer aspect ratio
-            float cursorSize = 64.0f*scale;
-            float cursorOffset = 2.0f*scale;
-
             // Set freefly camera
             m_renderer.setCamera(m_freeflycam);
 
@@ -484,14 +463,9 @@ void Vos::run()
             m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
             m_pxText.render(m_renderer);
 
-            // Draw cursor
+            // Render cursor
             m_renderer.bindDefaultPipeline();
-            m_cursor.setSize(cursorSize, cursorSize);
-            m_cursor.setOrigin(0.0f, cursorSize);
-            m_cursor.setPosition(
-                m_mouseX-cursorOffset, m_mouseY+cursorOffset
-            );
-            m_cursor.render(m_renderer);
+            m_renderer.renderCursor(m_mouseX, m_mouseY);
 
             // End rendering
             m_renderer.endFrame();
@@ -528,9 +502,6 @@ void Vos::run()
 
         // Destroy view
         m_view.destroyView(m_renderer);
-
-        // Destroy cursor texture
-        m_cursorTexture.destroyTexture(m_renderer);
     }
 
     // Close VOS
