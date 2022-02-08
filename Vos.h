@@ -54,18 +54,22 @@
     #include "Renderer/FreeFlyCam.h"
     #include "Renderer/Sprite.h"
     #include "Renderer/ProcSprite.h"
-    #include "Renderer/Shapes/Rect.h"
-    #include "Renderer/Shapes/Oval.h"
+
+    #include "Renderer/Shapes/RectangleShape.h"
+    #include "Renderer/Shapes/EllipseShape.h"
+
     #include "Renderer/GUI/GUIPxText.h"
     #include "Renderer/GUI/GUIWindow.h"
+
     #include "Renderer/StaticMesh.h"
     #include "Renderer/HeightMapChunk.h"
-    #include "Event.h"
 
     #include "Images/Embedded/PxFont.h"
     #include "Images/Embedded/Window.h"
     #include "Images/BMPFile.h"
     #include "Images/PNGFile.h"
+
+    #include "Event.h"
 
     #include <cstdint>
 
@@ -121,8 +125,8 @@
             FreeFlyCam      m_freeflycam;       // Freefly camera
 
             ProcSprite      m_procSprite;       // Procedural sprite
-            Rect            m_rect;             // Rect shape
-            Oval            m_oval;             // Oval shape
+            RectangleShape  m_rectanle;         // Rectangle shape
+            EllipseShape    m_ellipse;          // Ellipse shape
 
             Texture         m_pxFontTexture;    // Pixel font texture
             GUIPxText       m_pxText;           // Test pixel text

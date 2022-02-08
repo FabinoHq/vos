@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shapes/Rect.h : Rectangle shape management                    //
+//     Renderer/Shapes/RectangleShape.h : Rectangle shape management          //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHAPES_RECT_HEADER
-#define VOS_RENDERER_SHAPES_RECT_HEADER
+#ifndef VOS_RENDERER_SHAPES_RECTANGLESHAPE_HEADER
+#define VOS_RENDERER_SHAPES_RECTANGLESHAPE_HEADER
 
     #include "../Shader.h"
     #include "../../Math/Math.h"
@@ -48,7 +48,7 @@
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
 
-    #include "../Shaders/Rect.h"
+    #include "../Shaders/Rectangle.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -58,80 +58,80 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Rect class definition                                                 //
+    //  RectangleShape class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Rect : public Transform2
+    class RectangleShape : public Transform2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Rect default constructor                                      //
+            //  RectangleShape default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            Rect();
+            RectangleShape();
 
             ////////////////////////////////////////////////////////////////////
-            //  Rect virtual destructor                                       //
+            //  RectangleShape virtual destructor                             //
             ////////////////////////////////////////////////////////////////////
-            virtual ~Rect();
+            virtual ~RectangleShape();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init rect                                                     //
-            //  return : True if the rect is successfully created             //
+            //  Init rectangle                                                //
+            //  return : True if the rectangle is successfully created        //
             ////////////////////////////////////////////////////////////////////
             bool init(float width, float height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rect color                                                //
+            //  Set rectangle color                                           //
             ////////////////////////////////////////////////////////////////////
             void setColor(const Vector4& color);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rect color                                                //
+            //  Set rectangle color                                           //
             ////////////////////////////////////////////////////////////////////
             void setColor(float red, float green, float blue, float alpha);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rect red channel                                          //
+            //  Set rectangle red channel                                     //
             ////////////////////////////////////////////////////////////////////
             void setRed(float red);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rect green channel                                        //
+            //  Set rectangle green channel                                   //
             ////////////////////////////////////////////////////////////////////
             void setGreen(float green);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rect blue channel                                         //
+            //  Set rectangle blue channel                                    //
             ////////////////////////////////////////////////////////////////////
             void setBlue(float blue);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set rect alpha channel                                        //
+            //  Set rectangle alpha channel                                   //
             ////////////////////////////////////////////////////////////////////
             void setAlpha(float alpha);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Render rect                                                  //
+            //  Render rectangle                                              //
             ////////////////////////////////////////////////////////////////////
             void render(Renderer& renderer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Rect private copy constructor : Not copyable                  //
+            //  RectangleShape private copy constructor : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            Rect(const Rect&) = delete;
+            RectangleShape(const RectangleShape&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Rect private copy operator : Not copyable                     //
+            //  RectangleShape private copy operator : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            Rect& operator=(const Rect&) = delete;
+            RectangleShape& operator=(const RectangleShape&) = delete;
 
 
         private:
-            Vector4             m_color;            // Rect color
+            Vector4             m_color;            // Rectangle color
     };
 
 
-#endif // VOS_RENDERER_SHAPES_RECT_HEADER
+#endif // VOS_RENDERER_SHAPES_RECTANGLESHAPE_HEADER

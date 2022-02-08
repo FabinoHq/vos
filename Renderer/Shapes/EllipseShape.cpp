@@ -37,16 +37,16 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shapes/Rect.cpp : Rectangle shape management                  //
+//     Renderer/Shapes/EllipseShape.cpp : Ellipse shape management            //
 ////////////////////////////////////////////////////////////////////////////////
-#include "Rect.h"
+#include "EllipseShape.h"
 #include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Rect default constructor                                                  //
+//  EllipseShape default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
-Rect::Rect() :
+EllipseShape::EllipseShape() :
 Transform2(),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
@@ -54,40 +54,40 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Rect virtual destructor                                                   //
+//  EllipseShape virtual destructor                                           //
 ////////////////////////////////////////////////////////////////////////////////
-Rect::~Rect()
+EllipseShape::~EllipseShape()
 {
     m_color.reset();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init rect                                                                 //
-//  return : True if the rect is successfully created                         //
+//  Init ellipse                                                              //
+//  return : True if the ellipse is successfully created                      //
 ////////////////////////////////////////////////////////////////////////////////
-bool Rect::init(float width, float height)
+bool EllipseShape::init(float width, float height)
 {
-    // Reset rect transformations
+    // Reset ellipse transformations
     resetTransforms();
 
-    // Set rect size
+    // Set ellipse size
     setSize(width, height);
 
-    // Center rect origin (anchor)
+    // Center ellipse origin (anchor)
     centerOrigin();
 
-    // Reset rect color
+    // Reset ellipse color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 
-    // Rect successfully created
+    // Ellipse successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rect color                                                            //
+//  Set ellipse color                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Rect::setColor(const Vector4& color)
+void EllipseShape::setColor(const Vector4& color)
 {
     m_color.vec[0] = color.vec[0];
     m_color.vec[1] = color.vec[1];
@@ -96,9 +96,9 @@ void Rect::setColor(const Vector4& color)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rect color                                                            //
+//  Set ellipse color                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Rect::setColor(float red, float green, float blue, float alpha)
+void EllipseShape::setColor(float red, float green, float blue, float alpha)
 {
     m_color.vec[0] = red;
     m_color.vec[1] = green;
@@ -107,44 +107,44 @@ void Rect::setColor(float red, float green, float blue, float alpha)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rect red channel                                                      //
+//  Set ellipse red channel                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void Rect::setRed(float red)
+void EllipseShape::setRed(float red)
 {
     m_color.vec[0] = red;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rect green channel                                                    //
+//  Set ellipse green channel                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void Rect::setGreen(float green)
+void EllipseShape::setGreen(float green)
 {
     m_color.vec[1] = green;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rect blue channel                                                     //
+//  Set ellipse blue channel                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void Rect::setBlue(float blue)
+void EllipseShape::setBlue(float blue)
 {
     m_color.vec[2] = blue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set rect alpha channel                                                    //
+//  Set ellipse alpha channel                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void Rect::setAlpha(float alpha)
+void EllipseShape::setAlpha(float alpha)
 {
     m_color.vec[3] = alpha;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render rect                                                               //
+//  Render ellipse                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Rect::render(Renderer& renderer)
+void EllipseShape::render(Renderer& renderer)
 {
-    // Compute rect transformations
+    // Compute ellipse transformations
     computeTransforms();
 
     // Push model matrix into command buffer
@@ -167,7 +167,7 @@ void Rect::render(Renderer& renderer)
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
-    // Draw rect triangles
+    // Draw ellipse triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         6, 1, 0, 0, 0

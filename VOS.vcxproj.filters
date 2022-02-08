@@ -110,12 +110,6 @@
     <ClCompile Include="Renderer\ProcSprite.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Shapes\Rect.cpp">
-      <Filter>Renderer\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Shapes\Oval.cpp">
-      <Filter>Renderer\Shapes</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Pipeline.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -145,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="Renderer\GUI\GUIWindow.cpp">
       <Filter>Renderer\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Shapes\EllipseShape.cpp">
+      <Filter>Renderer\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Shapes\RectangleShape.cpp">
+      <Filter>Renderer\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -258,18 +258,6 @@
     <ClInclude Include="Math\Vector4.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Shapes\Rect.h">
-      <Filter>Renderer\Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Shaders\Rect.h">
-      <Filter>Renderer\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Shaders\Oval.h">
-      <Filter>Renderer\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Shapes\Oval.h">
-      <Filter>Renderer\Shapes</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Pipeline.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -338,6 +326,18 @@
     </ClInclude>
     <ClInclude Include="Images\Embedded\NWSECursor.h">
       <Filter>Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\Ellipse.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\Rectangle.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shapes\EllipseShape.h">
+      <Filter>Renderer\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shapes\RectangleShape.h">
+      <Filter>Renderer\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

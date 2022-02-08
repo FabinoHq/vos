@@ -37,16 +37,16 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shapes/Oval.cpp : Ellipse shape management                    //
+//     Renderer/Shapes/RectangleShape.cpp : Rectangle shape management        //
 ////////////////////////////////////////////////////////////////////////////////
-#include "Oval.h"
+#include "RectangleShape.h"
 #include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Oval default constructor                                                  //
+//  RectangleShape default constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
-Oval::Oval() :
+RectangleShape::RectangleShape() :
 Transform2(),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
@@ -54,40 +54,40 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Oval virtual destructor                                                   //
+//  RectangleShape virtual destructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-Oval::~Oval()
+RectangleShape::~RectangleShape()
 {
     m_color.reset();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init oval                                                                 //
-//  return : True if the oval is successfully created                         //
+//  Init rectangle                                                            //
+//  return : True if the rectangle is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool Oval::init(float width, float height)
+bool RectangleShape::init(float width, float height)
 {
-    // Reset oval transformations
+    // Reset rectangle transformations
     resetTransforms();
 
-    // Set oval size
+    // Set rectangle size
     setSize(width, height);
 
-    // Center oval origin (anchor)
+    // Center rectangle origin (anchor)
     centerOrigin();
 
-    // Reset oval color
+    // Reset rectangle color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 
-    // Oval successfully created
+    // Rectangle successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set oval color                                                            //
+//  Set rectangle color                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void Oval::setColor(const Vector4& color)
+void RectangleShape::setColor(const Vector4& color)
 {
     m_color.vec[0] = color.vec[0];
     m_color.vec[1] = color.vec[1];
@@ -96,9 +96,9 @@ void Oval::setColor(const Vector4& color)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set oval color                                                            //
+//  Set rectangle color                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void Oval::setColor(float red, float green, float blue, float alpha)
+void RectangleShape::setColor(float red, float green, float blue, float alpha)
 {
     m_color.vec[0] = red;
     m_color.vec[1] = green;
@@ -107,44 +107,44 @@ void Oval::setColor(float red, float green, float blue, float alpha)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set oval red channel                                                      //
+//  Set rectangle red channel                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void Oval::setRed(float red)
+void RectangleShape::setRed(float red)
 {
     m_color.vec[0] = red;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set oval green channel                                                    //
+//  Set rectangle green channel                                               //
 ////////////////////////////////////////////////////////////////////////////////
-void Oval::setGreen(float green)
+void RectangleShape::setGreen(float green)
 {
     m_color.vec[1] = green;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set oval blue channel                                                     //
+//  Set rectangle blue channel                                                //
 ////////////////////////////////////////////////////////////////////////////////
-void Oval::setBlue(float blue)
+void RectangleShape::setBlue(float blue)
 {
     m_color.vec[2] = blue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set oval alpha channel                                                    //
+//  Set rectangle alpha channel                                               //
 ////////////////////////////////////////////////////////////////////////////////
-void Oval::setAlpha(float alpha)
+void RectangleShape::setAlpha(float alpha)
 {
     m_color.vec[3] = alpha;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render oval                                                               //
+//  Render rectangle                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void Oval::render(Renderer& renderer)
+void RectangleShape::render(Renderer& renderer)
 {
-    // Compute oval transformations
+    // Compute rectangle transformations
     computeTransforms();
 
     // Push model matrix into command buffer
@@ -167,7 +167,7 @@ void Oval::render(Renderer& renderer)
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
-    // Draw oval triangles
+    // Draw rectangle triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         6, 1, 0, 0, 0

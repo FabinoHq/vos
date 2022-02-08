@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/Oval.frag : Ellipse fragment shader           //
+//     Renderer/Shaders/Sources/Rectangle.frag : Rectangle fragment shader    //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision highp float;
@@ -59,6 +59,5 @@ layout(location = 0) out vec4 o_color;
 void main()
 {
     // Compute output color
-    vec4 ovalShape = vec4(step(length(vec2(0.5, 0.5)-i_texCoords), 0.5));
-    o_color = constants.color*ovalShape;
+    o_color = constants.color;
 }

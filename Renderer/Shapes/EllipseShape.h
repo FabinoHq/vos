@@ -37,10 +37,10 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shapes/Oval.h : Ellipse shape management                      //
+//     Renderer/Shapes/EllipseShape.h : Ellipse shape management              //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHAPES_OVAL_HEADER
-#define VOS_RENDERER_SHAPES_OVAL_HEADER
+#ifndef VOS_RENDERER_SHAPES_ELLIPSESHAPE_HEADER
+#define VOS_RENDERER_SHAPES_ELLIPSESHAPE_HEADER
 
     #include "../Shader.h"
     #include "../../Math/Math.h"
@@ -48,7 +48,7 @@
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
 
-    #include "../Shaders/Oval.h"
+    #include "../Shaders/Ellipse.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -58,80 +58,80 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Oval class definition                                                 //
+    //  EllipseShape class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
-    class Oval : public Transform2
+    class EllipseShape : public Transform2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Oval default constructor                                      //
+            //  EllipseShape default constructor                              //
             ////////////////////////////////////////////////////////////////////
-            Oval();
+            EllipseShape();
 
             ////////////////////////////////////////////////////////////////////
-            //  Oval virtual destructor                                       //
+            //  EllipseShape virtual destructor                               //
             ////////////////////////////////////////////////////////////////////
-            virtual ~Oval();
+            virtual ~EllipseShape();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init oval                                                     //
-            //  return : True if the oval is successfully created             //
+            //  Init ellipse                                                  //
+            //  return : True if the ellipse is successfully created          //
             ////////////////////////////////////////////////////////////////////
             bool init(float width, float height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set oval color                                                //
+            //  Set ellipse color                                             //
             ////////////////////////////////////////////////////////////////////
             void setColor(const Vector4& color);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set oval color                                                //
+            //  Set ellipse color                                             //
             ////////////////////////////////////////////////////////////////////
             void setColor(float red, float green, float blue, float alpha);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set oval red channel                                          //
+            //  Set ellipse red channel                                       //
             ////////////////////////////////////////////////////////////////////
             void setRed(float red);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set oval green channel                                        //
+            //  Set ellipse green channel                                     //
             ////////////////////////////////////////////////////////////////////
             void setGreen(float green);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set oval blue channel                                         //
+            //  Set ellipse blue channel                                      //
             ////////////////////////////////////////////////////////////////////
             void setBlue(float blue);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set oval alpha channel                                        //
+            //  Set ellipse alpha channel                                     //
             ////////////////////////////////////////////////////////////////////
             void setAlpha(float alpha);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Render oval                                                  //
+            //  Render ellipse                                                //
             ////////////////////////////////////////////////////////////////////
             void render(Renderer& renderer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Oval private copy constructor : Not copyable                  //
+            //  EllipseShape private copy constructor : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            Oval(const Oval&) = delete;
+            EllipseShape(const EllipseShape&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Oval private copy operator : Not copyable                     //
+            //  EllipseShape private copy operator : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            Oval& operator=(const Oval&) = delete;
+            EllipseShape& operator=(const EllipseShape&) = delete;
 
 
         private:
-            Vector4             m_color;            // Oval color
+            Vector4             m_color;            // Ellipse color
     };
 
 
-#endif // VOS_RENDERER_SHAPES_OVAL_HEADER
+#endif // VOS_RENDERER_SHAPES_ELLIPSESHAPE_HEADER

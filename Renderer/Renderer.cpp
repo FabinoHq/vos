@@ -66,8 +66,8 @@ m_vertexBuffer(),
 m_layout(),
 m_pipeline(),
 m_ninePatchPipeline(),
-m_rectPipeline(),
-m_ovalPipeline(),
+m_rectanglePipeline(),
+m_ellipsePipeline(),
 m_pxTextPipeline(),
 m_staticMeshPipeline(),
 m_view(),
@@ -362,32 +362,32 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create rect pipeline
-    m_rectPipeline.createVertexShader(
+    // Create rectangle pipeline
+    m_rectanglePipeline.createVertexShader(
         *this, DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_rectPipeline.createFragmentShader(
-        *this, RectFragmentShader, RectFragmentShaderSize
+    m_rectanglePipeline.createFragmentShader(
+        *this, RectangleFragmentShader, RectangleFragmentShaderSize
     );
-    if (!m_rectPipeline.createPipeline(*this))
+    if (!m_rectanglePipeline.createPipeline(*this))
     {
-        // Could not create rect pipeline
-        SysMessage::box() << "[0x304D] Could not create rect pipeline\n";
+        // Could not create rectangle pipeline
+        SysMessage::box() << "[0x304D] Could not create rectangle pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
-    // Create oval pipeline
-    m_ovalPipeline.createVertexShader(
+    // Create ellipse pipeline
+    m_ellipsePipeline.createVertexShader(
         *this, DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_ovalPipeline.createFragmentShader(
-        *this, OvalFragmentShader, OvalFragmentShaderSize
+    m_ellipsePipeline.createFragmentShader(
+        *this, EllipseFragmentShader, EllipseFragmentShaderSize
     );
-    if (!m_ovalPipeline.createPipeline(*this))
+    if (!m_ellipsePipeline.createPipeline(*this))
     {
-        // Could not create oval pipeline
-        SysMessage::box() << "[0x304E] Could not create oval pipeline\n";
+        // Could not create ellipse pipeline
+        SysMessage::box() << "[0x304E] Could not create ellipse pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -875,11 +875,11 @@ void Renderer::cleanup()
             // Destroy pixel text pipeline
             m_pxTextPipeline.destroyPipeline(*this);
 
-            // Destroy oval pipeline
-            m_ovalPipeline.destroyPipeline(*this);
+            // Destroy ellipse pipeline
+            m_ellipsePipeline.destroyPipeline(*this);
 
-            // Destroy rect pipeline
-            m_rectPipeline.destroyPipeline(*this);
+            // Destroy rectangle pipeline
+            m_rectanglePipeline.destroyPipeline(*this);
 
             // Destroy ninepatch pipeline
             m_ninePatchPipeline.destroyPipeline(*this);
@@ -989,19 +989,19 @@ void Renderer::bindNinePatchPipeline()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer rect pipeline                                               //
+//  Bind renderer rectangle pipeline                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindRectPipeline()
+void Renderer::bindRectanglePipeline()
 {
-    m_rectPipeline.bind(*this);
+    m_rectanglePipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer oval pipeline                                               //
+//  Bind renderer ellipse pipeline                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindOvalPipeline()
+void Renderer::bindEllipsePipeline()
 {
-    m_ovalPipeline.bind(*this);
+    m_ellipsePipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

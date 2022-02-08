@@ -69,8 +69,8 @@
 
     #include "Shaders/Default.h"
     #include "Shaders/NinePatch.h"
-    #include "Shaders/Rect.h"
-    #include "Shaders/Oval.h"
+    #include "Shaders/Rectangle.h"
+    #include "Shaders/Ellipse.h"
     #include "Shaders/PxText.h"
     #include "Shaders/StaticMesh.h"
 
@@ -185,14 +185,14 @@
             void bindNinePatchPipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer rect pipeline                                   //
+            //  Bind renderer rectangle pipeline                              //
             ////////////////////////////////////////////////////////////////////
-            void bindRectPipeline();
+            void bindRectanglePipeline();
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer oval pipeline                                   //
+            //  Bind renderer ellipse pipeline                                //
             ////////////////////////////////////////////////////////////////////
-            void bindOvalPipeline();
+            void bindEllipsePipeline();
 
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer pixel text pipeline                             //
@@ -350,8 +350,8 @@
             GraphicsLayout      m_layout;               // Graphics layout
             Pipeline            m_pipeline;             // Default pipeline
             Pipeline            m_ninePatchPipeline;    // NinePatch pipeline
-            Pipeline            m_rectPipeline;         // Rect pipeline
-            Pipeline            m_ovalPipeline;         // Oval pipeline
+            Pipeline            m_rectanglePipeline;    // Rectangle pipeline
+            Pipeline            m_ellipsePipeline;      // Ellipse pipeline
             Pipeline            m_pxTextPipeline;       // Pixel text pipeline
             Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
             View                m_view;                 // Default view

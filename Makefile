@@ -61,7 +61,7 @@ VOS: main.o \
 	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
-	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
+	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o
@@ -82,17 +82,19 @@ VOS: main.o \
 	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
-	Renderer/Shapes/Rect.o Renderer/Shapes/Oval.o \
+	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
+
 
 main.o: main.cpp
 	$(CC) -o main.o -c main.cpp $(CFLAGS)
 
 Vos.o: Vos.cpp
 	$(CC) -o Vos.o -c Vos.cpp $(CFLAGS)
+
 
 System/SysSleep.o: System/SysSleep.cpp
 	$(CC) -o System/SysSleep.o -c System/SysSleep.cpp $(CFLAGS)
@@ -192,11 +194,15 @@ Renderer/Sprite.o: Renderer/Sprite.cpp
 Renderer/ProcSprite.o: Renderer/ProcSprite.cpp
 	$(CC) -o Renderer/ProcSprite.o -c Renderer/ProcSprite.cpp $(CFLAGS)
 
-Renderer/Shapes/Rect.o: Renderer/Shapes/Rect.cpp
-	$(CC) -o Renderer/Shapes/Rect.o -c Renderer/Shapes/Rect.cpp $(CFLAGS)
 
-Renderer/Shapes/Oval.o: Renderer/Shapes/Oval.cpp
-	$(CC) -o Renderer/Shapes/Oval.o -c Renderer/Shapes/Oval.cpp $(CFLAGS)
+Renderer/Shapes/RectangleShape.o: Renderer/Shapes/RectangleShape.cpp
+	$(CC) -o Renderer/Shapes/RectangleShape.o -c \
+	Renderer/Shapes/RectangleShape.cpp $(CFLAGS)
+
+Renderer/Shapes/EllipseShape.o: Renderer/Shapes/EllipseShape.cpp
+	$(CC) -o Renderer/Shapes/EllipseShape.o -c \
+	Renderer/Shapes/EllipseShape.cpp $(CFLAGS)
+
 
 Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
 	$(CC) -o Renderer/GUI/GUIPxText.o -c Renderer/GUI/GUIPxText.cpp $(CFLAGS)
@@ -204,14 +210,17 @@ Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
 Renderer/GUI/GUIWindow.o: Renderer/GUI/GUIWindow.cpp
 	$(CC) -o Renderer/GUI/GUIWindow.o -c Renderer/GUI/GUIWindow.cpp $(CFLAGS)
 
+
 Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 	$(CC) -o Renderer/StaticMesh.o -c Renderer/StaticMesh.cpp $(CFLAGS)
 
 Renderer/HeightMapChunk.o: Renderer/HeightMapChunk.cpp
 	$(CC) -o Renderer/HeightMapChunk.o -c Renderer/HeightMapChunk.cpp $(CFLAGS)
 
+
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
+
 
 clean:
 	rm -rf *.o

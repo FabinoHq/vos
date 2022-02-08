@@ -54,8 +54,8 @@ m_view(),
 m_camera(),
 m_freeflycam(),
 m_procSprite(),
-m_rect(),
-m_oval(),
+m_rectanle(),
+m_ellipse(),
 m_pxFontTexture(),
 m_pxText(),
 m_windowTexture(),
@@ -138,17 +138,17 @@ bool Vos::launch()
         return false;
     }
 
-    // Init rect shape
-    if (!m_rect.init(1.0f, 1.0f))
+    // Init rectangle shape
+    if (!m_rectanle.init(1.0f, 1.0f))
     {
-        // Could not init rect shape
+        // Could not init rectangle shape
         return false;
     }
 
-    // Init oval shape
-    if (!m_oval.init(1.0f, 1.0f))
+    // Init ellipse shape
+    if (!m_ellipse.init(1.0f, 1.0f))
     {
-        // Could not init oval shape
+        // Could not init ellipse shape
         return false;
     }
 
@@ -442,20 +442,20 @@ void Vos::run()
             m_renderer.bindDefaultVertexBuffer();
 
             // Render rectangle
-            /*m_renderer.bindRectPipeline();
-            m_rect.render(m_renderer);*/
+            /*m_renderer.bindRectanglePipeline();
+            m_rectanle.render(m_renderer);*/
 
             // Render ellipse
-            /*m_renderer.bindOvalPipeline();
-            m_oval.render(m_renderer);*/
+            /*m_renderer.bindEllipsePipeline();
+            m_ellipse.render(m_renderer);*/
 
             // Render procedural sprite
             /*m_procSprite.bindPipeline(m_renderer);
             m_procSprite.render(m_renderer);*/
 
             // Render window
-            m_renderer.bindNinePatchPipeline();
-            m_guiWindow.render(m_renderer);
+            /*m_renderer.bindNinePatchPipeline();
+            m_guiWindow.render(m_renderer);*/
 
             // Render pixel text (framerate)
             m_renderer.bindPxTextPipeline();
