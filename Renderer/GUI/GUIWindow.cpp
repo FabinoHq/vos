@@ -256,6 +256,7 @@ void GUIWindow::setMinSize(const Vector2& minSize)
 {
     m_minSize.vec[0] = minSize.vec[0];
     m_minSize.vec[1] = minSize.vec[1];
+    clampWindowSize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,6 +266,7 @@ void GUIWindow::setMinSize(float minWidth, float minHeight)
 {
     m_minSize.vec[0] = minWidth;
     m_minSize.vec[1] = minHeight;
+    clampWindowSize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -274,6 +276,7 @@ void GUIWindow::setMaxSize(const Vector2& maxSize)
 {
     m_maxSize.vec[0] = maxSize.vec[0];
     m_maxSize.vec[1] = maxSize.vec[1];
+    clampWindowSize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -283,6 +286,7 @@ void GUIWindow::setMaxSize(float maxWidth, float maxHeight)
 {
     m_maxSize.vec[0] = maxWidth;
     m_maxSize.vec[1] = maxHeight;
+    clampWindowSize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -657,6 +661,7 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
         m_position.vec[1] = (m_grabPosition.vec[1] + mouseY);
         return true;
     }
+
     return false;
 }
 
