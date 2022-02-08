@@ -292,7 +292,7 @@
             bool                m_grabBottom;       // Bottom grabbing state
             bool                m_grabLeft;         // Left grabbing state
             bool                m_grabRight;        // Right grabbing state
-            Vector2             m_grabPosition;     // Window grabbing position
+            Vector2             m_grabVector;       // Window grabbing vector
     };
 
 
