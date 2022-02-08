@@ -149,6 +149,9 @@
     <ClCompile Include="Renderer\Shapes\CuboidShape.cpp">
       <Filter>Renderer\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\SkyBox.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -344,6 +347,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shapes\CuboidShape.h">
       <Filter>Renderer\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\SkyBox.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

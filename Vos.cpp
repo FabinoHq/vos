@@ -53,6 +53,7 @@ m_clock(),
 m_view(),
 m_camera(),
 m_freeflycam(),
+m_skybox(),
 m_procSprite(),
 m_rectanle(),
 m_ellipse(),
@@ -130,6 +131,14 @@ bool Vos::launch()
     }
     m_freeflycam.setZ(1.0f);
     m_freeflycam.setSpeed(5.0f);
+
+
+    // Init skybox
+    if (!m_skybox.init(m_renderer))
+    {
+        // Could not init skybox
+        return false;
+    }
 
 
     // Init procedural sprite
@@ -432,15 +441,23 @@ void Vos::run()
             // Set freefly camera
             m_renderer.setCamera(m_freeflycam);
 
+            // Render skybox
+            m_renderer.bindSkyBoxPipeline();
+            m_skybox.setColor(0.12f, 0.3f, 0.5f, 1.0f);
+            m_skybox.setPosition(m_freeflycam.getPosition());
+            m_skybox.bindVertexBuffer(m_renderer);
+            m_skybox.render(m_renderer);
+
             // Render cuboid shape
-            m_renderer.bindShapePipeline();
+            /*m_renderer.bindShapePipeline();
             m_cuboid.bindVertexBuffer(m_renderer);
-            m_cuboid.render(m_renderer);
+            m_cuboid.render(m_renderer);*/
 
             // Render static mesh
-            /*m_renderer.bindStaticMeshPipeline();
+            m_renderer.bindStaticMeshPipeline();
             m_staticMesh.bindVertexBuffer(m_renderer);
-            m_staticMesh.render(m_renderer);*/
+            m_staticMesh.setX(3.0f);
+            m_staticMesh.render(m_renderer);
 
             // Render heightmap chunk
             /*m_renderer.bindStaticMeshPipeline();
@@ -508,6 +525,9 @@ void Vos::run()
 
         // Destroy procedural sprite
         m_procSprite.destroyProcSprite(m_renderer);
+
+        // Destroy skybox
+        m_skybox.destroySkyBox(m_renderer);
 
 
         // Destroy freefly camera

@@ -64,6 +64,7 @@ VOS: main.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
+	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o
 
@@ -86,6 +87,7 @@ VOS: main.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
+	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
 	main.o $(LDFLAGS)
@@ -216,6 +218,9 @@ Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
 Renderer/GUI/GUIWindow.o: Renderer/GUI/GUIWindow.cpp
 	$(CC) -o Renderer/GUI/GUIWindow.o -c Renderer/GUI/GUIWindow.cpp $(CFLAGS)
 
+
+Renderer/SkyBox.o: Renderer/SkyBox.cpp
+	$(CC) -o Renderer/SkyBox.o -c Renderer/SkyBox.cpp $(CFLAGS)
 
 Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 	$(CC) -o Renderer/StaticMesh.o -c Renderer/StaticMesh.cpp $(CFLAGS)

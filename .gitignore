@@ -121,6 +121,8 @@
 !Renderer/Sprite.cpp
 !Renderer/ProcSprite.h
 !Renderer/ProcSprite.cpp
+!Renderer/SkyBox.h
+!Renderer/SkyBox.cpp
 !Renderer/StaticMesh.h
 !Renderer/StaticMesh.cpp
 !Renderer/HeightMapChunk.h

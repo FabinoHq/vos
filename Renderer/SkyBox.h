@@ -37,65 +37,64 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shapes/CuboidShape.h : Cuboid shape management                //
+//     Renderer/SkyBox.h : SkyBox management                                  //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER
-#define VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER
+#ifndef VOS_RENDERER_SKYBOX_HEADER
+#define VOS_RENDERER_SKYBOX_HEADER
 
-    #include "../Vulkan/VertexBuffer.h"
-    #include "../Shader.h"
-    #include "../../Math/Math.h"
-    #include "../../Math/Vector4.h"
-    #include "../../Math/Matrix4x4.h"
-    #include "../../Math/Transform3.h"
+    #include "Vulkan/VertexBuffer.h"
+    #include "Shader.h"
+    #include "../Math/Math.h"
+    #include "../Math/Vector4.h"
+    #include "../Math/Matrix4x4.h"
+    #include "../Math/Transform3.h"
 
     #include <cstdint>
-    #include <cstring>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  CuboidShape vertex buffer vertices                                    //
+    //  SkyBox vertex buffer vertices                                         //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t CuboidShapeVerticesCount = 192;
-    const float CuboidShapeVertices[CuboidShapeVerticesCount] =
+    const uint32_t SkyBoxVerticesCount = 192;
+    const float SkyBoxVertices[SkyBoxVerticesCount] =
     {
         // Front face (+Z)
-        -0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-        0.5f, 0.5f, 0.5f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-        -0.5f, 0.5f, 0.5f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+        0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
         // Back face (-Z)
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f, 0.0f, -1.0f,
-        -0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
-        0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+        0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
+        -0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  0.0f, 0.0f, -1.0f,
+        -0.5f, 0.5f, 0.5f,  1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+        0.5f, 0.5f, 0.5f,  0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
         // Top face (+Y)
-        -0.5f, 0.5f, 0.5f,  0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.5f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
         // Bottom face (-Y)
-        0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  0.0f, -1.0f, 0.0f,
-        -0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f,  0.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  0.0f, -1.0f, 0.0f,
         // Left face (-X)
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.5f,  1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.5f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f,  1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+        0.5f, 0.5f, -0.5f,  0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
         // Right face (+X)
-        0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-        0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-        0.5f, 0.5f, 0.5f,  0.0f, 0.0f,  1.0f, 0.0f, 0.0f
+        -0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f,  0.0f, 0.0f,  1.0f, 0.0f, 0.0f
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  CuboidShape vertex buffer indices                                     //
+    //  SkyBox vertex buffer indices                                          //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t CuboidShapeIndicesCount = 36;
-    const uint16_t CuboidShapeIndices[CuboidShapeIndicesCount] =
+    const uint32_t SkyBoxIndicesCount = 36;
+    const uint16_t SkyBoxIndices[SkyBoxIndicesCount] =
     {
         0, 1, 2,
         2, 3, 0,
@@ -119,101 +118,92 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  CuboidShape class definition                                          //
+    //  SkyBox class definition                                               //
     ////////////////////////////////////////////////////////////////////////////
-    class CuboidShape : public Transform3
+    class SkyBox : public Transform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  CuboidShape default constructor                               //
+            //  SkyBox default constructor                                    //
             ////////////////////////////////////////////////////////////////////
-            CuboidShape();
+            SkyBox();
 
             ////////////////////////////////////////////////////////////////////
-            //  CuboidShape virtual destructor                                //
+            //  SkyBox virtual destructor                                     //
             ////////////////////////////////////////////////////////////////////
-            virtual ~CuboidShape();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init cuboid                                                   //
-            //  return : True if the cuboid is successfully created           //
-            ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer,
-                float width, float height, float depth);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set cuboid size                                               //
-            //  return : True if the cuboid is size is successfully set       //
-            ////////////////////////////////////////////////////////////////////
-            bool setSize(Renderer& renderer,
-                float width, float height, float depth);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy cuboid                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyCuboid(Renderer& renderer);
+            virtual ~SkyBox();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set cuboid color                                              //
+            //  Init skybox                                                   //
+            //  return : True if the skybox is successfully created           //
+            ////////////////////////////////////////////////////////////////////
+            bool init(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy skybox                                                //
+            ////////////////////////////////////////////////////////////////////
+            void destroySkyBox(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set skybox color                                              //
             ////////////////////////////////////////////////////////////////////
             void setColor(const Vector4& color);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set cuboid color                                              //
+            //  Set skybox color                                              //
             ////////////////////////////////////////////////////////////////////
             void setColor(float red, float green, float blue, float alpha);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set cuboid red channel                                        //
+            //  Set skybox red channel                                        //
             ////////////////////////////////////////////////////////////////////
             void setRed(float red);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set cuboid green channel                                      //
+            //  Set skybox green channel                                      //
             ////////////////////////////////////////////////////////////////////
             void setGreen(float green);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set cuboid blue channel                                       //
+            //  Set skybox blue channel                                       //
             ////////////////////////////////////////////////////////////////////
             void setBlue(float blue);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set cuboid alpha channel                                      //
+            //  Set skybox alpha channel                                      //
             ////////////////////////////////////////////////////////////////////
             void setAlpha(float alpha);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind cuboid vertex buffer                                     //
+            //  Bind skybox vertex buffer                                     //
             ////////////////////////////////////////////////////////////////////
             void bindVertexBuffer(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render cuboid                                                 //
+            //  Render skybox                                                 //
             ////////////////////////////////////////////////////////////////////
             void render(Renderer& renderer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  CuboidShape private copy constructor : Not copyable           //
+            //  SkyBox private copy constructor : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            CuboidShape(const CuboidShape&) = delete;
+            SkyBox(const SkyBox&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  CuboidShape private copy operator : Not copyable              //
+            //  SkyBox private copy operator : Not copyable                   //
             ////////////////////////////////////////////////////////////////////
-            CuboidShape& operator=(const CuboidShape&) = delete;
+            SkyBox& operator=(const SkyBox&) = delete;
 
 
         private:
-            float               m_vertices[CuboidShapeVerticesCount];
-            VertexBuffer        m_vertexBuffer;     // Cuboid vertex buffer
-            Vector4             m_color;            // Cuboid color
+            VertexBuffer        m_vertexBuffer;     // SkyBox vertex buffer
+            Vector4             m_color;            // SkyBox color
     };
 
 
-#endif // VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER
+#endif // VOS_RENDERER_SKYBOX_HEADER

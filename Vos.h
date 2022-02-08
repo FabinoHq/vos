@@ -54,6 +54,7 @@
     #include "Renderer/FreeFlyCam.h"
     #include "Renderer/Sprite.h"
     #include "Renderer/ProcSprite.h"
+    #include "Renderer/SkyBox.h"
 
     #include "Renderer/Shapes/RectangleShape.h"
     #include "Renderer/Shapes/EllipseShape.h"
@@ -124,6 +125,8 @@
             View            m_view;             // View
             Camera          m_camera;           // Camera
             FreeFlyCam      m_freeflycam;       // Freefly camera
+
+            SkyBox          m_skybox;           // SkyBox
 
             ProcSprite      m_procSprite;       // Procedural sprite
             RectangleShape  m_rectanle;         // Rectangle shape

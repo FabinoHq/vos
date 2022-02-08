@@ -151,6 +151,7 @@
     <ClCompile Include="Renderer\Shapes\CuboidShape.cpp" />
     <ClCompile Include="Renderer\Shapes\EllipseShape.cpp" />
     <ClCompile Include="Renderer\Shapes\RectangleShape.cpp" />
+    <ClCompile Include="Renderer\SkyBox.cpp" />
     <ClCompile Include="Renderer\Sprite.cpp" />
     <ClCompile Include="Renderer\StaticMesh.cpp" />
     <ClCompile Include="Renderer\Texture.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="Renderer\Shapes\CuboidShape.h" />
     <ClInclude Include="Renderer\Shapes\EllipseShape.h" />
     <ClInclude Include="Renderer\Shapes\RectangleShape.h" />
+    <ClInclude Include="Renderer\SkyBox.h" />
     <ClInclude Include="Renderer\Sprite.h" />
     <ClInclude Include="Renderer\StaticMesh.h" />
     <ClInclude Include="Renderer\Texture.h" />

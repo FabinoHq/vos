@@ -70,6 +70,7 @@ m_rectanglePipeline(),
 m_ellipsePipeline(),
 m_shapePipeline(),
 m_pxTextPipeline(),
+m_skyBoxPipeline(),
 m_staticMeshPipeline(),
 m_view(),
 m_cursorTexture(),
@@ -424,6 +425,22 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create skybox pipeline
+    m_skyBoxPipeline.createVertexShader(
+        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
+    );
+    m_skyBoxPipeline.createFragmentShader(
+        *this, DefaultProcFragmentShader, DefaultProcFragmentShaderSize
+    );
+    if (!m_skyBoxPipeline.createPipeline(
+        *this, VERTEX_INPUTS_STATICMESH, false, true))
+    {
+        // Could not create skybox pipeline
+        SysMessage::box() << "[0x3051] Could not create skybox pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create static mesh pipeline
     m_staticMeshPipeline.createVertexShader(
         *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
@@ -435,7 +452,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
-        SysMessage::box() << "[0x3051] Could not create static mesh pipeline\n";
+        SysMessage::box() << "[0x3052] Could not create static mesh pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -447,7 +464,7 @@ bool Renderer::init(SysWindow* sysWindow)
         DefaultVerticesCount, DefaultIndicesCount))
     {
         // Could not create default vertex buffer
-        SysMessage::box() << "[0x3052] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3053] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -889,6 +906,9 @@ void Renderer::cleanup()
             // Destroy static mesh pipeline
             m_staticMeshPipeline.destroyPipeline(*this);
 
+            // Destroy skybox pipeline
+            m_skyBoxPipeline.destroyPipeline(*this);
+
             // Destroy pixel text pipeline
             m_pxTextPipeline.destroyPipeline(*this);
 
@@ -1035,6 +1055,14 @@ void Renderer::bindShapePipeline()
 void Renderer::bindPxTextPipeline()
 {
     m_pxTextPipeline.bind(*this);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer skybox pipeline                                             //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindSkyBoxPipeline()
+{
+    m_skyBoxPipeline.bind(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

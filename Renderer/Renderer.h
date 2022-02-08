@@ -206,6 +206,11 @@
             void bindPxTextPipeline();
 
             ////////////////////////////////////////////////////////////////////
+            //  Bind renderer skybox pipeline                                 //
+            ////////////////////////////////////////////////////////////////////
+            void bindSkyBoxPipeline();
+
+            ////////////////////////////////////////////////////////////////////
             //  Bind renderer static mesh pipeline                            //
             ////////////////////////////////////////////////////////////////////
             void bindStaticMeshPipeline();
@@ -360,6 +365,7 @@
             Pipeline            m_ellipsePipeline;      // Ellipse pipeline
             Pipeline            m_shapePipeline;        // Shape pipeline
             Pipeline            m_pxTextPipeline;       // Pixel text pipeline
+            Pipeline            m_skyBoxPipeline;       // SkyBox pipeline
             Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
             View                m_view;                 // Default view
 
