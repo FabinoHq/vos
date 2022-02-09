@@ -73,6 +73,7 @@
     #include "Shaders/PxText.h"
     #include "Shaders/SkyBox.h"
     #include "Shaders/StaticMesh.h"
+    #include "Shaders/StaticProc.h"
 
     #include "../Images/Embedded/Cursor.h"
     #include "../Images/Embedded/NSCursor.h"

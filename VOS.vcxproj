@@ -213,6 +213,7 @@
     <ClInclude Include="Renderer\Shaders\PxText.h" />
     <ClInclude Include="Renderer\Shaders\Rectangle.h" />
     <ClInclude Include="Renderer\Shaders\StaticMesh.h" />
+    <ClInclude Include="Renderer\Shaders\StaticProc.h" />
     <ClInclude Include="Renderer\Shapes\CuboidShape.h" />
     <ClInclude Include="Renderer\Shapes\EllipseShape.h" />
     <ClInclude Include="Renderer\Shapes\RectangleShape.h" />

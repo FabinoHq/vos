@@ -399,7 +399,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
     );
     m_shapePipeline.createFragmentShader(
-        *this, DefaultProcFragmentShader, DefaultProcFragmentShaderSize
+        *this, StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
     if (!m_shapePipeline.createPipeline(
         *this, VERTEX_INPUTS_STATICMESH, true, true))
@@ -911,6 +911,9 @@ void Renderer::cleanup()
 
             // Destroy pixel text pipeline
             m_pxTextPipeline.destroyPipeline(*this);
+
+            // Destroy shape pipepline
+            m_shapePipeline.destroyPipeline(*this);
 
             // Destroy ellipse pipeline
             m_ellipsePipeline.destroyPipeline(*this);

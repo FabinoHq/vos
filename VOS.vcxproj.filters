@@ -357,5 +357,8 @@
     <ClInclude Include="Renderer\CubeMap.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Shaders\StaticProc.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

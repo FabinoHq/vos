@@ -250,6 +250,6 @@ void CuboidShape::render(Renderer& renderer)
     // Draw cuboid triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        CuboidShapeVerticesCount, 1, 0, 0, 0
+        CuboidShapeIndicesCount, 1, 0, 0, 0
     );
 }

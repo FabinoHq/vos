@@ -390,7 +390,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
     subresourceRange.baseMipLevel = 0;
     subresourceRange.levelCount = 1;
     subresourceRange.baseArrayLayer = 0;
-    subresourceRange.layerCount = 1;
+    subresourceRange.layerCount = 6;
 
     VkImageMemoryBarrier undefinedToTransfer;
     undefinedToTransfer.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;

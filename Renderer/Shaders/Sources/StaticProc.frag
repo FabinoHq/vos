@@ -37,7 +37,7 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/DefaultProc.frag : Procedural fragment shader //
+//     Renderer/Shaders/Sources/StaticProc.frag : Static procedural shader    //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision highp float;
@@ -55,6 +55,7 @@ layout(push_constant) uniform Constants
 
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
+layout(location = 1) in vec3 i_normals;
 layout(location = 0) out vec4 o_color;
 void main()
 {

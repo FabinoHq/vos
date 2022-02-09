@@ -544,14 +544,13 @@ void Vos::run()
             m_skybox.render(m_renderer);
 
             // Render cuboid shape
-            m_renderer.bindShapePipeline();
+            /*m_renderer.bindShapePipeline();
             m_cuboid.bindVertexBuffer(m_renderer);
-            m_cuboid.render(m_renderer);
+            m_cuboid.render(m_renderer);*/
 
             // Render static mesh
             m_renderer.bindStaticMeshPipeline();
             m_staticMesh.bindVertexBuffer(m_renderer);
-            m_staticMesh.setX(3.0f);
             m_staticMesh.render(m_renderer);
 
             // Render heightmap chunk
@@ -623,6 +622,9 @@ void Vos::run()
 
         // Destroy skybox
         m_skybox.destroySkyBox(m_renderer);
+
+        // Destroy cubemap
+        m_cubemap.destroyCubeMap(m_renderer);
 
 
         // Destroy freefly camera
