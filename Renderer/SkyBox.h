@@ -55,7 +55,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  SkyBox vertex buffer vertices                                         //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t SkyBoxVerticesCount = 192;
+    const uint32_t SkyBoxVerticesCount = 72;
     const float SkyBoxVertices[SkyBoxVerticesCount] =
     {
         // Front face (+Z)
