@@ -42,7 +42,6 @@
 #ifndef VOS_RENDERER_SHAPES_RECTANGLESHAPE_HEADER
 #define VOS_RENDERER_SHAPES_RECTANGLESHAPE_HEADER
 
-    #include "../Shader.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector4.h"
     #include "../../Math/Matrix4x4.h"

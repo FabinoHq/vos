@@ -111,6 +111,8 @@
 !Renderer/Shader.cpp
 !Renderer/Texture.h
 !Renderer/Texture.cpp
+!Renderer/CubeMap.h
+!Renderer/CubeMap.cpp
 !Renderer/View.h
 !Renderer/View.cpp
 !Renderer/Camera.h

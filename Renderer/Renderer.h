@@ -56,6 +56,7 @@
     #include "Pipeline.h"
     #include "Shader.h"
     #include "Texture.h"
+    #include "CubeMap.h"
     #include "View.h"
     #include "Camera.h"
     #include "FreeFlyCam.h"

@@ -53,6 +53,7 @@ m_clock(),
 m_view(),
 m_camera(),
 m_freeflycam(),
+m_cubemap(),
 m_skybox(),
 m_procSprite(),
 m_rectanle(),
@@ -133,8 +134,23 @@ bool Vos::launch()
     m_freeflycam.setSpeed(5.0f);
 
 
+    // Load cubemap texture
+    PNGFile cubeMapZP;
+    if (!cubeMapZP.loadImage("Textures/testsprite.png"))
+    {
+        return false;
+    }
+    if (!m_cubemap.updateCubeMap(m_renderer,
+        cubeMapZP.getWidth(), cubeMapZP.getHeight(), cubeMapZP.getImage(),
+        true))
+    {
+        // Could not load cubemap texture
+        return false;
+    }
+    cubeMapZP.destroyImage();
+
     // Init skybox
-    if (!m_skybox.init(m_renderer))
+    if (!m_skybox.init(m_renderer, m_cubemap))
     {
         // Could not init skybox
         return false;
@@ -405,15 +421,15 @@ void Vos::run()
                     m_freeflycam.mouseMove(
                         event.mouse.x*1.0f, event.mouse.y*1.0f
                     );
-                    m_guiWindow.mouseMove(m_mouseX, m_mouseY);
-                    m_guiWindow.updateCursor(m_renderer, m_mouseX, m_mouseY);
+                    //m_guiWindow.mouseMove(m_mouseX, m_mouseY);
+                    //m_guiWindow.updateCursor(m_renderer, m_mouseX, m_mouseY);
                     break;
 
                 // Mouse button pressed
                 case EVENT_MOUSEPRESSED:
                     if (event.mouse.button == EVENT_MOUSE_LEFT)
                     {
-                        m_guiWindow.mousePress(m_mouseX, m_mouseY);
+                        //m_guiWindow.mousePress(m_mouseX, m_mouseY);
                     }
                     break;
 
@@ -421,7 +437,7 @@ void Vos::run()
                 case EVENT_MOUSERELEASED:
                     if (event.mouse.button == EVENT_MOUSE_LEFT)
                     {
-                        m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
+                        //m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
                     }
                     break;
 
@@ -443,15 +459,14 @@ void Vos::run()
 
             // Render skybox
             m_renderer.bindSkyBoxPipeline();
-            m_skybox.setColor(0.12f, 0.3f, 0.5f, 1.0f);
             m_skybox.setPosition(m_freeflycam.getPosition());
             m_skybox.bindVertexBuffer(m_renderer);
             m_skybox.render(m_renderer);
 
             // Render cuboid shape
-            /*m_renderer.bindShapePipeline();
+            m_renderer.bindShapePipeline();
             m_cuboid.bindVertexBuffer(m_renderer);
-            m_cuboid.render(m_renderer);*/
+            m_cuboid.render(m_renderer);
 
             // Render static mesh
             m_renderer.bindStaticMeshPipeline();

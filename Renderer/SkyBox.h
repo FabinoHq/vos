@@ -43,7 +43,7 @@
 #define VOS_RENDERER_SKYBOX_HEADER
 
     #include "Vulkan/VertexBuffer.h"
-    #include "Shader.h"
+    #include "CubeMap.h"
     #include "../Math/Math.h"
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
@@ -138,7 +138,7 @@
             //  Init skybox                                                   //
             //  return : True if the skybox is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer);
+            bool init(Renderer& renderer, CubeMap& cubemap);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy skybox                                                //
@@ -202,6 +202,7 @@
 
         private:
             VertexBuffer        m_vertexBuffer;     // SkyBox vertex buffer
+            CubeMap*            m_cubemap;          // SkyBox cubemap pointer
             Vector4             m_color;            // SkyBox color
     };
 

@@ -42,6 +42,7 @@
 #include "VulkanMemory.h"
 #include "VulkanBuffer.h"
 #include "../Texture.h"
+#include "../CubeMap.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -744,6 +745,115 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
 //  Free texture memory                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanMemory::freeTextureMemory(VkDevice& vulkanDevice, Texture& texture)
+{
+    // Free image memory
+    if (m_memoryReady && vulkanDevice)
+    {
+        //vkFreeMemory(vulkanDevice, memory, 0);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Allocate cubemap memory                                                   //
+//  return : True if cubemap memory is successfully allocated                 //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanMemory::allocateCubeMapMemory(VkDevice& vulkanDevice,
+    CubeMap& cubemap)
+{
+    // Check Vulkan memory
+    if (!m_memoryReady)
+    {
+        // Vulkan memory is not ready
+        return false;
+    }
+
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Check cubemap handle
+    if (!cubemap.isValid())
+    {
+        // Invalid cubemap handle
+        return false;
+    }
+
+    // Get memory requirements
+    VkMemoryRequirements memoryRequirements;
+    cubemap.getMemoryRequirements(vulkanDevice, &memoryRequirements);
+
+    // Check memory requirements size
+    if (memoryRequirements.size <= 0)
+    {
+        // Invalid memory requirements size
+        return false;
+    }
+
+    // Check memory type bits
+    if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
+    {
+        // Invalid memory type bits
+        return false;
+    }
+
+    // Compute memory alignment
+    VkDeviceSize size = memoryRequirements.size;
+    VkDeviceSize alignment = m_memoryAlignment;
+    if (memoryRequirements.alignment >= alignment)
+    {
+        alignment = memoryRequirements.alignment;
+        if ((alignment % m_memoryAlignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+    else
+    {
+        if ((alignment % memoryRequirements.alignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+
+    // Adjust memory size according to alignment
+    VkDeviceSize sizeOffset = (size % alignment);
+    if (sizeOffset != 0)
+    {
+        size += (alignment - sizeOffset);
+    }
+
+    // Adjust memory start offset according to alignment
+    VkDeviceSize startOffset = (m_deviceMemoryOffset % alignment);
+    if (startOffset != 0)
+    {
+        m_deviceMemoryOffset += (alignment - startOffset);
+    }
+
+    // Bind cubemap memory
+    if (!cubemap.bindCubeMapMemory(
+        vulkanDevice, m_deviceMemory, size, m_deviceMemoryOffset))
+    {
+        // Could not bind cubemap memory
+        return false;
+    }
+
+    // Update current memory offset
+    m_deviceMemoryOffset += size;
+
+    // CubeMap memory successfully allocated
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Free cubemap memory                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void VulkanMemory::freeCubeMapMemory(VkDevice& vulkanDevice, CubeMap& cubemap)
 {
     // Free image memory
     if (m_memoryReady && vulkanDevice)

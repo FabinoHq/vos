@@ -430,7 +430,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
     );
     m_skyBoxPipeline.createFragmentShader(
-        *this, DefaultProcFragmentShader, DefaultProcFragmentShaderSize
+        *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_skyBoxPipeline.createPipeline(
         *this, VERTEX_INPUTS_STATICMESH, false, true))

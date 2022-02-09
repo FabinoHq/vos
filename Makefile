@@ -58,7 +58,8 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
-	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
+	Renderer/Pipeline.o Renderer/Shader.o \
+	Renderer/Texture.o Renderer/CubeMap.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
@@ -81,7 +82,8 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
-	Renderer/Pipeline.o Renderer/Shader.o Renderer/Texture.o \
+	Renderer/Pipeline.o Renderer/Shader.o \
+	Renderer/CubeMap.o Renderer/Texture.o \
 	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
@@ -182,6 +184,9 @@ Renderer/Shader.o: Renderer/Shader.cpp
 
 Renderer/Texture.o: Renderer/Texture.cpp
 	$(CC) -o Renderer/Texture.o -c Renderer/Texture.cpp $(CFLAGS)
+
+Renderer/CubeMap.o: Renderer/CubeMap.cpp
+	$(CC) -o Renderer/CubeMap.o -c Renderer/CubeMap.cpp $(CFLAGS)
 
 Renderer/View.o: Renderer/View.cpp
 	$(CC) -o Renderer/View.o -c Renderer/View.cpp $(CFLAGS)

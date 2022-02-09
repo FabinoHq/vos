@@ -37,15 +37,22 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shapes/EllipseShape.h : Ellipse shape management              //
+//     Renderer/CubeMap.h : CubeMap management                                //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHAPES_ELLIPSESHAPE_HEADER
-#define VOS_RENDERER_SHAPES_ELLIPSESHAPE_HEADER
+#ifndef VOS_RENDERER_CUBEMAP_HEADER
+#define VOS_RENDERER_CUBEMAP_HEADER
 
-    #include "../../Math/Math.h"
-    #include "../../Math/Vector4.h"
-    #include "../../Math/Matrix4x4.h"
-    #include "../../Math/Transform2.h"
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/VulkanBuffer.h"
+
+    #include <cstdint>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  CubeMap settings                                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint64_t CubeMapFenceTimeout = 100000000000;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -55,86 +62,93 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  EllipseShape class definition                                         //
+    //  CubeMap class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
-    class EllipseShape : public Transform2
+    class CubeMap
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  EllipseShape default constructor                              //
+            //  CubeMap default constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            EllipseShape();
+            CubeMap();
 
             ////////////////////////////////////////////////////////////////////
-            //  EllipseShape virtual destructor                               //
+            //  CubeMap destructor                                            //
             ////////////////////////////////////////////////////////////////////
-            virtual ~EllipseShape();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init ellipse                                                  //
-            //  return : True if the ellipse is successfully created          //
-            ////////////////////////////////////////////////////////////////////
-            bool init(float width, float height);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set ellipse color                                             //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(const Vector4& color);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set ellipse color                                             //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(float red, float green, float blue, float alpha);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set ellipse red channel                                       //
-            ////////////////////////////////////////////////////////////////////
-            void setRed(float red);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set ellipse green channel                                     //
-            ////////////////////////////////////////////////////////////////////
-            void setGreen(float green);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set ellipse blue channel                                      //
-            ////////////////////////////////////////////////////////////////////
-            void setBlue(float blue);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set ellipse alpha channel                                     //
-            ////////////////////////////////////////////////////////////////////
-            void setAlpha(float alpha);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set ellipse smooth amount                                     //
-            ////////////////////////////////////////////////////////////////////
-            void setSmooth(float smooth);
+            ~CubeMap();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Render ellipse                                                //
+            //  Create cubemap                                                //
+            //  return : True if cubemap is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            void render(Renderer& renderer);
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  EllipseShape private copy constructor : Not copyable          //
-            ////////////////////////////////////////////////////////////////////
-            EllipseShape(const EllipseShape&) = delete;
+            bool createCubeMap(Renderer& renderer,
+                uint32_t width, uint32_t height, bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////
-            //  EllipseShape private copy operator : Not copyable             //
+            //  Update cubemap                                                //
+            //  return : True if cubemap is successfully updated              //
             ////////////////////////////////////////////////////////////////////
-            EllipseShape& operator=(const EllipseShape&) = delete;
+            bool updateCubeMap(Renderer& renderer,
+                uint32_t width, uint32_t height, const unsigned char* data,
+                bool smooth = true);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind cubemap                                                  //
+            ////////////////////////////////////////////////////////////////////
+            void bind(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy cubemap                                               //
+            ////////////////////////////////////////////////////////////////////
+            void destroyCubeMap(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if the cubemap has a valid handle                       //
+            //  return : True if the cubemap is valid                         //
+            ////////////////////////////////////////////////////////////////////
+            bool isValid();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get cubemap memory requirements                               //
+            ////////////////////////////////////////////////////////////////////
+            void getMemoryRequirements(VkDevice& vulkanDevice,
+                VkMemoryRequirements* memoryRequirements);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind cubemap memory                                           //
+            //  return : True if cubemap memory is successfully binded        //
+            ////////////////////////////////////////////////////////////////////
+            bool bindCubeMapMemory(VkDevice& vulkanDevice,
+                VkDeviceMemory& deviceMemory, VkDeviceSize size,
+                VkDeviceSize offset);
 
 
         private:
-            Vector4             m_color;            // Ellipse color
-            float               m_smooth;           // Ellipse smooth amount
+            ////////////////////////////////////////////////////////////////////
+            //  CubeMap private copy constructor : Not copyable               //
+            ////////////////////////////////////////////////////////////////////
+            CubeMap(const CubeMap&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  CubeMap private copy operator : Not copyable                  //
+            ////////////////////////////////////////////////////////////////////
+            CubeMap& operator=(const CubeMap&) = delete;
+
+
+        private:
+            VkImage             m_handle;           // CubeMap handle
+            VkSampler           m_sampler;          // CubeMap sampler
+            VkImageView         m_view;             // CubeMap view
+            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
+
+            VulkanBuffer        m_stagingBuffer;    // Stagging buffer
+            VkDeviceSize        m_memorySize;       // Memory size
+            VkDeviceSize        m_memoryOffset;     // Memory offset
+
+            uint32_t            m_width;            // CubeMap width
+            uint32_t            m_height;           // CubeMap height
     };
 
-
-#endif // VOS_RENDERER_SHAPES_ELLIPSESHAPE_HEADER
+#endif // VOS_RENDERER_CUBEMAP_HEADER

@@ -152,6 +152,9 @@
     <ClCompile Include="Renderer\SkyBox.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\CubeMap.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -349,6 +352,9 @@
       <Filter>Renderer\Shapes</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\SkyBox.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\CubeMap.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>

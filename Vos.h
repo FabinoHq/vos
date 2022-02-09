@@ -49,6 +49,8 @@
     #include "System/SysClock.h"
     #include "System/SysSleep.h"
     #include "Renderer/Renderer.h"
+    #include "Renderer/Texture.h"
+    #include "Renderer/CubeMap.h"
     #include "Renderer/View.h"
     #include "Renderer/Camera.h"
     #include "Renderer/FreeFlyCam.h"
@@ -126,6 +128,7 @@
             Camera          m_camera;           // Camera
             FreeFlyCam      m_freeflycam;       // Freefly camera
 
+            CubeMap         m_cubemap;          // CubeMap
             SkyBox          m_skybox;           // SkyBox
 
             ProcSprite      m_procSprite;       // Procedural sprite

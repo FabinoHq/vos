@@ -48,6 +48,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 SkyBox::SkyBox() :
 Transform3(),
+m_cubemap(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
 
@@ -59,6 +60,7 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 SkyBox::~SkyBox()
 {
     m_color.reset();
+    m_cubemap = 0;
 }
 
 
@@ -66,7 +68,7 @@ SkyBox::~SkyBox()
 //  Init skybox                                                               //
 //  return : True if the skybox is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool SkyBox::init(Renderer& renderer)
+bool SkyBox::init(Renderer& renderer, CubeMap& cubemap)
 {
     // Create skybox vertex buffer
     if (!renderer.createVertexBuffer(m_vertexBuffer,
@@ -77,8 +79,18 @@ bool SkyBox::init(Renderer& renderer)
         return false;
     }
 
+    // Check cubemap handle
+    if (!cubemap.isValid())
+    {
+        // Invalid cubemap handle
+        return false;
+    }
+
     // Reset skybox transformations
     resetTransforms();
+
+    // Set skybox cubemap pointer
+    m_cubemap = &cubemap;
 
     // Reset skybox color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -198,6 +210,9 @@ void SkyBox::render(Renderer& renderer)
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
+
+    // Bind skybox cubemap
+    m_cubemap->bind(renderer);
 
     // Draw skybox triangles
     vkCmdDrawIndexed(
