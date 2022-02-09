@@ -458,6 +458,20 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
             break;
         }
 
+        case VERTEX_INPUTS_CUBEMAP:
+        {
+            // Vertex binding stride
+            vertexBinding.stride = sizeof(float)*3;
+
+            // Position
+            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[0].location = 0;
+            vertexAttribs[0].binding = vertexBinding.binding;
+            vertexAttribs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+            vertexAttribs[0].offset = 0;
+            break;
+        }
+
         case VERTEX_INPUTS_STATICMESH:
         {
             // Vertex binding stride

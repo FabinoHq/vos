@@ -90,8 +90,8 @@
             //  return : True if cubemap is successfully updated              //
             ////////////////////////////////////////////////////////////////////
             bool updateCubeMap(Renderer& renderer,
-                uint32_t width, uint32_t height, const unsigned char* data,
-                bool smooth = true);
+                uint32_t width, uint32_t height,
+                const unsigned char* data, bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind cubemap                                                  //

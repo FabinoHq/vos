@@ -342,6 +342,13 @@ bool Texture::updateTexture(Renderer& renderer,
         return false;
     }
 
+    // Check texture data
+    if (!data)
+    {
+        // Invalid texture data
+        return false;
+    }
+
     // Check current texture
     if (!m_handle || (width != m_width) || (height != m_height))
     {

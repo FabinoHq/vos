@@ -427,13 +427,13 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create skybox pipeline
     m_skyBoxPipeline.createVertexShader(
-        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
+        *this, SkyBoxVertexShader, SkyBoxVertexShaderSize
     );
     m_skyBoxPipeline.createFragmentShader(
-        *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
+        *this, SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
     if (!m_skyBoxPipeline.createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, false, true))
+        *this, VERTEX_INPUTS_CUBEMAP, false, true))
     {
         // Could not create skybox pipeline
         SysMessage::box() << "[0x3051] Could not create skybox pipeline\n";

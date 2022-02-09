@@ -124,14 +124,14 @@ bool CubeMap::createCubeMap(Renderer& renderer,
     VkImageCreateInfo imageInfo;
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.pNext = 0;
-    imageInfo.flags = 0;
+    imageInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
     imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
     imageInfo.extent.width = m_width;
     imageInfo.extent.height = m_height;
     imageInfo.extent.depth = 1;
     imageInfo.mipLevels = 1;
-    imageInfo.arrayLayers = 1;
+    imageInfo.arrayLayers = 6;
     imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
     imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
     imageInfo.usage =
@@ -162,7 +162,7 @@ bool CubeMap::createCubeMap(Renderer& renderer,
     }
 
     // Create staging buffer
-    uint32_t cubemapSize = m_width * m_height * 4;
+    uint32_t cubemapSize = m_width * m_height * 4 * 6;
     if (!m_stagingBuffer.createBuffer(
         renderer.m_physicalDevice, renderer.m_vulkanDevice,
         renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -219,7 +219,7 @@ bool CubeMap::createCubeMap(Renderer& renderer,
     viewInfo.pNext = 0;
     viewInfo.flags = 0;
     viewInfo.image = m_handle;
-    viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    viewInfo.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
     viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
     viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -229,7 +229,7 @@ bool CubeMap::createCubeMap(Renderer& renderer,
     viewInfo.subresourceRange.baseMipLevel = 0;
     viewInfo.subresourceRange.levelCount = 1;
     viewInfo.subresourceRange.baseArrayLayer = 0;
-    viewInfo.subresourceRange.layerCount = 1;
+    viewInfo.subresourceRange.layerCount = 6;
 
     if (vkCreateImageView(
         renderer.m_vulkanDevice, &viewInfo, 0, &m_view) != VK_SUCCESS)
@@ -333,6 +333,13 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
         return false;
     }
 
+    // Check cubemap data
+    if (!data)
+    {
+        // Invalid cubemap data
+        return false;
+    }
+
     // Check current cubemap
     if (!m_handle || (width != m_width) || (height != m_height))
     {
@@ -416,24 +423,27 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
         0, 0, 0, 0, 0, 1, &undefinedToTransfer
     );
 
-    VkBufferImageCopy imageCopy;
-    imageCopy.bufferOffset = 0;
-    imageCopy.bufferRowLength = 0;
-    imageCopy.bufferImageHeight = 0;
-    imageCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    imageCopy.imageSubresource.mipLevel = 0;
-    imageCopy.imageSubresource.baseArrayLayer = 0;
-    imageCopy.imageSubresource.layerCount = 1;
-    imageCopy.imageOffset.x = 0;
-    imageCopy.imageOffset.y = 0;
-    imageCopy.imageOffset.z = 0;
-    imageCopy.imageExtent.width = m_width;
-    imageCopy.imageExtent.height = m_height;
-    imageCopy.imageExtent.depth = 1;
+    VkBufferImageCopy imageCopy[6];
+    for (uint32_t i = 0; i < 6; ++i)
+    {
+        imageCopy[i].bufferOffset = (width * height * 4 * i);
+        imageCopy[i].bufferRowLength = 0;
+        imageCopy[i].bufferImageHeight = 0;
+        imageCopy[i].imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        imageCopy[i].imageSubresource.mipLevel = 0;
+        imageCopy[i].imageSubresource.baseArrayLayer = i;
+        imageCopy[i].imageSubresource.layerCount = 1;
+        imageCopy[i].imageOffset.x = 0;
+        imageCopy[i].imageOffset.y = 0;
+        imageCopy[i].imageOffset.z = 0;
+        imageCopy[i].imageExtent.width = m_width;
+        imageCopy[i].imageExtent.height = m_height;
+        imageCopy[i].imageExtent.depth = 1;
+    }
 
     vkCmdCopyBufferToImage(
         commandBuffer, m_stagingBuffer.handle, m_handle,
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 6, imageCopy
     );
 
     vkCmdPipelineBarrier(

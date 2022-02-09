@@ -71,6 +71,7 @@
     #include "Shaders/Rectangle.h"
     #include "Shaders/Ellipse.h"
     #include "Shaders/PxText.h"
+    #include "Shaders/SkyBox.h"
     #include "Shaders/StaticMesh.h"
 
     #include "../Images/Embedded/Cursor.h"

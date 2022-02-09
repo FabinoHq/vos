@@ -134,20 +134,100 @@ bool Vos::launch()
     m_freeflycam.setSpeed(5.0f);
 
 
-    // Load cubemap texture
-    PNGFile cubeMapZP;
-    if (!cubeMapZP.loadImage("Textures/testsprite.png"))
+    // Load cubemap textures
+    PNGFile cubeMapRight;
+    if (!cubeMapRight.loadImage("Textures/testsprite.png"))
     {
         return false;
     }
-    if (!m_cubemap.updateCubeMap(m_renderer,
-        cubeMapZP.getWidth(), cubeMapZP.getHeight(), cubeMapZP.getImage(),
-        true))
+    PNGFile cubeMapLeft;
+    if (!cubeMapLeft.loadImage("Textures/testsprite.png"))
+    {
+        return false;
+    }
+    PNGFile cubeMapTop;
+    if (!cubeMapTop.loadImage("Textures/testsprite.png"))
+    {
+        return false;
+    }
+    PNGFile cubeMapBottom;
+    if (!cubeMapBottom.loadImage("Textures/testsprite.png"))
+    {
+        return false;
+    }
+    PNGFile cubeMapFront;
+    if (!cubeMapFront.loadImage("Textures/testsprite.png"))
+    {
+        return false;
+    }
+    PNGFile cubeMapBack;
+    if (!cubeMapBack.loadImage("Textures/testsprite.png"))
+    {
+        return false;
+    }
+
+    // Allocate cubemap data
+    unsigned int cubemapWidth = cubeMapFront.getWidth();
+    unsigned int cubemapHeight = cubeMapFront.getHeight();
+    unsigned char* cubemapData = 0;
+    try
+    {
+        cubemapData = new unsigned char[cubemapWidth*cubemapHeight*4*6];
+    }
+    catch (const std::bad_alloc&)
+    {
+        cubemapData = 0;
+    }
+    catch (...)
+    {
+        cubemapData = 0;
+    }
+    if (!cubemapData)
+    {
+        return false;
+    }
+
+    // Copy cubemap data
+    memcpy(
+        &cubemapData[cubemapWidth*cubemapHeight*4*0],
+        cubeMapRight.getImage(), cubemapWidth*cubemapHeight*4
+    );
+    memcpy(
+        &cubemapData[cubemapWidth*cubemapHeight*4*1],
+        cubeMapLeft.getImage(), cubemapWidth*cubemapHeight*4
+    );
+    memcpy(
+        &cubemapData[cubemapWidth*cubemapHeight*4*2],
+        cubeMapTop.getImage(), cubemapWidth*cubemapHeight*4
+    );
+    memcpy(
+        &cubemapData[cubemapWidth*cubemapHeight*4*3],
+        cubeMapBottom.getImage(), cubemapWidth*cubemapHeight*4
+    );
+    memcpy(
+        &cubemapData[cubemapWidth*cubemapHeight*4*4],
+        cubeMapFront.getImage(), cubemapWidth*cubemapHeight*4
+    );
+    memcpy(
+        &cubemapData[cubemapWidth*cubemapHeight*4*5],
+        cubeMapBack.getImage(), cubemapWidth*cubemapHeight*4
+    );
+
+    // Cleanup cubemap textures
+    cubeMapRight.destroyImage();
+    cubeMapLeft.destroyImage();
+    cubeMapTop.destroyImage();
+    cubeMapBottom.destroyImage();
+    cubeMapFront.destroyImage();
+    cubeMapBack.destroyImage();
+
+    // Create cubemap texture
+    if (!m_cubemap.updateCubeMap(
+        m_renderer, cubemapWidth, cubemapHeight, cubemapData, true))
     {
         // Could not load cubemap texture
         return false;
     }
-    cubeMapZP.destroyImage();
 
     // Init skybox
     if (!m_skybox.init(m_renderer, m_cubemap))
