@@ -48,6 +48,9 @@
     #include "System/SysWindow.h"
     #include "System/SysClock.h"
     #include "System/SysSleep.h"
+
+    #include "Network/IPAddress4.h"
+
     #include "Renderer/Renderer.h"
     #include "Renderer/Texture.h"
     #include "Renderer/CubeMap.h"
@@ -75,6 +78,7 @@
 
     #include "Event.h"
 
+    #include <cstddef>
     #include <cstdint>
     #include <exception>
 

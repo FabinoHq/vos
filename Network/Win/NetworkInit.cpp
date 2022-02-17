@@ -37,77 +37,35 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shader.h : Shader management                                  //
+//     Network/Win/NetworkInit.cpp : Network init management for Windows      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHADER_HEADER
-#define VOS_RENDERER_SHADER_HEADER
-
-    #include "Vulkan/Vulkan.h"
-
-    #include <cstddef>
-    #include <cstdint>
+#include <winsock2.h>
 
 
+////////////////////////////////////////////////////////////////////////////////
+//  NetworkInit struct definition                                             //
+////////////////////////////////////////////////////////////////////////////////
+struct NetworkInit
+{
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
+    //  NetworkInit default constructor                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Shader class definition                                               //
-    ////////////////////////////////////////////////////////////////////////////
-    class Shader
+    NetworkInit()
     {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader default constructor                                    //
-            ////////////////////////////////////////////////////////////////////
-            Shader();
+        // Init windows network automatically
+        WSAData wsaData;
+        WSAStartup(MAKEWORD(2, 2), &wsaData);
+    }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Shader destructor                                             //
-            ////////////////////////////////////////////////////////////////////
-            ~Shader();
+    ////////////////////////////////////////////////////////////////////////////
+    //  NetworkInit destructor                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    ~NetworkInit()
+    {
+        // Cleanup windows network automatically
+        WSACleanup();
+    }
+};
 
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create Shader                                                 //
-            //  return : True if Shader is successfully created               //
-            ////////////////////////////////////////////////////////////////////
-            bool createShader(Renderer& renderer,
-                const uint32_t* source, const size_t size);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy Shader                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyShader(Renderer& renderer);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Check if the shader is valid                                  //
-            //  return : True if the shader is valid                          //
-            ////////////////////////////////////////////////////////////////////
-            bool isValid();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy constructor : Not copyable                //
-            ////////////////////////////////////////////////////////////////////
-            Shader(const Shader&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy operator : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Shader& operator=(const Shader&) = delete;
-
-
-        private:
-            VkShaderModule      m_shader;       // Shader handle
-
-            friend class        Pipeline;       // Pipeline has access
-    };
-
-
-#endif // VOS_RENDERER_SHADER_HEADER
+// Network init global instance
+NetworkInit NetworkInitGlobal;

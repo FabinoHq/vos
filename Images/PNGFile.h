@@ -47,6 +47,7 @@
     #include "../Compress/ZLib.h"
 
     #include <exception>
+    #include <cstddef>
     #include <cstdint>
     #include <cstring>
     #include <string>

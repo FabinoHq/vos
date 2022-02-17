@@ -47,6 +47,7 @@
     #include "VulkanQueue.h"
     #include "VulkanBuffer.h"
 
+    #include <cstddef>
     #include <cstdint>
 
 

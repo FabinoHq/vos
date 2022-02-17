@@ -81,6 +81,7 @@
     #include "../Images/Embedded/NESWCursor.h"
     #include "../Images/Embedded/NWSECursor.h"
 
+    #include <cstddef>
     #include <cstdint>
     #include <vector>
 

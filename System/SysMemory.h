@@ -52,6 +52,7 @@
     #include "../Images/BMPFile.h"
     #include "../Images/PNGFile.h"
 
+    #include <cstddef>
     #include <cstdint>
     #include <limits>
 

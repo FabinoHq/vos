@@ -43,6 +43,7 @@
 #define VOS_IMAGES_BMPFILE_HEADER
 
     #include <exception>
+    #include <cstddef>
     #include <cstdint>
     #include <cstring>
     #include <string>

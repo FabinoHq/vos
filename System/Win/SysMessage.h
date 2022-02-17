@@ -45,6 +45,10 @@
     #include "../SysMutex.h"
     #include "../SysMutexLocker.h"
 
+    #undef UNICODE
+    #define UNICODE
+    #undef _WINSOCKAPI_
+    #define _WINSOCKAPI_
     #include <windows.h>
     #include <string>
     #include <sstream>

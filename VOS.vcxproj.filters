@@ -34,6 +34,12 @@
     <Filter Include="Renderer\GUI">
       <UniqueIdentifier>{1eb5d3fc-a139-4af4-be95-c4e4e0790251}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{940e2a07-6629-4f1b-a54c-3c7a94db1cfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Win">
+      <UniqueIdentifier>{c842206e-7bfa-4e6d-aa89-0e087c2a8c4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -154,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="Renderer\CubeMap.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Win\IPAddress4.cpp">
+      <Filter>Network\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Win\NetworkInit.cpp">
+      <Filter>Network\Win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,6 +371,12 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\StaticProc.h">
       <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\IPAddress4.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Win\IPAddress4.h">
+      <Filter>Network\Win</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

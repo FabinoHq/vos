@@ -44,6 +44,7 @@
 
     #include "../System/SysCRC.h"
 
+    #include <cstddef>
     #include <cstdint>
     #include <cstring>
 

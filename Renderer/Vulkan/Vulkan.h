@@ -44,6 +44,7 @@
 
     #include "../../System/SysVulkan.h"
 
+    #include <cstddef>
     #include <cstdint>
 
 

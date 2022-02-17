@@ -42,6 +42,7 @@
 #ifndef VOS_SYSTEM_SYSCRC_HEADER
 #define VOS_SYSTEM_SYSCRC_HEADER
 
+    #include <cstddef>
     #include <cstdint>
 
 

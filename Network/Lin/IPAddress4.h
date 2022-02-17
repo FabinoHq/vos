@@ -37,97 +37,88 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/Swapchain.h : Swapchain management                     //
+//     Network/Lin/IPAddress4.h : IPv4 address management for Linux           //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
-#define VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
+#ifndef VOS_NETWORK_LIN_IPADDRESS4_HEADER
+#define VOS_NETWORK_LIN_IPADDRESS4_HEADER
 
-    #include "Vulkan.h"
-    #include "VulkanMemory.h"
+    #include <arpa/inet.h>
+    #include <netdb.h>
 
-    #include <cstddef>
     #include <cstdint>
-    #include <vector>
+    #include <cstring>
+    #include <string>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer swapchain settings                                           //
+    //  IPAddress4 class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxSwapchainFrames = 2;
-    const uint64_t RendererSwapchainFenceTimeout = 5000000000;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Swapchain class definition                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Swapchain
+    class IPAddress4
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain default constructor                                 //
+            //  IPAddress4 default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Swapchain();
+            IPAddress4();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain destructor                                          //
+            //  IPAddress4 copy constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            ~Swapchain();
+            IPAddress4(const IPAddress4& ipaddress);
+
+            ////////////////////////////////////////////////////////////////////
+            //  IPAddress4 destructor                                         //
+            ////////////////////////////////////////////////////////////////////
+            ~IPAddress4();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create swapchain                                              //
-            //  return : True if swapchain is successfully created            //
+            //  Set IP address v4 integer                                     //
             ////////////////////////////////////////////////////////////////////
-            bool createSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                uint32_t surfaceQueueIndex, VulkanMemory& vulkanMemory);
+            void setInteger(uint32_t ipaddress);
 
             ////////////////////////////////////////////////////////////////////
-            //  Resize swapchain                                              //
-            //  return : True if swapchain is successfully resized            //
+            //  Set IP address v4 string                                      //
             ////////////////////////////////////////////////////////////////////
-            bool resizeSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                VulkanMemory& vulkanMemory);
+            bool setString(const std::string& ipaddress);
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy swapchain                                             //
+            //  Resolve host name into IP address                             //
             ////////////////////////////////////////////////////////////////////
-            void destroySwapchain(VkDevice& vulkanDevice);
+            bool resolveHostName(const std::string& hostName);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get IP address v4 representation                              //
+            ////////////////////////////////////////////////////////////////////
+            in_addr getAddress();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get IP address v4 integer                                     //
+            ////////////////////////////////////////////////////////////////////
+            uint32_t getInteger();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get IP address v4 string                                      //
+            ////////////////////////////////////////////////////////////////////
+            std::string getString();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  IPAddress4 copy operator                                      //
+            ////////////////////////////////////////////////////////////////////
+            IPAddress4& operator=(const IPAddress4& ipaddress);
+
+            ////////////////////////////////////////////////////////////////////
+            //  IPAddress4 equal to operator                                  //
+            ////////////////////////////////////////////////////////////////////
+            bool operator==(const IPAddress4& ipaddress);
 
 
         private:
-            ////////////////////////////////////////////////////////////////////
-            //  Swapchain private copy constructor : Not copyable             //
-            ////////////////////////////////////////////////////////////////////
-            Swapchain(const Swapchain&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Swapchain private copy operator : Not copyable                //
-            ////////////////////////////////////////////////////////////////////
-            Swapchain& operator=(const Swapchain&) = delete;
-
-
-        public:
-            VkSwapchainKHR      handle;         // Swapchain handle
-            VkFormat            format;         // Swapchain format
-            VkExtent2D          extent;         // Swapchain extent
-            VkRenderPass        renderPass;     // Render pass
-            VkCommandPool       commandsPool;   // Command pool
-            uint32_t            frames;         // Swapchain frames count
-            uint32_t            current;        // Swapchain current frame
-            float               ratio;          // Swapchain aspect ratio
-
-            VkImage             images[RendererMaxSwapchainFrames];
-            VkImage             depthImages[RendererMaxSwapchainFrames];
-            VkImageView         views[RendererMaxSwapchainFrames];
-            VkImageView         depthViews[RendererMaxSwapchainFrames];
-            VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
-            VkSemaphore         renderReady[RendererMaxSwapchainFrames];
-            VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
-            VkFence             fences[RendererMaxSwapchainFrames];
-            VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
+            in_addr         m_ipaddress;        // IPAddress v4 representation
     };
 
 
-#endif // VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
+#endif // VOS_NETWORK_LIN_IPADDRESS4_HEADER

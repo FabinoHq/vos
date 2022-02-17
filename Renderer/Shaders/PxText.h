@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_SHADERS_PXTEXT_HEADER
 #define VOS_RENDERER_SHADERS_PXTEXT_HEADER
 
+    #include <cstddef>
     #include <cstdint>
 
 

@@ -37,77 +37,22 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shader.h : Shader management                                  //
+//     Network/IPAddress4.h : IPv4 address management wrapper                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHADER_HEADER
-#define VOS_RENDERER_SHADER_HEADER
-
-    #include "Vulkan/Vulkan.h"
-
-    #include <cstddef>
-    #include <cstdint>
+#ifndef VOS_NETWORK_IPADDRESS4_HEADER
+#define VOS_NETWORK_IPADDRESS4_HEADER
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
+    #include "../System/System.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Shader class definition                                               //
-    ////////////////////////////////////////////////////////////////////////////
-    class Shader
-    {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader default constructor                                    //
-            ////////////////////////////////////////////////////////////////////
-            Shader();
+    #ifdef VOS_WINDOWS
+        #include "Win/IPAddress4.h"
+    #endif // VOS_WINDOWS
 
-            ////////////////////////////////////////////////////////////////////
-            //  Shader destructor                                             //
-            ////////////////////////////////////////////////////////////////////
-            ~Shader();
+    #ifdef VOS_LINUX
+        #include "Lin/IPAddress4.h"
+    #endif // VOS_LINUX
 
 
-            ////////////////////////////////////////////////////////////////////
-            //  Create Shader                                                 //
-            //  return : True if Shader is successfully created               //
-            ////////////////////////////////////////////////////////////////////
-            bool createShader(Renderer& renderer,
-                const uint32_t* source, const size_t size);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy Shader                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyShader(Renderer& renderer);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Check if the shader is valid                                  //
-            //  return : True if the shader is valid                          //
-            ////////////////////////////////////////////////////////////////////
-            bool isValid();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy constructor : Not copyable                //
-            ////////////////////////////////////////////////////////////////////
-            Shader(const Shader&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy operator : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Shader& operator=(const Shader&) = delete;
-
-
-        private:
-            VkShaderModule      m_shader;       // Shader handle
-
-            friend class        Pipeline;       // Pipeline has access
-    };
-
-
-#endif // VOS_RENDERER_SHADER_HEADER
+#endif // VOS_NETWORK_IPADDRESS4_HEADER

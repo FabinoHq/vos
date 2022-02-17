@@ -46,6 +46,10 @@
     #include "SysDisplayMode.h"
     #include "../../Event.h"
 
+    #undef UNICODE
+    #define UNICODE
+    #undef _WINSOCKAPI_
+    #define _WINSOCKAPI_
     #include <windows.h>
     #include <hidusage.h>
     #include <queue>

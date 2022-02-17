@@ -50,6 +50,7 @@
 
     #include "Shaders/DefaultProc.h"
 
+    #include <cstddef>
     #include <cstdint>
 
 

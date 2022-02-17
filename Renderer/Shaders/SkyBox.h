@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_SHADERS_SKYBOX_HEADER
 #define VOS_RENDERER_SHADERS_SKYBOX_HEADER
 
+    #include <cstddef>
     #include <cstdint>
 
 

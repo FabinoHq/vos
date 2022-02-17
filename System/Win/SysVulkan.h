@@ -45,6 +45,7 @@
     #include "../System.h"
     #include "../SysWindow.h"
 
+    #include <cstddef>
     #include <cstdint>
     #include <cstring>
 

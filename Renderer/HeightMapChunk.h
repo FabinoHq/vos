@@ -51,6 +51,7 @@
 
     #include <exception>
     #include <fstream>
+    #include <cstddef>
     #include <cstdint>
 
 

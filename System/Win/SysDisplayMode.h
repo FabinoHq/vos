@@ -42,6 +42,10 @@
 #ifndef VOS_SYSTEM_WIN_SYSDISPLAYMODE_HEADER
 #define VOS_SYSTEM_WIN_SYSDISPLAYMODE_HEADER
 
+    #undef UNICODE
+    #define UNICODE
+    #undef _WINSOCKAPI_
+    #define _WINSOCKAPI_
     #include <windows.h>
 
 

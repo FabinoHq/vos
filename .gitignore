@@ -61,6 +61,16 @@
 !System/Win/SysVulkan.h
 !System/Win/SysVulkan.cpp
 
+!Network/
+!Network/IPAddress4.h
+!Network/Lin/
+!Network/Lin/IPAddress4.h
+!Network/Lin/IPAddress4.cpp
+!Network/Win/
+!Network/Win/NetworkInit.cpp
+!Network/Win/IPAddress4.h
+!Network/Win/IPAddress4.cpp
+
 !Compress/
 !Compress/ZLib.h
 !Compress/ZLib.cpp

@@ -51,6 +51,7 @@
     #include "../../Math/Math.h"
     #include "../../Math/Matrix4x4.h"
 
+    #include <cstddef>
     #include <cstdint>
 
 

@@ -45,6 +45,7 @@
     #include "Vulkan/Vulkan.h"
     #include "Shader.h"
 
+    #include <cstddef>
     #include <cstdint>
     #include <vector>
 
