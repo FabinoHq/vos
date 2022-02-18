@@ -91,6 +91,21 @@ IPAddress6::~IPAddress6()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set IP address v6 representation                                          //
+////////////////////////////////////////////////////////////////////////////////
+void IPAddress6::setAddress(in6_addr ipaddress)
+{
+    m_ipaddress.u.Word[0] = ipaddress.u.Word[0];
+    m_ipaddress.u.Word[1] = ipaddress.u.Word[1];
+    m_ipaddress.u.Word[2] = ipaddress.u.Word[2];
+    m_ipaddress.u.Word[3] = ipaddress.u.Word[3];
+    m_ipaddress.u.Word[4] = ipaddress.u.Word[4];
+    m_ipaddress.u.Word[5] = ipaddress.u.Word[5];
+    m_ipaddress.u.Word[6] = ipaddress.u.Word[6];
+    m_ipaddress.u.Word[7] = ipaddress.u.Word[7];
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Set IP address v6 string                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 bool IPAddress6::setString(const std::string& ipaddress)

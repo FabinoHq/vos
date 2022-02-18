@@ -37,83 +37,136 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Network/Win/IPAddress6.h : IPv6 address management for Windows         //
+//     Network/Lin/TCPSocket.h : TCPSocket management for Linux               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_NETWORK_WIN_IPADDRESS6_HEADER
-#define VOS_NETWORK_WIN_IPADDRESS6_HEADER
+#ifndef VOS_NETWORK_LIN_TCPSOCKET_HEADER
+#define VOS_NETWORK_LIN_TCPSOCKET_HEADER
 
-    #include <winsock2.h>
-    #include <Ws2tcpip.h>
+    #include "IPAddress4.h"
+    #include "IPAddress6.h"
 
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <netinet/tcp.h>
+    #include <arpa/inet.h>
+    #include <netdb.h>
+    #include <fcntl.h>
+    #include <unistd.h>
+
+    #include <cstddef>
     #include <cstdint>
     #include <cstring>
-    #include <string>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  IPAddress6 class definition                                           //
+    //  TCPSocket IP Address version                                          //
     ////////////////////////////////////////////////////////////////////////////
-    class IPAddress6
+    enum TCPSocketIPVersion
+    {
+        TCPSOCKET_NONE = 0,
+        TCPSOCKET_IPV4 = 1,
+        TCPSOCKET_IPV6 = 2
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TCPSocket invalid socket constant                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    const int TCPSocketInvalid = -1;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TCPSocket maximum back log (pending connections queue length)         //
+    ////////////////////////////////////////////////////////////////////////////
+    const int TCPSocketMaxBackLog = SOMAXCONN;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TCPSocket class definition                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class TCPSocket
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  IPAddress6 default constructor                                //
+            //  TCPSocket default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            IPAddress6();
+            TCPSocket();
 
             ////////////////////////////////////////////////////////////////////
-            //  IPAddress6 copy constructor                                   //
+            //  TCPSocket destructor                                         //
             ////////////////////////////////////////////////////////////////////
-            IPAddress6(const IPAddress6& ipaddress);
-
-            ////////////////////////////////////////////////////////////////////
-            //  IPAddress6 destructor                                         //
-            ////////////////////////////////////////////////////////////////////
-            ~IPAddress6();
+            ~TCPSocket();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set IP address v6 representation                              //
+            //  Create TCP Socket                                             //
             ////////////////////////////////////////////////////////////////////
-            void setAddress(in6_addr ipaddress);
+            bool createSocket(
+                TCPSocketIPVersion ipversion, bool blocking = true);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set IP address v6 string                                      //
+            //  Close TCP Socket                                              //
             ////////////////////////////////////////////////////////////////////
-            bool setString(const std::string& ipaddress);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Resolve host name into IP address                             //
-            ////////////////////////////////////////////////////////////////////
-            bool resolveHostName(const std::string& hostName);
+            void closeSocket();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get IP address v6 representation                              //
+            //  Bind TCP Socket                                               //
             ////////////////////////////////////////////////////////////////////
-            in6_addr getAddress();
+            bool bindSocket(uint16_t port);
 
             ////////////////////////////////////////////////////////////////////
-            //  Get IP address v6 string                                      //
+            //  Listen bound port                                             //
             ////////////////////////////////////////////////////////////////////
-            std::string getString();
+            bool listenPort();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Accept incoming connection (IPv4)                             //
+            ////////////////////////////////////////////////////////////////////
+            bool acceptConnection(TCPSocket& socket, IPAddress4& ipaddress);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Accept incoming connection (IPv6)                             //
+            ////////////////////////////////////////////////////////////////////
+            bool acceptConnection(TCPSocket& socket, IPAddress6& ipaddress);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  IPAddress6 copy operator                                      //
+            //  Connect TCP socket to IP address (IPv4)                       //
             ////////////////////////////////////////////////////////////////////
-            IPAddress6& operator=(const IPAddress6& ipaddress);
+            bool connectSocket(IPAddress4& ipaddress, uint16_t port);
 
             ////////////////////////////////////////////////////////////////////
-            //  IPAddress6 equal to operator                                  //
+            //  Connect TCP socket to IP address (IPv6)                       //
             ////////////////////////////////////////////////////////////////////
-            bool operator==(const IPAddress6& ipaddress);
+            bool connectSocket(IPAddress6& ipaddress, uint16_t port);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Send data over TCP                                            //
+            ////////////////////////////////////////////////////////////////////
+            bool sendData(const char* data, size_t size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Receive data over TCP                                         //
+            ////////////////////////////////////////////////////////////////////
+            bool receiveData(char* data, size_t size);
 
 
         private:
-            in6_addr        m_ipaddress;        // IPAddress v6 representation
+            ////////////////////////////////////////////////////////////////////
+            //  TCPSocket private copy constructor : Not copyable             //
+            ////////////////////////////////////////////////////////////////////
+            TCPSocket(const TCPSocket&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  TCPSocket private copy operator : Not copyable                //
+            ////////////////////////////////////////////////////////////////////
+            TCPSocket& operator=(const TCPSocket&) = delete;
+
+
+        private:
+            int                     m_handle;       // TCPSocket handle
+            TCPSocketIPVersion      m_ipversion;    // TCPSocket IP version
     };
 
 
-#endif // VOS_NETWORK_WIN_IPADDRESS6_HEADER
+#endif // VOS_NETWORK_LIN_TCPSOCKET_HEADER

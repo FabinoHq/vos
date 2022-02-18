@@ -91,6 +91,21 @@ IPAddress6::~IPAddress6()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set IP address v6 representation                                          //
+////////////////////////////////////////////////////////////////////////////////
+void IPAddress6::setAddress(in6_addr ipaddress)
+{
+    m_ipaddress.s6_addr16[0] = ipaddress.s6_addr16[0];
+    m_ipaddress.s6_addr16[1] = ipaddress.s6_addr16[1];
+    m_ipaddress.s6_addr16[2] = ipaddress.s6_addr16[2];
+    m_ipaddress.s6_addr16[3] = ipaddress.s6_addr16[3];
+    m_ipaddress.s6_addr16[4] = ipaddress.s6_addr16[4];
+    m_ipaddress.s6_addr16[5] = ipaddress.s6_addr16[5];
+    m_ipaddress.s6_addr16[6] = ipaddress.s6_addr16[6];
+    m_ipaddress.s6_addr16[7] = ipaddress.s6_addr16[7];
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Set IP address v6 string                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 bool IPAddress6::setString(const std::string& ipaddress)

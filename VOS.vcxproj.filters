@@ -170,6 +170,9 @@
     <ClCompile Include="Network\Win\IPAddress6.cpp">
       <Filter>Network\Win</Filter>
     </ClCompile>
+    <ClCompile Include="Network\Win\TCPSocket.cpp">
+      <Filter>Network\Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -383,6 +386,15 @@
     </ClInclude>
     <ClInclude Include="Network\Win\IPAddress6.h">
       <Filter>Network\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Win\TCPSocket.h">
+      <Filter>Network\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\IPAddress6.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\TCPSocket.h">
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
