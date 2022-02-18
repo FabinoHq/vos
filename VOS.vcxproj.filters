@@ -167,6 +167,9 @@
     <ClCompile Include="Network\Win\NetworkInit.cpp">
       <Filter>Network\Win</Filter>
     </ClCompile>
+    <ClCompile Include="Network\Win\IPAddress6.cpp">
+      <Filter>Network\Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -376,6 +379,9 @@
       <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="Network\Win\IPAddress4.h">
+      <Filter>Network\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Win\IPAddress6.h">
       <Filter>Network\Win</Filter>
     </ClInclude>
   </ItemGroup>

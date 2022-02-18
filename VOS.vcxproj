@@ -140,6 +140,7 @@
     <ClCompile Include="Images\PNGFile.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Network\Win\IPAddress4.cpp" />
+    <ClCompile Include="Network\Win\IPAddress6.cpp" />
     <ClCompile Include="Network\Win\NetworkInit.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
     <ClCompile Include="Renderer\CubeMap.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Network\IPAddress4.h" />
     <ClInclude Include="Network\Win\IPAddress4.h" />
+    <ClInclude Include="Network\Win\IPAddress6.h" />
     <ClInclude Include="Renderer\Camera.h" />
     <ClInclude Include="Renderer\CubeMap.h" />
     <ClInclude Include="Renderer\FreeFlyCam.h" />

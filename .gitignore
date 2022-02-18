@@ -63,13 +63,18 @@
 
 !Network/
 !Network/IPAddress4.h
+!Network/IPAddress6.h
 !Network/Lin/
 !Network/Lin/IPAddress4.h
 !Network/Lin/IPAddress4.cpp
+!Network/Lin/IPAddress6.h
+!Network/Lin/IPAddress6.cpp
 !Network/Win/
 !Network/Win/NetworkInit.cpp
 !Network/Win/IPAddress4.h
 !Network/Win/IPAddress4.cpp
+!Network/Win/IPAddress6.h
+!Network/Win/IPAddress6.cpp
 
 !Compress/
 !Compress/ZLib.h

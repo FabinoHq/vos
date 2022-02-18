@@ -37,122 +37,78 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Network/Win/IPAddress6.h : IPv6 address management for Windows         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_NETWORK_WIN_IPADDRESS6_HEADER
+#define VOS_NETWORK_WIN_IPADDRESS6_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysMemory.h"
-    #include "System/SysWindow.h"
-    #include "System/SysClock.h"
-    #include "System/SysSleep.h"
+    #include <winsock2.h>
+    #include <Ws2tcpip.h>
 
-    #include "Renderer/Renderer.h"
-    #include "Renderer/Texture.h"
-    #include "Renderer/CubeMap.h"
-    #include "Renderer/View.h"
-    #include "Renderer/Camera.h"
-    #include "Renderer/FreeFlyCam.h"
-    #include "Renderer/Sprite.h"
-    #include "Renderer/ProcSprite.h"
-    #include "Renderer/SkyBox.h"
-
-    #include "Renderer/Shapes/RectangleShape.h"
-    #include "Renderer/Shapes/EllipseShape.h"
-    #include "Renderer/Shapes/CuboidShape.h"
-
-    #include "Renderer/GUI/GUIPxText.h"
-    #include "Renderer/GUI/GUIWindow.h"
-
-    #include "Renderer/StaticMesh.h"
-    #include "Renderer/HeightMapChunk.h"
-
-    #include "Images/Embedded/PxFont.h"
-    #include "Images/Embedded/Window.h"
-    #include "Images/BMPFile.h"
-    #include "Images/PNGFile.h"
-
-    #include "Event.h"
-
-    #include <cstddef>
     #include <cstdint>
-    #include <exception>
+    #include <cstring>
+    #include <string>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
+    //  IPAddress6 class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
-    class Vos
+    class IPAddress6
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
+            //  IPAddress6 default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Vos();
+            IPAddress6();
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
+            //  IPAddress6 copy constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            ~Vos();
+            IPAddress6(const IPAddress6& ipaddress);
+
+            ////////////////////////////////////////////////////////////////////
+            //  IPAddress6 destructor                                         //
+            ////////////////////////////////////////////////////////////////////
+            ~IPAddress6();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
+            //  Set IP address v6 string                                      //
             ////////////////////////////////////////////////////////////////////
-            bool launch();
+            bool setString(const std::string& ipaddress);
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
+            //  Resolve host name into IP address                             //
             ////////////////////////////////////////////////////////////////////
-            void run();
+            bool resolveHostName(const std::string& hostName);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get IP address v6 representation                              //
+            ////////////////////////////////////////////////////////////////////
+            in6_addr getAddress();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get IP address v6 string                                      //
+            ////////////////////////////////////////////////////////////////////
+            std::string getString();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  IPAddress6 copy operator                                      //
+            ////////////////////////////////////////////////////////////////////
+            IPAddress6& operator=(const IPAddress6& ipaddress);
+
+            ////////////////////////////////////////////////////////////////////
+            //  IPAddress6 equal to operator                                  //
+            ////////////////////////////////////////////////////////////////////
+            bool operator==(const IPAddress6& ipaddress);
 
 
         private:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
-            ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
-
-        private:
-            bool            m_running;          // VOS running state
-            SysWindow       m_window;           // VOS main window
-            Renderer        m_renderer;         // VOS renderer
-            SysClock        m_clock;            // VOS clock
-
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-
-            CubeMap         m_cubemap;          // CubeMap
-            SkyBox          m_skybox;           // SkyBox
-
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectanle;         // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
-            CuboidShape     m_cuboid;           // Cuboid shape
-
-            Texture         m_pxFontTexture;    // Pixel font texture
-            GUIPxText       m_pxText;           // Test pixel text
-
-            Texture         m_windowTexture;    // GUI Window texture
-            GUIWindow       m_guiWindow;        // GUI Window
-
-            Texture         m_testTexture;      // Test texture
-            StaticMesh      m_staticMesh;       // Static mesh
-
-            HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
+            in6_addr        m_ipaddress;        // IPAddress v6 representation
     };
 
 
-#endif // VOS_VOS_HEADER
+#endif // VOS_NETWORK_WIN_IPADDRESS6_HEADER

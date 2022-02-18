@@ -52,7 +52,7 @@ VOS: main.o \
 	System/SysClock.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	Network/Lin/IPAddress4.o \
+	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
@@ -77,7 +77,7 @@ VOS: main.o \
 	System/SysClock.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	Network/Lin/IPAddress4.o \
+	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
@@ -138,6 +138,9 @@ System/Lin/SysVulkan.o: System/Lin/SysVulkan.cpp
 
 Network/Lin/IPAddress4.o: Network/Lin/IPAddress4.cpp
 	$(CC) -o Network/Lin/IPAddress4.o -c Network/Lin/IPAddress4.cpp $(CFLAGS)
+
+Network/Lin/IPAddress6.o: Network/Lin/IPAddress6.cpp
+	$(CC) -o Network/Lin/IPAddress6.o -c Network/Lin/IPAddress6.cpp $(CFLAGS)
 
 
 Compress/ZLib.o: Compress/ZLib.cpp
