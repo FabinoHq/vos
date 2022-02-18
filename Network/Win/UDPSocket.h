@@ -37,16 +37,15 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Network/Win/TCPSocket.h : TCPSocket management for Windows             //
+//     Network/Win/UDPSocket.h : UDPSocket management for Windows             //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_NETWORK_WIN_TCPSOCKET_HEADER
-#define VOS_NETWORK_WIN_TCPSOCKET_HEADER
+#ifndef VOS_NETWORK_WIN_UDPSOCKET_HEADER
+#define VOS_NETWORK_WIN_UDPSOCKET_HEADER
 
     #include "IPAddress4.h"
     #include "IPAddress6.h"
 
     #include <winsock2.h>
-    #include <Ws2tcpip.h>
 
     #include <cstddef>
     #include <cstdint>
@@ -54,114 +53,102 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TCPSocket IP Address version                                          //
+    //  UDPSocket IP Address version                                          //
     ////////////////////////////////////////////////////////////////////////////
-    enum TCPSocketIPVersion
+    enum UDPSocketIPVersion
     {
-        TCPSOCKET_NONE = 0,
-        TCPSOCKET_IPV4 = 1,
-        TCPSOCKET_IPV6 = 2
+        UDPSOCKET_NONE = 0,
+        UDPSOCKET_IPV4 = 1,
+        UDPSOCKET_IPV6 = 2
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TCPSocket invalid socket constant                                     //
+    //  UDPSocket invalid socket constant                                     //
     ////////////////////////////////////////////////////////////////////////////
-    const UINT_PTR TCPSocketInvalid = INVALID_SOCKET;
+    const UINT_PTR UDPSocketInvalid = INVALID_SOCKET;
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TCPSocket maximum back log (pending connections queue length)         //
+    //  UDPSocket maximum back log (pending connections queue length)         //
     ////////////////////////////////////////////////////////////////////////////
-    const int TCPSocketMaxBackLog = SOMAXCONN;
+    const int UDPSocketMaxBackLog = SOMAXCONN;
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TCPSocket class definition                                            //
+    //  UDPSocket class definition                                            //
     ////////////////////////////////////////////////////////////////////////////
-    class TCPSocket
+    class UDPSocket
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  TCPSocket default constructor                                //
+            //  UDPSocket default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            TCPSocket();
+            UDPSocket();
 
             ////////////////////////////////////////////////////////////////////
-            //  TCPSocket destructor                                         //
+            //  UDPSocket destructor                                         //
             ////////////////////////////////////////////////////////////////////
-            ~TCPSocket();
+            ~UDPSocket();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create TCP Socket                                             //
+            //  Create UDP Socket                                             //
             ////////////////////////////////////////////////////////////////////
-            bool createSocket(TCPSocketIPVersion ipversion,
+            bool createSocket(UDPSocketIPVersion ipversion,
                 bool blocking = true);
 
             ////////////////////////////////////////////////////////////////////
-            //  Close TCP Socket                                              //
+            //  Close UDP Socket                                              //
             ////////////////////////////////////////////////////////////////////
             void closeSocket();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind TCP Socket                                               //
+            //  Bind UDP Socket                                               //
             ////////////////////////////////////////////////////////////////////
             bool bindSocket(uint16_t port);
 
-            ////////////////////////////////////////////////////////////////////
-            //  Listen bound port                                             //
-            ////////////////////////////////////////////////////////////////////
-            bool listenPort();
 
             ////////////////////////////////////////////////////////////////////
-            //  Accept incoming connection (IPv4)                             //
+            //  Send data over UDP (IPv4)                                     //
             ////////////////////////////////////////////////////////////////////
-            bool acceptConnection(TCPSocket& socket, IPAddress4& ipaddress);
+            bool sendData(const char* data, size_t size,
+                IPAddress4& ipaddress, uint16_t port);
 
             ////////////////////////////////////////////////////////////////////
-            //  Accept incoming connection (IPv6)                             //
+            //  Send data over UDP (IPv6)                                     //
             ////////////////////////////////////////////////////////////////////
-            bool acceptConnection(TCPSocket& socket, IPAddress6& ipaddress);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Connect TCP socket to IP address (IPv4)                       //
-            ////////////////////////////////////////////////////////////////////
-            bool connectSocket(IPAddress4& ipaddress, uint16_t port);
+            bool sendData(const char* data, size_t size,
+                IPAddress6& ipaddress, uint16_t port);
 
             ////////////////////////////////////////////////////////////////////
-            //  Connect TCP socket to IP address (IPv6)                       //
+            //  Receive data over UDP (IPv4)                                  //
             ////////////////////////////////////////////////////////////////////
-            bool connectSocket(IPAddress6& ipaddress, uint16_t port);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Send data over TCP                                            //
-            ////////////////////////////////////////////////////////////////////
-            bool sendData(const char* data, size_t size);
+            bool receiveData(char* data, size_t size,
+                IPAddress4& ipaddress, uint16_t port);
 
             ////////////////////////////////////////////////////////////////////
-            //  Receive data over TCP                                         //
+            //  Receive data over UDP (IPv6)                                  //
             ////////////////////////////////////////////////////////////////////
-            bool receiveData(char* data, size_t size);
+            bool receiveData(char* data, size_t size,
+                IPAddress6& ipaddress, uint16_t port);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  TCPSocket private copy constructor : Not copyable             //
+            //  UDPSocket private copy constructor : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            TCPSocket(const TCPSocket&) = delete;
+            UDPSocket(const UDPSocket&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  TCPSocket private copy operator : Not copyable                //
+            //  UDPSocket private copy operator : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            TCPSocket& operator=(const TCPSocket&) = delete;
+            UDPSocket& operator=(const UDPSocket&) = delete;
 
 
         private:
-            UINT_PTR                m_handle;       // TCPSocket handle
-            TCPSocketIPVersion      m_ipversion;    // TCPSocket IP version
+            UINT_PTR                m_handle;       // UDPSocket handle
+            UDPSocketIPVersion      m_ipversion;    // UDPSocket IP version
     };
 
 
-#endif // VOS_NETWORK_WIN_TCPSOCKET_HEADER
+#endif // VOS_NETWORK_WIN_UDPSOCKET_HEADER

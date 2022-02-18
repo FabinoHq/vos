@@ -143,6 +143,7 @@
     <ClCompile Include="Network\Win\IPAddress6.cpp" />
     <ClCompile Include="Network\Win\NetworkInit.cpp" />
     <ClCompile Include="Network\Win\TCPSocket.cpp" />
+    <ClCompile Include="Network\Win\UDPSocket.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
     <ClCompile Include="Renderer\CubeMap.cpp" />
     <ClCompile Include="Renderer\FreeFlyCam.cpp" />
@@ -203,9 +204,11 @@
     <ClInclude Include="Network\IPAddress4.h" />
     <ClInclude Include="Network\IPAddress6.h" />
     <ClInclude Include="Network\TCPSocket.h" />
+    <ClInclude Include="Network\UDPSocket.h" />
     <ClInclude Include="Network\Win\IPAddress4.h" />
     <ClInclude Include="Network\Win\IPAddress6.h" />
     <ClInclude Include="Network\Win\TCPSocket.h" />
+    <ClInclude Include="Network\Win\UDPSocket.h" />
     <ClInclude Include="Renderer\Camera.h" />
     <ClInclude Include="Renderer\CubeMap.h" />
     <ClInclude Include="Renderer\FreeFlyCam.h" />

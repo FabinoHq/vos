@@ -173,6 +173,9 @@
     <ClCompile Include="Network\Win\TCPSocket.cpp">
       <Filter>Network\Win</Filter>
     </ClCompile>
+    <ClCompile Include="Network\Win\UDPSocket.cpp">
+      <Filter>Network\Win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -395,6 +398,12 @@
     </ClInclude>
     <ClInclude Include="Network\TCPSocket.h">
       <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\UDPSocket.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Win\UDPSocket.h">
+      <Filter>Network\Win</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

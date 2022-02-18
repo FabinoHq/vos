@@ -65,6 +65,7 @@
 !Network/IPAddress4.h
 !Network/IPAddress6.h
 !Network/TCPSocket.h
+!Network/UDPSocket.h
 !Network/Lin/
 !Network/Lin/IPAddress4.h
 !Network/Lin/IPAddress4.cpp
@@ -72,6 +73,8 @@
 !Network/Lin/IPAddress6.cpp
 !Network/Lin/TCPSocket.h
 !Network/Lin/TCPSocket.cpp
+!Network/Lin/UDPSocket.h
+!Network/Lin/UDPSocket.cpp
 !Network/Win/
 !Network/Win/NetworkInit.cpp
 !Network/Win/IPAddress4.h
@@ -80,6 +83,8 @@
 !Network/Win/IPAddress6.cpp
 !Network/Win/TCPSocket.h
 !Network/Win/TCPSocket.cpp
+!Network/Win/UDPSocket.h
+!Network/Win/UDPSocket.cpp
 
 !Compress/
 !Compress/ZLib.h

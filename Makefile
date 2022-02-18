@@ -53,7 +53,7 @@ VOS: main.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
-	Network/Lin/TCPSocket.o \
+	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
@@ -79,7 +79,7 @@ VOS: main.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
-	Network/Lin/TCPSocket.o \
+	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
@@ -146,6 +146,9 @@ Network/Lin/IPAddress6.o: Network/Lin/IPAddress6.cpp
 
 Network/Lin/TCPSocket.o: Network/Lin/TCPSocket.cpp
 	$(CC) -o Network/Lin/TCPSocket.o -c Network/Lin/TCPSocket.cpp $(CFLAGS)
+
+Network/Lin/UDPSocket.o: Network/Lin/UDPSocket.cpp
+	$(CC) -o Network/Lin/UDPSocket.o -c Network/Lin/UDPSocket.cpp $(CFLAGS)
 
 
 Compress/ZLib.o: Compress/ZLib.cpp
