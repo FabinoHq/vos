@@ -77,6 +77,13 @@ PNGFile::~PNGFile()
 bool PNGFile::setImage(uint32_t width, uint32_t height,
     const unsigned char* image)
 {
+    // Check image data
+    if (!image)
+    {
+        // Invalid image data
+        return false;
+    }
+
     // Check image loaded state
     if (m_loaded)
     {
@@ -408,6 +415,94 @@ bool PNGFile::savePNGImage(const std::string& filepath,
         return false;
     }
 
+    // Write PNG file IHDR chunk header
+    PNGFileChunkHeader pngIHDRChunkHeader;
+    pngIHDRChunkHeader.length = SysSwapEndianness(PNGFileIHDRChunkSize);
+    pngIHDRChunkHeader.type[0] = PNGFileIHDRChunkType[0];
+    pngIHDRChunkHeader.type[1] = PNGFileIHDRChunkType[1];
+    pngIHDRChunkHeader.type[2] = PNGFileIHDRChunkType[2];
+    pngIHDRChunkHeader.type[3] = PNGFileIHDRChunkType[3];
+    pngFile.write((char*)&pngIHDRChunkHeader, PNGFileChunkHeaderSize);
+    if (!pngFile)
+    {
+        // Could not write PNG file IHDR chunk header
+        return false;
+    }
+
+    // Write PNG file IHDR chunk
+    PNGFileIHDRChunk pngIHDRChunk;
+    pngIHDRChunk.width = SysSwapEndianness(width);
+    pngIHDRChunk.height = SysSwapEndianness(height);
+    pngIHDRChunk.bitDepth = 8;
+    pngIHDRChunk.colorType = PNGFILE_COLOR_RGBA;
+    pngIHDRChunk.compression = 0;
+    pngIHDRChunk.filter = 0;
+    pngIHDRChunk.interlace = 0;
+    pngFile.write((char*)&pngIHDRChunk, PNGFileIHDRChunkSize);
+    if (!pngFile)
+    {
+        // Could not write PNG file IHDR chunk
+        return false;
+    }
+
+    // Compute PNG file IHDR chunk CRC
+    uint32_t pngIHDRChunkCRC = SysCRC32Default;
+    pngIHDRChunkCRC = SysUpdateCRC32(
+        pngIHDRChunkCRC, pngIHDRChunkHeader.type, PNGFileChunkHeaderTypeSize
+    );
+    pngIHDRChunkCRC = SysUpdateCRC32(
+        pngIHDRChunkCRC, (unsigned char*)&pngIHDRChunk, PNGFileIHDRChunkSize
+    );
+    pngIHDRChunkCRC = SysSwapEndianness(pngIHDRChunkCRC^SysCRC32Final);
+
+    // Write PNG file IHDR chunk CRC
+    pngFile.write((char*)&pngIHDRChunkCRC, PNGFileChunkCRCSize);
+    if (!pngFile)
+    {
+        // Could not write PNG file IHDR chunk CRC
+        return false;
+    }
+
+    // Swap PNG file IHDR chunk byte endianness
+    pngIHDRChunk.width = SysSwapEndianness(pngIHDRChunk.width);
+    pngIHDRChunk.height = SysSwapEndianness(pngIHDRChunk.height);
+
+    // Save PNG file image data
+    if (!savePNGData(pngFile, pngIHDRChunk, image))
+    {
+        // Could not save PNG image data
+        return false;
+    }
+
+    // Write PNG file IEND chunk header
+    PNGFileChunkHeader pngIENDChunkHeader;
+    pngIENDChunkHeader.length = SysSwapEndianness(PNGFileIENDChunkSize);
+    pngIENDChunkHeader.type[0] = PNGFileIENDChunkType[0];
+    pngIENDChunkHeader.type[1] = PNGFileIENDChunkType[1];
+    pngIENDChunkHeader.type[2] = PNGFileIENDChunkType[2];
+    pngIENDChunkHeader.type[3] = PNGFileIENDChunkType[3];
+    pngFile.write((char*)&pngIENDChunkHeader, PNGFileChunkHeaderSize);
+    if (!pngFile)
+    {
+        // Could not write PNG file IEND chunk header
+        return false;
+    }
+
+    // Compute PNG file IEND chunk CRC
+    uint32_t pngIENDChunkCRC = SysCRC32Default;
+    pngIENDChunkCRC = SysUpdateCRC32(
+        pngIENDChunkCRC, pngIENDChunkHeader.type, PNGFileChunkHeaderTypeSize
+    );
+    pngIENDChunkCRC = SysSwapEndianness(pngIENDChunkCRC^SysCRC32Final);
+
+    // Write PNG file IEND chunk CRC
+    pngFile.write((char*)&pngIENDChunkCRC, PNGFileChunkCRCSize);
+    if (!pngFile)
+    {
+        // Could not write PNG file IEND chunk CRC
+        return false;
+    }
+
     // Close PNG file
     pngFile.close();
 
@@ -560,13 +655,13 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
 
     // Decompress deflate data
     if (!ZLibDeflateDecompress(
-        rawData, pngIDATChunkHeader.length, pngData, pngDataSize))
+        rawData, pngIDATChunkHeader.length, pngData, &pngDataSize))
     {
         // Could not decompress deflate data
         return false;
     }
 
-    // Allocate image data
+    // Allocate 32bits RGBA internal image data
     size_t imageSize = pngIHDRChunk.width*pngIHDRChunk.height*4;
     try
     {
@@ -640,6 +735,186 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     m_height = pngIHDRChunk.height;
 
     // PNG file image data is successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Save PNG file image data                                                  //
+//  return : True if PNG file image data is successfully saved                //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::savePNGData(std::ofstream& pngFile,
+    PNGFileIHDRChunk& pngIHDRChunk, const unsigned char* image)
+{
+    // Check image data
+    if (!image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Set pixel depth
+    uint32_t pixelDepth = 0;
+    switch (pngIHDRChunk.colorType)
+    {
+        case PNGFILE_COLOR_GREYSCALE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGB:
+            pixelDepth = 3;
+            break;
+        case PNGFILE_COLOR_PALETTE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_GREYSCALE_ALPHA:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGBA:
+            pixelDepth = 4;
+            break;
+        default:
+            // Unsupported PNG file color type
+            return false;
+    }
+
+    // Allocate PNG data
+    size_t pngDataSize =
+        (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
+    unsigned char* pngData = 0;
+    try
+    {
+        pngData = new unsigned char[pngDataSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate PNG data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate PNG data
+        return false;
+    }
+    if (!pngData)
+    {
+        // Invalid PNG data
+        return false;
+    }
+
+    // Encode PNG image data
+    switch (pngIHDRChunk.colorType)
+    {
+        case PNGFILE_COLOR_GREYSCALE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGB:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_PALETTE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_GREYSCALE_ALPHA:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_RGBA:
+            // Encode 32 bits RGBA PNG
+            if (!encodePNG32bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
+            {
+                // Could not encode 32 bits RGBA PNG
+                return false;
+            }
+            break;
+        default:
+            // Unsupported PNG file color type
+            return false;
+    }
+
+    // Compute ZLib compressed data size
+    size_t compressedDataSize = ZLibComputeDeflateCompressSize(pngDataSize);
+
+    // Allocate compressed data
+    unsigned char* compressedData = 0;
+    try
+    {
+        compressedData = new unsigned char[compressedDataSize];
+    }
+    catch (const std::bad_alloc&)
+    {
+        // Could not allocate compressed data
+        return false;
+    }
+    catch (...)
+    {
+        // Could not allocate compressed data
+        return false;
+    }
+    if (!compressedData)
+    {
+        // Invalid compressed data
+        return false;
+    }
+
+    // Compress deflate data
+    if (!ZLibDeflateCompress(
+        pngData, pngDataSize, compressedData, &compressedDataSize))
+    {
+        // Could not compress deflate data
+        return false;
+    }
+
+    // Write PNG file IDAT chunk header
+    PNGFileChunkHeader pngIDATChunkHeader;
+    pngIDATChunkHeader.length = SysSwapEndianness((uint32_t)compressedDataSize);
+    pngIDATChunkHeader.type[0] = PNGFileIDATChunkType[0];
+    pngIDATChunkHeader.type[1] = PNGFileIDATChunkType[1];
+    pngIDATChunkHeader.type[2] = PNGFileIDATChunkType[2];
+    pngIDATChunkHeader.type[3] = PNGFileIDATChunkType[3];
+    pngFile.write((char*)&pngIDATChunkHeader, PNGFileChunkHeaderSize);
+    if (!pngFile)
+    {
+        // Could not read PNG file chunk header
+        return false;
+    }
+
+    // Write PNG file IDAT chunk
+    pngFile.write((char*)compressedData, compressedDataSize);
+    if (!pngFile)
+    {
+        // Could not read PNG file IDAT chunk
+        return false;
+    }
+
+    // Compute PNG file IDAT chunk CRC
+    uint32_t pngIDATChunkCRC = SysCRC32Default;
+    pngIDATChunkCRC = SysUpdateCRC32(
+        pngIDATChunkCRC, pngIDATChunkHeader.type, PNGFileChunkHeaderTypeSize
+    );
+    pngIDATChunkCRC = SysUpdateCRC32(
+        pngIDATChunkCRC, compressedData, compressedDataSize
+    );
+    pngIDATChunkCRC = SysSwapEndianness(pngIDATChunkCRC^SysCRC32Final);
+
+    // Write PNG file IDAT chunk CRC
+    pngFile.write((char*)&pngIDATChunkCRC, PNGFileChunkCRCSize);
+    if (!pngFile)
+    {
+        // Could not write PNG file IDAT chunk CRC
+        return false;
+    }
+
+    // Destroy compressed data
+    if (compressedData)
+    {
+        delete[] compressedData;
+    }
+
+    // Destroy png data
+    if (pngData)
+    {
+        delete[] pngData;
+    }
+
+    // PNG file image data is successfully saved
     return true;
 }
 
@@ -773,6 +1048,36 @@ bool PNGFile::decodePNG32bits(unsigned char* data,
     }
 
     // PNG 32 bits data are successfully decoded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Encode PNG 32 bits data                                                   //
+//  return : True if PNG 32 bits data are successfully encoded                //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::encodePNG32bits(unsigned char* data,
+    uint32_t width, uint32_t height, const unsigned char* image)
+{
+    // Check image data
+    if (!image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    size_t inIndex = 0;
+    size_t outIndex = 0;
+    size_t scanlineSize = width*4;
+    for (uint32_t j = 0; j < height; ++j)
+    {
+        // No filter
+        data[outIndex++] = PNGFILE_FILTER_NONE;
+        memcpy(&data[outIndex], &image[inIndex], scanlineSize);
+        outIndex += scanlineSize;
+        inIndex += scanlineSize;
+    }
+
+    // PNG 32 bits data are successfully encoded
     return true;
 }
 

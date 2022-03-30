@@ -50,6 +50,17 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  ZLib deflate compression level hint enumeration                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum ZLibCompressionLevelHint
+    {
+        ZLIB_DEFLATE_FASTEST_COMPRESSION = 0,
+        ZLIB_DEFLATE_FAST_COMPRESSION = 1,
+        ZLIB_DEFLATE_DEFAULT_COMPRESSION = 2,
+        ZLIB_DEFLATE_SLOWEST_COMPRESSION = 3
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     //  ZLib deflate block types enumeration                                  //
     ////////////////////////////////////////////////////////////////////////////
     enum ZLibDeflateBlockType
@@ -60,11 +71,24 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Compute compressed ZLib deflate data size                             //
+    //  return : Computed compressed ZLib deflate data size                   //
+    ////////////////////////////////////////////////////////////////////////////
+    size_t ZLibComputeDeflateCompressSize(size_t inSize);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Compress ZLib deflate data                                            //
+    //  return : True if the data is successfully compressed                  //
+    ////////////////////////////////////////////////////////////////////////////
+    bool ZLibDeflateCompress(
+        unsigned char* in, size_t inSize, unsigned char* out, size_t* outSize);
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Decompress ZLib deflate data                                          //
     //  return : True if the data is successfully decompressed                //
     ////////////////////////////////////////////////////////////////////////////
     bool ZLibDeflateDecompress(
-        unsigned char* in, size_t inSize, unsigned char* out, size_t outSize);
+        unsigned char* in, size_t inSize, unsigned char* out, size_t* outSize);
 
 
 #endif // VOS_COMPRESS_ZLIB_HEADER

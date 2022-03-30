@@ -103,7 +103,7 @@ bool CubeMap::createCubeMap(Renderer& renderer,
     }
 
     // Check cubemap size
-    if (width == 0 || height == 0)
+    if ((width == 0) || (height == 0) || (width != height))
     {
         // Invalid cubemap size
         return false;
@@ -327,7 +327,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
     }
 
     // Check cubemap size
-    if (width == 0 || height == 0)
+    if ((width == 0) || (height == 0) || (width != height))
     {
         // Invalid cubemap size
         return false;

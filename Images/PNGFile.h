@@ -71,9 +71,9 @@
         uint32_t        length;
         unsigned char   type[4];
     };
-    const size_t PNGFileChunkHeaderSize = 8;
-    const size_t PNGFileChunkHeaderTypeSize = 4;
-    const size_t PNGFileChunkCRCSize = 4;
+    const uint32_t PNGFileChunkHeaderSize = 8;
+    const uint32_t PNGFileChunkHeaderTypeSize = 4;
+    const uint32_t PNGFileChunkCRCSize = 4;
 
     ////////////////////////////////////////////////////////////////////////////
     //  PNGFile IHDR chunk structure                                          //
@@ -89,7 +89,7 @@
         uint8_t     filter;
         uint8_t     interlace;
     };
-    const size_t PNGFileIHDRChunkSize = 13;
+    const uint32_t PNGFileIHDRChunkSize = 13;
 
     ////////////////////////////////////////////////////////////////////////////
     //  PNGFile IDAT chunk type                                               //
@@ -97,7 +97,13 @@
     const unsigned char PNGFileIDATChunkType[4] = {0x49, 0x44, 0x41, 0x54};
 
     ////////////////////////////////////////////////////////////////////////////
-    //  PNGFile color type enumeration                                       //
+    //  PNGFile IEND chunk type                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    const unsigned char PNGFileIENDChunkType[4] = {0x49, 0x45, 0x4E, 0x44};
+    const uint32_t PNGFileIENDChunkSize = 0;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  PNGFile color type enumeration                                        //
     ////////////////////////////////////////////////////////////////////////////
     enum PNGFileColorType
     {
@@ -216,11 +222,25 @@
                 PNGFileIHDRChunk& pngIHDRChunk);
 
             ////////////////////////////////////////////////////////////////////
+            //  Save PNG file image data                                      //
+            //  return : True if PNG file image data is successfully saved    //
+            ////////////////////////////////////////////////////////////////////
+            static bool savePNGData(std::ofstream& pngFile,
+                PNGFileIHDRChunk& pngIHDRChunk, const unsigned char* image);
+
+            ////////////////////////////////////////////////////////////////////
             //  Decode PNG 32 bits data                                       //
             //  return : True if PNG 32 bits data are successfully decoded    //
             ////////////////////////////////////////////////////////////////////
             bool decodePNG32bits(unsigned char* data,
                 uint32_t width, uint32_t height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Encode PNG 32 bits data                                       //
+            //  return : True if PNG 32 bits data are successfully encoded    //
+            ////////////////////////////////////////////////////////////////////
+            static bool encodePNG32bits(unsigned char* data,
+                uint32_t width, uint32_t height, const unsigned char* image);
 
             ////////////////////////////////////////////////////////////////////
             //  Decode PNG 24 bits data                                       //
