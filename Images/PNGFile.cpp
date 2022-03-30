@@ -300,7 +300,7 @@ bool PNGFile::loadImage(const std::string& filepath)
 //  Save PNG file                                                             //
 //  return : True if PNG file is successfully saved                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool PNGFile::saveImage(const std::string& filepath)
+bool PNGFile::saveImage(const std::string& filepath, PNGFileColorType colorType)
 {
     // Check image loaded state
     if (!m_loaded)
@@ -310,7 +310,7 @@ bool PNGFile::saveImage(const std::string& filepath)
     }
 
     // Save PNG file
-    if (!savePNGImage(filepath, m_width, m_height, m_image))
+    if (!savePNGImage(filepath, m_width, m_height, m_image, colorType))
     {
         // Could not save PNG file
         return false;
@@ -378,7 +378,8 @@ uint32_t PNGFile::getHeight()
 //  return : True if PNG image is successfully saved                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool PNGFile::savePNGImage(const std::string& filepath,
-    uint32_t width, uint32_t height, const unsigned char* image)
+    uint32_t width, uint32_t height, const unsigned char* image,
+    PNGFileColorType colorType)
 {
     // Check image data
     if (!image)
@@ -434,7 +435,7 @@ bool PNGFile::savePNGImage(const std::string& filepath,
     pngIHDRChunk.width = SysSwapEndianness(width);
     pngIHDRChunk.height = SysSwapEndianness(height);
     pngIHDRChunk.bitDepth = 8;
-    pngIHDRChunk.colorType = PNGFILE_COLOR_RGBA;
+    pngIHDRChunk.colorType = (uint8_t)colorType;
     pngIHDRChunk.compression = 0;
     pngIHDRChunk.filter = 0;
     pngIHDRChunk.interlace = 0;
@@ -807,8 +808,14 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
             // Unsupported PNG file color type
             return false;
         case PNGFILE_COLOR_RGB:
-            // Unsupported PNG file color type
-            return false;
+            // Encode 24 bits RGB PNG
+            if (!encodePNG24bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
+            {
+                // Could not encode 24 bits RGB PNG
+                return false;
+            }
+            break;
         case PNGFILE_COLOR_PALETTE:
             // Unsupported PNG file color type
             return false;
@@ -1072,6 +1079,8 @@ bool PNGFile::encodePNG32bits(unsigned char* data,
     {
         // No filter
         data[outIndex++] = PNGFILE_FILTER_NONE;
+
+        // Encode unfiltered scanline
         memcpy(&data[outIndex], &image[inIndex], scanlineSize);
         outIndex += scanlineSize;
         inIndex += scanlineSize;
@@ -1241,5 +1250,42 @@ bool PNGFile::decodePNG24bits(unsigned char* data,
     }
 
     // PNG 24 bits data are successfully decoded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Encode PNG 24 bits data                                                   //
+//  return : True if PNG 24 bits data are successfully encoded                //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::encodePNG24bits(unsigned char* data,
+    uint32_t width, uint32_t height, const unsigned char* image)
+{
+    // Check image data
+    if (!image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    size_t inIndex = 0;
+    size_t outIndex = 0;
+    size_t scanlineSize = width*3;
+    size_t alphaMod = 0;
+    for (uint32_t j = 0; j < height; ++j)
+    {
+        // No filter
+        data[outIndex++] = PNGFILE_FILTER_NONE;
+
+        // Encode unfiltered scanline
+        for (size_t i = 0; i < scanlineSize; ++i)
+        {
+            // RGB channels
+            data[outIndex++] = image[inIndex++];
+            // Alpha channel
+            if (((++alphaMod) % 3) == 0) ++inIndex;
+        }
+    }
+
+    // PNG 24 bits data are successfully encoded
     return true;
 }

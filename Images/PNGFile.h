@@ -161,7 +161,8 @@
             //  Save PNG file                                                 //
             //  return : True if PNG file is successfully saved               //
             ////////////////////////////////////////////////////////////////////
-            bool saveImage(const std::string& filepath);
+            bool saveImage(const std::string& filepath,
+                PNGFileColorType colorType = PNGFILE_COLOR_RGBA);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy PNG image                                             //
@@ -199,7 +200,8 @@
             //  return : True if PNG image is successfully saved              //
             ////////////////////////////////////////////////////////////////////
             static bool savePNGImage(const std::string& filepath,
-                uint32_t width, uint32_t height, const unsigned char* image);
+                uint32_t width, uint32_t height, const unsigned char* image,
+                PNGFileColorType colorType = PNGFILE_COLOR_RGBA);
 
 
         private:
@@ -248,6 +250,13 @@
             ////////////////////////////////////////////////////////////////////
             bool decodePNG24bits(unsigned char* data,
                 uint32_t width, uint32_t height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Encode PNG 24 bits data                                       //
+            //  return : True if PNG 24 bits data are successfully encoded    //
+            ////////////////////////////////////////////////////////////////////
+            static bool encodePNG24bits(unsigned char* data,
+                uint32_t width, uint32_t height, const unsigned char* image);
 
 
         private:
