@@ -614,7 +614,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
         if (!pngFile)
         {
             // Could not read PNG file chunk header
-            break;
+            return false;
         }
         pngIDATChunkHeader.length = SysSwapEndianness(
             pngIDATChunkHeader.length
