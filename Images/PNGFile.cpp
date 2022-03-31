@@ -543,36 +543,39 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             return false;
     }
 
-    // Read PNG file IDAT chunk header
-    PNGFileChunkHeader pngIDATChunkHeader = {0, {0, 0, 0, 0}};
-    bool pngIDATChunkFound = false;
-    while (!pngIDATChunkFound)
+    // Read PNG file IDAT chunks headers
+    std::streampos pngIDATstart = pngFile.tellg();
+    size_t pngIDATChunksLength = 0;
+    unsigned int pngIDATChunksCount = 0;
+    PNGFileChunkHeader pngIDATChunkHeader;
+    while (pngFile)
     {
+        pngIDATChunkHeader = {0, {0, 0, 0, 0}};
         pngFile.read((char*)&pngIDATChunkHeader, PNGFileChunkHeaderSize);
         if (!pngFile)
         {
             // Could not read PNG file chunk header
-            return false;
+            break;
         }
         pngIDATChunkHeader.length = SysSwapEndianness(
             pngIDATChunkHeader.length
         );
-        if ((pngIDATChunkHeader.type[0] != PNGFileIDATChunkType[0]) ||
-            (pngIDATChunkHeader.type[1] != PNGFileIDATChunkType[1]) ||
-            (pngIDATChunkHeader.type[2] != PNGFileIDATChunkType[2]) ||
-            (pngIDATChunkHeader.type[3] != PNGFileIDATChunkType[3]))
-        {
-            pngFile.ignore(pngIDATChunkHeader.length + PNGFileChunkCRCSize);
-        }
-        else
+        if ((pngIDATChunkHeader.type[0] == PNGFileIDATChunkType[0]) &&
+            (pngIDATChunkHeader.type[1] == PNGFileIDATChunkType[1]) &&
+            (pngIDATChunkHeader.type[2] == PNGFileIDATChunkType[2]) &&
+            (pngIDATChunkHeader.type[3] == PNGFileIDATChunkType[3]))
         {
             // PNG file IDAT chunk header found
-            pngIDATChunkFound = true;
+            pngIDATChunksLength += pngIDATChunkHeader.length;
+            ++pngIDATChunksCount;
         }
+
+        // Skip current chunk
+        pngFile.ignore(pngIDATChunkHeader.length + PNGFileChunkCRCSize);
     }
-    if (!pngIDATChunkFound)
+    if (pngIDATChunksCount <= 0)
     {
-        // Could not find PNG file IDAT chunk header
+        // Could not find any PNG file IDAT chunk header
         return false;
     }
 
@@ -580,7 +583,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     unsigned char* rawData = 0;
     try
     {
-        rawData = new unsigned char[pngIDATChunkHeader.length];
+        rawData = new unsigned char[pngIDATChunksLength];
     }
     catch (const std::bad_alloc&)
     {
@@ -598,36 +601,74 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
         return false;
     }
 
-    // Read PNG file raw image data
-    pngFile.read((char*)rawData, pngIDATChunkHeader.length);
-    if (!pngFile)
-    {
-        // Could not read PNG raw image data
-        return false;
-    }
+    // Reset input file stream
+    pngFile.clear();
+    pngFile.seekg(pngIDATstart, std::ios::beg);
 
-    // Read PNG file IDAT chunk CRC
-    uint32_t pngIDATChunkCRC = 0;
-    pngFile.read((char*)&pngIDATChunkCRC, PNGFileChunkCRCSize);
-    if (!pngFile)
+    // Read all IDAT chunks
+    size_t rawDataOffset = 0;
+    for (unsigned int i = 0; i < pngIDATChunksCount;)
     {
-        // Could not read PNG file IDAT chunk CRC
-        return false;
-    }
-    pngIDATChunkCRC = SysSwapEndianness(pngIDATChunkCRC);
+        pngIDATChunkHeader = {0, {0, 0, 0, 0}};
+        pngFile.read((char*)&pngIDATChunkHeader, PNGFileChunkHeaderSize);
+        if (!pngFile)
+        {
+            // Could not read PNG file chunk header
+            break;
+        }
+        pngIDATChunkHeader.length = SysSwapEndianness(
+            pngIDATChunkHeader.length
+        );
+        if ((pngIDATChunkHeader.type[0] != PNGFileIDATChunkType[0]) ||
+            (pngIDATChunkHeader.type[1] != PNGFileIDATChunkType[1]) ||
+            (pngIDATChunkHeader.type[2] != PNGFileIDATChunkType[2]) ||
+            (pngIDATChunkHeader.type[3] != PNGFileIDATChunkType[3]))
+        {
+            // Skip current chunk
+            pngFile.ignore(pngIDATChunkHeader.length + PNGFileChunkCRCSize);
+        }
+        else
+        {
+            // Read PNG file raw image data
+            pngFile.read(
+                (char*)&rawData[rawDataOffset], pngIDATChunkHeader.length
+            );
+            if (!pngFile)
+            {
+                // Could not read PNG raw image data
+                return false;
+            }
 
-    // Check PNG file IDAT chunk CRC
-    uint32_t checkIDATChunkCRC = SysCRC32Default;
-    checkIDATChunkCRC = SysUpdateCRC32(
-        checkIDATChunkCRC, pngIDATChunkHeader.type, PNGFileChunkHeaderTypeSize
-    );
-    checkIDATChunkCRC = SysUpdateCRC32(
-        checkIDATChunkCRC, rawData, pngIDATChunkHeader.length
-    );
-    if ((checkIDATChunkCRC^SysCRC32Final) != pngIDATChunkCRC)
-    {
-        // Invalid PNG file IDAT chunk CRC
-        return false;
+            // Read PNG file IDAT chunk CRC
+            uint32_t pngIDATChunkCRC = 0;
+            pngFile.read((char*)&pngIDATChunkCRC, PNGFileChunkCRCSize);
+            if (!pngFile)
+            {
+                // Could not read PNG file IDAT chunk CRC
+                return false;
+            }
+            pngIDATChunkCRC = SysSwapEndianness(pngIDATChunkCRC);
+
+            // Check PNG file IDAT chunk CRC
+            uint32_t checkIDATChunkCRC = SysCRC32Default;
+            checkIDATChunkCRC = SysUpdateCRC32(
+                checkIDATChunkCRC, pngIDATChunkHeader.type,
+                PNGFileChunkHeaderTypeSize
+            );
+            checkIDATChunkCRC = SysUpdateCRC32(
+                checkIDATChunkCRC, &rawData[rawDataOffset],
+                pngIDATChunkHeader.length
+            );
+            if ((checkIDATChunkCRC^SysCRC32Final) != pngIDATChunkCRC)
+            {
+                // Invalid PNG file IDAT chunk CRC
+                return false;
+            }
+
+            // Increment raw data offset
+            rawDataOffset += pngIDATChunkHeader.length;
+            ++i;
+        }
     }
 
     // Allocate decompressed data
@@ -656,7 +697,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
 
     // Decompress deflate data
     if (!ZLibDeflateDecompress(
-        rawData, pngIDATChunkHeader.length, pngData, &pngDataSize))
+        rawData, pngIDATChunksLength, pngData, &pngDataSize))
     {
         // Could not decompress deflate data
         return false;
@@ -879,7 +920,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     pngFile.write((char*)&pngIDATChunkHeader, PNGFileChunkHeaderSize);
     if (!pngFile)
     {
-        // Could not read PNG file chunk header
+        // Could not write PNG file chunk header
         return false;
     }
 
@@ -887,7 +928,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     pngFile.write((char*)compressedData, compressedDataSize);
     if (!pngFile)
     {
-        // Could not read PNG file IDAT chunk
+        // Could not write PNG file IDAT chunk
         return false;
     }
 
