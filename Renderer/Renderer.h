@@ -60,6 +60,7 @@
     #include "View.h"
     #include "Camera.h"
     #include "FreeFlyCam.h"
+    #include "OrbitalCam.h"
     #include "Sprite.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
@@ -95,7 +96,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer max uniforms descriptor sets                                 //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxUniformsDesc = 4;
+    const uint32_t RendererMaxUniformsDesc = 256;
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer max textures descriptor sets                                 //

@@ -176,6 +176,9 @@
     <ClCompile Include="Network\Win\UDPSocket.cpp">
       <Filter>Network\Win</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\OrbitalCam.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -404,6 +407,9 @@
     </ClInclude>
     <ClInclude Include="Network\Win\UDPSocket.h">
       <Filter>Network\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\OrbitalCam.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

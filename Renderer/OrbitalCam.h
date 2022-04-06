@@ -37,124 +37,100 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Renderer/OrbitalCam.h : Orbital camera management                      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_RENDERER_ORBITALCAM_HEADER
+#define VOS_RENDERER_ORBITALCAM_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysMemory.h"
-    #include "System/SysWindow.h"
-    #include "System/SysClock.h"
-    #include "System/SysSleep.h"
-
-    #include "Renderer/Renderer.h"
-    #include "Renderer/Texture.h"
-    #include "Renderer/CubeMap.h"
-    #include "Renderer/View.h"
-    #include "Renderer/Camera.h"
-    #include "Renderer/FreeFlyCam.h"
-    #include "Renderer/OrbitalCam.h"
-    #include "Renderer/Sprite.h"
-    #include "Renderer/ProcSprite.h"
-    #include "Renderer/SkyBox.h"
-
-    #include "Renderer/Shapes/RectangleShape.h"
-    #include "Renderer/Shapes/EllipseShape.h"
-    #include "Renderer/Shapes/CuboidShape.h"
-
-    #include "Renderer/GUI/GUIPxText.h"
-    #include "Renderer/GUI/GUIWindow.h"
-
-    #include "Renderer/StaticMesh.h"
-    #include "Renderer/HeightMapChunk.h"
-
-    #include "Images/Embedded/PxFont.h"
-    #include "Images/Embedded/Window.h"
-    #include "Images/BMPFile.h"
-    #include "Images/PNGFile.h"
-
-    #include "Event.h"
-
-    #include <cstddef>
     #include <cstdint>
-    #include <exception>
+    #include <cstring>
+
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/UniformBuffer.h"
+    #include "../Math/Math.h"
+    #include "../Math/Vector3.h"
+    #include "../Math/Matrix4x4.h"
+
+    #include "Camera.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
+    //  Orbital camera default settings                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Vos
+    const float OrbitalCameraMouseFactor = 0.004f;
+    const float OrbitalCameraMinAngle = -(Math::PiTwo-0.001f);
+    const float OrbitalCameraMaxAngle = (Math::PiTwo-0.001f);
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  OrbitalCam class definition                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    class OrbitalCam : public Camera
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
+            //  OrbitalCam default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Vos();
+            OrbitalCam();
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
+            //  OrbitalCam virtual destructor                                 //
             ////////////////////////////////////////////////////////////////////
-            ~Vos();
+            virtual ~OrbitalCam();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
+            //  Compute orbital camera                                        //
             ////////////////////////////////////////////////////////////////////
-            bool launch();
+            virtual void compute(Renderer& renderer, float frametime);
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
+            //  Set orbital camera target                                     //
             ////////////////////////////////////////////////////////////////////
-            void run();
+            void setTarget(const Vector3& target);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set orbital camera target                                     //
+            ////////////////////////////////////////////////////////////////////
+            void setTarget(float targetX, float targetY, float targetZ);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set orbital camera speed                                      //
+            ////////////////////////////////////////////////////////////////////
+            void setSpeed(float speed);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle mouse move event                                       //
+            ////////////////////////////////////////////////////////////////////
+            void mouseMove(float mouseDx, float mouseDy);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
+            //  OrbitalCam private copy constructor : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
+            OrbitalCam(const OrbitalCam&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
+            //  OrbitalCam private copy operator : Not copyable               //
             ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
+            OrbitalCam& operator=(const OrbitalCam&) = delete;
+
 
         private:
-            bool            m_running;          // VOS running state
-            SysWindow       m_window;           // VOS main window
-            Renderer        m_renderer;         // VOS renderer
-            SysClock        m_clock;            // VOS clock
+            Vector3     m_target;       // Orbitalcam target
+            Vector3     m_cross;        // Orbitalcam cross product
 
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-            OrbitalCam      m_orbitalcam;       // Orbital camera
-
-            CubeMap         m_cubemap;          // CubeMap
-            SkyBox          m_skybox;           // SkyBox
-
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectanle;         // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
-            CuboidShape     m_cuboid;           // Cuboid shape
-
-            Texture         m_pxFontTexture;    // Pixel font texture
-            GUIPxText       m_pxText;           // Test pixel text
-
-            Texture         m_windowTexture;    // GUI Window texture
-            GUIWindow       m_guiWindow;        // GUI Window
-
-            Texture         m_testTexture;      // Test texture
-            StaticMesh      m_staticMesh;       // Static mesh
-
-            HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
+            float       m_speed;        // Orbitalcam speed
     };
 
 
-#endif // VOS_VOS_HEADER
+#endif // VOS_RENDERER_ORBITALCAM_HEADER

@@ -150,6 +150,7 @@
     <ClCompile Include="Renderer\GUI\GUIPxText.cpp" />
     <ClCompile Include="Renderer\GUI\GUIWindow.cpp" />
     <ClCompile Include="Renderer\HeightMapChunk.cpp" />
+    <ClCompile Include="Renderer\OrbitalCam.cpp" />
     <ClCompile Include="Renderer\Pipeline.cpp" />
     <ClCompile Include="Renderer\ProcSprite.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Renderer\GUI\GUIPxText.h" />
     <ClInclude Include="Renderer\GUI\GUIWindow.h" />
     <ClInclude Include="Renderer\HeightMapChunk.h" />
+    <ClInclude Include="Renderer\OrbitalCam.h" />
     <ClInclude Include="Renderer\Pipeline.h" />
     <ClInclude Include="Renderer\ProcSprite.h" />
     <ClInclude Include="Renderer\Renderer.h" />

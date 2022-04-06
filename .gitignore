@@ -144,6 +144,8 @@
 !Renderer/Camera.cpp
 !Renderer/FreeFlyCam.h
 !Renderer/FreeFlyCam.cpp
+!Renderer/OrbitalCam.h
+!Renderer/OrbitalCam.cpp
 !Renderer/Sprite.h
 !Renderer/Sprite.cpp
 !Renderer/ProcSprite.h

@@ -47,6 +47,7 @@
 //  FreeFlyCam default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
 FreeFlyCam::FreeFlyCam() :
+Camera(),
 m_cross(),
 m_speed(1.0f),
 m_forward(false),

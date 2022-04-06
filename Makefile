@@ -62,7 +62,8 @@ VOS: main.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Pipeline.o Renderer/Shader.o \
 	Renderer/Texture.o Renderer/CubeMap.o \
-	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
+	Renderer/View.o Renderer/Camera.o \
+	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
@@ -88,7 +89,8 @@ VOS: main.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Pipeline.o Renderer/Shader.o \
 	Renderer/CubeMap.o Renderer/Texture.o \
-	Renderer/View.o Renderer/Camera.o Renderer/FreeFlyCam.o \
+	Renderer/View.o Renderer/Camera.o \
+	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
@@ -213,6 +215,9 @@ Renderer/Camera.o: Renderer/Camera.cpp
 
 Renderer/FreeFlyCam.o: Renderer/FreeFlyCam.cpp
 	$(CC) -o Renderer/FreeFlyCam.o -c Renderer/FreeFlyCam.cpp $(CFLAGS)
+
+Renderer/OrbitalCam.o: Renderer/OrbitalCam.cpp
+	$(CC) -o Renderer/OrbitalCam.o -c Renderer/OrbitalCam.cpp $(CFLAGS)
 
 Renderer/Sprite.o: Renderer/Sprite.cpp
 	$(CC) -o Renderer/Sprite.o -c Renderer/Sprite.cpp $(CFLAGS)

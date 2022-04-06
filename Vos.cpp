@@ -53,6 +53,7 @@ m_clock(),
 m_view(),
 m_camera(),
 m_freeflycam(),
+m_orbitalcam(),
 m_cubemap(),
 m_skybox(),
 m_procSprite(),
@@ -132,6 +133,16 @@ bool Vos::launch()
     }
     m_freeflycam.setZ(1.0f);
     m_freeflycam.setSpeed(5.0f);
+
+    // Init orbital camera
+    if (!m_orbitalcam.init(m_renderer))
+    {
+        // Could not init orbital camera
+        return false;
+    }
+    m_orbitalcam.setZ(1.0f);
+    m_orbitalcam.setTarget(0.0f, 0.0f, 0.0f);
+    m_orbitalcam.setSpeed(5.0f);
 
 
     // Load cubemap textures
@@ -530,16 +541,21 @@ void Vos::run()
         m_view.compute(m_renderer);
         m_camera.compute(m_renderer);
         m_freeflycam.compute(m_renderer, frametime);
+        m_orbitalcam.compute(m_renderer, frametime);
 
         // Render frame
         if (m_renderer.startFrame())
         {
             // Set freefly camera
-            m_renderer.setCamera(m_freeflycam);
+            //m_renderer.setCamera(m_freeflycam);
+
+            // Set orbital camera
+            m_renderer.setCamera(m_orbitalcam);
 
             // Render skybox
             m_renderer.bindSkyBoxPipeline();
-            m_skybox.setPosition(m_freeflycam.getPosition());
+            //m_skybox.setPosition(m_freeflycam.getPosition());
+            m_skybox.setPosition(m_orbitalcam.getPosition());
             m_skybox.bindVertexBuffer(m_renderer);
             m_skybox.render(m_renderer);
 
@@ -626,6 +642,9 @@ void Vos::run()
         // Destroy cubemap
         m_cubemap.destroyCubeMap(m_renderer);
 
+
+        // Destroy orbital camera
+        m_orbitalcam.destroyCamera(m_renderer);
 
         // Destroy freefly camera
         m_freeflycam.destroyCamera(m_renderer);
