@@ -61,6 +61,8 @@
     const float OrbitalCameraMouseFactor = 0.004f;
     const float OrbitalCameraMinAngle = -(Math::PiTwo-0.001f);
     const float OrbitalCameraMaxAngle = (Math::PiTwo-0.001f);
+    const float OrbitalCameraMinDistance = 0.0f;
+    const float OrbitalCameraMaxDistance = 10.0f;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -103,6 +105,11 @@
             void setTarget(float targetX, float targetY, float targetZ);
 
             ////////////////////////////////////////////////////////////////////
+            //  Set orbital camera distance from target                       //
+            ////////////////////////////////////////////////////////////////////
+            void setDistance(float distance);
+
+            ////////////////////////////////////////////////////////////////////
             //  Set orbital camera speed                                      //
             ////////////////////////////////////////////////////////////////////
             void setSpeed(float speed);
@@ -111,6 +118,16 @@
             //  Handle mouse move event                                       //
             ////////////////////////////////////////////////////////////////////
             void mouseMove(float mouseDx, float mouseDy);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle mouse press event                                      //
+            ////////////////////////////////////////////////////////////////////
+            void mousePress();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle mouse release event                                    //
+            ////////////////////////////////////////////////////////////////////
+            void mouseRelease();
 
             ////////////////////////////////////////////////////////////////////
             //  Handle mouse wheel event                                      //
@@ -132,10 +149,10 @@
 
         private:
             Vector3     m_target;       // Orbitalcam target
-            Vector3     m_cross;        // Orbitalcam cross product
-
+            float       m_distance;     // Orbitalcam distance from target
             float       m_speed;        // Orbitalcam speed
 
+            bool        m_mousePressed; // Orbitalcam mouse pressed state
             bool        m_forward;      // Orbitalcam forward state
             bool        m_backward;     // Orbitalcam backward state
     };

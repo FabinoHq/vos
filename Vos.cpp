@@ -142,7 +142,8 @@ bool Vos::launch()
     }
     m_orbitalcam.setZ(1.0f);
     m_orbitalcam.setTarget(0.0f, 0.0f, 0.0f);
-    m_orbitalcam.setSpeed(10.0f);
+    m_orbitalcam.setDistance(2.0f);
+    m_orbitalcam.setSpeed(50.0f);
 
 
     // Load cubemap textures
@@ -512,6 +513,9 @@ void Vos::run()
                     m_freeflycam.mouseMove(
                         event.mouse.x*1.0f, event.mouse.y*1.0f
                     );
+                    m_orbitalcam.mouseMove(
+                        event.mouse.x*1.0f, event.mouse.y*1.0f
+                    );
                     //m_guiWindow.mouseMove(m_mouseX, m_mouseY);
                     //m_guiWindow.updateCursor(m_renderer, m_mouseX, m_mouseY);
                     break;
@@ -520,6 +524,7 @@ void Vos::run()
                 case EVENT_MOUSEPRESSED:
                     if (event.mouse.button == EVENT_MOUSE_LEFT)
                     {
+                        m_orbitalcam.mousePress();
                         //m_guiWindow.mousePress(m_mouseX, m_mouseY);
                     }
                     break;
@@ -528,6 +533,7 @@ void Vos::run()
                 case EVENT_MOUSERELEASED:
                     if (event.mouse.button == EVENT_MOUSE_LEFT)
                     {
+                        m_orbitalcam.mouseRelease();
                         //m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
                     }
                     break;

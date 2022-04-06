@@ -49,8 +49,11 @@
 OrbitalCam::OrbitalCam() :
 Camera(),
 m_target(),
-m_cross(),
-m_speed(1.0f)
+m_distance(1.0f),
+m_speed(1.0f),
+m_mousePressed(false),
+m_forward(false),
+m_backward(false)
 {
 
 }
@@ -60,8 +63,11 @@ m_speed(1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 OrbitalCam::~OrbitalCam()
 {
+    m_backward = false;
+    m_forward = false;
+    m_mousePressed = false;
     m_speed = 0.0f;
-    m_cross.reset();
+    m_distance = 0.0f;
     m_target.reset();
 }
 
@@ -74,26 +80,38 @@ void OrbitalCam::compute(Renderer& renderer, float frametime)
     // Compute orbital camera speed
     float speed = m_speed*frametime;
 
-    // Normalize orbital camera target
-    m_target.normalize();
-
-    // Compute orbital camera cross product
-    m_cross.crossProduct(m_target, m_upward);
-    m_cross.normalize();
-
     // Compute move states
     if (m_forward)
     {
         // Move forward
-        moveZ(-speed);
+        m_distance -= speed;
+        if (m_distance <= OrbitalCameraMinDistance)
+        {
+            m_distance = OrbitalCameraMinDistance;
+        }
         m_forward = false;
     }
     if (m_backward)
     {
         // Move backward
-        moveZ(speed);
+        m_distance += speed;
+        if (m_distance >= OrbitalCameraMaxDistance)
+        {
+            m_distance = OrbitalCameraMaxDistance;
+        }
         m_backward = false;
     }
+
+    // Compute camera position
+    m_position.vec[0] = std::cos(m_angles.vec[0]);
+    m_position.vec[0] *= std::sin(m_angles.vec[1]);
+    m_position.vec[0] *= m_distance;
+    m_position.vec[1] = std::sin(-m_angles.vec[0]);
+    m_position.vec[1] *= m_distance;
+    m_position.vec[2] = std::cos(m_angles.vec[0]);
+    m_position.vec[2] *= std::cos(m_angles.vec[1]);
+    m_position.vec[2] *= m_distance;
+    m_position += m_target;
 
     // Compute projection matrix
     m_projMatrix.setPerspective(
@@ -110,6 +128,22 @@ void OrbitalCam::compute(Renderer& renderer, float frametime)
     m_projViewMatrix *= m_viewMatrix;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set orbital camera distance from target                                   //
+////////////////////////////////////////////////////////////////////////////////
+void OrbitalCam::setDistance(float distance)
+{
+    if (m_distance <= OrbitalCameraMinDistance)
+    {
+        m_distance = OrbitalCameraMinDistance;
+    }
+    if (m_distance >= OrbitalCameraMaxDistance)
+    {
+        m_distance = OrbitalCameraMaxDistance;
+    }
+    m_distance = distance;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set orbital camera target                                                 //
@@ -145,8 +179,11 @@ void OrbitalCam::setSpeed(float speed)
 void OrbitalCam::mouseMove(float mouseDx, float mouseDy)
 {
     // Set orbital camera angles
-    m_angles.vec[1] -= mouseDx*OrbitalCameraMouseFactor;
-    m_angles.vec[0] -= mouseDy*OrbitalCameraMouseFactor;
+    if (m_mousePressed)
+    {
+        m_angles.vec[1] -= mouseDx*OrbitalCameraMouseFactor;
+        m_angles.vec[0] -= mouseDy*OrbitalCameraMouseFactor;
+    }
 
     // Clamp X orbital camera angle
     if (m_angles.vec[0] <= OrbitalCameraMinAngle)
@@ -157,6 +194,22 @@ void OrbitalCam::mouseMove(float mouseDx, float mouseDy)
     {
         m_angles.vec[0] = OrbitalCameraMaxAngle;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle mouse press event                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void OrbitalCam::mousePress()
+{
+    m_mousePressed = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle mouse release event                                                //
+////////////////////////////////////////////////////////////////////////////////
+void OrbitalCam::mouseRelease()
+{
+    m_mousePressed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
