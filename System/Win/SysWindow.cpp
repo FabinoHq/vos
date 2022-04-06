@@ -386,6 +386,15 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                                 event.mouse.y = raw->data.mouse.lLastY;
                                 m_events.push(event);
                             }
+
+                            // Mouse wheel event
+                            if (raw->data.mouse.usButtonFlags & RI_MOUSE_WHEEL)
+                            {
+                                event.type = EVENT_MOUSEWHEEL;
+                                event.mouse.wheel =
+                                    (short)raw->data.mouse.usButtonData;
+                                m_events.push(event);
+                            }
                             break;
                         }
 

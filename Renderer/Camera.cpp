@@ -47,6 +47,7 @@
 //  Camera default constructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
 Camera::Camera() :
+Transform3(),
 m_projMatrix(),
 m_projViewMatrix(),
 m_target(0.0f, 0.0f, 0.0f),

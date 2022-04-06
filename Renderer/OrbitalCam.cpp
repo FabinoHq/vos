@@ -71,12 +71,29 @@ OrbitalCam::~OrbitalCam()
 ////////////////////////////////////////////////////////////////////////////////
 void OrbitalCam::compute(Renderer& renderer, float frametime)
 {
+    // Compute orbital camera speed
+    float speed = m_speed*frametime;
+
     // Normalize orbital camera target
     m_target.normalize();
 
     // Compute orbital camera cross product
     m_cross.crossProduct(m_target, m_upward);
     m_cross.normalize();
+
+    // Compute move states
+    if (m_forward)
+    {
+        // Move forward
+        moveZ(-speed);
+        m_forward = false;
+    }
+    if (m_backward)
+    {
+        // Move backward
+        moveZ(speed);
+        m_backward = false;
+    }
 
     // Compute projection matrix
     m_projMatrix.setPerspective(
@@ -139,5 +156,24 @@ void OrbitalCam::mouseMove(float mouseDx, float mouseDy)
     if (m_angles.vec[0] >= OrbitalCameraMaxAngle)
     {
         m_angles.vec[0] = OrbitalCameraMaxAngle;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle mouse wheel event                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void OrbitalCam::mouseWheel(int mouseWheel)
+{
+    if (mouseWheel > 0)
+    {
+        // Mouse wheel up
+        m_forward = true;
+        m_backward = false;
+    }
+    else if (mouseWheel < 0)
+    {
+        // Mouse wheel down
+        m_backward = true;
+        m_forward = false;
     }
 }

@@ -143,19 +143,21 @@
 
 
         private:
-            Display*            m_display;      // Display handle
-            Window              m_handle;       // Window handle
-            int                 m_screen;       // Screen handle
-            long int            m_closeMsg;     // Close message
-            bool                m_hasFocus;     // Window has focus
+            Display*            m_display;          // Display handle
+            Window              m_handle;           // Window handle
+            int                 m_screen;           // Screen handle
+            long int            m_closeMsg;         // Close message
+            bool                m_hasFocus;         // Window has focus
 
-            int                 m_width;        // Window width
-            int                 m_height;       // Window height
-            int                 m_lastMouseX;   // Last mouse X position
-            int                 m_lastMouseY;   // Last mouse Y position
-            Cursor              m_hiddenCursor; // Hiden cursor
+            int                 m_width;            // Window width
+            int                 m_height;           // Window height
+            int                 m_lastMouseX;       // Last mouse X position
+            int                 m_lastMouseY;       // Last mouse Y position
+            bool                m_lastMouseLeft;    // Last mouse left state
+            bool                m_lastMouseRight;   // Last mouse right state
+            Cursor              m_hiddenCursor;     // Hiden cursor
 
-            std::queue<Event>   m_events;       // Events FIFO queue
+            std::queue<Event>   m_events;           // Events FIFO queue
     };
 
 

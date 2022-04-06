@@ -142,7 +142,7 @@ bool Vos::launch()
     }
     m_orbitalcam.setZ(1.0f);
     m_orbitalcam.setTarget(0.0f, 0.0f, 0.0f);
-    m_orbitalcam.setSpeed(5.0f);
+    m_orbitalcam.setSpeed(10.0f);
 
 
     // Load cubemap textures
@@ -530,6 +530,11 @@ void Vos::run()
                     {
                         //m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
                     }
+                    break;
+
+                // Mouse wheel
+                case EVENT_MOUSEWHEEL:
+                    m_orbitalcam.mouseWheel(event.mouse.wheel);
                     break;
 
                 default:

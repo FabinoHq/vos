@@ -55,6 +55,8 @@ m_width(0),
 m_height(0),
 m_lastMouseX(0),
 m_lastMouseY(0),
+m_lastMouseLeft(false),
+m_lastMouseRight(false),
 m_hiddenCursor(0)
 {
 
@@ -161,7 +163,7 @@ bool SysWindow::create()
     // Center mouse
     XWarpPointer(m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY);
 
-    // Raw mouse initial position
+    // Raw mouse initial state
     Window root;
     int mouseX = 0;
     int mouseY = 0;
@@ -172,6 +174,8 @@ bool SysWindow::create()
     );
     m_lastMouseX = mouseX;
     m_lastMouseY = mouseY;
+    m_lastMouseLeft = (mask & Button1Mask);
+    m_lastMouseRight = (mask & Button3Mask);
 
     // Hide mouse cursor
     Pixmap cursorPixmap = XCreatePixmap(m_display, m_handle, 1, 1, 1);
@@ -253,6 +257,7 @@ bool SysWindow::getEvent(Event& event)
     if (m_hasFocus)
     {
         // Raw mouse input
+        Event event;
         Window root;
         int mouseX = 0;
         int mouseY = 0;
@@ -264,14 +269,67 @@ bool SysWindow::getEvent(Event& event)
 
         if ((mouseX != m_lastMouseX) || (mouseY != m_lastMouseY))
         {
-            Event rawMouse;
-            rawMouse.type = EVENT_MOUSEMOVED;
-            rawMouse.mouse.x = mouseX-m_lastMouseX;
-            rawMouse.mouse.y = mouseY-m_lastMouseY;
-            m_events.push(rawMouse);
+            event.type = EVENT_MOUSEMOVED;
+            event.mouse.x = mouseX-m_lastMouseX;
+            event.mouse.y = mouseY-m_lastMouseY;
+            m_events.push(event);
         }
         m_lastMouseX = mouseX;
         m_lastMouseY = mouseY;
+
+        // Mouse buttons
+        if (mask & Button1Mask)
+        {
+            if (!m_lastMouseLeft)
+            {
+                // Left mouse button pressed
+                event.type = EVENT_MOUSEPRESSED;
+                event.mouse.button = EVENT_MOUSE_LEFT;
+                event.mouse.x = mouseX;
+                event.mouse.y = mouseY;
+                m_events.push(event);
+                m_lastMouseLeft = true;
+            }
+        }
+        else
+        {
+            if (m_lastMouseLeft)
+            {
+                // Left mouse button released
+                event.type = EVENT_MOUSERELEASED;
+                event.mouse.button = EVENT_MOUSE_LEFT;
+                event.mouse.x = mouseX;
+                event.mouse.y = mouseY;
+                m_events.push(event);
+                m_lastMouseLeft = false;
+            }
+        }
+        if (mask & Button3Mask)
+        {
+            if (!m_lastMouseRight)
+            {
+                // Right mouse button pressed
+                event.type = EVENT_MOUSEPRESSED;
+                event.mouse.button = EVENT_MOUSE_RIGHT;
+                event.mouse.x = mouseX;
+                event.mouse.y = mouseY;
+                m_events.push(event);
+                m_lastMouseRight = true;
+            }
+        }
+        else
+        {
+            if (m_lastMouseRight)
+            {
+                // Right mouse button released
+                event.type = EVENT_MOUSERELEASED;
+                event.mouse.button = EVENT_MOUSE_RIGHT;
+                event.mouse.x = mouseX;
+                event.mouse.y = mouseY;
+                m_events.push(event);
+                m_lastMouseRight = false;
+            }
+        }
 
         // Get window center position
         XWindowAttributes xwa;
@@ -408,6 +466,29 @@ void SysWindow::processEvent(XEvent msg)
                 event.type = EVENT_KEYRELEASED;
                 event.key = transcriptKey(XLookupKeysym(&msg.xkey, 0));
                 m_events.push(event);
+                break;
+
+            // Mouse wheel events
+            case ButtonPress:
+                switch (msg.xbutton.button)
+                {
+                    // Mouse wheel up
+                    case Button4:
+                        event.type = EVENT_MOUSEWHEEL;
+                        event.mouse.wheel = 127;
+                        m_events.push(event);
+                        break;
+
+                    // Mouse wheel down
+                    case Button5:
+                        event.type = EVENT_MOUSEWHEEL;
+                        event.mouse.wheel = -127;
+                        m_events.push(event);
+                        break;
+
+                    default:
+                        break;
+                }
                 break;
 
             default:

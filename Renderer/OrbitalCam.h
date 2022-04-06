@@ -112,6 +112,11 @@
             ////////////////////////////////////////////////////////////////////
             void mouseMove(float mouseDx, float mouseDy);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Handle mouse wheel event                                      //
+            ////////////////////////////////////////////////////////////////////
+            void mouseWheel(int mouseWheel);
+
 
         private:
             ////////////////////////////////////////////////////////////////////
@@ -130,6 +135,9 @@
             Vector3     m_cross;        // Orbitalcam cross product
 
             float       m_speed;        // Orbitalcam speed
+
+            bool        m_forward;      // Orbitalcam forward state
+            bool        m_backward;     // Orbitalcam backward state
     };
 
 
