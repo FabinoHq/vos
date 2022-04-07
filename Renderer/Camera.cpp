@@ -138,9 +138,6 @@ bool Camera::init(Renderer& renderer)
         m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
     );
 
-    // Reset view matrix
-    m_viewMatrix.setIdentity();
-
     // Reset projview matrix
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;

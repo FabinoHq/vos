@@ -105,12 +105,10 @@ void OrbitalCam::compute(Renderer& renderer, float frametime)
     // Compute camera position
     m_position.vec[0] = std::cos(m_angles.vec[0]);
     m_position.vec[0] *= std::sin(m_angles.vec[1]);
-    m_position.vec[0] *= m_distance;
     m_position.vec[1] = std::sin(-m_angles.vec[0]);
-    m_position.vec[1] *= m_distance;
     m_position.vec[2] = std::cos(m_angles.vec[0]);
     m_position.vec[2] *= std::cos(m_angles.vec[1]);
-    m_position.vec[2] *= m_distance;
+    m_position *= m_distance;
     m_position += m_target;
 
     // Compute projection matrix
@@ -118,14 +116,10 @@ void OrbitalCam::compute(Renderer& renderer, float frametime)
         m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
     );
 
-    // Compute view matrix
-    m_viewMatrix.setIdentity();
-    m_viewMatrix.rotate(-m_angles);
-    m_viewMatrix.translate(-m_position);
-
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_viewMatrix;
+    m_projViewMatrix.rotate(-m_angles);
+    m_projViewMatrix.translate(-m_position);
 }
 
 

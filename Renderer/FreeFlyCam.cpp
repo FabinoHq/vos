@@ -196,14 +196,10 @@ void FreeFlyCam::compute(Renderer& renderer, float frametime)
         m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
     );
 
-    // Compute view matrix
-    m_viewMatrix.setIdentity();
-    m_viewMatrix.rotate(-m_angles);
-    m_viewMatrix.translate(-m_position);
-
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_viewMatrix;
+    m_projViewMatrix.rotate(-m_angles);
+    m_projViewMatrix.translate(-m_position);
 }
 
 
