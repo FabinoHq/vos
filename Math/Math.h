@@ -170,11 +170,6 @@
         //  Linear interpolation                                              //
         //  return : Interpolated value                                       //
         ////////////////////////////////////////////////////////////////////////
-        inline int32_t linearInterp(int32_t x, int32_t y, int32_t t)
-        {
-            return x + t*(y-x);
-        }
-
         inline float linearInterp(float x, float y, float t)
         {
             return x + t*(y-x);
@@ -189,11 +184,6 @@
         //  Cubic interpolation                                               //
         //  return : Interpolated value                                       //
         ////////////////////////////////////////////////////////////////////////
-        inline int32_t cubicInterp(int32_t x, int32_t y, int32_t t)
-        {
-            return x + (t*t*(3-2*t))*(y-x);
-        }
-
         inline float cubicInterp(float x, float y, float t)
         {
             return x + (t*t*(3.0f-2.0f*t))*(y-x);

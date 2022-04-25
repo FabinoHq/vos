@@ -95,6 +95,7 @@
 !Math/Vector2.h
 !Math/Vector2i.h
 !Math/Vector3.h
+!Math/Vector3i.h
 !Math/Vector4.h
 !Math/Matrix4x4.h
 !Math/Transform2.h

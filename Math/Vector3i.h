@@ -37,34 +37,34 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Math/Vector3.h : 3 components vector management                        //
+//     Math/Vector3i.h : 3 components int vector management                   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_MATH_VECTOR3_HEADER
-#define VOS_MATH_VECTOR3_HEADER
+#ifndef VOS_MATH_VECTOR3I_HEADER
+#define VOS_MATH_VECTOR3I_HEADER
 
     #include "Math.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Vector3 class definition                                              //
+    //  Vector3i class definition                                             //
     ////////////////////////////////////////////////////////////////////////////
-    class Vector3
+    class Vector3i
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 default constructor                                   //
+            //  Vector3i default constructor                                  //
             ////////////////////////////////////////////////////////////////////
-            Vector3()
+            Vector3i()
             {
-                vec[0] = 0.0f;
-                vec[1] = 0.0f;
-                vec[2] = 0.0f;
+                vec[0] = 0;
+                vec[1] = 0;
+                vec[2] = 0;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 copy constructor                                      //
+            //  Vector3i copy constructor                                     //
             ////////////////////////////////////////////////////////////////////
-            Vector3(const Vector3& vector)
+            Vector3i(const Vector3i& vector)
             {
                 vec[0] = vector.vec[0];
                 vec[1] = vector.vec[1];
@@ -72,9 +72,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 components constructor                                //
+            //  Vector3i components constructor                               //
             ////////////////////////////////////////////////////////////////////
-            Vector3(float x, float y, float z)
+            Vector3i(int32_t x, int32_t y, int32_t z)
             {
                 vec[0] = x;
                 vec[1] = y;
@@ -82,30 +82,30 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 destructor                                            //
+            //  Vector3i destructor                                           //
             ////////////////////////////////////////////////////////////////////
-            ~Vector3()
+            ~Vector3i()
             {
-                vec[0] = 0.0f;
-                vec[1] = 0.0f;
-                vec[2] = 0.0f;
+                vec[0] = 0;
+                vec[1] = 0;
+                vec[2] = 0;
             }
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Reset Vector3 to zero                                         //
+            //  Reset Vector3i to zero                                        //
             ////////////////////////////////////////////////////////////////////
             inline void reset()
             {
-                vec[0] = 0.0f;
-                vec[1] = 0.0f;
-                vec[2] = 0.0f;
+                vec[0] = 0;
+                vec[1] = 0;
+                vec[2] = 0;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 components from a vector                          //
+            //  Set Vector3i components from a vector                         //
             ////////////////////////////////////////////////////////////////////
-            inline void set(const Vector3& vector)
+            inline void set(const Vector3i& vector)
             {
                 vec[0] = vector.vec[0];
                 vec[1] = vector.vec[1];
@@ -113,9 +113,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 components from X, Y and Z components             //
+            //  Set Vector3i components from X, Y and Z components            //
             ////////////////////////////////////////////////////////////////////
-            inline void set(float x, float y, float z)
+            inline void set(int32_t x, int32_t y, int32_t z)
             {
                 vec[0] = x;
                 vec[1] = y;
@@ -123,70 +123,33 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 X component                                       //
+            //  Set Vector3i X component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setX(float x)
+            inline void setX(int32_t x)
             {
                 vec[0] = x;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 Y component                                       //
+            //  Set Vector3i Y component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setY(float y)
+            inline void setY(int32_t y)
             {
                 vec[1] = y;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set Vector3 Z component                                       //
+            //  Set Vector3i Z component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setZ(float z)
+            inline void setZ(int32_t z)
             {
                 vec[2] = z;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  linearInterp : Linear interpolation                           //
-            ////////////////////////////////////////////////////////////////////
-            inline void linearInterp(Vector3& v1, Vector3& v2, float t)
-            {
-                vec[0] = v1.vec[0] + t*(v2.vec[0]-v1.vec[0]);
-                vec[1] = v1.vec[1] + t*(v2.vec[1]-v1.vec[1]);
-                vec[2] = v1.vec[2] + t*(v2.vec[2]-v1.vec[2]);
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Cubic interpolation                                           //
-            ////////////////////////////////////////////////////////////////////
-            inline void cubicInterp(Vector3& v1, Vector3& v2, float t)
-            {
-                vec[0] = v1.vec[0] + (t*t*(3.0f-2.0f*t))*(v2.vec[0]-v1.vec[0]);
-                vec[1] = v1.vec[1] + (t*t*(3.0f-2.0f*t))*(v2.vec[1]-v1.vec[1]);
-                vec[2] = v1.vec[2] + (t*t*(3.0f-2.0f*t))*(v2.vec[2]-v1.vec[2]);
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Hermit interpolation                                          //
-            ////////////////////////////////////////////////////////////////////
-            inline void hermitInterp(
-                Vector3& v0, Vector3& v1, Vector3& v2, Vector3& v3, float t)
-            {
-                vec[0] = Math::hermitInterp(
-                    v0.vec[0], v1.vec[0], v2.vec[0], v3.vec[0], t
-                );
-                vec[1] = Math::hermitInterp(
-                    v0.vec[1], v1.vec[1], v2.vec[1], v3.vec[1], t
-                );
-                vec[2] = Math::hermitInterp(
-                    v0.vec[2], v1.vec[2], v2.vec[2], v3.vec[2], t
-                );
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
-            inline float dotProduct(Vector3& v)
+            inline int32_t dotProduct(Vector3i& v)
             {
                 return (vec[0]*v.vec[0] + vec[1]*v.vec[1] + vec[2]*v.vec[2]);
             }
@@ -194,7 +157,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set this vector as a cross product from 2 vectors             //
             ////////////////////////////////////////////////////////////////////
-            inline void crossProduct(Vector3& v1, Vector3& v2)
+            inline void crossProduct(Vector3i& v1, Vector3i& v2)
             {
                 vec[0] = (v2.vec[1]*v1.vec[2]) - (v2.vec[2]*v1.vec[1]);
                 vec[1] = (v2.vec[2]*v1.vec[0]) - (v2.vec[0]*v1.vec[2]);
@@ -202,23 +165,23 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vector3 length                                            //
+            //  Get Vector3i length                                           //
             ////////////////////////////////////////////////////////////////////
-            inline float length()
+            inline int32_t length()
             {
-                return std::sqrt((vec[0]*vec[0])+(vec[1]*vec[1])+
+                return Math::sqrt((vec[0]*vec[0])+(vec[1]*vec[1])+
                     (vec[2]*vec[2]));
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Normalize Vector3                                             //
+            //  Normalize Vector3i                                            //
             ////////////////////////////////////////////////////////////////////
             inline void normalize()
             {
-                float len = length();
-                if (len > 0.0f)
+                int32_t len = length();
+                if (len > 0)
                 {
-                    float invLength = 1.0f/len;
+                    int32_t invLength = 1/len;
                     vec[0] *= invLength;
                     vec[1] *= invLength;
                     vec[2] *= invLength;
@@ -227,37 +190,37 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vector3 x component                                       //
+            //  Get Vector3i x component                                      //
             //  return : X component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline float& x()
+            inline int32_t& x()
             {
                 return vec[0];
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vector3 y component                                       //
+            //  Get Vector3i y component                                      //
             //  return : Y component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline float& y()
+            inline int32_t& y()
             {
                 return vec[1];
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vector3 z component                                       //
+            //  Get Vector3i z component                                      //
             //  return : Z component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline float& z()
+            inline int32_t& z()
             {
                 return vec[2];
             }
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 affectation operator                                  //
+            //  Vector3i affectation operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator=(const Vector3& vector)
+            inline Vector3i& operator=(const Vector3i& vector)
             {
                 vec[0] = vector.vec[0];
                 vec[1] = vector.vec[1];
@@ -265,7 +228,7 @@
                 return *this;
             }
 
-            inline Vector3& operator=(float val)
+            inline Vector3i& operator=(int32_t val)
             {
                 vec[0] = val;
                 vec[1] = val;
@@ -274,97 +237,97 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 addition operator                                     //
+            //  Vector3i addition operator                                    //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator+(const Vector3& vector)
+            inline Vector3i operator+(const Vector3i& vector)
             {
-                Vector3 result;
+                Vector3i result;
                 result.vec[0] = vec[0]+vector.vec[0];
                 result.vec[1] = vec[1]+vector.vec[1];
                 result.vec[2] = vec[2]+vector.vec[2];
                 return result;
             }
 
-            inline Vector3 operator+(float val)
+            inline Vector3i operator+(int32_t val)
             {
-                return Vector3(vec[0]+val, vec[1]+val, vec[2]+val);
+                return Vector3i(vec[0]+val, vec[1]+val, vec[2]+val);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 subtraction operator                                  //
+            //  Vector3i subtraction operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator-(const Vector3& vector)
+            inline Vector3i operator-(const Vector3i& vector)
             {
-                Vector3 result;
+                Vector3i result;
                 result.vec[0] = vec[0]-vector.vec[0];
                 result.vec[1] = vec[1]-vector.vec[1];
                 result.vec[2] = vec[2]-vector.vec[2];
                 return result;
             }
 
-            inline Vector3 operator-(float val)
+            inline Vector3i operator-(int32_t val)
             {
-                return Vector3(vec[0]-val, vec[1]-val, vec[2]-val);
+                return Vector3i(vec[0]-val, vec[1]-val, vec[2]-val);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 unary plus operator                                   //
+            //  Vector3i unary plus operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator+()
+            inline Vector3i operator+()
             {
-                return Vector3(*this);
+                return Vector3i(*this);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 unary minus operator                                  //
+            //  Vector3i unary minus operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator-()
+            inline Vector3i operator-()
             {
-                return Vector3(-vec[0], -vec[1], -vec[2]);
+                return Vector3i(-vec[0], -vec[1], -vec[2]);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 multiplication operator                               //
+            //  Vector3i multiplication operator                              //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator*(const Vector3& vector)
+            inline Vector3i operator*(const Vector3i& vector)
             {
-                Vector3 result;
+                Vector3i result;
                 result.vec[0] = vec[0]*vector.vec[0];
                 result.vec[1] = vec[1]*vector.vec[1];
                 result.vec[2] = vec[2]*vector.vec[2];
                 return result;
             }
 
-            inline Vector3 operator*(float val)
+            inline Vector3i operator*(int32_t val)
             {
-                return Vector3(vec[0]*val, vec[1]*val, vec[2]*val);
+                return Vector3i(vec[0]*val, vec[1]*val, vec[2]*val);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 division operator                                     //
+            //  Vector3i division operator                                    //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator/(const Vector3& vector)
+            inline Vector3i operator/(const Vector3i& vector)
             {
-                Vector3 result(*this);
-                if (vector.vec[0] != 0.0f)
+                Vector3i result(*this);
+                if (vector.vec[0] != 0)
                 {
                     result.vec[0] /= vector.vec[0];
                 }
-                if (vector.vec[1] != 0.0f)
+                if (vector.vec[1] != 0)
                 {
                     result.vec[1] /= vector.vec[1];
                 }
-                if (vector.vec[2] != 0.0f)
+                if (vector.vec[2] != 0)
                 {
                     result.vec[2] /= vector.vec[2];
                 }
                 return result;
             }
 
-            inline Vector3 operator/(float val)
+            inline Vector3i operator/(int32_t val)
             {
-                Vector3 result(*this);
-                if (val != 0.0f)
+                Vector3i result(*this);
+                if (val != 0)
                 {
                     result.vec[0] /= val;
                     result.vec[1] /= val;
@@ -374,9 +337,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 prefix increment operator                             //
+            //  Vector3i prefix increment operator                            //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator++()
+            inline Vector3i& operator++()
             {
                 ++vec[0];
                 ++vec[1];
@@ -385,17 +348,17 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 postfix increment operator                            //
+            //  Vector3i postfix increment operator                           //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator++(int)
+            inline Vector3i operator++(int)
             {
-                return Vector3(vec[0]++, vec[1]++, vec[2]++);
+                return Vector3i(vec[0]++, vec[1]++, vec[2]++);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 prefix decrement operator                             //
+            //  Vector3i prefix decrement operator                            //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator--()
+            inline Vector3i& operator--()
             {
                 --vec[0];
                 --vec[1];
@@ -404,17 +367,17 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 postfix decrement operator                            //
+            //  Vector3i postfix decrement operator                           //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator--(int)
+            inline Vector3i operator--(int)
             {
-                return Vector3(vec[0]--, vec[1]--, vec[2]--);
+                return Vector3i(vec[0]--, vec[1]--, vec[2]--);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 addition assignment operator                          //
+            //  Vector3i addition assignment operator                         //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator+=(const Vector3& vector)
+            inline Vector3i& operator+=(const Vector3i& vector)
             {
                 vec[0] += vector.vec[0];
                 vec[1] += vector.vec[1];
@@ -422,7 +385,7 @@
                 return *this;
             }
 
-            inline Vector3& operator+=(float val)
+            inline Vector3i& operator+=(int32_t val)
             {
                 vec[0] += val;
                 vec[1] += val;
@@ -431,9 +394,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 subtraction assignment operator                       //
+            //  Vector3i subtraction assignment operator                      //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator-=(const Vector3& vector)
+            inline Vector3i& operator-=(const Vector3i& vector)
             {
                 vec[0] -= vector.vec[0];
                 vec[1] -= vector.vec[1];
@@ -441,7 +404,7 @@
                 return *this;
             }
 
-            inline Vector3& operator-=(float val)
+            inline Vector3i& operator-=(int32_t val)
             {
                 vec[0] -= val;
                 vec[1] -= val;
@@ -450,9 +413,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 multiplication assignment operator                    //
+            //  Vector3i multiplication assignment operator                   //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator*=(const Vector3& vector)
+            inline Vector3i& operator*=(const Vector3i& vector)
             {
                 vec[0] *= vector.vec[0];
                 vec[1] *= vector.vec[1];
@@ -460,7 +423,7 @@
                 return *this;
             }
 
-            inline Vector3& operator*=(float val)
+            inline Vector3i& operator*=(int32_t val)
             {
                 vec[0] *= val;
                 vec[1] *= val;
@@ -469,28 +432,28 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 division assignment operator                          //
+            //  Vector3i division assignment operator                         //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3& operator/=(const Vector3& vector)
+            inline Vector3i& operator/=(const Vector3i& vector)
             {
-                if (vector.vec[0] != 0.0f)
+                if (vector.vec[0] != 0)
                 {
                     vec[0] *= vector.vec[0];
                 }
-                if (vector.vec[1] != 0.0f)
+                if (vector.vec[1] != 0)
                 {
                     vec[1] *= vector.vec[1];
                 }
-                if (vector.vec[2] != 0.0f)
+                if (vector.vec[2] != 0)
                 {
                     vec[2] *= vector.vec[2];
                 }
                 return *this;
             }
 
-            inline Vector3& operator/=(float val)
+            inline Vector3i& operator/=(int32_t val)
             {
-                if (val != 0.0f)
+                if (val != 0)
                 {
                     vec[0] *= val;
                     vec[1] *= val;
@@ -500,31 +463,29 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 equal to operator                                     //
+            //  Vector3i equal to operator                                    //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator==(const Vector3& vector)
+            inline bool operator==(const Vector3i& vector)
             {
-                bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
-                    Math::areEqual(vec[1], vector.vec[1]) &&
-                    Math::areEqual(vec[2], vector.vec[2]);
-                return areEqual;
+                return ((vec[0] == vector.vec[0]) &&
+                    (vec[1] == vector.vec[1]) &&
+                    (vec[2] == vector.vec[2]));
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Vector3 not equal to operator                                 //
+            //  Vector3i not equal to operator                                //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator!=(const Vector3& vector)
+            inline bool operator!=(const Vector3i& vector)
             {
-                bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
-                    Math::areEqual(vec[1], vector.vec[1]) &&
-                    Math::areEqual(vec[2], vector.vec[2]);
-                return !areEqual;
+                return ((vec[0] != vector.vec[0]) ||
+                    (vec[1] != vector.vec[1]) ||
+                    (vec[2] != vector.vec[2]));
             }
 
 
         public:
-            float   vec[3];     // 3 components vector representation
+            int32_t     vec[3];     // 3 components int vector representation
     };
 
 
-#endif // VOS_MATH_VECTOR3_HEADER
+#endif // VOS_MATH_VECTOR3I_HEADER
