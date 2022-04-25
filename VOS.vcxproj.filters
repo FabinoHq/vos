@@ -411,5 +411,8 @@
     <ClInclude Include="Renderer\OrbitalCam.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Vector2i.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -42,6 +42,7 @@
 #ifndef VOS_MATH_MATH_HEADER
 #define VOS_MATH_MATH_HEADER
 
+    #include <cstdint>
     #include <cmath>
 
 
@@ -72,7 +73,7 @@
         //  Get number sign (-1 or +1)                                        //
         //  return : Sign of the number (-1 or +1)                            //
         ////////////////////////////////////////////////////////////////////////
-        inline int sign(int x)
+        inline int32_t sign(int32_t x)
         {
             return (x >= 0) ? 1 : -1;
         }
@@ -91,7 +92,7 @@
         //  Get the absolute value of x                                       //
         //  return : Absolute value of x                                      //
         ////////////////////////////////////////////////////////////////////////
-        inline int abs(int x)
+        inline int32_t abs(int32_t x)
         {
             return (x >= 0) ? x : -x;
         }
@@ -125,7 +126,7 @@
         //  Integer modulo                                                    //
         //  return : Integer modulo (x % n)                                   //
         ////////////////////////////////////////////////////////////////////////
-        inline int modulus(int x, int n)
+        inline int32_t modulus(int32_t x, int32_t n)
         {
             return ((x%n)+n)%n;
         }
@@ -146,7 +147,7 @@
         //  param n : Right operand                                           //
         //  return : Integer division (x / n)                                 //
         ////////////////////////////////////////////////////////////////////////
-        inline int divide(int x, int n)
+        inline int32_t divide(int32_t x, int32_t n)
         {
             if (n == 0) return 0;
             if (x < 0) x -= (n-1);
@@ -154,10 +155,22 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //  Integer square root                                               //
+        //  param x : Integer to get square root of                           //
+        //  return : Integer square root (sqrt(x))                            //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t sqrt(int32_t x)
+        {
+            int32_t result = 0;
+            while ((result+1)*(result+1) <= x) { ++result; }
+            return result;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Linear interpolation                                              //
         //  return : Interpolated value                                       //
         ////////////////////////////////////////////////////////////////////////
-        inline int linearInterp(int x, int y, int t)
+        inline int32_t linearInterp(int32_t x, int32_t y, int32_t t)
         {
             return x + t*(y-x);
         }
@@ -176,7 +189,7 @@
         //  Cubic interpolation                                               //
         //  return : Interpolated value                                       //
         ////////////////////////////////////////////////////////////////////////
-        inline int cubicInterp(int x, int y, int t)
+        inline int32_t cubicInterp(int32_t x, int32_t y, int32_t t)
         {
             return x + (t*t*(3-2*t))*(y-x);
         }
@@ -214,6 +227,11 @@
         //  Distance between two points                                       //
         //  return : Distance between the two given points                    //
         ////////////////////////////////////////////////////////////////////////
+        inline int32_t distance(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+        {
+            return Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
+        }
+
         inline float distance(float x1, float y1, float x2, float y2)
         {
             return std::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
