@@ -417,5 +417,8 @@
     <ClInclude Include="Math\Vector3i.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Vector4i.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

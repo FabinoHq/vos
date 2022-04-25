@@ -301,12 +301,8 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4 operator+(const Vector4& vector)
             {
-                Vector4 result;
-                result.vec[0] = vec[0]+vector.vec[0];
-                result.vec[1] = vec[1]+vector.vec[1];
-                result.vec[2] = vec[2]+vector.vec[2];
-                result.vec[3] = vec[3]+vector.vec[3];
-                return result;
+                return Vector4(vec[0]+vector.vec[0], vec[1]+vector.vec[1],
+                    vec[2]+vector.vec[2], vec[3]+vector.vec[3]);
             }
 
             inline Vector4 operator+(float val)
@@ -319,12 +315,8 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4 operator-(const Vector4& vector)
             {
-                Vector4 result;
-                result.vec[0] = vec[0]-vector.vec[0];
-                result.vec[1] = vec[1]-vector.vec[1];
-                result.vec[2] = vec[2]-vector.vec[2];
-                result.vec[3] = vec[3]-vector.vec[3];
-                return result;
+                return Vector4(vec[0]-vector.vec[0], vec[1]-vector.vec[1],
+                    vec[2]-vector.vec[2], vec[3]-vector.vec[3]);
             }
 
             inline Vector4 operator-(float val)
@@ -353,12 +345,8 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4 operator*(const Vector4& vector)
             {
-                Vector4 result;
-                result.vec[0] = vec[0]*vector.vec[0];
-                result.vec[1] = vec[1]*vector.vec[1];
-                result.vec[2] = vec[2]*vector.vec[2];
-                result.vec[3] = vec[3]*vector.vec[3];
-                return result;
+                return Vector4(vec[0]*vector.vec[0], vec[1]*vector.vec[1],
+                    vec[2]*vector.vec[2], vec[3]*vector.vec[3]);
             }
 
             inline Vector4 operator*(float val)

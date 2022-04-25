@@ -241,11 +241,8 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector3i operator+(const Vector3i& vector)
             {
-                Vector3i result;
-                result.vec[0] = vec[0]+vector.vec[0];
-                result.vec[1] = vec[1]+vector.vec[1];
-                result.vec[2] = vec[2]+vector.vec[2];
-                return result;
+                return Vector3i(vec[0]+vector.vec[0], vec[1]+vector.vec[1],
+                    vec[2]+vector.vec[2]);
             }
 
             inline Vector3i operator+(int32_t val)
@@ -258,11 +255,8 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector3i operator-(const Vector3i& vector)
             {
-                Vector3i result;
-                result.vec[0] = vec[0]-vector.vec[0];
-                result.vec[1] = vec[1]-vector.vec[1];
-                result.vec[2] = vec[2]-vector.vec[2];
-                return result;
+                return Vector3i(vec[0]-vector.vec[0], vec[1]-vector.vec[1],
+                    vec[2]-vector.vec[2]);
             }
 
             inline Vector3i operator-(int32_t val)
@@ -291,11 +285,8 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector3i operator*(const Vector3i& vector)
             {
-                Vector3i result;
-                result.vec[0] = vec[0]*vector.vec[0];
-                result.vec[1] = vec[1]*vector.vec[1];
-                result.vec[2] = vec[2]*vector.vec[2];
-                return result;
+                return Vector3i(vec[0]*vector.vec[0], vec[1]*vector.vec[1],
+                    vec[2]*vector.vec[2]);
             }
 
             inline Vector3i operator*(int32_t val)
