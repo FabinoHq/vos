@@ -300,8 +300,8 @@
                 result.low += value.low*value.sign;
                 clampLow(result);
 
-                // Set result sign
-                setSign(result);
+                // Compute result sign
+                computeSign(result);
 
                 // Return result value
                 return result;
@@ -324,8 +324,8 @@
                 // Clamp low precision
                 clampLow(result);
 
-                // Set result sign
-                setSign(result);
+                // Compute result sign
+                computeSign(result);
 
                 // Return result value
                 return result;
@@ -353,8 +353,8 @@
                 result.low -= value.low*value.sign;
                 clampLow(result);
 
-                // Set result sign
-                setSign(result);
+                // Compute result sign
+                computeSign(result);
 
                 // Return result value
                 return result;
@@ -377,8 +377,8 @@
                 // Clamp low precision
                 clampLow(result);
 
-                // Set result sign
-                setSign(result);
+                // Compute result sign
+                computeSign(result);
 
                 // Return result value
                 return result;
@@ -419,8 +419,8 @@
                 // Clamp low precision
                 clampLow();
 
-                // Set result sign
-                setSign();
+                // Compute result sign
+                computeSign();
 
                 // Return result value
                 return *this;
@@ -446,8 +446,8 @@
                 // Clamp low precision
                 clampLow();
 
-                // Set result sign
-                setSign();
+                // Compute result sign
+                computeSign();
 
                 // Return result value
                 return result;
@@ -472,8 +472,8 @@
                 // Clamp low precision
                 clampLow();
 
-                // Set result sign
-                setSign();
+                // Compute result sign
+                computeSign();
 
                 // Return result value
                 return *this;
@@ -499,8 +499,8 @@
                 // Clamp low precision
                 clampLow();
 
-                // Set result sign
-                setSign();
+                // Compute result sign
+                computeSign();
 
                 // Return result value
                 return result;
@@ -527,8 +527,8 @@
                 low += value.low*value.sign;
                 clampLow();
 
-                // Set result sign
-                setSign();
+                // Compute result sign
+                computeSign();
 
                 // Return result value
                 return *this;
@@ -550,8 +550,8 @@
                 // Clamp low precision
                 clampLow();
 
-                // Set result sign
-                setSign();
+                // Compute result sign
+                computeSign();
 
                 // Return result value
                 return *this;
@@ -578,8 +578,8 @@
                 low -= value.low*value.sign;
                 clampLow();
 
-                // Set result sign
-                setSign();
+                // Compute result sign
+                computeSign();
 
                 // Return result value
                 return *this;
@@ -601,8 +601,8 @@
                 // Clamp low precision
                 clampLow();
 
-                // Set result sign
-                setSign();
+                // Compute result sign
+                computeSign();
 
                 // Return result value
                 return *this;
@@ -721,9 +721,9 @@
 
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Set MultiInt sign value                                       //
+            //  Compute MultiInt sign value                                   //
             ////////////////////////////////////////////////////////////////////
-            inline void setSign()
+            inline void computeSign()
             {
                 int32_t lowSign = Math::sign(low);
                 int32_t mediumSign = Math::sign(medium);
@@ -769,7 +769,7 @@
                 }
             }
 
-            inline void setSign(MultiInt& result)
+            inline void computeSign(MultiInt& result)
             {
                 int32_t lowSign = Math::sign(result.low);
                 int32_t mediumSign = Math::sign(result.medium);
