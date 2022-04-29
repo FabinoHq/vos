@@ -92,6 +92,7 @@
 
 !Math/
 !Math/Math.h
+!Math/MultiInt.h
 !Math/Vector2.h
 !Math/Vector2i.h
 !Math/Vector3.h
