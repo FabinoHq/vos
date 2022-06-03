@@ -74,7 +74,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector2i components constructor                               //
             ////////////////////////////////////////////////////////////////////
-            Vector2i(int32_t x, int32_t y)
+            Vector2i(int64_t x, int64_t y)
             {
                 vec[0] = x;
                 vec[1] = y;
@@ -111,7 +111,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector2i components from X and Y components               //
             ////////////////////////////////////////////////////////////////////
-            inline void set(int32_t x, int32_t y)
+            inline void set(int64_t x, int64_t y)
             {
                 vec[0] = x;
                 vec[1] = y;
@@ -120,7 +120,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector2i X component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setX(int32_t x)
+            inline void setX(int64_t x)
             {
                 vec[0] = x;
             }
@@ -128,7 +128,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector2i Y component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setY(int32_t y)
+            inline void setY(int64_t y)
             {
                 vec[1] = y;
             }
@@ -136,7 +136,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t dotProduct(Vector2i& v)
+            inline int64_t dotProduct(Vector2i& v)
             {
                 return (vec[0]*v.vec[0] + vec[1]*v.vec[1]);
             }
@@ -144,7 +144,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get Vector2i length                                           //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t length()
+            inline int64_t length()
             {
                 return Math::sqrt((vec[0]*vec[0])+(vec[1]*vec[1]));
             }
@@ -154,10 +154,10 @@
             ////////////////////////////////////////////////////////////////////
             inline void normalize()
             {
-                int32_t len = length();
+                int64_t len = length();
                 if (len > 0)
                 {
-                    int32_t invLength = 1/len;
+                    int64_t invLength = 1/len;
                     vec[0] *= invLength;
                     vec[1] *= invLength;
                 }
@@ -168,7 +168,7 @@
             //  Get Vector2i x component                                      //
             //  return : X component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t& x()
+            inline int64_t& x()
             {
                 return vec[0];
             }
@@ -177,7 +177,7 @@
             //  Get Vector2i y component                                      //
             //  return : Y component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t& y()
+            inline int64_t& y()
             {
                 return vec[1];
             }
@@ -193,7 +193,7 @@
                 return *this;
             }
 
-            inline Vector2i& operator=(int32_t val)
+            inline Vector2i& operator=(int64_t val)
             {
                 vec[0] = val;
                 vec[1] = val;
@@ -208,7 +208,7 @@
                 return Vector2i(vec[0]+vector.vec[0], vec[1]+vector.vec[1]);
             }
 
-            inline Vector2i operator+(int32_t val)
+            inline Vector2i operator+(int64_t val)
             {
                 return Vector2i(vec[0]+val, vec[1]+val);
             }
@@ -221,7 +221,7 @@
                 return Vector2i(vec[0]-vector.vec[0], vec[1]-vector.vec[1]);
             }
 
-            inline Vector2i operator-(int32_t val)
+            inline Vector2i operator-(int64_t val)
             {
                 return Vector2i(vec[0]-val, vec[1]-val);
             }
@@ -250,7 +250,7 @@
                 return Vector2i(vec[0]*vector.vec[0], vec[1]*vector.vec[1]);
             }
 
-            inline Vector2i operator*(int32_t val)
+            inline Vector2i operator*(int64_t val)
             {
                 return Vector2i(vec[0]*val, vec[1]*val);
             }
@@ -272,7 +272,7 @@
                 return result;
             }
 
-            inline Vector2i operator/(int32_t val)
+            inline Vector2i operator/(int64_t val)
             {
                 Vector2i result(*this);
                 if (val != 0)
@@ -329,7 +329,7 @@
                 return *this;
             }
 
-            inline Vector2i& operator+=(int32_t val)
+            inline Vector2i& operator+=(int64_t val)
             {
                 vec[0] += val;
                 vec[1] += val;
@@ -346,7 +346,7 @@
                 return *this;
             }
 
-            inline Vector2i& operator-=(int32_t val)
+            inline Vector2i& operator-=(int64_t val)
             {
                 vec[0] -= val;
                 vec[1] -= val;
@@ -363,7 +363,7 @@
                 return *this;
             }
 
-            inline Vector2i& operator*=(int32_t val)
+            inline Vector2i& operator*=(int64_t val)
             {
                 vec[0] *= val;
                 vec[1] *= val;
@@ -386,7 +386,7 @@
                 return *this;
             }
 
-            inline Vector2i& operator/=(int32_t val)
+            inline Vector2i& operator/=(int64_t val)
             {
                 if (val != 0)
                 {
@@ -414,7 +414,7 @@
 
 
         public:
-            int32_t     vec[2];     // 2 components int vector representation
+            int64_t     vec[2];     // 2 components int vector representation
     };
 
 

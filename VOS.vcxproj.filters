@@ -40,6 +40,9 @@
     <Filter Include="Network\Win">
       <UniqueIdentifier>{c842206e-7bfa-4e6d-aa89-0e087c2a8c4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{2aa44072-a845-4a8f-b8d8-50a1dd97a90f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -178,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="Renderer\OrbitalCam.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\BoundingCircle.cpp">
+      <Filter>Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -419,6 +428,12 @@
     </ClInclude>
     <ClInclude Include="Math\Vector4i.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\BoundingCircle.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

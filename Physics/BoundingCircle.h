@@ -37,129 +37,54 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Physics/BoundingCircle.h : Bounding Circle management                  //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_PHYSICS_BOUNDINGCIRCLE_HEADER
+#define VOS_PHYSICS_BOUNDINGCIRCLE_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysMemory.h"
-    #include "System/SysWindow.h"
-    #include "System/SysClock.h"
-    #include "System/SysSleep.h"
+    #include "../Math/Math.h"
+    #include "../Math/Vector2i.h"
 
-    #include "Renderer/Renderer.h"
-    #include "Renderer/Texture.h"
-    #include "Renderer/CubeMap.h"
-    #include "Renderer/View.h"
-    #include "Renderer/Camera.h"
-    #include "Renderer/FreeFlyCam.h"
-    #include "Renderer/OrbitalCam.h"
-    #include "Renderer/Sprite.h"
-    #include "Renderer/ProcSprite.h"
-    #include "Renderer/SkyBox.h"
-
-    #include "Renderer/Shapes/RectangleShape.h"
-    #include "Renderer/Shapes/EllipseShape.h"
-    #include "Renderer/Shapes/CuboidShape.h"
-
-    #include "Renderer/GUI/GUIPxText.h"
-    #include "Renderer/GUI/GUIWindow.h"
-
-    #include "Renderer/StaticMesh.h"
-    #include "Renderer/HeightMapChunk.h"
-
-    #include "Images/Embedded/PxFont.h"
-    #include "Images/Embedded/Window.h"
-    #include "Images/BMPFile.h"
-    #include "Images/PNGFile.h"
-
-    #include "Physics/Physics.h"
-    #include "Physics/BoundingCircle.h"
-
-    #include "Event.h"
-
-    #include <cstddef>
     #include <cstdint>
-    #include <exception>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
+    //  BoundingCircle class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Vos
+    class BoundingCircle
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
+            //  BoundingCircle default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            Vos();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
-            ////////////////////////////////////////////////////////////////////
-            ~Vos();
-
+            BoundingCircle();
 
             ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
+            //  BoundingCircle copy constructor                               //
             ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
-            ////////////////////////////////////////////////////////////////////
-            void run();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
+            BoundingCircle(const BoundingCircle& boundingCircle);
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
+            //  BoundingCircle center and radius constructor                  //
             ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
+            BoundingCircle(Vector2i center, int64_t radius);
 
-        private:
-            bool            m_running;          // VOS running state
-            SysWindow       m_window;           // VOS main window
-            Renderer        m_renderer;         // VOS renderer
-            SysClock        m_clock;            // VOS clock
+            ////////////////////////////////////////////////////////////////////
+            //  BoundingCircle destructor                                     //
+            ////////////////////////////////////////////////////////////////////
+            ~BoundingCircle();
 
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-            OrbitalCam      m_orbitalcam;       // Orbital camera
 
-            CubeMap         m_cubemap;          // CubeMap
-            SkyBox          m_skybox;           // SkyBox
+            ////////////////////////////////////////////////////////////////////
+            //  BoundingCircle affectation operator                           //
+            ////////////////////////////////////////////////////////////////////
+            BoundingCircle& operator=(const BoundingCircle& boundingCircle);
 
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectanle;         // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
-            CuboidShape     m_cuboid;           // Cuboid shape
 
-            Texture         m_pxFontTexture;    // Pixel font texture
-            GUIPxText       m_pxText;           // Test pixel text
-
-            Texture         m_windowTexture;    // GUI Window texture
-            GUIWindow       m_guiWindow;        // GUI Window
-
-            Texture         m_testTexture;      // Test texture
-            StaticMesh      m_staticMesh;       // Static mesh
-
-            HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
-
-            BoundingCircle  m_boundingCircle;   // Bounding circle
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
+        public:
+            Vector2i    center;     // Bounding circle center
+            int64_t     radius;     // Bounding circle radius
     };
 
 
-#endif // VOS_VOS_HEADER
+#endif // VOS_PHYSICS_BOUNDINGCIRCLE_HEADER

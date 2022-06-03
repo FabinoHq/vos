@@ -78,6 +78,11 @@
             return (x >= 0) ? 1 : -1;
         }
 
+        inline int64_t sign(int64_t x)
+        {
+            return (x >= 0) ? 1 : -1;
+        }
+
         inline float sign(float x)
         {
             return (x >= 0.0f) ? 1.0f : -1.0f;
@@ -93,6 +98,11 @@
         //  return : Absolute value of x                                      //
         ////////////////////////////////////////////////////////////////////////
         inline int32_t abs(int32_t x)
+        {
+            return (x >= 0) ? x : -x;
+        }
+
+        inline int64_t abs(int64_t x)
         {
             return (x >= 0) ? x : -x;
         }
@@ -131,6 +141,11 @@
             return ((x%n)+n)%n;
         }
 
+        inline int64_t modulus(int64_t x, int64_t n)
+        {
+            return ((x%n)+n)%n;
+        }
+
         inline float modulus(float x, float n)
         {
             return (std::fmod((std::fmod(x,n)+n),n));
@@ -154,6 +169,13 @@
             return (x/n);
         }
 
+        inline int64_t divide(int64_t x, int64_t n)
+        {
+            if (n == 0) return 0;
+            if (x < 0) x -= (n-1);
+            return (x/n);
+        }
+
         ////////////////////////////////////////////////////////////////////////
         //  Integer square root                                               //
         //  param x : Integer to get square root of                           //
@@ -162,6 +184,13 @@
         inline int32_t sqrt(int32_t x)
         {
             int32_t result = 0;
+            while ((result+1)*(result+1) <= x) { ++result; }
+            return result;
+        }
+
+        inline int64_t sqrt(int64_t x)
+        {
+            int64_t result = 0;
             while ((result+1)*(result+1) <= x) { ++result; }
             return result;
         }
@@ -218,6 +247,11 @@
         //  return : Distance between the two given points                    //
         ////////////////////////////////////////////////////////////////////////
         inline int32_t distance(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+        {
+            return Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
+        }
+
+        inline int64_t distance(int64_t x1, int64_t y1, int64_t x2, int64_t y2)
         {
             return Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
         }

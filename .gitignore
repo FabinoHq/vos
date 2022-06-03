@@ -117,6 +117,12 @@
 !Images/PNGFile.h
 !Images/PNGFile.cpp
 
+!Physics/
+!Physics/Physics.h
+!Physics/Physics.cpp
+!Physics/BoundingCircle.h
+!Physics/BoundingCircle.cpp
+
 !Renderer/
 !Renderer/Vulkan/Vulkan.h
 !Renderer/Vulkan/Vulkan.cpp

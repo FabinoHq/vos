@@ -67,6 +67,7 @@ m_guiWindow(),
 m_testTexture(),
 m_staticMesh(),
 m_heightMapChunk(),
+m_boundingCircle(),
 m_mouseX(0.0f),
 m_mouseY(0.0f)
 {
@@ -377,6 +378,12 @@ bool Vos::launch()
     if (heightmap) { delete[] heightmap; }
 
 
+    // Init bounding circle
+    m_boundingCircle.center.vec[0] = 0;
+    m_boundingCircle.center.vec[1] = 0;
+    m_boundingCircle.radius = 100000000;
+
+
     // Run VOS
     run();
 
@@ -564,11 +571,11 @@ void Vos::run()
             m_renderer.setCamera(m_orbitalcam);
 
             // Render skybox
-            m_renderer.bindSkyBoxPipeline();
+            /*m_renderer.bindSkyBoxPipeline();
             //m_skybox.setPosition(m_freeflycam.getPosition());
             m_skybox.setPosition(m_orbitalcam.getPosition());
             m_skybox.bindVertexBuffer(m_renderer);
-            m_skybox.render(m_renderer);
+            m_skybox.render(m_renderer);*/
 
             // Render cuboid shape
             /*m_renderer.bindShapePipeline();
@@ -576,14 +583,29 @@ void Vos::run()
             m_cuboid.render(m_renderer);*/
 
             // Render static mesh
-            m_renderer.bindStaticMeshPipeline();
+            /*m_renderer.bindStaticMeshPipeline();
             m_staticMesh.bindVertexBuffer(m_renderer);
-            m_staticMesh.render(m_renderer);
+            m_staticMesh.render(m_renderer);*/
 
             // Render heightmap chunk
             /*m_renderer.bindStaticMeshPipeline();
             m_heightMapChunk.bindVertexBuffer(m_renderer);
             m_heightMapChunk.render(m_renderer);*/
+
+
+            // Set 2D view
+            m_renderer.setView(m_view);
+
+            // Render ellipse
+            m_renderer.bindEllipsePipeline();
+            float centerX = m_boundingCircle.center.vec[0]*0.000000001f;
+            float centerY = m_boundingCircle.center.vec[1]*0.000000001f;
+            float radius = m_boundingCircle.radius*0.000000001f;
+            m_ellipse.setOrigin(radius, radius);
+            m_ellipse.setPosition(centerX, centerY);
+            m_ellipse.setSize(radius*2.0f, radius*2.0f);
+            m_ellipse.setSmooth(0.025f);
+            m_ellipse.render(m_renderer);
 
 
             // Set default screen view

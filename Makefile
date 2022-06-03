@@ -56,6 +56,7 @@ VOS: main.o \
 	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
+	Physics/Physics.o Physics/BoundingCircle.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
@@ -83,6 +84,7 @@ VOS: main.o \
 	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
+	Physics/Physics.o Physics/BoundingCircle.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
@@ -162,6 +164,13 @@ Images/BMPFile.o: Images/BMPFile.cpp
 
 Images/PNGFile.o: Images/PNGFile.cpp
 	$(CC) -o Images/PNGFile.o -c Images/PNGFile.cpp $(CFLAGS)
+
+
+Physics/Physics.o: Physics/Physics.cpp
+	$(CC) -o Physics/Physics.o -c Physics/Physics.cpp $(CFLAGS)
+
+Physics/BoundingCircle.o: Physics/BoundingCircle.cpp
+	$(CC) -o Physics/BoundingCircle.o -c Physics/BoundingCircle.cpp $(CFLAGS)
 
 
 Renderer/Vulkan/Vulkan.o: Renderer/Vulkan/Vulkan.cpp
