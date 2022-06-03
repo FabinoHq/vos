@@ -156,6 +156,7 @@
             HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
 
             BoundingCircle  m_boundingCircle;   // Bounding circle
+            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
 
             float           m_mouseX;           // Mouse X position
             float           m_mouseY;           // Mouse Y position
