@@ -447,6 +447,9 @@ void Vos::run()
             framecnt = 0.0f;
         }
 
+        // Space key released event
+        bool spaceReleased = false;
+
         // Get main window event
         Event event;
         while (m_window.getEvent(event))
@@ -506,6 +509,10 @@ void Vos::run()
 
                         case EVENT_KEY_D:
                             m_freeflycam.setRightward(false);
+                            break;
+
+                        case EVENT_KEY_SPACE:
+                            spaceReleased = true;
                             break;
 
                         default:
@@ -570,9 +577,24 @@ void Vos::run()
             static_cast<int64_t>(m_mouseX*1000000000);
         m_boundingCircle2.center.vec[1] =
             static_cast<int64_t>(m_mouseY*1000000000);*/
+        Vector2i collideOffset;
+        collideOffset.vec[0] = static_cast<int64_t>(m_mouseX*1000000000);
+        collideOffset.vec[1] = static_cast<int64_t>(m_mouseY*1000000000);
+        collideOffset.vec[0] -= m_boundingCircle2.center.vec[0];
+        collideOffset.vec[1] -= m_boundingCircle2.center.vec[1];
         Collision2 collideCircle;
         collideCircle.reset();
-        m_boundingCircle2.collideCircle(m_boundingCircle, collideCircle);
+        m_boundingCircle2.collideCircle(
+            m_boundingCircle, collideOffset, collideCircle
+        );
+
+        // Space key released event
+        if (spaceReleased)
+        {
+            m_boundingCircle2.center.vec[0] = collideCircle.position.vec[0];
+            m_boundingCircle2.center.vec[1] = collideCircle.position.vec[1];
+            spaceReleased = false;
+        }
 
         // Render frame
         if (m_renderer.startFrame())
@@ -633,11 +655,8 @@ void Vos::run()
             m_ellipse.render(m_renderer);
 
             // Render bounding circle 2 projection
-            Vector2i projectedCenter;
-            projectedCenter.vec[0] = static_cast<int64_t>(m_mouseX*1000000000);
-            projectedCenter.vec[1] = static_cast<int64_t>(m_mouseY*1000000000);
-            centerX = projectedCenter.vec[0]*PhysicsToRenderer;
-            centerY = projectedCenter.vec[1]*PhysicsToRenderer;
+            centerX = collideCircle.position.vec[0]*PhysicsToRenderer;
+            centerY = collideCircle.position.vec[1]*PhysicsToRenderer;
             radius = m_boundingCircle2.radius*PhysicsToRenderer;
             m_ellipse.setColor(0.8f, 0.2f, 0.8f, 0.8f);
             if (collideCircle.collide)

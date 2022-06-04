@@ -151,9 +151,18 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
 ////////////////////////////////////////////////////////////////////////////////
 //  Collide bounding circle with bounding circle                              //
 ////////////////////////////////////////////////////////////////////////////////
-bool BoundingCircle::collideCircle(
-	const BoundingCircle& boundingCircle, Collision2& collision)
+bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
+	const Vector2i& offset, Collision2& collision)
 {
+	// Reset collision
+	collision.reset();
+	collision.collide = false;
+	collision.position.vec[0] = center.vec[0]+offset.vec[0];
+	collision.position.vec[1] = center.vec[1]+offset.vec[1];
+	collision.offset.vec[0] = offset.vec[0];
+	collision.offset.vec[1] = offset.vec[1];
+
+	// Collide circle
 	Vector2i dist = (center - boundingCircle.center);
 	int64_t distance = (dist.vec[0]*dist.vec[0])+(dist.vec[1]*dist.vec[1]);
 	int64_t radiuses = (radius + boundingCircle.radius);
@@ -171,4 +180,5 @@ BoundingCircle& BoundingCircle::operator=(const BoundingCircle& boundingCircle)
 	center.vec[0] = boundingCircle.center.vec[0];
 	center.vec[1] = boundingCircle.center.vec[1];
 	radius = boundingCircle.radius;
+	return *this;
 }

@@ -67,6 +67,7 @@
         EVENT_KEY_NONE,
         EVENT_KEY_ESCAPE,
         EVENT_KEY_RETURN,
+        EVENT_KEY_SPACE,
 
         EVENT_KEY_UP,
         EVENT_KEY_DOWN,

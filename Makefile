@@ -279,6 +279,7 @@ clean:
 	rm -rf Network/Lin/*.o
 	rm -rf Compress/*.o
 	rm -rf Images/*.o
+	rm -rf Physics/*.o
 	rm -rf Renderer/*.o
 	rm -rf Renderer/Vulkan/*.o
 	rm -rf Renderer/Shapes/*.o

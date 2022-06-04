@@ -116,8 +116,8 @@
             ////////////////////////////////////////////////////////////////////
             //  Collide bounding circle with bounding circle                  //
             ////////////////////////////////////////////////////////////////////
-            bool collideCircle(
-                const BoundingCircle& boundingCircle, Collision2& collision);
+            bool collideCircle(const BoundingCircle& boundingCircle,
+                const Vector2i& offset, Collision2& collision);
 
 
             ////////////////////////////////////////////////////////////////////

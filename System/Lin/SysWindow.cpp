@@ -506,6 +506,7 @@ EventKey SysWindow::transcriptKey(KeySym key)
     {
         case XK_Escape: return EVENT_KEY_ESCAPE;
         case XK_Return: return EVENT_KEY_RETURN;
+        case XK_space: return EVENT_KEY_SPACE;
 
         case XK_Up: return EVENT_KEY_UP;
         case XK_Down: return EVENT_KEY_DOWN;
@@ -528,32 +529,32 @@ EventKey SysWindow::transcriptKey(KeySym key)
         case XK_F14: return EVENT_KEY_F14;
         case XK_F15: return EVENT_KEY_F15;
 
-        case XK_a: return EVENT_KEY_A;
-        case XK_b: return EVENT_KEY_B;
-        case XK_c: return EVENT_KEY_C;
-        case XK_d: return EVENT_KEY_D;
-        case XK_e: return EVENT_KEY_E;
-        case XK_f: return EVENT_KEY_F;
-        case XK_g: return EVENT_KEY_G;
-        case XK_h: return EVENT_KEY_H;
-        case XK_i: return EVENT_KEY_I;
-        case XK_j: return EVENT_KEY_J;
-        case XK_k: return EVENT_KEY_K;
-        case XK_l: return EVENT_KEY_L;
-        case XK_m: return EVENT_KEY_M;
-        case XK_n: return EVENT_KEY_N;
-        case XK_o: return EVENT_KEY_O;
-        case XK_p: return EVENT_KEY_P;
-        case XK_q: return EVENT_KEY_Q;
-        case XK_r: return EVENT_KEY_R;
-        case XK_s: return EVENT_KEY_S;
-        case XK_t: return EVENT_KEY_T;
-        case XK_u: return EVENT_KEY_U;
-        case XK_v: return EVENT_KEY_V;
-        case XK_w: return EVENT_KEY_W;
-        case XK_x: return EVENT_KEY_X;
-        case XK_y: return EVENT_KEY_Y;
-        case XK_z: return EVENT_KEY_Z;
+        case XK_A: case XK_a: return EVENT_KEY_A;
+        case XK_B: case XK_b: return EVENT_KEY_B;
+        case XK_C: case XK_c: return EVENT_KEY_C;
+        case XK_D: case XK_d: return EVENT_KEY_D;
+        case XK_E: case XK_e: return EVENT_KEY_E;
+        case XK_F: case XK_f: return EVENT_KEY_F;
+        case XK_G: case XK_g: return EVENT_KEY_G;
+        case XK_H: case XK_h: return EVENT_KEY_H;
+        case XK_I: case XK_i: return EVENT_KEY_I;
+        case XK_J: case XK_j: return EVENT_KEY_J;
+        case XK_K: case XK_k: return EVENT_KEY_K;
+        case XK_L: case XK_l: return EVENT_KEY_L;
+        case XK_M: case XK_m: return EVENT_KEY_M;
+        case XK_N: case XK_n: return EVENT_KEY_N;
+        case XK_O: case XK_o: return EVENT_KEY_O;
+        case XK_P: case XK_p: return EVENT_KEY_P;
+        case XK_Q: case XK_q: return EVENT_KEY_Q;
+        case XK_R: case XK_r: return EVENT_KEY_R;
+        case XK_S: case XK_s: return EVENT_KEY_S;
+        case XK_T: case XK_t: return EVENT_KEY_T;
+        case XK_U: case XK_u: return EVENT_KEY_U;
+        case XK_V: case XK_v: return EVENT_KEY_V;
+        case XK_W: case XK_w: return EVENT_KEY_W;
+        case XK_X: case XK_x: return EVENT_KEY_X;
+        case XK_Y: case XK_y: return EVENT_KEY_Y;
+        case XK_Z: case XK_z: return EVENT_KEY_Z;
 
         case XK_0: return EVENT_KEY_0;
         case XK_1: return EVENT_KEY_1;

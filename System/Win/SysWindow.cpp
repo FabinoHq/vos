@@ -419,6 +419,7 @@ EventKey SysWindow::transcriptKey(WPARAM key)
     {
         case VK_ESCAPE: return EVENT_KEY_ESCAPE;
         case VK_RETURN: return EVENT_KEY_RETURN;
+        case VK_SPACE: return EVENT_KEY_SPACE;
 
         case VK_UP: return EVENT_KEY_UP;
         case VK_DOWN: return EVENT_KEY_DOWN;

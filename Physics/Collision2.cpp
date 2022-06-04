@@ -166,4 +166,5 @@ Collision2& Collision2::operator=(const Collision2& collision2)
 	offset.vec[1] = collision2.offset.vec[1];
 	normal.vec[0] = collision2.normal.vec[0];
 	normal.vec[1] = collision2.normal.vec[1];
+	return *this;
 }
