@@ -67,9 +67,10 @@
             BoundingCircle(const BoundingCircle& boundingCircle);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingCircle center and radius constructor                  //
+            //  BoundingCircle position and radius constructor                //
             ////////////////////////////////////////////////////////////////////
-            BoundingCircle(const Vector2i& circleCenter, int64_t circleRadius);
+            BoundingCircle(
+                const Vector2i& circlePosition, int64_t circleRadius);
 
             ////////////////////////////////////////////////////////////////////
             //  BoundingCircle destructor                                     //
@@ -78,29 +79,29 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center and radius                         //
+            //  Set bounding circle position and radius                       //
             ////////////////////////////////////////////////////////////////////
-            void set(const Vector2i& circleCenter, int64_t circleRadius);
+            void set(const Vector2i& circlePosition, int64_t circleRadius);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center                                    //
+            //  Set bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
-            void setCenter(const Vector2i& circleCenter);
+            void setPosition(const Vector2i& circlePosition);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center                                    //
+            //  Set bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
-            void setCenter(int64_t centerX, int64_t centerY);
+            void setPosition(int64_t positionX, int64_t positionY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center X position                         //
+            //  Set bounding circle position X position                       //
             ////////////////////////////////////////////////////////////////////
-            void setCenterX(int64_t centerX);
+            void setPositionX(int64_t positionX);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center Y position                         //
+            //  Set bounding circle position Y position                       //
             ////////////////////////////////////////////////////////////////////
-            void setCenterY(int64_t centerY);
+            void setPositionY(int64_t positionY);
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle radius                                    //
@@ -127,7 +128,7 @@
 
 
         public:
-            Vector2i    center;     // Bounding circle center
+            Vector2i    position;   // Bounding circle position
             int64_t     radius;     // Bounding circle radius
     };
 

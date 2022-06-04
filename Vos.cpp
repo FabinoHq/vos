@@ -380,11 +380,11 @@ bool Vos::launch()
 
 
     // Init bounding circle
-    m_boundingCircle.setCenter(-200000000, 0);
+    m_boundingCircle.setPosition(-200000000, 0);
     m_boundingCircle.setRadius(100000000);
 
     // Init bounding circle 2
-    m_boundingCircle2.setCenter(200000000, 0);
+    m_boundingCircle2.setPosition(200000000, 0);
     m_boundingCircle2.setRadius(100000000);
 
 
@@ -573,15 +573,15 @@ void Vos::run()
         m_orbitalcam.compute(m_renderer, frametime);
 
         // Compute physics
-        /*m_boundingCircle2.center.vec[0] =
+        /*m_boundingCircle2.position.vec[0] =
             static_cast<int64_t>(m_mouseX*1000000000);
-        m_boundingCircle2.center.vec[1] =
+        m_boundingCircle2.position.vec[1] =
             static_cast<int64_t>(m_mouseY*1000000000);*/
         Vector2i collideOffset;
         collideOffset.vec[0] = static_cast<int64_t>(m_mouseX*1000000000);
         collideOffset.vec[1] = static_cast<int64_t>(m_mouseY*1000000000);
-        collideOffset.vec[0] -= m_boundingCircle2.center.vec[0];
-        collideOffset.vec[1] -= m_boundingCircle2.center.vec[1];
+        collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
+        collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
         Collision2 collideCircle;
         collideCircle.reset();
         m_boundingCircle2.collideCircle(
@@ -591,8 +591,8 @@ void Vos::run()
         // Space key released event
         if (spaceReleased)
         {
-            m_boundingCircle2.center.vec[0] = collideCircle.position.vec[0];
-            m_boundingCircle2.center.vec[1] = collideCircle.position.vec[1];
+            m_boundingCircle2.position.vec[0] = collideCircle.position.vec[0];
+            m_boundingCircle2.position.vec[1] = collideCircle.position.vec[1];
             spaceReleased = false;
         }
 
@@ -633,30 +633,32 @@ void Vos::run()
 
             // Render bounding circle
             m_renderer.bindEllipsePipeline();
-            float centerX = m_boundingCircle.center.vec[0]*PhysicsToRenderer;
-            float centerY = m_boundingCircle.center.vec[1]*PhysicsToRenderer;
+            float positionX =
+                m_boundingCircle.position.vec[0]*PhysicsToRenderer;
+            float positionY =
+                m_boundingCircle.position.vec[1]*PhysicsToRenderer;
             float radius = m_boundingCircle.radius*PhysicsToRenderer;
             m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
             m_ellipse.setOrigin(radius, radius);
-            m_ellipse.setPosition(centerX, centerY);
+            m_ellipse.setPosition(positionX, positionY);
             m_ellipse.setSize(radius*2.05f, radius*2.05f);
             m_ellipse.setSmooth(0.025f);
             m_ellipse.render(m_renderer);
 
             // Render bounding circle 2
-            centerX = m_boundingCircle2.center.vec[0]*PhysicsToRenderer;
-            centerY = m_boundingCircle2.center.vec[1]*PhysicsToRenderer;
+            positionX = m_boundingCircle2.position.vec[0]*PhysicsToRenderer;
+            positionY = m_boundingCircle2.position.vec[1]*PhysicsToRenderer;
             radius = m_boundingCircle2.radius*PhysicsToRenderer;
             m_ellipse.setColor(0.0f, 0.2f, 0.8f, 0.8f);
             m_ellipse.setOrigin(radius, radius);
-            m_ellipse.setPosition(centerX, centerY);
+            m_ellipse.setPosition(positionX, positionY);
             m_ellipse.setSize(radius*2.05f, radius*2.05f);
             m_ellipse.setSmooth(0.025f);
             m_ellipse.render(m_renderer);
 
             // Render bounding circle 2 projection
-            centerX = collideCircle.position.vec[0]*PhysicsToRenderer;
-            centerY = collideCircle.position.vec[1]*PhysicsToRenderer;
+            positionX = collideCircle.position.vec[0]*PhysicsToRenderer;
+            positionY = collideCircle.position.vec[1]*PhysicsToRenderer;
             radius = m_boundingCircle2.radius*PhysicsToRenderer;
             m_ellipse.setColor(0.8f, 0.2f, 0.8f, 0.8f);
             if (collideCircle.collide)
@@ -664,7 +666,7 @@ void Vos::run()
                 m_ellipse.setColor(0.8f, 0.2f, 0.2f, 0.8f);
             }
             m_ellipse.setOrigin(radius, radius);
-            m_ellipse.setPosition(centerX, centerY);
+            m_ellipse.setPosition(positionX, positionY);
             m_ellipse.setSize(radius*2.05f, radius*2.05f);
             m_ellipse.setSmooth(0.025f);
             m_ellipse.render(m_renderer);

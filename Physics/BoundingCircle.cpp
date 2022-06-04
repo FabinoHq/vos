@@ -46,7 +46,7 @@
 //  BoundingCircle default constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle::BoundingCircle() :
-center(0, 0),
+position(0, 0),
 radius(0)
 {
 
@@ -57,19 +57,19 @@ radius(0)
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle::BoundingCircle(const BoundingCircle& boundingCircle)
 {
-    center.vec[0] = boundingCircle.center.vec[0];
-	center.vec[1] = boundingCircle.center.vec[1];
+    position.vec[0] = boundingCircle.position.vec[0];
+	position.vec[1] = boundingCircle.position.vec[1];
     radius = boundingCircle.radius;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  BoundingCircle center and radius constructor                              //
+//  BoundingCircle position and radius constructor                            //
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle::BoundingCircle(
-	const Vector2i& circleCenter, int64_t circleRadius)
+	const Vector2i& circlePosition, int64_t circleRadius)
 {
-	center.vec[0] = circleCenter.vec[0];
-	center.vec[1] = circleCenter.vec[1];
+	position.vec[0] = circlePosition.vec[0];
+	position.vec[1] = circlePosition.vec[1];
 	radius = circleRadius;
 }
 
@@ -79,53 +79,53 @@ BoundingCircle::BoundingCircle(
 BoundingCircle::~BoundingCircle()
 {
 	radius = 0;
-	center.vec[1] = 0;
-	center.vec[0] = 0;
+	position.vec[1] = 0;
+	position.vec[0] = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center and radius                                     //
+//  Set bounding circle position and radius                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::set(const Vector2i& circleCenter, int64_t circleRadius)
+void BoundingCircle::set(const Vector2i& circlePosition, int64_t circleRadius)
 {
-	center.vec[0] = circleCenter.vec[0];
-	center.vec[1] = circleCenter.vec[1];
+	position.vec[0] = circlePosition.vec[0];
+	position.vec[1] = circlePosition.vec[1];
 	radius = circleRadius;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center                                                //
+//  Set bounding circle position                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setCenter(const Vector2i& circleCenter)
+void BoundingCircle::setPosition(const Vector2i& circlePosition)
 {
-	center.vec[0] = circleCenter.vec[0];
-	center.vec[1] = circleCenter.vec[1];
+	position.vec[0] = circlePosition.vec[0];
+	position.vec[1] = circlePosition.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center                                                //
+//  Set bounding circle position                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setCenter(int64_t centerX, int64_t centerY)
+void BoundingCircle::setPosition(int64_t positionX, int64_t positionY)
 {
-	center.vec[0] = centerX;
-	center.vec[1] = centerY;
+	position.vec[0] = positionX;
+	position.vec[1] = positionY;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center X position                                     //
+//  Set bounding circle position X position                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setCenterX(int64_t centerX)
+void BoundingCircle::setPositionX(int64_t positionX)
 {
-	center.vec[0] = centerX;
+	position.vec[0] = positionX;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center Y position                                     //
+//  Set bounding circle position Y position                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setCenterY(int64_t centerY)
+void BoundingCircle::setPositionY(int64_t positionY)
 {
-	center.vec[1] = centerY;
+	position.vec[1] = positionY;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ void BoundingCircle::setRadius(int64_t circleRadius)
 ////////////////////////////////////////////////////////////////////////////////
 bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
 {
-	Vector2i dist = (center - boundingCircle.center);
+	Vector2i dist = (position - boundingCircle.position);
 	int64_t distance = (dist.vec[0]*dist.vec[0])+(dist.vec[1]*dist.vec[1]);
 	int64_t radiuses = (radius + boundingCircle.radius);
 	return (distance <= (radiuses*radiuses));
@@ -157,13 +157,13 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	// Reset collision
 	collision.reset();
 	collision.collide = false;
-	collision.position.vec[0] = center.vec[0]+offset.vec[0];
-	collision.position.vec[1] = center.vec[1]+offset.vec[1];
+	collision.position.vec[0] = position.vec[0]+offset.vec[0];
+	collision.position.vec[1] = position.vec[1]+offset.vec[1];
 	collision.offset.vec[0] = offset.vec[0];
 	collision.offset.vec[1] = offset.vec[1];
 
 	// Collide circle
-	Vector2i dist = (center - boundingCircle.center);
+	Vector2i dist = (position - boundingCircle.position);
 	int64_t distance = (dist.vec[0]*dist.vec[0])+(dist.vec[1]*dist.vec[1]);
 	int64_t radiuses = (radius + boundingCircle.radius);
 	bool colliding = (distance <= (radiuses*radiuses));
@@ -177,8 +177,8 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle& BoundingCircle::operator=(const BoundingCircle& boundingCircle)
 {
-	center.vec[0] = boundingCircle.center.vec[0];
-	center.vec[1] = boundingCircle.center.vec[1];
+	position.vec[0] = boundingCircle.position.vec[0];
+	position.vec[1] = boundingCircle.position.vec[1];
 	radius = boundingCircle.radius;
 	return *this;
 }
