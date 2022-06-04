@@ -120,6 +120,8 @@
 !Physics/
 !Physics/Physics.h
 !Physics/Physics.cpp
+!Physics/Collision2.h
+!Physics/Collision2.cpp
 !Physics/BoundingCircle.h
 !Physics/BoundingCircle.cpp
 

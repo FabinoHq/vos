@@ -37,138 +37,133 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/BoundingCircle.cpp : Bounding Circle management                //
+//     Physics/Collision2.cpp : 2 components collision management             //
 ////////////////////////////////////////////////////////////////////////////////
-#include "BoundingCircle.h"
+#include "Collision2.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  BoundingCircle default constructor                                        //
+//  Collision2 default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
-BoundingCircle::BoundingCircle() :
-center(0, 0),
-radius(0)
+Collision2::Collision2() :
+collide(false),
+position(0, 0),
+offset(0, 0),
+normal(0, 0)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  BoundingCircle copy constructor                                           //
+//  Collision2 copy constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
-BoundingCircle::BoundingCircle(const BoundingCircle& boundingCircle)
+Collision2::Collision2(const Collision2& collision2)
 {
-    center.vec[0] = boundingCircle.center.vec[0];
-	center.vec[1] = boundingCircle.center.vec[1];
-    radius = boundingCircle.radius;
+	collide = collision2.collide;
+	position.vec[0] = collision2.position.vec[0];
+	position.vec[1] = collision2.position.vec[1];
+	offset.vec[0] = collision2.offset.vec[0];
+	offset.vec[1] = collision2.offset.vec[1];
+	normal.vec[0] = collision2.normal.vec[0];
+	normal.vec[1] = collision2.normal.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  BoundingCircle center and radius constructor                              //
+//  Collision2 destructor                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-BoundingCircle::BoundingCircle(
-	const Vector2i& circleCenter, int64_t circleRadius)
+Collision2::~Collision2()
 {
-	center.vec[0] = circleCenter.vec[0];
-	center.vec[1] = circleCenter.vec[1];
-	radius = circleRadius;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  BoundingCircle destructor                                                 //
-////////////////////////////////////////////////////////////////////////////////
-BoundingCircle::~BoundingCircle()
-{
-	radius = 0;
-	center.vec[1] = 0;
-	center.vec[0] = 0;
+	normal.reset();
+	offset.reset();
+	position.reset();
+	collide = false;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center and radius                                     //
+//  Reset collision                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::set(const Vector2i& circleCenter, int64_t circleRadius)
+void Collision2::reset()
 {
-	center.vec[0] = circleCenter.vec[0];
-	center.vec[1] = circleCenter.vec[1];
-	radius = circleRadius;
+	collide = false;
+	position.reset();
+	offset.reset();
+	normal.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center                                                //
+//  Set collision collide state                                               //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setCenter(const Vector2i& circleCenter)
+void Collision2::setCollide(bool collisionCollide)
 {
-	center.vec[0] = circleCenter.vec[0];
-	center.vec[1] = circleCenter.vec[1];
+	collide = collisionCollide;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center                                                //
+//  Set collision position                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setCenter(int64_t centerX, int64_t centerY)
+void Collision2::setPosition(const Vector2i& collisionPosition)
 {
-	center.vec[0] = centerX;
-	center.vec[1] = centerY;
+	position.vec[0] = collisionPosition.vec[0];
+	position.vec[1] = collisionPosition.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center X position                                     //
+//  Set collision position                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setCenterX(int64_t centerX)
+void Collision2::setPosition(int64_t positionX, int64_t positionY)
 {
-	center.vec[0] = centerX;
+	position.vec[0] = positionX;
+	position.vec[1] = positionY;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle center Y position                                     //
+//  Set collision offset                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setCenterY(int64_t centerY)
+void Collision2::setOffset(const Vector2i& collisionOffset)
 {
-	center.vec[1] = centerY;
+	offset.vec[0] = collisionOffset.vec[0];
+	offset.vec[1] = collisionOffset.vec[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle radius                                                //
+//  Set collision offset                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::setRadius(int64_t circleRadius)
+void Collision2::setOffset(int64_t offsetX, int64_t offsetY)
 {
-	radius = circleRadius;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Collide bounding circle with bounding circle                              //
-////////////////////////////////////////////////////////////////////////////////
-bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
-{
-	Vector2i dist = (center - boundingCircle.center);
-	int64_t distance = (dist.vec[0]*dist.vec[0])+(dist.vec[1]*dist.vec[1]);
-	int64_t radiuses = (radius + boundingCircle.radius);
-	return (distance <= (radiuses*radiuses));
+	offset.vec[0] = offsetX;
+	offset.vec[1] = offsetY;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Collide bounding circle with bounding circle                              //
+//  Set collision normal                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-bool BoundingCircle::collideCircle(
-	const BoundingCircle& boundingCircle, Collision2& collision)
+void Collision2::setNormal(const Vector2i& collisionNormal)
 {
-	Vector2i dist = (center - boundingCircle.center);
-	int64_t distance = (dist.vec[0]*dist.vec[0])+(dist.vec[1]*dist.vec[1]);
-	int64_t radiuses = (radius + boundingCircle.radius);
-	bool colliding = (distance <= (radiuses*radiuses));
-	collision.collide = colliding;
-	return colliding;
+	normal.vec[0] = collisionNormal.vec[0];
+	normal.vec[1] = collisionNormal.vec[1];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set collision normal                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void Collision2::setNormal(int64_t normalX, int64_t normalY)
+{
+	normal.vec[0] = normalX;
+	normal.vec[1] = normalY;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  BoundingCircle affectation operator                                       //
+//  Collision2 affectation operator                                           //
 ////////////////////////////////////////////////////////////////////////////////
-BoundingCircle& BoundingCircle::operator=(const BoundingCircle& boundingCircle)
+Collision2& Collision2::operator=(const Collision2& collision2)
 {
-	center.vec[0] = boundingCircle.center.vec[0];
-	center.vec[1] = boundingCircle.center.vec[1];
-	radius = boundingCircle.radius;
+	collide = collision2.collide;
+	position.vec[0] = collision2.position.vec[0];
+	position.vec[1] = collision2.position.vec[1];
+	offset.vec[0] = collision2.offset.vec[0];
+	offset.vec[1] = collision2.offset.vec[1];
+	normal.vec[0] = collision2.normal.vec[0];
+	normal.vec[1] = collision2.normal.vec[1];
 }

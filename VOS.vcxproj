@@ -145,6 +145,7 @@
     <ClCompile Include="Network\Win\TCPSocket.cpp" />
     <ClCompile Include="Network\Win\UDPSocket.cpp" />
     <ClCompile Include="Physics\BoundingCircle.cpp" />
+    <ClCompile Include="Physics\Collision2.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
     <ClCompile Include="Renderer\CubeMap.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Network\Win\TCPSocket.h" />
     <ClInclude Include="Network\Win\UDPSocket.h" />
     <ClInclude Include="Physics\BoundingCircle.h" />
+    <ClInclude Include="Physics\Collision2.h" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Renderer\Camera.h" />
     <ClInclude Include="Renderer\CubeMap.h" />

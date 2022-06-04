@@ -76,6 +76,7 @@
     #include "Images/PNGFile.h"
 
     #include "Physics/Physics.h"
+    #include "Physics/Collision2.h"
     #include "Physics/BoundingCircle.h"
 
     #include "Event.h"

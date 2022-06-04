@@ -188,6 +188,9 @@
     <ClCompile Include="Physics\BoundingCircle.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\Collision2.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -433,6 +436,9 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="Physics\BoundingCircle.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collision2.h">
       <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -566,11 +566,13 @@ void Vos::run()
         m_orbitalcam.compute(m_renderer, frametime);
 
         // Compute physics
-        m_boundingCircle2.center.vec[0] =
+        /*m_boundingCircle2.center.vec[0] =
             static_cast<int64_t>(m_mouseX*1000000000);
         m_boundingCircle2.center.vec[1] =
-            static_cast<int64_t>(m_mouseY*1000000000);
-        bool collideCircle = m_boundingCircle2.collideCircle(m_boundingCircle);
+            static_cast<int64_t>(m_mouseY*1000000000);*/
+        Collision2 collideCircle;
+        collideCircle.reset();
+        m_boundingCircle2.collideCircle(m_boundingCircle, collideCircle);
 
         // Render frame
         if (m_renderer.startFrame())
@@ -612,7 +614,7 @@ void Vos::run()
             float centerX = m_boundingCircle.center.vec[0]*PhysicsToRenderer;
             float centerY = m_boundingCircle.center.vec[1]*PhysicsToRenderer;
             float radius = m_boundingCircle.radius*PhysicsToRenderer;
-            m_ellipse.setColor(0.0f, 0.8f, 0.2f, 1.0f);
+            m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
             m_ellipse.setOrigin(radius, radius);
             m_ellipse.setPosition(centerX, centerY);
             m_ellipse.setSize(radius*2.05f, radius*2.05f);
@@ -623,8 +625,25 @@ void Vos::run()
             centerX = m_boundingCircle2.center.vec[0]*PhysicsToRenderer;
             centerY = m_boundingCircle2.center.vec[1]*PhysicsToRenderer;
             radius = m_boundingCircle2.radius*PhysicsToRenderer;
-            m_ellipse.setColor(0.0f, 0.2f, 0.8f, 1.0f);
-            if (collideCircle) { m_ellipse.setColor(0.8f, 0.2f, 0.2f, 1.0f); }
+            m_ellipse.setColor(0.0f, 0.2f, 0.8f, 0.8f);
+            m_ellipse.setOrigin(radius, radius);
+            m_ellipse.setPosition(centerX, centerY);
+            m_ellipse.setSize(radius*2.05f, radius*2.05f);
+            m_ellipse.setSmooth(0.025f);
+            m_ellipse.render(m_renderer);
+
+            // Render bounding circle 2 projection
+            Vector2i projectedCenter;
+            projectedCenter.vec[0] = static_cast<int64_t>(m_mouseX*1000000000);
+            projectedCenter.vec[1] = static_cast<int64_t>(m_mouseY*1000000000);
+            centerX = projectedCenter.vec[0]*PhysicsToRenderer;
+            centerY = projectedCenter.vec[1]*PhysicsToRenderer;
+            radius = m_boundingCircle2.radius*PhysicsToRenderer;
+            m_ellipse.setColor(0.8f, 0.2f, 0.8f, 0.8f);
+            if (collideCircle.collide)
+            {
+                m_ellipse.setColor(0.8f, 0.2f, 0.2f, 0.8f);
+            }
             m_ellipse.setOrigin(radius, radius);
             m_ellipse.setPosition(centerX, centerY);
             m_ellipse.setSize(radius*2.05f, radius*2.05f);

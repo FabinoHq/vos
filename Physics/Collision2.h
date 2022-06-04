@@ -37,99 +37,92 @@
 //   For more information, please refer to <http://unlicense.org>             //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/BoundingCircle.h : Bounding Circle management                  //
+//     Physics/Collision2.h : 2 components collision management               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_PHYSICS_BOUNDINGCIRCLE_HEADER
-#define VOS_PHYSICS_BOUNDINGCIRCLE_HEADER
+#ifndef VOS_PHYSICS_COLLISION2_HEADER
+#define VOS_PHYSICS_COLLISION2_HEADER
 
     #include "../Math/Math.h"
     #include "../Math/Vector2i.h"
-
-    #include "Collision2.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  BoundingCircle class definition                                       //
+    //  Collision2 class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
-    class BoundingCircle
+    class Collision2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  BoundingCircle default constructor                            //
+            //  Collision2 default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            BoundingCircle();
+            Collision2();
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingCircle copy constructor                               //
+            //  Collision2 copy constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            BoundingCircle(const BoundingCircle& boundingCircle);
+            Collision2(const Collision2& collision2);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingCircle center and radius constructor                  //
+            //  Collision2 destructor                                         //
             ////////////////////////////////////////////////////////////////////
-            BoundingCircle(const Vector2i& circleCenter, int64_t circleRadius);
-
-            ////////////////////////////////////////////////////////////////////
-            //  BoundingCircle destructor                                     //
-            ////////////////////////////////////////////////////////////////////
-            ~BoundingCircle();
+            ~Collision2();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center and radius                         //
+            //  Reset collision                                               //
             ////////////////////////////////////////////////////////////////////
-            void set(const Vector2i& circleCenter, int64_t circleRadius);
+            void reset();
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center                                    //
+            //  Set collision collide state                                   //
             ////////////////////////////////////////////////////////////////////
-            void setCenter(const Vector2i& circleCenter);
+            void setCollide(bool collisionCollide);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center                                    //
+            //  Set collision position                                        //
             ////////////////////////////////////////////////////////////////////
-            void setCenter(int64_t centerX, int64_t centerY);
+            void setPosition(const Vector2i& collisionPosition);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center X position                         //
+            //  Set collision position                                        //
             ////////////////////////////////////////////////////////////////////
-            void setCenterX(int64_t centerX);
+            void setPosition(int64_t positionX, int64_t positionY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle center Y position                         //
+            //  Set collision offset                                          //
             ////////////////////////////////////////////////////////////////////
-            void setCenterY(int64_t centerY);
+            void setOffset(const Vector2i& collisionOffset);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle radius                                    //
+            //  Set collision offset                                          //
             ////////////////////////////////////////////////////////////////////
-            void setRadius(int64_t circleRadius);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Collide bounding circle with bounding circle                  //
-            ////////////////////////////////////////////////////////////////////
-            bool collideCircle(const BoundingCircle& boundingCircle);
+            void setOffset(int64_t offsetX, int64_t offsetY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding circle with bounding circle                  //
+            //  Set collision normal                                          //
             ////////////////////////////////////////////////////////////////////
-            bool collideCircle(
-                const BoundingCircle& boundingCircle, Collision2& collision);
+            void setNormal(const Vector2i& collisionNormal);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set collision normal                                          //
+            ////////////////////////////////////////////////////////////////////
+            void setNormal(int64_t normalX, int64_t normalY);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingCircle affectation operator                           //
+            //  Collision2 affectation operator                               //
             ////////////////////////////////////////////////////////////////////
-            BoundingCircle& operator=(const BoundingCircle& boundingCircle);
+            Collision2& operator=(const Collision2& collision2);
 
 
         public:
-            Vector2i    center;     // Bounding circle center
-            int64_t     radius;     // Bounding circle radius
+            bool        collide;    // Collision state
+            Vector2i    position;   // Collision position
+            Vector2i    offset;     // Collision offset
+            Vector2i    normal;     // Collision normal
     };
 
 
-#endif // VOS_PHYSICS_BOUNDINGCIRCLE_HEADER
+#endif // VOS_PHYSICS_COLLISION2_HEADER
