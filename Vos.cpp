@@ -380,12 +380,12 @@ bool Vos::launch()
 
 
     // Init bounding circle
-    m_boundingCircle.setPosition(-200000000, 0);
-    m_boundingCircle.setRadius(100000000);
+    m_boundingCircle.setPosition(-20000000, 0);
+    m_boundingCircle.setRadius(10000000);
 
     // Init bounding circle 2
-    m_boundingCircle2.setPosition(200000000, 0);
-    m_boundingCircle2.setRadius(100000000);
+    m_boundingCircle2.setPosition(20000000, 0);
+    m_boundingCircle2.setRadius(8000000);
 
 
     // Run VOS
@@ -515,6 +515,10 @@ void Vos::run()
                             spaceReleased = true;
                             break;
 
+                        case EVENT_KEY_R:
+                            m_boundingCircle2.setPosition(20000000, 0);
+                            break;
+
                         default:
                             break;
                     }
@@ -573,17 +577,12 @@ void Vos::run()
         m_orbitalcam.compute(m_renderer, frametime);
 
         // Compute physics
-        /*m_boundingCircle2.position.vec[0] =
-            static_cast<int64_t>(m_mouseX*1000000000);
-        m_boundingCircle2.position.vec[1] =
-            static_cast<int64_t>(m_mouseY*1000000000);*/
         Vector2i collideOffset;
-        collideOffset.vec[0] = static_cast<int64_t>(m_mouseX*1000000000);
-        collideOffset.vec[1] = static_cast<int64_t>(m_mouseY*1000000000);
+        collideOffset.vec[0] = static_cast<int64_t>(m_mouseX*100000000);
+        collideOffset.vec[1] = static_cast<int64_t>(m_mouseY*100000000);
         collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
         collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
         Collision2 collideCircle;
-        collideCircle.reset();
         m_boundingCircle2.collideCircle(
             m_boundingCircle, collideOffset, collideCircle
         );
@@ -652,8 +651,8 @@ void Vos::run()
             m_ellipse.setColor(0.0f, 0.2f, 0.8f, 0.8f);
             m_ellipse.setOrigin(radius, radius);
             m_ellipse.setPosition(positionX, positionY);
-            m_ellipse.setSize(radius*2.05f, radius*2.05f);
-            m_ellipse.setSmooth(0.025f);
+            m_ellipse.setSize(radius*2.04f, radius*2.04f);
+            m_ellipse.setSmooth(0.022f);
             m_ellipse.render(m_renderer);
 
             // Render bounding circle 2 projection
@@ -667,8 +666,8 @@ void Vos::run()
             }
             m_ellipse.setOrigin(radius, radius);
             m_ellipse.setPosition(positionX, positionY);
-            m_ellipse.setSize(radius*2.05f, radius*2.05f);
-            m_ellipse.setSmooth(0.025f);
+            m_ellipse.setSize(radius*2.07f, radius*2.07f);
+            m_ellipse.setSmooth(0.028f);
             m_ellipse.render(m_renderer);
 
 

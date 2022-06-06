@@ -50,9 +50,9 @@
     ////////////////////////////////////////////////////////////////////////////
     //  MultiInt limits constants                                             //
     ////////////////////////////////////////////////////////////////////////////
-    const int32_t MutiIntMaxLowValue = 1000000000;
-    const int32_t MutiIntMaxMediumValue = 1000000000;
-    const int32_t MutiIntMaxHighValue = 1000000000;
+    const int32_t MutiIntMaxLowValue = 100000000;
+    const int32_t MutiIntMaxMediumValue = 100000000;
+    const int32_t MutiIntMaxHighValue = 100000000;
 
 
     ////////////////////////////////////////////////////////////////////////////
