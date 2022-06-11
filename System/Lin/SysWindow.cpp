@@ -53,8 +53,6 @@ m_closeMsg(0),
 m_hasFocus(false),
 m_width(0),
 m_height(0),
-m_lastMouseX(0),
-m_lastMouseY(0),
 m_lastMouseLeft(false),
 m_lastMouseRight(false),
 m_hiddenCursor(0)
@@ -172,8 +170,6 @@ bool SysWindow::create()
         m_display, m_handle, &root, &root,
         &mouseX, &mouseY, &mouseX, &mouseY, &mask
     );
-    m_lastMouseX = mouseX;
-    m_lastMouseY = mouseY;
     m_lastMouseLeft = (mask & Button1Mask);
     m_lastMouseRight = (mask & Button3Mask);
 
@@ -256,6 +252,12 @@ bool SysWindow::getEvent(Event& event)
 
     if (m_hasFocus)
     {
+        // Get window center position
+        XWindowAttributes xwa;
+        XGetWindowAttributes(m_display, m_handle, &xwa);
+        int centerX = (xwa.width/2)-xwa.x;
+        int centerY = (xwa.height/2)-xwa.y;
+
         // Raw mouse input
         Event event;
         Window root;
@@ -267,15 +269,13 @@ bool SysWindow::getEvent(Event& event)
             &mouseX, &mouseY, &mouseX, &mouseY, &mask
         );
 
-        if ((mouseX != m_lastMouseX) || (mouseY != m_lastMouseY))
+        if ((mouseX != centerX) || (mouseY != centerY))
         {
             event.type = EVENT_MOUSEMOVED;
-            event.mouse.x = mouseX-m_lastMouseX;
-            event.mouse.y = mouseY-m_lastMouseY;
+            event.mouse.x = mouseX-centerX;
+            event.mouse.y = mouseY-centerY;
             m_events.push(event);
         }
-        m_lastMouseX = mouseX;
-        m_lastMouseY = mouseY;
 
         // Mouse buttons
         if (mask & Button1Mask)
@@ -331,22 +331,11 @@ bool SysWindow::getEvent(Event& event)
             }
         }
 
-        // Get window center position
-        XWindowAttributes xwa;
-        XGetWindowAttributes(m_display, m_handle, &xwa);
-        int centerX = (xwa.width/2)-xwa.x;
-        int centerY = (xwa.height/2)-xwa.y;
-
         // Center mouse
         XWarpPointer(
             m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY
         );
-        XQueryPointer(
-            m_display, m_handle, &root, &root,
-            &mouseX, &mouseY, &mouseX, &mouseY, &mask
-        );
-        m_lastMouseX = mouseX;
-        m_lastMouseY = mouseY;
+        XFlush(m_display);
     }
 
     // Get event in the FIFO queue
@@ -436,16 +425,18 @@ void SysWindow::processEvent(XEvent msg)
                         SysSleep(0.01);
                     }
                 }
-                Window root;
-                int mouseX = 0;
-                int mouseY = 0;
-                unsigned int mask = 0;
-                XQueryPointer(
-                    m_display, m_handle, &root, &root,
-                    &mouseX, &mouseY, &mouseX, &mouseY, &mask
+
+                // Get window center position
+                XWindowAttributes xwa;
+                XGetWindowAttributes(m_display, m_handle, &xwa);
+                int centerX = (xwa.width/2)-xwa.x;
+                int centerY = (xwa.height/2)-xwa.y;
+
+                // Center mouse
+                XWarpPointer(
+                    m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY
                 );
-                m_lastMouseX = mouseX;
-                m_lastMouseY = mouseY;
+                XFlush(m_display);
                 break;
             }
 
