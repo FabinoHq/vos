@@ -541,7 +541,8 @@ void VulkanMemory::freeBufferMemory(VkDevice& vulkanDevice,
 //  Allocate swapchain image memory                                           //
 //  return : True if swapchain image is successfully allocated                //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanMemory::allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image)
+bool VulkanMemory::allocateSwapchainImage(VkDevice& vulkanDevice,
+    VkImage& image)
 {
     // Check Vulkan memory
     if (!m_memoryReady)

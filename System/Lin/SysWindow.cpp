@@ -159,7 +159,7 @@ bool SysWindow::create()
     int centerY = (xwa.height/2)-xwa.y;
 
     // Center mouse
-    XWarpPointer(m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY);
+    XWarpPointer(m_display, None, m_handle, 0, 0, 0, 0, centerX, centerY);
 
     // Raw mouse initial state
     Window root;
@@ -275,6 +275,12 @@ bool SysWindow::getEvent(Event& event)
             event.mouse.x = mouseX-centerX;
             event.mouse.y = mouseY-centerY;
             m_events.push(event);
+
+            // Center mouse
+            XWarpPointer(
+                m_display, None, m_handle, 0, 0, 0, 0, centerX, centerY
+            );
+            XFlush(m_display);
         }
 
         // Mouse buttons
@@ -330,12 +336,6 @@ bool SysWindow::getEvent(Event& event)
                 m_lastMouseRight = false;
             }
         }
-
-        // Center mouse
-        XWarpPointer(
-            m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY
-        );
-        XFlush(m_display);
     }
 
     // Get event in the FIFO queue
@@ -434,7 +434,7 @@ void SysWindow::processEvent(XEvent msg)
 
                 // Center mouse
                 XWarpPointer(
-                    m_display, m_handle, m_handle, 0, 0, 0, 0, centerX, centerY
+                    m_display, None, m_handle, 0, 0, 0, 0, centerX, centerY
                 );
                 XFlush(m_display);
                 break;
