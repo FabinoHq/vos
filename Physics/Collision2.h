@@ -110,6 +110,11 @@
             ////////////////////////////////////////////////////////////////////
             void setNormal(int64_t normalX, int64_t normalY);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set collision factor                                          //
+            ////////////////////////////////////////////////////////////////////
+            void setFactor(int64_t collisionFactor);
+
 
             ////////////////////////////////////////////////////////////////////
             //  Collision2 affectation operator                               //
@@ -118,10 +123,11 @@
 
 
         public:
-            bool        collide;    // Collision state
-            Vector2i    position;   // Collision position
-            Vector2i    offset;     // Collision offset
-            Vector2i    normal;     // Collision normal
+            bool            collide;        // Collision state
+            Vector2i        position;       // Collision position
+            Vector2i        offset;         // Collision offset
+            Vector2i        normal;         // Collision normal
+            int64_t         factor;         // Collision factor
     };
 
 

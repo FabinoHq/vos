@@ -206,7 +206,7 @@
             ////////////////////////////////////////////////////////////////////
             //  dotProduct : Get the dot product of this vector and another   //
             ////////////////////////////////////////////////////////////////////
-            inline float dotProduct(Vector4& v)
+            inline float dotProduct(Vector4& v) const
             {
                 return (vec[0]*v.vec[0] + vec[1]*v.vec[1] +
                     vec[2]*v.vec[2] + vec[3]*v.vec[3]);
@@ -215,7 +215,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get Vector4 length                                            //
             ////////////////////////////////////////////////////////////////////
-            inline float length()
+            inline float length() const
             {
                 return std::sqrt((vec[0]*vec[0])+(vec[1]*vec[1])+
                     (vec[2]*vec[2])+(vec[3]*vec[3]));
@@ -299,13 +299,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4 addition operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline Vector4 operator+(const Vector4& vector)
+            inline Vector4 operator+(const Vector4& vector) const
             {
                 return Vector4(vec[0]+vector.vec[0], vec[1]+vector.vec[1],
                     vec[2]+vector.vec[2], vec[3]+vector.vec[3]);
             }
 
-            inline Vector4 operator+(float val)
+            inline Vector4 operator+(float val) const
             {
                 return Vector4(vec[0]+val, vec[1]+val, vec[2]+val, vec[3]+val);
             }
@@ -313,13 +313,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4 subtraction operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector4 operator-(const Vector4& vector)
+            inline Vector4 operator-(const Vector4& vector) const
             {
                 return Vector4(vec[0]-vector.vec[0], vec[1]-vector.vec[1],
                     vec[2]-vector.vec[2], vec[3]-vector.vec[3]);
             }
 
-            inline Vector4 operator-(float val)
+            inline Vector4 operator-(float val) const
             {
                 return Vector4(vec[0]-val, vec[1]-val, vec[2]-val, vec[3]-val);
             }
@@ -327,7 +327,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4 unary plus operator                                   //
             ////////////////////////////////////////////////////////////////////
-            inline Vector4 operator+()
+            inline Vector4 operator+() const
             {
                 return Vector4(*this);
             }
@@ -335,7 +335,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4 unary minus operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector4 operator-()
+            inline Vector4 operator-() const
             {
                 return Vector4(-vec[0], -vec[1], -vec[2], -vec[3]);
             }
@@ -343,13 +343,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4 multiplication operator                               //
             ////////////////////////////////////////////////////////////////////
-            inline Vector4 operator*(const Vector4& vector)
+            inline Vector4 operator*(const Vector4& vector) const
             {
                 return Vector4(vec[0]*vector.vec[0], vec[1]*vector.vec[1],
                     vec[2]*vector.vec[2], vec[3]*vector.vec[3]);
             }
 
-            inline Vector4 operator*(float val)
+            inline Vector4 operator*(float val) const
             {
                 return Vector4(vec[0]*val, vec[1]*val, vec[2]*val, vec[3]*val);
             }
@@ -357,7 +357,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4 division operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline Vector4 operator/(const Vector4& vector)
+            inline Vector4 operator/(const Vector4& vector) const
             {
                 Vector4 result(*this);
                 if (vector.vec[0] != 0.0f)
@@ -379,7 +379,7 @@
                 return result;
             }
 
-            inline Vector4 operator/(float val)
+            inline Vector4 operator/(float val) const
             {
                 Vector4 result(*this);
                 if (val != 0.0f)
@@ -534,7 +534,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4 equal to operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator==(const Vector4& vector)
+            inline bool operator==(const Vector4& vector) const
             {
                 bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
                     Math::areEqual(vec[1], vector.vec[1]) &&
@@ -546,7 +546,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4 not equal to operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator!=(const Vector4& vector)
+            inline bool operator!=(const Vector4& vector) const
             {
                 bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
                     Math::areEqual(vec[1], vector.vec[1]) &&

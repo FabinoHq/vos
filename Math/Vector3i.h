@@ -149,7 +149,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t dotProduct(Vector3i& v)
+            inline int64_t dotProduct(Vector3i& v) const
             {
                 return (vec[0]*v.vec[0] + vec[1]*v.vec[1] + vec[2]*v.vec[2]);
             }
@@ -167,7 +167,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get Vector3i length                                           //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t length()
+            inline int64_t length() const
             {
                 return Math::sqrt((vec[0]*vec[0])+(vec[1]*vec[1])+
                     (vec[2]*vec[2]));
@@ -239,13 +239,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i addition operator                                    //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3i operator+(const Vector3i& vector)
+            inline Vector3i operator+(const Vector3i& vector) const
             {
                 return Vector3i(vec[0]+vector.vec[0], vec[1]+vector.vec[1],
                     vec[2]+vector.vec[2]);
             }
 
-            inline Vector3i operator+(int64_t val)
+            inline Vector3i operator+(int64_t val) const
             {
                 return Vector3i(vec[0]+val, vec[1]+val, vec[2]+val);
             }
@@ -253,13 +253,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i subtraction operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3i operator-(const Vector3i& vector)
+            inline Vector3i operator-(const Vector3i& vector) const
             {
                 return Vector3i(vec[0]-vector.vec[0], vec[1]-vector.vec[1],
                     vec[2]-vector.vec[2]);
             }
 
-            inline Vector3i operator-(int64_t val)
+            inline Vector3i operator-(int64_t val) const
             {
                 return Vector3i(vec[0]-val, vec[1]-val, vec[2]-val);
             }
@@ -267,7 +267,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i unary plus operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3i operator+()
+            inline Vector3i operator+() const
             {
                 return Vector3i(*this);
             }
@@ -275,7 +275,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i unary minus operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3i operator-()
+            inline Vector3i operator-() const
             {
                 return Vector3i(-vec[0], -vec[1], -vec[2]);
             }
@@ -283,13 +283,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i multiplication operator                              //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3i operator*(const Vector3i& vector)
+            inline Vector3i operator*(const Vector3i& vector) const
             {
                 return Vector3i(vec[0]*vector.vec[0], vec[1]*vector.vec[1],
                     vec[2]*vector.vec[2]);
             }
 
-            inline Vector3i operator*(int64_t val)
+            inline Vector3i operator*(int64_t val) const
             {
                 return Vector3i(vec[0]*val, vec[1]*val, vec[2]*val);
             }
@@ -297,7 +297,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i division operator                                    //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3i operator/(const Vector3i& vector)
+            inline Vector3i operator/(const Vector3i& vector) const
             {
                 Vector3i result(*this);
                 if (vector.vec[0] != 0)
@@ -315,7 +315,7 @@
                 return result;
             }
 
-            inline Vector3i operator/(int64_t val)
+            inline Vector3i operator/(int64_t val) const
             {
                 Vector3i result(*this);
                 if (val != 0)
@@ -456,7 +456,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i equal to operator                                    //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator==(const Vector3i& vector)
+            inline bool operator==(const Vector3i& vector) const
             {
                 return ((vec[0] == vector.vec[0]) &&
                     (vec[1] == vector.vec[1]) &&
@@ -466,7 +466,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i not equal to operator                                //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator!=(const Vector3i& vector)
+            inline bool operator!=(const Vector3i& vector) const
             {
                 return ((vec[0] != vector.vec[0]) ||
                     (vec[1] != vector.vec[1]) ||

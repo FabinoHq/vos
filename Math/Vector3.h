@@ -186,13 +186,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
-            inline float dotProduct(Vector3& v)
+            inline float dotProduct(Vector3& v) const
             {
                 return (vec[0]*v.vec[0] + vec[1]*v.vec[1] + vec[2]*v.vec[2]);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set this vector as a cross product from 2 vectors             //
+            //  Set this vector as the cross product from 2 vectors           //
             ////////////////////////////////////////////////////////////////////
             inline void crossProduct(Vector3& v1, Vector3& v2)
             {
@@ -204,7 +204,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get Vector3 length                                            //
             ////////////////////////////////////////////////////////////////////
-            inline float length()
+            inline float length() const
             {
                 return std::sqrt((vec[0]*vec[0])+(vec[1]*vec[1])+
                     (vec[2]*vec[2]));
@@ -276,13 +276,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3 addition operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator+(const Vector3& vector)
+            inline Vector3 operator+(const Vector3& vector) const
             {
                 return Vector3(vec[0]+vector.vec[0], vec[1]+vector.vec[1],
                     vec[2]+vector.vec[2]);
             }
 
-            inline Vector3 operator+(float val)
+            inline Vector3 operator+(float val) const
             {
                 return Vector3(vec[0]+val, vec[1]+val, vec[2]+val);
             }
@@ -290,13 +290,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3 subtraction operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator-(const Vector3& vector)
+            inline Vector3 operator-(const Vector3& vector) const
             {
                 return Vector3(vec[0]-vector.vec[0], vec[1]-vector.vec[1],
                     vec[2]-vector.vec[2]);
             }
 
-            inline Vector3 operator-(float val)
+            inline Vector3 operator-(float val) const
             {
                 return Vector3(vec[0]-val, vec[1]-val, vec[2]-val);
             }
@@ -304,7 +304,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3 unary plus operator                                   //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator+()
+            inline Vector3 operator+() const
             {
                 return Vector3(*this);
             }
@@ -312,7 +312,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3 unary minus operator                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator-()
+            inline Vector3 operator-() const
             {
                 return Vector3(-vec[0], -vec[1], -vec[2]);
             }
@@ -320,13 +320,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3 multiplication operator                               //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator*(const Vector3& vector)
+            inline Vector3 operator*(const Vector3& vector) const
             {
                 return Vector3(vec[0]*vector.vec[0], vec[1]*vector.vec[1],
                     vec[2]*vector.vec[2]);
             }
 
-            inline Vector3 operator*(float val)
+            inline Vector3 operator*(float val) const
             {
                 return Vector3(vec[0]*val, vec[1]*val, vec[2]*val);
             }
@@ -334,7 +334,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3 division operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline Vector3 operator/(const Vector3& vector)
+            inline Vector3 operator/(const Vector3& vector) const
             {
                 Vector3 result(*this);
                 if (vector.vec[0] != 0.0f)
@@ -352,7 +352,7 @@
                 return result;
             }
 
-            inline Vector3 operator/(float val)
+            inline Vector3 operator/(float val) const
             {
                 Vector3 result(*this);
                 if (val != 0.0f)
@@ -493,7 +493,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3 equal to operator                                     //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator==(const Vector3& vector)
+            inline bool operator==(const Vector3& vector) const
             {
                 bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
                     Math::areEqual(vec[1], vector.vec[1]) &&
@@ -504,7 +504,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3 not equal to operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator!=(const Vector3& vector)
+            inline bool operator!=(const Vector3& vector) const
             {
                 bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
                     Math::areEqual(vec[1], vector.vec[1]) &&

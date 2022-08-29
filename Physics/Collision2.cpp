@@ -49,7 +49,8 @@ Collision2::Collision2() :
 collide(false),
 position(0, 0),
 offset(0, 0),
-normal(0, 0)
+normal(0, 0),
+factor(0)
 {
 
 }
@@ -66,6 +67,7 @@ Collision2::Collision2(const Collision2& collision2)
 	offset.vec[1] = collision2.offset.vec[1];
 	normal.vec[0] = collision2.normal.vec[0];
 	normal.vec[1] = collision2.normal.vec[1];
+	factor = collision2.factor;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +75,7 @@ Collision2::Collision2(const Collision2& collision2)
 ////////////////////////////////////////////////////////////////////////////////
 Collision2::~Collision2()
 {
+	factor = 0;
 	normal.reset();
 	offset.reset();
 	position.reset();
@@ -89,6 +92,7 @@ void Collision2::reset()
 	position.reset();
 	offset.reset();
 	normal.reset();
+	factor = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,6 +157,19 @@ void Collision2::setNormal(int64_t normalX, int64_t normalY)
 	normal.vec[1] = normalY;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Set collision factor                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void Collision2::setFactor(int64_t collisionFactor)
+{
+	// Clamp collision factor
+	if (collisionFactor <= 0) { collisionFactor = 0; }
+	if (collisionFactor >= Math::OneInt) { collisionFactor = Math::OneInt; }
+
+	// Set collision factor
+	factor = collisionFactor;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Collision2 affectation operator                                           //
@@ -166,5 +183,6 @@ Collision2& Collision2::operator=(const Collision2& collision2)
 	offset.vec[1] = collision2.offset.vec[1];
 	normal.vec[0] = collision2.normal.vec[0];
 	normal.vec[1] = collision2.normal.vec[1];
+	factor = collision2.factor;
 	return *this;
 }

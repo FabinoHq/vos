@@ -170,6 +170,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	collision.reset();
 	collision.position.vec[0] = position.vec[0];
 	collision.position.vec[1] = position.vec[1];
+	collision.setFactor(Math::OneInt);
 
 	// Check offset vector
 	if ((offset.vec[0] == 0) && (offset.vec[1] == 0)) { return false; }
@@ -267,6 +268,9 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	collision.normal.vec[1] =
 		(collision.position.vec[1] - boundingCircle.position.vec[1]);
 	collision.normal.normalize();
+	collision.setFactor(
+		(collision.offset.length() << Math::OneIntShift) / offset.length()
+	);
 	collision.collide = true;
 	return collision.collide;
 }
