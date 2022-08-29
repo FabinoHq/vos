@@ -262,6 +262,11 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	collision.offset.vec[1] = currentCircle.position.vec[1] - position.vec[1];
 	collision.position.vec[0] = currentCircle.position.vec[0];
 	collision.position.vec[1] = currentCircle.position.vec[1];
+	collision.normal.vec[0] =
+		(collision.position.vec[0] - boundingCircle.position.vec[0]);
+	collision.normal.vec[1] =
+		(collision.position.vec[1] - boundingCircle.position.vec[1]);
+	collision.normal.normalize();
 	collision.collide = true;
 	return collision.collide;
 }
