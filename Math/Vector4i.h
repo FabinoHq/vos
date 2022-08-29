@@ -166,8 +166,10 @@
             ////////////////////////////////////////////////////////////////////
             inline int64_t dotProduct(Vector4i& v) const
             {
-                return (vec[0]*v.vec[0] + vec[1]*v.vec[1] +
-                    vec[2]*v.vec[2] + vec[3]*v.vec[3]);
+                return (
+                    (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) +
+                    (vec[2]*v.vec[2]) + (vec[3]*v.vec[3])
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -175,8 +177,10 @@
             ////////////////////////////////////////////////////////////////////
             inline int64_t length() const
             {
-                return Math::sqrt((vec[0]*vec[0])+(vec[1]*vec[1])+
-                    (vec[2]*vec[2])+(vec[3]*vec[3]));
+                return Math::sqrt(
+                    (vec[0]*vec[0]) + (vec[1]*vec[1]) +
+                    (vec[2]*vec[2]) + (vec[3]*vec[3])
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -259,8 +263,10 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4i operator+(const Vector4i& vector) const
             {
-                return Vector4i(vec[0]+vector.vec[0], vec[1]+vector.vec[1],
-                    vec[2]+vector.vec[2], vec[3]+vector.vec[3]);
+                return Vector4i(
+                    vec[0]+vector.vec[0], vec[1]+vector.vec[1],
+                    vec[2]+vector.vec[2], vec[3]+vector.vec[3]
+                );
             }
 
             inline Vector4i operator+(int64_t val) const
@@ -273,8 +279,10 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4i operator-(const Vector4i& vector) const
             {
-                return Vector4i(vec[0]-vector.vec[0], vec[1]-vector.vec[1],
-                    vec[2]-vector.vec[2], vec[3]-vector.vec[3]);
+                return Vector4i(
+                    vec[0]-vector.vec[0], vec[1]-vector.vec[1],
+                    vec[2]-vector.vec[2], vec[3]-vector.vec[3]
+                );
             }
 
             inline Vector4i operator-(int64_t val) const
@@ -303,8 +311,10 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4i operator*(const Vector4i& vector) const
             {
-                return Vector4i(vec[0]*vector.vec[0], vec[1]*vector.vec[1],
-                    vec[2]*vector.vec[2], vec[3]*vector.vec[3]);
+                return Vector4i(
+                    vec[0]*vector.vec[0], vec[1]*vector.vec[1],
+                    vec[2]*vector.vec[2], vec[3]*vector.vec[3]
+                );
             }
 
             inline Vector4i operator*(int64_t val) const
@@ -494,10 +504,12 @@
             ////////////////////////////////////////////////////////////////////
             inline bool operator==(const Vector4i& vector) const
             {
-                return ((vec[0] == vector.vec[0]) &&
+                return (
+                    (vec[0] == vector.vec[0]) &&
                     (vec[1] == vector.vec[1]) &&
                     (vec[2] == vector.vec[2]) &&
-                    (vec[3] == vector.vec[3]));
+                    (vec[3] == vector.vec[3])
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -505,10 +517,12 @@
             ////////////////////////////////////////////////////////////////////
             inline bool operator!=(const Vector4i& vector) const
             {
-                return ((vec[0] != vector.vec[0]) ||
+                return (
+                    (vec[0] != vector.vec[0]) ||
                     (vec[1] != vector.vec[1]) ||
                     (vec[2] != vector.vec[2]) ||
-                    (vec[3] != vector.vec[3]));
+                    (vec[3] != vector.vec[3])
+                );
             }
 
 

@@ -168,7 +168,7 @@
             ////////////////////////////////////////////////////////////////////
             inline float dotProduct(Vector2& v) const
             {
-                return (vec[0]*v.vec[0] + vec[1]*v.vec[1]);
+                return ((vec[0]*v.vec[0]) + (vec[1]*v.vec[1]));
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -176,7 +176,7 @@
             ////////////////////////////////////////////////////////////////////
             inline float length() const
             {
-                return std::sqrt((vec[0]*vec[0])+(vec[1]*vec[1]));
+                return std::sqrt((vec[0]*vec[0]) + (vec[1]*vec[1]));
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -431,9 +431,10 @@
             ////////////////////////////////////////////////////////////////////
             inline bool operator==(const Vector2& vector) const
             {
-                bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
-                    Math::areEqual(vec[1], vector.vec[1]);
-                return areEqual;
+                return (
+                    Math::areEqual(vec[0], vector.vec[0]) &&
+                    Math::areEqual(vec[1], vector.vec[1])
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -441,9 +442,10 @@
             ////////////////////////////////////////////////////////////////////
             inline bool operator!=(const Vector2& vector) const
             {
-                bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
-                    Math::areEqual(vec[1], vector.vec[1]);
-                return !areEqual;
+                return (!(
+                    Math::areEqual(vec[0], vector.vec[0]) &&
+                    Math::areEqual(vec[1], vector.vec[1]))
+                );
             }
 
 

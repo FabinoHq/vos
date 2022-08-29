@@ -208,8 +208,10 @@
             ////////////////////////////////////////////////////////////////////
             inline float dotProduct(Vector4& v) const
             {
-                return (vec[0]*v.vec[0] + vec[1]*v.vec[1] +
-                    vec[2]*v.vec[2] + vec[3]*v.vec[3]);
+                return (
+                    (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) +
+                    (vec[2]*v.vec[2]) + (vec[3]*v.vec[3])
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -217,8 +219,10 @@
             ////////////////////////////////////////////////////////////////////
             inline float length() const
             {
-                return std::sqrt((vec[0]*vec[0])+(vec[1]*vec[1])+
-                    (vec[2]*vec[2])+(vec[3]*vec[3]));
+                return std::sqrt(
+                    (vec[0]*vec[0]) + (vec[1]*vec[1]) +
+                    (vec[2]*vec[2]) + (vec[3]*vec[3])
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -301,8 +305,10 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4 operator+(const Vector4& vector) const
             {
-                return Vector4(vec[0]+vector.vec[0], vec[1]+vector.vec[1],
-                    vec[2]+vector.vec[2], vec[3]+vector.vec[3]);
+                return Vector4(
+                    vec[0]+vector.vec[0], vec[1]+vector.vec[1],
+                    vec[2]+vector.vec[2], vec[3]+vector.vec[3]
+                );
             }
 
             inline Vector4 operator+(float val) const
@@ -315,8 +321,10 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4 operator-(const Vector4& vector) const
             {
-                return Vector4(vec[0]-vector.vec[0], vec[1]-vector.vec[1],
-                    vec[2]-vector.vec[2], vec[3]-vector.vec[3]);
+                return Vector4(
+                    vec[0]-vector.vec[0], vec[1]-vector.vec[1],
+                    vec[2]-vector.vec[2], vec[3]-vector.vec[3]
+                );
             }
 
             inline Vector4 operator-(float val) const
@@ -345,8 +353,10 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector4 operator*(const Vector4& vector) const
             {
-                return Vector4(vec[0]*vector.vec[0], vec[1]*vector.vec[1],
-                    vec[2]*vector.vec[2], vec[3]*vector.vec[3]);
+                return Vector4(
+                    vec[0]*vector.vec[0], vec[1]*vector.vec[1],
+                    vec[2]*vector.vec[2], vec[3]*vector.vec[3]
+                );
             }
 
             inline Vector4 operator*(float val) const
@@ -536,11 +546,12 @@
             ////////////////////////////////////////////////////////////////////
             inline bool operator==(const Vector4& vector) const
             {
-                bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
+                return (
+                    Math::areEqual(vec[0], vector.vec[0]) &&
                     Math::areEqual(vec[1], vector.vec[1]) &&
                     Math::areEqual(vec[2], vector.vec[2]) &&
-                    Math::areEqual(vec[3], vector.vec[3]);
-                return areEqual;
+                    Math::areEqual(vec[3], vector.vec[3])
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -548,11 +559,12 @@
             ////////////////////////////////////////////////////////////////////
             inline bool operator!=(const Vector4& vector) const
             {
-                bool areEqual = Math::areEqual(vec[0], vector.vec[0]) &&
+                return (!(
+                    Math::areEqual(vec[0], vector.vec[0]) &&
                     Math::areEqual(vec[1], vector.vec[1]) &&
                     Math::areEqual(vec[2], vector.vec[2]) &&
-                    Math::areEqual(vec[3], vector.vec[3]);
-                return !areEqual;
+                    Math::areEqual(vec[3], vector.vec[3]))
+                );
             }
 
 
