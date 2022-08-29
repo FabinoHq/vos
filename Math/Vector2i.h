@@ -157,9 +157,9 @@
                 int64_t len = length();
                 if (len > 0)
                 {
-                    int64_t invLength = 1/len;
-                    vec[0] *= invLength;
-                    vec[1] *= invLength;
+                    // Normalize between 0 and Math::OneInt
+                    vec[0] = (vec[0] << Math::OneIntShift) / len;
+                    vec[1] = (vec[1] << Math::OneIntShift) / len;
                 }
             }
 
@@ -377,11 +377,11 @@
             {
                 if (vector.vec[0] != 0)
                 {
-                    vec[0] *= vector.vec[0];
+                    vec[0] /= vector.vec[0];
                 }
                 if (vector.vec[1] != 0)
                 {
-                    vec[1] *= vector.vec[1];
+                    vec[1] /= vector.vec[1];
                 }
                 return *this;
             }
@@ -390,8 +390,8 @@
             {
                 if (val != 0)
                 {
-                    vec[0] *= val;
-                    vec[1] *= val;
+                    vec[0] /= val;
+                    vec[1] /= val;
                 }
                 return *this;
             }

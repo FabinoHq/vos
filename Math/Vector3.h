@@ -466,15 +466,15 @@
             {
                 if (vector.vec[0] != 0.0f)
                 {
-                    vec[0] *= vector.vec[0];
+                    vec[0] /= vector.vec[0];
                 }
                 if (vector.vec[1] != 0.0f)
                 {
-                    vec[1] *= vector.vec[1];
+                    vec[1] /= vector.vec[1];
                 }
                 if (vector.vec[2] != 0.0f)
                 {
-                    vec[2] *= vector.vec[2];
+                    vec[2] /= vector.vec[2];
                 }
                 return *this;
             }
@@ -483,9 +483,9 @@
             {
                 if (val != 0.0f)
                 {
-                    vec[0] *= val;
-                    vec[1] *= val;
-                    vec[2] *= val;
+                    vec[0] /= val;
+                    vec[1] /= val;
+                    vec[2] /= val;
                 }
                 return *this;
             }

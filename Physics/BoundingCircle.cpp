@@ -232,8 +232,8 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	}
 
 	// Small steps iterative collision
-	stepX >>= 1;
-	stepY >>= 1;
+	stepX >>= 1;	// stepX = stepX/2
+	stepY >>= 1;	// stepY = stepY/2
 	currentCircle.position.vec[0] = collision.position.vec[0];
 	currentCircle.position.vec[1] = collision.position.vec[1];
 	for (int64_t i = 0; i < PhysicsMaxSmallStepsIterations; ++i)
@@ -245,8 +245,8 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 			// Rollback to previous position
 			currentCircle.position.vec[0] = collision.position.vec[0];
 			currentCircle.position.vec[1] = collision.position.vec[1];
-			stepX >>= 1;
-			stepY >>= 1;
+			stepX >>= 1;	// stepX = stepX/2
+			stepY >>= 1;	// stepY = stepY/2
 		}
 		else
 		{

@@ -65,8 +65,18 @@
         const float DegToRad = Pi/180.0f;
         const float RadToDeg = 180.0f/Pi;
 
+        // Square roots constants
         const float SqrtTwo = 1.4142135623730950488016887242097f;
         const float OneSqrtTwo = 0.7071067811865475244008443621048f;
+
+        // Integer constants
+        const int64_t OneIntShift = 20;
+        const int64_t OneInt = (1 << OneIntShift);
+        const int64_t PiInt = 3294198;
+        const int64_t TwoPiInt = 6588396;
+        const int64_t TwoPiThreeInt = 2196132;
+        const int64_t PiTwoInt = 1647099;
+        const int64_t PiThreeInt = 1098066;
 
 
         ////////////////////////////////////////////////////////////////////////
