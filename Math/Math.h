@@ -195,16 +195,12 @@
         ////////////////////////////////////////////////////////////////////////
         inline int32_t sqrt(int32_t x)
         {
-            int32_t result = 0;
-            while ((result+1)*(result+1) <= x) { ++result; }
-            return result;
+            return (static_cast<int32_t>(std::sqrt(x)));
         }
 
         inline int64_t sqrt(int64_t x)
         {
-            int64_t result = 0;
-            while ((result+1)*(result+1) <= x) { ++result; }
-            return result;
+            return (static_cast<int64_t>(std::sqrt(x)));
         }
 
         ////////////////////////////////////////////////////////////////////////
