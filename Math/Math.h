@@ -206,6 +206,34 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //  Integer binary logarithm                                          //
+        //  param x : Integer to get binary logarithm of                      //
+        //  return : Integer binary logarithm (log2(x))                       //
+        ////////////////////////////////////////////////////////////////////////
+        inline int8_t log2(int32_t x)
+        {
+            int8_t result = 0;
+            if (x >= 0x10000) { result += 16; x >>= 16; }
+            if (x >= 0x100) { result += 8; x >>= 8; }
+            if (x >= 0x10) { result += 4; x >>= 4; }
+            if (x >= 0x4) { result += 2; x >>= 2; }
+            if (x >= 0x2) { result += 1; x >>= 1; }
+            return result;
+        }
+
+        inline int8_t log2(int64_t x)
+        {
+            int8_t result = 0;
+            if (x >= 0x100000000) { result += 32; x >>= 32; }
+            if (x >= 0x10000) { result += 16; x >>= 16; }
+            if (x >= 0x100) { result += 8; x >>= 8; }
+            if (x >= 0x10) { result += 4; x >>= 4; }
+            if (x >= 0x4) { result += 2; x >>= 2; }
+            if (x >= 0x2) { result += 1; x >>= 1; }
+            return result;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Linear interpolation                                              //
         //  return : Interpolated value                                       //
         ////////////////////////////////////////////////////////////////////////
