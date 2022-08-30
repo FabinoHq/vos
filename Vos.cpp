@@ -583,6 +583,10 @@ void Vos::run()
             // Set 2D view
             m_renderer.setView(m_view);
 
+            // Bind default vertex buffer
+            m_renderer.bindDefaultVertexBuffer();
+
+
             // Render bounding circle
             m_renderer.bindEllipsePipeline();
             float positionX =
