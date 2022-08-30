@@ -42,6 +42,8 @@
 #ifndef VOS_NETWORK_LIN_IPADDRESS4_HEADER
 #define VOS_NETWORK_LIN_IPADDRESS4_HEADER
 
+    #include "../../System/System.h"
+
     #include <arpa/inet.h>
     #include <netdb.h>
 

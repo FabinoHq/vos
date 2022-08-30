@@ -42,6 +42,7 @@
 #ifndef VOS_MATH_TRANSFORM3_HEADER
 #define VOS_MATH_TRANSFORM3_HEADER
 
+    #include "../System/System.h"
     #include "Math.h"
     #include "Vector3.h"
     #include "Matrix4x4.h"

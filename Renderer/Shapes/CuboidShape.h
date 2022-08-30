@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER
 #define VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER
 
+    #include "../../System/System.h"
     #include "../Vulkan/VertexBuffer.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector4.h"

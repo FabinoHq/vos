@@ -42,12 +42,14 @@
 #ifndef VOS_IMAGES_BMPFILE_HEADER
 #define VOS_IMAGES_BMPFILE_HEADER
 
-    #include <exception>
+    #include "../System/System.h"
+
     #include <cstddef>
     #include <cstdint>
     #include <cstring>
     #include <string>
     #include <fstream>
+    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

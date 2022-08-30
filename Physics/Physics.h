@@ -42,6 +42,8 @@
 #ifndef VOS_PHYSICS_PHYSICS_HEADER
 #define VOS_PHYSICS_PHYSICS_HEADER
 
+    #include "../System/System.h"
+
     #include <cstdint>
 
 

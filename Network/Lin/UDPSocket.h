@@ -42,6 +42,7 @@
 #ifndef VOS_NETWORK_WIN_UDPSOCKET_HEADER
 #define VOS_NETWORK_WIN_UDPSOCKET_HEADER
 
+    #include "../../System/System.h"
     #include "IPAddress4.h"
     #include "IPAddress6.h"
 

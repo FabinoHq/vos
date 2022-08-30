@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_SKYBOX_HEADER
 #define VOS_RENDERER_SKYBOX_HEADER
 
+    #include "../System/System.h"
     #include "Vulkan/VertexBuffer.h"
     #include "CubeMap.h"
     #include "../Math/Math.h"

@@ -42,6 +42,8 @@
 #ifndef VOS_SYSTEM_LIN_SYSDISPLAYMODE_HEADER
 #define VOS_SYSTEM_LIN_SYSDISPLAYMODE_HEADER
 
+    #include "../System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  SysDisplayMode class definition                                       //

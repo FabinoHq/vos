@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
 #define VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
 
+    #include "../System/System.h"
     #include "Vulkan/VertexBuffer.h"
     #include "Texture.h"
     #include "../Math/Math.h"
@@ -49,10 +50,10 @@
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
 
-    #include <exception>
     #include <fstream>
     #include <cstddef>
     #include <cstdint>
+    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

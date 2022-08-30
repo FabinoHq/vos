@@ -42,6 +42,7 @@
 #ifndef VOS_COMPRESS_ZLIB_HEADER
 #define VOS_COMPRESS_ZLIB_HEADER
 
+    #include "../System/System.h"
     #include "../System/SysCRC.h"
 
     #include <cstddef>

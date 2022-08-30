@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_SHADERS_DEFAULT_HEADER
 #define VOS_RENDERER_SHADERS_DEFAULT_HEADER
 
+    #include "../../System/System.h"
+
     #include <cstddef>
     #include <cstdint>
 

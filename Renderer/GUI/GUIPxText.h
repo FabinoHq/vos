@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_GUI_GUIPXTEXT_HEADER
 #define VOS_RENDERER_GUI_GUIPXTEXT_HEADER
 
+    #include "../../System/System.h"
     #include "../Texture.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"

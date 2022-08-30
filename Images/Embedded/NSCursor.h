@@ -42,6 +42,8 @@
 #ifndef VOS_IMAGES_EMBEDDED_NSCURSOR_HEADER
 #define VOS_IMAGES_EMBEDDED_NSCURSOR_HEADER
 
+    #include "../../System/System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  NS Cursor embedded image                                              //

@@ -42,6 +42,8 @@
 #ifndef VOS_IMAGES_EMBEDDED_NESWCURSOR_HEADER
 #define VOS_IMAGES_EMBEDDED_NESWCURSOR_HEADER
 
+    #include "../../System/System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  NESW Cursor embedded image                                            //

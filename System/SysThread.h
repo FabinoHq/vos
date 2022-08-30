@@ -42,12 +42,13 @@
 #ifndef VOS_SYSTEM_SYSTHREAD_HEADER
 #define VOS_SYSTEM_SYSTHREAD_HEADER
 
+    #include "System.h"
     #include "SysSleep.h"
     #include "SysMutex.h"
     #include "SysMutexLocker.h"
 
-    #include <exception>
     #include <thread>
+    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

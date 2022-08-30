@@ -42,6 +42,7 @@
 #ifndef VOS_MATH_MULTIINT_HEADER
 #define VOS_MATH_MULTIINT_HEADER
 
+    #include "../System/System.h"
     #include "Math.h"
 
     #include <cstdint>

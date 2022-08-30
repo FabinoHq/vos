@@ -42,22 +42,21 @@
 #ifndef VOS_SYSTEM_SYSSLEEP_HEADER
 #define VOS_SYSTEM_SYSSLEEP_HEADER
 
-    #include <exception>
+    #include "System.h"
+
     #include <thread>
     #include <chrono>
 
 
     ////////////////////////////////////////////////////////////////////////////
     //  Put current thread to sleep for given time in seconds                 //
-    //  return : True if the thread has slept, false otherwise                //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysSleep(double seconds);
+    void SysSleep(double seconds);
 
     ////////////////////////////////////////////////////////////////////////////
     //  Put current thread to sleep for given time in seconds                 //
-    //  return : True if the thread has slept, false otherwise                //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysSleep(float seconds);
+    void SysSleep(float seconds);
 
 
 #endif // VOS_SYSTEM_SYSSLEEP_HEADER

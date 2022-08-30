@@ -42,17 +42,17 @@
 #ifndef VOS_RENDERER_ORBITALCAM_HEADER
 #define VOS_RENDERER_ORBITALCAM_HEADER
 
-    #include <cstdint>
-    #include <cstring>
-
+    #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/UniformBuffer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
-
     #include "Camera.h"
+
+    #include <cstdint>
+    #include <cstring>
 
 
     ////////////////////////////////////////////////////////////////////////////

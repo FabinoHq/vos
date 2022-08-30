@@ -58,11 +58,8 @@ m_lock(0)
 SysMutexLocker::~SysMutexLocker()
 {
     // Delete eventual locker
-    if (m_lock)
-    {
-        delete m_lock;
-        m_lock = 0;
-    }
+    if (m_lock) delete m_lock;
+    m_lock = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,33 +68,13 @@ SysMutexLocker::~SysMutexLocker()
 ////////////////////////////////////////////////////////////////////////////////
 bool SysMutexLocker::lock()
 {
-    if (m_lock)
-    {
-        // Mutex is already locked
-        return true;
-    }
+    // Check if mutex is already locked
+    if (m_lock) return true;
 
-    try
-    {
-        // Lock the mutex
-        m_lock = new std::lock_guard<std::mutex>(m_mutex.m_mutex);
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Memory allocation error
-        return false;
-    }
-    catch (...)
-    {
-        // Unknown error
-        return false;
-    }
-
-    if (!m_lock)
-    {
-        // Memory allocation error
-        return false;
-    }
+    // Lock the mutex
+    m_lock = new (std::nothrow)
+        std::lock_guard<std::mutex>(m_mutex.m_mutex);
+    if (!m_lock) return false;
 
     // Mutex successfully locked
     return true;
@@ -109,9 +86,6 @@ bool SysMutexLocker::lock()
 void SysMutexLocker::unlock()
 {
     // Delete eventual locker
-    if (m_lock)
-    {
-        delete m_lock;
-        m_lock = 0;
-    }
+    if (m_lock) delete m_lock;
+    m_lock = 0;
 }

@@ -83,7 +83,7 @@
 
     #include <cstddef>
     #include <cstdint>
-    #include <exception>
+    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

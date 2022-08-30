@@ -42,6 +42,8 @@
 #ifndef VOS_SYSTEM_SYSCRC_HEADER
 #define VOS_SYSTEM_SYSCRC_HEADER
 
+    #include "System.h"
+
     #include <cstddef>
     #include <cstdint>
 

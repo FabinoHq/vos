@@ -42,6 +42,8 @@
 #ifndef VOS_RENDERER_SHADERS_ELLIPSE_HEADER
 #define VOS_RENDERER_SHADERS_ELLIPSE_HEADER
 
+    #include "../../System/System.h"
+
     #include <cstddef>
     #include <cstdint>
 

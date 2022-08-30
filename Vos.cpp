@@ -150,56 +150,24 @@ bool Vos::launch()
 
     // Load cubemap textures
     PNGFile cubeMapRight;
-    if (!cubeMapRight.loadImage("Textures/testsprite.png"))
-    {
-        return false;
-    }
+    if (!cubeMapRight.loadImage("Textures/testsprite.png")) return false;
     PNGFile cubeMapLeft;
-    if (!cubeMapLeft.loadImage("Textures/testsprite.png"))
-    {
-        return false;
-    }
+    if (!cubeMapLeft.loadImage("Textures/testsprite.png")) return false;
     PNGFile cubeMapTop;
-    if (!cubeMapTop.loadImage("Textures/testsprite.png"))
-    {
-        return false;
-    }
+    if (!cubeMapTop.loadImage("Textures/testsprite.png")) return false;
     PNGFile cubeMapBottom;
-    if (!cubeMapBottom.loadImage("Textures/testsprite.png"))
-    {
-        return false;
-    }
+    if (!cubeMapBottom.loadImage("Textures/testsprite.png")) return false;
     PNGFile cubeMapFront;
-    if (!cubeMapFront.loadImage("Textures/testsprite.png"))
-    {
-        return false;
-    }
+    if (!cubeMapFront.loadImage("Textures/testsprite.png")) return false;
     PNGFile cubeMapBack;
-    if (!cubeMapBack.loadImage("Textures/testsprite.png"))
-    {
-        return false;
-    }
+    if (!cubeMapBack.loadImage("Textures/testsprite.png")) return false;
 
     // Allocate cubemap data
     unsigned int cubemapWidth = cubeMapFront.getWidth();
     unsigned int cubemapHeight = cubeMapFront.getHeight();
-    unsigned char* cubemapData = 0;
-    try
-    {
-        cubemapData = new unsigned char[cubemapWidth*cubemapHeight*4*6];
-    }
-    catch (const std::bad_alloc&)
-    {
-        cubemapData = 0;
-    }
-    catch (...)
-    {
-        cubemapData = 0;
-    }
-    if (!cubemapData)
-    {
-        return false;
-    }
+    unsigned char* cubemapData = new (std::nothrow)
+        unsigned char[cubemapWidth*cubemapHeight*4*6];
+    if (!cubemapData) return false;
 
     // Copy cubemap data
     memcpy(
@@ -338,24 +306,9 @@ bool Vos::launch()
     }
 
     // Allocate heightmap data
-    float* heightmap = 0;
-    try
-    {
-        heightmap = new float[(HeightMapChunkWidth+3)*(HeightMapChunkHeight+3)];
-    }
-    catch (const std::bad_alloc&)
-    {
-        heightmap = 0;
-    }
-    catch (...)
-    {
-        heightmap = 0;
-    }
-    if (!heightmap)
-    {
-        // Could not allocate heightmap data
-        return false;
-    }
+    float* heightmap = new (std::nothrow)
+        float[(HeightMapChunkWidth+3)*(HeightMapChunkHeight+3)];
+    if (!heightmap) return false;
 
     // Generate heightmap data
     size_t heightmapIndex = 0;

@@ -42,6 +42,8 @@
 #ifndef VOS_MATH_MATH_HEADER
 #define VOS_MATH_MATH_HEADER
 
+    #include "../System/System.h"
+
     #include <cstdint>
     #include <cmath>
 

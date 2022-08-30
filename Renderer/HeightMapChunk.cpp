@@ -115,26 +115,9 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
     uint32_t indicesCount = (6*HeightMapChunkWidth*HeightMapChunkHeight);
 
     // Allocate vertices and indices
-    try
-    {
-        vertices = new float[verticesCount];
-        indices = new uint16_t[indicesCount];
-    }
-    catch (const std::bad_alloc&)
-    {
-        vertices = 0;
-        indices = 0;
-    }
-    catch (...)
-    {
-        vertices = 0;
-        indices = 0;
-    }
-    if (!vertices || !indices)
-    {
-        // Invalid vertices or indices pointer
-        return false;
-    }
+    vertices = new (std::nothrow) float[verticesCount];
+    indices = new (std::nothrow) uint16_t[indicesCount];
+    if (!vertices || !indices) return false;
 
     // Generate vertices data
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
@@ -250,26 +233,9 @@ bool HeightMapChunk::generate(Renderer& renderer, Texture& texture,
     }
 
     // Allocate vertices and indices
-    try
-    {
-        vertices = new float[verticesCount];
-        indices = new uint16_t[indicesCount];
-    }
-    catch (const std::bad_alloc&)
-    {
-        vertices = 0;
-        indices = 0;
-    }
-    catch (...)
-    {
-        vertices = 0;
-        indices = 0;
-    }
-    if (!vertices || !indices)
-    {
-        // Invalid vertices or indices pointer
-        return false;
-    }
+    vertices = new (std::nothrow) float[verticesCount];
+    indices = new (std::nothrow) uint16_t[indicesCount];
+    if (!vertices || !indices) return false;
 
     // Generate vertices data
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
@@ -404,26 +370,9 @@ bool HeightMapChunk::update(Renderer& renderer, float* heightmap)
     }
 
     // Allocate vertices and indices
-    try
-    {
-        vertices = new float[verticesCount];
-        indices = new uint16_t[indicesCount];
-    }
-    catch (const std::bad_alloc&)
-    {
-        vertices = 0;
-        indices = 0;
-    }
-    catch (...)
-    {
-        vertices = 0;
-        indices = 0;
-    }
-    if (!vertices || !indices)
-    {
-        // Invalid vertices or indices pointer
-        return false;
-    }
+    vertices = new (std::nothrow) float[verticesCount];
+    indices = new (std::nothrow) uint16_t[indicesCount];
+    if (!vertices || !indices) return false;
 
     // Generate vertices data
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
@@ -583,26 +532,9 @@ bool HeightMapChunk::loadVMSH(Renderer& renderer,
         }
 
         // Allocate vertices and indices
-        try
-        {
-            vertices = new float[verticesCount];
-            indices = new uint16_t[indicesCount];
-        }
-        catch (const std::bad_alloc&)
-        {
-            vertices = 0;
-            indices = 0;
-        }
-        catch (...)
-        {
-            vertices = 0;
-            indices = 0;
-        }
-        if (!vertices || !indices)
-        {
-            // Invalid vertices or indices pointer
-            return false;
-        }
+        vertices = new (std::nothrow) float[verticesCount];
+        indices = new (std::nothrow) uint16_t[indicesCount];
+        if (!vertices || !indices) return false;
 
         // Read vertices
         file.read((char*)vertices, sizeof(float)*verticesCount);

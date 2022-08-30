@@ -42,6 +42,8 @@
 #ifndef VOS_NETWORK_WIN_IPADDRESS6_HEADER
 #define VOS_NETWORK_WIN_IPADDRESS6_HEADER
 
+    #include "../../System/System.h"
+
     #include <winsock2.h>
     #include <Ws2tcpip.h>
 

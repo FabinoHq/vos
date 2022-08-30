@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_SHAPES_ELLIPSESHAPE_HEADER
 #define VOS_RENDERER_SHAPES_ELLIPSESHAPE_HEADER
 
+    #include "../../System/System.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector4.h"
     #include "../../Math/Matrix4x4.h"

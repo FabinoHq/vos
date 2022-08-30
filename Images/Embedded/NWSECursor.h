@@ -42,6 +42,8 @@
 #ifndef VOS_IMAGES_EMBEDDED_NWSECURSOR_HEADER
 #define VOS_IMAGES_EMBEDDED_NWSECURSOR_HEADER
 
+    #include "../../System/System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  NWSE Cursor embedded image                                            //

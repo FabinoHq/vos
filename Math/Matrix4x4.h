@@ -42,6 +42,7 @@
 #ifndef VOS_MATH_MATRIX4X4_HEADER
 #define VOS_MATH_MATRIX4X4_HEADER
 
+    #include "../System/System.h"
     #include "Math.h"
     #include "Vector2.h"
     #include "Vector3.h"

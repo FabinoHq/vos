@@ -42,6 +42,8 @@
 #ifndef VOS_IMAGES_EMBEDDED_EWCURSOR_HEADER
 #define VOS_IMAGES_EMBEDDED_EWCURSOR_HEADER
 
+    #include "../../System/System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  EW Cursor embedded image                                              //

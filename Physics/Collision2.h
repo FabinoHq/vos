@@ -42,6 +42,7 @@
 #ifndef VOS_PHYSICS_COLLISION2_HEADER
 #define VOS_PHYSICS_COLLISION2_HEADER
 
+    #include "../System/System.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2i.h"
 

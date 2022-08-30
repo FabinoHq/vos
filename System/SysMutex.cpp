@@ -62,35 +62,10 @@ SysMutex::~SysMutex()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Lock the mutex, wait until the mutex is locked                            //
-//  return : True if the mutex is locked, false otherwise                     //
 ////////////////////////////////////////////////////////////////////////////////
-bool SysMutex::lock()
+void SysMutex::lock()
 {
-    bool locked = false;
-    unsigned int lockAttempts = 0;
-    do
-    {
-        locked = true;
-        ++lockAttempts;
-        try
-        {
-            // Lock the mutex
-            m_mutex.lock();
-        }
-        catch (const std::system_error&)
-        {
-            // Mutex system error
-            locked = false;
-        }
-        catch (...)
-        {
-            // Unknown error
-            locked = false;
-        }
-    } while ((!locked) && (lockAttempts <= SysMutexMaxLockAttempts));
-
-    // Mutex locked state
-    return locked;
+    m_mutex.lock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_CAMERA_HEADER
 #define VOS_RENDERER_CAMERA_HEADER
 
+    #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/UniformBuffer.h"

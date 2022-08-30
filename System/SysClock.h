@@ -42,6 +42,8 @@
 #ifndef VOS_SYSTEM_SYSCLOCK_HEADER
 #define VOS_SYSTEM_SYSCLOCK_HEADER
 
+    #include "System.h"
+
     #include <chrono>
 
 

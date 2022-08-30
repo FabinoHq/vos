@@ -42,16 +42,17 @@
 #ifndef VOS_IMAGES_PNGFILE_HEADER
 #define VOS_IMAGES_PNGFILE_HEADER
 
+    #include "../System/System.h"
     #include "../System/SysMemory.h"
     #include "../System/SysCRC.h"
     #include "../Compress/ZLib.h"
 
-    #include <exception>
     #include <cstddef>
     #include <cstdint>
     #include <cstring>
     #include <string>
     #include <fstream>
+    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

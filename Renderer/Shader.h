@@ -42,6 +42,7 @@
 #ifndef VOS_RENDERER_SHADER_HEADER
 #define VOS_RENDERER_SHADER_HEADER
 
+    #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
 
     #include <cstddef>

@@ -42,6 +42,7 @@
 #ifndef VOS_SYSTEM_WIN_SYSWINDOW_HEADER
 #define VOS_SYSTEM_WIN_SYSWINDOW_HEADER
 
+    #include "../System.h"
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"
     #include "../../Event.h"

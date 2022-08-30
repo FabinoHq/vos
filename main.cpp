@@ -40,7 +40,6 @@
 //     main.cpp : Main program entry point                                    //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Vos.h"
-#include <exception>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,30 +48,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main()
 {
-    try
+    // Start VOS
+    Vos vos;
+    if (!vos.launch())
     {
-        // Start VOS
-        Vos vos;
-        if (!vos.launch())
-        {
-            // VOS error occured
-            SysMessage::box().display();
-            return 1;
-        }
-    }
-    catch (const std::exception&)
-    {
-        // Standard exception occured
-        SysMessage::box() << "[0x0001] Unknown error occured\n";
-        SysMessage::box() << "Please restart the VOS program";
-        SysMessage::box().display();
-        return 1;
-    }
-    catch (...)
-    {
-        // Unknown exception occured
-        SysMessage::box() << "[0x0002] Unknown error occured\n";
-        SysMessage::box() << "Please restart the VOS program";
+        // VOS error occured
         SysMessage::box().display();
         return 1;
     }

@@ -94,26 +94,9 @@ bool BMPFile::setImage(uint32_t width, uint32_t height,
     }
 
     // Allocate image data
-    size_t imageSize = width*height*4;
-    try
-    {
-        m_image = new unsigned char[imageSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    if (!m_image)
-    {
-        // Invalid image data
-        return false;
-    }
+    size_t imageSize = (width*height*4);
+    m_image = new (std::nothrow) unsigned char[imageSize];
+    if (!m_image) return false;
 
     // Copy image data
     memcpy(m_image, image, imageSize);
@@ -494,57 +477,20 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
     // Load BMP raw image data
     size_t rawDataSize = width*height*3;
     unsigned char* rawData = 0;
-    try
-    {
-        // Allocate raw image data
-        rawData = new unsigned char[rawDataSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    if (!rawData)
-    {
-        // Invalid raw image data
-        return false;
-    }
+
+    // Allocate raw image data
+    rawData = new (std::nothrow) unsigned char[rawDataSize];
+    if (!rawData) return false;
 
     // Read BMP raw image data
     bmpFile.seekg(dataOffset);
     bmpFile.read((char*)rawData, rawDataSize);
-    if (!bmpFile)
-    {
-        // Could not read BMP raw image data
-        return false;
-    }
+    if (!bmpFile) return false;
 
     // Allocate image data
-    size_t imageSize = width*height*4;
-    try
-    {
-        m_image = new unsigned char[imageSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    if (!m_image)
-    {
-        // Invalid image data
-        return false;
-    }
+    size_t imageSize = (width*height*4);
+    m_image = new (std::nothrow) unsigned char[imageSize];
+    if (!m_image) return false;
 
     // Convert 24bits BMP image data
     for (uint32_t i = 0; i < width; ++i)
@@ -596,27 +542,8 @@ bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize,
     }
 
     // Allocate raw image data
-    unsigned char* rawData = 0;
-    try
-    {
-        // Allocate raw image data
-        rawData = new unsigned char[imageSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    if (!rawData)
-    {
-        // Invalid raw image data
-        return false;
-    }
+    unsigned char* rawData = new (std::nothrow) unsigned char[imageSize];
+    if (!rawData) return false;
 
     // Convert 24bits BMP image data
     for (uint32_t i = 0; i < width; ++i)
@@ -660,26 +587,10 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
     // Load BMP raw image data
     size_t rawDataSize = width*height*2;
     unsigned char* rawData = 0;
-    try
-    {
-        // Allocate raw image data
-        rawData = new unsigned char[rawDataSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    if (!rawData)
-    {
-        // Invalid raw image data
-        return false;
-    }
+
+    // Allocate raw image data
+    rawData = new (std::nothrow) unsigned char[rawDataSize];
+    if (!rawData) return false;
 
     // Read BMP raw image data
     bmpFile.seekg(dataOffset);
@@ -691,26 +602,9 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
     }
 
     // Allocate image data
-    size_t imageSize = width*height*4;
-    try
-    {
-        m_image = new unsigned char[imageSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    if (!m_image)
-    {
-        // Invalid image data
-        return false;
-    }
+    size_t imageSize = (width*height*4);
+    m_image = new (std::nothrow) unsigned char[imageSize];
+    if (!m_image) return false;
 
     // Convert 16bits BMP image data
     for (uint32_t i = 0; i < width; ++i)
@@ -770,26 +664,8 @@ bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize,
     }
 
     // Allocate raw image data
-    uint16_t* rawData = 0;
-    try
-    {
-        rawData = new uint16_t[imageSize/2];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    if (!rawData)
-    {
-        // Invalid raw image data
-        return false;
-    }
+    uint16_t* rawData = new (std::nothrow) uint16_t[imageSize/2];
+    if (!rawData) return false;
 
     // Convert 16bits BMP image data
     for (uint32_t i = 0; i < width; ++i)

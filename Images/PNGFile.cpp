@@ -100,28 +100,10 @@ bool PNGFile::setImage(uint32_t width, uint32_t height,
         return false;
     }
 
-    // Set PNG image data
-    size_t imageSize = width*height*4;
-    try
-    {
-        // Allocate raw image data
-        m_image = new unsigned char[imageSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    if (!m_image)
-    {
-        // Invalid image data
-        return false;
-    }
+    // Allocate image data
+    size_t imageSize = (width*height*4);
+    m_image = new (std::nothrow) unsigned char[imageSize];
+    if (!m_image) return false;
 
     // Copy image data
     memcpy(m_image, image, imageSize);
@@ -580,26 +562,9 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     }
 
     // Allocate raw image data
-    unsigned char* rawData = 0;
-    try
-    {
-        rawData = new unsigned char[pngIDATChunksLength];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
-    if (!rawData)
-    {
-        // Invalid raw image data
-        return false;
-    }
+    unsigned char* rawData = new (std::nothrow)
+        unsigned char[pngIDATChunksLength];
+    if (!rawData) return false;
 
     // Reset input file stream
     pngFile.clear();
@@ -674,26 +639,8 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     // Allocate decompressed data
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
-    unsigned char* pngData = 0;
-    try
-    {
-        pngData = new unsigned char[pngDataSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate decompressed data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate decompressed data
-        return false;
-    }
-    if (!pngData)
-    {
-        // Invalid decompressed data
-        return false;
-    }
+    unsigned char* pngData = new (std::nothrow) unsigned char[pngDataSize];
+    if (!pngData) return false;
 
     // Decompress deflate data
     if (!ZLibDeflateDecompress(
@@ -704,26 +651,9 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     }
 
     // Allocate 32bits RGBA internal image data
-    size_t imageSize = pngIHDRChunk.width*pngIHDRChunk.height*4;
-    try
-    {
-        m_image = new unsigned char[imageSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate image data
-        return false;
-    }
-    if (!m_image)
-    {
-        // Invalid image data
-        return false;
-    }
+    size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
+    m_image = new (std::nothrow) unsigned char[imageSize];
+    if (!m_image) return false;
 
     // Decode PNG image data
     switch (pngIHDRChunk.colorType)
@@ -821,26 +751,8 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     // Allocate PNG data
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
-    unsigned char* pngData = 0;
-    try
-    {
-        pngData = new unsigned char[pngDataSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate PNG data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate PNG data
-        return false;
-    }
-    if (!pngData)
-    {
-        // Invalid PNG data
-        return false;
-    }
+    unsigned char* pngData = new (std::nothrow) unsigned char[pngDataSize];
+    if (!pngData) return false;
 
     // Encode PNG image data
     switch (pngIHDRChunk.colorType)
@@ -881,26 +793,9 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     size_t compressedDataSize = ZLibComputeDeflateCompressSize(pngDataSize);
 
     // Allocate compressed data
-    unsigned char* compressedData = 0;
-    try
-    {
-        compressedData = new unsigned char[compressedDataSize];
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Could not allocate compressed data
-        return false;
-    }
-    catch (...)
-    {
-        // Could not allocate compressed data
-        return false;
-    }
-    if (!compressedData)
-    {
-        // Invalid compressed data
-        return false;
-    }
+    unsigned char* compressedData = new (std::nothrow)
+        unsigned char[compressedDataSize];
+    if (!compressedData) return false;
 
     // Compress deflate data
     if (!ZLibDeflateCompress(

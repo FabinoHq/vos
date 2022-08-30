@@ -42,6 +42,7 @@
 #ifndef VOS_SYSTEM_LIN_SYSWINDOW_HEADER
 #define VOS_SYSTEM_LIN_SYSWINDOW_HEADER
 
+    #include "../System.h"
     #include "../SysSleep.h"
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"

@@ -42,6 +42,8 @@
 #ifndef VOS_IMAGES_EMBEDDED_WINDOW_HEADER
 #define VOS_IMAGES_EMBEDDED_WINDOW_HEADER
 
+    #include "../../System/System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Window embedded image                                                 //

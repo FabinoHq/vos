@@ -42,6 +42,7 @@
 #ifndef VOS_SYSTEM_WIN_SYSMESSAGE_HEADER
 #define VOS_SYSTEM_WIN_SYSMESSAGE_HEADER
 
+    #include "../System.h"
     #include "../SysMutex.h"
     #include "../SysMutexLocker.h"
 

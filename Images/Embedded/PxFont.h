@@ -42,6 +42,8 @@
 #ifndef VOS_IMAGES_EMBEDDED_PXFONT_HEADER
 #define VOS_IMAGES_EMBEDDED_PXFONT_HEADER
 
+    #include "../../System/System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  PxFont embedded image                                                 //

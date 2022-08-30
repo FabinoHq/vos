@@ -42,6 +42,7 @@
 #ifndef VOS_MATH_VECTOR2I_HEADER
 #define VOS_MATH_VECTOR2I_HEADER
 
+    #include "../System/System.h"
     #include "Math.h"
 
     #include <cstdint>

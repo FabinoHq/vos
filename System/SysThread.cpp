@@ -71,27 +71,9 @@ bool SysThread::start()
     // Stop eventual running thread
     stop();
 
-    try
-    {
-        // Start the thread
-        m_thread = new std::thread(&SysThread::run, this);
-    }
-    catch (const std::bad_alloc&)
-    {
-        // Memory allocation error
-        return false;
-    }
-    catch (...)
-    {
-        // Unknown error
-        return false;
-    }
-
-    if (!m_thread)
-    {
-        // Memory allocation error
-        return false;
-    }
+    // Start the thread
+    m_thread = new (std::nothrow) std::thread(&SysThread::run, this);
+    if (!m_thread) return false;
 
     // Thread successfully started
     return true;

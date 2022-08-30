@@ -42,15 +42,10 @@
 #ifndef VOS_SYSTEM_SYSMUTEX_HEADER
 #define VOS_SYSTEM_SYSMUTEX_HEADER
 
-    #include <exception>
+    #include "System.h"
+
     #include <thread>
     #include <mutex>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  SysMutex max lock attempts                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    const unsigned int SysMutexMaxLockAttempts = 20;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -72,9 +67,8 @@
 
             ////////////////////////////////////////////////////////////////////
             //  Lock the mutex, wait until the mutex is locked                //
-            //  return : True if the mutex is locked, false otherwise         //
             ////////////////////////////////////////////////////////////////////
-            bool lock();
+            void lock();
 
             ////////////////////////////////////////////////////////////////////
             //  Try to lock the mutex without waiting                         //
@@ -101,8 +95,10 @@
 
 
         private:
-            friend class    SysMutexLocker; // Give MutexLocker access to mutex
             std::mutex      m_mutex;        // System mutex
+
+            // Give SysMutexLocker access to mutex
+            friend class    SysMutexLocker;
     };
 
 #endif // VOS_SYSTEM_SYSMUTEX_HEADER

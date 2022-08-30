@@ -42,6 +42,8 @@
 #ifndef VOS_IMAGES_EMBEDDED_CURSOR_HEADER
 #define VOS_IMAGES_EMBEDDED_CURSOR_HEADER
 
+    #include "../../System/System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Cursor embedded image                                                 //
