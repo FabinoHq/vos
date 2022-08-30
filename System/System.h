@@ -48,7 +48,6 @@
     ////////////////////////////////////////////////////////////////////////////
     #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW32__)
         #define VOS_WINDOWS
-        #pragma warning( disable : 4530 )
     #endif // Windows
 
     #if defined(__APPLE__)
