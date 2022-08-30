@@ -42,7 +42,6 @@
 #ifndef VOS_NETWORK_TCPSOCKET_HEADER
 #define VOS_NETWORK_TCPSOCKET_HEADER
 
-
     #include "../System/System.h"
 
 

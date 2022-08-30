@@ -42,6 +42,8 @@
 #ifndef VOS_EVENT_HEADER
 #define VOS_EVENT_HEADER
 
+    #include "System/System.h"
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Event type enumeration                                                //

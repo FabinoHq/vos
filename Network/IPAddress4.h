@@ -42,7 +42,6 @@
 #ifndef VOS_NETWORK_IPADDRESS4_HEADER
 #define VOS_NETWORK_IPADDRESS4_HEADER
 
-
     #include "../System/System.h"
 
 
