@@ -39,7 +39,9 @@
 ##    VOS : Virtual Operating System                                          ##
 ##     Makefile : Linux make compilation file                                 ##
 ################################################################################
-CC=g++ -std=c++17 -O3 -fno-exceptions -fno-rtti
+CC=g++ -std=c++17 -O3 -fno-exceptions -fno-rtti \
+	-fomit-frame-pointer -ffunction-sections \
+	-ffast-math -ffinite-math-only -fno-trapping-math -fno-math-errno
 CFLAGS=-W -Wall
 LDFLAGS=-pthread -lX11 -ldl
 
