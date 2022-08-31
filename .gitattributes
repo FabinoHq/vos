@@ -9,6 +9,16 @@
 *.h++   text diff=cpp
 *.hh    text diff=cpp
 
+*.c     linguist-language=cpp
+*.cc    linguist-language=cpp
+*.cxx   linguist-language=cpp
+*.cpp   linguist-language=cpp
+*.c++   linguist-language=cpp
+*.hpp   linguist-language=cpp
+*.h     linguist-language=cpp
+*.h++   linguist-language=cpp
+*.hh    linguist-language=cpp
+
 # Compiled Dynamic libraries
 *.so    binary
 *.dylib binary
