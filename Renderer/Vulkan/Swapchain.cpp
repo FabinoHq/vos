@@ -651,7 +651,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     subpassDependencies[0].dstAccessMask =
         (VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT |
         VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT);
-    subpassDependencies[0].dependencyFlags = 0;
+    subpassDependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
     subpassDependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[1].dstSubpass = 0;
