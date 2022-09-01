@@ -51,33 +51,9 @@
 
     #include "Renderer/Renderer.h"
     #include "Renderer/Texture.h"
-    #include "Renderer/CubeMap.h"
-    #include "Renderer/View.h"
-    #include "Renderer/Camera.h"
-    #include "Renderer/FreeFlyCam.h"
-    #include "Renderer/OrbitalCam.h"
-    #include "Renderer/Sprite.h"
-    #include "Renderer/ProcSprite.h"
-    #include "Renderer/SkyBox.h"
-
-    #include "Renderer/Shapes/RectangleShape.h"
-    #include "Renderer/Shapes/EllipseShape.h"
-    #include "Renderer/Shapes/CuboidShape.h"
 
     #include "Renderer/GUI/GUIPxText.h"
-    #include "Renderer/GUI/GUIWindow.h"
-
-    #include "Renderer/StaticMesh.h"
-    #include "Renderer/HeightMapChunk.h"
-
     #include "Images/Embedded/PxFont.h"
-    #include "Images/Embedded/Window.h"
-    #include "Images/BMPFile.h"
-    #include "Images/PNGFile.h"
-
-    #include "Physics/Physics.h"
-    #include "Physics/Collision2.h"
-    #include "Physics/BoundingCircle.h"
 
     #include "Event.h"
 
@@ -135,32 +111,10 @@
             Renderer        m_renderer;         // VOS renderer
             SysClock        m_clock;            // VOS clock
 
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-            OrbitalCam      m_orbitalcam;       // Orbital camera
-
-            CubeMap         m_cubemap;          // CubeMap
-            SkyBox          m_skybox;           // SkyBox
-
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectanle;         // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
-            CuboidShape     m_cuboid;           // Cuboid shape
+            Game            m_game;             // Game instance
 
             Texture         m_pxFontTexture;    // Pixel font texture
             GUIPxText       m_pxText;           // Test pixel text
-
-            Texture         m_windowTexture;    // GUI Window texture
-            GUIWindow       m_guiWindow;        // GUI Window
-
-            Texture         m_testTexture;      // Test texture
-            StaticMesh      m_staticMesh;       // Static mesh
-
-            HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
-
-            BoundingCircle  m_boundingCircle;   // Bounding circle
-            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
 
             float           m_mouseX;           // Mouse X position
             float           m_mouseY;           // Mouse Y position
