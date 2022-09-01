@@ -37,99 +37,43 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/Collision2.h : 2 components collision management               //
+//     Game/Game.h : Main game class management                               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_PHYSICS_COLLISION2_HEADER
-#define VOS_PHYSICS_COLLISION2_HEADER
-
-    #include "../System/System.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector2i.h"
-
-    #include <cstdint>
+#ifndef VOS_GAME_GAME_HEADER
+#define VOS_GAME_GAME_HEADER
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Collision2 class definition                                           //
+    //  Game main class definition                                            //
     ////////////////////////////////////////////////////////////////////////////
-    class Collision2
+    class Game
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Collision2 default constructor                                //
+            //  Game default constructor                                      //
             ////////////////////////////////////////////////////////////////////
-            Collision2();
+            Game();
 
             ////////////////////////////////////////////////////////////////////
-            //  Collision2 copy constructor                                   //
+            //  Game destructor                                               //
             ////////////////////////////////////////////////////////////////////
-            Collision2(const Collision2& collision2);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Collision2 destructor                                         //
-            ////////////////////////////////////////////////////////////////////
-            ~Collision2();
+            ~Game();
 
 
+        private:
             ////////////////////////////////////////////////////////////////////
-            //  Reset collision                                               //
+            //  Game private copy constructor : Not copyable                  //
             ////////////////////////////////////////////////////////////////////
-            void reset();
+            Game(const Game&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Set collision collide state                                   //
+            //  Game private copy operator : Not copyable                     //
             ////////////////////////////////////////////////////////////////////
-            void setCollide(bool collisionCollide);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set collision position                                        //
-            ////////////////////////////////////////////////////////////////////
-            void setPosition(const Vector2i& collisionPosition);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set collision position                                        //
-            ////////////////////////////////////////////////////////////////////
-            void setPosition(int64_t positionX, int64_t positionY);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set collision offset                                          //
-            ////////////////////////////////////////////////////////////////////
-            void setOffset(const Vector2i& collisionOffset);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set collision offset                                          //
-            ////////////////////////////////////////////////////////////////////
-            void setOffset(int64_t offsetX, int64_t offsetY);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set collision normal                                          //
-            ////////////////////////////////////////////////////////////////////
-            void setNormal(const Vector2i& collisionNormal);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set collision normal                                          //
-            ////////////////////////////////////////////////////////////////////
-            void setNormal(int64_t normalX, int64_t normalY);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set collision factor                                          //
-            ////////////////////////////////////////////////////////////////////
-            void setFactor(int64_t collisionFactor);
+            Game& operator=(const Game&) = delete;
 
 
-            ////////////////////////////////////////////////////////////////////
-            //  Collision2 affectation operator                               //
-            ////////////////////////////////////////////////////////////////////
-            Collision2& operator=(const Collision2& collision2);
-
-
-        public:
-            bool            collide;        // Collision state
-            Vector2i        position;       // Collision position
-            Vector2i        offset;         // Collision offset
-            Vector2i        normal;         // Collision normal
-            int64_t         factor;         // Collision factor
+        private:
     };
 
 
-#endif // VOS_PHYSICS_COLLISION2_HEADER
+#endif // VOS_GAME_GAME_HEADER

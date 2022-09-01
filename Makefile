@@ -34,7 +34,7 @@
 ##   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR    ##
 ##   OTHER DEALINGS IN THE SOFTWARE.                                          ##
 ##                                                                            ##
-##   For more information, please refer to <http://unlicense.org>             ##
+##   For more information, please refer to <https://unlicense.org>            ##
 ################################################################################
 ##    VOS : Virtual Operating System                                          ##
 ##     Makefile : Linux make compilation file                                 ##
@@ -73,7 +73,8 @@ VOS: main.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
-	Renderer/Renderer.o
+	Renderer/Renderer.o \
+	Game/Game.o
 
 	$(CC) -o VOS \
 	Vos.o \
@@ -102,6 +103,7 @@ VOS: main.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
+	Game/Game.o \
 	main.o $(LDFLAGS)
 
 
@@ -274,6 +276,10 @@ Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
 
 
+Game/Game.o: Game/Game.cpp
+	$(CC) -o Game/Game.o -c Game/Game.cpp $(CFLAGS)
+
+
 clean:
 	rm -rf *.o
 	rm -rf System/*.o
@@ -286,6 +292,7 @@ clean:
 	rm -rf Renderer/Vulkan/*.o
 	rm -rf Renderer/Shapes/*.o
 	rm -rf Renderer/GUI/*.o
+	rm -rf Game/*.o
 
 mrproper: clean
 	rm -rf VOS

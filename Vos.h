@@ -34,7 +34,7 @@
 //   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR    //
 //   OTHER DEALINGS IN THE SOFTWARE.                                          //
 //                                                                            //
-//   For more information, please refer to <http://unlicense.org>             //
+//   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
 //     Vos.h : VOS Main class management                                      //
@@ -81,6 +81,8 @@
 
     #include "Event.h"
 
+    #include "Game/Game.h"
+
     #include <cstddef>
     #include <cstdint>
     #include <new>
@@ -125,6 +127,7 @@
             //  Vos private copy operator : Not copyable                      //
             ////////////////////////////////////////////////////////////////////
             Vos& operator=(const Vos&) = delete;
+
 
         private:
             bool            m_running;          // VOS running state

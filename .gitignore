@@ -217,3 +217,8 @@
 # Models files
 !Models/
 !models/testmodel.vmsh
+
+# Game files
+!Game/
+!Game/Game.h
+!Game/Game.cpp

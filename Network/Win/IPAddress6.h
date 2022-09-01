@@ -34,7 +34,7 @@
 //   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR    //
 //   OTHER DEALINGS IN THE SOFTWARE.                                          //
 //                                                                            //
-//   For more information, please refer to <http://unlicense.org>             //
+//   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
 //     Network/Win/IPAddress6.h : IPv6 address management for Windows         //
