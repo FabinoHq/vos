@@ -43,7 +43,7 @@
 #define VOS_IMAGES_PNGFILE_HEADER
 
     #include "../System/System.h"
-    #include "../System/SysMemory.h"
+    #include "../System/SysCPU.h"
     #include "../System/SysCRC.h"
     #include "../Compress/ZLib.h"
 

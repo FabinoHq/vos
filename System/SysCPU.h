@@ -37,10 +37,10 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/SysMemory.h : System memory management                          //
+//     System/SysCPU.h : System CPU management                                //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SYSTEM_SYSMEMORY_HEADER
-#define VOS_SYSTEM_SYSMEMORY_HEADER
+#ifndef VOS_SYSTEM_SYSCPU_HEADER
+#define VOS_SYSTEM_SYSCPU_HEADER
 
     #include "System.h"
     #include "SysMessage.h"
@@ -77,58 +77,58 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory representation                                    //
-    //  return : True if the system memory is ready, false otherwise          //
+    //  Check system CPU                                                      //
+    //  return : True if the CPU is ready, false otherwise                    //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheck();
+    bool SysCPUCheck();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory char representation                               //
-    //  return : True if the system memory char representation is correct     //
+    //  Check system CPU char representation                                  //
+    //  return : True if the system CPU char representation is correct        //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheckChar();
+    bool SysCPUCheckChar();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory bool representation                               //
-    //  return : True if the system memory bool representation is correct     //
+    //  Check system CPU bool representation                                  //
+    //  return : True if the system CPU bool representation is correct        //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheckBool();
+    bool SysCPUCheckBool();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory int representation                                //
-    //  return : True if the system memory int representation is correct      //
+    //  Check system CPU int representation                                   //
+    //  return : True if the system CPU int representation is correct         //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheckInt();
+    bool SysCPUCheckInt();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory float representation                              //
-    //  return : True if the system memory float representation is correct    //
+    //  Check system CPU float representation                                 //
+    //  return : True if the system CPU float representation is correct       //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheckFloat();
+    bool SysCPUCheckFloat();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory double representation                             //
-    //  return : True if the system memory double representation is correct   //
+    //  Check system CPU double representation                                //
+    //  return : True if the system CPU double representation is correct      //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheckDouble();
+    bool SysCPUCheckDouble();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory endianness                                        //
-    //  return : True if the system memory is little-endian                   //
+    //  Check system CPU endianness                                           //
+    //  return : True if the system CPU is little-endian                      //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheckEndianness();
+    bool SysCPUCheckEndianness();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory maths representations                             //
-    //  return : True if the system memory maths representations are correct  //
+    //  Check system CPU maths representations                                //
+    //  return : True if the system CPU maths representations are correct     //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheckMaths();
+    bool SysCPUCheckMaths();
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system memory images representations                            //
-    //  return : True if the system memory images representations are correct //
+    //  Check system CPU images representations                               //
+    //  return : True if the system CPU images representations are correct    //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysMemoryCheckImages();
+    bool SysCPUCheckImages();
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -151,4 +151,4 @@
     }
 
 
-#endif // VOS_SYSTEM_SYSMEMORY_HEADER
+#endif // VOS_SYSTEM_SYSCPU_HEADER

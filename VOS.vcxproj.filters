@@ -86,9 +86,6 @@
     <ClCompile Include="System\Win\SysMessage.cpp">
       <Filter>System\Win</Filter>
     </ClCompile>
-    <ClCompile Include="System\SysMemory.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Sprite.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -197,6 +194,9 @@
     <ClCompile Include="Game\Game.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="System\SysCPU.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -263,9 +263,6 @@
     </ClInclude>
     <ClInclude Include="System\Win\SysMessage.h">
       <Filter>System\Win</Filter>
-    </ClInclude>
-    <ClInclude Include="System\SysMemory.h">
-      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\Sprite.h">
       <Filter>Renderer</Filter>
@@ -449,6 +446,9 @@
     </ClInclude>
     <ClInclude Include="Game\Game.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysCPU.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

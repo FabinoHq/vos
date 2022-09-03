@@ -74,10 +74,10 @@ Vos::~Vos()
 ////////////////////////////////////////////////////////////////////////////////
 bool Vos::launch()
 {
-    // Check system memory
-    if (!SysMemoryCheck())
+    // Check system CPU
+    if (!SysCPUCheck())
     {
-        // Invalid system memory
+        // Invalid system CPU
         return false;
     }
 

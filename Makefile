@@ -51,7 +51,7 @@ VOS: main.o \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
 	System/SysMutex.o System/SysMutexLocker.o \
-	System/SysClock.o System/SysMemory.o \
+	System/SysClock.o System/SysCPU.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
@@ -80,7 +80,7 @@ VOS: main.o \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
 	System/SysMutex.o System/SysMutexLocker.o \
-	System/SysClock.o System/SysMemory.o \
+	System/SysClock.o System/SysCPU.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
@@ -129,8 +129,8 @@ System/SysMutexLocker.o: System/SysMutexLocker.cpp
 System/SysClock.o: System/SysClock.cpp
 	$(CC) -o System/SysClock.o -c System/SysClock.cpp $(CFLAGS)
 
-System/SysMemory.o: System/SysMemory.cpp
-	$(CC) -o System/SysMemory.o -c System/SysMemory.cpp $(CFLAGS)
+System/SysCPU.o: System/SysCPU.cpp
+	$(CC) -o System/SysCPU.o -c System/SysCPU.cpp $(CFLAGS)
 
 System/Lin/SysMessage.o: System/Lin/SysMessage.cpp
 	$(CC) -o System/Lin/SysMessage.o -c System/Lin/SysMessage.cpp $(CFLAGS)
