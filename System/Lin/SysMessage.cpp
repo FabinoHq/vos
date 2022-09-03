@@ -59,7 +59,6 @@ m_message()
 void SysMessage::display()
 {
     SysMutexLocker locker(m_mutex);
-    locker.lock();
     if (m_display)
     {
         std::cerr << m_message.str();

@@ -119,4 +119,5 @@
             bool            m_standby;      // Thread standby mode
     };
 
+
 #endif // VOS_SYSTEM_SYSTHREAD_HEADER

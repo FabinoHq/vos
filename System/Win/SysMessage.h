@@ -90,8 +90,8 @@
             ////////////////////////////////////////////////////////////////////
             template<typename T> SysMessage& operator<<(const T& t)
             {
+                // Lock system message mutex
                 SysMutexLocker locker(m_mutex);
-                locker.lock();
 
                 // Add to system message
                 m_message << t;

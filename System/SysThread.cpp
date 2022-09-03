@@ -87,17 +87,9 @@ void SysThread::stop()
     if (m_thread)
     {
         // Request thread stop
-        SysMutexLocker locker(m_mutex);
-        if (locker.lock())
-        {
-            m_running = false;
-            locker.unlock();
-        }
-        else
-        {
-            // Mutex error
-            return;
-        }
+        m_mutex.lock();
+        m_running = false;
+        m_mutex.unlock();
 
         // Wait for the thread to stop
         m_thread->join();
@@ -114,16 +106,7 @@ void SysThread::stop()
 void SysThread::standby(bool standbyMode)
 {
     SysMutexLocker locker(m_mutex);
-    if (locker.lock())
-    {
-        // Set standby mode
-        m_standby = standbyMode;
-    }
-    else
-    {
-        // Mutex error
-        return;
-    }
+    m_standby = standbyMode;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,18 +128,10 @@ void SysThread::run()
     bool running = false;
     bool standby = false;
 
-    SysMutexLocker locker(m_mutex);
-    if (locker.lock())
-    {
-        m_running = running = true;
-        m_standby = standby = false;
-        locker.unlock();
-    }
-    else
-    {
-        // Mutex error
-        return;
-    }
+    m_mutex.lock();
+    m_running = running = true;
+    m_standby = standby = false;
+    m_mutex.unlock();
 
     // Run the thread
     while (running)
@@ -173,16 +148,9 @@ void SysThread::run()
         }
 
         // Update running and standby states
-        if (locker.lock())
-        {
-            running = m_running;
-            standby = m_standby;
-            locker.unlock();
-        }
-        else
-        {
-            // Mutex error
-            return;
-        }
+        m_mutex.lock();
+        running = m_running;
+        standby = m_standby;
+        m_mutex.unlock();
     }
 }

@@ -47,7 +47,6 @@
 
     #include <thread>
     #include <mutex>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -57,26 +56,14 @@
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  SysMutexLocker constructor                                    //
+            //  SysMutexLocker constructor : Lock the associated mutex        //
             ////////////////////////////////////////////////////////////////////
             SysMutexLocker(SysMutex& mutex);
 
             ////////////////////////////////////////////////////////////////////
-            //  SysMutexLocker destructor                                     //
+            //  SysMutexLocker destructor : Unlock the associated mutex       //
             ////////////////////////////////////////////////////////////////////
             ~SysMutexLocker();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Relock the associated mutex                                   //
-            //  return : True if the mutex is locked, false otherwise         //
-            ////////////////////////////////////////////////////////////////////
-            bool lock();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Unlock the associated mutex                                   //
-            ////////////////////////////////////////////////////////////////////
-            void unlock();
 
 
         private:
@@ -92,8 +79,8 @@
 
 
         private:
-            SysMutex&                       m_mutex;    // Associated mutex
-            std::lock_guard<std::mutex>*    m_lock;     // Lock guard
+            SysMutex&           m_mutex;            // Associated mutex
     };
+
 
 #endif // VOS_SYSTEM_SYSMUTEXLOCKER_HEADER

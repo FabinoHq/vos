@@ -46,10 +46,9 @@
 //  SysMutexLocker constructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
 SysMutexLocker::SysMutexLocker(SysMutex& mutex) :
-m_mutex(mutex),
-m_lock(0)
+m_mutex(mutex)
 {
-
+    m_mutex.lock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,35 +56,5 @@ m_lock(0)
 ////////////////////////////////////////////////////////////////////////////////
 SysMutexLocker::~SysMutexLocker()
 {
-    // Delete eventual locker
-    if (m_lock) delete m_lock;
-    m_lock = 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  lock : lock the associated mutex                                          //
-//  Return : True if the mutex is locked, false otherwise                     //
-////////////////////////////////////////////////////////////////////////////////
-bool SysMutexLocker::lock()
-{
-    // Check if mutex is already locked
-    if (m_lock) return true;
-
-    // Lock the mutex
-    m_lock = new (std::nothrow)
-        std::lock_guard<std::mutex>(m_mutex.m_mutex);
-    if (!m_lock) return false;
-
-    // Mutex successfully locked
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  unlock : Unlock the associated mutex                                      //
-////////////////////////////////////////////////////////////////////////////////
-void SysMutexLocker::unlock()
-{
-    // Delete eventual locker
-    if (m_lock) delete m_lock;
-    m_lock = 0;
+    m_mutex.unlock();
 }
