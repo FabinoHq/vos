@@ -45,7 +45,6 @@
     #include "System.h"
     #include "SysSleep.h"
     #include "SysMutex.h"
-    #include "SysMutexLocker.h"
 
     #include <thread>
     #include <new>

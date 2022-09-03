@@ -44,7 +44,6 @@
 
     #include "../System.h"
     #include "../SysMutex.h"
-    #include "../SysMutexLocker.h"
 
     #include <iostream>
     #include <string>
@@ -80,12 +79,11 @@
             ////////////////////////////////////////////////////////////////////
             template<typename T> SysMessage& operator<<(const T& t)
             {
-                // Lock system message mutex
-                SysMutexLocker locker(m_mutex);
-
                 // Add to system message
+                m_mutex.lock();
                 m_message << t;
                 m_display = true;
+                m_mutex.unlock();
                 return *this;
             }
 

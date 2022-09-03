@@ -95,10 +95,7 @@
 
 
         private:
-            std::mutex      m_mutex;        // System mutex
-
-            // Give SysMutexLocker access to mutex
-            friend class    SysMutexLocker;
+            std::mutex          m_mutex;            // System mutex
     };
 
 #endif // VOS_SYSTEM_SYSMUTEX_HEADER

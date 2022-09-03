@@ -58,12 +58,13 @@ m_message()
 ////////////////////////////////////////////////////////////////////////////////
 void SysMessage::display()
 {
-    SysMutexLocker locker(m_mutex);
+    m_mutex.lock();
     if (m_display)
     {
         std::cerr << m_message.str();
         std::cerr << '\n';
     }
+    m_mutex.unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

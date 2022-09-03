@@ -58,7 +58,7 @@ m_message()
 ////////////////////////////////////////////////////////////////////////////////
 void SysMessage::display()
 {
-    SysMutexLocker locker(m_mutex);
+    m_mutex.lock();
     if (m_display)
     {
         MessageBox(
@@ -66,6 +66,7 @@ void SysMessage::display()
             MB_OK | MB_ICONERROR | MB_SYSTEMMODAL
         );
     }
+    m_mutex.unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
