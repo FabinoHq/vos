@@ -41,7 +41,7 @@
 ################################################################################
 CC=g++ -std=c++17 -O3 -fno-exceptions -fno-rtti \
 	-fomit-frame-pointer -ffunction-sections \
-	-ffast-math -ffinite-math-only -fno-trapping-math -fno-math-errno
+	-fno-trapping-math -fno-math-errno -fno-signed-zeros
 CFLAGS=-W -Wall
 LDFLAGS=-pthread -lX11 -ldl
 
@@ -50,7 +50,6 @@ all: VOS
 VOS: main.o \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
-	System/SysMutex.o System/SysMutexLocker.o \
 	System/SysClock.o System/SysCPU.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
@@ -79,7 +78,6 @@ VOS: main.o \
 	$(CC) -o VOS \
 	Vos.o \
 	System/SysSleep.o System/SysThread.o \
-	System/SysMutex.o System/SysMutexLocker.o \
 	System/SysClock.o System/SysCPU.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
@@ -119,12 +117,6 @@ System/SysSleep.o: System/SysSleep.cpp
 
 System/SysThread.o: System/SysThread.cpp
 	$(CC) -o System/SysThread.o -c System/SysThread.cpp $(CFLAGS)
-
-System/SysMutex.o: System/SysMutex.cpp
-	$(CC) -o System/SysMutex.o -c System/SysMutex.cpp $(CFLAGS)
-
-System/SysMutexLocker.o: System/SysMutexLocker.cpp
-	$(CC) -o System/SysMutexLocker.o -c System/SysMutexLocker.cpp $(CFLAGS)
 
 System/SysClock.o: System/SysClock.cpp
 	$(CC) -o System/SysClock.o -c System/SysClock.cpp $(CFLAGS)

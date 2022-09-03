@@ -65,9 +65,9 @@ m_heightMapChunk(),
 m_boundingCircle(),
 m_boundingCircle2(),
 m_collideCircle(),
-m_spaceReleased(false),
 m_mouseX(0.0f),
-m_mouseY(0.0f)
+m_mouseY(0.0f),
+m_spaceReleased(false)
 {
 
 }

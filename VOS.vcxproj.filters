@@ -65,12 +65,6 @@
     <ClCompile Include="System\Win\SysDisplayMode.cpp">
       <Filter>System\Win</Filter>
     </ClCompile>
-    <ClCompile Include="System\SysMutex.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\SysMutexLocker.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="System\SysThread.cpp">
       <Filter>System</Filter>
     </ClCompile>

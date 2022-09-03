@@ -244,8 +244,6 @@
     <ClCompile Include="Renderer\Vulkan\VulkanQueue.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysCPU.cpp" />
-    <ClCompile Include="System\SysMutex.cpp" />
-    <ClCompile Include="System\SysMutexLocker.cpp" />
     <ClCompile Include="System\SysSleep.cpp" />
     <ClCompile Include="System\SysThread.cpp" />
     <ClCompile Include="System\Win\SysDisplayMode.cpp" />

@@ -58,12 +58,19 @@
             ////////////////////////////////////////////////////////////////////
             //  SysMutexLocker constructor : Lock the associated mutex        //
             ////////////////////////////////////////////////////////////////////
-            SysMutexLocker(SysMutex& mutex);
+            inline SysMutexLocker(SysMutex& mutex) :
+            m_mutex(mutex)
+            {
+                m_mutex.lock();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  SysMutexLocker destructor : Unlock the associated mutex       //
             ////////////////////////////////////////////////////////////////////
-            ~SysMutexLocker();
+            inline ~SysMutexLocker()
+            {
+                m_mutex.unlock();
+            }
 
 
         private:
