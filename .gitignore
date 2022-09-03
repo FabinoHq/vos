@@ -29,8 +29,6 @@
 !System/
 !System/System.h
 !System/SysMessage.h
-!System/SysMemory.h
-!System/SysMemory.cpp
 !System/SysCPU.h
 !System/SysCPU.cpp
 !System/SysCRC.h
