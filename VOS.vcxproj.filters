@@ -444,5 +444,8 @@
     <ClInclude Include="System\SysCPU.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="System\Win\SysCPU.h">
+      <Filter>System\Win</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

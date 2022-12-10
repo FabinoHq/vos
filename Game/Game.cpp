@@ -354,9 +354,6 @@ void Game::events(Event& event)
     float scale = m_renderer.getScale();
     float ratio = m_renderer.getRatio();
 
-    // Space key released event
-    m_spaceReleased = false;
-
     // Process event
     switch (event.type)
     {

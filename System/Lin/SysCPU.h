@@ -37,110 +37,59 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/SysCPU.h : System CPU management                                //
+//     System/Lin/SysCPU.h : System CPU management for Linux                  //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SYSTEM_SYSCPU_HEADER
-#define VOS_SYSTEM_SYSCPU_HEADER
+#ifndef VOS_SYSTEM_LIN_SYSCPU_HEADER
+#define VOS_SYSTEM_LIN_SYSCPU_HEADER
 
-    #include "System.h"
-    #include "SysMessage.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector2.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Vector4.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Images/BMPFile.h"
-    #include "../Images/PNGFile.h"
+    #include "../System.h"
 
     #include <cstddef>
     #include <cstdint>
-    #include <limits>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Platform dependent CPU management                                     //
+    //  Swap 2 bytes unsigned integer endianness                              //
+    //  return : Swapped 2 bytes unsigned integer                             //
     ////////////////////////////////////////////////////////////////////////////
-    #ifdef VOS_WINDOWS
-        #include "Win/SysCPU.h"
-    #endif // VOS_WINDOWS
-
-    #ifdef VOS_LINUX
-        #include "Lin/SysCPU.h"
-    #endif // VOS_LINUX
-
+    #define SysByteSwap16 __builtin_bswap16
 
     ////////////////////////////////////////////////////////////////////////////
-    //  8 bits integer limits                                                 //
+    //  Swap 4 bytes unsigned integer endianness                              //
+    //  return : Swapped 4 bytes unsigned integer                             //
     ////////////////////////////////////////////////////////////////////////////
-    const int64_t SysInt8MinLimit = -128;
-    const int64_t SysInt8MaxLimit = 127;
+    #define SysByteSwap32 __builtin_bswap32
 
     ////////////////////////////////////////////////////////////////////////////
-    //  16 bits integer limits                                                //
+    //  Swap 8 bytes unsigned integer endianness                              //
+    //  return : Swapped 8 bytes unsigned integer                             //
     ////////////////////////////////////////////////////////////////////////////
-    const int64_t SysInt16MinLimit = -32768;
-    const int64_t SysInt16MaxLimit = 32767;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  32 bits integer limits                                                //
-    ////////////////////////////////////////////////////////////////////////////
-    const int64_t SysInt32MinLimit = -2147483648;
-    const int64_t SysInt32MaxLimit = 2147483647;
+    #define SysByteSwap64 __builtin_bswap64
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU                                                      //
-    //  return : True if the CPU is ready, false otherwise                    //
+    //  Compute 32 bits scan forward                                          //
+    //  return : Computed 32 bits scan forward                                //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheck();
+    #define SysBitScanForward32(bits) (__builtin_ctz(bits))
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU char representation                                  //
-    //  return : True if the system CPU char representation is correct        //
+    //  Compute 32 bits scan reverse                                          //
+    //  return : Computed 32 bits scan reverse                                //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheckChar();
+    #define SysBitScanReverse32(bits) (0x1F - __builtin_clz(bits))
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU bool representation                                  //
-    //  return : True if the system CPU bool representation is correct        //
+    //  Compute 64 bits scan forward                                          //
+    //  return : Computed 64 bits scan forward                                //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheckBool();
+    #define SysBitScanForward64(bits) (__builtin_ctzll(bits))
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU int representation                                   //
-    //  return : True if the system CPU int representation is correct         //
+    //  Compute 64 bits scan reverse                                          //
+    //  return : Computed 64 bits scan reverse                                //
     ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheckInt();
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU float representation                                 //
-    //  return : True if the system CPU float representation is correct       //
-    ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheckFloat();
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU double representation                                //
-    //  return : True if the system CPU double representation is correct      //
-    ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheckDouble();
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU endianness                                           //
-    //  return : True if the system CPU is little-endian                      //
-    ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheckEndianness();
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU maths representations                                //
-    //  return : True if the system CPU maths representations are correct     //
-    ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheckMaths();
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Check system CPU images representations                               //
-    //  return : True if the system CPU images representations are correct    //
-    ////////////////////////////////////////////////////////////////////////////
-    bool SysCPUCheckImages();
+    #define SysBitScanReverse64(bits) (0x3F - __builtin_clzll(bits))
 
 
-#endif // VOS_SYSTEM_SYSCPU_HEADER
+#endif // VOS_SYSTEM_LIN_SYSCPU_HEADER

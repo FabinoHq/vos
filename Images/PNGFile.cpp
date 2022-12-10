@@ -170,7 +170,7 @@ bool PNGFile::loadImage(const std::string& filepath)
         // Could not read PNG file IHDR chunk header
         return false;
     }
-    pngIHDRChunkHeader.length = SysSwapEndianness(pngIHDRChunkHeader.length);
+    pngIHDRChunkHeader.length = SysByteSwap32(pngIHDRChunkHeader.length);
 
     // Check PNG file IHDR chunk type
     if ((pngIHDRChunkHeader.type[0] != PNGFileIHDRChunkType[0]) ||
@@ -206,7 +206,7 @@ bool PNGFile::loadImage(const std::string& filepath)
         // Could not read PNG file IHDR chunk CRC
         return false;
     }
-    pngIHDRChunkCRC = SysSwapEndianness(pngIHDRChunkCRC);
+    pngIHDRChunkCRC = SysByteSwap32(pngIHDRChunkCRC);
 
     // Check PNG file IHDR chunk CRC
     uint32_t checkIHDRChunkCRC = SysCRC32Default;
@@ -223,8 +223,8 @@ bool PNGFile::loadImage(const std::string& filepath)
     }
 
     // Swap PNG file IHDR chunk byte endianness
-    pngIHDRChunk.width = SysSwapEndianness(pngIHDRChunk.width);
-    pngIHDRChunk.height = SysSwapEndianness(pngIHDRChunk.height);
+    pngIHDRChunk.width = SysByteSwap32(pngIHDRChunk.width);
+    pngIHDRChunk.height = SysByteSwap32(pngIHDRChunk.height);
 
     // Check PNG file image size
     if ((pngIHDRChunk.width <= 0) || (pngIHDRChunk.height <= 0) ||
@@ -400,7 +400,7 @@ bool PNGFile::savePNGImage(const std::string& filepath,
 
     // Write PNG file IHDR chunk header
     PNGFileChunkHeader pngIHDRChunkHeader;
-    pngIHDRChunkHeader.length = SysSwapEndianness(PNGFileIHDRChunkSize);
+    pngIHDRChunkHeader.length = SysByteSwap32(PNGFileIHDRChunkSize);
     pngIHDRChunkHeader.type[0] = PNGFileIHDRChunkType[0];
     pngIHDRChunkHeader.type[1] = PNGFileIHDRChunkType[1];
     pngIHDRChunkHeader.type[2] = PNGFileIHDRChunkType[2];
@@ -414,8 +414,8 @@ bool PNGFile::savePNGImage(const std::string& filepath,
 
     // Write PNG file IHDR chunk
     PNGFileIHDRChunk pngIHDRChunk;
-    pngIHDRChunk.width = SysSwapEndianness(width);
-    pngIHDRChunk.height = SysSwapEndianness(height);
+    pngIHDRChunk.width = SysByteSwap32(width);
+    pngIHDRChunk.height = SysByteSwap32(height);
     pngIHDRChunk.bitDepth = 8;
     pngIHDRChunk.colorType = (uint8_t)colorType;
     pngIHDRChunk.compression = 0;
@@ -436,7 +436,7 @@ bool PNGFile::savePNGImage(const std::string& filepath,
     pngIHDRChunkCRC = SysUpdateCRC32(
         pngIHDRChunkCRC, (unsigned char*)&pngIHDRChunk, PNGFileIHDRChunkSize
     );
-    pngIHDRChunkCRC = SysSwapEndianness(pngIHDRChunkCRC^SysCRC32Final);
+    pngIHDRChunkCRC = SysByteSwap32(pngIHDRChunkCRC^SysCRC32Final);
 
     // Write PNG file IHDR chunk CRC
     pngFile.write((char*)&pngIHDRChunkCRC, PNGFileChunkCRCSize);
@@ -447,8 +447,8 @@ bool PNGFile::savePNGImage(const std::string& filepath,
     }
 
     // Swap PNG file IHDR chunk byte endianness
-    pngIHDRChunk.width = SysSwapEndianness(pngIHDRChunk.width);
-    pngIHDRChunk.height = SysSwapEndianness(pngIHDRChunk.height);
+    pngIHDRChunk.width = SysByteSwap32(pngIHDRChunk.width);
+    pngIHDRChunk.height = SysByteSwap32(pngIHDRChunk.height);
 
     // Save PNG file image data
     if (!savePNGData(pngFile, pngIHDRChunk, image))
@@ -459,7 +459,7 @@ bool PNGFile::savePNGImage(const std::string& filepath,
 
     // Write PNG file IEND chunk header
     PNGFileChunkHeader pngIENDChunkHeader;
-    pngIENDChunkHeader.length = SysSwapEndianness(PNGFileIENDChunkSize);
+    pngIENDChunkHeader.length = SysByteSwap32(PNGFileIENDChunkSize);
     pngIENDChunkHeader.type[0] = PNGFileIENDChunkType[0];
     pngIENDChunkHeader.type[1] = PNGFileIENDChunkType[1];
     pngIENDChunkHeader.type[2] = PNGFileIENDChunkType[2];
@@ -476,7 +476,7 @@ bool PNGFile::savePNGImage(const std::string& filepath,
     pngIENDChunkCRC = SysUpdateCRC32(
         pngIENDChunkCRC, pngIENDChunkHeader.type, PNGFileChunkHeaderTypeSize
     );
-    pngIENDChunkCRC = SysSwapEndianness(pngIENDChunkCRC^SysCRC32Final);
+    pngIENDChunkCRC = SysByteSwap32(pngIENDChunkCRC^SysCRC32Final);
 
     // Write PNG file IEND chunk CRC
     pngFile.write((char*)&pngIENDChunkCRC, PNGFileChunkCRCSize);
@@ -539,7 +539,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             // Could not read PNG file chunk header
             break;
         }
-        pngIDATChunkHeader.length = SysSwapEndianness(
+        pngIDATChunkHeader.length = SysByteSwap32(
             pngIDATChunkHeader.length
         );
         if ((pngIDATChunkHeader.type[0] == PNGFileIDATChunkType[0]) &&
@@ -581,7 +581,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             // Could not read PNG file chunk header
             return false;
         }
-        pngIDATChunkHeader.length = SysSwapEndianness(
+        pngIDATChunkHeader.length = SysByteSwap32(
             pngIDATChunkHeader.length
         );
         if ((pngIDATChunkHeader.type[0] != PNGFileIDATChunkType[0]) ||
@@ -612,7 +612,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
                 // Could not read PNG file IDAT chunk CRC
                 return false;
             }
-            pngIDATChunkCRC = SysSwapEndianness(pngIDATChunkCRC);
+            pngIDATChunkCRC = SysByteSwap32(pngIDATChunkCRC);
 
             // Check PNG file IDAT chunk CRC
             uint32_t checkIDATChunkCRC = SysCRC32Default;
@@ -807,7 +807,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
 
     // Write PNG file IDAT chunk header
     PNGFileChunkHeader pngIDATChunkHeader;
-    pngIDATChunkHeader.length = SysSwapEndianness((uint32_t)compressedDataSize);
+    pngIDATChunkHeader.length = SysByteSwap32((uint32_t)compressedDataSize);
     pngIDATChunkHeader.type[0] = PNGFileIDATChunkType[0];
     pngIDATChunkHeader.type[1] = PNGFileIDATChunkType[1];
     pngIDATChunkHeader.type[2] = PNGFileIDATChunkType[2];
@@ -835,7 +835,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     pngIDATChunkCRC = SysUpdateCRC32(
         pngIDATChunkCRC, compressedData, compressedDataSize
     );
-    pngIDATChunkCRC = SysSwapEndianness(pngIDATChunkCRC^SysCRC32Final);
+    pngIDATChunkCRC = SysByteSwap32(pngIDATChunkCRC^SysCRC32Final);
 
     // Write PNG file IDAT chunk CRC
     pngFile.write((char*)&pngIDATChunkCRC, PNGFileChunkCRCSize);

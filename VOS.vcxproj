@@ -333,6 +333,7 @@
     <ClInclude Include="System\SysThread.h" />
     <ClInclude Include="System\SysWindow.h" />
     <ClInclude Include="System\SysVulkan.h" />
+    <ClInclude Include="System\Win\SysCPU.h" />
     <ClInclude Include="System\Win\SysDisplayMode.h" />
     <ClInclude Include="System\Win\SysMessage.h" />
     <ClInclude Include="System\Win\SysVulkan.h" />
