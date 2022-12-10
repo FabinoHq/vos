@@ -26,6 +26,7 @@
 !Vos.h
 !Vos.cpp
 
+# System
 !System/
 !System/System.h
 !System/SysMessage.h
@@ -43,7 +44,6 @@
 !System/SysVulkan.h
 !System/SysClock.h
 !System/SysClock.cpp
-!System/Lin/
 !System/Lin/SysMessage.h
 !System/Lin/SysMessage.cpp
 !System/Lin/SysCPU.h
@@ -53,7 +53,6 @@
 !System/Lin/SysWindow.cpp
 !System/Lin/SysVulkan.h
 !System/Lin/SysVulkan.cpp
-!System/Win/
 !System/Win/SysMessage.h
 !System/Win/SysMessage.cpp
 !System/Win/SysCPU.h
@@ -64,6 +63,7 @@
 !System/Win/SysVulkan.h
 !System/Win/SysVulkan.cpp
 
+# Network
 !Network/
 !Network/IPAddress4.h
 !Network/IPAddress6.h
@@ -89,10 +89,12 @@
 !Network/Win/UDPSocket.h
 !Network/Win/UDPSocket.cpp
 
+# Compress
 !Compress/
 !Compress/ZLib.h
 !Compress/ZLib.cpp
 
+# Math
 !Math/
 !Math/Math.h
 !Math/MultiInt.h
@@ -106,6 +108,7 @@
 !Math/Transform2.h
 !Math/Transform3.h
 
+# Images
 !Images/
 !Images/Embedded/
 !Images/Embedded/Cursor.h
@@ -120,6 +123,7 @@
 !Images/PNGFile.h
 !Images/PNGFile.cpp
 
+# Physics
 !Physics/
 !Physics/Physics.h
 !Physics/Physics.cpp
@@ -128,6 +132,7 @@
 !Physics/BoundingCircle.h
 !Physics/BoundingCircle.cpp
 
+# Renderer
 !Renderer/
 !Renderer/Vulkan/Vulkan.h
 !Renderer/Vulkan/Vulkan.cpp
@@ -174,6 +179,7 @@
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
 
+# Shaders
 !Renderer/Shaders/
 !Renderer/Shaders/Sources/
 !Renderer/Shaders/Sources/Default.vert
@@ -198,6 +204,7 @@
 !Renderer/Shaders/StaticMesh.h
 !Renderer/Shaders/StaticProc.h
 
+# Shapes
 !Renderer/Shapes/
 !Renderer/Shapes/RectangleShape.h
 !Renderer/Shapes/RectangleShape.cpp
@@ -206,6 +213,7 @@
 !Renderer/Shapes/CuboidShape.h
 !Renderer/Shapes/CuboidShape.cpp
 
+# GUI
 !Renderer/GUI/
 !Renderer/GUI/GUIPxText.h
 !Renderer/GUI/GUIPxText.cpp
