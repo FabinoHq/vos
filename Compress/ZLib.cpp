@@ -49,10 +49,7 @@
 size_t ZLibComputeDeflateCompressSize(size_t inSize)
 {
     bool computed = false;
-    size_t outSize = 0;
-
-    // ZLib header
-    outSize += 2;
+    size_t outSize = 2;
 
     // Compute deflate data compressed size
     while (!computed)
@@ -90,12 +87,9 @@ size_t ZLibComputeDeflateCompressSize(size_t inSize)
 bool ZLibDeflateCompress(unsigned char in[], size_t inSize,
     unsigned char out[], size_t* outSize)
 {
+    bool compressed = false;
     size_t inIndex = 0;
     size_t outIndex = 0;
-    uint32_t bitsCount = 0;
-    uint16_t blockSize = 0;
-    uint16_t nBlockSize = 0;
-    bool compressed = false;
 
     // Check data buffers
     if (!in || !out || (inSize <= 0) || (*outSize < 2))
@@ -112,17 +106,15 @@ bool ZLibDeflateCompress(unsigned char in[], size_t inSize,
     out[outIndex++] = (zlibHeader & 0xFF);
 
     // Compress deflate data
+    uint32_t bitsCount = 0;
     while (!compressed)
     {
         // Check remaining size
+        uint16_t blockSize = 65535;
         if ((inSize-inIndex) <= 65535)
         {
             blockSize = (uint16_t)(inSize-inIndex);
             compressed = true;
-        }
-        else
-        {
-            blockSize = 65535;
         }
 
         // Check output buffer size
@@ -144,7 +136,7 @@ bool ZLibDeflateCompress(unsigned char in[], size_t inSize,
         // Write block size
         out[outIndex++] = (blockSize & 0xFF);
         out[outIndex++] = ((blockSize >> 8) & 0xFF);
-        nBlockSize = ~blockSize;
+        uint16_t nBlockSize = ((uint16_t)~blockSize);
         out[outIndex++] = (nBlockSize & 0xFF);
         out[outIndex++] = ((nBlockSize >> 8) & 0xFF);
 
@@ -190,20 +182,9 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
     uint32_t lenCounts[ZLIB_DEFLATE_MAX_CODEWORD_LEN+1] = {0};
     uint32_t offsets[ZLIB_DEFLATE_MAX_CODEWORD_LEN+1] = {0};
     uint32_t codespace = 0;
-    uint32_t codeword = 0;
-    uint32_t entry = 0;
-    uint32_t tableEnd = 0;
-    uint32_t subtablePrefix = 0;
-    uint32_t subtableStart = 0;
-    uint32_t subtableBits = 0;
-    uint32_t currentBit = 0;
-    uint32_t stride = 0;
-    uint32_t count = 0;
-    uint32_t i = 0;
-    uint32_t j = 0;
 
     // Count codewords for each length
-    for (i = 0; i < symbolsCount; ++i)
+    for (uint32_t i = 0; i < symbolsCount; ++i)
     {
         ++lenCounts[lengthsTable[i]];
     }
@@ -211,7 +192,7 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
     // Compute offsets and codespace for sorting symbols
     offsets[0] = 0;
     offsets[1] = lenCounts[0];
-    for (i = 1; i < codewordLen; ++i)
+    for (uint32_t i = 1; i < codewordLen; ++i)
     {
         offsets[i+1] = (offsets[i] + lenCounts[i]);
         codespace = ((codespace << 1) + lenCounts[i]);
@@ -233,12 +214,8 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
     }
     else if (codespace < (0x00000001u << codewordLen))
     {
-        if (codespace == 0)
-        {
-            // Empty code
-            entry = (decodeResults[0] | 1);
-        }
-        else
+        uint32_t entry = (decodeResults[0] | 1);
+        if (codespace != 0)
         {
             // Incomplete code
             if ((codespace != (0x00000001u << (codewordLen-1))) ||
@@ -253,7 +230,7 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
         }
 
         // Compute decode table
-        for (i = 0; i < (0x00000001u << tableBits); ++i)
+        for (uint32_t i = 0; i < (0x00000001u << tableBits); ++i)
         {
             decodeTable[i] = entry;
         }
@@ -263,9 +240,11 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
     }
 
     // Complete codespace
-    i = 1;
+    uint32_t codeword = 0;
+    uint32_t i = 1;
+    uint32_t count = 0;
     while ((count = lenCounts[i]) == 0) { ++i; }
-    tableEnd = (0x00000001u << i);
+    uint32_t tableEnd = (0x00000001u << i);
     while (i <= tableBits)
     {
         // Process codewords
@@ -287,7 +266,7 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
             }
 
             // Increment codeword
-            currentBit =
+            uint32_t currentBit =
                 (0x00000001u << SysBitScanReverse32(codeword ^ (tableEnd-1)));
             codeword &= (currentBit - 1);
             codeword |= currentBit;
@@ -307,15 +286,16 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
 
     // Process codewords with length greater than tableBits
     tableEnd = (0x00000001u << tableBits);
-    subtablePrefix = 0xFFFFFFFFu;
+    uint32_t subtablePrefix = 0xFFFFFFFFu;
+    uint32_t subtableStart = 0;
     for (;;)
     {
         if ((codeword & ((0x00000001u << tableBits)-1)) != subtablePrefix)
         {
             // Compute subtable length
+            uint32_t subtableBits = (i - tableBits);
             subtablePrefix = (codeword & ((0x00000001u << tableBits) - 1));
             subtableStart = tableEnd;
-            subtableBits = (i - tableBits);
             codespace = count;
             while (codespace < (0x00000001u << subtableBits))
             {
@@ -331,14 +311,14 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
         }
 
         // Fill subtable for the current codeword
-        entry = (decodeResults[*sortedSymbols++] | (i - tableBits));
-        j = subtableStart + (codeword >> tableBits);
-        stride = (0x00000001u << (i - tableBits));
+        uint32_t entry = (decodeResults[*sortedSymbols++] | (i - tableBits));
+        uint32_t curTable = subtableStart + (codeword >> tableBits);
+        uint32_t stride = (0x00000001u << (i - tableBits));
         do
         {
-            decodeTable[j] = entry;
-            j += stride;
-        } while (j < tableEnd);
+            decodeTable[curTable] = entry;
+            curTable += stride;
+        } while (curTable < tableEnd);
 
         // Check for last codeword
         if (codeword == ((0x00000001u << i) - 1))
@@ -348,7 +328,7 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
         }
 
         // Increment codeword
-        currentBit = (0x00000001u << SysBitScanReverse32(
+        uint32_t currentBit = (0x00000001u << SysBitScanReverse32(
             codeword ^ ((0x00000001u << i) - 1))
         );
         codeword &= (currentBit - 1);
@@ -359,9 +339,6 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
             count = lenCounts[++i];
         }
     }
-
-    // Could not create Huffman decode table
-    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -371,21 +348,14 @@ bool ZLibBuildDecodeTable(uint32_t decodeTable[], uint8_t lengthsTable[],
 bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
     unsigned char out[], size_t* outSize)
 {
+    bool decompressed = false;
+    bool staticTablesLoaded = false;
     size_t inIndex = 0;
     size_t outIndex = 0;
-    size_t endIndex = 0;
+    size_t endIndex = (inSize-4);
     uint32_t bitsLeft = 0;
     uint64_t current = 0;
     size_t overrun = 0;
-    uint16_t blockSize = 0;
-    uint16_t nBlockSize = 0;
-    uint32_t litlenSymbols = 0;
-    uint32_t offsetSymbols = 0;
-    uint32_t precodeSymbols = 0;
-    uint8_t precode = 0;
-    bool decompressed = false;
-    uint32_t i = 0;
-    bool staticTablesLoaded = false;
     ZLibDeflateDecodeTables tables;
 
     // Check data buffers
@@ -394,9 +364,6 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
         // Invalid data buffers
         return false;
     }
-
-    // Compute end input index
-    endIndex = (inSize-4);
 
     // Check ZLib header
     uint16_t zlibHeader = (in[inIndex++] << 8);
@@ -409,7 +376,6 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
     if ((zlibHeader >> 12) > 0x0007) return false;
     // FDICT     
     if ((zlibHeader >> 5) & 0x0001) return false;
-
 
     // Decompress deflate data
     while (!decompressed)
@@ -432,12 +398,12 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
         }
 
         // Read final block state
-        decompressed = current & 0x01;
+        decompressed = (current & 0x01);
         current >>= 1;
         bitsLeft -= 1;
 
         // Read block type
-        unsigned char blockType = current & 0x03;
+        unsigned char blockType = (current & 0x03);
         current >>= 2;
         bitsLeft -= 2;
 
@@ -454,13 +420,13 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
             if ((inIndex + 4) > endIndex) return false;
 
             // Read block size
-            blockSize = in[inIndex++];
+            uint16_t blockSize = in[inIndex++];
             blockSize |= (in[inIndex++] << 8);
-            nBlockSize = in[inIndex++];
+            uint16_t nBlockSize = in[inIndex++];
             nBlockSize |= (in[inIndex++] << 8);
 
             // Check block size
-            if (blockSize != (uint16_t)~nBlockSize) return false;
+            if (blockSize != ((uint16_t)~nBlockSize)) return false;
 
             // Check buffers sizes
             if ((inIndex + blockSize) > endIndex) return false;
@@ -473,12 +439,15 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
         }
         else
         {
+            uint32_t litlenSymbols = 0;
+            uint32_t offsetSymbols = 0;
             if (blockType == ZLIB_DEFLATE_BLOCK_STATIC_HUFFMAN)
             {
                 // Static huffman block type
                 if (!staticTablesLoaded)
                 {
                     // Build static tables
+                    uint32_t i = 0;
                     for (i = 0; i < 144; ++i)
                     {
                         tables.u.l.lengths[i] = 8;
@@ -509,19 +478,20 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                 staticTablesLoaded = false;
 
                 // Read codeword length counts
-                litlenSymbols = (current & 0x1F) + 257;
+                litlenSymbols = ((current & 0x1F) + 257);
                 current >>= 5;
                 bitsLeft -= 5;
 
-                offsetSymbols = (current & 0x1F) + 1;
+                offsetSymbols = ((current & 0x1F) + 1);
                 current >>= 5;
                 bitsLeft -= 5;
 
-                precodeSymbols = (current & 0x0F) + 4;
+                uint32_t precodeSymbols = ((current & 0x0F) + 4);
                 current >>= 4;
                 bitsLeft -= 4;
 
                 // Compute precode symbols
+                uint32_t i = 0;
                 for (i = 0; i < precodeSymbols; ++i)
                 {
                     // Read next 3 bits
@@ -542,7 +512,7 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                     }
 
                     // Read precode table entry
-                    precode = (current & 0x07);
+                    uint8_t precode = (current & 0x07);
                     current >>= 3;
                     bitsLeft -= 3;
                     tables.u.precode[ZLibDeflatePrecodePermutations[i]] =
@@ -568,11 +538,6 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                 // Expand litlen and offset codeword lengths
                 for (i = 0; i < (litlenSymbols+offsetSymbols); )
                 {
-                    uint32_t entry = 0;
-                    uint32_t presym = 0;
-                    uint8_t repVal = 0;
-                    uint32_t repCount = 0;
-
                     // Read next 14 bits
                     if (bitsLeft < 14)
                     {
@@ -591,11 +556,11 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                     }
 
                     // Read next precode symbol
-                    entry = tables.u.l.decode[((uint32_t)current &
+                    uint32_t entry = tables.u.l.decode[((uint32_t)current &
                         ((0x00000001u << ZLIB_DEFLATE_MAX_PRECODE_LEN) - 1))];
                     current >>= (entry & 0xFF);
                     bitsLeft -= (entry & 0xFF);
-                    presym = (entry >> 8);
+                    uint32_t presym = (entry >> 8);
 
                     // Handle explicit codeword lengths
                     if (presym < 16)
@@ -608,8 +573,8 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                     {
                         // Repeat previous length 6 times
                         if (i == 0) { return false; }
-                        repVal = tables.u.l.lengths[i-1];
-                        repCount = ((current & 0x03) + 3);
+                        uint8_t repVal = tables.u.l.lengths[i-1];
+                        uint32_t repCount = ((current & 0x03) + 3);
                         current >>= 2;
                         bitsLeft -= 2;
                         tables.u.l.lengths[i+0] = repVal;
@@ -623,7 +588,7 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                     else if (presym == 17)
                     {
                         // Repeat zero 10 times
-                        repCount = ((current & 0x07) + 3);
+                        uint32_t repCount = ((current & 0x07) + 3);
                         current >>= 3;
                         bitsLeft -= 3;
                         tables.u.l.lengths[i+0] = 0;
@@ -641,7 +606,7 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                     else
                     {
                         // Repeat zero 138 times
-                        repCount = ((current & 0x7F) + 11);
+                        uint32_t repCount = ((current & 0x7F) + 11);
                         current >>= 7;
                         bitsLeft -= 7;
                         memset(
@@ -689,12 +654,6 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
             // Decompress Huffman block
             for (;;)
             {
-                uint32_t entry = 0;
-                uint32_t len = 0;
-                uint32_t offset = 0;
-                const uint8_t* src = 0;
-                uint8_t* dst = 0;
-
                 // Read next 15 bits
                 if (bitsLeft < 15)
                 {
@@ -713,7 +672,7 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                 }
 
                 // Decode litlen symbol
-                entry = tables.u.litlen[((uint32_t)current &
+                uint32_t entry = tables.u.litlen[((uint32_t)current &
                     ((0x00000001u << ZLIB_DEFLATE_LITLEN_TABLEBITS) - 1))];
                 if (entry & 0x80000000)
                 {
@@ -754,7 +713,8 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                 }
 
                 // Compute full length
-                len = ((uint32_t)current & ((0x00000001u << (entry & 0xFF))-1));
+                uint32_t len =
+                    ((uint32_t)current & ((0x00000001u << (entry & 0xFF))-1));
                 current >>= (entry & 0xFF);
                 bitsLeft -= (entry & 0xFF);
                 len += (entry >> 8);
@@ -801,17 +761,17 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
                 }
 
                 // Compute extra offset
-                offset = ((uint32_t)current & ((0x00000001u << (entry>>16))-1));
+                uint32_t offset =
+                    ((uint32_t)current & ((0x00000001u << (entry>>16))-1));
                 current >>= (entry >> 16);
                 bitsLeft -= (entry >> 16);
                 offset += (entry & 0xFFFF);
                 if (offset > outIndex) { return false; }
 
                 // Copy to output buffer
-                src = &out[outIndex-offset];
-                dst = &out[outIndex];
+                const uint8_t* src = &out[outIndex-offset];
+                uint8_t* dst = &out[outIndex];
                 outIndex += len;
-
                 *dst++ = *src++;
                 *dst++ = *src++;
                 do

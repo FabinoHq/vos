@@ -870,7 +870,7 @@ bool PNGFile::decodePNG32bits(unsigned char* data,
 {
     size_t inIndex = 0;
     size_t outIndex = 0;
-    size_t scanlineSize = width*4;
+    size_t scanlineSize = (width*4);
     for (uint32_t j = 0; j < height; ++j)
     {
         // Check scanline filter type
@@ -905,15 +905,13 @@ bool PNGFile::decodePNG32bits(unsigned char* data,
             case PNGFILE_FILTER_UP:
             {
                 // Up filter
-                size_t prevIndex = inIndex-scanlineSize-1;
-                bool firstLine = false;
+                size_t prevIndex = (inIndex-scanlineSize-1);
                 unsigned char prevData = 0;
-                if (j <= 0) firstLine = true;
 
                 // Decode up filtered scanline
                 for (size_t i = 0; i < scanlineSize; ++i)
                 {
-                    if (!firstLine) prevData = data[prevIndex];
+                    if (j > 0) { prevData = data[prevIndex]; }
                     m_image[outIndex++] = (data[inIndex++] += prevData);
                     ++prevIndex;
                 }
@@ -922,24 +920,22 @@ bool PNGFile::decodePNG32bits(unsigned char* data,
             case PNGFILE_FILTER_AVERAGE:
             {
                 // Average filter
-                size_t prevIndex = inIndex-scanlineSize-1;
+                size_t prevIndex = (inIndex-scanlineSize-1);
                 size_t prevIndex2 = inIndex;
-                bool firstLine = false;
                 unsigned char prevData = 0;
-                if (j <= 0) firstLine = true;
 
                 // Decode first pixel (up filtered)
                 for (size_t i = 0; i < 4; ++i)
                 {
-                    if (!firstLine) prevData = (data[prevIndex]/2);
+                    if (j > 0) { prevData = (data[prevIndex]/2); }
                     m_image[outIndex++] = (data[inIndex++] += prevData);
                     ++prevIndex;
                 }
 
                 // Decode avarage filtered scanline
-                for (size_t i = 0; i < scanlineSize-4; ++i)
+                for (size_t i = 4; i < scanlineSize; ++i)
                 {
-                    if (!firstLine) prevData = data[prevIndex];
+                    if (j > 0) { prevData = data[prevIndex]; }
                     m_image[outIndex++] = (data[inIndex++] +=
                         ((prevData + data[prevIndex2++])/2));
                     ++prevIndex;
@@ -949,33 +945,30 @@ bool PNGFile::decodePNG32bits(unsigned char* data,
             case PNGFILE_FILTER_PAETH:
             {
                 // Paeth multibyte filter
-                size_t prevIndex = inIndex-scanlineSize-1;
+                size_t prevIndex = (inIndex-scanlineSize-1);
                 size_t prevIndex2 = prevIndex;
                 size_t prevIndex3 = inIndex;
-                bool firstLine = false;
-                unsigned char currentData = 0;
                 unsigned char prevData = 0;
                 unsigned char prevData2 = 0;
-                int p = 0, pa = 0, pb = 0, pc = 0;
 
                 // Decode first pixel
                 for (size_t i = 0; i < 4; ++i)
                 {
-                    if (!firstLine) prevData = data[prevIndex];
+                    if (j > 0) { prevData = data[prevIndex]; }
                     m_image[outIndex++] = (data[inIndex++] += prevData);
                     ++prevIndex;
                 }
 
                 // Decode paeth filtered scanline
-                for (size_t i = 0; i < scanlineSize-4; ++i)
+                for (size_t i = 4; i < scanlineSize; ++i)
                 {
-                    currentData = data[prevIndex3++];
-                    if (!firstLine) prevData = data[prevIndex];
-                    prevData2 = data[prevIndex2++];
-                    p = prevData - prevData2;
-                    pc = currentData - prevData2;
-                    pa = (p < 0) ? -p : p;
-                    pb = (pc < 0) ? -pc : pc;
+                    unsigned char currentData = data[prevIndex3++];
+                    if (j > 0) { prevData = data[prevIndex]; }
+                    if (j > 0) { prevData2 = data[prevIndex2++]; }
+                    int p = prevData - prevData2;
+                    int pc = currentData - prevData2;
+                    int pa = (p < 0) ? -p : p;
+                    int pb = (pc < 0) ? -pc : pc;
                     pc = ((p + pc) < 0) ? -(p + pc) : (p + pc);
                     if (pb < pa) { pa = pb; currentData = prevData; }
                     if (pc < pa) { currentData = prevData2; }
@@ -1010,7 +1003,7 @@ bool PNGFile::encodePNG32bits(unsigned char* data,
 
     size_t inIndex = 0;
     size_t outIndex = 0;
-    size_t scanlineSize = width*4;
+    size_t scanlineSize = (width*4);
     for (uint32_t j = 0; j < height; ++j)
     {
         // No filter
@@ -1035,8 +1028,7 @@ bool PNGFile::decodePNG24bits(unsigned char* data,
 {
     size_t inIndex = 0;
     size_t outIndex = 0;
-    size_t scanlineSize = width*3;
-    size_t alphaMod = 0;
+    size_t scanlineSize = (width*3);
     for (uint32_t j = 0; j < height; ++j)
     {
         // Check scanline filter type
@@ -1045,15 +1037,12 @@ bool PNGFile::decodePNG24bits(unsigned char* data,
             case PNGFILE_FILTER_NONE:
             {
                 // No filter
-                alphaMod = 0;
-
-                // Decode unfiltered scanline
                 for (size_t i = 0; i < scanlineSize; ++i)
                 {
                     // RGB channels
                     m_image[outIndex++] = data[inIndex++];
                     // Alpha channel
-                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                    if ((i % 3) == 2) { m_image[outIndex++] = 255; }
                 }
                 break;
             }
@@ -1068,7 +1057,6 @@ bool PNGFile::decodePNG24bits(unsigned char* data,
                 outIndex += 3;
                 // Add first pixel alpha channel
                 m_image[outIndex++] = 255;
-                alphaMod = 0;
 
                 // Decode sub filtered scanline
                 for (size_t i = 3; i < scanlineSize; ++i)
@@ -1077,105 +1065,95 @@ bool PNGFile::decodePNG24bits(unsigned char* data,
                     m_image[outIndex++] =
                         (data[inIndex++] += data[prevIndex++]);
                     // Alpha channel
-                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                    if ((i % 3) == 2) { m_image[outIndex++] = 255; }
                 }
                 break;
             }
             case PNGFILE_FILTER_UP:
             {
                 // Up filter
-                size_t prevIndex = inIndex-scanlineSize-1;
-                bool firstLine = false;
+                size_t prevIndex = (inIndex-scanlineSize-1);
                 unsigned char prevData = 0;
-                if (j <= 0) firstLine = true;
-                alphaMod = 0;
 
                 // Decode up filtered scanline
                 for (size_t i = 0; i < scanlineSize; ++i)
                 {
                     // RGB channels
-                    if (!firstLine) prevData = data[prevIndex];
+                    if (j > 0) { prevData = data[prevIndex]; }
                     m_image[outIndex++] = (data[inIndex++] += prevData);
                     ++prevIndex;
                     // Alpha channel
-                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                    if ((i % 3) == 2) { m_image[outIndex++] = 255; }
                 }
                 break;
             }
             case PNGFILE_FILTER_AVERAGE:
             {
                 // Average filter
-                size_t prevIndex = inIndex-scanlineSize-1;
+                size_t prevIndex = (inIndex-scanlineSize-1);
                 size_t prevIndex2 = inIndex;
-                bool firstLine = false;
                 unsigned char prevData = 0;
-                if (j <= 0) firstLine = true;
 
                 // Decode first pixel (up filtered)
                 for (size_t i = 0; i < 3; ++i)
                 {
-                    if (!firstLine) prevData = (data[prevIndex]/2);
+                    if (j > 0) { prevData = (data[prevIndex]/2); }
                     m_image[outIndex++] = (data[inIndex++] += prevData);
                     ++prevIndex;
                 }
                 // Add first pixel alpha channel
                 m_image[outIndex++] = 255;
-                alphaMod = 0;
 
                 // Decode average filtered scanline
-                for (size_t i = 0; i < scanlineSize-3; ++i)
+                for (size_t i = 3; i < scanlineSize; ++i)
                 {
                     // RGB channels
-                    if (!firstLine) prevData = data[prevIndex];
+                    if (j > 0) { prevData = data[prevIndex]; }
                     m_image[outIndex++] = (data[inIndex++] +=
                         ((prevData + data[prevIndex2++])/2));
                     ++prevIndex;
                     // Alpha channel
-                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                    if ((i % 3) == 2) { m_image[outIndex++] = 255; }
                 }
                 break;
             }
             case PNGFILE_FILTER_PAETH:
             {
                 // Paeth multibyte filter
-                size_t prevIndex = inIndex-scanlineSize-1;
+                size_t prevIndex = (inIndex-scanlineSize-1);
                 size_t prevIndex2 = prevIndex;
                 size_t prevIndex3 = inIndex;
-                bool firstLine = false;
-                unsigned char currentData = 0;
                 unsigned char prevData = 0;
                 unsigned char prevData2 = 0;
-                int p = 0, pa = 0, pb = 0, pc = 0;
 
                 // Decode first pixel
                 for (size_t i = 0; i < 3; ++i)
                 {
-                    if (!firstLine) prevData = data[prevIndex];
+                    if (j > 0) { prevData = data[prevIndex]; }
                     m_image[outIndex++] = (data[inIndex++] += prevData);
                     ++prevIndex;
                 }
                 // Add first pixel alpha channel
                 m_image[outIndex++] = 255;
-                alphaMod = 0;
 
                 // Decode paeth filtered scanline
-                for (size_t i = 0; i < scanlineSize-3; ++i)
+                for (size_t i = 3; i < scanlineSize; ++i)
                 {
                     // RGB channels
-                    currentData = data[prevIndex3++];
-                    if (!firstLine) prevData = data[prevIndex];
-                    prevData2 = data[prevIndex2++];
-                    p = prevData - prevData2;
-                    pc = currentData - prevData2;
-                    pa = (p < 0) ? -p : p;
-                    pb = (pc < 0) ? -pc : pc;
+                    unsigned char currentData = data[prevIndex3++];
+                    if (j > 0) { prevData = data[prevIndex]; }
+                    if (j > 0) { prevData2 = data[prevIndex2++]; }
+                    int p = prevData - prevData2;
+                    int pc = currentData - prevData2;
+                    int pa = (p < 0) ? -p : p;
+                    int pb = (pc < 0) ? -pc : pc;
                     pc = ((p + pc) < 0) ? -(p + pc) : (p + pc);
                     if (pb < pa) { pa = pb; currentData = prevData; }
                     if (pc < pa) { currentData = prevData2; }
                     m_image[outIndex++] = (data[inIndex++] += currentData);
                     ++prevIndex;
                     // Alpha channel
-                    if (((++alphaMod) % 3) == 0) m_image[outIndex++] = 255;
+                    if ((i % 3) == 2) { m_image[outIndex++] = 255; }
                 }
                 break;
             }
@@ -1205,8 +1183,7 @@ bool PNGFile::encodePNG24bits(unsigned char* data,
 
     size_t inIndex = 0;
     size_t outIndex = 0;
-    size_t scanlineSize = width*3;
-    size_t alphaMod = 0;
+    size_t scanlineSize = (width*3);
     for (uint32_t j = 0; j < height; ++j)
     {
         // No filter
@@ -1218,7 +1195,7 @@ bool PNGFile::encodePNG24bits(unsigned char* data,
             // RGB channels
             data[outIndex++] = image[inIndex++];
             // Alpha channel
-            if (((++alphaMod) % 3) == 0) ++inIndex;
+            if ((i % 3) == 2) { ++inIndex; }
         }
     }
 
