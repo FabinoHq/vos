@@ -787,6 +787,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
             return false;
         case PNGFILE_COLOR_GREYSCALE_ALPHA:
             pixelDepth = 2;
+            break;
         case PNGFILE_COLOR_RGBA:
             pixelDepth = 4;
             break;
