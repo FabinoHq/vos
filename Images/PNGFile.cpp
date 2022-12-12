@@ -515,8 +515,8 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             // Unsupported PNG file color type
             return false;
         case PNGFILE_COLOR_GREYSCALE_ALPHA:
-            // Unsupported PNG file color type
-            return false;
+            pixelDepth = 2;
+            break;
         case PNGFILE_COLOR_RGBA:
             pixelDepth = 4;
             break;
@@ -564,7 +564,11 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     // Allocate raw image data
     unsigned char* rawData = new (std::nothrow)
         unsigned char[pngIDATChunksLength];
-    if (!rawData) return false;
+    if (!rawData)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
 
     // Reset input file stream
     pngFile.clear();
@@ -579,6 +583,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
         if (!pngFile)
         {
             // Could not read PNG file chunk header
+            if (rawData) { delete[] rawData; }
             return false;
         }
         pngIDATChunkHeader.length = SysByteSwap32(
@@ -601,6 +606,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             if (!pngFile)
             {
                 // Could not read PNG raw image data
+                if (rawData) { delete[] rawData; }
                 return false;
             }
 
@@ -610,6 +616,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             if (!pngFile)
             {
                 // Could not read PNG file IDAT chunk CRC
+                if (rawData) { delete[] rawData; }
                 return false;
             }
             pngIDATChunkCRC = SysByteSwap32(pngIDATChunkCRC);
@@ -627,6 +634,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             if ((checkIDATChunkCRC^SysCRC32Final) != pngIDATChunkCRC)
             {
                 // Invalid PNG file IDAT chunk CRC
+                if (rawData) { delete[] rawData; }
                 return false;
             }
 
@@ -640,20 +648,33 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
     unsigned char* pngData = new (std::nothrow) unsigned char[pngDataSize];
-    if (!pngData) return false;
+    if (!pngData)
+    {
+        // Could not allocate decompressed data
+        if (rawData) { delete[] rawData; }
+        return false;
+    }
 
     // Decompress deflate data
     if (!ZLibDeflateDecompress(
         rawData, pngIDATChunksLength, pngData, &pngDataSize))
     {
         // Could not decompress deflate data
+        if (pngData) { delete[] pngData; }
+        if (rawData) { delete[] rawData; }
         return false;
     }
 
     // Allocate 32bits RGBA internal image data
     size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
     m_image = new (std::nothrow) unsigned char[imageSize];
-    if (!m_image) return false;
+    if (!m_image)
+    {
+        // Could not allocate internal image data
+        if (pngData) { delete[] pngData; }
+        if (rawData) { delete[] rawData; }
+        return false;
+    }
 
     // Decode PNG image data
     switch (pngIHDRChunk.colorType)
@@ -663,7 +684,10 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             if (!decodePNG8bits(
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
-                // Could not decode 8 bits RGB PNG
+                // Could not decode 8 bits greyscale PNG
+                if (pngData) { delete[] pngData; }
+                if (rawData) { delete[] rawData; }
+                if (m_image) { delete[] m_image; m_image = 0; }
                 return false;
             }
             break;
@@ -673,6 +697,9 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 24 bits RGB PNG
+                if (pngData) { delete[] pngData; }
+                if (rawData) { delete[] rawData; }
+                if (m_image) { delete[] m_image; m_image = 0; }
                 return false;
             }
             break;
@@ -680,19 +707,34 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             // Unsupported PNG file color type
             return false;
         case PNGFILE_COLOR_GREYSCALE_ALPHA:
-            // Unsupported PNG file color type
-            return false;
+            // Decode 16 bits greyscale-alpha PNG
+            if (!decodePNG16bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height))
+            {
+                // Could not decode 16 bits greyscale-alpha PNG
+                if (pngData) { delete[] pngData; }
+                if (rawData) { delete[] rawData; }
+                if (m_image) { delete[] m_image; m_image = 0; }
+                return false;
+            }
+            break;
         case PNGFILE_COLOR_RGBA:
             // Decode 32 bits RGBA PNG
             if (!decodePNG32bits(
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 32 bits RGBA PNG
+                if (pngData) { delete[] pngData; }
+                if (rawData) { delete[] rawData; }
+                if (m_image) { delete[] m_image; m_image = 0; }
                 return false;
             }
             break;
         default:
             // Unsupported PNG file color type
+            if (pngData) { delete[] pngData; }
+            if (rawData) { delete[] rawData; }
+            if (m_image) { delete[] m_image; m_image = 0; }
             return false;
     }
 
@@ -744,8 +786,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
             // Unsupported PNG file color type
             return false;
         case PNGFILE_COLOR_GREYSCALE_ALPHA:
-            // Unsupported PNG file color type
-            return false;
+            pixelDepth = 2;
         case PNGFILE_COLOR_RGBA:
             pixelDepth = 4;
             break;
@@ -758,7 +799,11 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
     unsigned char* pngData = new (std::nothrow) unsigned char[pngDataSize];
-    if (!pngData) return false;
+    if (!pngData)
+    {
+        // Could not allocate PNG data
+        return false;
+    }
 
     // Encode PNG image data
     switch (pngIHDRChunk.colorType)
@@ -768,7 +813,8 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
             if (!encodePNG8bits(
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
             {
-                // Could not encode 8 bits RGB PNG
+                // Could not encode 8 bits greyscale PNG
+                if (pngData) { delete[] pngData; }
                 return false;
             }
             break;
@@ -778,6 +824,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
             {
                 // Could not encode 24 bits RGB PNG
+                if (pngData) { delete[] pngData; }
                 return false;
             }
             break;
@@ -785,19 +832,28 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
             // Unsupported PNG file color type
             return false;
         case PNGFILE_COLOR_GREYSCALE_ALPHA:
-            // Unsupported PNG file color type
-            return false;
+            // Encode 16 bits greyscale-alpha PNG
+            if (!encodePNG16bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
+            {
+                // Could not encode 16 bits greyscale-alpha PNG
+                if (pngData) { delete[] pngData; }
+                return false;
+            }
+            break;
         case PNGFILE_COLOR_RGBA:
             // Encode 32 bits RGBA PNG
             if (!encodePNG32bits(
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
             {
                 // Could not encode 32 bits RGBA PNG
+                if (pngData) { delete[] pngData; }
                 return false;
             }
             break;
         default:
             // Unsupported PNG file color type
+            if (pngData) { delete[] pngData; }
             return false;
     }
 
@@ -807,13 +863,20 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     // Allocate compressed data
     unsigned char* compressedData = new (std::nothrow)
         unsigned char[compressedDataSize];
-    if (!compressedData) return false;
+    if (!compressedData)
+    {
+        // Could not allocate compressed data
+        if (pngData) { delete[] pngData; }
+        return false;
+    }
 
     // Compress deflate data
     if (!ZLibDeflateCompress(
         pngData, pngDataSize, compressedData, &compressedDataSize))
     {
         // Could not compress deflate data
+        if (compressedData) { delete[] compressedData; }
+        if (pngData) { delete[] pngData; }
         return false;
     }
 
@@ -828,6 +891,8 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     if (!pngFile)
     {
         // Could not write PNG file chunk header
+        if (compressedData) { delete[] compressedData; }
+        if (pngData) { delete[] pngData; }
         return false;
     }
 
@@ -836,6 +901,8 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     if (!pngFile)
     {
         // Could not write PNG file IDAT chunk
+        if (compressedData) { delete[] compressedData; }
+        if (pngData) { delete[] pngData; }
         return false;
     }
 
@@ -1212,6 +1279,230 @@ bool PNGFile::encodePNG24bits(unsigned char* data,
     }
 
     // PNG 24 bits data are successfully encoded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Decode PNG 16 bits data                                                   //
+//  return : True if PNG 16 bits data are successfully decoded                //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::decodePNG16bits(unsigned char* data,
+    uint32_t width, uint32_t height)
+{
+    size_t inIndex = 0;
+    size_t outIndex = 0;
+    size_t scanlineSize = (width*2);
+    for (uint32_t j = 0; j < height; ++j)
+    {
+        // Check scanline filter type
+        switch (data[inIndex++])
+        {
+            case PNGFILE_FILTER_NONE:
+            {
+                // No filter
+                for (size_t i = 0; i < scanlineSize; i+=2)
+                {
+                    // RGB channels
+                    m_image[outIndex++] = data[inIndex];
+                    m_image[outIndex++] = data[inIndex];
+                    m_image[outIndex++] = data[inIndex++];
+                    // Alpha channel
+                    m_image[outIndex++] = data[inIndex++];
+                }
+                break;
+            }
+            case PNGFILE_FILTER_SUB:
+            {
+                // Sub filter
+                size_t prevIndex = inIndex;
+
+                // Copy first pixel
+                m_image[outIndex++] = data[inIndex];
+                m_image[outIndex++] = data[inIndex];
+                m_image[outIndex++] = data[inIndex++];
+                // Alpha channel
+                m_image[outIndex++] = data[inIndex++];
+
+                // Decode sub filtered scanline
+                for (size_t i = 2; i < scanlineSize; i+=2)
+                {
+                    // RGB channels
+                    unsigned char greyscale =
+                        (data[inIndex++] += data[prevIndex++]);
+                    m_image[outIndex++] = greyscale;
+                    m_image[outIndex++] = greyscale;
+                    m_image[outIndex++] = greyscale;
+                    // Alpha channel
+                    m_image[outIndex++] =
+                        (data[inIndex++] += data[prevIndex++]);
+                }
+                break;
+            }
+            case PNGFILE_FILTER_UP:
+            {
+                // Up filter
+                size_t prevIndex = (inIndex-scanlineSize-1);
+                unsigned char prevData = 0;
+
+                // Decode up filtered scanline
+                for (size_t i = 0; i < scanlineSize; i+=2)
+                {
+                    // RGB channels
+                    if (j > 0) { prevData = data[prevIndex]; }
+                    unsigned char greyscale = (data[inIndex++] += prevData);
+                    ++prevIndex;
+                    m_image[outIndex++] = greyscale;
+                    m_image[outIndex++] = greyscale;
+                    m_image[outIndex++] = greyscale;
+                    // Alpha channel
+                    if (j > 0) { prevData = data[prevIndex]; }
+                    m_image[outIndex++] = (data[inIndex++] += prevData);
+                    ++prevIndex;
+                }
+                break;
+            }
+            case PNGFILE_FILTER_AVERAGE:
+            {
+                // Average filter
+                size_t prevIndex = (inIndex-scanlineSize-1);
+                size_t prevIndex2 = inIndex;
+                unsigned char prevData = 0;
+
+                // Decode first pixel (up filtered)
+                if (j > 0) { prevData = (data[prevIndex]/2); }
+                unsigned char greyscale = (data[inIndex++] += prevData);
+                ++prevIndex;
+                m_image[outIndex++] = greyscale;
+                m_image[outIndex++] = greyscale;
+                m_image[outIndex++] = greyscale;
+                // Alpha channel
+                if (j > 0) { prevData = (data[prevIndex]/2); }
+                m_image[outIndex++] = (data[inIndex++] += prevData);
+                ++prevIndex;
+
+                // Decode avarage filtered scanline
+                for (size_t i = 2; i < scanlineSize; i+=2)
+                {
+                    // RGB channels
+                    if (j > 0) { prevData = data[prevIndex]; }
+                    greyscale = (data[inIndex++] +=
+                        ((prevData + data[prevIndex2++])/2));
+                    ++prevIndex;
+                    m_image[outIndex++] = greyscale;
+                    m_image[outIndex++] = greyscale;
+                    m_image[outIndex++] = greyscale;
+                    // Alpha channel
+                    if (j > 0) { prevData = data[prevIndex]; }
+                    m_image[outIndex++] = (data[inIndex++] +=
+                        ((prevData + data[prevIndex2++])/2));
+                    ++prevIndex;
+                }
+                break;
+            }
+            case PNGFILE_FILTER_PAETH:
+            {
+                // Paeth multibyte filter
+                size_t prevIndex = (inIndex-scanlineSize-1);
+                size_t prevIndex2 = prevIndex;
+                size_t prevIndex3 = inIndex;
+                unsigned char prevData = 0;
+                unsigned char prevData2 = 0;
+
+                // Decode first pixel
+                if (j > 0) { prevData = data[prevIndex]; }
+                unsigned char greyscale = (data[inIndex++] += prevData);
+                ++prevIndex;
+                m_image[outIndex++] = greyscale;
+                m_image[outIndex++] = greyscale;
+                m_image[outIndex++] = greyscale;
+                // Alpha channel
+                if (j > 0) { prevData = data[prevIndex]; }
+                m_image[outIndex++] = (data[inIndex++] += prevData);
+                ++prevIndex;
+
+                // Decode paeth filtered scanline
+                for (size_t i = 2; i < scanlineSize; i+=2)
+                {
+                    // RGB channels
+                    unsigned char currentData = data[prevIndex3++];
+                    if (j > 0) { prevData = data[prevIndex]; }
+                    if (j > 0) { prevData2 = data[prevIndex2++]; }
+                    int p = prevData - prevData2;
+                    int pc = currentData - prevData2;
+                    int pa = (p < 0) ? -p : p;
+                    int pb = (pc < 0) ? -pc : pc;
+                    pc = ((p + pc) < 0) ? -(p + pc) : (p + pc);
+                    if (pb < pa) { pa = pb; currentData = prevData; }
+                    if (pc < pa) { currentData = prevData2; }
+                    greyscale = (data[inIndex++] += currentData);
+                    ++prevIndex;
+                    m_image[outIndex++] = greyscale;
+                    m_image[outIndex++] = greyscale;
+                    m_image[outIndex++] = greyscale;
+                    // Alpha channel
+                    currentData = data[prevIndex3++];
+                    if (j > 0) { prevData = data[prevIndex]; }
+                    if (j > 0) { prevData2 = data[prevIndex2++]; }
+                    p = prevData - prevData2;
+                    pc = currentData - prevData2;
+                    pa = (p < 0) ? -p : p;
+                    pb = (pc < 0) ? -pc : pc;
+                    pc = ((p + pc) < 0) ? -(p + pc) : (p + pc);
+                    if (pb < pa) { pa = pb; currentData = prevData; }
+                    if (pc < pa) { currentData = prevData2; }
+                    m_image[outIndex++] = (data[inIndex++] += currentData);
+                    ++prevIndex;
+                }
+                break;
+            }
+            default:
+                // Invalid filter type
+                return false;
+        }
+    }
+
+    // PNG 16 bits data are successfully decoded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Encode PNG 16 bits data                                                   //
+//  return : True if PNG 16 bits data are successfully encoded                //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::encodePNG16bits(unsigned char* data,
+    uint32_t width, uint32_t height, const unsigned char* image)
+{
+    // Check image data
+    if (!image)
+    {
+        // Invalid image data
+        return false;
+    }
+
+    size_t inIndex = 0;
+    size_t outIndex = 0;
+    size_t scanlineSize = (width*2);
+    for (uint32_t j = 0; j < height; ++j)
+    {
+        // No filter
+        data[outIndex++] = PNGFILE_FILTER_NONE;
+
+        // Encode unfiltered scanline
+        for (size_t i = 0; i < scanlineSize; i+=2)
+        {
+            // Compute greyscale
+            int greyscale =
+                (image[inIndex++] + image[inIndex++] + image[inIndex++]);
+            greyscale /= 3;
+            if (greyscale <= 0) { greyscale = 0; }
+            if (greyscale >= 255) { greyscale = 255; }
+            data[outIndex++] = (unsigned char)greyscale;
+            // Alpha channel
+            data[outIndex++] = image[inIndex++];
+        }
+    }
+
+    // PNG 16 bits data are successfully encoded
     return true;
 }
 

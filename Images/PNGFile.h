@@ -260,6 +260,20 @@
                 uint32_t width, uint32_t height, const unsigned char* image);
 
             ////////////////////////////////////////////////////////////////////
+            //  Decode PNG 16 bits data                                       //
+            //  return : True if PNG 16 bits data are successfully decoded    //
+            ////////////////////////////////////////////////////////////////////
+            bool decodePNG16bits(unsigned char* data,
+                uint32_t width, uint32_t height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Encode PNG 16 bits data                                       //
+            //  return : True if PNG 16 bits data are successfully encoded    //
+            ////////////////////////////////////////////////////////////////////
+            static bool encodePNG16bits(unsigned char* data,
+                uint32_t width, uint32_t height, const unsigned char* image);
+
+            ////////////////////////////////////////////////////////////////////
             //  Decode PNG 8 bits data                                        //
             //  return : True if PNG 8 bits data are successfully decoded     //
             ////////////////////////////////////////////////////////////////////
