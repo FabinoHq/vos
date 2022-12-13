@@ -67,9 +67,21 @@
     enum EventKey
     {
         EVENT_KEY_NONE,
+
         EVENT_KEY_ESCAPE,
         EVENT_KEY_RETURN,
         EVENT_KEY_SPACE,
+        EVENT_KEY_BACKSPACE,
+
+        EVENT_KEY_RSYS,
+        EVENT_KEY_LSYS,
+        EVENT_KEY_RCTRL,
+        EVENT_KEY_RALT,
+        EVENT_KEY_RSHIFT,
+        EVENT_KEY_LCTRL,
+        EVENT_KEY_LALT,
+        EVENT_KEY_LSHIFT,
+        EVENT_KEY_TAB,
 
         EVENT_KEY_UP,
         EVENT_KEY_DOWN,

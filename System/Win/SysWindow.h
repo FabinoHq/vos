@@ -150,7 +150,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Transcript key event                                          //
             ////////////////////////////////////////////////////////////////////
-            EventKey transcriptKey(WPARAM key);
+            EventKey transcriptKey(WPARAM wparam, LPARAM lparam);
 
 
         private:

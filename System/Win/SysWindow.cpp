@@ -256,6 +256,18 @@ LRESULT CALLBACK SysWindow::OnEvent(
         VOSGlobalWindow->processEvent(msg, wparam, lparam);
     }
 
+    // System menu event
+    if ((msg == WM_SYSCOMMAND) && (wparam == SC_KEYMENU))
+    {
+        return 0;
+    }
+
+    // System close event
+    if (msg == WM_CLOSE)
+    {
+        return 0;
+    }
+
     // System destroy event
     if (msg == WM_DESTROY)
     {
@@ -309,14 +321,16 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 
             // Keys events
             case WM_KEYDOWN:
+            case WM_SYSKEYDOWN:
                 event.type = EVENT_KEYPRESSED;
-                event.key = transcriptKey(wparam);
+                event.key = transcriptKey(wparam, lparam);
                 m_events.push(event);
                 break;
 
             case WM_KEYUP:
+            case WM_SYSKEYUP:
                 event.type = EVENT_KEYRELEASED;
-                event.key = transcriptKey(wparam);
+                event.key = transcriptKey(wparam, lparam);
                 m_events.push(event);
                 break;
 
@@ -413,18 +427,39 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 ////////////////////////////////////////////////////////////////////////////////
 //  Transcript key event                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-EventKey SysWindow::transcriptKey(WPARAM key)
+EventKey SysWindow::transcriptKey(WPARAM wparam, LPARAM lparam)
 {
-    switch (key)
+    switch (wparam)
     {
         case VK_ESCAPE: return EVENT_KEY_ESCAPE;
         case VK_RETURN: return EVENT_KEY_RETURN;
         case VK_SPACE: return EVENT_KEY_SPACE;
+        case VK_BACK: return EVENT_KEY_BACKSPACE;
 
         case VK_UP: return EVENT_KEY_UP;
         case VK_DOWN: return EVENT_KEY_DOWN;
         case VK_LEFT: return EVENT_KEY_LEFT;
         case VK_RIGHT: return EVENT_KEY_RIGHT;
+
+        case VK_RWIN: return EVENT_KEY_RSYS;
+        case VK_LWIN: return EVENT_KEY_LSYS;
+        case VK_CONTROL:
+        {
+            return ((HIWORD(lparam)&KF_EXTENDED) ?
+                EVENT_KEY_RCTRL : EVENT_KEY_LCTRL);
+        }
+        case VK_MENU:
+        {
+            return ((HIWORD(lparam)&KF_EXTENDED) ?
+                EVENT_KEY_RALT : EVENT_KEY_LALT);
+        }
+        case VK_SHIFT:
+        {
+            static UINT rshift = MapVirtualKeyW(VK_RSHIFT, MAPVK_VK_TO_VSC);
+            return ((((lparam & 0x00FF0000) >> 16) == rshift) ?
+                EVENT_KEY_RSHIFT : EVENT_KEY_LSHIFT);
+        }
+        case VK_TAB: return EVENT_KEY_TAB;
 
         case VK_F1: return EVENT_KEY_F1;
         case VK_F2: return EVENT_KEY_F2;
@@ -480,7 +515,6 @@ EventKey SysWindow::transcriptKey(WPARAM key)
         case '8': return EVENT_KEY_8;
         case '9': return EVENT_KEY_9;
 
-        default:
-            return EVENT_KEY_NONE;
+        default: return EVENT_KEY_NONE;
     }
 }

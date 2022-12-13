@@ -241,8 +241,8 @@ void Vos::run()
             m_pxText.render(m_renderer);
 
             // Render cursor
-            m_renderer.bindDefaultPipeline();
-            m_renderer.renderCursor(m_mouseX, m_mouseY);
+            //m_renderer.bindDefaultPipeline();
+            //m_renderer.renderCursor(m_mouseX, m_mouseY);
 
             // End rendering
             m_renderer.endFrame();

@@ -448,16 +448,28 @@ void SysWindow::processEvent(XEvent msg)
 
             // Keys events
             case KeyPress:
+            {
                 event.type = EVENT_KEYPRESSED;
-                event.key = transcriptKey(XLookupKeysym(&msg.xkey, 0));
+                for (int i = 0; i < 4; ++i)
+                {
+                    event.key = transcriptKey(XLookupKeysym(&msg.xkey, i));
+                    if (event.key != EVENT_KEY_NONE) break;
+                }
                 m_events.push(event);
                 break;
+            }
 
             case KeyRelease:
+            {
                 event.type = EVENT_KEYRELEASED;
-                event.key = transcriptKey(XLookupKeysym(&msg.xkey, 0));
+                for (int i = 0; i < 4; ++i)
+                {
+                    event.key = transcriptKey(XLookupKeysym(&msg.xkey, i));
+                    if (event.key != EVENT_KEY_NONE) break;
+                }
                 m_events.push(event);
                 break;
+            }
 
             // Mouse wheel events
             case ButtonPress:
@@ -496,8 +508,19 @@ EventKey SysWindow::transcriptKey(KeySym key)
     switch (key)
     {
         case XK_Escape: return EVENT_KEY_ESCAPE;
-        case XK_Return: return EVENT_KEY_RETURN;
+        case XK_Return: case XK_KP_Enter: return EVENT_KEY_RETURN;
         case XK_space: return EVENT_KEY_SPACE;
+        case XK_BackSpace: return EVENT_KEY_BACKSPACE;
+
+        case XK_Super_R: return EVENT_KEY_RSYS;
+        case XK_Super_L: return EVENT_KEY_LSYS;
+        case XK_Control_R: return EVENT_KEY_RCTRL;
+        case XK_Control_L: return EVENT_KEY_LCTRL;
+        case XK_Alt_R: return EVENT_KEY_RALT;
+        case XK_Alt_L: return EVENT_KEY_LALT;
+        case XK_Shift_R: return EVENT_KEY_RSHIFT;
+        case XK_Shift_L: return EVENT_KEY_LSHIFT;
+        case XK_Tab: return EVENT_KEY_TAB;
 
         case XK_Up: return EVENT_KEY_UP;
         case XK_Down: return EVENT_KEY_DOWN;
@@ -558,7 +581,6 @@ EventKey SysWindow::transcriptKey(KeySym key)
         case XK_8: return EVENT_KEY_8;
         case XK_9: return EVENT_KEY_9;
 
-        default:
-            return EVENT_KEY_NONE;
+        default: return EVENT_KEY_NONE;
     }
 }

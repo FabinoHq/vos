@@ -1492,8 +1492,9 @@ bool PNGFile::encodePNG16bits(unsigned char* data,
         for (size_t i = 0; i < scanlineSize; i+=2)
         {
             // Compute greyscale
-            int greyscale =
-                (image[inIndex++] + image[inIndex++] + image[inIndex++]);
+            int greyscale = image[inIndex++];
+            greyscale += image[inIndex++];
+            greyscale += image[inIndex++];
             greyscale /= 3;
             if (greyscale <= 0) { greyscale = 0; }
             if (greyscale >= 255) { greyscale = 255; }
@@ -1695,8 +1696,9 @@ bool PNGFile::encodePNG8bits(unsigned char* data,
         for (size_t i = 0; i < scanlineSize; ++i)
         {
             // Compute greyscale
-            int greyscale =
-                (image[inIndex++] + image[inIndex++] + image[inIndex++]);
+            int greyscale = image[inIndex++];
+            greyscale += image[inIndex++];
+            greyscale += image[inIndex++];
             greyscale /= 3;
             if (greyscale <= 0) { greyscale = 0; }
             if (greyscale >= 255) { greyscale = 255; }

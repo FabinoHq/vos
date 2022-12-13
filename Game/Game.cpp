@@ -377,6 +377,13 @@ void Game::events(Event& event)
                     m_freeflycam.setRightward(true);
                     break;
 
+                case EVENT_KEY_SPACE:
+                    break;
+
+                case EVENT_KEY_LSHIFT:
+                    m_freeflycam.setSpeed(50.0f);
+                    break;
+
                 default:
                     break;
             }
@@ -406,8 +413,12 @@ void Game::events(Event& event)
                     m_spaceReleased = true;
                     break;
 
+                case EVENT_KEY_LSHIFT:
+                    m_freeflycam.setSpeed(5.0f);
+                    break;
+
                 case EVENT_KEY_R:
-                    m_boundingCircle2.setPosition(20000000, 0);
+                    //m_boundingCircle2.setPosition(20000000, 0);
                     break;
 
                 default:
@@ -426,9 +437,9 @@ void Game::events(Event& event)
             m_freeflycam.mouseMove(
                 event.mouse.x*1.0f, event.mouse.y*1.0f
             );
-            m_orbitalcam.mouseMove(
+            /*m_orbitalcam.mouseMove(
                 event.mouse.x*1.0f, event.mouse.y*1.0f
-            );
+            );*/
             //m_guiWindow.mouseMove(m_mouseX, m_mouseY);
             //m_guiWindow.updateCursor(m_renderer, m_mouseX, m_mouseY);
             break;
@@ -437,7 +448,7 @@ void Game::events(Event& event)
         case EVENT_MOUSEPRESSED:
             if (event.mouse.button == EVENT_MOUSE_LEFT)
             {
-                m_orbitalcam.mousePress();
+                //m_orbitalcam.mousePress();
                 //m_guiWindow.mousePress(m_mouseX, m_mouseY);
             }
             break;
@@ -446,14 +457,14 @@ void Game::events(Event& event)
         case EVENT_MOUSERELEASED:
             if (event.mouse.button == EVENT_MOUSE_LEFT)
             {
-                m_orbitalcam.mouseRelease();
+                //m_orbitalcam.mouseRelease();
                 //m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
             }
             break;
 
         // Mouse wheel
         case EVENT_MOUSEWHEEL:
-            m_orbitalcam.mouseWheel(event.mouse.wheel);
+            //m_orbitalcam.mouseWheel(event.mouse.wheel);
             break;
 
         default:
@@ -473,7 +484,7 @@ void Game::compute(float frametime)
     m_orbitalcam.compute(m_renderer, frametime);
 
     // Compute physics
-    Vector2i collideOffset;
+    /*Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int64_t>(m_mouseX*100000000);
     collideOffset.vec[1] = static_cast<int64_t>(m_mouseY*100000000);
     collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
@@ -489,7 +500,7 @@ void Game::compute(float frametime)
         m_boundingCircle2.position.vec[0] = m_collideCircle.position.vec[0];
         m_boundingCircle2.position.vec[1] = m_collideCircle.position.vec[1];
         m_spaceReleased = false;
-    }
+    }*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -498,10 +509,10 @@ void Game::compute(float frametime)
 void Game::render()
 {
     // Set freefly camera
-    //m_renderer.setCamera(m_freeflycam);
+    m_renderer.setCamera(m_freeflycam);
 
     // Set orbital camera
-    m_renderer.setCamera(m_orbitalcam);
+    //m_renderer.setCamera(m_orbitalcam);
 
     // Render skybox
     /*m_renderer.bindSkyBoxPipeline();
@@ -521,9 +532,9 @@ void Game::render()
     m_staticMesh.render(m_renderer);*/
 
     // Render heightmap chunk
-    /*m_renderer.bindStaticMeshPipeline();
+    m_renderer.bindStaticMeshPipeline();
     m_heightMapChunk.bindVertexBuffer(m_renderer);
-    m_heightMapChunk.render(m_renderer);*/
+    m_heightMapChunk.render(m_renderer);
 
 
     // Set 2D view
@@ -534,7 +545,7 @@ void Game::render()
 
 
     // Render bounding circle
-    m_renderer.bindEllipsePipeline();
+    /*m_renderer.bindEllipsePipeline();
     float positionX =
         m_boundingCircle.position.vec[0]*PhysicsToRenderer;
     float positionY =
@@ -571,7 +582,7 @@ void Game::render()
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.07f, radius*2.07f);
     m_ellipse.setSmooth(0.028f);
-    m_ellipse.render(m_renderer);
+    m_ellipse.render(m_renderer);*/
 
 
     // Set default screen view
