@@ -242,6 +242,10 @@
     <ClCompile Include="Renderer\Vulkan\VulkanBuffer.cpp" />
     <ClCompile Include="Renderer\Vulkan\VulkanMemory.cpp" />
     <ClCompile Include="Renderer\Vulkan\VulkanQueue.cpp" />
+    <ClCompile Include="Resources\HeightMapLoader.cpp" />
+    <ClCompile Include="Resources\MeshLoader.cpp" />
+    <ClCompile Include="Resources\Resources.cpp" />
+    <ClCompile Include="Resources\TextureLoader.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysCPU.cpp" />
     <ClCompile Include="System\SysSleep.cpp" />
@@ -321,6 +325,10 @@
     <ClInclude Include="Renderer\Vulkan\VulkanBuffer.h" />
     <ClInclude Include="Renderer\Vulkan\VulkanMemory.h" />
     <ClInclude Include="Renderer\Vulkan\VulkanQueue.h" />
+    <ClInclude Include="Resources\HeightMapLoader.h" />
+    <ClInclude Include="Resources\MeshLoader.h" />
+    <ClInclude Include="Resources\Resources.h" />
+    <ClInclude Include="Resources\TextureLoader.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysCPU.h" />
     <ClInclude Include="System\SysCRC.h" />

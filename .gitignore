@@ -220,6 +220,17 @@
 !Renderer/GUI/GUIWindow.h
 !Renderer/GUI/GUIWindow.cpp
 
+# Resources
+!Resources/
+!Resources/Resources.h
+!Resources/Resources.cpp
+!Resources/TextureLoader.h
+!Resources/TextureLoader.cpp
+!Resources/MeshLoader.h
+!Resources/MeshLoader.cpp
+!Resources/HeightMapLoader.h
+!Resources/HeightMapLoader.cpp
+
 # Textures files
 !Textures/
 !textures/testsprite.png

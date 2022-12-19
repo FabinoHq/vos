@@ -45,8 +45,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Game default constructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-Game::Game(Renderer& renderer) :
+Game::Game(Renderer& renderer, Resources& resources) :
 m_renderer(renderer),
+m_resources(resources),
 m_view(),
 m_camera(),
 m_freeflycam(),

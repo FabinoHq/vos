@@ -37,89 +37,65 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Resources/TextureLoader.h : Texture loading management                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_RESOURCES_TEXTURELOADER_HEADER
+#define VOS_RESOURCES_TEXTURELOADER_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysCPU.h"
-    #include "System/SysWindow.h"
-    #include "System/SysClock.h"
-    #include "System/SysSleep.h"
-
-    #include "Renderer/Renderer.h"
-    #include "Renderer/Texture.h"
-
-    #include "Resources/Resources.h"
-    #include "Renderer/GUI/GUIPxText.h"
-
-    #include "Event.h"
-
-    #include "Game/Game.h"
-
-    #include <cstddef>
-    #include <cstdint>
-    #include <new>
+    #include "../System/System.h"
+    #include "../System/SysThread.h"
+    #include "../System/SysMutex.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
+    //  Embedded textures                                                     //
     ////////////////////////////////////////////////////////////////////////////
-    class Vos
+    #include "../Images/Embedded/Cursor.h"
+    #include "../Images/Embedded/NSCursor.h"
+    #include "../Images/Embedded/EWCursor.h"
+    #include "../Images/Embedded/NESWCursor.h"
+    #include "../Images/Embedded/NWSECursor.h"
+    #include "../Images/Embedded/PxFont.h"
+    #include "../Images/Embedded/Window.h"
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TextureLoader class definition                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    class TextureLoader
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
+            //  TextureLoader default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            Vos();
+            TextureLoader();
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
+            //  TextureLoader virtual destructor                              //
             ////////////////////////////////////////////////////////////////////
-            ~Vos();
+            virtual ~TextureLoader();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
+            //  TextureLoader thread process                                  //
             ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
-            ////////////////////////////////////////////////////////////////////
-            void run();
+            virtual void process();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
+            //  TextureLoader private copy constructor : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
+            TextureLoader(const TextureLoader&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
+            //  TextureLoader private copy operator : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
+            TextureLoader& operator=(const TextureLoader&) = delete;
 
 
         private:
-            bool            m_running;          // VOS running state
-            SysWindow       m_window;           // VOS main window
-            Renderer        m_renderer;         // VOS renderer
-            SysClock        m_clock;            // VOS clock
-
-            Resources       m_resources;        // Resources
-            Game            m_game;             // Game instance
-
-            Texture         m_pxFontTexture;    // Pixel font texture
-            GUIPxText       m_pxText;           // Test pixel text
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
     };
 
 
-#endif // VOS_VOS_HEADER
+#endif // VOS_RESOURCES_TEXTURELOADER_HEADER

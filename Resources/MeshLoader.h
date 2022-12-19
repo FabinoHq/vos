@@ -37,89 +37,53 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Resources/MeshLoader.h : Mesh loading management                       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_RESOURCES_MESHLOADER_HEADER
+#define VOS_RESOURCES_MESHLOADER_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysCPU.h"
-    #include "System/SysWindow.h"
-    #include "System/SysClock.h"
-    #include "System/SysSleep.h"
-
-    #include "Renderer/Renderer.h"
-    #include "Renderer/Texture.h"
-
-    #include "Resources/Resources.h"
-    #include "Renderer/GUI/GUIPxText.h"
-
-    #include "Event.h"
-
-    #include "Game/Game.h"
-
-    #include <cstddef>
-    #include <cstdint>
-    #include <new>
+    #include "../System/System.h"
+    #include "../System/SysThread.h"
+    #include "../System/SysMutex.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
+    //  MeshLoader class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
-    class Vos
+    class MeshLoader
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
+            //  MeshLoader default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            Vos();
+            MeshLoader();
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
+            //  MeshLoader virtual destructor                                 //
             ////////////////////////////////////////////////////////////////////
-            ~Vos();
+            virtual ~MeshLoader();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
+            //  MeshLoader thread process                                     //
             ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
-            ////////////////////////////////////////////////////////////////////
-            void run();
+            virtual void process();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
+            //  MeshLoader private copy constructor : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
+            MeshLoader(const MeshLoader&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
+            //  MeshLoader private copy operator : Not copyable               //
             ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
+            MeshLoader& operator=(const MeshLoader&) = delete;
 
 
         private:
-            bool            m_running;          // VOS running state
-            SysWindow       m_window;           // VOS main window
-            Renderer        m_renderer;         // VOS renderer
-            SysClock        m_clock;            // VOS clock
-
-            Resources       m_resources;        // Resources
-            Game            m_game;             // Game instance
-
-            Texture         m_pxFontTexture;    // Pixel font texture
-            GUIPxText       m_pxText;           // Test pixel text
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
     };
 
 
-#endif // VOS_VOS_HEADER
+#endif // VOS_RESOURCES_MESHLOADER_HEADER

@@ -46,6 +46,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{c4371f93-72cd-44b2-8aca-78bdfa21ceda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{7044fbb2-2e6c-4616-bb73-268fb71ef8db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -190,6 +193,18 @@
     </ClCompile>
     <ClCompile Include="System\SysCPU.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\HeightMapLoader.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\MeshLoader.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Resources.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\TextureLoader.cpp">
+      <Filter>Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -446,6 +461,18 @@
     </ClInclude>
     <ClInclude Include="System\Win\SysCPU.h">
       <Filter>System\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\HeightMapLoader.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\MeshLoader.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Resources.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\TextureLoader.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

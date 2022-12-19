@@ -37,89 +37,52 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Vos.h : VOS Main class management                                      //
+//     Resources/Resources.h : Resources management                           //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_VOS_HEADER
-#define VOS_VOS_HEADER
+#ifndef VOS_RESOURCES_RESOURCES_HEADER
+#define VOS_RESOURCES_RESOURCES_HEADER
 
-    #include "System/System.h"
-    #include "System/SysMessage.h"
-    #include "System/SysCPU.h"
-    #include "System/SysWindow.h"
-    #include "System/SysClock.h"
-    #include "System/SysSleep.h"
+    #include "../System/System.h"
 
-    #include "Renderer/Renderer.h"
-    #include "Renderer/Texture.h"
-
-    #include "Resources/Resources.h"
-    #include "Renderer/GUI/GUIPxText.h"
-
-    #include "Event.h"
-
-    #include "Game/Game.h"
-
-    #include <cstddef>
-    #include <cstdint>
-    #include <new>
+    #include "TextureLoader.h"
+    #include "MeshLoader.h"
+    #include "HeightMapLoader.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VOS main class definition                                             //
+    //  Resources class definition                                            //
     ////////////////////////////////////////////////////////////////////////////
-    class Vos
+    class Resources
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Vos default constructor                                       //
+            //  Resources default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            Vos();
+            Resources();
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos destructor                                                //
+            //  Resources destructor                                          //
             ////////////////////////////////////////////////////////////////////
-            ~Vos();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Launch VOS                                                    //
-            //  return : True if VOS successfully started, false otherwise    //
-            ////////////////////////////////////////////////////////////////////
-            bool launch();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Run VOS                                                       //
-            ////////////////////////////////////////////////////////////////////
-            void run();
+            ~Resources();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy constructor : Not copyable                   //
+            //  Resources private copy constructor : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            Vos(const Vos&) = delete;
+            Resources(const Resources&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Vos private copy operator : Not copyable                      //
+            //  Resources private copy operator : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            Vos& operator=(const Vos&) = delete;
+            Resources& operator=(const Resources&) = delete;
 
 
         private:
-            bool            m_running;          // VOS running state
-            SysWindow       m_window;           // VOS main window
-            Renderer        m_renderer;         // VOS renderer
-            SysClock        m_clock;            // VOS clock
-
-            Resources       m_resources;        // Resources
-            Game            m_game;             // Game instance
-
-            Texture         m_pxFontTexture;    // Pixel font texture
-            GUIPxText       m_pxText;           // Test pixel text
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
+            TextureLoader       m_textureLoader;        // Texture loader
+            MeshLoader          m_meshLoader;           // Mesh loader
+            HeightMapLoader     m_heightMapLoader;      // HeightMap loader
     };
 
 
-#endif // VOS_VOS_HEADER
+#endif // VOS_RESOURCES_RESOURCES_HEADER

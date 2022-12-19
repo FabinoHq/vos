@@ -77,11 +77,7 @@
     #include "Shaders/StaticMesh.h"
     #include "Shaders/StaticProc.h"
 
-    #include "../Images/Embedded/Cursor.h"
-    #include "../Images/Embedded/NSCursor.h"
-    #include "../Images/Embedded/EWCursor.h"
-    #include "../Images/Embedded/NESWCursor.h"
-    #include "../Images/Embedded/NWSECursor.h"
+    #include "../Resources/Resources.h"
 
     #include <cstddef>
     #include <cstdint>

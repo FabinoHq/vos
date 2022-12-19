@@ -64,7 +64,6 @@
     #include "../Renderer/StaticMesh.h"
     #include "../Renderer/HeightMapChunk.h"
 
-    #include "../Images/Embedded/Window.h"
     #include "../Images/BMPFile.h"
     #include "../Images/PNGFile.h"
 
@@ -84,7 +83,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Game default constructor                                      //
             ////////////////////////////////////////////////////////////////////
-            Game(Renderer& renderer);
+            Game(Renderer& renderer, Resources& resources);
 
             ////////////////////////////////////////////////////////////////////
             //  Game destructor                                               //
@@ -134,6 +133,7 @@
 
         private:
             Renderer&       m_renderer;         // Renderer
+            Resources&      m_resources;        // Resources
 
             View            m_view;             // View
             Camera          m_camera;           // Camera

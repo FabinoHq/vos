@@ -73,6 +73,8 @@ VOS: main.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
+	Resources/Resources.o Resources/TextureLoader.o \
+	Resources/MeshLoader.o Resources/HeightMapLoader.o \
 	Game/Game.o
 
 	$(CC) -o VOS \
@@ -101,6 +103,8 @@ VOS: main.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
 	Renderer/Renderer.o \
+	Resources/Resources.o Resources/TextureLoader.o \
+	Resources/MeshLoader.o Resources/HeightMapLoader.o \
 	Game/Game.o \
 	main.o $(LDFLAGS)
 
@@ -268,6 +272,20 @@ Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
 
 
+Resources/Resources.o: Resources/Resources.cpp
+	$(CC) -o Resources/Resources.o -c Resources/Resources.cpp $(CFLAGS)
+
+Resources/TextureLoader.o: Resources/TextureLoader.cpp
+	$(CC) -o Resources/TextureLoader.o -c Resources/TextureLoader.cpp $(CFLAGS)
+
+Resources/MeshLoader.o: Resources/MeshLoader.cpp
+	$(CC) -o Resources/MeshLoader.o -c Resources/MeshLoader.cpp $(CFLAGS)
+
+Resources/HeightMapLoader.o: Resources/HeightMapLoader.cpp
+	$(CC) -o Resources/HeightMapLoader.o -c \
+	Resources/HeightMapLoader.cpp $(CFLAGS)
+
+
 Game/Game.o: Game/Game.cpp
 	$(CC) -o Game/Game.o -c Game/Game.cpp $(CFLAGS)
 
@@ -284,6 +302,7 @@ clean:
 	rm -rf Renderer/Vulkan/*.o
 	rm -rf Renderer/Shapes/*.o
 	rm -rf Renderer/GUI/*.o
+	rm -rf Resources/*.o
 	rm -rf Game/*.o
 
 mrproper: clean
