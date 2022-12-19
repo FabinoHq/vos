@@ -46,7 +46,7 @@
     #include "../SysSleep.h"
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"
-    #include "../../Event.h"
+    #include "../SysEvent.h"
 
     #include <X11/Xlib.h>
     #include <X11/Xutil.h>

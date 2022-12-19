@@ -29,6 +29,7 @@
 # System
 !System/
 !System/System.h
+!System/SysEvent.h
 !System/SysMessage.h
 !System/SysCPU.h
 !System/SysCPU.cpp

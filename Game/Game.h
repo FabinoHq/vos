@@ -43,6 +43,7 @@
 #define VOS_GAME_GAME_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysEvent.h"
 
     #include "../Renderer/Renderer.h"
     #include "../Renderer/Texture.h"
@@ -70,8 +71,6 @@
     #include "../Physics/Physics.h"
     #include "../Physics/Collision2.h"
     #include "../Physics/BoundingCircle.h"
-
-    #include "../Event.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

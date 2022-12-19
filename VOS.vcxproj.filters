@@ -209,7 +209,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
-    <ClInclude Include="Event.h" />
     <ClInclude Include="Renderer\Renderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -473,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="Resources\TextureLoader.h">
       <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysEvent.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

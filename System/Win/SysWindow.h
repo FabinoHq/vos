@@ -45,7 +45,7 @@
     #include "../System.h"
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"
-    #include "../../Event.h"
+    #include "../SysEvent.h"
 
     #undef UNICODE
     #define UNICODE

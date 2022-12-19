@@ -43,6 +43,7 @@
 #define VOS_VOS_HEADER
 
     #include "System/System.h"
+    #include "System/SysEvent.h"
     #include "System/SysMessage.h"
     #include "System/SysCPU.h"
     #include "System/SysWindow.h"
@@ -54,8 +55,6 @@
 
     #include "Resources/Resources.h"
     #include "Renderer/GUI/GUIPxText.h"
-
-    #include "Event.h"
 
     #include "Game/Game.h"
 

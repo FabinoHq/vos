@@ -37,12 +37,12 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Event.h : VOS Events management                                        //
+//     System/SysEvent.h : System Events management                           //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_EVENT_HEADER
-#define VOS_EVENT_HEADER
+#ifndef VOS_SYSTEM_SYSEVENT_HEADER
+#define VOS_SYSTEM_SYSEVENT_HEADER
 
-    #include "System/System.h"
+    #include "System.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -180,4 +180,4 @@
     };
 
 
-#endif // VOS_EVENT_HEADER
+#endif // VOS_SYSTEM_SYSEVENT_HEADER

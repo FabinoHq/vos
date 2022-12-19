@@ -258,7 +258,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compress\ZLib.h" />
-    <ClInclude Include="Event.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Images\BMPFile.h" />
     <ClInclude Include="Images\Embedded\Cursor.h" />
@@ -333,6 +332,7 @@
     <ClInclude Include="System\SysCPU.h" />
     <ClInclude Include="System\SysCRC.h" />
     <ClInclude Include="System\SysDisplayMode.h" />
+    <ClInclude Include="System\SysEvent.h" />
     <ClInclude Include="System\SysMessage.h" />
     <ClInclude Include="System\SysMutex.h" />
     <ClInclude Include="System\SysMutexLocker.h" />
