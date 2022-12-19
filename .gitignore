@@ -22,7 +22,6 @@
 
 # Sources files
 !main.cpp
-!Event.h
 !Vos.h
 !Vos.cpp
 
