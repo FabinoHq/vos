@@ -113,7 +113,6 @@
             Resources       m_resources;        // Resources
             Game            m_game;             // Game instance
 
-            Texture         m_pxFontTexture;    // Pixel font texture
             GUIPxText       m_pxText;           // Test pixel text
 
             float           m_mouseX;           // Mouse X position

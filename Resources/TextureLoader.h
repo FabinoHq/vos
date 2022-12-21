@@ -49,6 +49,9 @@
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Texture.h"
 
+    #include "../Images/BMPFile.h"
+    #include "../Images/PNGFile.h"
+
     #include <cstdint>
     #include <new>
 
@@ -65,9 +68,11 @@
         TEXTURE_NESWCURSOR = 4,
         TEXTURE_NWSECURSOR = 5,
         TEXTURE_WINDOW = 6,
-        TEXTURE_PXFONT = 7,
+        TEXTURE_PIXELFONT = 7,
 
-        TEXTURE_ASSETSCOUNT = 8
+        TEXTURE_TEST = 8,
+
+        TEXTURE_ASSETSCOUNT = 9
     };
 
 
@@ -104,8 +109,9 @@
         TEXTURELOADER_STATE_LOADEMBEDDED = 2,
 
         TEXTURELOADER_STATE_IDLE = 3,
+        TEXTURELOADER_STATE_LOAD = 4,
 
-        TEXTURELOADER_STATE_ERROR = 4
+        TEXTURELOADER_STATE_ERROR = 5
     };
 
 
@@ -145,6 +151,12 @@
             bool init();
 
             ////////////////////////////////////////////////////////////////////
+            //  Start loading textures assets                                 //
+            //  return : True if textures assets are loading                  //
+            ////////////////////////////////////////////////////////////////////
+            bool startLoading();
+
+            ////////////////////////////////////////////////////////////////////
             //  Get texture loader state                                      //
             //  return : Current texture loader state                         //
             ////////////////////////////////////////////////////////////////////
@@ -171,6 +183,12 @@
             //  return : True if embedded textures are successfully loaded    //
             ////////////////////////////////////////////////////////////////////
             bool loadEmbeddedTextures();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Load textures assets                                          //
+            //  return : True if textures assets are loaded                   //
+            ////////////////////////////////////////////////////////////////////
+            bool loadTextures();
 
 
         private:

@@ -121,6 +121,21 @@ void TextureLoader::process()
 			SysSleep(TextureLoaderIdleSleepTime);
 			break;
 
+		case TEXTURELOADER_STATE_LOAD:
+			if (loadTextures())
+			{
+				m_stateMutex.lock();
+				m_state = TEXTURELOADER_STATE_IDLE;
+				m_stateMutex.unlock();
+			}
+			else
+			{
+				m_stateMutex.lock();
+				m_state = TEXTURELOADER_STATE_ERROR;
+				m_stateMutex.unlock();
+			}
+			break;
+
 		case TEXTURELOADER_STATE_ERROR:
 			// Texture loader error
 			SysSleep(TextureLoaderErrorSleepTime);
@@ -162,6 +177,27 @@ bool TextureLoader::init()
 
 	// Texture loader ready
 	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Start loading textures assets                                             //
+//  return : True if textures assets are loading                              //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::startLoading()
+{
+	bool loading = false;
+	m_stateMutex.lock();
+
+	// Check texture loader state
+	if (m_state == TEXTURELOADER_STATE_IDLE)
+	{
+		// Switch to load state
+		m_state = TEXTURELOADER_STATE_LOAD;
+		loading = true;
+	}
+
+	m_stateMutex.unlock();
+	return loading;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,6 +283,48 @@ bool TextureLoader::loadEmbeddedTextures()
         return false;
     }
 
+    // Load window texture
+    if (!m_textures[TEXTURE_WINDOW].updateTexture(m_renderer,
+        WindowImageWidth, WindowImageHeight, WindowImage,
+        true, false))
+    {
+        // Could not load window texture
+        return false;
+    }
+
+    // Load pixel font texture
+    if (!m_textures[TEXTURE_PIXELFONT].updateTexture(m_renderer,
+        PxFontImageWidth, PxFontImageHeight, PxFontImage,
+        true, false))
+    {
+        // Could not load pixel font texture
+        return false;
+    }
+
     // Embedded textures successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load textures assets                                                      //
+//  return : True if textures assets are loaded                               //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::loadTextures()
+{
+	// Load test texture
+    PNGFile pngfile;
+    if (!pngfile.loadImage("Textures/testsprite.png"))
+    {
+        return false;
+    }
+    if (!m_textures[TEXTURE_TEST].updateTexture(m_renderer,
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
+        false, true))
+    {
+        return false;
+    }
+    pngfile.destroyImage();
+
+    // Textures assets successfully loaded
     return true;
 }

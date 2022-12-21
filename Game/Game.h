@@ -65,9 +65,6 @@
     #include "../Renderer/StaticMesh.h"
     #include "../Renderer/HeightMapChunk.h"
 
-    #include "../Images/BMPFile.h"
-    #include "../Images/PNGFile.h"
-
     #include "../Physics/Physics.h"
     #include "../Physics/Collision2.h"
     #include "../Physics/BoundingCircle.h"
@@ -147,12 +144,9 @@
             EllipseShape    m_ellipse;          // Ellipse shape
             CuboidShape     m_cuboid;           // Cuboid shape
 
-            Texture         m_windowTexture;    // GUI Window texture
             GUIWindow       m_guiWindow;        // GUI Window
 
-            Texture         m_testTexture;      // Test texture
             StaticMesh      m_staticMesh;       // Static mesh
-
             HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
 
             BoundingCircle  m_boundingCircle;   // Bounding circle

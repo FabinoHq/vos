@@ -52,7 +52,6 @@ m_renderer(m_resources),
 m_clock(),
 m_resources(m_renderer),
 m_game(m_renderer, m_resources),
-m_pxFontTexture(),
 m_pxText(),
 m_mouseX(0.0f),
 m_mouseY(0.0f)
@@ -110,18 +109,32 @@ bool Vos::launch()
         return false;
     }
 
-
-    // Load pixel font texture
-    if (!m_pxFontTexture.updateTexture(m_renderer,
-        PxFontImageWidth, PxFontImageHeight, PxFontImage,
-        true, false))
+    // Start resources loading
+    if (!m_resources.startLoading())
     {
-        // Could not load pixel font texture
+        // Unable to start resources loading
         return false;
     }
 
+
+    // Wait for resources
+    bool resourcesLoaded = false;
+    while (!resourcesLoaded)
+    {
+        if (m_resources.isLoadingDone())
+        {
+            resourcesLoaded = true;
+        }
+        else
+        {
+            // Release some CPU while loading
+            SysSleep(ResourcesWaitSleepTime);
+        }
+    }
+
+
     // Init test pixel text
-    if (!m_pxText.init(m_pxFontTexture, 0.04f))
+    if (!m_pxText.init(m_resources.textures.get(TEXTURE_PIXELFONT), 0.04f))
     {
         // Could not init test pixel text
         return false;
@@ -269,9 +282,6 @@ void Vos::run()
     {
         // Destroy game
         m_game.destroy();
-
-        // Destroy pixel font texture
-        m_pxFontTexture.destroyTexture(m_renderer);
 
         // Destroy resources
         m_resources.destroyResources();

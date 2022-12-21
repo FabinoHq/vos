@@ -97,10 +97,52 @@ bool Resources::init()
             // Resources are ready
             resourcesReady = true;
         }
+        else
+        {
+            // Release some CPU while loading
+            SysSleep(ResourcesWaitSleepTime);
+        }
     }
 
     // Resources loaders are ready
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Start loading resources assets                                            //
+//  return : True if resources assets are loading                             //
+////////////////////////////////////////////////////////////////////////////////
+bool Resources::startLoading()
+{
+    // Start textures assets loading
+    if (!textures.startLoading())
+    {
+        // Could not start textures loading
+        SysMessage::box() << "[0x4001] Could not start textures loader\n";
+        SysMessage::box() << "Please check your resources files";
+        return false;
+    }
+
+    // Resources assets are loading
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get resources loading status                                              //
+//  return : True if resources assets are loaded, false otherwise             //
+////////////////////////////////////////////////////////////////////////////////
+bool Resources::isLoadingDone()
+{
+    // Get resources loader states
+    TextureLoaderState textureState = textures.getState();
+    if (textureState == TEXTURELOADER_STATE_IDLE)
+    {
+        // Resources assets are loaded
+        return true;
+    }
+
+    // Resources assets are still loading, or an error occured
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

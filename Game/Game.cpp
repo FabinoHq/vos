@@ -58,9 +58,7 @@ m_procSprite(),
 m_rectanle(),
 m_ellipse(),
 m_cuboid(),
-m_windowTexture(),
 m_guiWindow(),
-m_testTexture(),
 m_staticMesh(),
 m_heightMapChunk(),
 m_boundingCircle(),
@@ -224,40 +222,18 @@ bool Game::init()
     }
 
 
-    // Load window texture
-    if (!m_windowTexture.updateTexture(m_renderer,
-        WindowImageWidth, WindowImageHeight, WindowImage,
-        true, false))
-    {
-        // Could not load window texture
-        return false;
-    }
-
     // Init GUI window
-    if (!m_guiWindow.init(m_windowTexture, 1.0f, 1.0f, 3.75f))
+    if (!m_guiWindow.init(
+        m_resources.textures.get(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
     {
         // Could not init GUI window
         return false;
     }
 
 
-    // Load test texture
-    PNGFile pngfile;
-    if (!pngfile.loadImage("Textures/testsprite.png"))
-    {
-        return false;
-    }
-    if (!m_testTexture.updateTexture(m_renderer,
-        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
-        false, true))
-    {
-        return false;
-    }
-    pngfile.destroyImage();
-
     // Init static mesh
-    if (!m_staticMesh.loadVMSH(
-        m_renderer, m_testTexture, "Models/testmodel.vmsh"))
+    if (!m_staticMesh.loadVMSH(m_renderer,
+        m_resources.textures.get(TEXTURE_TEST), "Models/testmodel.vmsh"))
     {
         // Could not init static mesh
         return false;
@@ -280,7 +256,8 @@ bool Game::init()
     }
 
     // Init heightmap chunk
-    if (!m_heightMapChunk.generate(m_renderer, m_testTexture, heightmap))
+    if (!m_heightMapChunk.generate(
+        m_renderer, m_resources.textures.get(TEXTURE_TEST), heightmap))
     {
         // Could not init heightmap chunk
         return false;
@@ -315,12 +292,6 @@ void Game::destroy()
 
     // Destroy cuboid
     m_cuboid.destroyCuboid(m_renderer);
-
-    // Destroy window texture
-    m_windowTexture.destroyTexture(m_renderer);
-
-    // Destroy test texture
-    m_testTexture.destroyTexture(m_renderer);
 
     // Destroy procedural sprite
     m_procSprite.destroyProcSprite(m_renderer);
