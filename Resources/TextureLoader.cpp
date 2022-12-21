@@ -40,12 +40,16 @@
 //     Resources/TextureLoader.cpp : Texture loading management               //
 ////////////////////////////////////////////////////////////////////////////////
 #include "TextureLoader.h"
+#include "../Renderer/Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //  TextureLoader default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-TextureLoader::TextureLoader()
+TextureLoader::TextureLoader(Renderer& renderer) :
+m_renderer(renderer),
+m_state(TEXTURELOADER_STATE_NONE),
+m_stagingBuffer()
 {
 
 }
@@ -64,5 +68,69 @@ TextureLoader::~TextureLoader()
 ////////////////////////////////////////////////////////////////////////////////
 void TextureLoader::process()
 {
+	switch (m_state)
+	{
+		case TEXTURELOADER_STATE_NONE:
+			// Boot to init state
+			m_state = TEXTURELOADER_STATE_INIT;
+			break;
 
+		case TEXTURELOADER_STATE_INIT:
+			// Init texture loader
+			if (init())
+			{
+				m_state = TEXTURELOADER_STATE_READY;
+			}
+			else
+			{
+				m_state = TEXTURELOADER_STATE_ERROR;
+			}
+			break;
+
+		case TEXTURELOADER_STATE_READY:
+			// Texture loader ready
+			SysSleep(0.1);
+			break;
+
+		case TEXTURELOADER_STATE_ERROR:
+			// Texture loader error
+			SysSleep(0.1);
+			break;
+
+		default:
+			// Invalid state
+			break;
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init TextureLoader                                                        //
+//  return : True if texture loader is ready                                  //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::init()
+{
+	// Create staging buffer
+    if (!m_stagingBuffer.createBuffer(
+        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
+        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VULKAN_MEMORY_HOST, TextureMaxSize))
+    {
+        // Could not create staging buffer
+        return false;
+    }
+
+	// Texture loader ready
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy texture loader                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void TextureLoader::destroyTextureLoader()
+{
+	// Destroy staging buffer
+    m_stagingBuffer.destroyBuffer(
+    	m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory
+    );
 }

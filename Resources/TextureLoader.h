@@ -45,6 +45,19 @@
     #include "../System/System.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
+    #include "../Renderer/Vulkan/Vulkan.h"
+    #include "../Renderer/Vulkan/VulkanBuffer.h"
+
+    #include <cstdint>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TextureLoader settings                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t TextureMaxWidth = 2048;
+    const uint32_t TextureMaxHeight = 2048;
+    const uint32_t TextureMaxSize = (TextureMaxWidth*TextureMaxHeight*4);
+    const uint64_t TextureFenceTimeout = 100000000000;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -60,6 +73,24 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  TextureLoaderState enumeration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    enum TextureLoaderState
+    {
+        TEXTURELOADER_STATE_NONE = 0,
+        TEXTURELOADER_STATE_INIT = 1,
+        TEXTURELOADER_STATE_READY = 2,
+        TEXTURELOADER_STATE_ERROR = 3
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  TextureLoader class definition                                        //
     ////////////////////////////////////////////////////////////////////////////
     class TextureLoader : public SysThread
@@ -68,7 +99,7 @@
             ////////////////////////////////////////////////////////////////////
             //  TextureLoader default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            TextureLoader();
+            TextureLoader(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
             //  TextureLoader virtual destructor                              //
@@ -80,6 +111,18 @@
             //  TextureLoader thread process                                  //
             ////////////////////////////////////////////////////////////////////
             virtual void process();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Init TextureLoader                                            //
+            //  return : True if texture loader is ready                      //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy texture loader                                        //
+            ////////////////////////////////////////////////////////////////////
+            void destroyTextureLoader();
 
 
         private:
@@ -95,6 +138,9 @@
 
 
         private:
+            Renderer&               m_renderer;         // Renderer
+            TextureLoaderState      m_state;            // TextureLoader state
+            VulkanBuffer            m_stagingBuffer;    // Stagging buffer
     };
 
 

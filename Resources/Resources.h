@@ -43,7 +43,7 @@
 #define VOS_RESOURCES_RESOURCES_HEADER
 
     #include "../System/System.h"
-
+    #include "../Renderer/Renderer.h"
     #include "TextureLoader.h"
     #include "MeshLoader.h"
     #include "HeightMapLoader.h"
@@ -58,12 +58,24 @@
             ////////////////////////////////////////////////////////////////////
             //  Resources default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            Resources();
+            Resources(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
             //  Resources destructor                                          //
             ////////////////////////////////////////////////////////////////////
             ~Resources();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Init resources loaders                                        //
+            //  return : True if resources loaders are ready                  //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy resources                                             //
+            ////////////////////////////////////////////////////////////////////
+            void destroyResources();
 
 
         private:
@@ -78,10 +90,10 @@
             Resources& operator=(const Resources&) = delete;
 
 
-        private:
-            TextureLoader       m_textureLoader;        // Texture loader
-            MeshLoader          m_meshLoader;           // Mesh loader
-            HeightMapLoader     m_heightMapLoader;      // HeightMap loader
+        public:
+            TextureLoader       textures;       // Texture loader
+            MeshLoader          meshes;         // Mesh loader
+            HeightMapLoader     heightmaps;     // HeightMap loader
     };
 
 

@@ -70,6 +70,12 @@
             virtual void process();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy mesh loader                                           //
+            ////////////////////////////////////////////////////////////////////
+            void destroyMeshLoader();
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  MeshLoader private copy constructor : Not copyable            //

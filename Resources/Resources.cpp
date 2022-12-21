@@ -45,10 +45,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Resources default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
-Resources::Resources() :
-m_textureLoader(),
-m_meshLoader(),
-m_heightMapLoader()
+Resources::Resources(Renderer& renderer) :
+textures(renderer),
+meshes(),
+heightmaps()
 {
 
 }
@@ -59,4 +59,48 @@ m_heightMapLoader()
 Resources::~Resources()
 {
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init resources loaders                                                    //
+//  return : True if resources loaders are ready                              //
+////////////////////////////////////////////////////////////////////////////////
+bool Resources::init()
+{
+    // Start texture loader thread
+    textures.start();
+
+    // Start mesh loader thread
+    meshes.start();
+
+    // Start heightmap loader thread
+    heightmaps.start();
+
+    // Resources loaders are ready
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy resources                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void Resources::destroyResources()
+{
+    // Stop heightmap loader thread
+    heightmaps.stop();
+
+    // Stop mesh loader thread
+    meshes.stop();
+
+    // Stop texture loader thread
+    textures.stop();
+
+    // Destroy heightmap loader
+    heightmaps.destroyHeightMapLoader();
+
+    // Destroy mesh loader
+    meshes.destroyMeshLoader();
+
+    // Destroy texture loader
+    textures.destroyTextureLoader();
 }

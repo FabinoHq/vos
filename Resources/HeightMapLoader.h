@@ -70,6 +70,12 @@
             virtual void process();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy heightmap loader                                      //
+            ////////////////////////////////////////////////////////////////////
+            void destroyHeightMapLoader();
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  HeightMapLoader private copy constructor : Not copyable       //

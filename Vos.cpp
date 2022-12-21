@@ -50,7 +50,7 @@ m_running(false),
 m_window(),
 m_renderer(),
 m_clock(),
-m_resources(),
+m_resources(m_renderer),
 m_game(m_renderer, m_resources),
 m_pxFontTexture(),
 m_pxText(),
@@ -93,6 +93,13 @@ bool Vos::launch()
     if (!m_renderer.init(&m_window))
     {
         // Unable to init VOS renderer
+        return false;
+    }
+
+    // Init VOS resources
+    if (!m_resources.init())
+    {
+        // Unable to init VOS resources
         return false;
     }
 
@@ -258,6 +265,9 @@ void Vos::run()
 
         // Destroy pixel font texture
         m_pxFontTexture.destroyTexture(m_renderer);
+
+        // Destroy resources
+        m_resources.destroyResources();
     }
 
     // Close VOS
