@@ -47,8 +47,28 @@
     #include "../System/SysMutex.h"
     #include "../Renderer/Vulkan/Vulkan.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
+    #include "../Renderer/Texture.h"
 
     #include <cstdint>
+    #include <new>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TexturesAssets enumeration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    enum TexturesAssets
+    {
+        TEXTURE_DEFAULT = 0,
+        TEXTURE_CURSOR = 1,
+        TEXTURE_NSCURSOR = 2,
+        TEXTURE_EWCURSOR = 3,
+        TEXTURE_NESWCURSOR = 4,
+        TEXTURE_NWSECURSOR = 5,
+        TEXTURE_WINDOW = 6,
+        TEXTURE_PXFONT = 7,
+
+        TEXTURE_ASSETSCOUNT = 8
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -58,6 +78,8 @@
     const uint32_t TextureMaxHeight = 2048;
     const uint32_t TextureMaxSize = (TextureMaxWidth*TextureMaxHeight*4);
     const uint64_t TextureFenceTimeout = 100000000000;
+    const double TextureLoaderIdleSleepTime = 0.01;
+    const double TextureLoaderErrorSleepTime = 0.1;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -79,8 +101,11 @@
     {
         TEXTURELOADER_STATE_NONE = 0,
         TEXTURELOADER_STATE_INIT = 1,
-        TEXTURELOADER_STATE_READY = 2,
-        TEXTURELOADER_STATE_ERROR = 3
+        TEXTURELOADER_STATE_LOADEMBEDDED = 2,
+
+        TEXTURELOADER_STATE_IDLE = 3,
+
+        TEXTURELOADER_STATE_ERROR = 4
     };
 
 
@@ -120,9 +145,23 @@
             bool init();
 
             ////////////////////////////////////////////////////////////////////
+            //  Get texture loader state                                      //
+            //  return : Current texture loader state                         //
+            ////////////////////////////////////////////////////////////////////
+            TextureLoaderState getState();
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy texture loader                                        //
             ////////////////////////////////////////////////////////////////////
             void destroyTextureLoader();
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  Load embedded textures                                        //
+            //  return : True if embedded textures are successfully loaded    //
+            ////////////////////////////////////////////////////////////////////
+            bool loadEmbeddedTextures();
 
 
         private:
@@ -140,7 +179,10 @@
         private:
             Renderer&               m_renderer;         // Renderer
             TextureLoaderState      m_state;            // TextureLoader state
+            SysMutex                m_stateMutex;       // State mutex
             VulkanBuffer            m_stagingBuffer;    // Stagging buffer
+
+            Texture*                m_textures;         // Textures assets
     };
 
 

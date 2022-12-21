@@ -49,7 +49,9 @@
 TextureLoader::TextureLoader(Renderer& renderer) :
 m_renderer(renderer),
 m_state(TEXTURELOADER_STATE_NONE),
-m_stagingBuffer()
+m_stateMutex(),
+m_stagingBuffer(),
+m_textures(0)
 {
 
 }
@@ -68,37 +70,67 @@ TextureLoader::~TextureLoader()
 ////////////////////////////////////////////////////////////////////////////////
 void TextureLoader::process()
 {
+	TextureLoaderState state = TEXTURELOADER_STATE_NONE;
+	m_stateMutex.lock();
+	state = m_state;
+	m_stateMutex.unlock();
+
 	switch (m_state)
 	{
 		case TEXTURELOADER_STATE_NONE:
 			// Boot to init state
+			m_stateMutex.lock();
 			m_state = TEXTURELOADER_STATE_INIT;
+			m_stateMutex.unlock();
 			break;
 
 		case TEXTURELOADER_STATE_INIT:
 			// Init texture loader
 			if (init())
 			{
-				m_state = TEXTURELOADER_STATE_READY;
+				m_stateMutex.lock();
+				m_state = TEXTURELOADER_STATE_LOADEMBEDDED;
+				m_stateMutex.unlock();
 			}
 			else
 			{
+				m_stateMutex.lock();
 				m_state = TEXTURELOADER_STATE_ERROR;
+				m_stateMutex.unlock();
 			}
 			break;
 
-		case TEXTURELOADER_STATE_READY:
-			// Texture loader ready
-			SysSleep(0.1);
+		case TEXTURELOADER_STATE_LOADEMBEDDED:
+			// Load embedded textures
+			if (loadEmbeddedTextures())
+			{
+				m_stateMutex.lock();
+				m_state = TEXTURELOADER_STATE_IDLE;
+				m_stateMutex.unlock();
+			}
+			else
+			{
+				m_stateMutex.lock();
+				m_state = TEXTURELOADER_STATE_ERROR;
+				m_stateMutex.unlock();
+			}
+			break;
+
+		case TEXTURELOADER_STATE_IDLE:
+			// Texture loader in idle state
+			SysSleep(TextureLoaderIdleSleepTime);
 			break;
 
 		case TEXTURELOADER_STATE_ERROR:
 			// Texture loader error
-			SysSleep(0.1);
+			SysSleep(TextureLoaderErrorSleepTime);
 			break;
 
 		default:
 			// Invalid state
+			m_stateMutex.lock();
+			m_state = TEXTURELOADER_STATE_ERROR;
+			m_stateMutex.unlock();
 			break;
 	}
 }
@@ -120,8 +152,29 @@ bool TextureLoader::init()
         return false;
     }
 
+    // Allocate textures assets
+    m_textures = new (std::nothrow) Texture[TEXTURE_ASSETSCOUNT];
+    if (!m_textures)
+    {
+    	// Could not allocate textures assets
+    	return false;
+    }
+
 	// Texture loader ready
 	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get texture loader state                                                  //
+//  return : Current texture loader state                                     //
+////////////////////////////////////////////////////////////////////////////////
+TextureLoaderState TextureLoader::getState()
+{
+	TextureLoaderState state = TEXTURELOADER_STATE_NONE;
+	m_stateMutex.lock();
+	state = m_state;
+	m_stateMutex.unlock();
+	return state;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,8 +182,35 @@ bool TextureLoader::init()
 ////////////////////////////////////////////////////////////////////////////////
 void TextureLoader::destroyTextureLoader()
 {
+	// Destroy textures assets
+	for (unsigned int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
+	{
+		m_textures[i].destroyTexture(m_renderer);
+	}
+	if (m_textures) { delete[] m_textures; }
+
 	// Destroy staging buffer
     m_stagingBuffer.destroyBuffer(
     	m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory
     );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load embedded textures                                                    //
+//  return : True if embedded textures are successfully loaded                //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::loadEmbeddedTextures()
+{
+	// Load cursor texture
+	/*if (!m_textures[TEXTURE_CURSOR].updateTexture(m_renderer,
+        CursorImageWidth, CursorImageHeight, CursorImage,
+        false, false))
+    {
+        // Could not load cursor texture
+        return false;
+    }*/
+
+    // Embedded textures successfully loaded
+    return true;
 }
