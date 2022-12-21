@@ -121,7 +121,24 @@ void TextureLoader::process()
 			SysSleep(TextureLoaderIdleSleepTime);
 			break;
 
+		case TEXTURELOADER_STATE_PRELOAD:
+			// Preload textures assets
+			if (preloadTextures())
+			{
+				m_stateMutex.lock();
+				m_state = TEXTURELOADER_STATE_IDLE;
+				m_stateMutex.unlock();
+			}
+			else
+			{
+				m_stateMutex.lock();
+				m_state = TEXTURELOADER_STATE_ERROR;
+				m_stateMutex.unlock();
+			}
+			break;
+
 		case TEXTURELOADER_STATE_LOAD:
+			// Load textures assets
 			if (loadTextures())
 			{
 				m_stateMutex.lock();
@@ -177,6 +194,27 @@ bool TextureLoader::init()
 
 	// Texture loader ready
 	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Start preloading textures assets                                          //
+//  return : True if textures assets are preloading                           //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::startPreload()
+{
+	bool preLoading = false;
+	m_stateMutex.lock();
+
+	// Check texture loader state
+	if (m_state == TEXTURELOADER_STATE_IDLE)
+	{
+		// Switch to preload state
+		m_state = TEXTURELOADER_STATE_PRELOAD;
+		preLoading = true;
+	}
+
+	m_stateMutex.unlock();
+	return preLoading;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -306,10 +344,10 @@ bool TextureLoader::loadEmbeddedTextures()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Load textures assets                                                      //
-//  return : True if textures assets are loaded                               //
+//  Preload textures assets                                                   //
+//  return : True if textures assets are preloaded                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool TextureLoader::loadTextures()
+bool TextureLoader::preloadTextures()
 {
 	// Load test texture
     PNGFile pngfile;
@@ -325,6 +363,16 @@ bool TextureLoader::loadTextures()
     }
     pngfile.destroyImage();
 
-    // Textures assets successfully loaded
+    // Textures assets are successfully preloaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load textures assets                                                      //
+//  return : True if textures assets are loaded                               //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::loadTextures()
+{
+    // Textures assets are successfully loaded
     return true;
 }

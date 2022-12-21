@@ -109,6 +109,45 @@ bool Resources::init()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Preload resources assets                                                  //
+//  return : True if resources assets are successfully preloaded              //
+////////////////////////////////////////////////////////////////////////////////
+bool Resources::preload()
+{
+    // Start texture preloading
+    textures.startPreload();
+
+    // Wait for resources preload
+    bool resourcesPreloaded = false;
+    while (!resourcesPreloaded)
+    {
+        // Get resources loader states
+        TextureLoaderState textureState = textures.getState();
+        if (textureState == TEXTURELOADER_STATE_ERROR)
+        {
+            // Texture loader error
+            SysMessage::box() << "[0x4001] Could not preload textures\n";
+            SysMessage::box() << "Please check your resources files";
+            return false;
+        }
+
+        if (textureState == TEXTURELOADER_STATE_IDLE)
+        {
+            // Resources are preloaded
+            resourcesPreloaded = true;
+        }
+        else
+        {
+            // Release some CPU while loading
+            SysSleep(ResourcesWaitSleepTime);
+        }
+    }
+
+    // Resources assets are successfully preloaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Start loading resources assets                                            //
 //  return : True if resources assets are loading                             //
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +157,7 @@ bool Resources::startLoading()
     if (!textures.startLoading())
     {
         // Could not start textures loading
-        SysMessage::box() << "[0x4001] Could not start textures loader\n";
+        SysMessage::box() << "[0x4002] Could not start textures loader\n";
         SysMessage::box() << "Please check your resources files";
         return false;
     }

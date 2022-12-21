@@ -109,6 +109,13 @@ bool Vos::launch()
         return false;
     }
 
+    // Preload resources
+    if (!m_resources.preload())
+    {
+        // Unable to preload resources
+        return false;
+    }
+
     // Start resources loading
     if (!m_resources.startLoading())
     {

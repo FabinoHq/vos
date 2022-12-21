@@ -85,6 +85,12 @@
             bool init();
 
             ////////////////////////////////////////////////////////////////////
+            //  Preload resources assets                                      //
+            //  return : True if resources assets are successfully preloaded  //
+            ////////////////////////////////////////////////////////////////////
+            bool preload();
+
+            ////////////////////////////////////////////////////////////////////
             //  Start loading resources assets                                //
             //  return : True if resources assets are loading                 //
             ////////////////////////////////////////////////////////////////////

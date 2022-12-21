@@ -109,9 +109,10 @@
         TEXTURELOADER_STATE_LOADEMBEDDED = 2,
 
         TEXTURELOADER_STATE_IDLE = 3,
-        TEXTURELOADER_STATE_LOAD = 4,
+        TEXTURELOADER_STATE_PRELOAD = 4,
+        TEXTURELOADER_STATE_LOAD = 5,
 
-        TEXTURELOADER_STATE_ERROR = 5
+        TEXTURELOADER_STATE_ERROR = 6
     };
 
 
@@ -151,6 +152,12 @@
             bool init();
 
             ////////////////////////////////////////////////////////////////////
+            //  Start preloading textures assets                              //
+            //  return : True if textures assets are preloading               //
+            ////////////////////////////////////////////////////////////////////
+            bool startPreload();
+
+            ////////////////////////////////////////////////////////////////////
             //  Start loading textures assets                                 //
             //  return : True if textures assets are loading                  //
             ////////////////////////////////////////////////////////////////////
@@ -183,6 +190,12 @@
             //  return : True if embedded textures are successfully loaded    //
             ////////////////////////////////////////////////////////////////////
             bool loadEmbeddedTextures();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Preload textures assets                                       //
+            //  return : True if textures assets are preloaded                //
+            ////////////////////////////////////////////////////////////////////
+            bool preloadTextures();
 
             ////////////////////////////////////////////////////////////////////
             //  Load textures assets                                          //
