@@ -151,6 +151,15 @@
             TextureLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
+            //  Get texture                                                   //
+            //  return : Texture asset                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline Texture& get(TexturesAssets texture)
+            {
+                return m_textures[texture];
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy texture loader                                        //
             ////////////////////////////////////////////////////////////////////
             void destroyTextureLoader();

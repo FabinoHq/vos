@@ -48,7 +48,7 @@
 Vos::Vos() :
 m_running(false),
 m_window(),
-m_renderer(),
+m_renderer(m_resources),
 m_clock(),
 m_resources(m_renderer),
 m_game(m_renderer, m_resources),
@@ -100,6 +100,13 @@ bool Vos::launch()
     if (!m_resources.init())
     {
         // Unable to init VOS resources
+        return false;
+    }
+
+    // Init VOS embedded resources
+    if (!m_renderer.initEmbedded())
+    {
+        // Unable to init VOS embedded resources
         return false;
     }
 

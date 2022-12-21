@@ -119,7 +119,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Renderer default constructor                                  //
             ////////////////////////////////////////////////////////////////////
-            Renderer();
+            Renderer(Resources& resources);
 
             ////////////////////////////////////////////////////////////////////
             //  Renderer destructor                                           //
@@ -132,6 +132,12 @@
             //  return : True if the renderer is successfully loaded          //
             ////////////////////////////////////////////////////////////////////
             bool init(SysWindow* sysWindow);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Init embedded resources                                       //
+            //  return : True if the renderer embedded resources are ready    //
+            ////////////////////////////////////////////////////////////////////
+            bool initEmbedded();
 
             ////////////////////////////////////////////////////////////////////
             //  Start rendering frame                                         //
@@ -371,11 +377,7 @@
             Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
             View                m_view;                 // Default view
 
-            Texture             m_cursorTexture;        // Cursor texture
-            Texture             m_nsCursorTexture;      // NS cursor texture
-            Texture             m_ewCursorTexture;      // EW cursor texture
-            Texture             m_neswCursorTexture;    // NE-SW cursor texture
-            Texture             m_nwseCursorTexture;    // NW-SE cursor texture
+            Resources&          m_resources;            // Resources
             Vector2             m_cursorOffset;         // Cursor offset
             Sprite              m_cursor;               // Cursor sprite
     };

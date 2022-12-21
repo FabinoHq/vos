@@ -45,7 +45,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Renderer default constructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
-Renderer::Renderer() :
+Renderer::Renderer(Resources& resources) :
 m_rendererReady(false),
 m_frameIndex(0),
 m_sysWindow(0),
@@ -73,11 +73,7 @@ m_pxTextPipeline(),
 m_skyBoxPipeline(),
 m_staticMeshPipeline(),
 m_view(),
-m_cursorTexture(),
-m_nsCursorTexture(),
-m_ewCursorTexture(),
-m_neswCursorTexture(),
-m_nwseCursorTexture(),
+m_resources(resources),
 m_cursorOffset(0.0f, 0.0f),
 m_cursor()
 {
@@ -476,65 +472,28 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-
-    // Load cursor texture
-    if (!m_cursorTexture.updateTexture(*this,
-        CursorImageWidth, CursorImageHeight, CursorImage,
-        false, false))
-    {
-        // Could not load cursor texture
-        return false;
-    }
-
-    // Load NS cursor texture
-    if (!m_nsCursorTexture.updateTexture(*this,
-        NSCursorImageWidth, NSCursorImageHeight, NSCursorImage,
-        false, false))
-    {
-        // Could not load NS cursor texture
-        return false;
-    }
-
-    // Load EW cursor texture
-    if (!m_ewCursorTexture.updateTexture(*this,
-        EWCursorImageWidth, EWCursorImageHeight, EWCursorImage,
-        false, false))
-    {
-        // Could not load EW cursor texture
-        return false;
-    }
-
-    // Load NE-SW cursor texture
-    if (!m_neswCursorTexture.updateTexture(*this,
-        NESWCursorImageWidth, NESWCursorImageHeight, NESWCursorImage,
-        false, false))
-    {
-        // Could not load NE-SW cursor texture
-        return false;
-    }
-
-    // Load NW-SE cursor texture
-    if (!m_nwseCursorTexture.updateTexture(*this,
-        NWSECursorImageWidth, NWSECursorImageHeight, NWSECursorImage,
-        false, false))
-    {
-        // Could not load NW-SE cursor texture
-        return false;
-    }
-
     // Set default cursor offset
     m_cursorOffset.set(RendererDefaultCursorOffset);
 
+    // Renderer successfully loaded
+    m_rendererReady = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init embedded resources                                                   //
+//  return : True if the renderer embedded resources are ready                //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::initEmbedded()
+{
     // Init cursor sprite
-    if (!m_cursor.init(m_cursorTexture, 1.0f, 1.0f))
+    if (!m_cursor.init(m_resources.textures.get(TEXTURE_CURSOR), 1.0f, 1.0f))
     {
         // Could not init cursor sprite
         return false;
     }
 
-
-    // Renderer successfully loaded
-    m_rendererReady = true;
+    // Renderer embedded resources are ready
     return true;
 }
 
@@ -882,21 +841,6 @@ void Renderer::cleanup()
     {
         if (waitDeviceIdle())
         {
-            // Destroy NWSE cursor texture
-            m_nwseCursorTexture.destroyTexture(*this);
-
-            // Destroy NESW cursor texture
-            m_neswCursorTexture.destroyTexture(*this);
-
-            // Destroy EW cursor texture
-            m_ewCursorTexture.destroyTexture(*this);
-
-            // Destroy NS cursor texture
-            m_nsCursorTexture.destroyTexture(*this);
-
-            // Destroy cursor texture
-            m_cursorTexture.destroyTexture(*this);
-
             // Destroy default view
             m_view.destroyView(*this);
 
@@ -1160,7 +1104,7 @@ bool Renderer::setCamera(Camera& camera)
 bool Renderer::setDefaultCursor()
 {
     m_cursorOffset.set(RendererDefaultCursorOffset);
-    return m_cursor.setTexture(m_cursorTexture);
+    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_CURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1169,7 +1113,7 @@ bool Renderer::setDefaultCursor()
 bool Renderer::setNSCursor()
 {
     m_cursorOffset.set(RendererNSCursorOffset);
-    return m_cursor.setTexture(m_nsCursorTexture);
+    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_NSCURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1178,7 +1122,7 @@ bool Renderer::setNSCursor()
 bool Renderer::setEWCursor()
 {
     m_cursorOffset.set(RendererEWCursorOffset);
-    return m_cursor.setTexture(m_ewCursorTexture);
+    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_EWCURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1187,7 +1131,7 @@ bool Renderer::setEWCursor()
 bool Renderer::setNESWCursor()
 {
     m_cursorOffset.set(RendererNESWCursorOffset);
-    return m_cursor.setTexture(m_neswCursorTexture);
+    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_NESWCURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1196,7 +1140,7 @@ bool Renderer::setNESWCursor()
 bool Renderer::setNWSECursor()
 {
     m_cursorOffset.set(RendererNWSECursorOffset);
-    return m_cursor.setTexture(m_nwseCursorTexture);
+    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_NWSECURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

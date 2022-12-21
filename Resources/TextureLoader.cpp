@@ -203,13 +203,49 @@ void TextureLoader::destroyTextureLoader()
 bool TextureLoader::loadEmbeddedTextures()
 {
 	// Load cursor texture
-	/*if (!m_textures[TEXTURE_CURSOR].updateTexture(m_renderer,
+	if (!m_textures[TEXTURE_CURSOR].updateTexture(m_renderer,
         CursorImageWidth, CursorImageHeight, CursorImage,
         false, false))
     {
         // Could not load cursor texture
         return false;
-    }*/
+    }
+
+    // Load NS cursor texture
+    if (!m_textures[TEXTURE_NSCURSOR].updateTexture(m_renderer,
+        NSCursorImageWidth, NSCursorImageHeight, NSCursorImage,
+        false, false))
+    {
+        // Could not load NS cursor texture
+        return false;
+    }
+
+    // Load EW cursor texture
+    if (!m_textures[TEXTURE_EWCURSOR].updateTexture(m_renderer,
+        EWCursorImageWidth, EWCursorImageHeight, EWCursorImage,
+        false, false))
+    {
+        // Could not load EW cursor texture
+        return false;
+    }
+
+    // Load NE-SW cursor texture
+    if (!m_textures[TEXTURE_NESWCURSOR].updateTexture(m_renderer,
+        NESWCursorImageWidth, NESWCursorImageHeight, NESWCursorImage,
+        false, false))
+    {
+        // Could not load NE-SW cursor texture
+        return false;
+    }
+
+    // Load NW-SE cursor texture
+    if (!m_textures[TEXTURE_NWSECURSOR].updateTexture(m_renderer,
+        NWSECursorImageWidth, NWSECursorImageHeight, NWSECursorImage,
+        false, false))
+    {
+        // Could not load NW-SE cursor texture
+        return false;
+    }
 
     // Embedded textures successfully loaded
     return true;

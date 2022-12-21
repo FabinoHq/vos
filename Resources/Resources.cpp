@@ -40,6 +40,7 @@
 //     Resources/Resources.cpp : Resources management                         //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Resources.h"
+#include "../Renderer/Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +77,27 @@ bool Resources::init()
 
     // Start heightmap loader thread
     heightmaps.start();
+
+    // Wait for resources init
+    bool resourcesReady = false;
+    while (!resourcesReady)
+    {
+        // Get resources loader states
+        TextureLoaderState textureState = textures.getState();
+        if (textureState == TEXTURELOADER_STATE_ERROR)
+        {
+            // Texture loader error
+            SysMessage::box() << "[0x4000] Could not init textures loader\n";
+            SysMessage::box() << "Please check your resources files";
+            return false;
+        }
+
+        if (textureState == TEXTURELOADER_STATE_IDLE)
+        {
+            // Resources are ready
+            resourcesReady = true;
+        }
+    }
 
     // Resources loaders are ready
     return true;

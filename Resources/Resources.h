@@ -43,10 +43,16 @@
 #define VOS_RESOURCES_RESOURCES_HEADER
 
     #include "../System/System.h"
-    #include "../Renderer/Renderer.h"
+    #include "../System/SysMessage.h"
     #include "TextureLoader.h"
     #include "MeshLoader.h"
     #include "HeightMapLoader.h"
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////
