@@ -220,9 +220,14 @@
             Renderer&               m_renderer;         // Renderer
             TextureLoaderState      m_state;            // TextureLoader state
             SysMutex                m_stateMutex;       // State mutex
-            VulkanBuffer            m_stagingBuffer;    // Stagging buffer
+
+            VkCommandBuffer         m_commandBuffer;    // Command buffer
+            VulkanBuffer            m_stagingBuffer;    // Staging buffer
+            VkFence                 m_fence;            // Staging fence
 
             Texture*                m_textures;         // Textures assets
+
+            friend class Texture;                       // Texture has access
     };
 
 

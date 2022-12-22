@@ -50,7 +50,9 @@ TextureLoader::TextureLoader(Renderer& renderer) :
 m_renderer(renderer),
 m_state(TEXTURELOADER_STATE_NONE),
 m_stateMutex(),
+m_commandBuffer(0),
 m_stagingBuffer(),
+m_fence(0),
 m_textures(0)
 {
 
@@ -174,6 +176,26 @@ void TextureLoader::process()
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureLoader::init()
 {
+	// Allocate command buffer
+    VkCommandBufferAllocateInfo bufferAllocate;
+    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    bufferAllocate.pNext = 0;
+    bufferAllocate.commandPool = m_renderer.m_swapchain.commandsPool;
+    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    bufferAllocate.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(m_renderer.m_vulkanDevice,
+        &bufferAllocate, &m_commandBuffer) != VK_SUCCESS)
+    {
+        // Could not allocate command buffer
+        return false;
+    }
+    if (!m_commandBuffer)
+    {
+    	// Invalid command buffer
+    	return false;
+    }
+
 	// Create staging buffer
     if (!m_stagingBuffer.createBuffer(
         m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
@@ -181,6 +203,24 @@ bool TextureLoader::init()
         VULKAN_MEMORY_HOST, TextureMaxSize))
     {
         // Could not create staging buffer
+        return false;
+    }
+
+    // Create staging fence
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = 0;
+    fenceInfo.flags = 0;
+
+    if (vkCreateFence(
+        m_renderer.m_vulkanDevice, &fenceInfo, 0, &m_fence) != VK_SUCCESS)
+    {
+        // Could not create staging fence
+        return false;
+    }
+    if (!m_fence)
+    {
+        // Invalid staging fence
         return false;
     }
 
@@ -263,10 +303,24 @@ void TextureLoader::destroyTextureLoader()
 	}
 	if (m_textures) { delete[] m_textures; }
 
+	// Destroy staging fence
+    if (m_fence)
+    {
+        vkDestroyFence(m_renderer.m_vulkanDevice, m_fence, 0);
+    }
+
 	// Destroy staging buffer
     m_stagingBuffer.destroyBuffer(
     	m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory
     );
+
+    // Destroy command buffer
+    if (m_commandBuffer)
+    {
+        vkFreeCommandBuffers(m_renderer.m_vulkanDevice,
+            m_renderer.m_swapchain.commandsPool, 1, &m_commandBuffer
+        );
+    }
 }
 
 
@@ -277,7 +331,7 @@ void TextureLoader::destroyTextureLoader()
 bool TextureLoader::loadEmbeddedTextures()
 {
 	// Load cursor texture
-	if (!m_textures[TEXTURE_CURSOR].updateTexture(m_renderer,
+	if (!m_textures[TEXTURE_CURSOR].updateTexture(m_renderer, *this,
         CursorImageWidth, CursorImageHeight, CursorImage,
         false, false))
     {
@@ -286,7 +340,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NS cursor texture
-    if (!m_textures[TEXTURE_NSCURSOR].updateTexture(m_renderer,
+    if (!m_textures[TEXTURE_NSCURSOR].updateTexture(m_renderer, *this,
         NSCursorImageWidth, NSCursorImageHeight, NSCursorImage,
         false, false))
     {
@@ -295,7 +349,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load EW cursor texture
-    if (!m_textures[TEXTURE_EWCURSOR].updateTexture(m_renderer,
+    if (!m_textures[TEXTURE_EWCURSOR].updateTexture(m_renderer, *this,
         EWCursorImageWidth, EWCursorImageHeight, EWCursorImage,
         false, false))
     {
@@ -304,7 +358,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NE-SW cursor texture
-    if (!m_textures[TEXTURE_NESWCURSOR].updateTexture(m_renderer,
+    if (!m_textures[TEXTURE_NESWCURSOR].updateTexture(m_renderer, *this,
         NESWCursorImageWidth, NESWCursorImageHeight, NESWCursorImage,
         false, false))
     {
@@ -313,7 +367,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NW-SE cursor texture
-    if (!m_textures[TEXTURE_NWSECURSOR].updateTexture(m_renderer,
+    if (!m_textures[TEXTURE_NWSECURSOR].updateTexture(m_renderer, *this,
         NWSECursorImageWidth, NWSECursorImageHeight, NWSECursorImage,
         false, false))
     {
@@ -322,7 +376,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load window texture
-    if (!m_textures[TEXTURE_WINDOW].updateTexture(m_renderer,
+    if (!m_textures[TEXTURE_WINDOW].updateTexture(m_renderer, *this,
         WindowImageWidth, WindowImageHeight, WindowImage,
         true, false))
     {
@@ -331,7 +385,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load pixel font texture
-    if (!m_textures[TEXTURE_PIXELFONT].updateTexture(m_renderer,
+    if (!m_textures[TEXTURE_PIXELFONT].updateTexture(m_renderer, *this,
         PxFontImageWidth, PxFontImageHeight, PxFontImage,
         true, false))
     {
@@ -355,7 +409,7 @@ bool TextureLoader::preloadTextures()
     {
         return false;
     }
-    if (!m_textures[TEXTURE_TEST].updateTexture(m_renderer,
+    if (!m_textures[TEXTURE_TEST].updateTexture(m_renderer, *this,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
         false, true))
     {

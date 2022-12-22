@@ -55,6 +55,11 @@
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  TextureLoader class declaration                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    class TextureLoader;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Texture class definition                                              //
@@ -85,7 +90,7 @@
             //  Update texture                                                //
             //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
-            bool updateTexture(Renderer& renderer,
+            bool updateTexture(Renderer& renderer, TextureLoader& loader,
                 uint32_t width, uint32_t height, const unsigned char* data,
                 bool smooth = true, bool repeat = false);
 
@@ -139,7 +144,6 @@
             VkImageView         m_view;             // Texture view
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
 
-            VulkanBuffer        m_stagingBuffer;    // Stagging buffer
             VkDeviceSize        m_memorySize;       // Memory size
             VkDeviceSize        m_memoryOffset;     // Memory offset
 

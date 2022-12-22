@@ -144,7 +144,7 @@
             VkImageView         m_view;             // CubeMap view
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
 
-            VulkanBuffer        m_stagingBuffer;    // Stagging buffer
+            VulkanBuffer        m_stagingBuffer;    // Staging buffer
             VkDeviceSize        m_memorySize;       // Memory size
             VkDeviceSize        m_memoryOffset;     // Memory offset
 

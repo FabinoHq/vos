@@ -50,7 +50,6 @@ Texture::Texture() :
 m_handle(0),
 m_sampler(0),
 m_view(0),
-m_stagingBuffer(),
 m_memorySize(0),
 m_memoryOffset(0),
 m_width(0),
@@ -103,7 +102,8 @@ bool Texture::createTexture(Renderer& renderer,
     }
 
     // Check texture size
-    if (width == 0 || height == 0)
+    if ((width <= 0) || (width >= TextureMaxWidth) ||
+        (height <= 0) || (height >= TextureMaxHeight))
     {
         // Invalid texture size
         return false;
@@ -116,10 +116,6 @@ bool Texture::createTexture(Renderer& renderer,
         destroyTexture(renderer);
     }
 
-    // Set texture parameters
-    m_width = width;
-    m_height = height;
-
     // Create image
     VkImageCreateInfo imageInfo;
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -127,8 +123,8 @@ bool Texture::createTexture(Renderer& renderer,
     imageInfo.flags = 0;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
     imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-    imageInfo.extent.width = m_width;
-    imageInfo.extent.height = m_height;
+    imageInfo.extent.width = width;
+    imageInfo.extent.height = height;
     imageInfo.extent.depth = 1;
     imageInfo.mipLevels = 1;
     imageInfo.arrayLayers = 1;
@@ -158,17 +154,6 @@ bool Texture::createTexture(Renderer& renderer,
         renderer.m_vulkanDevice, *this))
     {
         // Could not allocate texture memory
-        return false;
-    }
-
-    // Create staging buffer
-    uint32_t textureSize = m_width * m_height * 4;
-    if (!m_stagingBuffer.createBuffer(
-        renderer.m_physicalDevice, renderer.m_vulkanDevice,
-        renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_HOST, textureSize))
-    {
-        // Could not create staging buffer
         return false;
     }
 
@@ -295,6 +280,10 @@ bool Texture::createTexture(Renderer& renderer,
         );
     }
 
+    // Set texture size
+    m_width = width;
+    m_height = height;
+
     // Texture successfully created
     return true;
 }
@@ -303,7 +292,7 @@ bool Texture::createTexture(Renderer& renderer,
 //  Update texture                                                            //
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::updateTexture(Renderer& renderer,
+bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
     uint32_t width, uint32_t height, const unsigned char* data,
     bool smooth, bool repeat)
 {
@@ -336,7 +325,8 @@ bool Texture::updateTexture(Renderer& renderer,
     }
 
     // Check texture size
-    if (width == 0 || height == 0)
+    if ((width <= 0) || (width >= TextureMaxWidth) ||
+        (height <= 0) || (height >= TextureMaxHeight))
     {
         // Invalid texture size
         return false;
@@ -357,27 +347,22 @@ bool Texture::updateTexture(Renderer& renderer,
         createTexture(renderer, width, height, smooth, repeat);
     }
 
-    // Write data into staging buffer memory
-    if (!renderer.m_vulkanMemory.writeBufferMemory(
-        renderer.m_vulkanDevice, m_stagingBuffer, data))
+    // Create staging buffer
+    uint32_t textureSize = (m_width*m_height*4);
+    if (!loader.m_stagingBuffer.createBuffer(
+        renderer.m_physicalDevice, renderer.m_vulkanDevice,
+        renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VULKAN_MEMORY_HOST, textureSize))
     {
-        // Could not write data into staging buffer memory
+        // Could not create staging buffer
         return false;
     }
 
-    // Allocate command buffers
-    VkCommandBuffer commandBuffer = 0;
-    VkCommandBufferAllocateInfo bufferAllocate;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = renderer.m_swapchain.commandsPool;
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(
-        renderer.m_vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    // Write data into staging buffer memory
+    if (!renderer.m_vulkanMemory.writeBufferMemory(
+        renderer.m_vulkanDevice, loader.m_stagingBuffer, data))
     {
-        // Could not allocate command buffers
+        // Could not write data into staging buffer memory
         return false;
     }
 
@@ -388,7 +373,8 @@ bool Texture::updateTexture(Renderer& renderer,
     bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     bufferBeginInfo.pInheritanceInfo = 0;
 
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    if (vkBeginCommandBuffer(
+        loader.m_commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
     {
         // Could not record command buffer
         return false;
@@ -426,7 +412,7 @@ bool Texture::updateTexture(Renderer& renderer,
     transferToShader.subresourceRange = subresourceRange;
 
     vkCmdPipelineBarrier(
-        commandBuffer,
+        loader.m_commandBuffer,
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
         0, 0, 0, 0, 0, 1, &undefinedToTransfer
@@ -448,38 +434,28 @@ bool Texture::updateTexture(Renderer& renderer,
     imageCopy.imageExtent.depth = 1;
 
     vkCmdCopyBufferToImage(
-        commandBuffer, m_stagingBuffer.handle, m_handle,
+        loader.m_commandBuffer, loader.m_stagingBuffer.handle, m_handle,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
     );
 
     vkCmdPipelineBarrier(
-        commandBuffer,
+        loader.m_commandBuffer,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
         VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
         0, 0, 0, 0, 0, 1, &transferToShader
     );
 
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+    if (vkEndCommandBuffer(loader.m_commandBuffer) != VK_SUCCESS)
     {
         // Could not end command buffer
         return false;
     }
 
-    VkFence fence = 0;
-    VkFenceCreateInfo fenceInfo;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = 0;
-
-    if (vkCreateFence(
-        renderer.m_vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
+    // Reset staging fence
+    if (vkResetFences(
+        renderer.m_vulkanDevice, 1, &loader.m_fence) != VK_SUCCESS)
     {
-        // Could not create fence
-        return false;
-    }
-    if (!fence)
-    {
-        // Invalid fence
+        // Could not reset staging fence
         return false;
     }
 
@@ -491,12 +467,12 @@ bool Texture::updateTexture(Renderer& renderer,
     submitInfo.pWaitSemaphores = 0;
     submitInfo.pWaitDstStageMask = 0;
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
+    submitInfo.pCommandBuffers = &loader.m_commandBuffer;
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(
-        renderer.m_graphicsQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
+    if (vkQueueSubmit(renderer.m_graphicsQueue.handle,
+        1, &submitInfo, loader.m_fence) != VK_SUCCESS)
     {
         // Could not submit queue
         return false;
@@ -504,25 +480,16 @@ bool Texture::updateTexture(Renderer& renderer,
 
     // Wait for transfer to finish
     if (vkWaitForFences(renderer.m_vulkanDevice, 1,
-        &fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
+        &loader.m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
         return false;
     }
 
-    // Destroy fence
-    if (fence)
-    {
-        vkDestroyFence(renderer.m_vulkanDevice, fence, 0);
-    }
-
-    // Destroy buffers
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(renderer.m_vulkanDevice,
-            renderer.m_swapchain.commandsPool, 1, &commandBuffer
-        );
-    }
+    // Destroy staging buffer
+    loader.m_stagingBuffer.destroyBuffer(
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory
+    );
 
     // Texture successfully loaded
     return true;
@@ -565,11 +532,6 @@ void Texture::destroyTexture(Renderer& renderer)
         {
             vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
         }
-
-        // Destroy staging buffer
-        m_stagingBuffer.destroyBuffer(
-            renderer.m_vulkanDevice, renderer.m_vulkanMemory
-        );
 
         // Free texture memory
         renderer.m_vulkanMemory.freeTextureMemory(
