@@ -103,8 +103,8 @@ bool Texture::createTexture(Renderer& renderer,
     }
 
     // Check texture size
-    if ((width <= 0) || (width >= TextureMaxWidth) ||
-        (height <= 0) || (height >= TextureMaxHeight))
+    if ((width <= 0) || (width > TextureMaxWidth) ||
+        (height <= 0) || (height > TextureMaxHeight))
     {
         // Invalid texture size
         return false;
@@ -326,8 +326,8 @@ bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
     }
 
     // Check texture size
-    if ((width <= 0) || (width >= TextureMaxWidth) ||
-        (height <= 0) || (height >= TextureMaxHeight))
+    if ((width <= 0) || (width > TextureMaxWidth) ||
+        (height <= 0) || (height > TextureMaxHeight))
     {
         // Invalid texture size
         return false;
