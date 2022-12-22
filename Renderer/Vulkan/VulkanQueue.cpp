@@ -75,7 +75,7 @@ bool VulkanQueue::createGraphicsQueue(VkDevice& vulkanDevice,
     if (!vulkanDevice)
     {
         // Invalid Vulkan device
-        SysMessage::box() << "[0x301E] Invalid Vulkan device\n";
+        SysMessage::box() << "[0x301F] Invalid Vulkan device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -86,7 +86,7 @@ bool VulkanQueue::createGraphicsQueue(VkDevice& vulkanDevice,
     if (index >= (vulkanQueues.graphicsQueueMax-1))
     {
         // Invalid queue count
-        SysMessage::box() << "[0x301F] Invalid queue count\n";
+        SysMessage::box() << "[0x3020] Invalid graphics queue count\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -96,7 +96,7 @@ bool VulkanQueue::createGraphicsQueue(VkDevice& vulkanDevice,
     if (!handle)
     {
         // Invalid queue handle
-        SysMessage::box() << "[0x3020] Invalid queue handle\n";
+        SysMessage::box() << "[0x3021] Invalid graphics queue handle\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -127,7 +127,7 @@ bool VulkanQueue::createSurfaceQueue(VkDevice& vulkanDevice,
     if (!vulkanDevice)
     {
         // Invalid Vulkan device
-        SysMessage::box() << "[0x301E] Invalid Vulkan device\n";
+        SysMessage::box() << "[0x3022] Invalid Vulkan device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -138,7 +138,7 @@ bool VulkanQueue::createSurfaceQueue(VkDevice& vulkanDevice,
     if (index >= (vulkanQueues.surfaceQueueMax-1))
     {
         // Invalid queue count
-        SysMessage::box() << "[0x301F] Invalid queue count\n";
+        SysMessage::box() << "[0x3023] Invalid surface queue count\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -148,7 +148,7 @@ bool VulkanQueue::createSurfaceQueue(VkDevice& vulkanDevice,
     if (!handle)
     {
         // Invalid queue handle
-        SysMessage::box() << "[0x3020] Invalid queue handle\n";
+        SysMessage::box() << "[0x3024] Invalid surface queue handle\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -179,7 +179,7 @@ bool VulkanQueue::createTransferQueue(VkDevice& vulkanDevice,
     if (!vulkanDevice)
     {
         // Invalid Vulkan device
-        SysMessage::box() << "[0x301E] Invalid Vulkan device\n";
+        SysMessage::box() << "[0x3025] Invalid Vulkan device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -190,7 +190,7 @@ bool VulkanQueue::createTransferQueue(VkDevice& vulkanDevice,
     if (index >= (vulkanQueues.transferQueueMax-1))
     {
         // Invalid queue count
-        SysMessage::box() << "[0x301F] Invalid queue count\n";
+        SysMessage::box() << "[0x3026] Invalid transfer queue count\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -200,7 +200,7 @@ bool VulkanQueue::createTransferQueue(VkDevice& vulkanDevice,
     if (!handle)
     {
         // Invalid queue handle
-        SysMessage::box() << "[0x3020] Invalid queue handle\n";
+        SysMessage::box() << "[0x3027] Invalid transfer queue handle\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
