@@ -94,7 +94,7 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (uniformBuffer.handle)
     {
         // Destroy current buffer
-        uniformBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+        uniformBuffer.destroyBuffer(vulkanDevice);
     }
 
     // Create uniform buffer
@@ -162,7 +162,7 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
         !stagingBuffer.handle || (stagingBuffer.size != size))
     {
         // Recreate uniform buffer
-        destroyBuffer(vulkanDevice, vulkanMemory);
+        destroyBuffer(vulkanDevice);
         createBuffer(physicalDevice, vulkanDevice, vulkanMemory, size);
     }
 
@@ -285,9 +285,8 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Uniform buffer                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void UniformBuffer::destroyBuffer(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory)
+void UniformBuffer::destroyBuffer(VkDevice& vulkanDevice)
 {
-    stagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
-    uniformBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    stagingBuffer.destroyBuffer(vulkanDevice);
+    uniformBuffer.destroyBuffer(vulkanDevice);
 }

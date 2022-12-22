@@ -846,7 +846,7 @@ void Renderer::cleanup()
             m_view.destroyView(*this);
 
             // Destroy vertex buffer
-            m_vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
+            m_vertexBuffer.destroyBuffer(m_vulkanDevice);
 
             // Destroy static mesh pipeline
             m_staticMeshPipeline.destroyPipeline(*this);
@@ -953,7 +953,7 @@ bool Renderer::updateVertexBuffer(VertexBuffer& vertexBuffer,
 void Renderer::destroyVertexBuffer(VertexBuffer& vertexBuffer)
 {
     // Destroy vertex buffer
-    vertexBuffer.destroyBuffer(m_vulkanDevice, m_vulkanMemory);
+    vertexBuffer.destroyBuffer(m_vulkanDevice);
 }
 
 

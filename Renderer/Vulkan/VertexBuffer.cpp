@@ -112,7 +112,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         vertexBuffer.handle || vertexStagingBuffer.handle)
     {
         // Destroy current buffers
-        destroyBuffer(vulkanDevice, vulkanMemory);
+        destroyBuffer(vulkanDevice);
     }
 
     // Compute vertices and indices sizes
@@ -662,11 +662,10 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vertex buffer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void VertexBuffer::destroyBuffer(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory)
+void VertexBuffer::destroyBuffer(VkDevice& vulkanDevice)
 {
-    indexStagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
-    indexBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
-    vertexStagingBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
-    vertexBuffer.destroyBuffer(vulkanDevice, vulkanMemory);
+    indexStagingBuffer.destroyBuffer(vulkanDevice);
+    indexBuffer.destroyBuffer(vulkanDevice);
+    vertexStagingBuffer.destroyBuffer(vulkanDevice);
+    vertexBuffer.destroyBuffer(vulkanDevice);
 }

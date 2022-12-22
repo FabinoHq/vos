@@ -561,14 +561,7 @@ void CubeMap::destroyCubeMap(Renderer& renderer)
         }
 
         // Destroy staging buffer
-        m_stagingBuffer.destroyBuffer(
-            renderer.m_vulkanDevice, renderer.m_vulkanMemory
-        );
-
-        // Free cubemap memory
-        renderer.m_vulkanMemory.freeCubeMapMemory(
-            renderer.m_vulkanDevice, *this
-        );
+        m_stagingBuffer.destroyBuffer(renderer.m_vulkanDevice);
     }
 
     m_height = 0;

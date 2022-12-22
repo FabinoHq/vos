@@ -200,9 +200,7 @@ void View::destroyView(Renderer& renderer)
     // Destroy uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        m_uniformBuffers[i].destroyBuffer(
-            renderer.m_vulkanDevice, renderer.m_vulkanMemory
-        );
+        m_uniformBuffers[i].destroyBuffer(renderer.m_vulkanDevice);
         m_descriptorSets[i] = 0;
     }
 

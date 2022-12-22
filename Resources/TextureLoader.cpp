@@ -341,9 +341,7 @@ void TextureLoader::destroyTextureLoader()
     }
 
 	// Destroy staging buffer
-    m_stagingBuffer.destroyBuffer(
-    	m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory
-    );
+    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
 
     // Destroy command buffer
     if (m_commandBuffer)
@@ -507,9 +505,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     }
 
     // Destroy staging buffer
-    m_stagingBuffer.destroyBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory
-    );
+    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
 
 	// Texture successfully uploaded
 	return true;

@@ -99,7 +99,7 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (handle)
     {
         // Destroy Vulkan Buffer
-        destroyBuffer(vulkanDevice, vulkanMemory);
+        destroyBuffer(vulkanDevice);
     }
 
     // Create Vulkan Buffer
@@ -141,8 +141,7 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vulkan buffer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory)
+void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice)
 {
     if (vulkanDevice)
     {
@@ -151,9 +150,6 @@ void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice,
         {
             vkDestroyBuffer(vulkanDevice, handle, 0);
         }
-
-        // Free buffer memory
-        vulkanMemory.freeBufferMemory(vulkanDevice, *this);
     }
 
     memoryOffset = 0;

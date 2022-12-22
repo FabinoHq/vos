@@ -103,8 +103,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Destroy Uniform buffer                                        //
             ////////////////////////////////////////////////////////////////////
-            void destroyBuffer(VkDevice& vulkanDevice,
-                VulkanMemory& vulkanMemory);
+            void destroyBuffer(VkDevice& vulkanDevice);
 
 
         private:

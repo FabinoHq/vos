@@ -53,13 +53,7 @@ m_memoryReady(false),
 m_deviceMemoryIndex(0),
 m_hostMemoryIndex(0),
 m_maxAllocationCount(0),
-m_memoryAlignment(0),
-m_swapchainMemory(0),
-m_swapchainMemoryOffset(0),
-m_deviceMemory(0),
-m_deviceMemoryOffset(0),
-m_hostMemory(0),
-m_hostMemoryOffset(0)
+m_memoryAlignment(0)
 {
 
 }
@@ -69,16 +63,8 @@ m_hostMemoryOffset(0)
 ////////////////////////////////////////////////////////////////////////////////
 VulkanMemory::~VulkanMemory()
 {
-    m_hostMemoryOffset = 0;
-    m_hostMemory = 0;
-    m_deviceMemoryOffset = 0;
-    m_deviceMemory = 0;
-    m_swapchainMemoryOffset = 0;
-    m_swapchainMemory = 0;
     m_memoryAlignment = 0;
     m_maxAllocationCount = 0;
-    m_hostMemoryIndex = 0;
-    m_deviceMemoryIndex = 0;
     m_memoryReady = false;
 }
 
@@ -100,6 +86,14 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
         SysMessage::box() << "[0x3101] Invalid physical device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
+    }
+
+    // Reset memory arrays
+    for (unsigned int i = 0; i < VULKAN_MEMORY_TYPESCOUNT; ++i)
+    {
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_index[i] = 0;
     }
 
     // Get physical device properties
@@ -134,7 +128,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     }
 
     // Check maximum allocation count
-    if (m_maxAllocationCount <= 0)
+    if (m_maxAllocationCount < VULKAN_MEMORY_TYPESCOUNT)
     {
         // Invalid maximum allocation count
         SysMessage::box() << "[0x3104] Invalid maximum allocation count\n";
@@ -152,7 +146,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     if (physicalMemoryProperties.memoryTypeCount <= 0)
     {
         // No physical memory type
-        SysMessage::box() << "[0x3105] No physical memory type\n";
+        SysMessage::box() << "[0x3105] No physical memory types\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -205,9 +199,10 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     allocateInfo.pNext = 0;
     allocateInfo.allocationSize = 16777216;
     allocateInfo.memoryTypeIndex = m_deviceMemoryIndex;
+    m_index[VULKAN_MEMORY_SWAPCHAIN] = m_deviceMemoryIndex;
 
-    if (vkAllocateMemory(
-        vulkanDevice, &allocateInfo, 0, &m_swapchainMemory) != VK_SUCCESS)
+    if (vkAllocateMemory(vulkanDevice,
+        &allocateInfo, 0, &m_memory[VULKAN_MEMORY_SWAPCHAIN]) != VK_SUCCESS)
     {
         // Could not allocate device memory
         SysMessage::box() << "[0x3107] Could not allocate swapchain memory\n";
@@ -220,12 +215,13 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     allocateInfo.pNext = 0;
     allocateInfo.allocationSize = 268435456;
     allocateInfo.memoryTypeIndex = m_deviceMemoryIndex;
+    m_index[VULKAN_MEMORY_DEVICE] = m_deviceMemoryIndex;
 
-    if (vkAllocateMemory(
-        vulkanDevice, &allocateInfo, 0, &m_deviceMemory) != VK_SUCCESS)
+    if (vkAllocateMemory(vulkanDevice,
+        &allocateInfo, 0, &m_memory[VULKAN_MEMORY_DEVICE]) != VK_SUCCESS)
     {
         // Could not allocate device memory
-        SysMessage::box() << "[0x3107] Could not allocate device memory\n";
+        SysMessage::box() << "[0x3108] Could not allocate device memory\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -235,12 +231,13 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     allocateInfo.pNext = 0;
     allocateInfo.allocationSize = 268435456;
     allocateInfo.memoryTypeIndex = m_hostMemoryIndex;
+    m_index[VULKAN_MEMORY_HOST] = m_hostMemoryIndex;
 
-    if (vkAllocateMemory(
-        vulkanDevice, &allocateInfo, 0, &m_hostMemory) != VK_SUCCESS)
+    if (vkAllocateMemory(vulkanDevice,
+        &allocateInfo, 0, &m_memory[VULKAN_MEMORY_HOST]) != VK_SUCCESS)
     {
         // Could not allocate host memory
-        SysMessage::box() << "[0x3108] Could not allocate host memory\n";
+        SysMessage::box() << "[0x3109] Could not allocate host memory\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -257,33 +254,128 @@ void VulkanMemory::cleanup(VkDevice& vulkanDevice)
 {
     if (m_memoryReady && vulkanDevice)
     {
-        if (m_hostMemory)
+        for (unsigned int i = 0; i < VULKAN_MEMORY_TYPESCOUNT; ++i)
         {
-            vkFreeMemory(vulkanDevice, m_hostMemory, 0);
-        }
-
-        if (m_deviceMemory)
-        {
-            vkFreeMemory(vulkanDevice, m_deviceMemory, 0);
-        }
-
-        if (m_swapchainMemory)
-        {
-            vkFreeMemory(vulkanDevice, m_swapchainMemory, 0);
+            if (m_memory[i])
+            {
+                vkFreeMemory(vulkanDevice, m_memory[i], 0);
+            }
         }
     }
 
-    m_hostMemoryOffset = 0;
-    m_hostMemory = 0;
-    m_deviceMemoryOffset = 0;
-    m_deviceMemory = 0;
-    m_swapchainMemoryOffset = 0;
-    m_swapchainMemory = 0;
     m_memoryAlignment = 0;
     m_maxAllocationCount = 0;
-    m_hostMemoryIndex = 0;
-    m_deviceMemoryIndex = 0;
     m_memoryReady = false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Allocate swapchain image memory                                           //
+//  return : True if swapchain image is successfully allocated                //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanMemory::allocateSwapchainImage(VkDevice& vulkanDevice,
+    VkImage& image)
+{
+    // Check Vulkan memory
+    if (!m_memoryReady)
+    {
+        // Vulkan memory is not ready
+        return false;
+    }
+
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        return false;
+    }
+
+    // Check image handle
+    if (!image)
+    {
+        // Invalid image handle
+        return false;
+    }
+
+    // Get memory requirements
+    VkMemoryRequirements memoryRequirements;
+    vkGetImageMemoryRequirements(vulkanDevice, image, &memoryRequirements);
+
+    // Check memory requirements size
+    if (memoryRequirements.size <= 0)
+    {
+        // Invalid memory requirements size
+        return false;
+    }
+
+    // Check memory type bits
+    if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
+    {
+        // Invalid memory type bits
+        return false;
+    }
+
+    // Compute memory alignment
+    VkDeviceSize size = memoryRequirements.size;
+    VkDeviceSize alignment = m_memoryAlignment;
+    if (memoryRequirements.alignment >= alignment)
+    {
+        alignment = memoryRequirements.alignment;
+        if ((alignment % m_memoryAlignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+    else
+    {
+        if ((alignment % memoryRequirements.alignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+
+    // Adjust memory size according to alignment
+    VkDeviceSize sizeOffset = (size % alignment);
+    if (sizeOffset != 0)
+    {
+        size += (alignment - sizeOffset);
+    }
+
+    // Adjust memory start offset according to alignment
+    VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_SWAPCHAIN] % alignment);
+    if (startOffset != 0)
+    {
+        m_offset[VULKAN_MEMORY_SWAPCHAIN] += (alignment - startOffset);
+    }
+
+    // Bind image memory
+    if (vkBindImageMemory(vulkanDevice, image,
+        m_memory[VULKAN_MEMORY_SWAPCHAIN],
+        m_offset[VULKAN_MEMORY_SWAPCHAIN]) != VK_SUCCESS)
+    {
+        // Could not bind image memory
+        return false;
+    }
+
+    // Update current memory offset
+    m_offset[VULKAN_MEMORY_SWAPCHAIN] += size;
+
+    // Texture memory successfully allocated
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Reset swapchain image memory                                              //
+////////////////////////////////////////////////////////////////////////////////
+void VulkanMemory::resetSwapchainMemory()
+{
+    // Reset swapchain image memory
+    if (m_memoryReady)
+    {
+        m_offset[VULKAN_MEMORY_SWAPCHAIN] = 0;
+    }
 }
 
 
@@ -366,26 +458,26 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
         }
 
         // Adjust memory start offset according to alignment
-        VkDeviceSize startOffset = (m_deviceMemoryOffset % alignment);
+        VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_DEVICE] % alignment);
         if (startOffset != 0)
         {
-            m_deviceMemoryOffset += (alignment - startOffset);
+            m_offset[VULKAN_MEMORY_DEVICE] += (alignment - startOffset);
         }
 
         // Set buffer memory size and offset
         buffer.memorySize = size;
-        buffer.memoryOffset = m_deviceMemoryOffset;
+        buffer.memoryOffset = m_offset[VULKAN_MEMORY_DEVICE];
 
         // Bind buffer memory
-        if (vkBindBufferMemory(vulkanDevice,
-            buffer.handle, m_deviceMemory, buffer.memoryOffset) != VK_SUCCESS)
+        if (vkBindBufferMemory(vulkanDevice, buffer.handle,
+            m_memory[VULKAN_MEMORY_DEVICE], buffer.memoryOffset) != VK_SUCCESS)
         {
             // Could not bind buffer memory
             return false;
         }
 
         // Update current memory offset
-        m_deviceMemoryOffset += size;
+        m_offset[VULKAN_MEMORY_DEVICE] += size;
     }
     else
     {
@@ -425,26 +517,26 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
         }
 
         // Adjust memory start offset according to alignment
-        VkDeviceSize startOffset = (m_hostMemoryOffset % alignment);
+        VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_HOST] % alignment);
         if (startOffset != 0)
         {
-            m_hostMemoryOffset += (alignment - startOffset);
+            m_offset[VULKAN_MEMORY_HOST] += (alignment - startOffset);
         }
 
         // Set buffer memory size and offset
         buffer.memorySize = size;
-        buffer.memoryOffset = m_hostMemoryOffset;
+        buffer.memoryOffset = m_offset[VULKAN_MEMORY_HOST];
 
         // Bind buffer memory
-        if (vkBindBufferMemory(vulkanDevice,
-            buffer.handle, m_hostMemory, buffer.memoryOffset) != VK_SUCCESS)
+        if (vkBindBufferMemory(vulkanDevice, buffer.handle,
+            m_memory[VULKAN_MEMORY_HOST], buffer.memoryOffset) != VK_SUCCESS)
         {
             // Could not bind buffer memory
             return false;
         }
 
         // Update current memory offset
-        m_hostMemoryOffset += size;
+        m_offset[VULKAN_MEMORY_HOST] += size;
     }
 
     // Buffer memory successfully allocated
@@ -488,7 +580,7 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
 
     // Map buffer memory
     void* bufferMemory = 0;
-    if (vkMapMemory(vulkanDevice, m_hostMemory,
+    if (vkMapMemory(vulkanDevice, m_memory[VULKAN_MEMORY_HOST],
         buffer.memoryOffset, buffer.memorySize, 0, &bufferMemory) != VK_SUCCESS)
     {
         // Could not map buffer memory
@@ -507,7 +599,7 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
     VkMappedMemoryRange memoryRange;
     memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     memoryRange.pNext = 0;
-    memoryRange.memory = m_hostMemory;
+    memoryRange.memory = m_memory[VULKAN_MEMORY_HOST];
     memoryRange.offset = buffer.memoryOffset;
     memoryRange.size = buffer.memorySize;
 
@@ -517,132 +609,10 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    vkUnmapMemory(vulkanDevice, m_hostMemory);
+    vkUnmapMemory(vulkanDevice, m_memory[VULKAN_MEMORY_HOST]);
 
     // Buffer memory successfully mapped
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Free buffer memory                                                        //
-////////////////////////////////////////////////////////////////////////////////
-void VulkanMemory::freeBufferMemory(VkDevice& vulkanDevice,
-    VulkanBuffer& buffer)
-{
-    // Free buffer memory
-    if (m_memoryReady && vulkanDevice)
-    {
-        //vkFreeMemory(vulkanDevice, memory, 0);
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Allocate swapchain image memory                                           //
-//  return : True if swapchain image is successfully allocated                //
-////////////////////////////////////////////////////////////////////////////////
-bool VulkanMemory::allocateSwapchainImage(VkDevice& vulkanDevice,
-    VkImage& image)
-{
-    // Check Vulkan memory
-    if (!m_memoryReady)
-    {
-        // Vulkan memory is not ready
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check image handle
-    if (!image)
-    {
-        // Invalid image handle
-        return false;
-    }
-
-    // Get memory requirements
-    VkMemoryRequirements memoryRequirements;
-    vkGetImageMemoryRequirements(vulkanDevice, image, &memoryRequirements);
-
-    // Check memory requirements size
-    if (memoryRequirements.size <= 0)
-    {
-        // Invalid memory requirements size
-        return false;
-    }
-
-    // Check memory type bits
-    if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
-    {
-        // Invalid memory type bits
-        return false;
-    }
-
-    // Compute memory alignment
-    VkDeviceSize size = memoryRequirements.size;
-    VkDeviceSize alignment = m_memoryAlignment;
-    if (memoryRequirements.alignment >= alignment)
-    {
-        alignment = memoryRequirements.alignment;
-        if ((alignment % m_memoryAlignment) != 0)
-        {
-            // Invalid memory alignment
-            return false;
-        }
-    }
-    else
-    {
-        if ((alignment % memoryRequirements.alignment) != 0)
-        {
-            // Invalid memory alignment
-            return false;
-        }
-    }
-
-    // Adjust memory size according to alignment
-    VkDeviceSize sizeOffset = (size % alignment);
-    if (sizeOffset != 0)
-    {
-        size += (alignment - sizeOffset);
-    }
-
-    // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_swapchainMemoryOffset % alignment);
-    if (startOffset != 0)
-    {
-        m_swapchainMemoryOffset += (alignment - startOffset);
-    }
-
-    // Bind image memory
-    if (vkBindImageMemory(vulkanDevice,
-        image, m_swapchainMemory, m_swapchainMemoryOffset) != VK_SUCCESS)
-    {
-        // Could not bind image memory
-        return false;
-    }
-
-    // Update current memory offset
-    m_swapchainMemoryOffset += size;
-
-    // Texture memory successfully allocated
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Reset swapchain image memory                                              //
-////////////////////////////////////////////////////////////////////////////////
-void VulkanMemory::resetSwapchainMemory()
-{
-    // Reset swapchain image memory
-    if (m_memoryReady)
-    {
-        m_swapchainMemoryOffset = 0;
-    }
 }
 
 
@@ -721,37 +691,25 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
     }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_deviceMemoryOffset % alignment);
+    VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_DEVICE] % alignment);
     if (startOffset != 0)
     {
-        m_deviceMemoryOffset += (alignment - startOffset);
+        m_offset[VULKAN_MEMORY_DEVICE] += (alignment - startOffset);
     }
 
     // Bind texture memory
-    if (!texture.bindTextureMemory(
-        vulkanDevice, m_deviceMemory, size, m_deviceMemoryOffset))
+    if (!texture.bindTextureMemory(vulkanDevice,
+        m_memory[VULKAN_MEMORY_DEVICE], size, m_offset[VULKAN_MEMORY_DEVICE]))
     {
         // Could not bind texture memory
         return false;
     }
 
     // Update current memory offset
-    m_deviceMemoryOffset += size;
+    m_offset[VULKAN_MEMORY_DEVICE] += size;
 
     // Texture memory successfully allocated
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Free texture memory                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void VulkanMemory::freeTextureMemory(VkDevice& vulkanDevice, Texture& texture)
-{
-    // Free image memory
-    if (m_memoryReady && vulkanDevice)
-    {
-        //vkFreeMemory(vulkanDevice, memory, 0);
-    }
 }
 
 
@@ -830,35 +788,23 @@ bool VulkanMemory::allocateCubeMapMemory(VkDevice& vulkanDevice,
     }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_deviceMemoryOffset % alignment);
+    VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_DEVICE] % alignment);
     if (startOffset != 0)
     {
-        m_deviceMemoryOffset += (alignment - startOffset);
+        m_offset[VULKAN_MEMORY_DEVICE] += (alignment - startOffset);
     }
 
     // Bind cubemap memory
-    if (!cubemap.bindCubeMapMemory(
-        vulkanDevice, m_deviceMemory, size, m_deviceMemoryOffset))
+    if (!cubemap.bindCubeMapMemory(vulkanDevice,
+        m_memory[VULKAN_MEMORY_DEVICE], size, m_offset[VULKAN_MEMORY_DEVICE]))
     {
         // Could not bind cubemap memory
         return false;
     }
 
     // Update current memory offset
-    m_deviceMemoryOffset += size;
+    m_offset[VULKAN_MEMORY_DEVICE] += size;
 
     // CubeMap memory successfully allocated
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Free cubemap memory                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void VulkanMemory::freeCubeMapMemory(VkDevice& vulkanDevice, CubeMap& cubemap)
-{
-    // Free image memory
-    if (m_memoryReady && vulkanDevice)
-    {
-        //vkFreeMemory(vulkanDevice, memory, 0);
-    }
 }

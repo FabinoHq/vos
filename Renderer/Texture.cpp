@@ -396,11 +396,6 @@ void Texture::destroyTexture(Renderer& renderer)
         {
             vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
         }
-
-        // Free texture memory
-        renderer.m_vulkanMemory.freeTextureMemory(
-            renderer.m_vulkanDevice, *this
-        );
     }
 
     m_height = 0;

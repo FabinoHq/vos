@@ -70,8 +70,11 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VulkanMemoryType
     {
-        VULKAN_MEMORY_DEVICE = 0,
-        VULKAN_MEMORY_HOST = 1
+        VULKAN_MEMORY_SWAPCHAIN = 0,
+        VULKAN_MEMORY_DEVICE = 1,
+        VULKAN_MEMORY_HOST = 2,
+
+        VULKAN_MEMORY_TYPESCOUNT = 3
     };
 
 
@@ -105,6 +108,18 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Allocate swapchain image memory                               //
+            //  return : True if swapchain image is successfully allocated    //
+            ////////////////////////////////////////////////////////////////////
+            bool allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Reset swapchain image memory                                  //
+            ////////////////////////////////////////////////////////////////////
+            void resetSwapchainMemory();
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Allocate buffer memory                                        //
             //  return : True if buffer memory is successfully allocated      //
             ////////////////////////////////////////////////////////////////////
@@ -118,23 +133,6 @@
             bool writeBufferMemory(VkDevice& vulkanDevice,
                 VulkanBuffer& buffer, const void* data);
 
-            ////////////////////////////////////////////////////////////////////
-            //  Free buffer memory                                            //
-            ////////////////////////////////////////////////////////////////////
-            void freeBufferMemory(VkDevice& vulkanDevice, VulkanBuffer& buffer);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Allocate swapchain image memory                               //
-            //  return : True if swapchain image is successfully allocated    //
-            ////////////////////////////////////////////////////////////////////
-            bool allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Reset swapchain image memory                                  //
-            ////////////////////////////////////////////////////////////////////
-            void resetSwapchainMemory();
-
 
             ////////////////////////////////////////////////////////////////////
             //  Allocate texture memory                                       //
@@ -143,11 +141,6 @@
             bool allocateTextureMemory(VkDevice& vulkanDevice,
                 Texture& texture);
 
-            ////////////////////////////////////////////////////////////////////
-            //  Free texture memory                                           //
-            ////////////////////////////////////////////////////////////////////
-            void freeTextureMemory(VkDevice& vulkanDevice, Texture& texture);
-
 
             ////////////////////////////////////////////////////////////////////
             //  Allocate cubemap memory                                       //
@@ -155,11 +148,6 @@
             ////////////////////////////////////////////////////////////////////
             bool allocateCubeMapMemory(VkDevice& vulkanDevice,
                 CubeMap& cubemap);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Free cubemap memory                                           //
-            ////////////////////////////////////////////////////////////////////
-            void freeCubeMapMemory(VkDevice& vulkanDevice, CubeMap& cubemap);
 
 
         private:
@@ -181,12 +169,9 @@
             uint32_t        m_maxAllocationCount;   // Maximum allocation count
             VkDeviceSize    m_memoryAlignment;      // Memory alignment
 
-            VkDeviceMemory  m_swapchainMemory;          // Swapchain memory
-            VkDeviceSize    m_swapchainMemoryOffset;    // Swapchain offset
-            VkDeviceMemory  m_deviceMemory;             // Device memory
-            VkDeviceSize    m_deviceMemoryOffset;       // Device offset
-            VkDeviceMemory  m_hostMemory;               // Host memory
-            VkDeviceSize    m_hostMemoryOffset;         // Host offset
+            VkDeviceMemory  m_memory[VULKAN_MEMORY_TYPESCOUNT];     // Memory
+            VkDeviceSize    m_offset[VULKAN_MEMORY_TYPESCOUNT];     // Offset
+            uint32_t        m_index[VULKAN_MEMORY_TYPESCOUNT];      // Index
     };
 
 
