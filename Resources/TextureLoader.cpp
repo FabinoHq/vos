@@ -325,6 +325,161 @@ void TextureLoader::destroyTextureLoader()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Upload texture to graphics memory                                         //
+//  return : True if texture is successfully uploaded                         //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::uploadTexture(VkImage& handle,
+	uint32_t width, uint32_t height, const unsigned char* data)
+{
+	// Create staging buffer
+    uint32_t textureSize = (width*height*4);
+    if (!m_stagingBuffer.createBuffer(
+        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
+        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VULKAN_MEMORY_HOST, textureSize))
+    {
+        // Could not create staging buffer
+        return false;
+    }
+
+    // Write data into staging buffer memory
+    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+        m_renderer.m_vulkanDevice, m_stagingBuffer, data))
+    {
+        // Could not write data into staging buffer memory
+        return false;
+    }
+
+    // Transfert staging buffer data to texture buffer
+    VkCommandBufferBeginInfo bufferBeginInfo;
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(m_commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    VkImageSubresourceRange subresourceRange;
+    subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresourceRange.baseMipLevel = 0;
+    subresourceRange.levelCount = 1;
+    subresourceRange.baseArrayLayer = 0;
+    subresourceRange.layerCount = 1;
+
+    VkImageMemoryBarrier undefinedToTransfer;
+    undefinedToTransfer.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    undefinedToTransfer.pNext = 0;
+    undefinedToTransfer.srcAccessMask = 0;
+    undefinedToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    undefinedToTransfer.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    undefinedToTransfer.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    undefinedToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    undefinedToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    undefinedToTransfer.image = handle;
+    undefinedToTransfer.subresourceRange = subresourceRange;
+
+    VkImageMemoryBarrier transferToShader;
+    transferToShader.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    transferToShader.pNext = 0;
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.image = handle;
+    transferToShader.subresourceRange = subresourceRange;
+
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        0, 0, 0, 0, 0, 1, &undefinedToTransfer
+    );
+
+    VkBufferImageCopy imageCopy;
+    imageCopy.bufferOffset = 0;
+    imageCopy.bufferRowLength = 0;
+    imageCopy.bufferImageHeight = 0;
+    imageCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageCopy.imageSubresource.mipLevel = 0;
+    imageCopy.imageSubresource.baseArrayLayer = 0;
+    imageCopy.imageSubresource.layerCount = 1;
+    imageCopy.imageOffset.x = 0;
+    imageCopy.imageOffset.y = 0;
+    imageCopy.imageOffset.z = 0;
+    imageCopy.imageExtent.width = width;
+    imageCopy.imageExtent.height = height;
+    imageCopy.imageExtent.depth = 1;
+
+    vkCmdCopyBufferToImage(
+        m_commandBuffer, m_stagingBuffer.handle, handle,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
+    );
+
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+        0, 0, 0, 0, 0, 1, &transferToShader
+    );
+
+    if (vkEndCommandBuffer(m_commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    // Reset staging fence
+    if (vkResetFences(
+        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    {
+        // Could not reset staging fence
+        return false;
+    }
+
+    // Submit queue
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &m_commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(m_renderer.m_graphicsQueue.handle,
+        1, &submitInfo, m_fence) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    // Wait for transfer to finish
+    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+        &m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
+    {
+        // Transfer timed out
+        return false;
+    }
+
+    // Destroy staging buffer
+    m_stagingBuffer.destroyBuffer(
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory
+    );
+
+	// Texture successfully uploaded
+	return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Load embedded textures                                                    //
 //  return : True if embedded textures are successfully loaded                //
 ////////////////////////////////////////////////////////////////////////////////

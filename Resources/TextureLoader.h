@@ -184,6 +184,14 @@
             void destroyTextureLoader();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Upload texture to graphics memory                             //
+            //  return : True if texture is successfully uploaded             //
+            ////////////////////////////////////////////////////////////////////
+            bool uploadTexture(VkImage& handle,
+                uint32_t width, uint32_t height, const unsigned char* data);
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  Load embedded textures                                        //
@@ -226,8 +234,6 @@
             VkFence                 m_fence;            // Staging fence
 
             Texture*                m_textures;         // Textures assets
-
-            friend class Texture;                       // Texture has access
     };
 
 
