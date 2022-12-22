@@ -356,6 +356,7 @@
             VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
             VkPhysicalDevice    m_physicalDevice;       // Physical device
             VkDevice            m_vulkanDevice;         // Vulkan device
+            VulkanDeviceQueues  m_vulkanQueues;         // Vulkan queues
             VulkanQueue         m_graphicsQueue;        // Graphics queue
             VulkanQueue         m_surfaceQueue;         // Surface queue
             VulkanQueue         m_transferQueue;        // Transfer queue

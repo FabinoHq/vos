@@ -46,6 +46,7 @@
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
     #include "../Renderer/Vulkan/Vulkan.h"
+    #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Texture.h"
 
@@ -229,6 +230,7 @@
             TextureLoaderState      m_state;            // TextureLoader state
             SysMutex                m_stateMutex;       // State mutex
 
+            VulkanQueue             m_graphicsQueue;    // Graphics queue
             VkCommandBuffer         m_commandBuffer;    // Command buffer
             VulkanBuffer            m_stagingBuffer;    // Staging buffer
             VkFence                 m_fence;            // Staging fence

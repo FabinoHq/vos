@@ -54,6 +54,7 @@ m_vulkanInstance(0),
 m_vulkanSurface(0),
 m_physicalDevice(0),
 m_vulkanDevice(0),
+m_vulkanQueues(),
 m_graphicsQueue(),
 m_surfaceQueue(),
 m_transferQueue(),
@@ -228,7 +229,7 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create Vulkan swapchain
     if (!m_swapchain.createSwapchain(m_physicalDevice, m_vulkanDevice,
-        m_vulkanSurface, m_surfaceQueue.index, m_vulkanMemory))
+        m_vulkanSurface, m_surfaceQueue.family, m_vulkanMemory))
     {
         // Could not create Vulkan swapchain
         return false;
@@ -241,7 +242,7 @@ bool Renderer::init(SysWindow* sysWindow)
     commandPoolInfo.flags =
         VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
         VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-    commandPoolInfo.queueFamilyIndex = m_transferQueue.index;
+    commandPoolInfo.queueFamilyIndex = m_transferQueue.family;
 
     if (vkCreateCommandPool(m_vulkanDevice,
         &commandPoolInfo, 0, &m_transferCommandPool) != VK_SUCCESS)
@@ -584,8 +585,8 @@ bool Renderer::startFrame()
     presentToDraw.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     presentToDraw.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     presentToDraw.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    presentToDraw.srcQueueFamilyIndex = m_surfaceQueue.index;
-    presentToDraw.dstQueueFamilyIndex = m_graphicsQueue.index;
+    presentToDraw.srcQueueFamilyIndex = m_surfaceQueue.family;
+    presentToDraw.dstQueueFamilyIndex = m_graphicsQueue.family;
     presentToDraw.image = m_swapchain.images[m_frameIndex];
     presentToDraw.subresourceRange = subresource;
 
@@ -727,8 +728,8 @@ bool Renderer::endFrame()
     drawToPresent.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     drawToPresent.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     drawToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    drawToPresent.srcQueueFamilyIndex = m_graphicsQueue.index;
-    drawToPresent.dstQueueFamilyIndex = m_surfaceQueue.index;
+    drawToPresent.srcQueueFamilyIndex = m_graphicsQueue.family;
+    drawToPresent.dstQueueFamilyIndex = m_surfaceQueue.family;
     drawToPresent.image = m_swapchain.images[m_frameIndex];
     drawToPresent.subresourceRange = subresource;
 
@@ -1469,7 +1470,7 @@ bool Renderer::selectVulkanDevice()
 
         // Get device queue families
         if (VulkanQueue::getDeviceQueues(m_vulkanSurface, physicalDevices[i],
-            m_graphicsQueue, m_surfaceQueue, m_transferQueue))
+            m_vulkanQueues, m_graphicsQueue, m_surfaceQueue, m_transferQueue))
         {
             // Current device supports graphics, surface, and transfer queues
             VkFormatProperties formatProperties;
@@ -1558,20 +1559,20 @@ bool Renderer::selectVulkanDevice()
     queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueInfos.back().pNext = 0;
     queueInfos.back().flags = 0;
-    queueInfos.back().queueFamilyIndex = m_graphicsQueue.index;
+    queueInfos.back().queueFamilyIndex = m_graphicsQueue.family;
     queueInfos.back().queueCount = static_cast<uint32_t>(
         queuePriorities.size()
     );
     queueInfos.back().pQueuePriorities = queuePriorities.data();
 
     // Add another queue if the surface queue is different
-    if (m_surfaceQueue.index != m_graphicsQueue.index)
+    if (m_surfaceQueue.family != m_graphicsQueue.family)
     {
         queueInfos.push_back(VkDeviceQueueCreateInfo());
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = m_surfaceQueue.index;
+        queueInfos.back().queueFamilyIndex = m_surfaceQueue.family;
         queueInfos.back().queueCount = static_cast<uint32_t>(
             queuePriorities.size()
         );
@@ -1579,14 +1580,14 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Add another queue if the transfer queue is different
-    if ((m_transferQueue.index != m_graphicsQueue.index) &&
-        (m_transferQueue.index != m_surfaceQueue.index))
+    if ((m_transferQueue.family != m_graphicsQueue.family) &&
+        (m_transferQueue.family != m_surfaceQueue.family))
     {
         queueInfos.push_back(VkDeviceQueueCreateInfo());
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = m_transferQueue.index;
+        queueInfos.back().queueFamilyIndex = m_transferQueue.family;
         queueInfos.back().queueCount = static_cast<uint32_t>(
             queuePriorities.size()
         );

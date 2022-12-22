@@ -47,6 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 VulkanQueue::VulkanQueue() :
 handle(0),
+family(0),
 index(0)
 {
 
@@ -58,6 +59,7 @@ index(0)
 VulkanQueue::~VulkanQueue()
 {
     index = 0;
+    family = 0;
     handle = 0;
 }
 
@@ -78,7 +80,7 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
     }
 
     // Get queue handle
-    vkGetDeviceQueue(vulkanDevice, index, 0, &handle);
+    vkGetDeviceQueue(vulkanDevice, family, index, &handle);
     if (!handle)
     {
         // Invalid queue handle
@@ -97,7 +99,8 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
 //  return : True if the device supports all queue families                   //
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
-    VkPhysicalDevice& physicalDevice, VulkanQueue& graphicsQueue,
+    VkPhysicalDevice& physicalDevice,
+    VulkanDeviceQueues& vulkanQueues, VulkanQueue& graphicsQueue,
     VulkanQueue& surfaceQueue, VulkanQueue& transferQueue)
 {
     // Check Vulkan surface
@@ -133,13 +136,17 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
 
     // Get device queue families list
     bool graphicsQueueFound = false;
-    uint32_t graphicsQueueIndex = 0;
+    uint32_t graphicsQueueFamily = 0;
+    uint32_t graphicsQueueMax = 0;
     bool surfaceQueueFound = false;
-    uint32_t surfaceQueueIndex = 0;
+    uint32_t surfaceQueueFamily = 0;
+    uint32_t surfaceQueueMax = 0;
     bool fallbackTransferQueueFound = false;
-    uint32_t fallbackTransferQueueIndex = 0;
+    uint32_t fallbackTransferQueueFamily = 0;
+    uint32_t fallbackTransferQueueMax = 0;
     bool transferQueueFound = false;
-    uint32_t transferQueueIndex = 0;
+    uint32_t transferQueueFamily = 0;
+    uint32_t transferQueueMax = 0;
     std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
     std::vector<VkBool32> queueSurfaceSupport(queueFamilyCount);
 
@@ -163,8 +170,9 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
                 // Fallback transfer queue found
                 if (!fallbackTransferQueueFound)
                 {
-                    fallbackTransferQueueIndex = i;
+                    fallbackTransferQueueFamily = i;
                     fallbackTransferQueueFound = true;
+                    fallbackTransferQueueMax = queueFamilies[i].queueCount;
                 }
             }
 
@@ -175,18 +183,21 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
                 if (queueSurfaceSupport[i])
                 {
                     // Current queue supports both graphics and surface
-                    graphicsQueueIndex = i;
+                    graphicsQueueFamily = i;
                     graphicsQueueFound = true;
-                    surfaceQueueIndex = i;
+                    graphicsQueueMax = queueFamilies[i].queueCount;
+                    surfaceQueueFamily = i;
                     surfaceQueueFound = true;
+                    surfaceQueueMax = queueFamilies[i].queueCount;
                 }
                 else
                 {
                     // Current queue supports only graphics
                     if (!graphicsQueueFound)
                     {
-                        graphicsQueueIndex = i;
+                        graphicsQueueFamily = i;
                         graphicsQueueFound = true;
+                        graphicsQueueMax = queueFamilies[i].queueCount;
                     }
                 }
             }
@@ -198,8 +209,9 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
                     // Transfer queue found
                     if (!transferQueueFound)
                     {
-                        transferQueueIndex = i;
+                        transferQueueFamily = i;
                         transferQueueFound = true;
+                        transferQueueMax = queueFamilies[i].queueCount;
                     }
                 }
 
@@ -208,8 +220,9 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
                     // Current queue supports only surface
                     if (!surfaceQueueFound)
                     {
-                        surfaceQueueIndex = i;
+                        surfaceQueueFamily = i;
                         surfaceQueueFound = true;
+                        surfaceQueueMax = queueFamilies[i].queueCount;
                     }
                 }
             }
@@ -219,8 +232,9 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     // Set fallback transfer queue
     if (!transferQueueFound && fallbackTransferQueueFound)
     {
-        transferQueueIndex = fallbackTransferQueueIndex;
+        transferQueueFamily = fallbackTransferQueueFamily;
         transferQueueFound = true;
+        transferQueueMax = fallbackTransferQueueMax;
     }
 
     // Check if current device supports graphics, surface, and transfer queues
@@ -232,8 +246,18 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     }
 
     // Current device supports graphics, surface, and transfer queues
-    graphicsQueue.index = graphicsQueueIndex;
-    surfaceQueue.index = surfaceQueueIndex;
-    transferQueue.index = transferQueueIndex;
+    vulkanQueues.graphicsQueueFamily = graphicsQueueFamily;
+    vulkanQueues.graphicsQueueIndex = 0;
+    vulkanQueues.graphicsQueueMax = graphicsQueueMax;
+    vulkanQueues.surfaceQueueFamily = surfaceQueueFamily;
+    vulkanQueues.surfaceQueueIndex = 0;
+    vulkanQueues.surfaceQueueMax = surfaceQueueMax;
+    vulkanQueues.transferQueueFamily = graphicsQueueFamily;
+    vulkanQueues.transferQueueIndex = 0;
+    vulkanQueues.transferQueueMax = transferQueueMax;
+
+    graphicsQueue.family = graphicsQueueFamily;
+    surfaceQueue.family = surfaceQueueFamily;
+    transferQueue.family = transferQueueFamily;
     return true;
 }

@@ -50,6 +50,25 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  VulkanDeviceQueues structure definition                               //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VulkanDeviceQueues
+    {
+        uint32_t graphicsQueueFamily;
+        uint32_t graphicsQueueIndex;
+        uint32_t graphicsQueueMax;
+
+        uint32_t surfaceQueueFamily;
+        uint32_t surfaceQueueIndex;
+        uint32_t surfaceQueueMax;
+
+        uint32_t transferQueueFamily;
+        uint32_t transferQueueIndex;
+        uint32_t transferQueueMax;
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VulkanQueue class definition                                          //
     ////////////////////////////////////////////////////////////////////////////
     class VulkanQueue
@@ -78,7 +97,8 @@
             //  return : True if the device supports all queue families       //
             ////////////////////////////////////////////////////////////////////
             static bool getDeviceQueues(VkSurfaceKHR& vulkanSurface,
-                VkPhysicalDevice& physicalDevice, VulkanQueue& graphicsQueue,
+                VkPhysicalDevice& physicalDevice,
+                VulkanDeviceQueues& vulkanQueues, VulkanQueue& graphicsQueue,
                 VulkanQueue& surfaceQueue, VulkanQueue& transferQueue);
 
 
@@ -96,6 +116,7 @@
 
         public:
             VkQueue     handle;     // Queue handle
+            uint32_t    family;     // Queue family
             uint32_t    index;      // Queue index
     };
 

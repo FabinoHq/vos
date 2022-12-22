@@ -50,6 +50,7 @@ TextureLoader::TextureLoader(Renderer& renderer) :
 m_renderer(renderer),
 m_state(TEXTURELOADER_STATE_NONE),
 m_stateMutex(),
+m_graphicsQueue(),
 m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
@@ -176,6 +177,13 @@ void TextureLoader::process()
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureLoader::init()
 {
+    // Request graphics queue handle
+    /*if (!m_graphicsQueue.createVulkanQueue(m_renderer.m_vulkanDevice))
+    {
+        // Could not get graphics queue handle
+        return false;
+    }*/
+
 	// Allocate command buffer
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
