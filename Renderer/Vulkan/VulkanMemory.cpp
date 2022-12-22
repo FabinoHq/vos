@@ -420,124 +420,62 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    if (memoryType == VULKAN_MEMORY_DEVICE)
+    // Check memory type bits
+    if (!(memoryRequirements.memoryTypeBits & (1 << m_index[memoryType])))
     {
-        // Check memory type bits
-        if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
+        // Invalid memory type bits
+        return false;
+    }
+
+    // Compute memory alignment
+    VkDeviceSize size = memoryRequirements.size;
+    VkDeviceSize alignment = m_memoryAlignment;
+    if (memoryRequirements.alignment >= alignment)
+    {
+        alignment = memoryRequirements.alignment;
+        if ((alignment % m_memoryAlignment) != 0)
         {
-            // Invalid memory type bits
+            // Invalid memory alignment
             return false;
         }
-
-        // Compute memory alignment
-        VkDeviceSize size = memoryRequirements.size;
-        VkDeviceSize alignment = m_memoryAlignment;
-        if (memoryRequirements.alignment >= alignment)
-        {
-            alignment = memoryRequirements.alignment;
-            if ((alignment % m_memoryAlignment) != 0)
-            {
-                // Invalid memory alignment
-                return false;
-            }
-        }
-        else
-        {
-            if ((alignment % memoryRequirements.alignment) != 0)
-            {
-                // Invalid memory alignment
-                return false;
-            }
-        }
-
-        // Adjust memory size according to alignment
-        VkDeviceSize sizeOffset = (size % alignment);
-        if (sizeOffset != 0)
-        {
-            size += (alignment - sizeOffset);
-        }
-
-        // Adjust memory start offset according to alignment
-        VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_DEVICE] % alignment);
-        if (startOffset != 0)
-        {
-            m_offset[VULKAN_MEMORY_DEVICE] += (alignment - startOffset);
-        }
-
-        // Set buffer memory size and offset
-        buffer.memorySize = size;
-        buffer.memoryOffset = m_offset[VULKAN_MEMORY_DEVICE];
-
-        // Bind buffer memory
-        if (vkBindBufferMemory(vulkanDevice, buffer.handle,
-            m_memory[VULKAN_MEMORY_DEVICE], buffer.memoryOffset) != VK_SUCCESS)
-        {
-            // Could not bind buffer memory
-            return false;
-        }
-
-        // Update current memory offset
-        m_offset[VULKAN_MEMORY_DEVICE] += size;
     }
     else
     {
-        // Check memory type bits
-        if (!(memoryRequirements.memoryTypeBits & (1 << m_hostMemoryIndex)))
+        if ((alignment % memoryRequirements.alignment) != 0)
         {
-            // Invalid memory type bits
+            // Invalid memory alignment
             return false;
         }
-
-        // Compute memory alignment
-        VkDeviceSize size = memoryRequirements.size;
-        VkDeviceSize alignment = m_memoryAlignment;
-        if (memoryRequirements.alignment >= alignment)
-        {
-            alignment = memoryRequirements.alignment;
-            if ((alignment % m_memoryAlignment) != 0)
-            {
-                // Invalid memory alignment
-                return false;
-            }
-        }
-        else
-        {
-            if ((alignment % memoryRequirements.alignment) != 0)
-            {
-                // Invalid memory alignment
-                return false;
-            }
-        }
-
-        // Adjust memory size according to alignment
-        VkDeviceSize sizeOffset = (size % alignment);
-        if (sizeOffset != 0)
-        {
-            size += (alignment - sizeOffset);
-        }
-
-        // Adjust memory start offset according to alignment
-        VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_HOST] % alignment);
-        if (startOffset != 0)
-        {
-            m_offset[VULKAN_MEMORY_HOST] += (alignment - startOffset);
-        }
-
-        // Set buffer memory size and offset
-        buffer.memorySize = size;
-        buffer.memoryOffset = m_offset[VULKAN_MEMORY_HOST];
-
-        // Bind buffer memory
-        if (vkBindBufferMemory(vulkanDevice, buffer.handle,
-            m_memory[VULKAN_MEMORY_HOST], buffer.memoryOffset) != VK_SUCCESS)
-        {
-            // Could not bind buffer memory
-            return false;
-        }
-
-        // Update current memory offset
-        m_offset[VULKAN_MEMORY_HOST] += size;
     }
+
+    // Adjust memory size according to alignment
+    VkDeviceSize sizeOffset = (size % alignment);
+    if (sizeOffset != 0)
+    {
+        size += (alignment - sizeOffset);
+    }
+
+    // Adjust memory start offset according to alignment
+    VkDeviceSize startOffset = (m_offset[memoryType] % alignment);
+    if (startOffset != 0)
+    {
+        m_offset[memoryType] += (alignment - startOffset);
+    }
+
+    // Set buffer memory size and offset
+    buffer.memorySize = size;
+    buffer.memoryOffset = m_offset[memoryType];
+
+    // Bind buffer memory
+    if (vkBindBufferMemory(vulkanDevice, buffer.handle,
+        m_memory[memoryType], buffer.memoryOffset) != VK_SUCCESS)
+    {
+        // Could not bind buffer memory
+        return false;
+    }
+
+    // Update current memory offset
+    m_offset[memoryType] += size;
 
     // Buffer memory successfully allocated
     return true;
@@ -548,7 +486,7 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
 //  return : True if buffer memory is successfully written                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
-    VulkanBuffer& buffer, const void* data)
+    VulkanBuffer& buffer, const void* data, VulkanMemoryType memoryType)
 {
     // Check Vulkan memory
     if (!m_memoryReady)
@@ -578,9 +516,16 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
+    // Check memory type
+    if (m_index[memoryType] != m_hostMemoryIndex)
+    {
+        // Invalid memory type
+        return false;
+    }
+
     // Map buffer memory
     void* bufferMemory = 0;
-    if (vkMapMemory(vulkanDevice, m_memory[VULKAN_MEMORY_HOST],
+    if (vkMapMemory(vulkanDevice, m_memory[memoryType],
         buffer.memoryOffset, buffer.memorySize, 0, &bufferMemory) != VK_SUCCESS)
     {
         // Could not map buffer memory
@@ -599,7 +544,7 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
     VkMappedMemoryRange memoryRange;
     memoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     memoryRange.pNext = 0;
-    memoryRange.memory = m_memory[VULKAN_MEMORY_HOST];
+    memoryRange.memory = m_memory[memoryType];
     memoryRange.offset = buffer.memoryOffset;
     memoryRange.size = buffer.memorySize;
 
@@ -609,7 +554,7 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
         return false;
     }
 
-    vkUnmapMemory(vulkanDevice, m_memory[VULKAN_MEMORY_HOST]);
+    vkUnmapMemory(vulkanDevice, m_memory[memoryType]);
 
     // Buffer memory successfully mapped
     return true;
@@ -621,7 +566,7 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
 //  return : True if texture memory is successfully allocated                 //
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
-    Texture& texture)
+    Texture& texture, VulkanMemoryType memoryType)
 {
     // Check Vulkan memory
     if (!m_memoryReady)
@@ -644,6 +589,13 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
         return false;
     }
 
+    // Check memory type
+    if (m_index[memoryType] != m_deviceMemoryIndex)
+    {
+        // Invalid memory type
+        return false;
+    }
+
     // Get memory requirements
     VkMemoryRequirements memoryRequirements;
     texture.getMemoryRequirements(vulkanDevice, &memoryRequirements);
@@ -656,7 +608,7 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
     }
 
     // Check memory type bits
-    if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
+    if (!(memoryRequirements.memoryTypeBits & (1 << m_index[memoryType])))
     {
         // Invalid memory type bits
         return false;
@@ -691,22 +643,22 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
     }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_DEVICE] % alignment);
+    VkDeviceSize startOffset = (m_offset[memoryType] % alignment);
     if (startOffset != 0)
     {
-        m_offset[VULKAN_MEMORY_DEVICE] += (alignment - startOffset);
+        m_offset[memoryType] += (alignment - startOffset);
     }
 
     // Bind texture memory
     if (!texture.bindTextureMemory(vulkanDevice,
-        m_memory[VULKAN_MEMORY_DEVICE], size, m_offset[VULKAN_MEMORY_DEVICE]))
+        m_memory[memoryType], size, m_offset[memoryType]))
     {
         // Could not bind texture memory
         return false;
     }
 
     // Update current memory offset
-    m_offset[VULKAN_MEMORY_DEVICE] += size;
+    m_offset[memoryType] += size;
 
     // Texture memory successfully allocated
     return true;
@@ -718,7 +670,7 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
 //  return : True if cubemap memory is successfully allocated                 //
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanMemory::allocateCubeMapMemory(VkDevice& vulkanDevice,
-    CubeMap& cubemap)
+    CubeMap& cubemap, VulkanMemoryType memoryType)
 {
     // Check Vulkan memory
     if (!m_memoryReady)
@@ -741,6 +693,13 @@ bool VulkanMemory::allocateCubeMapMemory(VkDevice& vulkanDevice,
         return false;
     }
 
+    // Check memory type
+    if (m_index[memoryType] != m_deviceMemoryIndex)
+    {
+        // Invalid memory type
+        return false;
+    }
+
     // Get memory requirements
     VkMemoryRequirements memoryRequirements;
     cubemap.getMemoryRequirements(vulkanDevice, &memoryRequirements);
@@ -753,7 +712,7 @@ bool VulkanMemory::allocateCubeMapMemory(VkDevice& vulkanDevice,
     }
 
     // Check memory type bits
-    if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
+    if (!(memoryRequirements.memoryTypeBits & (1 << m_index[memoryType])))
     {
         // Invalid memory type bits
         return false;
@@ -788,22 +747,22 @@ bool VulkanMemory::allocateCubeMapMemory(VkDevice& vulkanDevice,
     }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_offset[VULKAN_MEMORY_DEVICE] % alignment);
+    VkDeviceSize startOffset = (m_offset[memoryType] % alignment);
     if (startOffset != 0)
     {
-        m_offset[VULKAN_MEMORY_DEVICE] += (alignment - startOffset);
+        m_offset[memoryType] += (alignment - startOffset);
     }
 
     // Bind cubemap memory
     if (!cubemap.bindCubeMapMemory(vulkanDevice,
-        m_memory[VULKAN_MEMORY_DEVICE], size, m_offset[VULKAN_MEMORY_DEVICE]))
+        m_memory[memoryType], size, m_offset[memoryType]))
     {
         // Could not bind cubemap memory
         return false;
     }
 
     // Update current memory offset
-    m_offset[VULKAN_MEMORY_DEVICE] += size;
+    m_offset[memoryType] += size;
 
     // CubeMap memory successfully allocated
     return true;

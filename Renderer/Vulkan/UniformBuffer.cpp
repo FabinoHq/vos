@@ -168,7 +168,8 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 
 
     // Write data into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(vulkanDevice, stagingBuffer, data))
+    if (!vulkanMemory.writeBufferMemory(
+        vulkanDevice, stagingBuffer, data, VULKAN_MEMORY_HOST))
     {
         // Could not write data into staging buffer memory
         return false;

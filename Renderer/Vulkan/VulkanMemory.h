@@ -130,8 +130,8 @@
             //  Write buffer memory                                           //
             //  return : True if buffer memory is successfully written        //
             ////////////////////////////////////////////////////////////////////
-            bool writeBufferMemory(VkDevice& vulkanDevice,
-                VulkanBuffer& buffer, const void* data);
+            bool writeBufferMemory(VkDevice& vulkanDevice, VulkanBuffer& buffer,
+                const void* data, VulkanMemoryType memoryType);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -139,7 +139,7 @@
             //  return : True if texture memory is successfully allocated     //
             ////////////////////////////////////////////////////////////////////
             bool allocateTextureMemory(VkDevice& vulkanDevice,
-                Texture& texture);
+                Texture& texture, VulkanMemoryType memoryType);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -147,7 +147,7 @@
             //  return : True if cubemap memory is successfully allocated     //
             ////////////////////////////////////////////////////////////////////
             bool allocateCubeMapMemory(VkDevice& vulkanDevice,
-                CubeMap& cubemap);
+                CubeMap& cubemap, VulkanMemoryType memoryType);
 
 
         private:

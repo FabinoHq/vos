@@ -155,7 +155,7 @@ bool CubeMap::createCubeMap(Renderer& renderer,
 
     // Allocate cubemap memory
     if (!renderer.m_vulkanMemory.allocateCubeMapMemory(
-        renderer.m_vulkanDevice, *this))
+        renderer.m_vulkanDevice, *this, VULKAN_MEMORY_DEVICE))
     {
         // Could not allocate cubemap memory
         return false;
@@ -350,7 +350,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
 
     // Write data into staging buffer memory
     if (!renderer.m_vulkanMemory.writeBufferMemory(
-        renderer.m_vulkanDevice, m_stagingBuffer, data))
+        renderer.m_vulkanDevice, m_stagingBuffer, data, VULKAN_MEMORY_HOST))
     {
         // Could not write data into staging buffer memory
         return false;
