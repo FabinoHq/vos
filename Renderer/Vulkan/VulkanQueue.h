@@ -86,10 +86,25 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan queue from index                                //
-            //  return : True if the queue is successfully created            //
+            //  Create graphics queue                                         //
+            //  return : True if the graphics queue is successfully created   //
             ////////////////////////////////////////////////////////////////////
-            bool createVulkanQueue(VkDevice& vulkanDevice);
+            bool createGraphicsQueue(VkDevice& vulkanDevice,
+                VulkanDeviceQueues& vulkanQueues);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create surface queue                                          //
+            //  return : True if the surface queue is successfully created    //
+            ////////////////////////////////////////////////////////////////////
+            bool createSurfaceQueue(VkDevice& vulkanDevice,
+                VulkanDeviceQueues& vulkanQueues);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create transfer queue                                         //
+            //  return : True if the transfer queue is successfully created   //
+            ////////////////////////////////////////////////////////////////////
+            bool createTransferQueue(VkDevice& vulkanDevice,
+                VulkanDeviceQueues& vulkanQueues);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -98,8 +113,7 @@
             ////////////////////////////////////////////////////////////////////
             static bool getDeviceQueues(VkSurfaceKHR& vulkanSurface,
                 VkPhysicalDevice& physicalDevice,
-                VulkanDeviceQueues& vulkanQueues, VulkanQueue& graphicsQueue,
-                VulkanQueue& surfaceQueue, VulkanQueue& transferQueue);
+                VulkanDeviceQueues& vulkanQueues);
 
 
         private:

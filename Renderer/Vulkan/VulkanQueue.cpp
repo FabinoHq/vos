@@ -65,10 +65,11 @@ VulkanQueue::~VulkanQueue()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Vulkan queue from index                                            //
-//  return : True if the queue is successfully created                        //
+//  Create graphics queue                                                     //
+//  return : True if the graphics queue is successfully created               //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
+bool VulkanQueue::createGraphicsQueue(VkDevice& vulkanDevice,
+    VulkanDeviceQueues& vulkanQueues)
 {
     // Check Vulkan device
     if (!vulkanDevice)
@@ -79,17 +80,143 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
         return false;
     }
 
+    // Get graphics queue family
+    family = vulkanQueues.graphicsQueueFamily;
+    index = vulkanQueues.graphicsQueueIndex;
+    if (index >= (vulkanQueues.graphicsQueueMax-1))
+    {
+        // Invalid queue count
+        SysMessage::box() << "[0x301F] Invalid queue count\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Get queue handle
     vkGetDeviceQueue(vulkanDevice, family, index, &handle);
     if (!handle)
     {
         // Invalid queue handle
-        SysMessage::box() << "[0x301F] Invalid queue handle\n";
+        SysMessage::box() << "[0x3020] Invalid queue handle\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
-    // Vulkan queue successfully created
+    // Increment queue family usage
+    ++vulkanQueues.graphicsQueueIndex;
+    if (vulkanQueues.surfaceQueueFamily == family)
+    {
+        ++vulkanQueues.surfaceQueueIndex;
+    }
+    if (vulkanQueues.transferQueueFamily == family)
+    {
+        ++vulkanQueues.transferQueueIndex;
+    }
+
+    // Graphics queue successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create surface queue                                                      //
+//  return : True if the surface queue is successfully created                //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanQueue::createSurfaceQueue(VkDevice& vulkanDevice,
+    VulkanDeviceQueues& vulkanQueues)
+{
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        SysMessage::box() << "[0x301E] Invalid Vulkan device\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Get surface queue family
+    family = vulkanQueues.surfaceQueueFamily;
+    index = vulkanQueues.surfaceQueueIndex;
+    if (index >= (vulkanQueues.surfaceQueueMax-1))
+    {
+        // Invalid queue count
+        SysMessage::box() << "[0x301F] Invalid queue count\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Get queue handle
+    vkGetDeviceQueue(vulkanDevice, family, index, &handle);
+    if (!handle)
+    {
+        // Invalid queue handle
+        SysMessage::box() << "[0x3020] Invalid queue handle\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Increment queue family usage
+    ++vulkanQueues.surfaceQueueIndex;
+    if (vulkanQueues.graphicsQueueFamily == family)
+    {
+        ++vulkanQueues.graphicsQueueIndex;
+    }
+    if (vulkanQueues.transferQueueFamily == family)
+    {
+        ++vulkanQueues.transferQueueIndex;
+    }
+
+    // Surface queue successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create transfer queue                                                     //
+//  return : True if the transfer queue is successfully created               //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanQueue::createTransferQueue(VkDevice& vulkanDevice,
+    VulkanDeviceQueues& vulkanQueues)
+{
+    // Check Vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid Vulkan device
+        SysMessage::box() << "[0x301E] Invalid Vulkan device\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Get transfer queue family
+    family = vulkanQueues.transferQueueFamily;
+    index = vulkanQueues.transferQueueIndex;
+    if (index >= (vulkanQueues.transferQueueMax-1))
+    {
+        // Invalid queue count
+        SysMessage::box() << "[0x301F] Invalid queue count\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Get queue handle
+    vkGetDeviceQueue(vulkanDevice, family, index, &handle);
+    if (!handle)
+    {
+        // Invalid queue handle
+        SysMessage::box() << "[0x3020] Invalid queue handle\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Increment queue family usage
+    ++vulkanQueues.transferQueueIndex;
+    if (vulkanQueues.graphicsQueueFamily == family)
+    {
+        ++vulkanQueues.graphicsQueueIndex;
+    }
+    if (vulkanQueues.surfaceQueueFamily == family)
+    {
+        ++vulkanQueues.surfaceQueueIndex;
+    }
+
+    // Transfer queue successfully created
     return true;
 }
 
@@ -100,8 +227,7 @@ bool VulkanQueue::createVulkanQueue(VkDevice& vulkanDevice)
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     VkPhysicalDevice& physicalDevice,
-    VulkanDeviceQueues& vulkanQueues, VulkanQueue& graphicsQueue,
-    VulkanQueue& surfaceQueue, VulkanQueue& transferQueue)
+    VulkanDeviceQueues& vulkanQueues)
 {
     // Check Vulkan surface
     if (!vulkanSurface)
@@ -252,12 +378,8 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     vulkanQueues.surfaceQueueFamily = surfaceQueueFamily;
     vulkanQueues.surfaceQueueIndex = 0;
     vulkanQueues.surfaceQueueMax = surfaceQueueMax;
-    vulkanQueues.transferQueueFamily = graphicsQueueFamily;
+    vulkanQueues.transferQueueFamily = transferQueueFamily;
     vulkanQueues.transferQueueIndex = 0;
     vulkanQueues.transferQueueMax = transferQueueMax;
-
-    graphicsQueue.family = graphicsQueueFamily;
-    surfaceQueue.family = surfaceQueueFamily;
-    transferQueue.family = transferQueueFamily;
     return true;
 }

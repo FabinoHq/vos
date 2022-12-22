@@ -207,21 +207,21 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Request graphics queue handle
-    if (!m_graphicsQueue.createVulkanQueue(m_vulkanDevice))
+    if (!m_graphicsQueue.createGraphicsQueue(m_vulkanDevice, m_vulkanQueues))
     {
         // Could not get graphics queue handle
         return false;
     }
 
     // Request surface queue handle
-    if (!m_surfaceQueue.createVulkanQueue(m_vulkanDevice))
+    if (!m_surfaceQueue.createSurfaceQueue(m_vulkanDevice, m_vulkanQueues))
     {
         // Could not get surface queue handle
         return false;
     }
 
     // Request transfer queue handle
-    if (!m_transferQueue.createVulkanQueue(m_vulkanDevice))
+    if (!m_transferQueue.createTransferQueue(m_vulkanDevice, m_vulkanQueues))
     {
         // Could not get surface queue handle
         return false;
@@ -248,14 +248,14 @@ bool Renderer::init(SysWindow* sysWindow)
         &commandPoolInfo, 0, &m_transferCommandPool) != VK_SUCCESS)
     {
         // Could not create transfer commands pool
-        SysMessage::box() << "[0x3042] Could not create commands pool\n";
+        SysMessage::box() << "[0x3044] Could not create commands pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_transferCommandPool)
     {
         // Invalid transfer commands pool
-        SysMessage::box() << "[0x3043] Invalid transfer commands pool\n";
+        SysMessage::box() << "[0x3045] Invalid transfer commands pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -279,14 +279,14 @@ bool Renderer::init(SysWindow* sysWindow)
         &uniformsPoolInfo, 0, &m_uniformsDescPool) != VK_SUCCESS)
     {
         // Could not create uniforms descriptor pool
-        SysMessage::box() << "[0x3046] Could not create uniforms desc pool\n";
+        SysMessage::box() << "[0x3048] Could not create uniforms desc pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_uniformsDescPool)
     {
         // Invalid uniforms descriptor pool
-        SysMessage::box() << "[0x3047] Invalid uniforms descriptor pool\n";
+        SysMessage::box() << "[0x3049] Invalid uniforms descriptor pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -310,14 +310,14 @@ bool Renderer::init(SysWindow* sysWindow)
         &texturesPoolInfo, 0, &m_texturesDescPool) != VK_SUCCESS)
     {
         // Could not create textures descriptor pool
-        SysMessage::box() << "[0x3048] Could not create textures desc pool\n";
+        SysMessage::box() << "[0x304A] Could not create textures desc pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_texturesDescPool)
     {
         // Invalid textures descriptor pool
-        SysMessage::box() << "[0x3049] Invalid textures descriptor pool\n";
+        SysMessage::box() << "[0x304B] Invalid textures descriptor pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -326,7 +326,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_layout.createLayout(m_vulkanDevice, m_swapchain))
     {
         // Could not create default pipeline layout
-        SysMessage::box() << "[0x304A] Could not create default layout\n";
+        SysMessage::box() << "[0x304C] Could not create default layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -341,7 +341,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_pipeline.createPipeline(*this))
     {
         // Could not create default pipeline
-        SysMessage::box() << "[0x304B] Could not create default pipeline\n";
+        SysMessage::box() << "[0x304D] Could not create default pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -356,7 +356,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_ninePatchPipeline.createPipeline(*this))
     {
         // Could not create ninepatch pipeline
-        SysMessage::box() << "[0x304C] Could not create ninepatch pipeline\n";
+        SysMessage::box() << "[0x304E] Could not create ninepatch pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -371,7 +371,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_rectanglePipeline.createPipeline(*this))
     {
         // Could not create rectangle pipeline
-        SysMessage::box() << "[0x304D] Could not create rectangle pipeline\n";
+        SysMessage::box() << "[0x304F] Could not create rectangle pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -386,7 +386,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_ellipsePipeline.createPipeline(*this))
     {
         // Could not create ellipse pipeline
-        SysMessage::box() << "[0x304E] Could not create ellipse pipeline\n";
+        SysMessage::box() << "[0x3050] Could not create ellipse pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -402,7 +402,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create shape pipeline
-        SysMessage::box() << "[0x304F] Could not create shape pipeline\n";
+        SysMessage::box() << "[0x3051] Could not create shape pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -417,7 +417,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_pxTextPipeline.createPipeline(*this))
     {
         // Could not create pixel text pipeline
-        SysMessage::box() << "[0x3050] Could not create pixel text pipeline\n";
+        SysMessage::box() << "[0x3052] Could not create pixel text pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -433,7 +433,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_CUBEMAP, false, true))
     {
         // Could not create skybox pipeline
-        SysMessage::box() << "[0x3051] Could not create skybox pipeline\n";
+        SysMessage::box() << "[0x3053] Could not create skybox pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -449,7 +449,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
-        SysMessage::box() << "[0x3052] Could not create static mesh pipeline\n";
+        SysMessage::box() << "[0x3054] Could not create static mesh pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -461,7 +461,7 @@ bool Renderer::init(SysWindow* sysWindow)
         DefaultVerticesCount, DefaultIndicesCount))
     {
         // Could not create default vertex buffer
-        SysMessage::box() << "[0x3053] Could not create vertex buffer\n";
+        SysMessage::box() << "[0x3055] Could not create vertex buffer\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -1469,8 +1469,8 @@ bool Renderer::selectVulkanDevice()
         }
 
         // Get device queue families
-        if (VulkanQueue::getDeviceQueues(m_vulkanSurface, physicalDevices[i],
-            m_vulkanQueues, m_graphicsQueue, m_surfaceQueue, m_transferQueue))
+        if (VulkanQueue::getDeviceQueues(
+            m_vulkanSurface, physicalDevices[i], m_vulkanQueues))
         {
             // Current device supports graphics, surface, and transfer queues
             VkFormatProperties formatProperties;
@@ -1553,41 +1553,58 @@ bool Renderer::selectVulkanDevice()
     std::vector<float> queuePriorities;
     queuePriorities.push_back(1.0f);
 
-    // Set queue create infos
+    // Set double queue priorities
+    std::vector<float> queuePriorities2;
+    queuePriorities2.push_back(1.0f);
+    queuePriorities2.push_back(1.0f);
+
+    // Set graphics queues create infos
     std::vector<VkDeviceQueueCreateInfo> queueInfos;
     queueInfos.push_back(VkDeviceQueueCreateInfo());
     queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueInfos.back().pNext = 0;
     queueInfos.back().flags = 0;
-    queueInfos.back().queueFamilyIndex = m_graphicsQueue.family;
+    queueInfos.back().queueFamilyIndex = m_vulkanQueues.graphicsQueueFamily;
     queueInfos.back().queueCount = static_cast<uint32_t>(
         queuePriorities.size()
     );
     queueInfos.back().pQueuePriorities = queuePriorities.data();
 
-    // Add another queue if the surface queue is different
-    if (m_surfaceQueue.family != m_graphicsQueue.family)
+    // Set surface queues create infos
+    if (m_vulkanQueues.surfaceQueueFamily != m_vulkanQueues.graphicsQueueFamily)
     {
+        // Add another queue if the surface queue is different
         queueInfos.push_back(VkDeviceQueueCreateInfo());
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = m_surfaceQueue.family;
+        queueInfos.back().queueFamilyIndex = m_vulkanQueues.surfaceQueueFamily;
         queueInfos.back().queueCount = static_cast<uint32_t>(
             queuePriorities.size()
         );
         queueInfos.back().pQueuePriorities = queuePriorities.data();
     }
-
-    // Add another queue if the transfer queue is different
-    if ((m_transferQueue.family != m_graphicsQueue.family) &&
-        (m_transferQueue.family != m_surfaceQueue.family))
+    else
     {
+        // Increment queues number if the surface queue is the same
+        queueInfos.back().queueCount = static_cast<uint32_t>(
+            queuePriorities2.size()
+        );
+        queueInfos.back().pQueuePriorities = queuePriorities2.data();
+    }
+
+    // Set transfer queues create infos
+    if ((m_vulkanQueues.transferQueueFamily !=
+        m_vulkanQueues.graphicsQueueFamily) &&
+        (m_vulkanQueues.transferQueueFamily !=
+        m_vulkanQueues.surfaceQueueFamily))
+    {
+        // Add another queue if the transfer queue is different
         queueInfos.push_back(VkDeviceQueueCreateInfo());
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = m_transferQueue.family;
+        queueInfos.back().queueFamilyIndex = m_vulkanQueues.transferQueueFamily;
         queueInfos.back().queueCount = static_cast<uint32_t>(
             queuePriorities.size()
         );
