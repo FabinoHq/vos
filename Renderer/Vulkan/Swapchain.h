@@ -81,7 +81,7 @@
             ////////////////////////////////////////////////////////////////////
             bool createSwapchain(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                uint32_t surfaceQueueIndex, VulkanMemory& vulkanMemory);
+                uint32_t surfaceQueueFamily, VulkanMemory& vulkanMemory);
 
             ////////////////////////////////////////////////////////////////////
             //  Resize swapchain                                              //

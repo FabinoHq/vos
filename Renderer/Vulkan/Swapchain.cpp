@@ -106,7 +106,7 @@ Swapchain::~Swapchain()
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-    uint32_t surfaceQueueIndex, VulkanMemory& vulkanMemory)
+    uint32_t surfaceQueueFamily, VulkanMemory& vulkanMemory)
 {
     // Check physical device
     if (!physicalDevice)
@@ -796,7 +796,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     commandPoolInfo.flags =
         VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
         VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-    commandPoolInfo.queueFamilyIndex = surfaceQueueIndex;
+    commandPoolInfo.queueFamilyIndex = surfaceQueueFamily;
 
     if (vkCreateCommandPool(
         vulkanDevice, &commandPoolInfo, 0, &commandsPool) != VK_SUCCESS)

@@ -1549,14 +1549,50 @@ bool Renderer::selectVulkanDevice()
         return false;
     }
 
-    // Set queue priorities
-    std::vector<float> queuePriorities;
-    queuePriorities.push_back(1.0f);
+    // Set vulkan queues
+    uint32_t graphicsQueues = RendererMaxGraphicsQueues;
+    uint32_t surfaceQueues = RendererMaxSurfaceQueues;
+    uint32_t transferQueues = RendererMaxTransferQueues;
+    if (m_vulkanQueues.surfaceQueueFamily ==
+        m_vulkanQueues.graphicsQueueFamily)
+    {
+        graphicsQueues += RendererMaxSurfaceQueues;
+        surfaceQueues = 0;
+    }
+    if (m_vulkanQueues.transferQueueFamily ==
+        m_vulkanQueues.graphicsQueueFamily)
+    {
+        graphicsQueues += RendererMaxTransferQueues;
+        transferQueues = 0;
+    }
+    else
+    {
+        if (m_vulkanQueues.transferQueueFamily ==
+            m_vulkanQueues.surfaceQueueFamily)
+        {
+            surfaceQueues += RendererMaxTransferQueues;
+            transferQueues = 0;
+        }
+    }
 
-    // Set double queue priorities
-    std::vector<float> queuePriorities2;
-    queuePriorities2.push_back(1.0f);
-    queuePriorities2.push_back(1.0f);
+    // Set queue priorities
+    std::vector<float> graphicsPriorities;
+    for (uint32_t i = 0; i < graphicsQueues; ++i)
+    {
+        graphicsPriorities.push_back(1.0f);
+    }
+
+    std::vector<float> surfacePriorities;
+    for (uint32_t i = 0; i < surfaceQueues; ++i)
+    {
+        surfacePriorities.push_back(1.0f);
+    }
+
+    std::vector<float> transferPriorities;
+    for (uint32_t i = 0; i < transferQueues; ++i)
+    {
+        transferPriorities.push_back(1.0f);
+    }
 
     // Set graphics queues create infos
     std::vector<VkDeviceQueueCreateInfo> queueInfos;
@@ -1565,50 +1601,31 @@ bool Renderer::selectVulkanDevice()
     queueInfos.back().pNext = 0;
     queueInfos.back().flags = 0;
     queueInfos.back().queueFamilyIndex = m_vulkanQueues.graphicsQueueFamily;
-    queueInfos.back().queueCount = static_cast<uint32_t>(
-        queuePriorities.size()
-    );
-    queueInfos.back().pQueuePriorities = queuePriorities.data();
+    queueInfos.back().queueCount = graphicsQueues;
+    queueInfos.back().pQueuePriorities = graphicsPriorities.data();
 
     // Set surface queues create infos
-    if (m_vulkanQueues.surfaceQueueFamily != m_vulkanQueues.graphicsQueueFamily)
+    if (surfaceQueues > 0)
     {
-        // Add another queue if the surface queue is different
         queueInfos.push_back(VkDeviceQueueCreateInfo());
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
         queueInfos.back().queueFamilyIndex = m_vulkanQueues.surfaceQueueFamily;
-        queueInfos.back().queueCount = static_cast<uint32_t>(
-            queuePriorities.size()
-        );
-        queueInfos.back().pQueuePriorities = queuePriorities.data();
-    }
-    else
-    {
-        // Increment queues number if the surface queue is the same
-        queueInfos.back().queueCount = static_cast<uint32_t>(
-            queuePriorities2.size()
-        );
-        queueInfos.back().pQueuePriorities = queuePriorities2.data();
+        queueInfos.back().queueCount = surfaceQueues;
+        queueInfos.back().pQueuePriorities = surfacePriorities.data();
     }
 
     // Set transfer queues create infos
-    if ((m_vulkanQueues.transferQueueFamily !=
-        m_vulkanQueues.graphicsQueueFamily) &&
-        (m_vulkanQueues.transferQueueFamily !=
-        m_vulkanQueues.surfaceQueueFamily))
+    if (transferQueues > 0)
     {
-        // Add another queue if the transfer queue is different
         queueInfos.push_back(VkDeviceQueueCreateInfo());
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
         queueInfos.back().queueFamilyIndex = m_vulkanQueues.transferQueueFamily;
-        queueInfos.back().queueCount = static_cast<uint32_t>(
-            queuePriorities.size()
-        );
-        queueInfos.back().pQueuePriorities = queuePriorities.data();
+        queueInfos.back().queueCount = transferQueues;
+        queueInfos.back().pQueuePriorities = transferPriorities.data();
     }
 
     // Create Vulkan device

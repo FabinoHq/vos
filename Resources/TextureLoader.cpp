@@ -51,6 +51,7 @@ m_renderer(renderer),
 m_state(TEXTURELOADER_STATE_NONE),
 m_stateMutex(),
 m_graphicsQueue(),
+m_commandPool(),
 m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
@@ -178,17 +179,39 @@ void TextureLoader::process()
 bool TextureLoader::init()
 {
     // Request graphics queue handle
-    /*if (!m_graphicsQueue.createVulkanQueue(m_renderer.m_vulkanDevice))
+    if (!m_graphicsQueue.createGraphicsQueue(
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanQueues))
     {
         // Could not get graphics queue handle
         return false;
-    }*/
+    }
+
+    // Create command pool
+    VkCommandPoolCreateInfo commandPoolInfo;
+    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.pNext = 0;
+    commandPoolInfo.flags =
+        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
+        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.queueFamilyIndex = m_graphicsQueue.family;
+
+    if (vkCreateCommandPool(m_renderer.m_vulkanDevice,
+        &commandPoolInfo, 0, &m_commandPool) != VK_SUCCESS)
+    {
+        // Could not create commands pool
+        return false;
+    }
+    if (!m_commandPool)
+    {
+        // Invalid commands pool
+        return false;
+    }
 
 	// Allocate command buffer
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = m_renderer.m_swapchain.commandsPool;
+    bufferAllocate.commandPool = m_commandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -326,8 +349,14 @@ void TextureLoader::destroyTextureLoader()
     if (m_commandBuffer)
     {
         vkFreeCommandBuffers(m_renderer.m_vulkanDevice,
-            m_renderer.m_swapchain.commandsPool, 1, &m_commandBuffer
+            m_commandPool, 1, &m_commandBuffer
         );
+    }
+
+    // Destroy command pool
+    if (m_commandPool)
+    {
+        vkDestroyCommandPool(m_renderer.m_vulkanDevice, m_commandPool, 0);
     }
 }
 
@@ -462,7 +491,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_renderer.m_graphicsQueue.handle,
+    if (vkQueueSubmit(m_graphicsQueue.handle,
         1, &submitInfo, m_fence) != VK_SUCCESS)
     {
         // Could not submit queue

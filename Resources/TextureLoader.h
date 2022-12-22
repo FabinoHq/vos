@@ -231,6 +231,7 @@
             SysMutex                m_stateMutex;       // State mutex
 
             VulkanQueue             m_graphicsQueue;    // Graphics queue
+            VkCommandPool           m_commandPool;      // Command pool
             VkCommandBuffer         m_commandBuffer;    // Command buffer
             VulkanBuffer            m_stagingBuffer;    // Staging buffer
             VkFence                 m_fence;            // Staging fence
