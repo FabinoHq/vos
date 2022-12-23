@@ -123,7 +123,8 @@ bool Game::init()
 
 
     // Init skybox
-    if (!m_skybox.init(m_renderer, m_resources.textures.cubemap(CUBEMAP_TEST)))
+    if (!m_skybox.init(
+        m_renderer, m_resources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
     {
         // Could not init skybox
         return false;
@@ -161,7 +162,7 @@ bool Game::init()
 
     // Init GUI window
     if (!m_guiWindow.init(
-        m_resources.textures.get(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
+        m_resources.textures.gui(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
     {
         // Could not init GUI window
         return false;
@@ -170,7 +171,7 @@ bool Game::init()
 
     // Init static mesh
     if (!m_staticMesh.loadVMSH(m_renderer,
-        m_resources.textures.get(TEXTURE_TEST), "Models/testmodel.vmsh"))
+        m_resources.textures.high(TEXTURE_TEST), "Models/testmodel.vmsh"))
     {
         // Could not init static mesh
         return false;
@@ -194,7 +195,7 @@ bool Game::init()
 
     // Init heightmap chunk
     if (!m_heightMapChunk.generate(
-        m_renderer, m_resources.textures.get(TEXTURE_TEST), heightmap))
+        m_renderer, m_resources.textures.high(TEXTURE_TEST), heightmap))
     {
         // Could not init heightmap chunk
         return false;

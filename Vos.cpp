@@ -141,7 +141,7 @@ bool Vos::launch()
 
 
     // Init test pixel text
-    if (!m_pxText.init(m_resources.textures.get(TEXTURE_PIXELFONT), 0.04f))
+    if (!m_pxText.init(m_resources.textures.gui(TEXTURE_PIXELFONT), 0.04f))
     {
         // Could not init test pixel text
         return false;

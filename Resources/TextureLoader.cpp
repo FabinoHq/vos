@@ -55,7 +55,8 @@ m_commandPool(),
 m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
-m_textures(0),
+m_texturesGUI(0),
+m_texturesHigh(0),
 m_cubemaps(0)
 {
 
@@ -244,16 +245,24 @@ bool TextureLoader::init()
         return false;
     }
 
-    // Allocate textures assets
-    m_textures = new (std::nothrow) Texture[TEXTURE_ASSETSCOUNT];
-    if (!m_textures)
+    // Allocate GUI textures
+    m_texturesGUI = new (std::nothrow) Texture[TEXTURE_GUICOUNT];
+    if (!m_texturesGUI)
     {
-    	// Could not allocate textures assets
+    	// Could not allocate GUI textures
     	return false;
     }
 
+    // Allocate high textures
+    m_texturesHigh = new (std::nothrow) Texture[TEXTURE_ASSETSCOUNT];
+    if (!m_texturesHigh)
+    {
+        // Could not allocate high textures
+        return false;
+    }
+
     // Allocate cubemaps assets
-    m_cubemaps = new (std::nothrow) CubeMap[CUBEMAP_ASSETSCOUNT];
+    m_cubemaps = new (std::nothrow) CubeMap[TEXTURE_CUBEMAPCOUNT];
     if (!m_cubemaps)
     {
         // Could not allocate textures assets
@@ -324,19 +333,26 @@ TextureLoaderState TextureLoader::getState()
 ////////////////////////////////////////////////////////////////////////////////
 void TextureLoader::destroyTextureLoader()
 {
-    // Destroy cubemaps assets
-    for (int i = 0; i < CUBEMAP_ASSETSCOUNT; ++i)
+    // Destroy cubemaps textures
+    for (int i = 0; i < TEXTURE_CUBEMAPCOUNT; ++i)
     {
         m_cubemaps[i].destroyCubeMap(m_renderer);
     }
     if (m_cubemaps) { delete[] m_cubemaps; }
 
-	// Destroy textures assets
-	for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
+    // Destroy high textures
+    for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
+    {
+        m_texturesHigh[i].destroyTexture(m_renderer);
+    }
+    if (m_texturesHigh) { delete[] m_texturesHigh; }
+
+	// Destroy GUI textures
+	for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
 	{
-		m_textures[i].destroyTexture(m_renderer);
+		m_texturesGUI[i].destroyTexture(m_renderer);
 	}
-	if (m_textures) { delete[] m_textures; }
+	if (m_texturesGUI) { delete[] m_texturesGUI; }
 
 	// Destroy staging fence
     if (m_fence)
@@ -702,7 +718,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
 bool TextureLoader::loadEmbeddedTextures()
 {
 	// Load cursor texture
-	if (!m_textures[TEXTURE_CURSOR].updateTexture(m_renderer, *this,
+	if (!m_texturesGUI[TEXTURE_CURSOR].updateTexture(m_renderer, *this,
         CursorImageWidth, CursorImageHeight, CursorImage,
         false, false))
     {
@@ -711,7 +727,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NS cursor texture
-    if (!m_textures[TEXTURE_NSCURSOR].updateTexture(m_renderer, *this,
+    if (!m_texturesGUI[TEXTURE_NSCURSOR].updateTexture(m_renderer, *this,
         NSCursorImageWidth, NSCursorImageHeight, NSCursorImage,
         false, false))
     {
@@ -720,7 +736,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load EW cursor texture
-    if (!m_textures[TEXTURE_EWCURSOR].updateTexture(m_renderer, *this,
+    if (!m_texturesGUI[TEXTURE_EWCURSOR].updateTexture(m_renderer, *this,
         EWCursorImageWidth, EWCursorImageHeight, EWCursorImage,
         false, false))
     {
@@ -729,7 +745,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NE-SW cursor texture
-    if (!m_textures[TEXTURE_NESWCURSOR].updateTexture(m_renderer, *this,
+    if (!m_texturesGUI[TEXTURE_NESWCURSOR].updateTexture(m_renderer, *this,
         NESWCursorImageWidth, NESWCursorImageHeight, NESWCursorImage,
         false, false))
     {
@@ -738,7 +754,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NW-SE cursor texture
-    if (!m_textures[TEXTURE_NWSECURSOR].updateTexture(m_renderer, *this,
+    if (!m_texturesGUI[TEXTURE_NWSECURSOR].updateTexture(m_renderer, *this,
         NWSECursorImageWidth, NWSECursorImageHeight, NWSECursorImage,
         false, false))
     {
@@ -747,7 +763,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load window texture
-    if (!m_textures[TEXTURE_WINDOW].updateTexture(m_renderer, *this,
+    if (!m_texturesGUI[TEXTURE_WINDOW].updateTexture(m_renderer, *this,
         WindowImageWidth, WindowImageHeight, WindowImage,
         true, false))
     {
@@ -756,7 +772,7 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load pixel font texture
-    if (!m_textures[TEXTURE_PIXELFONT].updateTexture(m_renderer, *this,
+    if (!m_texturesGUI[TEXTURE_PIXELFONT].updateTexture(m_renderer, *this,
         PxFontImageWidth, PxFontImageHeight, PxFontImage,
         true, false))
     {
@@ -780,7 +796,7 @@ bool TextureLoader::preloadTextures()
     {
         return false;
     }
-    if (!m_textures[TEXTURE_TEST].updateTexture(m_renderer, *this,
+    if (!m_texturesHigh[TEXTURE_TEST].updateTexture(m_renderer, *this,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
         false, true))
     {
@@ -845,7 +861,7 @@ bool TextureLoader::preloadTextures()
     cubeMapBack.destroyImage();
 
     // Create cubemap texture
-    if (!m_cubemaps[CUBEMAP_TEST].updateCubeMap(m_renderer, *this,
+    if (!m_cubemaps[TEXTURE_CUBEMAPTEST].updateCubeMap(m_renderer, *this,
         cubemapWidth, cubemapHeight, cubemapData, true))
     {
         // Could not load cubemap texture

@@ -486,7 +486,7 @@ bool Renderer::init(SysWindow* sysWindow)
 bool Renderer::initEmbedded()
 {
     // Init cursor sprite
-    if (!m_cursor.init(m_resources.textures.get(TEXTURE_CURSOR), 1.0f, 1.0f))
+    if (!m_cursor.init(m_resources.textures.gui(TEXTURE_CURSOR), 1.0f, 1.0f))
     {
         // Could not init cursor sprite
         return false;
@@ -1111,7 +1111,7 @@ bool Renderer::setCamera(Camera& camera)
 bool Renderer::setDefaultCursor()
 {
     m_cursorOffset.set(RendererDefaultCursorOffset);
-    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_CURSOR));
+    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_CURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1120,7 +1120,7 @@ bool Renderer::setDefaultCursor()
 bool Renderer::setNSCursor()
 {
     m_cursorOffset.set(RendererNSCursorOffset);
-    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_NSCURSOR));
+    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_NSCURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1129,7 +1129,7 @@ bool Renderer::setNSCursor()
 bool Renderer::setEWCursor()
 {
     m_cursorOffset.set(RendererEWCursorOffset);
-    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_EWCURSOR));
+    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_EWCURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1138,7 +1138,7 @@ bool Renderer::setEWCursor()
 bool Renderer::setNESWCursor()
 {
     m_cursorOffset.set(RendererNESWCursorOffset);
-    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_NESWCURSOR));
+    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_NESWCURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1147,7 +1147,7 @@ bool Renderer::setNESWCursor()
 bool Renderer::setNWSECursor()
 {
     m_cursorOffset.set(RendererNWSECursorOffset);
-    return m_cursor.setTexture(m_resources.textures.get(TEXTURE_NWSECURSOR));
+    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_NWSECURSOR));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

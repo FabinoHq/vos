@@ -59,34 +59,15 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TexturesAssets enumeration                                            //
+    //  Embedded textures                                                     //
     ////////////////////////////////////////////////////////////////////////////
-    enum TexturesAssets
-    {
-        TEXTURE_DEFAULT = 0,
-        TEXTURE_CURSOR = 1,
-        TEXTURE_NSCURSOR = 2,
-        TEXTURE_EWCURSOR = 3,
-        TEXTURE_NESWCURSOR = 4,
-        TEXTURE_NWSECURSOR = 5,
-        TEXTURE_WINDOW = 6,
-        TEXTURE_PIXELFONT = 7,
-
-        TEXTURE_TEST = 8,
-
-        TEXTURE_ASSETSCOUNT = 9
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  CubeMapsAssets enumeration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    enum CubeMapsAssets
-    {
-        CUBEMAP_DEFAULT = 0,
-        CUBEMAP_TEST = 1,
-
-        CUBEMAP_ASSETSCOUNT = 2
-    };
+    #include "../Images/Embedded/Cursor.h"
+    #include "../Images/Embedded/NSCursor.h"
+    #include "../Images/Embedded/EWCursor.h"
+    #include "../Images/Embedded/NESWCursor.h"
+    #include "../Images/Embedded/NWSECursor.h"
+    #include "../Images/Embedded/PxFont.h"
+    #include "../Images/Embedded/Window.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -104,15 +85,40 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Embedded textures                                                     //
+    //  TexturesGUI enumeration                                               //
     ////////////////////////////////////////////////////////////////////////////
-    #include "../Images/Embedded/Cursor.h"
-    #include "../Images/Embedded/NSCursor.h"
-    #include "../Images/Embedded/EWCursor.h"
-    #include "../Images/Embedded/NESWCursor.h"
-    #include "../Images/Embedded/NWSECursor.h"
-    #include "../Images/Embedded/PxFont.h"
-    #include "../Images/Embedded/Window.h"
+    enum TexturesGUI
+    {
+        TEXTURE_CURSOR = 0,
+        TEXTURE_NSCURSOR = 1,
+        TEXTURE_EWCURSOR = 2,
+        TEXTURE_NESWCURSOR = 3,
+        TEXTURE_NWSECURSOR = 4,
+        TEXTURE_WINDOW = 5,
+        TEXTURE_PIXELFONT = 6,
+
+        TEXTURE_GUICOUNT = 7
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TexturesAssets enumeration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    enum TexturesAssets
+    {
+        TEXTURE_TEST = 0,
+
+        TEXTURE_ASSETSCOUNT = 1
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TexturesCubeMaps enumeration                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    enum TexturesCubeMaps
+    {
+        TEXTURE_CUBEMAPTEST = 0,
+
+        TEXTURE_CUBEMAPCOUNT = 1
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -186,19 +192,28 @@
             TextureLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get texture                                                   //
-            //  return : Texture asset                                        //
+            //  Get GUI texture                                               //
+            //  return : GUI texture                                          //
             ////////////////////////////////////////////////////////////////////
-            inline Texture& get(TexturesAssets texture)
+            inline Texture& gui(TexturesGUI texture)
             {
-                return m_textures[texture];
+                return m_texturesGUI[texture];
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get texture                                                   //
-            //  return : Texture asset                                        //
+            //  Get high texture                                              //
+            //  return : high texture                                         //
             ////////////////////////////////////////////////////////////////////
-            inline CubeMap& cubemap(CubeMapsAssets cubemap)
+            inline Texture& high(TexturesAssets texture)
+            {
+                return m_texturesHigh[texture];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get CubeMap texture                                           //
+            //  return : CubeMap texture                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline CubeMap& cubemap(TexturesCubeMaps cubemap)
             {
                 return m_cubemaps[cubemap];
             }
@@ -267,8 +282,9 @@
             VulkanBuffer            m_stagingBuffer;    // Staging buffer
             VkFence                 m_fence;            // Staging fence
 
-            Texture*                m_textures;         // Textures assets
-            CubeMap*                m_cubemaps;         // CubeMaps assets
+            Texture*                m_texturesGUI;      // GUI textures
+            Texture*                m_texturesHigh;     // High textures
+            CubeMap*                m_cubemaps;         // CubeMaps textures
     };
 
 
