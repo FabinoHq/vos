@@ -227,16 +227,6 @@ bool TextureLoader::init()
     	return false;
     }
 
-	// Create staging buffer
-    if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_RENDERHOST, TextureMaxSize))
-    {
-        // Could not create staging buffer
-        return false;
-    }
-
     // Create staging fence
     VkFenceCreateInfo fenceInfo;
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
@@ -366,12 +356,15 @@ void TextureLoader::destroyTextureLoader()
 bool TextureLoader::uploadTexture(VkImage& handle,
 	uint32_t width, uint32_t height, const unsigned char* data)
 {
+    // Reset texture upload memory
+    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
+
 	// Create staging buffer
     uint32_t textureSize = (width*height*4);
     if (!m_stagingBuffer.createBuffer(
         m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
         m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_RENDERHOST, textureSize))
+        VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
         return false;
@@ -379,7 +372,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
 
     // Write data into staging buffer memory
     if (!m_renderer.m_vulkanMemory.writeBufferMemory(m_renderer.m_vulkanDevice,
-        m_stagingBuffer, data, VULKAN_MEMORY_RENDERHOST))
+        m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
         // Could not write data into staging buffer memory
         return false;

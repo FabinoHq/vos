@@ -80,8 +80,8 @@
     ////////////////////////////////////////////////////////////////////////////
     //  TextureLoader settings                                                //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t TextureMaxWidth = 2048;
-    const uint32_t TextureMaxHeight = 2048;
+    const uint32_t TextureMaxWidth = 4096;
+    const uint32_t TextureMaxHeight = 4096;
     const uint32_t TextureMaxSize = (TextureMaxWidth*TextureMaxHeight*4);
     const uint64_t TextureFenceTimeout = 100000000000;
     const double TextureLoaderIdleSleepTime = 0.01;
