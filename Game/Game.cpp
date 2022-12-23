@@ -122,71 +122,8 @@ bool Game::init()
     m_orbitalcam.setSpeed(50.0f);
 
 
-    // Load cubemap textures
-    PNGFile cubeMapRight;
-    if (!cubeMapRight.loadImage("Textures/testsprite.png")) return false;
-    PNGFile cubeMapLeft;
-    if (!cubeMapLeft.loadImage("Textures/testsprite.png")) return false;
-    PNGFile cubeMapTop;
-    if (!cubeMapTop.loadImage("Textures/testsprite.png")) return false;
-    PNGFile cubeMapBottom;
-    if (!cubeMapBottom.loadImage("Textures/testsprite.png")) return false;
-    PNGFile cubeMapFront;
-    if (!cubeMapFront.loadImage("Textures/testsprite.png")) return false;
-    PNGFile cubeMapBack;
-    if (!cubeMapBack.loadImage("Textures/testsprite.png")) return false;
-
-    // Allocate cubemap data
-    unsigned int cubemapWidth = cubeMapFront.getWidth();
-    unsigned int cubemapHeight = cubeMapFront.getHeight();
-    unsigned char* cubemapData = new (std::nothrow)
-        unsigned char[cubemapWidth*cubemapHeight*4*6];
-    if (!cubemapData) return false;
-
-    // Copy cubemap data
-    memcpy(
-        &cubemapData[cubemapWidth*cubemapHeight*4*0],
-        cubeMapRight.getImage(), cubemapWidth*cubemapHeight*4
-    );
-    memcpy(
-        &cubemapData[cubemapWidth*cubemapHeight*4*1],
-        cubeMapLeft.getImage(), cubemapWidth*cubemapHeight*4
-    );
-    memcpy(
-        &cubemapData[cubemapWidth*cubemapHeight*4*2],
-        cubeMapTop.getImage(), cubemapWidth*cubemapHeight*4
-    );
-    memcpy(
-        &cubemapData[cubemapWidth*cubemapHeight*4*3],
-        cubeMapBottom.getImage(), cubemapWidth*cubemapHeight*4
-    );
-    memcpy(
-        &cubemapData[cubemapWidth*cubemapHeight*4*4],
-        cubeMapFront.getImage(), cubemapWidth*cubemapHeight*4
-    );
-    memcpy(
-        &cubemapData[cubemapWidth*cubemapHeight*4*5],
-        cubeMapBack.getImage(), cubemapWidth*cubemapHeight*4
-    );
-
-    // Cleanup cubemap textures
-    cubeMapRight.destroyImage();
-    cubeMapLeft.destroyImage();
-    cubeMapTop.destroyImage();
-    cubeMapBottom.destroyImage();
-    cubeMapFront.destroyImage();
-    cubeMapBack.destroyImage();
-
-    // Create cubemap texture
-    if (!m_cubemap.updateCubeMap(
-        m_renderer, cubemapWidth, cubemapHeight, cubemapData, true))
-    {
-        // Could not load cubemap texture
-        return false;
-    }
-
     // Init skybox
-    if (!m_skybox.init(m_renderer, m_cubemap))
+    if (!m_skybox.init(m_renderer, m_resources.textures.cubemap(CUBEMAP_TEST)))
     {
         // Could not init skybox
         return false;
@@ -487,11 +424,11 @@ void Game::render()
     //m_renderer.setCamera(m_orbitalcam);
 
     // Render skybox
-    /*m_renderer.bindSkyBoxPipeline();
-    //m_skybox.setPosition(m_freeflycam.getPosition());
-    m_skybox.setPosition(m_orbitalcam.getPosition());
+    m_renderer.bindSkyBoxPipeline();
+    m_skybox.setPosition(m_freeflycam.getPosition());
+    //m_skybox.setPosition(m_orbitalcam.getPosition());
     m_skybox.bindVertexBuffer(m_renderer);
-    m_skybox.render(m_renderer);*/
+    m_skybox.render(m_renderer);
 
     // Render cuboid shape
     /*m_renderer.bindShapePipeline();

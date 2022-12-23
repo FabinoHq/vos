@@ -41,6 +41,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "CubeMap.h"
 #include "../Renderer.h"
+#include "../../Resources/TextureLoader.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +51,6 @@ CubeMap::CubeMap() :
 m_handle(0),
 m_sampler(0),
 m_view(0),
-m_stagingBuffer(),
 m_memorySize(0),
 m_memoryOffset(0),
 m_width(0),
@@ -103,7 +103,9 @@ bool CubeMap::createCubeMap(Renderer& renderer,
     }
 
     // Check cubemap size
-    if ((width == 0) || (height == 0) || (width != height))
+    if ((width <= 0) || (width > CubeMapMaxWidth) ||
+        (height <= 0) || (height > CubeMapMaxHeight) ||
+        (width != height))
     {
         // Invalid cubemap size
         return false;
@@ -116,10 +118,6 @@ bool CubeMap::createCubeMap(Renderer& renderer,
         destroyCubeMap(renderer);
     }
 
-    // Set cubemap parameters
-    m_width = width;
-    m_height = height;
-
     // Create image
     VkImageCreateInfo imageInfo;
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -127,8 +125,8 @@ bool CubeMap::createCubeMap(Renderer& renderer,
     imageInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
     imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-    imageInfo.extent.width = m_width;
-    imageInfo.extent.height = m_height;
+    imageInfo.extent.width = width;
+    imageInfo.extent.height = height;
     imageInfo.extent.depth = 1;
     imageInfo.mipLevels = 1;
     imageInfo.arrayLayers = 6;
@@ -158,17 +156,6 @@ bool CubeMap::createCubeMap(Renderer& renderer,
         renderer.m_vulkanDevice, *this, VULKAN_MEMORY_RENDERDEVICE))
     {
         // Could not allocate cubemap memory
-        return false;
-    }
-
-    // Create staging buffer
-    uint32_t cubemapSize = m_width * m_height * 4 * 6;
-    if (!m_stagingBuffer.createBuffer(
-        renderer.m_physicalDevice, renderer.m_vulkanDevice,
-        renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_RENDERHOST, cubemapSize))
-    {
-        // Could not create staging buffer
         return false;
     }
 
@@ -287,6 +274,10 @@ bool CubeMap::createCubeMap(Renderer& renderer,
         );
     }
 
+    // Set cubemap size
+    m_width = width;
+    m_height = height;
+
     // CubeMap successfully created
     return true;
 }
@@ -295,7 +286,7 @@ bool CubeMap::createCubeMap(Renderer& renderer,
 //  Update cubemap                                                            //
 //  return : True if cubemap is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::updateCubeMap(Renderer& renderer,
+bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
     uint32_t width, uint32_t height, const unsigned char* data, bool smooth)
 {
     // Check physical device
@@ -312,22 +303,10 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
         return false;
     }
 
-    // Check commands pool
-    if (!renderer.m_graphicsCommandPool)
-    {
-        // Invalid commands pool
-        return false;
-    }
-
-    // Check graphics queue
-    if (!renderer.m_graphicsQueue.handle)
-    {
-        // Invalid graphics queue
-        return false;
-    }
-
     // Check cubemap size
-    if ((width == 0) || (height == 0) || (width != height))
+    if ((width <= 0) || (width > CubeMapMaxWidth) ||
+        (height <= 0) || (height > CubeMapMaxHeight) ||
+        (width != height))
     {
         // Invalid cubemap size
         return false;
@@ -348,182 +327,11 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
         createCubeMap(renderer, width, height, smooth);
     }
 
-    // Write data into staging buffer memory
-    if (!renderer.m_vulkanMemory.writeBufferMemory(renderer.m_vulkanDevice,
-        m_stagingBuffer, data, VULKAN_MEMORY_RENDERHOST))
+    // Upload cubemap to graphics memory
+    if (!loader.uploadCubeMap(m_handle, width, height, data))
     {
-        // Could not write data into staging buffer memory
+        // Could not upload cubemap to graphics memory
         return false;
-    }
-
-    // Reset command pool
-    if (vkResetCommandPool(renderer.m_vulkanDevice,
-        renderer.m_graphicsCommandPool, 0) != VK_SUCCESS)
-    {
-        // Could not reset command pool
-        return false;
-    }
-
-    // Allocate command buffers
-    VkCommandBuffer commandBuffer = 0;
-    VkCommandBufferAllocateInfo bufferAllocate;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = renderer.m_graphicsCommandPool;
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(
-        renderer.m_vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
-    {
-        // Could not allocate command buffers
-        return false;
-    }
-
-    // Transfert staging buffer data to cubemap buffer
-    VkCommandBufferBeginInfo bufferBeginInfo;
-    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext = 0;
-    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = 0;
-
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
-    {
-        // Could not record command buffer
-        return false;
-    }
-
-    VkImageSubresourceRange subresourceRange;
-    subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    subresourceRange.baseMipLevel = 0;
-    subresourceRange.levelCount = 1;
-    subresourceRange.baseArrayLayer = 0;
-    subresourceRange.layerCount = 6;
-
-    VkImageMemoryBarrier undefinedToTransfer;
-    undefinedToTransfer.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    undefinedToTransfer.pNext = 0;
-    undefinedToTransfer.srcAccessMask = 0;
-    undefinedToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    undefinedToTransfer.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    undefinedToTransfer.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    undefinedToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    undefinedToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    undefinedToTransfer.image = m_handle;
-    undefinedToTransfer.subresourceRange = subresourceRange;
-
-    VkImageMemoryBarrier transferToShader;
-    transferToShader.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    transferToShader.pNext = 0;
-    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-    transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-    transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    transferToShader.image = m_handle;
-    transferToShader.subresourceRange = subresourceRange;
-
-    vkCmdPipelineBarrier(
-        commandBuffer,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_TRANSFER_BIT,
-        0, 0, 0, 0, 0, 1, &undefinedToTransfer
-    );
-
-    VkBufferImageCopy imageCopy[6];
-    for (uint32_t i = 0; i < 6; ++i)
-    {
-        imageCopy[i].bufferOffset = (width * height * 4 * i);
-        imageCopy[i].bufferRowLength = 0;
-        imageCopy[i].bufferImageHeight = 0;
-        imageCopy[i].imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        imageCopy[i].imageSubresource.mipLevel = 0;
-        imageCopy[i].imageSubresource.baseArrayLayer = i;
-        imageCopy[i].imageSubresource.layerCount = 1;
-        imageCopy[i].imageOffset.x = 0;
-        imageCopy[i].imageOffset.y = 0;
-        imageCopy[i].imageOffset.z = 0;
-        imageCopy[i].imageExtent.width = m_width;
-        imageCopy[i].imageExtent.height = m_height;
-        imageCopy[i].imageExtent.depth = 1;
-    }
-
-    vkCmdCopyBufferToImage(
-        commandBuffer, m_stagingBuffer.handle, m_handle,
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 6, imageCopy
-    );
-
-    vkCmdPipelineBarrier(
-        commandBuffer,
-        VK_PIPELINE_STAGE_TRANSFER_BIT,
-        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-        0, 0, 0, 0, 0, 1, &transferToShader
-    );
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-    {
-        // Could not end command buffer
-        return false;
-    }
-
-    VkFence fence = 0;
-    VkFenceCreateInfo fenceInfo;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = 0;
-
-    if (vkCreateFence(
-        renderer.m_vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
-    {
-        // Could not create fence
-        return false;
-    }
-    if (!fence)
-    {
-        // Invalid fence
-        return false;
-    }
-
-    // Submit queue
-    VkSubmitInfo submitInfo;
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = 0;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (vkQueueSubmit(
-        renderer.m_graphicsQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
-    {
-        // Could not submit queue
-        return false;
-    }
-
-    // Wait for transfer to finish
-    if (vkWaitForFences(renderer.m_vulkanDevice, 1,
-        &fence, VK_FALSE, CubeMapFenceTimeout) != VK_SUCCESS)
-    {
-        // Transfer timed out
-        return false;
-    }
-
-    // Destroy fence
-    if (fence)
-    {
-        vkDestroyFence(renderer.m_vulkanDevice, fence, 0);
-    }
-
-    // Destroy buffers
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(renderer.m_vulkanDevice,
-            renderer.m_graphicsCommandPool, 1, &commandBuffer
-        );
     }
 
     // CubeMap successfully loaded
@@ -567,9 +375,6 @@ void CubeMap::destroyCubeMap(Renderer& renderer)
         {
             vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
         }
-
-        // Destroy staging buffer
-        m_stagingBuffer.destroyBuffer(renderer.m_vulkanDevice);
     }
 
     m_height = 0;

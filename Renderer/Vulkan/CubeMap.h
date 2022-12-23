@@ -51,15 +51,14 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  CubeMap settings                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint64_t CubeMapFenceTimeout = 100000000000;
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Renderer class declaration                                            //
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TextureLoader class declaration                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    class TextureLoader;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -90,7 +89,7 @@
             //  Update cubemap                                                //
             //  return : True if cubemap is successfully updated              //
             ////////////////////////////////////////////////////////////////////
-            bool updateCubeMap(Renderer& renderer,
+            bool updateCubeMap(Renderer& renderer, TextureLoader& loader,
                 uint32_t width, uint32_t height,
                 const unsigned char* data, bool smooth = true);
 
@@ -144,7 +143,6 @@
             VkImageView         m_view;             // CubeMap view
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
 
-            VulkanBuffer        m_stagingBuffer;    // Staging buffer
             VkDeviceSize        m_memorySize;       // Memory size
             VkDeviceSize        m_memoryOffset;     // Memory offset
 

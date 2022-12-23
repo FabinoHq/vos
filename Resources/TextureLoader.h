@@ -49,6 +49,7 @@
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/Texture.h"
+    #include "../Renderer/Vulkan/CubeMap.h"
 
     #include "../Images/BMPFile.h"
     #include "../Images/PNGFile.h"
@@ -76,13 +77,27 @@
         TEXTURE_ASSETSCOUNT = 9
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  CubeMapsAssets enumeration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    enum CubeMapsAssets
+    {
+        CUBEMAP_DEFAULT = 0,
+        CUBEMAP_TEST = 1,
+
+        CUBEMAP_ASSETSCOUNT = 2
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  TextureLoader settings                                                //
     ////////////////////////////////////////////////////////////////////////////
     const uint32_t TextureMaxWidth = 4096;
     const uint32_t TextureMaxHeight = 4096;
+    const uint32_t CubeMapMaxWidth = 2048;
+    const uint32_t CubeMapMaxHeight = 2048;
     const uint32_t TextureMaxSize = (TextureMaxWidth*TextureMaxHeight*4);
+    const uint32_t CubeMapMaxSize = (CubeMapMaxWidth*CubeMapMaxHeight*4*6);
     const uint64_t TextureFenceTimeout = 100000000000;
     const double TextureLoaderIdleSleepTime = 0.01;
     const double TextureLoaderErrorSleepTime = 0.1;
@@ -180,6 +195,15 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get texture                                                   //
+            //  return : Texture asset                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline CubeMap& cubemap(CubeMapsAssets cubemap)
+            {
+                return m_cubemaps[cubemap];
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy texture loader                                        //
             ////////////////////////////////////////////////////////////////////
             void destroyTextureLoader();
@@ -190,6 +214,13 @@
             //  return : True if texture is successfully uploaded             //
             ////////////////////////////////////////////////////////////////////
             bool uploadTexture(VkImage& handle,
+                uint32_t width, uint32_t height, const unsigned char* data);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Upload cubemap to graphics memory                             //
+            //  return : True if cubemap is successfully uploaded             //
+            ////////////////////////////////////////////////////////////////////
+            bool uploadCubeMap(VkImage& handle,
                 uint32_t width, uint32_t height, const unsigned char* data);
 
 
@@ -237,6 +268,7 @@
             VkFence                 m_fence;            // Staging fence
 
             Texture*                m_textures;         // Textures assets
+            CubeMap*                m_cubemaps;         // CubeMaps assets
     };
 
 
