@@ -159,14 +159,6 @@
 !Renderer/Vulkan/Texture.cpp
 !Renderer/Vulkan/CubeMap.h
 !Renderer/Vulkan/CubeMap.cpp
-!Renderer/Pipeline.h
-!Renderer/Pipeline.cpp
-!Renderer/Shader.h
-!Renderer/Shader.cpp
-!Renderer/Texture.h
-!Renderer/Texture.cpp
-!Renderer/CubeMap.h
-!Renderer/CubeMap.cpp
 !Renderer/View.h
 !Renderer/View.cpp
 !Renderer/Camera.h
