@@ -48,7 +48,7 @@
     #include "../Renderer/Vulkan/Vulkan.h"
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
-    #include "../Renderer/Texture.h"
+    #include "../Renderer/Vulkan/Texture.h"
 
     #include "../Images/BMPFile.h"
     #include "../Images/PNGFile.h"

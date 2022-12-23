@@ -51,7 +51,6 @@
     #include "System/SysSleep.h"
 
     #include "Renderer/Renderer.h"
-    #include "Renderer/Texture.h"
 
     #include "Resources/Resources.h"
     #include "Renderer/GUI/GUIPxText.h"

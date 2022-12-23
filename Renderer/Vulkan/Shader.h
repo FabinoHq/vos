@@ -37,16 +37,15 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Texture.h : Texture management                                //
+//     Renderer/Vulkan/Shader.h : Shader management                           //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_TEXTURE_HEADER
-#define VOS_RENDERER_TEXTURE_HEADER
+#ifndef VOS_RENDERER_VULKAN_SHADER_HEADER
+#define VOS_RENDERER_VULKAN_SHADER_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/VulkanBuffer.h"
+    #include "../../System/System.h"
+    #include "Vulkan.h"
 
+    #include <cstddef>
     #include <cstdint>
 
 
@@ -55,100 +54,61 @@
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  TextureLoader class declaration                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    class TextureLoader;
-
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Texture class definition                                              //
+    //  Shader class definition                                               //
     ////////////////////////////////////////////////////////////////////////////
-    class Texture
+    class Shader
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Texture default constructor                                   //
+            //  Shader default constructor                                    //
             ////////////////////////////////////////////////////////////////////
-            Texture();
+            Shader();
 
             ////////////////////////////////////////////////////////////////////
-            //  Texture destructor                                            //
+            //  Shader destructor                                             //
             ////////////////////////////////////////////////////////////////////
-            ~Texture();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create texture                                                //
-            //  return : True if texture is successfully created              //
-            ////////////////////////////////////////////////////////////////////
-            bool createTexture(Renderer& renderer,
-                uint32_t width, uint32_t height,
-                bool smooth = true, bool repeat = false);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Update texture                                                //
-            //  return : True if texture is successfully updated              //
-            ////////////////////////////////////////////////////////////////////
-            bool updateTexture(Renderer& renderer, TextureLoader& loader,
-                uint32_t width, uint32_t height, const unsigned char* data,
-                bool smooth = true, bool repeat = false);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind texture                                                  //
-            ////////////////////////////////////////////////////////////////////
-            void bind(Renderer& renderer);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy texture                                               //
-            ////////////////////////////////////////////////////////////////////
-            void destroyTexture(Renderer& renderer);
+            ~Shader();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Check if the texture has a valid handle                       //
-            //  return : True if the texture is valid                         //
+            //  Create Shader                                                 //
+            //  return : True if Shader is successfully created               //
+            ////////////////////////////////////////////////////////////////////
+            bool createShader(Renderer& renderer,
+                const uint32_t* source, const size_t size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy Shader                                                //
+            ////////////////////////////////////////////////////////////////////
+            void destroyShader(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if the shader is valid                                  //
+            //  return : True if the shader is valid                          //
             ////////////////////////////////////////////////////////////////////
             bool isValid();
 
-            ////////////////////////////////////////////////////////////////////
-            //  Get texture memory requirements                               //
-            ////////////////////////////////////////////////////////////////////
-            void getMemoryRequirements(VkDevice& vulkanDevice,
-                VkMemoryRequirements* memoryRequirements);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind texture memory                                           //
-            //  return : True if texture memory is successfully binded        //
-            ////////////////////////////////////////////////////////////////////
-            bool bindTextureMemory(VkDevice& vulkanDevice,
-                VkDeviceMemory& deviceMemory, VkDeviceSize size,
-                VkDeviceSize offset);
-
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Texture private copy constructor : Not copyable               //
+            //  Shader private copy constructor : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            Texture(const Texture&) = delete;
+            Shader(const Shader&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Texture private copy operator : Not copyable                  //
+            //  Shader private copy operator : Not copyable                   //
             ////////////////////////////////////////////////////////////////////
-            Texture& operator=(const Texture&) = delete;
+            Shader& operator=(const Shader&) = delete;
 
 
         private:
-            VkImage             m_handle;           // Texture handle
-            VkSampler           m_sampler;          // Texture sampler
-            VkImageView         m_view;             // Texture view
-            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
+            VkShaderModule      m_shader;       // Shader handle
 
-            VkDeviceSize        m_memorySize;       // Memory size
-            VkDeviceSize        m_memoryOffset;     // Memory offset
-
-            uint32_t            m_width;            // Texture width
-            uint32_t            m_height;           // Texture height
+            friend class        Pipeline;       // Pipeline has access
     };
 
-#endif // VOS_RENDERER_TEXTURE_HEADER
+
+#endif // VOS_RENDERER_VULKAN_SHADER_HEADER

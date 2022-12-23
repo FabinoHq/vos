@@ -44,7 +44,7 @@
 
     #include "../System/System.h"
     #include "Vulkan/VertexBuffer.h"
-    #include "CubeMap.h"
+    #include "Vulkan/CubeMap.h"
     #include "../Math/Math.h"
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"

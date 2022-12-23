@@ -46,8 +46,7 @@
     #include "../System/SysEvent.h"
 
     #include "../Renderer/Renderer.h"
-    #include "../Renderer/Texture.h"
-    #include "../Renderer/CubeMap.h"
+    #include "../Renderer/Vulkan/CubeMap.h"
     #include "../Renderer/View.h"
     #include "../Renderer/Camera.h"
     #include "../Renderer/FreeFlyCam.h"

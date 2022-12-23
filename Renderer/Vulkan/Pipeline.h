@@ -37,13 +37,13 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Pipeline.h : Graphics pipeline management                     //
+//     Renderer/Vulkan/Pipeline.h : Graphics pipeline management              //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_PIPELINE_HEADER
-#define VOS_RENDERER_PIPELINE_HEADER
+#ifndef VOS_RENDERER_VULKAN_PIPELINE_HEADER
+#define VOS_RENDERER_VULKAN_PIPELINE_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
+    #include "../../System/System.h"
+    #include "Vulkan.h"
     #include "Shader.h"
 
     #include <cstddef>
@@ -159,4 +159,4 @@
     };
 
 
-#endif // VOS_RENDERER_PIPELINE_HEADER
+#endif // VOS_RENDERER_VULKAN_PIPELINE_HEADER

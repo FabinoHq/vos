@@ -37,10 +37,10 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Pipeline.cpp : Graphics pipeline management                   //
+//     Renderer/Vulkan/Pipeline.cpp : Graphics pipeline management            //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Pipeline.h"
-#include "Renderer.h"
+#include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////

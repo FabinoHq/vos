@@ -37,11 +37,11 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Texture.cpp : Texture management                              //
+//     Renderer/Vulkan/Texture.cpp : Texture management                       //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Texture.h"
-#include "Renderer.h"
-#include "../Resources/TextureLoader.h"
+#include "../Renderer.h"
+#include "../../Resources/TextureLoader.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////

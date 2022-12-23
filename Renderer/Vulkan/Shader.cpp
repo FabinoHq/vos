@@ -37,78 +37,116 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shader.h : Shader management                                  //
+//     Renderer/Vulkan/Shader.cpp : Shader management                         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SHADER_HEADER
-#define VOS_RENDERER_SHADER_HEADER
-
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-
-    #include <cstddef>
-    #include <cstdint>
+#include "Shader.h"
+#include "../Renderer.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
+////////////////////////////////////////////////////////////////////////////////
+//  Shader default constructor                                                //
+////////////////////////////////////////////////////////////////////////////////
+Shader::Shader() :
+m_shader(0)
+{
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Shader destructor                                                         //
+////////////////////////////////////////////////////////////////////////////////
+Shader::~Shader()
+{
+    m_shader = 0;
+}
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Shader class definition                                               //
-    ////////////////////////////////////////////////////////////////////////////
-    class Shader
+////////////////////////////////////////////////////////////////////////////////
+//  Create Shader                                                             //
+//  return : True if Shader is successfully created                           //
+////////////////////////////////////////////////////////////////////////////////
+bool Shader::createShader(Renderer& renderer,
+    const uint32_t* source, const size_t size)
+{
+    // Check Vulkan device
+    if (!renderer.m_vulkanDevice)
     {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader default constructor                                    //
-            ////////////////////////////////////////////////////////////////////
-            Shader();
+        // Invalid Vulkan device
+        m_shader = 0;
+        return false;
+    }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Shader destructor                                             //
-            ////////////////////////////////////////////////////////////////////
-            ~Shader();
+    // Check render pass
+    if (!renderer.m_swapchain.renderPass)
+    {
+        // Invalid render pass
+        m_shader = 0;
+        return false;
+    }
+
+    // Check shader source
+    if (!source || (size <= 0))
+    {
+        // Invalid shader source
+        m_shader = 0;
+        return false;
+    }
+
+    // Check current shader
+    if (m_shader)
+    {
+        // Destroy current shader
+        destroyShader(renderer);
+    }
+
+    // Create shader
+    VkShaderModuleCreateInfo shaderInfo;
+    shaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    shaderInfo.pNext = 0;
+    shaderInfo.flags = 0;
+    shaderInfo.codeSize = size;
+    shaderInfo.pCode = source;
+
+    if (vkCreateShaderModule(renderer.m_vulkanDevice,
+        &shaderInfo, 0, &m_shader) != VK_SUCCESS)
+    {
+        // Could not create shader
+        m_shader = 0;
+        return false;
+    }
+    if (!m_shader)
+    {
+        // Invalid shader
+        m_shader = 0;
+        return false;
+    }
+
+    // Shader successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy Shader                                                            //
+////////////////////////////////////////////////////////////////////////////////
+void Shader::destroyShader(Renderer& renderer)
+{
+    // Destroy shader
+    if (renderer.m_vulkanDevice && vkDestroyShaderModule)
+    {
+        if (m_shader)
+        {
+            vkDestroyShaderModule(renderer.m_vulkanDevice, m_shader, 0);
+        }
+    }
+    m_shader = 0;
+}
 
 
-            ////////////////////////////////////////////////////////////////////
-            //  Create Shader                                                 //
-            //  return : True if Shader is successfully created               //
-            ////////////////////////////////////////////////////////////////////
-            bool createShader(Renderer& renderer,
-                const uint32_t* source, const size_t size);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy Shader                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyShader(Renderer& renderer);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Check if the shader is valid                                  //
-            //  return : True if the shader is valid                          //
-            ////////////////////////////////////////////////////////////////////
-            bool isValid();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy constructor : Not copyable                //
-            ////////////////////////////////////////////////////////////////////
-            Shader(const Shader&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Shader private copy operator : Not copyable                   //
-            ////////////////////////////////////////////////////////////////////
-            Shader& operator=(const Shader&) = delete;
-
-
-        private:
-            VkShaderModule      m_shader;       // Shader handle
-
-            friend class        Pipeline;       // Pipeline has access
-    };
-
-
-#endif // VOS_RENDERER_SHADER_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Check if the shader is valid                                              //
+//  return : True if the shader is valid                                      //
+////////////////////////////////////////////////////////////////////////////////
+bool Shader::isValid()
+{
+    return m_shader;
+}

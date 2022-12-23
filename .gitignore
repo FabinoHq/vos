@@ -134,6 +134,7 @@
 
 # Renderer
 !Renderer/
+!Renderer/Vulkan/
 !Renderer/Vulkan/Vulkan.h
 !Renderer/Vulkan/Vulkan.cpp
 !Renderer/Vulkan/VulkanMemory.h
@@ -150,6 +151,14 @@
 !Renderer/Vulkan/UniformBuffer.cpp
 !Renderer/Vulkan/GraphicsLayout.h
 !Renderer/Vulkan/GraphicsLayout.cpp
+!Renderer/Vulkan/Pipeline.h
+!Renderer/Vulkan/Pipeline.cpp
+!Renderer/Vulkan/Shader.h
+!Renderer/Vulkan/Shader.cpp
+!Renderer/Vulkan/Texture.h
+!Renderer/Vulkan/Texture.cpp
+!Renderer/Vulkan/CubeMap.h
+!Renderer/Vulkan/CubeMap.cpp
 !Renderer/Pipeline.h
 !Renderer/Pipeline.cpp
 !Renderer/Shader.h

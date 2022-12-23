@@ -37,15 +37,15 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/CubeMap.h : CubeMap management                                //
+//     Renderer/Vulkan/CubeMap.h : CubeMap management                         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_CUBEMAP_HEADER
-#define VOS_RENDERER_CUBEMAP_HEADER
+#ifndef VOS_RENDERER_VULKAN_CUBEMAP_HEADER
+#define VOS_RENDERER_VULKAN_CUBEMAP_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/VulkanBuffer.h"
+    #include "../../System/System.h"
+    #include "Vulkan.h"
+    #include "Swapchain.h"
+    #include "VulkanBuffer.h"
 
     #include <cstdint>
 
@@ -152,4 +152,5 @@
             uint32_t            m_height;           // CubeMap height
     };
 
-#endif // VOS_RENDERER_CUBEMAP_HEADER
+
+#endif // VOS_RENDERER_VULKAN_CUBEMAP_HEADER

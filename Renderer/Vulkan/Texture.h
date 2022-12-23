@@ -37,20 +37,16 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/ProcSprite.h : Procedural sprite management                   //
+//     Renderer/Vulkan/Texture.h : Texture management                         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_PROCSPRITE_HEADER
-#define VOS_RENDERER_PROCSPRITE_HEADER
+#ifndef VOS_RENDERER_VULKAN_TEXTURE_HEADER
+#define VOS_RENDERER_VULKAN_TEXTURE_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Pipeline.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector4.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Math/Transform2.h"
-    #include "Shaders/DefaultProc.h"
+    #include "../../System/System.h"
+    #include "Vulkan.h"
+    #include "Swapchain.h"
+    #include "VulkanBuffer.h"
 
-    #include <cstddef>
     #include <cstdint>
 
 
@@ -59,94 +55,101 @@
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  TextureLoader class declaration                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    class TextureLoader;
+
 
     ////////////////////////////////////////////////////////////////////////////
-    //  ProcSprite class definition                                           //
+    //  Texture class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
-    class ProcSprite : Transform2
+    class Texture
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  ProcSprite default constructor                                //
+            //  Texture default constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            ProcSprite();
+            Texture();
 
             ////////////////////////////////////////////////////////////////////
-            //  ProcSprite virtual destructor                                 //
+            //  Texture destructor                                            //
             ////////////////////////////////////////////////////////////////////
-            virtual ~ProcSprite();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init procedural sprite                                        //
-            //  return : True if the proc sprite is successfully created      //
-            ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer, const uint32_t* fragmentSource,
-                const size_t fragmentSize, float width, float height);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy procedural sprite                                     //
-            ////////////////////////////////////////////////////////////////////
-            void destroyProcSprite(Renderer& renderer);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set procedural sprite color                                   //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(const Vector4& color);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set procedural sprite color                                   //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(float red, float green, float blue, float alpha);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set procedural sprite red channel                             //
-            ////////////////////////////////////////////////////////////////////
-            void setRed(float red);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set procedural sprite green channel                           //
-            ////////////////////////////////////////////////////////////////////
-            void setGreen(float green);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set procedural sprite blue channel                            //
-            ////////////////////////////////////////////////////////////////////
-            void setBlue(float blue);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set procedural sprite alpha channel                           //
-            ////////////////////////////////////////////////////////////////////
-            void setAlpha(float alpha);
+            ~Texture();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind procedural sprite pipeline                               //
+            //  Create texture                                                //
+            //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            void bindPipeline(Renderer& renderer);
+            bool createTexture(Renderer& renderer,
+                uint32_t width, uint32_t height,
+                bool smooth = true, bool repeat = false);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render procedural sprite                                      //
+            //  Update texture                                                //
+            //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
-            void render(Renderer& renderer);
+            bool updateTexture(Renderer& renderer, TextureLoader& loader,
+                uint32_t width, uint32_t height, const unsigned char* data,
+                bool smooth = true, bool repeat = false);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind texture                                                  //
+            ////////////////////////////////////////////////////////////////////
+            void bind(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy texture                                               //
+            ////////////////////////////////////////////////////////////////////
+            void destroyTexture(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if the texture has a valid handle                       //
+            //  return : True if the texture is valid                         //
+            ////////////////////////////////////////////////////////////////////
+            bool isValid();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get texture memory requirements                               //
+            ////////////////////////////////////////////////////////////////////
+            void getMemoryRequirements(VkDevice& vulkanDevice,
+                VkMemoryRequirements* memoryRequirements);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind texture memory                                           //
+            //  return : True if texture memory is successfully binded        //
+            ////////////////////////////////////////////////////////////////////
+            bool bindTextureMemory(VkDevice& vulkanDevice,
+                VkDeviceMemory& deviceMemory, VkDeviceSize size,
+                VkDeviceSize offset);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  ProcSprite private copy constructor : Not copyable            //
+            //  Texture private copy constructor : Not copyable               //
             ////////////////////////////////////////////////////////////////////
-            ProcSprite(const ProcSprite&) = delete;
+            Texture(const Texture&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  ProcSprite private copy operator : Not copyable               //
+            //  Texture private copy operator : Not copyable                  //
             ////////////////////////////////////////////////////////////////////
-            ProcSprite& operator=(const ProcSprite&) = delete;
+            Texture& operator=(const Texture&) = delete;
 
 
         private:
-            Pipeline            m_pipeline;         // ProcSprite pipeline
-            Vector4             m_color;            // ProcSprite color
+            VkImage             m_handle;           // Texture handle
+            VkSampler           m_sampler;          // Texture sampler
+            VkImageView         m_view;             // Texture view
+            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
+
+            VkDeviceSize        m_memorySize;       // Memory size
+            VkDeviceSize        m_memoryOffset;     // Memory offset
+
+            uint32_t            m_width;            // Texture width
+            uint32_t            m_height;           // Texture height
     };
 
 
-#endif // VOS_RENDERER_PROCSPRITE_HEADER
+#endif // VOS_RENDERER_VULKAN_TEXTURE_HEADER

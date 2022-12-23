@@ -37,10 +37,10 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/CubeMap.cpp : CubeMap management                              //
+//     Renderer/Vulkan/CubeMap.cpp : CubeMap management                       //
 ////////////////////////////////////////////////////////////////////////////////
 #include "CubeMap.h"
-#include "Renderer.h"
+#include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -74,12 +74,6 @@
     <ClCompile Include="System\SysSleep.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Texture.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Shader.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="System\Win\SysMessage.cpp">
       <Filter>System\Win</Filter>
     </ClCompile>
@@ -114,9 +108,6 @@
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\ProcSprite.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Pipeline.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Images\BMPFile.cpp">
@@ -156,9 +147,6 @@
       <Filter>Renderer\Shapes</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\SkyBox.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\CubeMap.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Network\Win\IPAddress4.cpp">
@@ -205,6 +193,18 @@
     </ClCompile>
     <ClCompile Include="Resources\TextureLoader.cpp">
       <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\CubeMap.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\Pipeline.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\Shader.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\Texture.cpp">
+      <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,12 +260,6 @@
     <ClInclude Include="Math\Matrix4x4.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Texture.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Shader.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="System\SysMessage.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -313,9 +307,6 @@
     </ClInclude>
     <ClInclude Include="Math\Vector4.h">
       <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Pipeline.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="System\SysCRC.h">
       <Filter>System</Filter>
@@ -401,9 +392,6 @@
     <ClInclude Include="Renderer\SkyBox.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\CubeMap.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Shaders\StaticProc.h">
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
@@ -475,6 +463,18 @@
     </ClInclude>
     <ClInclude Include="System\SysEvent.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\CubeMap.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\Pipeline.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\Shader.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\Texture.h">
+      <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

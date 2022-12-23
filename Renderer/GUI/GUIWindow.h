@@ -43,7 +43,7 @@
 #define VOS_RENDERER_GUI_GUIWINDOW_HEADER
 
     #include "../../System/System.h"
-    #include "../Texture.h"
+    #include "../Vulkan/Texture.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
     #include "../../Math/Vector4.h"

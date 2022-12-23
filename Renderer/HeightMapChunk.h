@@ -44,7 +44,7 @@
 
     #include "../System/System.h"
     #include "Vulkan/VertexBuffer.h"
-    #include "Texture.h"
+    #include "Vulkan/Texture.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
