@@ -908,7 +908,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     // Reset swapchain memory
-    vulkanMemory.resetSwapchainMemory();
+    vulkanMemory.resetMemory(VULKAN_MEMORY_SWAPCHAIN);
 
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;

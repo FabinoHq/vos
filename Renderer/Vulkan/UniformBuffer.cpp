@@ -101,7 +101,7 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (!uniformBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        VULKAN_MEMORY_DEVICE, size))
+        VULKAN_MEMORY_RENDERDEVICE, size))
     {
         // Could not create uniform buffer
         return false;
@@ -110,7 +110,7 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     // Create staging buffer
     if (!stagingBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_HOST, size))
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_RENDERHOST, size))
     {
         // Could not create staging buffer
         return false;
@@ -169,7 +169,7 @@ bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 
     // Write data into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, stagingBuffer, data, VULKAN_MEMORY_HOST))
+        vulkanDevice, stagingBuffer, data, VULKAN_MEMORY_RENDERHOST))
     {
         // Could not write data into staging buffer memory
         return false;

@@ -72,7 +72,7 @@
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkBufferUsageFlags usage, VulkanMemoryType memoryType,
+                VkBufferUsageFlags usage, VulkanMemoryPool memoryPool,
                 uint32_t bufferSize);
 
             ////////////////////////////////////////////////////////////////////

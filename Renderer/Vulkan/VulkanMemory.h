@@ -70,11 +70,43 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VulkanMemoryType
     {
-        VULKAN_MEMORY_SWAPCHAIN = 0,
-        VULKAN_MEMORY_DEVICE = 1,
-        VULKAN_MEMORY_HOST = 2,
+        VULKAN_MEMORY_DEVICE = 0,
+        VULKAN_MEMORY_HOST = 1
+    };
 
-        VULKAN_MEMORY_TYPESCOUNT = 3
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanMemoryPool enum                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    enum VulkanMemoryPool
+    {
+        VULKAN_MEMORY_SWAPCHAIN = 0,
+        VULKAN_MEMORY_RENDERDEVICE = 1,
+        VULKAN_MEMORY_RENDERHOST = 2,
+
+        VULKAN_MEMORY_POOLSCOUNT = 3
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanMemoryList structure                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct VulkanMemoryList
+    {
+        VulkanMemoryPool pool;
+        VulkanMemoryType type;
+        VkDeviceSize size;
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanMemoryArray : Memory pools type and size                        //
+    ////////////////////////////////////////////////////////////////////////////
+    const VulkanMemoryList VulkanMemoryArray[VULKAN_MEMORY_POOLSCOUNT] =
+    {
+        VULKAN_MEMORY_SWAPCHAIN, VULKAN_MEMORY_DEVICE, 0x1000000,
+        VULKAN_MEMORY_RENDERDEVICE, VULKAN_MEMORY_DEVICE, 0x10000000,
+        VULKAN_MEMORY_RENDERHOST, VULKAN_MEMORY_HOST, 0x10000000,
     };
 
 
@@ -102,6 +134,14 @@
             bool init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice);
 
             ////////////////////////////////////////////////////////////////////
+            //  Reset Vulkan memory pool                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void resetMemory(VulkanMemoryPool memoryPool)
+            {
+                m_offset[memoryPool] = 0;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Cleanup Vulkan memory                                         //
             ////////////////////////////////////////////////////////////////////
             void cleanup(VkDevice& vulkanDevice);
@@ -113,25 +153,20 @@
             ////////////////////////////////////////////////////////////////////
             bool allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image);
 
-            ////////////////////////////////////////////////////////////////////
-            //  Reset swapchain image memory                                  //
-            ////////////////////////////////////////////////////////////////////
-            void resetSwapchainMemory();
-
 
             ////////////////////////////////////////////////////////////////////
             //  Allocate buffer memory                                        //
             //  return : True if buffer memory is successfully allocated      //
             ////////////////////////////////////////////////////////////////////
             bool allocateBufferMemory(VkDevice& vulkanDevice,
-                VulkanBuffer& buffer, VulkanMemoryType memoryType);
+                VulkanBuffer& buffer, VulkanMemoryPool memoryPool);
 
             ////////////////////////////////////////////////////////////////////
             //  Write buffer memory                                           //
             //  return : True if buffer memory is successfully written        //
             ////////////////////////////////////////////////////////////////////
             bool writeBufferMemory(VkDevice& vulkanDevice, VulkanBuffer& buffer,
-                const void* data, VulkanMemoryType memoryType);
+                const void* data, VulkanMemoryPool memoryPool);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -139,7 +174,7 @@
             //  return : True if texture memory is successfully allocated     //
             ////////////////////////////////////////////////////////////////////
             bool allocateTextureMemory(VkDevice& vulkanDevice,
-                Texture& texture, VulkanMemoryType memoryType);
+                Texture& texture, VulkanMemoryPool memoryPool);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -147,7 +182,7 @@
             //  return : True if cubemap memory is successfully allocated     //
             ////////////////////////////////////////////////////////////////////
             bool allocateCubeMapMemory(VkDevice& vulkanDevice,
-                CubeMap& cubemap, VulkanMemoryType memoryType);
+                CubeMap& cubemap, VulkanMemoryPool memoryPool);
 
 
         private:
@@ -169,9 +204,9 @@
             uint32_t        m_maxAllocationCount;   // Maximum allocation count
             VkDeviceSize    m_memoryAlignment;      // Memory alignment
 
-            VkDeviceMemory  m_memory[VULKAN_MEMORY_TYPESCOUNT];     // Memory
-            VkDeviceSize    m_offset[VULKAN_MEMORY_TYPESCOUNT];     // Offset
-            uint32_t        m_index[VULKAN_MEMORY_TYPESCOUNT];      // Index
+            VkDeviceMemory  m_memory[VULKAN_MEMORY_POOLSCOUNT];     // Memory
+            VkDeviceSize    m_offset[VULKAN_MEMORY_POOLSCOUNT];     // Offset
+            uint32_t        m_index[VULKAN_MEMORY_POOLSCOUNT];      // Index
     };
 
 

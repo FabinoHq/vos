@@ -72,7 +72,7 @@ VulkanBuffer::~VulkanBuffer()
 ////////////////////////////////////////////////////////////////////////////////
 bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkBufferUsageFlags usage, VulkanMemoryType memoryType, uint32_t bufferSize)
+    VkBufferUsageFlags usage, VulkanMemoryPool memoryPool, uint32_t bufferSize)
 {
     // Check physical device
     if (!physicalDevice)
@@ -128,7 +128,7 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     size = bufferSize;
 
     // Allocate buffer memory
-    if (!vulkanMemory.allocateBufferMemory(vulkanDevice, *this, memoryType))
+    if (!vulkanMemory.allocateBufferMemory(vulkanDevice, *this, memoryPool))
     {
         // Could not allocate buffer memory
         return false;

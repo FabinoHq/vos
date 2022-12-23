@@ -152,7 +152,7 @@ bool Texture::createTexture(Renderer& renderer,
 
     // Allocate texture memory
     if (!renderer.m_vulkanMemory.allocateTextureMemory(
-        renderer.m_vulkanDevice, *this, VULKAN_MEMORY_DEVICE))
+        renderer.m_vulkanDevice, *this, VULKAN_MEMORY_RENDERDEVICE))
     {
         // Could not allocate texture memory
         return false;

@@ -231,7 +231,7 @@ bool TextureLoader::init()
     if (!m_stagingBuffer.createBuffer(
         m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
         m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_HOST, TextureMaxSize))
+        VULKAN_MEMORY_RENDERHOST, TextureMaxSize))
     {
         // Could not create staging buffer
         return false;
@@ -328,7 +328,7 @@ TextureLoaderState TextureLoader::getState()
 void TextureLoader::destroyTextureLoader()
 {
 	// Destroy textures assets
-	for (unsigned int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
+	for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
 	{
 		m_textures[i].destroyTexture(m_renderer);
 	}
@@ -371,15 +371,15 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     if (!m_stagingBuffer.createBuffer(
         m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
         m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_HOST, textureSize))
+        VULKAN_MEMORY_RENDERHOST, textureSize))
     {
         // Could not create staging buffer
         return false;
     }
 
     // Write data into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
-        m_renderer.m_vulkanDevice, m_stagingBuffer, data, VULKAN_MEMORY_HOST))
+    if (!m_renderer.m_vulkanMemory.writeBufferMemory(m_renderer.m_vulkanDevice,
+        m_stagingBuffer, data, VULKAN_MEMORY_RENDERHOST))
     {
         // Could not write data into staging buffer memory
         return false;

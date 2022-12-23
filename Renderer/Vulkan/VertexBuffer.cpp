@@ -124,7 +124,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (!vertexStagingBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_HOST, verticesCount))
+        VULKAN_MEMORY_RENDERHOST, verticesCount))
     {
         // Could not create staging buffer
         return false;
@@ -132,7 +132,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Write vertices into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, vertexStagingBuffer, vertices, VULKAN_MEMORY_HOST))
+        vulkanDevice, vertexStagingBuffer, vertices, VULKAN_MEMORY_RENDERHOST))
     {
         // Could not write vertices into staging buffer memory
         return false;
@@ -143,7 +143,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (!vertexBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_DEVICE, verticesCount))
+        VULKAN_MEMORY_RENDERDEVICE, verticesCount))
     {
         // Could not create vertex buffer
         return false;
@@ -256,7 +256,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (!indexStagingBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_HOST, indicesCount))
+        VULKAN_MEMORY_RENDERHOST, indicesCount))
     {
         // Could not create staging buffer
         return false;
@@ -264,7 +264,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Write indices into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, indexStagingBuffer, indices, VULKAN_MEMORY_HOST))
+        vulkanDevice, indexStagingBuffer, indices, VULKAN_MEMORY_RENDERHOST))
     {
         // Could not write indices into staging buffer memory
         return false;
@@ -275,7 +275,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     if (!indexBuffer.createBuffer(
         physicalDevice, vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_DEVICE, indicesCount))
+        VULKAN_MEMORY_RENDERDEVICE, indicesCount))
     {
         // Could not create index buffer
         return false;
@@ -441,7 +441,7 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 
     // Write vertices into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, vertexStagingBuffer, vertices, VULKAN_MEMORY_HOST))
+        vulkanDevice, vertexStagingBuffer, vertices, VULKAN_MEMORY_RENDERHOST))
     {
         // Could not write vertices into staging buffer memory
         return false;
@@ -552,7 +552,7 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
 
     // Write indices into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, indexStagingBuffer, indices, VULKAN_MEMORY_HOST))
+        vulkanDevice, indexStagingBuffer, indices, VULKAN_MEMORY_RENDERHOST))
     {
         // Could not write indices into staging buffer memory
         return false;
