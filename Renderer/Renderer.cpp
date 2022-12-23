@@ -58,6 +58,7 @@ m_vulkanQueues(),
 m_graphicsQueue(),
 m_surfaceQueue(),
 m_transferQueue(),
+m_graphicsCommandPool(0),
 m_transferCommandPool(0),
 m_uniformsDescPool(0),
 m_texturesDescPool(0),
@@ -235,13 +236,33 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create transfer commands pool
+    // Create graphics commands pool
     VkCommandPoolCreateInfo commandPoolInfo;
     commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     commandPoolInfo.pNext = 0;
-    commandPoolInfo.flags =
-        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
-        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.queueFamilyIndex = m_graphicsQueue.family;
+
+    if (vkCreateCommandPool(m_vulkanDevice,
+        &commandPoolInfo, 0, &m_graphicsCommandPool) != VK_SUCCESS)
+    {
+        // Could not create transfer commands pool
+        SysMessage::box() << "[0x304B] Could not create commands pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+    if (!m_graphicsCommandPool)
+    {
+        // Invalid graphics commands pool
+        SysMessage::box() << "[0x304C] Invalid graphics commands pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create transfer commands pool
+    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.pNext = 0;
+    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = m_transferQueue.family;
 
     if (vkCreateCommandPool(m_vulkanDevice,
@@ -553,6 +574,14 @@ bool Renderer::startFrame()
         return false;
     }
 
+
+    // Reset command pool
+    if (vkResetCommandPool(m_vulkanDevice,
+        m_swapchain.commandPools[m_swapchain.current], 0) != VK_SUCCESS)
+    {
+        // Could not reset command pool
+        return false;
+    }
 
     // Command buffer begin
     VkCommandBufferBeginInfo commandBegin;
@@ -893,6 +922,12 @@ void Renderer::cleanup()
                 vkDestroyCommandPool(m_vulkanDevice, m_transferCommandPool, 0);
             }
 
+            // Destroy graphics commands pool
+            if (m_graphicsCommandPool && vkDestroyCommandPool)
+            {
+                vkDestroyCommandPool(m_vulkanDevice, m_graphicsCommandPool, 0);
+            }
+
             // Destroy swapchain
             m_swapchain.destroySwapchain(m_vulkanDevice);
 
@@ -916,6 +951,7 @@ void Renderer::cleanup()
     m_uniformsDescPool = 0;
     m_texturesDescPool = 0;
     m_transferCommandPool = 0;
+    m_graphicsCommandPool = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
 }

@@ -114,7 +114,6 @@
             VkFormat            format;         // Swapchain format
             VkExtent2D          extent;         // Swapchain extent
             VkRenderPass        renderPass;     // Render pass
-            VkCommandPool       commandsPool;   // Command pool
             uint32_t            frames;         // Swapchain frames count
             uint32_t            current;        // Swapchain current frame
             float               ratio;          // Swapchain aspect ratio
@@ -127,6 +126,7 @@
             VkSemaphore         renderReady[RendererMaxSwapchainFrames];
             VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
             VkFence             fences[RendererMaxSwapchainFrames];
+            VkCommandPool       commandPools[RendererMaxSwapchainFrames];
             VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
     };
 

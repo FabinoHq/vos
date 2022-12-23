@@ -313,7 +313,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
     }
 
     // Check commands pool
-    if (!renderer.m_swapchain.commandsPool)
+    if (!renderer.m_graphicsCommandPool)
     {
         // Invalid commands pool
         return false;
@@ -356,12 +356,20 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
         return false;
     }
 
+    // Reset command pool
+    if (vkResetCommandPool(renderer.m_vulkanDevice,
+        renderer.m_graphicsCommandPool, 0) != VK_SUCCESS)
+    {
+        // Could not reset command pool
+        return false;
+    }
+
     // Allocate command buffers
     VkCommandBuffer commandBuffer = 0;
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = renderer.m_swapchain.commandsPool;
+    bufferAllocate.commandPool = renderer.m_graphicsCommandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -514,7 +522,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer,
     if (commandBuffer)
     {
         vkFreeCommandBuffers(renderer.m_vulkanDevice,
-            renderer.m_swapchain.commandsPool, 1, &commandBuffer
+            renderer.m_graphicsCommandPool, 1, &commandBuffer
         );
     }
 

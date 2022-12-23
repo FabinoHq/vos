@@ -50,7 +50,6 @@ handle(0),
 format(VK_FORMAT_UNDEFINED),
 extent(),
 renderPass(0),
-commandsPool(0),
 frames(0),
 current(0),
 ratio(0.0f)
@@ -67,6 +66,7 @@ ratio(0.0f)
         renderReady[i] = 0;
         renderFinished[i] = 0;
         fences[i] = 0;
+        commandPools[i] = 0;
         commandBuffers[i] = 0;
     }
 }
@@ -79,6 +79,7 @@ Swapchain::~Swapchain()
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         commandBuffers[i] = 0;
+        commandPools[i] = 0;
         fences[i] = 0;
         renderFinished[i] = 0;
         renderReady[i] = 0;
@@ -91,7 +92,6 @@ Swapchain::~Swapchain()
     ratio = 0.0f;
     current = 0;
     frames = 0;
-    commandsPool = 0;
     renderPass = 0;
     extent.height = 0;
     extent.width = 0;
@@ -789,46 +789,51 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         }
     }
 
-    // Create commands pool
+    // Create commands pools
     VkCommandPoolCreateInfo commandPoolInfo;
     commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     commandPoolInfo.pNext = 0;
-    commandPoolInfo.flags =
-        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
-        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = surfaceQueueFamily;
 
-    if (vkCreateCommandPool(
-        vulkanDevice, &commandPoolInfo, 0, &commandsPool) != VK_SUCCESS)
+    for (uint32_t i = 0; i < frames; ++i)
     {
-        // Could not create commands pool
-        SysMessage::box() << "[0x3047] Could not create commands pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-    if (!commandsPool)
-    {
-        // Invalid commands pool
-        SysMessage::box() << "[0x3048] Invalid commands pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
+        if (vkCreateCommandPool(
+            vulkanDevice, &commandPoolInfo, 0, &commandPools[i]) != VK_SUCCESS)
+        {
+            // Could not create commands pool
+            SysMessage::box() << "[0x3047] Could not create commands pool\n";
+            SysMessage::box() << "Please update your graphics drivers";
+            return false;
+        }
+        if (!commandPools[i])
+        {
+            // Invalid commands pool
+            SysMessage::box() << "[0x3048] Invalid commands pool\n";
+            SysMessage::box() << "Please update your graphics drivers";
+            return false;
+        }
     }
 
     // Allocate command buffers
-    VkCommandBufferAllocateInfo commandBufferInfo;
-    commandBufferInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    commandBufferInfo.pNext = 0;
-    commandBufferInfo.commandPool = commandsPool;
-    commandBufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    commandBufferInfo.commandBufferCount = frames;
-
-    if (vkAllocateCommandBuffers(
-        vulkanDevice, &commandBufferInfo, commandBuffers) != VK_SUCCESS)
+    for (uint32_t i = 0; i < frames; ++i)
     {
-        // Could not allocate command buffers
-        SysMessage::box() << "[0x3049] Could not allocate command buffers\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
+        VkCommandBufferAllocateInfo commandBufferInfo;
+        commandBufferInfo.sType =
+            VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        commandBufferInfo.pNext = 0;
+        commandBufferInfo.commandPool = commandPools[i];
+        commandBufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        commandBufferInfo.commandBufferCount = 1;
+
+        if (vkAllocateCommandBuffers(
+            vulkanDevice, &commandBufferInfo, &commandBuffers[i]) != VK_SUCCESS)
+        {
+            // Could not allocate command buffers
+            SysMessage::box() << "[0x3049] Could not allocate command buffer\n";
+            SysMessage::box() << "Please update your graphics drivers";
+            return false;
+        }
     }
 
     // Wait for device idle
@@ -1389,15 +1394,21 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
 
                 for (uint32_t i = 0; i < frames; ++i)
                 {
-                    // Destroy command buffers
-                    if (commandsPool && vkFreeCommandBuffers)
+                    // Destroy command buffer
+                    if (commandPools[i] && vkFreeCommandBuffers)
                     {
                         if (commandBuffers[i])
                         {
                             vkFreeCommandBuffers(vulkanDevice,
-                                commandsPool, 1, &commandBuffers[i]
+                                commandPools[i], 1, &commandBuffers[i]
                             );
                         }
+                    }
+
+                    // Destroy commands pool
+                    if (commandPools[i] && vkDestroyCommandPool)
+                    {
+                        vkDestroyCommandPool(vulkanDevice, commandPools[i], 0);
                     }
 
                     // Destroy fences
@@ -1450,12 +1461,6 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
                     }
                 }
 
-                // Destroy commands pool
-                if (commandsPool && vkDestroyCommandPool)
-                {
-                    vkDestroyCommandPool(vulkanDevice, commandsPool, 0);
-                }
-
                 // Destroy Vulkan swapchain
                 if (handle && vkDestroySwapchainKHR)
                 {
@@ -1468,6 +1473,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         commandBuffers[i] = 0;
+        commandPools[i] = 0;
         fences[i] = 0;
         renderFinished[i] = 0;
         renderReady[i] = 0;
@@ -1478,7 +1484,6 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
     ratio = 0.0f;
     current = 0;
     frames = 0;
-    commandsPool = 0;
     renderPass = 0;
     extent.height = 0;
     extent.width = 0;

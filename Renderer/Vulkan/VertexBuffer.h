@@ -102,7 +102,7 @@
             ////////////////////////////////////////////////////////////////////
             bool createBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+                VkCommandPool& commandPool, VulkanQueue& transferQueue,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 
@@ -112,7 +112,7 @@
             ////////////////////////////////////////////////////////////////////
             bool updateBuffer(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+                VkCommandPool& commandPool, VulkanQueue& transferQueue,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 

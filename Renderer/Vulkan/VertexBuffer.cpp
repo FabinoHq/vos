@@ -69,7 +69,7 @@ VertexBuffer::~VertexBuffer()
 ////////////////////////////////////////////////////////////////////////////////
 bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+    VkCommandPool& commandPool, VulkanQueue& transferQueue,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
@@ -88,7 +88,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Check commands pool
-    if (!commandsPool)
+    if (!commandPool)
     {
         // Invalid commands pool
         return false;
@@ -155,7 +155,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandsPool;
+    bufferAllocate.commandPool = commandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -248,7 +248,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     // Destroy buffers
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(vulkanDevice, commandPool, 1, &commandBuffer);
     }
 
 
@@ -286,7 +286,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     commandBuffer = 0;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandsPool;
+    bufferAllocate.commandPool = commandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -375,7 +375,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     // Destroy buffers
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(vulkanDevice, commandPool, 1, &commandBuffer);
     }
 
     // Vertex buffer successfully created
@@ -388,7 +388,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkCommandPool& commandsPool, VulkanQueue& transferQueue,
+    VkCommandPool& commandPool, VulkanQueue& transferQueue,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
@@ -407,7 +407,7 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Check commands pool
-    if (!commandsPool)
+    if (!commandPool)
     {
         // Invalid commands pool
         return false;
@@ -453,7 +453,7 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandsPool;
+    bufferAllocate.commandPool = commandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -546,7 +546,7 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     // Destroy buffers
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(vulkanDevice, commandPool, 1, &commandBuffer);
     }
 
 
@@ -563,7 +563,7 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     commandBuffer = 0;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandsPool;
+    bufferAllocate.commandPool = commandPool;
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -652,7 +652,7 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     // Destroy buffers
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(vulkanDevice, commandsPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(vulkanDevice, commandPool, 1, &commandBuffer);
     }
 
     // Vertex buffer successfully created

@@ -190,9 +190,7 @@ bool TextureLoader::init()
     VkCommandPoolCreateInfo commandPoolInfo;
     commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     commandPoolInfo.pNext = 0;
-    commandPoolInfo.flags =
-        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
-        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = m_graphicsQueue.family;
 
     if (vkCreateCommandPool(m_renderer.m_vulkanDevice,
@@ -375,6 +373,15 @@ bool TextureLoader::uploadTexture(VkImage& handle,
         m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
         // Could not write data into staging buffer memory
+        return false;
+    }
+
+
+    // Reset command pool
+    if (vkResetCommandPool(
+        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    {
+        // Could not reset command pool
         return false;
     }
 

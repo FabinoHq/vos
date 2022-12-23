@@ -360,6 +360,7 @@
             VulkanQueue         m_graphicsQueue;        // Graphics queue
             VulkanQueue         m_surfaceQueue;         // Surface queue
             VulkanQueue         m_transferQueue;        // Transfer queue
+            VkCommandPool       m_graphicsCommandPool;  // Graphics command pool
             VkCommandPool       m_transferCommandPool;  // Transfer command pool
             VkDescriptorPool    m_uniformsDescPool;     // Uniforms desc pool
             VkDescriptorPool    m_texturesDescPool;     // Textures desc pool

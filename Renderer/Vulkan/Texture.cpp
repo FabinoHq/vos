@@ -311,20 +311,6 @@ bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
         return false;
     }
 
-    // Check commands pool
-    if (!renderer.m_swapchain.commandsPool)
-    {
-        // Invalid commands pool
-        return false;
-    }
-
-    // Check graphics queue
-    if (!renderer.m_graphicsQueue.handle)
-    {
-        // Invalid graphics queue
-        return false;
-    }
-
     // Check texture size
     if ((width <= 0) || (width > TextureMaxWidth) ||
         (height <= 0) || (height > TextureMaxHeight))
