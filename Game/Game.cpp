@@ -170,8 +170,9 @@ bool Game::init()
 
 
     // Init static mesh
-    if (!m_staticMesh.loadVMSH(m_renderer,
-        m_resources.textures.high(TEXTURE_TEST), "Models/testmodel.vmsh"))
+    if (!m_staticMesh.init(
+        m_resources.meshes.mesh(MESHES_TEST),
+        m_resources.textures.high(TEXTURE_TEST)))
     {
         // Could not init static mesh
         return false;
@@ -224,9 +225,6 @@ void Game::destroy()
 {
     // Destroy heightmap chunk
     m_heightMapChunk.destroyHeightMapChunk(m_renderer);
-
-    // Destroy static mesh
-    m_staticMesh.destroyStaticMesh(m_renderer);
 
     // Destroy procedural sprite
     m_procSprite.destroyProcSprite(m_renderer);
@@ -429,14 +427,14 @@ void Game::render()
     m_skybox.render(m_renderer);
 
     // Render cuboid shape
-    m_renderer.bindShapePipeline();
+    /*m_renderer.bindShapePipeline();
     m_cuboid.bindVertexBuffer(m_renderer);
-    m_cuboid.render(m_renderer);
+    m_cuboid.render(m_renderer);*/
 
     // Render static mesh
-    /*m_renderer.bindStaticMeshPipeline();
+    m_renderer.bindStaticMeshPipeline();
     m_staticMesh.bindVertexBuffer(m_renderer);
-    m_staticMesh.render(m_renderer);*/
+    m_staticMesh.render(m_renderer);
 
     // Render heightmap chunk
     /*m_renderer.bindStaticMeshPipeline();

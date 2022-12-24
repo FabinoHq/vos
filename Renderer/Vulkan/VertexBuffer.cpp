@@ -46,6 +46,7 @@
 //  VertexBuffer default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 VertexBuffer::VertexBuffer() :
+indexCount(0),
 vertexBuffer(),
 vertexStagingBuffer(),
 indexBuffer(),
@@ -116,6 +117,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Compute vertices and indices sizes
+    indexCount = indicesCount;
     verticesCount *= sizeof(float);
     indicesCount *= sizeof(uint16_t);
 
@@ -435,6 +437,7 @@ bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
     }
 
     // Compute vertices and indices sizes
+    indexCount = indicesCount;
     verticesCount *= sizeof(float);
     indicesCount *= sizeof(uint16_t);
 

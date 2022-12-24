@@ -135,6 +135,7 @@
 
 
         public:
+            uint32_t        indexCount;             // Indices count
             VulkanBuffer    vertexBuffer;           // Vertex buffer
             VulkanBuffer    vertexStagingBuffer;    // Vertex staging buffer
             VulkanBuffer    indexBuffer;            // Index buffer

@@ -74,7 +74,7 @@
         MESHES_CUBOID = 1,
         MESHES_TEST = 2,
 
-        MESHES_ASSETSCOUNT = 2
+        MESHES_ASSETSCOUNT = 3
     };
 
 
@@ -181,6 +181,14 @@
             //  return : True if meshes assets are loaded                     //
             ////////////////////////////////////////////////////////////////////
             bool loadMeshes();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Load mesh from VMSH file                                      //
+            //  return : True if the mesh is successfully loaded              //
+            ////////////////////////////////////////////////////////////////////
+            bool loadVMSH(VertexBuffer& vertexBuffer,
+                const std::string& filepath);
 
 
         private:

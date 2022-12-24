@@ -365,7 +365,9 @@ bool MeshLoader::loadEmbeddedMeshes()
     }
 
     // Load cuboid vertex buffer
-    if (!m_renderer.createVertexBuffer(m_meshes[MESHES_CUBOID],
+    if (!m_meshes[MESHES_CUBOID].createBuffer(
+        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
+        m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
         CuboidShapeVertices, CuboidShapeIndices,
         CuboidShapeVerticesCount, CuboidShapeIndicesCount))
     {
@@ -383,6 +385,13 @@ bool MeshLoader::loadEmbeddedMeshes()
 ////////////////////////////////////////////////////////////////////////////////
 bool MeshLoader::preloadMeshes()
 {
+    // Load test static mesh
+    if (!loadVMSH(m_meshes[MESHES_TEST], "Models/testmodel.vmsh"))
+    {
+        // Could not load test static mesh
+        return false;
+    }
+
     // Meshes assets are successfully preloaded
     return true;
 }
@@ -394,5 +403,101 @@ bool MeshLoader::preloadMeshes()
 bool MeshLoader::loadMeshes()
 {
     // Meshes assets are successfully loaded
+    return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load mesh from VMSH file                                                  //
+//  return : True if the mesh is successfully loaded                          //
+////////////////////////////////////////////////////////////////////////////////
+bool MeshLoader::loadVMSH(VertexBuffer& vertexBuffer,
+    const std::string& filepath)
+{
+    // Init mesh data
+    float* vertices = 0;
+    uint16_t* indices = 0;
+    uint32_t verticesCount = 0;
+    uint32_t indicesCount = 0;
+
+    // Load mesh data from file
+    std::ifstream file;
+    file.open(filepath.c_str(), std::ios::in | std::ios::binary);
+    if (file.is_open())
+    {
+        // Read VMSH header
+        char header[4] = {0};
+        char majorVersion = 0;
+        char minorVersion = 0;
+        file.read(header, sizeof(char)*4);
+        file.read(&majorVersion, sizeof(char));
+        file.read(&minorVersion, sizeof(char));
+
+        // Check VMSH header
+        if ((header[0] != 'V') || (header[1] != 'M') ||
+            (header[2] != 'S') || (header[3] != 'H'))
+        {
+            // Invalid VMSH header
+            return false;
+        }
+
+        // Check VMSH version
+        if ((majorVersion != 1) || (minorVersion != 0))
+        {
+            // Invalid VMSH header
+            return false;
+        }
+
+        // Read VMSH file type
+        char type = 0;
+        file.read(&type, sizeof(char));
+        if (type != 0)
+        {
+            // Invalid VMSH type
+            return false;
+        }
+
+        // Read vertices and indices count
+        file.read((char*)&verticesCount, sizeof(uint32_t));
+        file.read((char*)&indicesCount, sizeof(uint32_t));
+        if ((verticesCount <= 0) || (indicesCount <= 0))
+        {
+            // Invalid vertices or indices count
+            return false;
+        }
+
+        // Allocate vertices and indices
+        vertices = new (std::nothrow) float[verticesCount];
+        indices = new (std::nothrow) uint16_t[indicesCount];
+        if (!vertices || !indices) return false;
+
+        // Read vertices
+        file.read((char*)vertices, sizeof(float)*verticesCount);
+
+        // Read indices
+        file.read((char*)indices, sizeof(uint16_t)*indicesCount);
+
+        // Close file
+        file.close();
+    }
+
+    // Create vertex buffer
+    if (!vertexBuffer.createBuffer(
+        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
+        m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
+        CuboidShapeVertices, CuboidShapeIndices,
+        CuboidShapeVerticesCount, CuboidShapeIndicesCount))
+    {
+        // Could not create vertex buffer
+        if (vertices) { delete[] vertices; }
+        if (indices) { delete[] indices; }
+        return false;
+    }
+
+    // Destroy mesh data
+    if (vertices) { delete[] vertices; }
+    if (indices) { delete[] indices; }
+
+    // Mesh successfully loaded
     return true;
 }

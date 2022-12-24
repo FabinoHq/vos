@@ -82,22 +82,12 @@
             //  Init static mesh                                              //
             //  return : True if the static mesh is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer, Texture& texture,
-                const float* vertices, const uint16_t* indices,
-                uint32_t verticesCount, uint32_t indicesCount);
+            bool init(VertexBuffer& vertexBuffer, Texture& texture);
 
             ////////////////////////////////////////////////////////////////////
-            //  Load static mesh from VMSH file                               //
-            //  return : True if the static mesh is successfully loaded       //
+            //  Set static mesh vertex buffer                                 //
             ////////////////////////////////////////////////////////////////////
-            bool loadVMSH(Renderer& renderer,
-                Texture& texture, const std::string& filepath);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy static mesh                                           //
-            ////////////////////////////////////////////////////////////////////
-            void destroyStaticMesh(Renderer& renderer);
-
+            void setVertexBuffer(VertexBuffer& vertexBuffer);
 
             ////////////////////////////////////////////////////////////////////
             //  Set static mesh texture                                       //
@@ -160,8 +150,7 @@
 
 
         private:
-            VertexBuffer    m_vertexBuffer;     // Static mesh vertex buffer
-            uint32_t        m_indicesCount;     // Static mesh indices count
+            VertexBuffer*   m_vertexBuffer;     // Static mesh vertex buffer
             Texture*        m_texture;          // Static mesh texture pointer
             Vector4         m_color;            // Static mesh color
     };

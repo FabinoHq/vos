@@ -144,19 +144,16 @@ void CuboidShape::setAlpha(float alpha)
 void CuboidShape::bindVertexBuffer(Renderer& renderer)
 {
     // Bind vertex buffer
-    if (m_vertexBuffer)
-    {
-        VkDeviceSize offset = 0;
-        vkCmdBindVertexBuffers(
-            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-            0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
-        );
+    VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
+    );
 
-        vkCmdBindIndexBuffer(
-            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-            m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
-        );
-    }
+    vkCmdBindIndexBuffer(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
