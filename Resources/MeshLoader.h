@@ -45,6 +45,10 @@
     #include "../System/System.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
+    #include "../Renderer/Vulkan/Vulkan.h"
+    #include "../Renderer/Vulkan/VulkanQueue.h"
+    #include "../Renderer/Vulkan/VulkanBuffer.h"
+    #include "../Renderer/Vulkan/VertexBuffer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -53,6 +57,17 @@
     const uint64_t MeshFenceTimeout = 100000000000;
     const double MeshLoaderIdleSleepTime = 0.01;
     const double MeshLoaderErrorSleepTime = 0.1;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  MeshesAssets enumeration                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    enum MeshesAssets
+    {
+        MESHES_TEST = 0,
+
+        MESHES_ASSETSCOUNT = 1
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -167,6 +182,14 @@
             Renderer&               m_renderer;         // Renderer
             MeshLoaderState         m_state;            // MeshLoader state
             SysMutex                m_stateMutex;       // State mutex
+
+            VulkanQueue             m_transferQueue;    // Transfer queue
+            VkCommandPool           m_commandPool;      // Command pool
+            VkCommandBuffer         m_commandBuffer;    // Command buffer
+            VulkanBuffer            m_stagingBuffer;    // Staging buffer
+            VkFence                 m_fence;            // Staging fence
+
+            VertexBuffer*           m_meshes;           // Meshes
     };
 
 

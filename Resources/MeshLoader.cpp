@@ -49,7 +49,13 @@
 MeshLoader::MeshLoader(Renderer& renderer) :
 m_renderer(renderer),
 m_state(MESHLOADER_STATE_NONE),
-m_stateMutex()
+m_stateMutex(),
+m_transferQueue(),
+m_commandPool(),
+m_commandBuffer(0),
+m_stagingBuffer(),
+m_fence(0),
+m_meshes(0)
 {
 
 }
@@ -68,101 +74,101 @@ MeshLoader::~MeshLoader()
 ////////////////////////////////////////////////////////////////////////////////
 void MeshLoader::process()
 {
-	MeshLoaderState state = MESHLOADER_STATE_NONE;
-	m_stateMutex.lock();
-	state = m_state;
-	m_stateMutex.unlock();
+    MeshLoaderState state = MESHLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
 
-	switch (m_state)
-	{
-		case MESHLOADER_STATE_NONE:
-			// Boot to init state
-			m_stateMutex.lock();
-			m_state = MESHLOADER_STATE_INIT;
-			m_stateMutex.unlock();
-			break;
+    switch (m_state)
+    {
+        case MESHLOADER_STATE_NONE:
+            // Boot to init state
+            m_stateMutex.lock();
+            m_state = MESHLOADER_STATE_INIT;
+            m_stateMutex.unlock();
+            break;
 
-		case MESHLOADER_STATE_INIT:
-			// Init mesh loader
-			if (init())
-			{
-				m_stateMutex.lock();
-				m_state = MESHLOADER_STATE_LOADEMBEDDED;
-				m_stateMutex.unlock();
-			}
-			else
-			{
-				m_stateMutex.lock();
-				m_state = MESHLOADER_STATE_ERROR;
-				m_stateMutex.unlock();
-			}
-			break;
+        case MESHLOADER_STATE_INIT:
+            // Init mesh loader
+            if (init())
+            {
+                m_stateMutex.lock();
+                m_state = MESHLOADER_STATE_LOADEMBEDDED;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = MESHLOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
 
-		case MESHLOADER_STATE_LOADEMBEDDED:
-			// Load embedded meshes
-			if (loadEmbeddedMeshes())
-			{
-				m_stateMutex.lock();
-				m_state = MESHLOADER_STATE_IDLE;
-				m_stateMutex.unlock();
-			}
-			else
-			{
-				m_stateMutex.lock();
-				m_state = MESHLOADER_STATE_ERROR;
-				m_stateMutex.unlock();
-			}
-			break;
+        case MESHLOADER_STATE_LOADEMBEDDED:
+            // Load embedded meshes
+            if (loadEmbeddedMeshes())
+            {
+                m_stateMutex.lock();
+                m_state = MESHLOADER_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = MESHLOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
 
-		case MESHLOADER_STATE_IDLE:
-			// Mesh loader in idle state
-			SysSleep(MeshLoaderIdleSleepTime);
-			break;
+        case MESHLOADER_STATE_IDLE:
+            // Mesh loader in idle state
+            SysSleep(MeshLoaderIdleSleepTime);
+            break;
 
-		case MESHLOADER_STATE_PRELOAD:
-			// Preload meshes assets
-			if (preloadMeshes())
-			{
-				m_stateMutex.lock();
-				m_state = MESHLOADER_STATE_IDLE;
-				m_stateMutex.unlock();
-			}
-			else
-			{
-				m_stateMutex.lock();
-				m_state = MESHLOADER_STATE_ERROR;
-				m_stateMutex.unlock();
-			}
-			break;
+        case MESHLOADER_STATE_PRELOAD:
+            // Preload meshes assets
+            if (preloadMeshes())
+            {
+                m_stateMutex.lock();
+                m_state = MESHLOADER_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = MESHLOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
 
-		case MESHLOADER_STATE_LOAD:
-			// Load meshes assets
-			if (loadMeshes())
-			{
-				m_stateMutex.lock();
-				m_state = MESHLOADER_STATE_IDLE;
-				m_stateMutex.unlock();
-			}
-			else
-			{
-				m_stateMutex.lock();
-				m_state = MESHLOADER_STATE_ERROR;
-				m_stateMutex.unlock();
-			}
-			break;
+        case MESHLOADER_STATE_LOAD:
+            // Load meshes assets
+            if (loadMeshes())
+            {
+                m_stateMutex.lock();
+                m_state = MESHLOADER_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = MESHLOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
 
-		case MESHLOADER_STATE_ERROR:
-			// Mesh loader error
-			SysSleep(MeshLoaderErrorSleepTime);
-			break;
+        case MESHLOADER_STATE_ERROR:
+            // Mesh loader error
+            SysSleep(MeshLoaderErrorSleepTime);
+            break;
 
-		default:
-			// Invalid state
-			m_stateMutex.lock();
-			m_state = MESHLOADER_STATE_ERROR;
-			m_stateMutex.unlock();
-			break;
-	}
+        default:
+            // Invalid state
+            m_stateMutex.lock();
+            m_state = MESHLOADER_STATE_ERROR;
+            m_stateMutex.unlock();
+            break;
+    }
 }
 
 
@@ -172,8 +178,81 @@ void MeshLoader::process()
 ////////////////////////////////////////////////////////////////////////////////
 bool MeshLoader::init()
 {
-	// Mesh loader ready
-	return true;
+    // Request transfer queue handle
+    if (!m_transferQueue.createGraphicsQueue(
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanQueues))
+    {
+        // Could not get transfer queue handle
+        return false;
+    }
+
+    // Create command pool
+    VkCommandPoolCreateInfo commandPoolInfo;
+    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.pNext = 0;
+    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.queueFamilyIndex = m_transferQueue.family;
+
+    if (vkCreateCommandPool(m_renderer.m_vulkanDevice,
+        &commandPoolInfo, 0, &m_commandPool) != VK_SUCCESS)
+    {
+        // Could not create commands pool
+        return false;
+    }
+    if (!m_commandPool)
+    {
+        // Invalid commands pool
+        return false;
+    }
+
+    // Allocate command buffer
+    VkCommandBufferAllocateInfo bufferAllocate;
+    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    bufferAllocate.pNext = 0;
+    bufferAllocate.commandPool = m_commandPool;
+    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    bufferAllocate.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(m_renderer.m_vulkanDevice,
+        &bufferAllocate, &m_commandBuffer) != VK_SUCCESS)
+    {
+        // Could not allocate command buffer
+        return false;
+    }
+    if (!m_commandBuffer)
+    {
+        // Invalid command buffer
+        return false;
+    }
+
+    // Create staging fence
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = 0;
+    fenceInfo.flags = 0;
+
+    if (vkCreateFence(
+        m_renderer.m_vulkanDevice, &fenceInfo, 0, &m_fence) != VK_SUCCESS)
+    {
+        // Could not create staging fence
+        return false;
+    }
+    if (!m_fence)
+    {
+        // Invalid staging fence
+        return false;
+    }
+
+    // Allocate meshes vertex buffers
+    m_meshes = new (std::nothrow) VertexBuffer[MESHES_ASSETSCOUNT];
+    if (!m_meshes)
+    {
+        // Could not allocate meshes vertex buffers
+        return false;
+    }
+
+    // Mesh loader ready
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -182,19 +261,19 @@ bool MeshLoader::init()
 ////////////////////////////////////////////////////////////////////////////////
 bool MeshLoader::startPreload()
 {
-	bool preLoading = false;
-	m_stateMutex.lock();
+    bool preLoading = false;
+    m_stateMutex.lock();
 
-	// Check mesh loader state
-	if (m_state == MESHLOADER_STATE_IDLE)
-	{
-		// Switch to preload state
-		m_state = MESHLOADER_STATE_PRELOAD;
-		preLoading = true;
-	}
+    // Check mesh loader state
+    if (m_state == MESHLOADER_STATE_IDLE)
+    {
+        // Switch to preload state
+        m_state = MESHLOADER_STATE_PRELOAD;
+        preLoading = true;
+    }
 
-	m_stateMutex.unlock();
-	return preLoading;
+    m_stateMutex.unlock();
+    return preLoading;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,19 +282,19 @@ bool MeshLoader::startPreload()
 ////////////////////////////////////////////////////////////////////////////////
 bool MeshLoader::startLoading()
 {
-	bool loading = false;
-	m_stateMutex.lock();
+    bool loading = false;
+    m_stateMutex.lock();
 
-	// Check mesh loader state
-	if (m_state == MESHLOADER_STATE_IDLE)
-	{
-		// Switch to load state
-		m_state = MESHLOADER_STATE_LOAD;
-		loading = true;
-	}
+    // Check mesh loader state
+    if (m_state == MESHLOADER_STATE_IDLE)
+    {
+        // Switch to load state
+        m_state = MESHLOADER_STATE_LOAD;
+        loading = true;
+    }
 
-	m_stateMutex.unlock();
-	return loading;
+    m_stateMutex.unlock();
+    return loading;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -224,11 +303,11 @@ bool MeshLoader::startLoading()
 ////////////////////////////////////////////////////////////////////////////////
 MeshLoaderState MeshLoader::getState()
 {
-	MeshLoaderState state = MESHLOADER_STATE_NONE;
-	m_stateMutex.lock();
-	state = m_state;
-	m_stateMutex.unlock();
-	return state;
+    MeshLoaderState state = MESHLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    return state;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +315,35 @@ MeshLoaderState MeshLoader::getState()
 ////////////////////////////////////////////////////////////////////////////////
 void MeshLoader::destroyMeshLoader()
 {
-	
+    // Destroy meshes vertex buffers
+    for (int i = 0; i < MESHES_ASSETSCOUNT; ++i)
+    {
+        m_meshes[i].destroyBuffer(m_renderer.m_vulkanDevice);
+    }
+    if (m_meshes) { delete[] m_meshes; }
+
+    // Destroy staging fence
+    if (m_fence)
+    {
+        vkDestroyFence(m_renderer.m_vulkanDevice, m_fence, 0);
+    }
+
+    // Destroy staging buffer
+    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+
+    // Destroy command buffer
+    if (m_commandBuffer)
+    {
+        vkFreeCommandBuffers(m_renderer.m_vulkanDevice,
+            m_commandPool, 1, &m_commandBuffer
+        );
+    }
+
+    // Destroy command pool
+    if (m_commandPool)
+    {
+        vkDestroyCommandPool(m_renderer.m_vulkanDevice, m_commandPool, 0);
+    }
 }
 
 

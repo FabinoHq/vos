@@ -52,7 +52,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  VulkanQueues settings                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxGraphicsQueues = 2;
+    const uint32_t RendererMaxGraphicsQueues = 3;
     const uint32_t RendererMaxSurfaceQueues = 1;
     const uint32_t RendererMaxTransferQueues = 1;
 

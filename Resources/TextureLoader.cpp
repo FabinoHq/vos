@@ -76,101 +76,101 @@ TextureLoader::~TextureLoader()
 ////////////////////////////////////////////////////////////////////////////////
 void TextureLoader::process()
 {
-	TextureLoaderState state = TEXTURELOADER_STATE_NONE;
-	m_stateMutex.lock();
-	state = m_state;
-	m_stateMutex.unlock();
+    TextureLoaderState state = TEXTURELOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
 
-	switch (m_state)
-	{
-		case TEXTURELOADER_STATE_NONE:
-			// Boot to init state
-			m_stateMutex.lock();
-			m_state = TEXTURELOADER_STATE_INIT;
-			m_stateMutex.unlock();
-			break;
+    switch (m_state)
+    {
+        case TEXTURELOADER_STATE_NONE:
+            // Boot to init state
+            m_stateMutex.lock();
+            m_state = TEXTURELOADER_STATE_INIT;
+            m_stateMutex.unlock();
+            break;
 
-		case TEXTURELOADER_STATE_INIT:
-			// Init texture loader
-			if (init())
-			{
-				m_stateMutex.lock();
-				m_state = TEXTURELOADER_STATE_LOADEMBEDDED;
-				m_stateMutex.unlock();
-			}
-			else
-			{
-				m_stateMutex.lock();
-				m_state = TEXTURELOADER_STATE_ERROR;
-				m_stateMutex.unlock();
-			}
-			break;
+        case TEXTURELOADER_STATE_INIT:
+            // Init texture loader
+            if (init())
+            {
+                m_stateMutex.lock();
+                m_state = TEXTURELOADER_STATE_LOADEMBEDDED;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = TEXTURELOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
 
-		case TEXTURELOADER_STATE_LOADEMBEDDED:
-			// Load embedded textures
-			if (loadEmbeddedTextures())
-			{
-				m_stateMutex.lock();
-				m_state = TEXTURELOADER_STATE_IDLE;
-				m_stateMutex.unlock();
-			}
-			else
-			{
-				m_stateMutex.lock();
-				m_state = TEXTURELOADER_STATE_ERROR;
-				m_stateMutex.unlock();
-			}
-			break;
+        case TEXTURELOADER_STATE_LOADEMBEDDED:
+            // Load embedded textures
+            if (loadEmbeddedTextures())
+            {
+                m_stateMutex.lock();
+                m_state = TEXTURELOADER_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = TEXTURELOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
 
-		case TEXTURELOADER_STATE_IDLE:
-			// Texture loader in idle state
-			SysSleep(TextureLoaderIdleSleepTime);
-			break;
+        case TEXTURELOADER_STATE_IDLE:
+            // Texture loader in idle state
+            SysSleep(TextureLoaderIdleSleepTime);
+            break;
 
-		case TEXTURELOADER_STATE_PRELOAD:
-			// Preload textures assets
-			if (preloadTextures())
-			{
-				m_stateMutex.lock();
-				m_state = TEXTURELOADER_STATE_IDLE;
-				m_stateMutex.unlock();
-			}
-			else
-			{
-				m_stateMutex.lock();
-				m_state = TEXTURELOADER_STATE_ERROR;
-				m_stateMutex.unlock();
-			}
-			break;
+        case TEXTURELOADER_STATE_PRELOAD:
+            // Preload textures assets
+            if (preloadTextures())
+            {
+                m_stateMutex.lock();
+                m_state = TEXTURELOADER_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = TEXTURELOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
 
-		case TEXTURELOADER_STATE_LOAD:
-			// Load textures assets
-			if (loadTextures())
-			{
-				m_stateMutex.lock();
-				m_state = TEXTURELOADER_STATE_IDLE;
-				m_stateMutex.unlock();
-			}
-			else
-			{
-				m_stateMutex.lock();
-				m_state = TEXTURELOADER_STATE_ERROR;
-				m_stateMutex.unlock();
-			}
-			break;
+        case TEXTURELOADER_STATE_LOAD:
+            // Load textures assets
+            if (loadTextures())
+            {
+                m_stateMutex.lock();
+                m_state = TEXTURELOADER_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = TEXTURELOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
 
-		case TEXTURELOADER_STATE_ERROR:
-			// Texture loader error
-			SysSleep(TextureLoaderErrorSleepTime);
-			break;
+        case TEXTURELOADER_STATE_ERROR:
+            // Texture loader error
+            SysSleep(TextureLoaderErrorSleepTime);
+            break;
 
-		default:
-			// Invalid state
-			m_stateMutex.lock();
-			m_state = TEXTURELOADER_STATE_ERROR;
-			m_stateMutex.unlock();
-			break;
-	}
+        default:
+            // Invalid state
+            m_stateMutex.lock();
+            m_state = TEXTURELOADER_STATE_ERROR;
+            m_stateMutex.unlock();
+            break;
+    }
 }
 
 
@@ -207,7 +207,7 @@ bool TextureLoader::init()
         return false;
     }
 
-	// Allocate command buffer
+    // Allocate command buffer
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
@@ -223,8 +223,8 @@ bool TextureLoader::init()
     }
     if (!m_commandBuffer)
     {
-    	// Invalid command buffer
-    	return false;
+        // Invalid command buffer
+        return false;
     }
 
     // Create staging fence
@@ -249,8 +249,8 @@ bool TextureLoader::init()
     m_texturesGUI = new (std::nothrow) Texture[TEXTURE_GUICOUNT];
     if (!m_texturesGUI)
     {
-    	// Could not allocate GUI textures
-    	return false;
+        // Could not allocate GUI textures
+        return false;
     }
 
     // Allocate high textures
@@ -269,8 +269,8 @@ bool TextureLoader::init()
         return false;
     }
 
-	// Texture loader ready
-	return true;
+    // Texture loader ready
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -279,19 +279,19 @@ bool TextureLoader::init()
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureLoader::startPreload()
 {
-	bool preLoading = false;
-	m_stateMutex.lock();
+    bool preLoading = false;
+    m_stateMutex.lock();
 
-	// Check texture loader state
-	if (m_state == TEXTURELOADER_STATE_IDLE)
-	{
-		// Switch to preload state
-		m_state = TEXTURELOADER_STATE_PRELOAD;
-		preLoading = true;
-	}
+    // Check texture loader state
+    if (m_state == TEXTURELOADER_STATE_IDLE)
+    {
+        // Switch to preload state
+        m_state = TEXTURELOADER_STATE_PRELOAD;
+        preLoading = true;
+    }
 
-	m_stateMutex.unlock();
-	return preLoading;
+    m_stateMutex.unlock();
+    return preLoading;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -300,19 +300,19 @@ bool TextureLoader::startPreload()
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureLoader::startLoading()
 {
-	bool loading = false;
-	m_stateMutex.lock();
+    bool loading = false;
+    m_stateMutex.lock();
 
-	// Check texture loader state
-	if (m_state == TEXTURELOADER_STATE_IDLE)
-	{
-		// Switch to load state
-		m_state = TEXTURELOADER_STATE_LOAD;
-		loading = true;
-	}
+    // Check texture loader state
+    if (m_state == TEXTURELOADER_STATE_IDLE)
+    {
+        // Switch to load state
+        m_state = TEXTURELOADER_STATE_LOAD;
+        loading = true;
+    }
 
-	m_stateMutex.unlock();
-	return loading;
+    m_stateMutex.unlock();
+    return loading;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -321,11 +321,11 @@ bool TextureLoader::startLoading()
 ////////////////////////////////////////////////////////////////////////////////
 TextureLoaderState TextureLoader::getState()
 {
-	TextureLoaderState state = TEXTURELOADER_STATE_NONE;
-	m_stateMutex.lock();
-	state = m_state;
-	m_stateMutex.unlock();
-	return state;
+    TextureLoaderState state = TEXTURELOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    return state;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -347,20 +347,20 @@ void TextureLoader::destroyTextureLoader()
     }
     if (m_texturesHigh) { delete[] m_texturesHigh; }
 
-	// Destroy GUI textures
-	for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
-	{
-		m_texturesGUI[i].destroyTexture(m_renderer);
-	}
-	if (m_texturesGUI) { delete[] m_texturesGUI; }
+    // Destroy GUI textures
+    for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
+    {
+        m_texturesGUI[i].destroyTexture(m_renderer);
+    }
+    if (m_texturesGUI) { delete[] m_texturesGUI; }
 
-	// Destroy staging fence
+    // Destroy staging fence
     if (m_fence)
     {
         vkDestroyFence(m_renderer.m_vulkanDevice, m_fence, 0);
     }
 
-	// Destroy staging buffer
+    // Destroy staging buffer
     m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
 
     // Destroy command buffer
@@ -384,12 +384,12 @@ void TextureLoader::destroyTextureLoader()
 //  return : True if texture is successfully uploaded                         //
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureLoader::uploadTexture(VkImage& handle,
-	uint32_t width, uint32_t height, const unsigned char* data)
+    uint32_t width, uint32_t height, const unsigned char* data)
 {
     // Reset texture upload memory
     m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
 
-	// Create staging buffer
+    // Create staging buffer
     uint32_t textureSize = (width*height*4);
     if (!m_stagingBuffer.createBuffer(
         m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
@@ -539,8 +539,8 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     // Destroy staging buffer
     m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
 
-	// Texture successfully uploaded
-	return true;
+    // Texture successfully uploaded
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -717,8 +717,8 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureLoader::loadEmbeddedTextures()
 {
-	// Load cursor texture
-	if (!m_texturesGUI[TEXTURE_CURSOR].updateTexture(m_renderer, *this,
+    // Load cursor texture
+    if (!m_texturesGUI[TEXTURE_CURSOR].updateTexture(m_renderer, *this,
         CursorImageWidth, CursorImageHeight, CursorImage,
         false, false))
     {
@@ -790,7 +790,7 @@ bool TextureLoader::loadEmbeddedTextures()
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureLoader::preloadTextures()
 {
-	// Load test texture
+    // Load test texture
     PNGFile pngfile;
     if (!pngfile.loadImage("Textures/testsprite.png"))
     {
