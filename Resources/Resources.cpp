@@ -48,7 +48,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 Resources::Resources(Renderer& renderer) :
 textures(renderer),
-meshes(),
+meshes(renderer),
 heightmaps()
 {
 
@@ -84,6 +84,9 @@ bool Resources::init()
     {
         // Get resources loader states
         TextureLoaderState textureState = textures.getState();
+        MeshLoaderState meshState = meshes.getState();
+
+        // Check texture loader state
         if (textureState == TEXTURELOADER_STATE_ERROR)
         {
             // Texture loader error
@@ -92,7 +95,18 @@ bool Resources::init()
             return false;
         }
 
-        if (textureState == TEXTURELOADER_STATE_IDLE)
+        // Check mesh loader state
+        if (meshState == MESHLOADER_STATE_ERROR)
+        {
+            // Mesh loader error
+            SysMessage::box() << "[0x4001] Could not init meshes loader\n";
+            SysMessage::box() << "Please check your resources files";
+            return false;
+        }
+
+        // Check resources init state
+        if ((textureState == TEXTURELOADER_STATE_IDLE) &&
+            (meshState == MESHLOADER_STATE_IDLE))
         {
             // Resources are ready
             resourcesReady = true;
@@ -117,21 +131,38 @@ bool Resources::preload()
     // Start texture preloading
     textures.startPreload();
 
+    // Start meshes preloading
+    meshes.startPreload();
+
     // Wait for resources preload
     bool resourcesPreloaded = false;
     while (!resourcesPreloaded)
     {
         // Get resources loader states
         TextureLoaderState textureState = textures.getState();
+        MeshLoaderState meshState = meshes.getState();
+
+        // Check texture loader state
         if (textureState == TEXTURELOADER_STATE_ERROR)
         {
             // Texture loader error
-            SysMessage::box() << "[0x4001] Could not preload textures\n";
+            SysMessage::box() << "[0x4002] Could not preload textures\n";
             SysMessage::box() << "Please check your resources files";
             return false;
         }
 
-        if (textureState == TEXTURELOADER_STATE_IDLE)
+        // Check mesh loader state
+        if (meshState == MESHLOADER_STATE_ERROR)
+        {
+            // Texture loader error
+            SysMessage::box() << "[0x4003] Could not preload meshes\n";
+            SysMessage::box() << "Please check your resources files";
+            return false;
+        }
+
+        // Check resources preload state
+        if ((textureState == TEXTURELOADER_STATE_IDLE) &&
+            (meshState == MESHLOADER_STATE_IDLE))
         {
             // Resources are preloaded
             resourcesPreloaded = true;
@@ -157,7 +188,16 @@ bool Resources::startLoading()
     if (!textures.startLoading())
     {
         // Could not start textures loading
-        SysMessage::box() << "[0x4002] Could not start textures loader\n";
+        SysMessage::box() << "[0x4004] Could not start textures loader\n";
+        SysMessage::box() << "Please check your resources files";
+        return false;
+    }
+
+    // Start meshes assets loading
+    if (!meshes.startLoading())
+    {
+        // Could not start meshes loading
+        SysMessage::box() << "[0x4005] Could not start meshes loader\n";
         SysMessage::box() << "Please check your resources files";
         return false;
     }
@@ -174,7 +214,11 @@ bool Resources::isLoadingDone()
 {
     // Get resources loader states
     TextureLoaderState textureState = textures.getState();
-    if (textureState == TEXTURELOADER_STATE_IDLE)
+    MeshLoaderState meshState = meshes.getState();
+
+    // Check resources loader states
+    if ((textureState == TEXTURELOADER_STATE_IDLE) &&
+        (meshState == MESHLOADER_STATE_IDLE))
     {
         // Resources assets are loaded
         return true;

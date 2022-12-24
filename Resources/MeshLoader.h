@@ -48,6 +48,37 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  MeshLoader settings                                                   //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint64_t MeshFenceTimeout = 100000000000;
+    const double MeshLoaderIdleSleepTime = 0.01;
+    const double MeshLoaderErrorSleepTime = 0.1;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  MeshLoaderState enumeration                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    enum MeshLoaderState
+    {
+        MESHLOADER_STATE_NONE = 0,
+        MESHLOADER_STATE_INIT = 1,
+        MESHLOADER_STATE_LOADEMBEDDED = 2,
+
+        MESHLOADER_STATE_IDLE = 3,
+        MESHLOADER_STATE_PRELOAD = 4,
+        MESHLOADER_STATE_LOAD = 5,
+
+        MESHLOADER_STATE_ERROR = 6
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  MeshLoader class definition                                           //
     ////////////////////////////////////////////////////////////////////////////
     class MeshLoader : public SysThread
@@ -56,7 +87,7 @@
             ////////////////////////////////////////////////////////////////////
             //  MeshLoader default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            MeshLoader();
+            MeshLoader(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
             //  MeshLoader virtual destructor                                 //
@@ -71,9 +102,53 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Init MeshLoader                                               //
+            //  return : True if mesh loader is ready                         //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Start preloading meshes assets                                //
+            //  return : True if meshes assets are preloading                 //
+            ////////////////////////////////////////////////////////////////////
+            bool startPreload();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Start loading meshes assets                                   //
+            //  return : True if meshes assets are loading                    //
+            ////////////////////////////////////////////////////////////////////
+            bool startLoading();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get mesh loader state                                         //
+            //  return : Current mesh loader state                            //
+            ////////////////////////////////////////////////////////////////////
+            MeshLoaderState getState();
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy mesh loader                                           //
             ////////////////////////////////////////////////////////////////////
             void destroyMeshLoader();
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  Load embedded meshes                                          //
+            //  return : True if embedded meshes are successfully loaded      //
+            ////////////////////////////////////////////////////////////////////
+            bool loadEmbeddedMeshes();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Preload meshes assets                                         //
+            //  return : True if meshes assets are preloaded                  //
+            ////////////////////////////////////////////////////////////////////
+            bool preloadMeshes();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Load meshes assets                                            //
+            //  return : True if meshes assets are loaded                     //
+            ////////////////////////////////////////////////////////////////////
+            bool loadMeshes();
 
 
         private:
@@ -89,6 +164,9 @@
 
 
         private:
+            Renderer&               m_renderer;         // Renderer
+            MeshLoaderState         m_state;            // MeshLoader state
+            SysMutex                m_stateMutex;       // State mutex
     };
 
 
