@@ -153,7 +153,7 @@ bool Game::init()
     }
 
     // Init cuboid shape
-    if (!m_cuboid.init(m_renderer, 1.0f, 1.0f, 1.0f))
+    if (!m_cuboid.init(m_resources))
     {
         // Could not init cuboid shape
         return false;
@@ -227,9 +227,6 @@ void Game::destroy()
 
     // Destroy static mesh
     m_staticMesh.destroyStaticMesh(m_renderer);
-
-    // Destroy cuboid
-    m_cuboid.destroyCuboid(m_renderer);
 
     // Destroy procedural sprite
     m_procSprite.destroyProcSprite(m_renderer);
@@ -432,9 +429,9 @@ void Game::render()
     m_skybox.render(m_renderer);
 
     // Render cuboid shape
-    /*m_renderer.bindShapePipeline();
+    m_renderer.bindShapePipeline();
     m_cuboid.bindVertexBuffer(m_renderer);
-    m_cuboid.render(m_renderer);*/
+    m_cuboid.render(m_renderer);
 
     // Render static mesh
     /*m_renderer.bindStaticMeshPipeline();
@@ -442,9 +439,9 @@ void Game::render()
     m_staticMesh.render(m_renderer);*/
 
     // Render heightmap chunk
-    m_renderer.bindStaticMeshPipeline();
+    /*m_renderer.bindStaticMeshPipeline();
     m_heightMapChunk.bindVertexBuffer(m_renderer);
-    m_heightMapChunk.render(m_renderer);
+    m_heightMapChunk.render(m_renderer);*/
 
 
     // Set 2D view

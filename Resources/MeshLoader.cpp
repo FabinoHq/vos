@@ -364,6 +364,15 @@ bool MeshLoader::loadEmbeddedMeshes()
         return false;
     }
 
+    // Load cuboid vertex buffer
+    if (!m_renderer.createVertexBuffer(m_meshes[MESHES_CUBOID],
+        CuboidShapeVertices, CuboidShapeIndices,
+        CuboidShapeVerticesCount, CuboidShapeIndicesCount))
+    {
+        // Could not load cuboid vertex buffer
+        return false;
+    }
+
     // Embedded meshes successfully loaded
     return true;
 }

@@ -55,6 +55,7 @@
     #include "../Renderer/ProcSprite.h"
     #include "../Renderer/SkyBox.h"
 
+    #include "../Resources/Resources.h"
     #include "../Renderer/GUI/GUIWindow.h"
 
     #include "../Renderer/Shapes/RectangleShape.h"

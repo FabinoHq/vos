@@ -41,6 +41,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "CuboidShape.h"
 #include "../Renderer.h"
+#include "../../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +49,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 CuboidShape::CuboidShape() :
 Transform3(),
-m_vertexBuffer(),
+m_vertexBuffer(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
 
@@ -67,30 +68,10 @@ CuboidShape::~CuboidShape()
 //  Init cuboid                                                               //
 //  return : True if the cuboid is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool CuboidShape::init(Renderer& renderer,
-    float width, float height, float depth)
+bool CuboidShape::init(Resources& resources)
 {
-    // Set cuboid vertices
-    memcpy(
-        m_vertices, CuboidShapeVertices, CuboidShapeVerticesCount*sizeof(float)
-    );
-
-    // Set cuboid size
-    for (uint32_t i = 0; i < CuboidShapeVerticesCount; i+=8)
-    {
-        m_vertices[i+0] *= width;
-        m_vertices[i+1] *= height;
-        m_vertices[i+2] *= depth;
-    }
-
-    // Create cuboid vertex buffer
-    if (!renderer.createVertexBuffer(m_vertexBuffer,
-        m_vertices, CuboidShapeIndices,
-        CuboidShapeVerticesCount, CuboidShapeIndicesCount))
-    {
-        // Could not create cuboid vertex buffer
-        return false;
-    }
+    // Set cuboid vertex buffer
+    m_vertexBuffer = &(resources.meshes.mesh(MESHES_CUBOID));
 
     // Reset cuboid transformations
     resetTransforms();
@@ -101,50 +82,6 @@ bool CuboidShape::init(Renderer& renderer,
     // Cuboid successfully created
     return true;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set cuboid size                                                           //
-//  return : True if the cuboid is size is successfully set                   //
-////////////////////////////////////////////////////////////////////////////////
-bool CuboidShape::setSize(Renderer& renderer,
-    float width, float height, float depth)
-{
-    // Set cuboid vertices
-    memcpy(
-        m_vertices, CuboidShapeVertices, CuboidShapeVerticesCount*sizeof(float)
-    );
-
-    // Set cuboid size
-    for (uint32_t i = 0; i < CuboidShapeVerticesCount; i+=8)
-    {
-        m_vertices[i+0] *= width;
-        m_vertices[i+1] *= height;
-        m_vertices[i+2] *= depth;
-    }
-
-    // Update vertex buffer
-    if (!renderer.updateVertexBuffer(m_vertexBuffer,
-        m_vertices, CuboidShapeIndices,
-        CuboidShapeVerticesCount, CuboidShapeIndicesCount))
-    {
-        // Could not update vertex buffer
-        return false;
-    }
-
-    // Cuboid size successfully set
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy cuboid                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void CuboidShape::destroyCuboid(Renderer& renderer)
-{
-    renderer.destroyVertexBuffer(m_vertexBuffer);
-    m_color.reset();
-    resetTransforms();
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set cuboid color                                                          //
@@ -207,16 +144,19 @@ void CuboidShape::setAlpha(float alpha)
 void CuboidShape::bindVertexBuffer(Renderer& renderer)
 {
     // Bind vertex buffer
-    VkDeviceSize offset = 0;
-    vkCmdBindVertexBuffers(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        0, 1, &m_vertexBuffer.vertexBuffer.handle, &offset
-    );
+    if (m_vertexBuffer)
+    {
+        VkDeviceSize offset = 0;
+        vkCmdBindVertexBuffers(
+            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+            0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
+        );
 
-    vkCmdBindIndexBuffer(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
-    );
+        vkCmdBindIndexBuffer(
+            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+            m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+        );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

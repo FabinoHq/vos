@@ -117,6 +117,11 @@
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Resources class declaration                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    class Resources;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  CuboidShape class definition                                          //
@@ -139,21 +144,7 @@
             //  Init cuboid                                                   //
             //  return : True if the cuboid is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer,
-                float width, float height, float depth);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set cuboid size                                               //
-            //  return : True if the cuboid is size is successfully set       //
-            ////////////////////////////////////////////////////////////////////
-            bool setSize(Renderer& renderer,
-                float width, float height, float depth);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy cuboid                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroyCuboid(Renderer& renderer);
-
+            bool init(Resources& resources);
 
             ////////////////////////////////////////////////////////////////////
             //  Set cuboid color                                              //
@@ -210,8 +201,7 @@
 
 
         private:
-            float               m_vertices[CuboidShapeVerticesCount];
-            VertexBuffer        m_vertexBuffer;     // Cuboid vertex buffer
+            VertexBuffer*       m_vertexBuffer;     // Cuboid vertex buffer
             Vector4             m_color;            // Cuboid color
     };
 
