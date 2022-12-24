@@ -353,6 +353,17 @@ void MeshLoader::destroyMeshLoader()
 ////////////////////////////////////////////////////////////////////////////////
 bool MeshLoader::loadEmbeddedMeshes()
 {
+    // Load default vertex buffer
+    if (!m_meshes[MESHES_DEFAULT].createBuffer(
+        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
+        m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
+        DefaultVertices, DefaultIndices,
+        DefaultVerticesCount, DefaultIndicesCount))
+    {
+        // Could not load default vertex buffer
+        return false;
+    }
+
     // Embedded meshes successfully loaded
     return true;
 }

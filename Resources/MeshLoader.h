@@ -64,9 +64,10 @@
     ////////////////////////////////////////////////////////////////////////////
     enum MeshesAssets
     {
-        MESHES_TEST = 0,
+        MESHES_DEFAULT = 0,
+        MESHES_TEST = 1,
 
-        MESHES_ASSETSCOUNT = 1
+        MESHES_ASSETSCOUNT = 2
     };
 
 
@@ -139,6 +140,15 @@
             //  return : Current mesh loader state                            //
             ////////////////////////////////////////////////////////////////////
             MeshLoaderState getState();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get mesh vertex buffer                                        //
+            //  return : mesh vertex buffer                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline VertexBuffer& mesh(MeshesAssets mesh)
+            {
+                return m_meshes[mesh];
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy mesh loader                                           //

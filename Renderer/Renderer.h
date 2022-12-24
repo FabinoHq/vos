@@ -366,7 +366,6 @@
 
             VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain
-            VertexBuffer        m_vertexBuffer;         // Default vertex buffer
             GraphicsLayout      m_layout;               // Graphics layout
             Pipeline            m_pipeline;             // Default pipeline
             Pipeline            m_ninePatchPipeline;    // NinePatch pipeline

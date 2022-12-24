@@ -63,7 +63,6 @@ m_uniformsDescPool(0),
 m_texturesDescPool(0),
 m_vulkanMemory(),
 m_swapchain(),
-m_vertexBuffer(),
 m_layout(),
 m_pipeline(),
 m_ninePatchPipeline(),
@@ -452,18 +451,6 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create default vertex buffer
-    if (!m_vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
-        m_vulkanMemory, m_transferCommandPool, m_transferQueue,
-        DefaultVertices, DefaultIndices,
-        DefaultVerticesCount, DefaultIndicesCount))
-    {
-        // Could not create default vertex buffer
-        SysMessage::box() << "[0x305C] Could not create vertex buffer\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
     // Init default view
     if (!m_view.init(*this))
     {
@@ -665,12 +652,14 @@ bool Renderer::startFrame()
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
-        0, 1, &m_vertexBuffer.vertexBuffer.handle, &offset
+        0, 1, &m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle,
+        &offset
     );
 
     vkCmdBindIndexBuffer(
         m_swapchain.commandBuffers[m_swapchain.current],
-        m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+        m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle,
+        0, VK_INDEX_TYPE_UINT16
     );
 
     // Push default model matrix into command buffer
@@ -850,9 +839,6 @@ void Renderer::cleanup()
         {
             // Destroy default view
             m_view.destroyView(*this);
-
-            // Destroy vertex buffer
-            m_vertexBuffer.destroyBuffer(m_vulkanDevice);
 
             // Destroy static mesh pipeline
             m_staticMeshPipeline.destroyPipeline(*this);
@@ -1037,12 +1023,14 @@ void Renderer::bindDefaultVertexBuffer()
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
-        0, 1, &m_vertexBuffer.vertexBuffer.handle, &offset
+        0, 1, &m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle,
+        &offset
     );
 
     vkCmdBindIndexBuffer(
         m_swapchain.commandBuffers[m_swapchain.current],
-        m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+        m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle,
+        0, VK_INDEX_TYPE_UINT16
     );
 }
 
