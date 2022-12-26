@@ -71,9 +71,10 @@ SkyBox::~SkyBox()
 bool SkyBox::init(Renderer& renderer, CubeMap& cubemap)
 {
     // Create skybox vertex buffer
-    if (!renderer.createVertexBuffer(m_vertexBuffer,
-        SkyBoxVertices, SkyBoxIndices,
-        SkyBoxVerticesCount, SkyBoxIndicesCount))
+    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+        renderer.m_transferCommandPool, renderer.m_transferQueue,
+        SkyBoxVertices, SkyBoxIndices, SkyBoxVerticesCount, SkyBoxIndicesCount))
     {
         // Could not create skybox vertex buffer
         return false;
@@ -104,7 +105,7 @@ bool SkyBox::init(Renderer& renderer, CubeMap& cubemap)
 ////////////////////////////////////////////////////////////////////////////////
 void SkyBox::destroySkyBox(Renderer& renderer)
 {
-    renderer.destroyVertexBuffer(m_vertexBuffer);
+    m_vertexBuffer.destroyBuffer(renderer.m_vulkanDevice);
     m_color.reset();
     resetTransforms();
 }

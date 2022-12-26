@@ -74,8 +74,10 @@ bool HeightMapChunk::init(Renderer& renderer, Texture& texture,
     uint32_t verticesCount, uint32_t indicesCount)
 {
     // Create vertex buffer
-    if (!renderer.createVertexBuffer(
-        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
+    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+        renderer.m_transferCommandPool, renderer.m_transferQueue,
+        vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
         return false;
@@ -179,8 +181,10 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
     }
 
     // Create vertex buffer
-    if (!renderer.createVertexBuffer(
-        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
+    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+        renderer.m_transferCommandPool, renderer.m_transferQueue,
+        vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
         if (vertices) { delete[] vertices; }
@@ -317,8 +321,10 @@ bool HeightMapChunk::generate(Renderer& renderer, Texture& texture,
     }
 
     // Create vertex buffer
-    if (!renderer.createVertexBuffer(
-        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
+    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+        renderer.m_transferCommandPool, renderer.m_transferQueue,
+        vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
         if (vertices) { delete[] vertices; }
@@ -454,8 +460,10 @@ bool HeightMapChunk::update(Renderer& renderer, float* heightmap)
     }
 
     // Update vertex buffer
-    if (!renderer.updateVertexBuffer(
-        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
+    if (!m_vertexBuffer.updateBuffer(renderer.m_physicalDevice,
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+        renderer.m_transferCommandPool, renderer.m_transferQueue,
+        vertices, indices, verticesCount, indicesCount))
     {
         // Could not update vertex buffer
         if (vertices) { delete[] vertices; }
@@ -547,8 +555,10 @@ bool HeightMapChunk::loadVMSH(Renderer& renderer,
     }
 
     // Create vertex buffer
-    if (!renderer.createVertexBuffer(
-        m_vertexBuffer, vertices, indices, verticesCount, indicesCount))
+    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+        renderer.m_transferCommandPool, renderer.m_transferQueue,
+        vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
         if (vertices) { delete[] vertices; }
@@ -585,7 +595,7 @@ void HeightMapChunk::destroyHeightMapChunk(Renderer& renderer)
 {
     m_texture = 0;
     m_indicesCount = 0;
-    renderer.destroyVertexBuffer(m_vertexBuffer);
+    m_vertexBuffer.destroyBuffer(renderer.m_vulkanDevice);
     resetTransforms();
 }
 

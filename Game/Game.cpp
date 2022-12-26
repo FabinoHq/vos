@@ -432,14 +432,14 @@ void Game::render()
     m_cuboid.render(m_renderer);*/
 
     // Render static mesh
-    m_renderer.bindStaticMeshPipeline();
+    /*m_renderer.bindStaticMeshPipeline();
     m_staticMesh.bindVertexBuffer(m_renderer);
-    m_staticMesh.render(m_renderer);
+    m_staticMesh.render(m_renderer);*/
 
     // Render heightmap chunk
-    /*m_renderer.bindStaticMeshPipeline();
+    m_renderer.bindStaticMeshPipeline();
     m_heightMapChunk.bindVertexBuffer(m_renderer);
-    m_heightMapChunk.render(m_renderer);*/
+    m_heightMapChunk.render(m_renderer);
 
 
     // Set 2D view

@@ -860,42 +860,6 @@ void Renderer::cleanup()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create vertex buffer                                                      //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::createVertexBuffer(VertexBuffer& vertexBuffer,
-    const float* vertices, const uint16_t* indices,
-    uint32_t verticesCount, uint32_t indicesCount)
-{
-    // Create vertex buffer
-    return (vertexBuffer.createBuffer(m_physicalDevice, m_vulkanDevice,
-        m_vulkanMemory, m_transferCommandPool, m_transferQueue,
-        vertices, indices, verticesCount, indicesCount));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Update vertex buffer                                                      //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::updateVertexBuffer(VertexBuffer& vertexBuffer,
-    const float* vertices, const uint16_t* indices,
-    uint32_t verticesCount, uint32_t indicesCount)
-{
-    // Update vertex buffer
-    return (vertexBuffer.updateBuffer(m_physicalDevice, m_vulkanDevice,
-        m_vulkanMemory, m_transferCommandPool, m_transferQueue,
-        vertices, indices, verticesCount, indicesCount));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy vertex buffer                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::destroyVertexBuffer(VertexBuffer& vertexBuffer)
-{
-    // Destroy vertex buffer
-    vertexBuffer.destroyBuffer(m_vulkanDevice);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 //  Bind renderer default pipeline                                            //
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::bindDefaultPipeline()

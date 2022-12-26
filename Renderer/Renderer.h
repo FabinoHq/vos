@@ -164,26 +164,6 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create vertex buffer                                          //
-            ////////////////////////////////////////////////////////////////////
-            bool createVertexBuffer(VertexBuffer& vertexBuffer,
-                const float* vertices, const uint16_t* indices,
-                uint32_t verticesCount, uint32_t indicesCount);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Update vertex buffer                                          //
-            ////////////////////////////////////////////////////////////////////
-            bool updateVertexBuffer(VertexBuffer& vertexBuffer,
-                const float* vertices, const uint16_t* indices,
-                uint32_t verticesCount, uint32_t indicesCount);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy vertex buffer                                         //
-            ////////////////////////////////////////////////////////////////////
-            void destroyVertexBuffer(VertexBuffer& vertexBuffer);
-
-
-            ////////////////////////////////////////////////////////////////////
             //  Bind renderer default pipeline                                //
             ////////////////////////////////////////////////////////////////////
             void bindDefaultPipeline();
