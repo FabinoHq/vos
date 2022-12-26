@@ -563,33 +563,6 @@ bool Renderer::startFrame()
         return false;
     }
 
-    // Present to draw pipeline barrier
-    VkImageSubresourceRange subresource;
-    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    subresource.baseMipLevel = 0;
-    subresource.levelCount = 1;
-    subresource.baseArrayLayer = 0;
-    subresource.layerCount = 1;
-
-    VkImageMemoryBarrier presentToDraw;
-    presentToDraw.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    presentToDraw.pNext = 0;
-    presentToDraw.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-    presentToDraw.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    presentToDraw.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    presentToDraw.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    presentToDraw.srcQueueFamilyIndex = m_surfaceQueue.family;
-    presentToDraw.dstQueueFamilyIndex = m_graphicsQueue.family;
-    presentToDraw.image = m_swapchain.images[m_frameIndex];
-    presentToDraw.subresourceRange = subresource;
-
-    vkCmdPipelineBarrier(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        0, 0, 0, 0, 0, 1, &presentToDraw
-    );
-
     // Set clear values
     VkClearValue clearValues[2];
     clearValues[0].color = RendererClearColor;
@@ -707,33 +680,6 @@ bool Renderer::endFrame()
 
     // End render pass
     vkCmdEndRenderPass(m_swapchain.commandBuffers[m_swapchain.current]);
-
-    // Draw to present pipeline barrier
-    VkImageSubresourceRange subresource;
-    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    subresource.baseMipLevel = 0;
-    subresource.levelCount = 1;
-    subresource.baseArrayLayer = 0;
-    subresource.layerCount = 1;
-
-    VkImageMemoryBarrier drawToPresent;
-    drawToPresent.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    drawToPresent.pNext = 0;
-    drawToPresent.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    drawToPresent.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-    drawToPresent.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    drawToPresent.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    drawToPresent.srcQueueFamilyIndex = m_graphicsQueue.family;
-    drawToPresent.dstQueueFamilyIndex = m_surfaceQueue.family;
-    drawToPresent.image = m_swapchain.images[m_frameIndex];
-    drawToPresent.subresourceRange = subresource;
-
-    vkCmdPipelineBarrier(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-        0, 0, 0, 0, 0, 1, &drawToPresent
-    );
 
     // End command buffer
     if (vkEndCommandBuffer(

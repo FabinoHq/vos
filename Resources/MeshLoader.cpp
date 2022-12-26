@@ -485,8 +485,7 @@ bool MeshLoader::loadVMSH(VertexBuffer& vertexBuffer,
     if (!vertexBuffer.createBuffer(
         m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
         m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
-        CuboidShapeVertices, CuboidShapeIndices,
-        CuboidShapeVerticesCount, CuboidShapeIndicesCount))
+        vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
         if (vertices) { delete[] vertices; }
