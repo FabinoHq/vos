@@ -123,8 +123,8 @@ bool Game::init()
 
 
     // Init skybox
-    if (!m_skybox.init(
-        m_renderer, m_resources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
+    if (!m_skybox.init(m_resources,
+        m_resources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
     {
         // Could not init skybox
         return false;
@@ -228,9 +228,6 @@ void Game::destroy()
 
     // Destroy procedural sprite
     m_procSprite.destroyProcSprite(m_renderer);
-
-    // Destroy skybox
-    m_skybox.destroySkyBox(m_renderer);
 
     // Destroy cubemap
     m_cubemap.destroyCubeMap(m_renderer);

@@ -41,6 +41,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "SkyBox.h"
 #include "Renderer.h"
+#include "../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,6 +49,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 SkyBox::SkyBox() :
 Transform3(),
+m_vertexBuffer(0),
 m_cubemap(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
@@ -61,6 +63,7 @@ SkyBox::~SkyBox()
 {
     m_color.reset();
     m_cubemap = 0;
+    m_vertexBuffer = 0;
 }
 
 
@@ -68,18 +71,8 @@ SkyBox::~SkyBox()
 //  Init skybox                                                               //
 //  return : True if the skybox is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool SkyBox::init(Renderer& renderer, CubeMap& cubemap)
+bool SkyBox::init(Resources& resources, CubeMap& cubemap)
 {
-    // Create skybox vertex buffer
-    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
-        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
-        renderer.m_transferCommandPool, renderer.m_transferQueue,
-        SkyBoxVertices, SkyBoxIndices, SkyBoxVerticesCount, SkyBoxIndicesCount))
-    {
-        // Could not create skybox vertex buffer
-        return false;
-    }
-
     // Check cubemap handle
     if (!cubemap.isValid())
     {
@@ -87,11 +80,14 @@ bool SkyBox::init(Renderer& renderer, CubeMap& cubemap)
         return false;
     }
 
-    // Reset skybox transformations
-    resetTransforms();
+    // Set cuboid vertex buffer
+    m_vertexBuffer = &(resources.meshes.mesh(MESHES_SKYBOX));
 
     // Set skybox cubemap pointer
     m_cubemap = &cubemap;
+
+    // Reset skybox transformations
+    resetTransforms();
 
     // Reset skybox color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -99,17 +95,6 @@ bool SkyBox::init(Renderer& renderer, CubeMap& cubemap)
     // SkyBox successfully created
     return true;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy skybox                                                            //
-////////////////////////////////////////////////////////////////////////////////
-void SkyBox::destroySkyBox(Renderer& renderer)
-{
-    m_vertexBuffer.destroyBuffer(renderer.m_vulkanDevice);
-    m_color.reset();
-    resetTransforms();
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set skybox color                                                          //
@@ -175,12 +160,12 @@ void SkyBox::bindVertexBuffer(Renderer& renderer)
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        0, 1, &m_vertexBuffer.vertexBuffer.handle, &offset
+        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
     );
 
     vkCmdBindIndexBuffer(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        m_vertexBuffer.indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
     );
 }
 

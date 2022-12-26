@@ -364,6 +364,17 @@ bool MeshLoader::loadEmbeddedMeshes()
         return false;
     }
 
+    // Load skybox vertex buffer
+    if (!m_meshes[MESHES_SKYBOX].createBuffer(
+        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
+        m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
+        SkyBoxVertices, SkyBoxIndices,
+        SkyBoxVerticesCount, SkyBoxIndicesCount))
+    {
+        // Could not load skybox vertex buffer
+        return false;
+    }
+
     // Load cuboid vertex buffer
     if (!m_meshes[MESHES_CUBOID].createBuffer(
         m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,

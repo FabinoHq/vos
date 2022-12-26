@@ -79,14 +79,14 @@ bool StaticMesh::init(VertexBuffer& vertexBuffer, Texture& texture)
         return false;
     }
 
-    // Reset static mesh transformations
-    resetTransforms();
-
     // Set static mesh vertex buffer pointer
     m_vertexBuffer = &vertexBuffer;
 
     // Set static mesh texture pointer
     m_texture = &texture;
+
+    // Reset static mesh transformations
+    resetTransforms();
 
     // Reset static mesh color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -185,12 +185,12 @@ void StaticMesh::bindVertexBuffer(Renderer& renderer)
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
+        0, 1, &(m_vertexBuffer->vertexBuffer.handle), &offset
     );
 
     vkCmdBindIndexBuffer(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+        (m_vertexBuffer->indexBuffer.handle), 0, VK_INDEX_TYPE_UINT16
     );
 }
 
@@ -228,6 +228,6 @@ void StaticMesh::render(Renderer& renderer)
     // Draw static mesh triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        m_vertexBuffer->indexCount, 1, 0, 0, 0
+        (m_vertexBuffer->indexCount), 1, 0, 0, 0
     );
 }

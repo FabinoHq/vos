@@ -625,13 +625,13 @@ bool Renderer::startFrame()
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
-        0, 1, &m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle,
+        0, 1, &(m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle),
         &offset
     );
 
     vkCmdBindIndexBuffer(
         m_swapchain.commandBuffers[m_swapchain.current],
-        m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle,
+        (m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle),
         0, VK_INDEX_TYPE_UINT16
     );
 
@@ -933,13 +933,13 @@ void Renderer::bindDefaultVertexBuffer()
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
-        0, 1, &m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle,
+        0, 1, &(m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle),
         &offset
     );
 
     vkCmdBindIndexBuffer(
         m_swapchain.commandBuffers[m_swapchain.current],
-        m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle,
+        (m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle),
         0, VK_INDEX_TYPE_UINT16
     );
 }

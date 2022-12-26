@@ -117,6 +117,11 @@
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Resources class declaration                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    class Resources;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  SkyBox class definition                                               //
@@ -139,13 +144,7 @@
             //  Init skybox                                                   //
             //  return : True if the skybox is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer, CubeMap& cubemap);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy skybox                                                //
-            ////////////////////////////////////////////////////////////////////
-            void destroySkyBox(Renderer& renderer);
-
+            bool init(Resources& resources, CubeMap& cubemap);
 
             ////////////////////////////////////////////////////////////////////
             //  Set skybox color                                              //
@@ -202,7 +201,7 @@
 
 
         private:
-            VertexBuffer        m_vertexBuffer;     // SkyBox vertex buffer
+            VertexBuffer*       m_vertexBuffer;     // SkyBox vertex buffer
             CubeMap*            m_cubemap;          // SkyBox cubemap pointer
             Vector4             m_color;            // SkyBox color
     };
