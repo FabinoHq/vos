@@ -50,6 +50,9 @@
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
 
+    #include <cstdint>
+    #include <new>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Embedded meshes                                                       //

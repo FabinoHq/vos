@@ -45,6 +45,15 @@
     #include "../System/System.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
+    #include "../Renderer/Vulkan/Vulkan.h"
+    #include "../Renderer/Vulkan/VulkanQueue.h"
+    #include "../Renderer/Vulkan/VulkanBuffer.h"
+    #include "../Renderer/Vulkan/VertexBuffer.h"
+
+    #include <cstdint>
+    #include <new>
+
+    #include "../Renderer/HeightMapChunk.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -53,6 +62,17 @@
     const uint64_t HeightMapFenceTimeout = 100000000000;
     const double HeightMapLoaderIdleSleepTime = 0.01;
     const double HeightMapLoaderErrorSleepTime = 0.1;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  HeightMapsAssets enumeration                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    enum HeightMapsAssets
+    {
+        HEIGHTMAP_DEFAULT = 0,
+
+        HEIGHTMAP_ASSETSCOUNT = 1
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -112,6 +132,15 @@
             HeightMapLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
+            //  Get heightmap vertex buffer                                   //
+            //  return : heightmap vertex buffer                              //
+            ////////////////////////////////////////////////////////////////////
+            inline VertexBuffer& heightmap(HeightMapsAssets heightmap)
+            {
+                return m_heightmaps[heightmap];
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy heightmap loader                                      //
             ////////////////////////////////////////////////////////////////////
             void destroyHeightMapLoader();
@@ -123,6 +152,13 @@
             //  return : True if heightmaps assets are loaded                 //
             ////////////////////////////////////////////////////////////////////
             bool loadHeightMaps();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Generate flat heightmap chunk                                 //
+            //  return : True if the flat heightmap chunk is generated        //
+            ////////////////////////////////////////////////////////////////////
+            bool generateFlat(VertexBuffer& vertexBuffer);
 
 
         private:
@@ -141,6 +177,14 @@
             Renderer&               m_renderer;         // Renderer
             HeightMapLoaderState    m_state;            // HeightMapLoader state
             SysMutex                m_stateMutex;       // State mutex
+
+            VulkanQueue             m_transferQueue;    // Transfer queue
+            VkCommandPool           m_commandPool;      // Command pool
+            VkCommandBuffer         m_commandBuffer;    // Command buffer
+            VulkanBuffer            m_stagingBuffer;    // Staging buffer
+            VkFence                 m_fence;            // Staging fence
+
+            VertexBuffer*           m_heightmaps;       // Heightmaps meshes
     };
 
 

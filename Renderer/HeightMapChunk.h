@@ -94,41 +94,12 @@
             //  Init heightmap chunk                                          //
             //  return : True if the heightmap chunk is successfully created  //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer, Texture& texture,
-                const float* vertices, const uint16_t* indices,
-                uint32_t verticesCount, uint32_t indicesCount);
+            bool init(VertexBuffer& vertexBuffer, Texture& texture);
 
             ////////////////////////////////////////////////////////////////////
-            //  Generate flat heightmap chunk                                 //
-            //  return : True if the flat heightmap chunk is generated        //
+            //  Set heightmap chunk vertex buffer                             //
             ////////////////////////////////////////////////////////////////////
-            bool generateFlat(Renderer& renderer, Texture& texture);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Generate heightmap chunk                                      //
-            //  return : True if the heightmap chunk is generated             //
-            ////////////////////////////////////////////////////////////////////
-            bool generate(Renderer& renderer, Texture& texture,
-                float* heightmap);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Update heightmap chunk                                        //
-            //  return : True if the heightmap chunk is updated               //
-            ////////////////////////////////////////////////////////////////////
-            bool update(Renderer& renderer, float* heightmap);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Load heightmap chunk from VMSH file                           //
-            //  return : True if the heightmap chunk is successfully loaded   //
-            ////////////////////////////////////////////////////////////////////
-            bool loadVMSH(Renderer& renderer,
-                Texture& texture, const std::string& filepath);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy heightmap chunk                                       //
-            ////////////////////////////////////////////////////////////////////
-            void destroyHeightMapChunk(Renderer& renderer);
-
+            void setVertexBuffer(VertexBuffer& vertexBuffer);
 
             ////////////////////////////////////////////////////////////////////
             //  Set heightmap chunk texture                                   //
@@ -160,8 +131,7 @@
 
 
         private:
-            VertexBuffer    m_vertexBuffer;     // Heightmap chunk vertex buffer
-            uint32_t        m_indicesCount;     // Heightmap chunk indices count
+            VertexBuffer*   m_vertexBuffer;     // Heightmap chunk vertex buffer
             Texture*        m_texture;          // Heightmap chunk texture ptr
     };
 

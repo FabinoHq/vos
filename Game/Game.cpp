@@ -178,32 +178,14 @@ bool Game::init()
         return false;
     }
 
-    // Allocate heightmap data
-    float* heightmap = new (std::nothrow)
-        float[(HeightMapChunkWidth+3)*(HeightMapChunkHeight+3)];
-    if (!heightmap) return false;
-
-    // Generate heightmap data
-    size_t heightmapIndex = 0;
-    for (uint32_t j = 0; j <= (HeightMapChunkHeight+2); ++j)
-    {
-        for (uint32_t i = 0; i <= (HeightMapChunkWidth+2); ++i)
-        {
-            heightmapIndex = (j * (HeightMapChunkWidth+3)) + i;
-            heightmap[heightmapIndex] = 0.0f;
-        }
-    }
-
     // Init heightmap chunk
-    if (!m_heightMapChunk.generate(
-        m_renderer, m_resources.textures.high(TEXTURE_TEST), heightmap))
+    if (!m_heightMapChunk.init(
+        m_resources.heightmaps.heightmap(HEIGHTMAP_DEFAULT),
+        m_resources.textures.high(TEXTURE_TEST)))
     {
         // Could not init heightmap chunk
         return false;
     }
-
-    // Cleanup heightmap data
-    if (heightmap) { delete[] heightmap; }
 
 
     // Init bounding circle
@@ -223,9 +205,6 @@ bool Game::init()
 ////////////////////////////////////////////////////////////////////////////////
 void Game::destroy()
 {
-    // Destroy heightmap chunk
-    m_heightMapChunk.destroyHeightMapChunk(m_renderer);
-
     // Destroy procedural sprite
     m_procSprite.destroyProcSprite(m_renderer);
 

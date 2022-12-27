@@ -51,7 +51,7 @@ m_renderer(renderer),
 m_state(TEXTURELOADER_STATE_NONE),
 m_stateMutex(),
 m_graphicsQueue(),
-m_commandPool(),
+m_commandPool(0),
 m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
@@ -339,6 +339,7 @@ void TextureLoader::destroyTextureLoader()
         m_cubemaps[i].destroyCubeMap(m_renderer);
     }
     if (m_cubemaps) { delete[] m_cubemaps; }
+    m_cubemaps = 0;
 
     // Destroy high textures
     for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
@@ -346,6 +347,7 @@ void TextureLoader::destroyTextureLoader()
         m_texturesHigh[i].destroyTexture(m_renderer);
     }
     if (m_texturesHigh) { delete[] m_texturesHigh; }
+    m_texturesHigh = 0;
 
     // Destroy GUI textures
     for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
@@ -353,12 +355,14 @@ void TextureLoader::destroyTextureLoader()
         m_texturesGUI[i].destroyTexture(m_renderer);
     }
     if (m_texturesGUI) { delete[] m_texturesGUI; }
+    m_texturesGUI = 0;
 
     // Destroy staging fence
     if (m_fence)
     {
         vkDestroyFence(m_renderer.m_vulkanDevice, m_fence, 0);
     }
+    m_fence = 0;
 
     // Destroy staging buffer
     m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
@@ -370,12 +374,14 @@ void TextureLoader::destroyTextureLoader()
             m_commandPool, 1, &m_commandBuffer
         );
     }
+    m_commandBuffer = 0;
 
     // Destroy command pool
     if (m_commandPool)
     {
         vkDestroyCommandPool(m_renderer.m_vulkanDevice, m_commandPool, 0);
     }
+    m_commandPool = 0;
 }
 
 

@@ -51,7 +51,7 @@ m_renderer(renderer),
 m_state(MESHLOADER_STATE_NONE),
 m_stateMutex(),
 m_transferQueue(),
-m_commandPool(),
+m_commandPool(0),
 m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
@@ -321,12 +321,14 @@ void MeshLoader::destroyMeshLoader()
         m_meshes[i].destroyBuffer(m_renderer.m_vulkanDevice);
     }
     if (m_meshes) { delete[] m_meshes; }
+    m_meshes = 0;
 
     // Destroy staging fence
     if (m_fence)
     {
         vkDestroyFence(m_renderer.m_vulkanDevice, m_fence, 0);
     }
+    m_fence = 0;
 
     // Destroy staging buffer
     m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
@@ -338,12 +340,14 @@ void MeshLoader::destroyMeshLoader()
             m_commandPool, 1, &m_commandBuffer
         );
     }
+    m_commandBuffer = 0;
 
     // Destroy command pool
     if (m_commandPool)
     {
         vkDestroyCommandPool(m_renderer.m_vulkanDevice, m_commandPool, 0);
     }
+    m_commandPool = 0;
 }
 
 
