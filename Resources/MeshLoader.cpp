@@ -355,8 +355,8 @@ bool MeshLoader::loadEmbeddedMeshes()
 {
     // Load default vertex buffer
     if (!m_meshes[MESHES_DEFAULT].createBuffer(
-        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
-        m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        m_commandPool, m_transferQueue,
         DefaultVertices, DefaultIndices,
         DefaultVerticesCount, DefaultIndicesCount))
     {
@@ -366,8 +366,8 @@ bool MeshLoader::loadEmbeddedMeshes()
 
     // Load skybox vertex buffer
     if (!m_meshes[MESHES_SKYBOX].createBuffer(
-        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
-        m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        m_commandPool, m_transferQueue,
         SkyBoxVertices, SkyBoxIndices,
         SkyBoxVerticesCount, SkyBoxIndicesCount))
     {
@@ -377,8 +377,8 @@ bool MeshLoader::loadEmbeddedMeshes()
 
     // Load cuboid vertex buffer
     if (!m_meshes[MESHES_CUBOID].createBuffer(
-        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
-        m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        m_commandPool, m_transferQueue,
         CuboidShapeVertices, CuboidShapeIndices,
         CuboidShapeVerticesCount, CuboidShapeIndicesCount))
     {
@@ -494,8 +494,8 @@ bool MeshLoader::loadVMSH(VertexBuffer& vertexBuffer,
 
     // Create vertex buffer
     if (!vertexBuffer.createBuffer(
-        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
-        m_renderer.m_vulkanMemory, m_commandPool, m_transferQueue,
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        m_commandPool, m_transferQueue,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer

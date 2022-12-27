@@ -74,7 +74,7 @@ bool HeightMapChunk::init(Renderer& renderer, Texture& texture,
     uint32_t verticesCount, uint32_t indicesCount)
 {
     // Create vertex buffer
-    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+    if (!m_vertexBuffer.createBuffer(
         renderer.m_vulkanDevice, renderer.m_vulkanMemory,
         renderer.m_transferCommandPool, renderer.m_transferQueue,
         vertices, indices, verticesCount, indicesCount))
@@ -181,7 +181,7 @@ bool HeightMapChunk::generateFlat(Renderer& renderer, Texture& texture)
     }
 
     // Create vertex buffer
-    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+    if (!m_vertexBuffer.createBuffer(
         renderer.m_vulkanDevice, renderer.m_vulkanMemory,
         renderer.m_transferCommandPool, renderer.m_transferQueue,
         vertices, indices, verticesCount, indicesCount))
@@ -321,7 +321,7 @@ bool HeightMapChunk::generate(Renderer& renderer, Texture& texture,
     }
 
     // Create vertex buffer
-    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+    if (!m_vertexBuffer.createBuffer(
         renderer.m_vulkanDevice, renderer.m_vulkanMemory,
         renderer.m_transferCommandPool, renderer.m_transferQueue,
         vertices, indices, verticesCount, indicesCount))
@@ -460,7 +460,7 @@ bool HeightMapChunk::update(Renderer& renderer, float* heightmap)
     }
 
     // Update vertex buffer
-    if (!m_vertexBuffer.updateBuffer(renderer.m_physicalDevice,
+    if (!m_vertexBuffer.updateBuffer(
         renderer.m_vulkanDevice, renderer.m_vulkanMemory,
         renderer.m_transferCommandPool, renderer.m_transferQueue,
         vertices, indices, verticesCount, indicesCount))
@@ -555,7 +555,7 @@ bool HeightMapChunk::loadVMSH(Renderer& renderer,
     }
 
     // Create vertex buffer
-    if (!m_vertexBuffer.createBuffer(renderer.m_physicalDevice,
+    if (!m_vertexBuffer.createBuffer(
         renderer.m_vulkanDevice, renderer.m_vulkanMemory,
         renderer.m_transferCommandPool, renderer.m_transferQueue,
         vertices, indices, verticesCount, indicesCount))

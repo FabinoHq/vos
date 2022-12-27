@@ -70,10 +70,9 @@
             //  Create Vulkan buffer                                          //
             //  return : True if Vulkan buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkBufferUsageFlags usage, VulkanMemoryPool memoryPool,
-                uint32_t bufferSize);
+            bool createBuffer(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory, VkBufferUsageFlags usage,
+                VulkanMemoryPool memoryPool, uint32_t bufferSize);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Vulkan buffer                                         //

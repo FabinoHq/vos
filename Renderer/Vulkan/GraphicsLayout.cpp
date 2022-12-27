@@ -79,22 +79,8 @@ GraphicsLayout::~GraphicsLayout()
 //  Create graphics pipeline layout                                           //
 //  return : True if graphics layout is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool GraphicsLayout::createLayout(VkDevice& vulkanDevice, Swapchain& swapchain)
+bool GraphicsLayout::createLayout(VkDevice& vulkanDevice)
 {
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check render pass
-    if (!swapchain.renderPass)
-    {
-        // Invalid render pass
-        return false;
-    }
-
     // Create descriptor set layouts
     if (!createDescriptorSetLayouts(vulkanDevice))
     {
@@ -123,13 +109,6 @@ bool GraphicsLayout::createLayout(VkDevice& vulkanDevice, Swapchain& swapchain)
 ////////////////////////////////////////////////////////////////////////////////
 bool GraphicsLayout::createDescriptorSetLayouts(VkDevice& vulkanDevice)
 {
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Descriptor sets bindings
     VkDescriptorSetLayoutBinding descriptorSetBindings[DESC_SETS_COUNT];
 
@@ -202,13 +181,6 @@ bool GraphicsLayout::createDescriptorSetLayouts(VkDevice& vulkanDevice)
 ////////////////////////////////////////////////////////////////////////////////
 bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
 {
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check descriptor set layouts
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {

@@ -65,21 +65,14 @@ UniformBuffer::~UniformBuffer()
 //  Create Uniform buffer                                                     //
 //  return : True if Uniform buffer is successfully created                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory, uint32_t size)
+bool UniformBuffer::createBuffer(VkDevice& vulkanDevice,
+    VulkanMemory& vulkanMemory, uint32_t size)
 {
-    // Check physical device
-    if (!physicalDevice)
+    // Check current buffer
+    if (uniformBuffer.handle)
     {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
+        // Destroy current buffer
+        uniformBuffer.destroyBuffer(vulkanDevice);
     }
 
     // Check UniformData size
@@ -90,16 +83,9 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Check current buffer
-    if (uniformBuffer.handle)
-    {
-        // Destroy current buffer
-        uniformBuffer.destroyBuffer(vulkanDevice);
-    }
-
     // Create uniform buffer
     if (!uniformBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
+        vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
         VULKAN_MEMORY_RENDERDEVICE, size))
     {
@@ -109,7 +95,7 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Create staging buffer
     if (!stagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
+        vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_RENDERHOST, size))
     {
         // Could not create staging buffer
@@ -124,48 +110,18 @@ bool UniformBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 //  Update Uniform buffer                                                     //
 //  return : True if Uniform buffer is successfully updated                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool UniformBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkCommandPool& transferCommandPool, VulkanQueue& transferQueue,
-    void* data, uint32_t size)
+bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
+    VulkanMemory& vulkanMemory, VkCommandPool& transferCommandPool,
+    VulkanQueue& transferQueue, void* data, uint32_t size)
 {
-    // Check physical device
-    if (!physicalDevice)
-    {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check commands pool
-    if (!transferCommandPool)
-    {
-        // Invalid commands pool
-        return false;
-    }
-
-    // Check transfer queue
-    if (!transferQueue.handle)
-    {
-        // Invalid transfer queue
-        return false;
-    }
-
     // Check current buffer
     if (!uniformBuffer.handle || (uniformBuffer.size != size) ||
         !stagingBuffer.handle || (stagingBuffer.size != size))
     {
         // Recreate uniform buffer
         destroyBuffer(vulkanDevice);
-        createBuffer(physicalDevice, vulkanDevice, vulkanMemory, size);
+        createBuffer(vulkanDevice, vulkanMemory, size);
     }
-
 
     // Write data into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(

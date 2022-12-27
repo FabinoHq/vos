@@ -202,7 +202,6 @@
 
 
         private:
-            bool            m_memoryReady;          // Vulkan memory ready state
             uint32_t        m_deviceMemoryIndex;    // Device memory type index
             uint32_t        m_hostMemoryIndex;      // Host memory type index
             uint32_t        m_maxAllocationCount;   // Maximum allocation count

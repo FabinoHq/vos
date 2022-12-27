@@ -68,52 +68,24 @@ VertexBuffer::~VertexBuffer()
 //  Create Vertex buffer                                                      //
 //  return : True if Vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkCommandPool& commandPool, VulkanQueue& transferQueue,
+bool VertexBuffer::createBuffer(VkDevice& vulkanDevice,
+    VulkanMemory& vulkanMemory, VkCommandPool& commandPool,
+    VulkanQueue& transferQueue,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
-    // Check physical device
-    if (!physicalDevice)
-    {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check commands pool
-    if (!commandPool)
-    {
-        // Invalid commands pool
-        return false;
-    }
-
-    // Check transfer queue
-    if (!transferQueue.handle)
-    {
-        // Invalid transfer queue
-        return false;
-    }
-
-    // Check input vertices and indices
-    if (!vertices || !indices || (verticesCount <= 0) || (indicesCount <= 0))
-    {
-        return false;
-    }
-
     // Check current buffers
     if (indexBuffer.handle || indexStagingBuffer.handle ||
         vertexBuffer.handle || vertexStagingBuffer.handle)
     {
         // Destroy current buffers
         destroyBuffer(vulkanDevice);
+    }
+
+    // Check input vertices and indices
+    if (!vertices || !indices || (verticesCount <= 0) || (indicesCount <= 0))
+    {
+        return false;
     }
 
     // Compute vertices and indices sizes
@@ -124,7 +96,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Create vertex staging buffer
     if (!vertexStagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
+        vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_RENDERHOST, verticesCount))
     {
@@ -143,7 +115,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Create vertex buffer
     if (!vertexBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
+        vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
         VULKAN_MEMORY_RENDERDEVICE, verticesCount))
     {
@@ -256,7 +228,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Create index staging buffer
     if (!indexStagingBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
+        vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_RENDERHOST, indicesCount))
     {
@@ -275,7 +247,7 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 
     // Create index buffer
     if (!indexBuffer.createBuffer(
-        physicalDevice, vulkanDevice, vulkanMemory,
+        vulkanDevice, vulkanMemory,
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
         VULKAN_MEMORY_RENDERDEVICE, indicesCount))
     {
@@ -388,51 +360,23 @@ bool VertexBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
 //  Update Vertex buffer                                                      //
 //  return : True if Vertex buffer is successfully updated                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::updateBuffer(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkCommandPool& commandPool, VulkanQueue& transferQueue,
+bool VertexBuffer::updateBuffer(VkDevice& vulkanDevice,
+    VulkanMemory& vulkanMemory, VkCommandPool& commandPool,
+    VulkanQueue& transferQueue,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
-    // Check physical device
-    if (!physicalDevice)
+    // Check current buffers
+    if (!indexBuffer.handle || !indexStagingBuffer.handle ||
+        !vertexBuffer.handle || !vertexStagingBuffer.handle)
     {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check commands pool
-    if (!commandPool)
-    {
-        // Invalid commands pool
-        return false;
-    }
-
-    // Check transfer queue
-    if (!transferQueue.handle)
-    {
-        // Invalid transfer queue
+        // Invalid current buffers
         return false;
     }
 
     // Check input vertices and indices
     if (!vertices || !indices || (verticesCount <= 0) || (indicesCount <= 0))
     {
-        return false;
-    }
-
-    // Check current buffers
-    if (!indexBuffer.handle || !indexStagingBuffer.handle ||
-        !vertexBuffer.handle || !vertexStagingBuffer.handle)
-    {
-        // Invalid current buffers
         return false;
     }
 

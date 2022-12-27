@@ -128,7 +128,7 @@
             //  Create graphics pipeline layout                               //
             //  return : True if graphics layout is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool createLayout(VkDevice& vulkanDevice, Swapchain& swapchain);
+            bool createLayout(VkDevice& vulkanDevice);
 
             ////////////////////////////////////////////////////////////////////
             //  Create descriptor set layouts                                 //

@@ -49,7 +49,6 @@
 //  VulkanMemory default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 VulkanMemory::VulkanMemory() :
-m_memoryReady(false),
 m_deviceMemoryIndex(0),
 m_hostMemoryIndex(0),
 m_maxAllocationCount(0),
@@ -65,7 +64,6 @@ VulkanMemory::~VulkanMemory()
 {
     m_memoryAlignment = 0;
     m_maxAllocationCount = 0;
-    m_memoryReady = false;
 }
 
 
@@ -76,9 +74,6 @@ VulkanMemory::~VulkanMemory()
 bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice)
 {
-    // Init Vulkan memory
-    m_memoryReady = false;
-
     // Check physical device
     if (!physicalDevice)
     {
@@ -243,7 +238,6 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     }
 
     // Vulkan memory is ready
-    m_memoryReady = true;
     return true;
 }
 
@@ -252,7 +246,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanMemory::cleanup(VkDevice& vulkanDevice)
 {
-    if (m_memoryReady && vulkanDevice)
+    if (vulkanDevice)
     {
         for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
         {
@@ -265,7 +259,6 @@ void VulkanMemory::cleanup(VkDevice& vulkanDevice)
 
     m_memoryAlignment = 0;
     m_maxAllocationCount = 0;
-    m_memoryReady = false;
 }
 
 
@@ -276,20 +269,6 @@ void VulkanMemory::cleanup(VkDevice& vulkanDevice)
 bool VulkanMemory::allocateSwapchainImage(VkDevice& vulkanDevice,
     VkImage& image)
 {
-    // Check Vulkan memory
-    if (!m_memoryReady)
-    {
-        // Vulkan memory is not ready
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check image handle
     if (!image)
     {
@@ -374,20 +353,6 @@ bool VulkanMemory::allocateSwapchainImage(VkDevice& vulkanDevice,
 bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
     VulkanBuffer& buffer, VulkanMemoryPool memoryPool)
 {
-    // Check Vulkan memory
-    if (!m_memoryReady)
-    {
-        // Vulkan memory is not ready
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check buffer handle
     if (!buffer.handle)
     {
@@ -476,20 +441,6 @@ bool VulkanMemory::allocateBufferMemory(VkDevice& vulkanDevice,
 bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
     VulkanBuffer& buffer, const void* data, VulkanMemoryPool memoryPool)
 {
-    // Check Vulkan memory
-    if (!m_memoryReady)
-    {
-        // Vulkan memory is not ready
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check buffer handle
     if (!buffer.handle)
     {
@@ -556,20 +507,6 @@ bool VulkanMemory::writeBufferMemory(VkDevice& vulkanDevice,
 bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
     Texture& texture, VulkanMemoryPool memoryPool)
 {
-    // Check Vulkan memory
-    if (!m_memoryReady)
-    {
-        // Vulkan memory is not ready
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check texture handle
     if (!texture.isValid())
     {
@@ -660,20 +597,6 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
 bool VulkanMemory::allocateCubeMapMemory(VkDevice& vulkanDevice,
     CubeMap& cubemap, VulkanMemoryPool memoryPool)
 {
-    // Check Vulkan memory
-    if (!m_memoryReady)
-    {
-        // Vulkan memory is not ready
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check cubemap handle
     if (!cubemap.isValid())
     {

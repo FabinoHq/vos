@@ -88,20 +88,6 @@ CubeMap::~CubeMap()
 bool CubeMap::createCubeMap(Renderer& renderer,
     uint32_t width, uint32_t height, bool smooth)
 {
-    // Check physical device
-    if (!renderer.m_physicalDevice)
-    {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check cubemap size
     if ((width <= 0) || (width > CubeMapMaxWidth) ||
         (height <= 0) || (height > CubeMapMaxHeight) ||
@@ -289,20 +275,6 @@ bool CubeMap::createCubeMap(Renderer& renderer,
 bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
     uint32_t width, uint32_t height, const unsigned char* data, bool smooth)
 {
-    // Check physical device
-    if (!renderer.m_physicalDevice)
-    {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check cubemap size
     if ((width <= 0) || (width > CubeMapMaxWidth) ||
         (height <= 0) || (height > CubeMapMaxHeight) ||

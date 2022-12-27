@@ -320,7 +320,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create default pipeline layout
-    if (!m_layout.createLayout(m_vulkanDevice, m_swapchain))
+    if (!m_layout.createLayout(m_vulkanDevice))
     {
         // Could not create default pipeline layout
         SysMessage::box() << "[0x3053] Could not create default layout\n";

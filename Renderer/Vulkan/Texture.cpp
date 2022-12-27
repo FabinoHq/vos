@@ -88,18 +88,11 @@ Texture::~Texture()
 bool Texture::createTexture(Renderer& renderer,
     uint32_t width, uint32_t height, bool smooth, bool repeat)
 {
-    // Check physical device
-    if (!renderer.m_physicalDevice)
+    // Check texture handle
+    if (m_handle)
     {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
+        // Destroy current texture
+        destroyTexture(renderer);
     }
 
     // Check texture size
@@ -108,13 +101,6 @@ bool Texture::createTexture(Renderer& renderer,
     {
         // Invalid texture size
         return false;
-    }
-
-    // Check texture handle
-    if (m_handle)
-    {
-        // Destroy current texture
-        destroyTexture(renderer);
     }
 
     // Create image
@@ -297,20 +283,6 @@ bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
     uint32_t width, uint32_t height, const unsigned char* data,
     bool smooth, bool repeat)
 {
-    // Check physical device
-    if (!renderer.m_physicalDevice)
-    {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
     // Check texture size
     if ((width <= 0) || (width > TextureMaxWidth) ||
         (height <= 0) || (height > TextureMaxHeight))

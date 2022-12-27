@@ -119,27 +119,17 @@ bool Pipeline::createFragmentShader(Renderer& renderer,
 bool Pipeline::createPipeline(Renderer& renderer,
     VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling)
 {
-    // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
+    // Check current pipeline
+    if (m_pipeline)
     {
-        // Invalid Vulkan device
-        m_pipeline = 0;
-        return false;
-    }
-
-    // Check render pass
-    if (!renderer.m_swapchain.renderPass)
-    {
-        // Invalid render pass
-        m_pipeline = 0;
-        return false;
+        // Destroy current pipeline
+        destroyPipeline(renderer);
     }
 
     // Check vertex shader
     if (!m_vertexShader.isValid())
     {
         // Invalid vertex shader
-        m_pipeline = 0;
         return false;
     }
 
@@ -147,7 +137,6 @@ bool Pipeline::createPipeline(Renderer& renderer,
     if (!m_fragmentShader.isValid())
     {
         // Invalid fragment shader
-        m_pipeline = 0;
         return false;
     }
 
@@ -337,13 +326,11 @@ bool Pipeline::createPipeline(Renderer& renderer,
         0, 1, &pipelineInfo, 0, &m_pipeline) != VK_SUCCESS)
     {
         // Could not create pipeline
-        m_pipeline = 0;
         return false;
     }
     if (!m_pipeline)
     {
         // Invalid pipeline handle
-        m_pipeline = 0;
         return false;
     }
 
@@ -356,13 +343,10 @@ bool Pipeline::createPipeline(Renderer& renderer,
 ////////////////////////////////////////////////////////////////////////////////
 void Pipeline::bind(Renderer& renderer)
 {
-    if (m_pipeline)
-    {
-        vkCmdBindPipeline(
-            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-            VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
-        );
-    }
+    vkCmdBindPipeline(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

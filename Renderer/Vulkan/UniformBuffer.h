@@ -87,18 +87,16 @@
             //  Create Uniform buffer                                         //
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                uint32_t size);
+            bool createBuffer(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Update Uniform buffer                                         //
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-                VkCommandPool& transferCommandPool, VulkanQueue& transferQueue,
-                void* data, uint32_t size);
+            bool updateBuffer(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory, VkCommandPool& transferCommandPool,
+                VulkanQueue& transferQueue, void* data, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Uniform buffer                                        //

@@ -102,7 +102,7 @@ bool View::init(Renderer& renderer)
     // Create uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        if (!m_uniformBuffers[i].updateBuffer(renderer.m_physicalDevice,
+        if (!m_uniformBuffers[i].updateBuffer(
             renderer.m_vulkanDevice, renderer.m_vulkanMemory,
             renderer.m_swapchain.commandPools[i], renderer.m_graphicsQueue,
             &uniformData, sizeof(uniformData)))
@@ -217,8 +217,7 @@ bool View::bind(Renderer& renderer)
 
     // Update uniform buffer
     if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
-        renderer.m_physicalDevice, renderer.m_vulkanDevice,
-        renderer.m_vulkanMemory,
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
         renderer.m_swapchain.commandPools[renderer.m_swapchain.current],
         renderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
     {

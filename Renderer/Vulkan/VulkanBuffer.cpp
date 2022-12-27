@@ -70,22 +70,15 @@ VulkanBuffer::~VulkanBuffer()
 //  Create Vulkan buffer                                                      //
 //  return : True if Vulkan buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VulkanMemory& vulkanMemory,
-    VkBufferUsageFlags usage, VulkanMemoryPool memoryPool, uint32_t bufferSize)
+bool VulkanBuffer::createBuffer(VkDevice& vulkanDevice,
+    VulkanMemory& vulkanMemory, VkBufferUsageFlags usage,
+    VulkanMemoryPool memoryPool, uint32_t bufferSize)
 {
-    // Check physical device
-    if (!physicalDevice)
+    // Check buffer handle
+    if (handle)
     {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
+        // Destroy Vulkan Buffer
+        destroyBuffer(vulkanDevice);
     }
 
     // Check buffer size
@@ -93,13 +86,6 @@ bool VulkanBuffer::createBuffer(VkPhysicalDevice& physicalDevice,
     {
         // Invalid buffer size
         return false;
-    }
-
-    // Check buffer handle
-    if (handle)
-    {
-        // Destroy Vulkan Buffer
-        destroyBuffer(vulkanDevice);
     }
 
     // Create Vulkan Buffer

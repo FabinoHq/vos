@@ -68,35 +68,18 @@ Shader::~Shader()
 bool Shader::createShader(Renderer& renderer,
     const uint32_t* source, const size_t size)
 {
-    // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
+    // Check current shader
+    if (m_shader)
     {
-        // Invalid Vulkan device
-        m_shader = 0;
-        return false;
-    }
-
-    // Check render pass
-    if (!renderer.m_swapchain.renderPass)
-    {
-        // Invalid render pass
-        m_shader = 0;
-        return false;
+        // Destroy current shader
+        destroyShader(renderer);
     }
 
     // Check shader source
     if (!source || (size <= 0))
     {
         // Invalid shader source
-        m_shader = 0;
         return false;
-    }
-
-    // Check current shader
-    if (m_shader)
-    {
-        // Destroy current shader
-        destroyShader(renderer);
     }
 
     // Create shader
@@ -111,13 +94,11 @@ bool Shader::createShader(Renderer& renderer,
         &shaderInfo, 0, &m_shader) != VK_SUCCESS)
     {
         // Could not create shader
-        m_shader = 0;
         return false;
     }
     if (!m_shader)
     {
         // Invalid shader
-        m_shader = 0;
         return false;
     }
 

@@ -392,8 +392,8 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     // Create staging buffer
     uint32_t textureSize = (width*height*4);
     if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
@@ -556,8 +556,8 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     // Create staging buffer
     uint32_t textureSize = (width*height*4*6);
     if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_physicalDevice, m_renderer.m_vulkanDevice,
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
