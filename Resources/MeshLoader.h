@@ -46,6 +46,7 @@
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
     #include "../Renderer/Vulkan/Vulkan.h"
+    #include "../Renderer/Vulkan/VulkanMemory.h"
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
@@ -166,6 +167,15 @@
             //  Destroy mesh loader                                           //
             ////////////////////////////////////////////////////////////////////
             void destroyMeshLoader();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Upload vertex buffer to graphics memory                       //
+            //  return : True if vertex buffer is successfully uploaded       //
+            ////////////////////////////////////////////////////////////////////
+            bool uploadVertexBuffer(VertexBuffer& vertexBuffer,
+                const float* vertices, const uint16_t* indices,
+                uint32_t verticesCount, uint32_t indicesCount);
 
 
         private:

@@ -40,6 +40,9 @@
 //     Renderer/Vulkan/VertexBuffer.cpp : Vertex buffer management            //
 ////////////////////////////////////////////////////////////////////////////////
 #include "VertexBuffer.h"
+#include "../Renderer.h"
+#include "../../Resources/MeshLoader.h"
+#include "../../Resources/HeightMapLoader.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,9 +51,7 @@
 VertexBuffer::VertexBuffer() :
 indexCount(0),
 vertexBuffer(),
-vertexStagingBuffer(),
-indexBuffer(),
-indexStagingBuffer()
+indexBuffer()
 {
 
 }
@@ -68,18 +69,15 @@ VertexBuffer::~VertexBuffer()
 //  Create Vertex buffer                                                      //
 //  return : True if Vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::createBuffer(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory, VkCommandPool& commandPool,
-    VulkanQueue& transferQueue,
+bool VertexBuffer::createBuffer(Renderer& m_renderer, MeshLoader& loader,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
     // Check current buffers
-    if (indexBuffer.handle || indexStagingBuffer.handle ||
-        vertexBuffer.handle || vertexStagingBuffer.handle)
+    if (vertexBuffer.handle || indexBuffer.handle)
     {
         // Destroy current buffers
-        destroyBuffer(vulkanDevice);
+        destroyBuffer(m_renderer.m_vulkanDevice);
     }
 
     // Check input vertices and indices
@@ -93,29 +91,9 @@ bool VertexBuffer::createBuffer(VkDevice& vulkanDevice,
     verticesCount *= sizeof(float);
     indicesCount *= sizeof(uint16_t);
 
-
-    // Create vertex staging buffer
-    if (!vertexStagingBuffer.createBuffer(
-        vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_RENDERHOST, verticesCount))
-    {
-        // Could not create staging buffer
-        return false;
-    }
-
-    // Write vertices into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, vertexStagingBuffer, vertices, VULKAN_MEMORY_RENDERHOST))
-    {
-        // Could not write vertices into staging buffer memory
-        return false;
-    }
-
-
     // Create vertex buffer
     if (!vertexBuffer.createBuffer(
-        vulkanDevice, vulkanMemory,
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
         VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
         VULKAN_MEMORY_RENDERDEVICE, verticesCount))
     {
@@ -123,131 +101,9 @@ bool VertexBuffer::createBuffer(VkDevice& vulkanDevice,
         return false;
     }
 
-
-    // Allocate command buffers
-    VkCommandBuffer commandBuffer = 0;
-    VkCommandBufferAllocateInfo bufferAllocate;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandPool;
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(
-        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
-    {
-        // Could not allocate command buffers
-        return false;
-    }
-
-    // Transfert staging buffer data to vertex buffer
-    VkCommandBufferBeginInfo bufferBeginInfo;
-    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext = 0;
-    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = 0;
-
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
-    {
-        // Could not record command buffer
-        return false;
-    }
-
-    VkBufferCopy bufferCopy;
-    bufferCopy.srcOffset = 0;
-    bufferCopy.dstOffset = 0;
-    bufferCopy.size = vertexStagingBuffer.size;
-
-    vkCmdCopyBuffer(
-        commandBuffer, vertexStagingBuffer.handle,
-        vertexBuffer.handle, 1, &bufferCopy
-    );
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-    {
-        // Could not end command buffer
-        return false;
-    }
-
-    VkFence fence = 0;
-    VkFenceCreateInfo fenceInfo;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = 0;
-
-    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
-    {
-        // Could not create fence
-        return false;
-    }
-    if (!fence)
-    {
-        // Invalid fence
-        return false;
-    }
-
-    // Submit queue
-    VkSubmitInfo submitInfo;
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = 0;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (vkQueueSubmit(
-        transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
-    {
-        // Could not submit queue
-        return false;
-    }
-
-    // Wait for transfer to finish
-    if (vkWaitForFences(vulkanDevice, 1,
-        &fence, VK_FALSE, VertexBufferFenceTimeout) != VK_SUCCESS)
-    {
-        // Transfer timed out
-        return false;
-    }
-
-    // Destroy fence
-    if (fence)
-    {
-        vkDestroyFence(vulkanDevice, fence, 0);
-    }
-
-    // Destroy buffers
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(vulkanDevice, commandPool, 1, &commandBuffer);
-    }
-
-
-    // Create index staging buffer
-    if (!indexStagingBuffer.createBuffer(
-        vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VULKAN_MEMORY_RENDERHOST, indicesCount))
-    {
-        // Could not create staging buffer
-        return false;
-    }
-
-    // Write indices into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, indexStagingBuffer, indices, VULKAN_MEMORY_RENDERHOST))
-    {
-        // Could not write indices into staging buffer memory
-        return false;
-    }
-
-
     // Create index buffer
     if (!indexBuffer.createBuffer(
-        vulkanDevice, vulkanMemory,
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
         VULKAN_MEMORY_RENDERDEVICE, indicesCount))
     {
@@ -255,101 +111,70 @@ bool VertexBuffer::createBuffer(VkDevice& vulkanDevice,
         return false;
     }
 
-
-    // Allocate command buffers
-    commandBuffer = 0;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandPool;
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(
-        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+    // Upload vertex buffer to graphics memory
+    if (!loader.uploadVertexBuffer(*this,
+        vertices, indices, verticesCount, indicesCount))
     {
-        // Could not allocate command buffers
+        // Could not upload vertex buffer to graphics memory
         return false;
     }
 
+    // Vertex buffer successfully created
+    return true;
+}
 
-    // Transfert staging buffer data to vertex buffer
-    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext = 0;
-    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = 0;
-
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+////////////////////////////////////////////////////////////////////////////////
+//  Create Vertex buffer                                                      //
+//  return : True if Vertex buffer is successfully created                    //
+////////////////////////////////////////////////////////////////////////////////
+bool VertexBuffer::createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
+    const float* vertices, const uint16_t* indices,
+    uint32_t verticesCount, uint32_t indicesCount)
+{
+    // Check current buffers
+    if (vertexBuffer.handle || indexBuffer.handle)
     {
-        // Could not record command buffer
+        // Destroy current buffers
+        destroyBuffer(m_renderer.m_vulkanDevice);
+    }
+
+    // Check input vertices and indices
+    if (!vertices || !indices || (verticesCount <= 0) || (indicesCount <= 0))
+    {
         return false;
     }
 
-    bufferCopy.srcOffset = 0;
-    bufferCopy.dstOffset = 0;
-    bufferCopy.size = indexStagingBuffer.size;
+    // Compute vertices and indices sizes
+    indexCount = indicesCount;
+    verticesCount *= sizeof(float);
+    indicesCount *= sizeof(uint16_t);
 
-    vkCmdCopyBuffer(
-        commandBuffer, indexStagingBuffer.handle,
-        indexBuffer.handle, 1, &bufferCopy
-    );
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+    // Create vertex buffer
+    if (!vertexBuffer.createBuffer(
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        VULKAN_MEMORY_RENDERDEVICE, verticesCount))
     {
-        // Could not end command buffer
+        // Could not create vertex buffer
         return false;
     }
 
-    fence = 0;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = 0;
-    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
+    // Create index buffer
+    if (!indexBuffer.createBuffer(
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        VULKAN_MEMORY_RENDERDEVICE, indicesCount))
     {
-        // Could not create fence
-        return false;
-    }
-    if (!fence)
-    {
-        // Invalid fence
+        // Could not create index buffer
         return false;
     }
 
-    // Submit queue
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = 0;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (vkQueueSubmit(
-        transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
+    // Upload vertex buffer to graphics memory
+    if (!loader.uploadVertexBuffer(*this,
+        vertices, indices, verticesCount, indicesCount))
     {
-        // Could not submit queue
+        // Could not upload vertex buffer to graphics memory
         return false;
-    }
-
-    // Wait for transfer to finish
-    if (vkWaitForFences(vulkanDevice, 1,
-        &fence, VK_FALSE, VertexBufferFenceTimeout) != VK_SUCCESS)
-    {
-        // Transfer timed out
-        return false;
-    }
-
-    // Destroy fence
-    if (fence)
-    {
-        vkDestroyFence(vulkanDevice, fence, 0);
-    }
-
-    // Destroy buffers
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(vulkanDevice, commandPool, 1, &commandBuffer);
     }
 
     // Vertex buffer successfully created
@@ -360,15 +185,12 @@ bool VertexBuffer::createBuffer(VkDevice& vulkanDevice,
 //  Update Vertex buffer                                                      //
 //  return : True if Vertex buffer is successfully updated                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::updateBuffer(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory, VkCommandPool& commandPool,
-    VulkanQueue& transferQueue,
+bool VertexBuffer::updateBuffer(MeshLoader& loader,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
     // Check current buffers
-    if (!indexBuffer.handle || !indexStagingBuffer.handle ||
-        !vertexBuffer.handle || !vertexStagingBuffer.handle)
+    if (!vertexBuffer.handle || !indexBuffer.handle)
     {
         // Invalid current buffers
         return false;
@@ -385,224 +207,53 @@ bool VertexBuffer::updateBuffer(VkDevice& vulkanDevice,
     verticesCount *= sizeof(float);
     indicesCount *= sizeof(uint16_t);
 
-
-    // Write vertices into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, vertexStagingBuffer, vertices, VULKAN_MEMORY_RENDERHOST))
+    // Upload vertex buffer to graphics memory
+    if (!loader.uploadVertexBuffer(*this,
+        vertices, indices, verticesCount, indicesCount))
     {
-        // Could not write vertices into staging buffer memory
+        // Could not upload vertex buffer to graphics memory
         return false;
     }
 
+    // Vertex buffer successfully updated
+    return true;
+}
 
-    // Allocate command buffers
-    VkCommandBuffer commandBuffer = 0;
-    VkCommandBufferAllocateInfo bufferAllocate;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandPool;
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(
-        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+////////////////////////////////////////////////////////////////////////////////
+//  Update Vertex buffer                                                      //
+//  return : True if Vertex buffer is successfully updated                    //
+////////////////////////////////////////////////////////////////////////////////
+bool VertexBuffer::updateBuffer(HeightMapLoader& loader,
+    const float* vertices, const uint16_t* indices,
+    uint32_t verticesCount, uint32_t indicesCount)
+{
+    // Check current buffers
+    if (!vertexBuffer.handle || !indexBuffer.handle)
     {
-        // Could not allocate command buffers
+        // Invalid current buffers
         return false;
     }
 
-    // Transfert staging buffer data to vertex buffer
-    VkCommandBufferBeginInfo bufferBeginInfo;
-    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext = 0;
-    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = 0;
-
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    // Check input vertices and indices
+    if (!vertices || !indices || (verticesCount <= 0) || (indicesCount <= 0))
     {
-        // Could not record command buffer
         return false;
     }
 
-    VkBufferCopy bufferCopy;
-    bufferCopy.srcOffset = 0;
-    bufferCopy.dstOffset = 0;
-    bufferCopy.size = vertexStagingBuffer.size;
+    // Compute vertices and indices sizes
+    indexCount = indicesCount;
+    verticesCount *= sizeof(float);
+    indicesCount *= sizeof(uint16_t);
 
-    vkCmdCopyBuffer(
-        commandBuffer, vertexStagingBuffer.handle,
-        vertexBuffer.handle, 1, &bufferCopy
-    );
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+    // Upload vertex buffer to graphics memory
+    if (!loader.uploadVertexBuffer(*this,
+        vertices, indices, verticesCount, indicesCount))
     {
-        // Could not end command buffer
+        // Could not upload vertex buffer to graphics memory
         return false;
     }
 
-    VkFence fence = 0;
-    VkFenceCreateInfo fenceInfo;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = 0;
-
-    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
-    {
-        // Could not create fence
-        return false;
-    }
-    if (!fence)
-    {
-        // Invalid fence
-        return false;
-    }
-
-    // Submit queue
-    VkSubmitInfo submitInfo;
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = 0;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (vkQueueSubmit(
-        transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
-    {
-        // Could not submit queue
-        return false;
-    }
-
-    // Wait for transfer to finish
-    if (vkWaitForFences(vulkanDevice, 1,
-        &fence, VK_FALSE, VertexBufferFenceTimeout) != VK_SUCCESS)
-    {
-        // Transfer timed out
-        return false;
-    }
-
-    // Destroy fence
-    if (fence)
-    {
-        vkDestroyFence(vulkanDevice, fence, 0);
-    }
-
-    // Destroy buffers
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(vulkanDevice, commandPool, 1, &commandBuffer);
-    }
-
-
-    // Write indices into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, indexStagingBuffer, indices, VULKAN_MEMORY_RENDERHOST))
-    {
-        // Could not write indices into staging buffer memory
-        return false;
-    }
-
-
-    // Allocate command buffers
-    commandBuffer = 0;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = commandPool;
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(
-        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
-    {
-        // Could not allocate command buffers
-        return false;
-    }
-
-
-    // Transfert staging buffer data to vertex buffer
-    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext = 0;
-    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = 0;
-
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
-    {
-        // Could not record command buffer
-        return false;
-    }
-
-    bufferCopy.srcOffset = 0;
-    bufferCopy.dstOffset = 0;
-    bufferCopy.size = indexStagingBuffer.size;
-
-    vkCmdCopyBuffer(
-        commandBuffer, indexStagingBuffer.handle,
-        indexBuffer.handle, 1, &bufferCopy
-    );
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-    {
-        // Could not end command buffer
-        return false;
-    }
-
-    fence = 0;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = 0;
-    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
-    {
-        // Could not create fence
-        return false;
-    }
-    if (!fence)
-    {
-        // Invalid fence
-        return false;
-    }
-
-    // Submit queue
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = 0;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (vkQueueSubmit(
-        transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
-    {
-        // Could not submit queue
-        return false;
-    }
-
-    // Wait for transfer to finish
-    if (vkWaitForFences(vulkanDevice, 1,
-        &fence, VK_FALSE, VertexBufferFenceTimeout) != VK_SUCCESS)
-    {
-        // Transfer timed out
-        return false;
-    }
-
-    // Destroy fence
-    if (fence)
-    {
-        vkDestroyFence(vulkanDevice, fence, 0);
-    }
-
-    // Destroy buffers
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(vulkanDevice, commandPool, 1, &commandBuffer);
-    }
-
-    // Vertex buffer successfully created
+    // Vertex buffer successfully updated
     return true;
 }
 
@@ -611,8 +262,6 @@ bool VertexBuffer::updateBuffer(VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void VertexBuffer::destroyBuffer(VkDevice& vulkanDevice)
 {
-    indexStagingBuffer.destroyBuffer(vulkanDevice);
     indexBuffer.destroyBuffer(vulkanDevice);
-    vertexStagingBuffer.destroyBuffer(vulkanDevice);
     vertexBuffer.destroyBuffer(vulkanDevice);
 }

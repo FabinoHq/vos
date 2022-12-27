@@ -406,11 +406,11 @@ bool TextureLoader::uploadTexture(VkImage& handle,
         return false;
     }
 
-    // Write data into staging buffer memory
+    // Write texture into staging buffer memory
     if (!m_renderer.m_vulkanMemory.writeBufferMemory(m_renderer.m_vulkanDevice,
         m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
-        // Could not write data into staging buffer memory
+        // Could not write texture into staging buffer memory
         return false;
     }
 

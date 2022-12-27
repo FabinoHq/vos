@@ -52,11 +52,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VertexBuffer settings                                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint64_t VertexBufferFenceTimeout = 100000000000;
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Default vertex buffer vertices                                        //
     ////////////////////////////////////////////////////////////////////////////
     const uint32_t DefaultVerticesCount = 20;
@@ -80,6 +75,22 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  MeshLoader class declaration                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    class MeshLoader;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  HeightMapLoader class declaration                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    class HeightMapLoader;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  VertexBuffer class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
     class VertexBuffer
@@ -100,9 +111,15 @@
             //  Create Vertex buffer                                          //
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(VkDevice& vulkanDevice,
-                VulkanMemory& vulkanMemory, VkCommandPool& commandPool,
-                VulkanQueue& transferQueue,
+            bool createBuffer(Renderer& m_renderer, MeshLoader& loader,
+                const float* vertices, const uint16_t* indices,
+                uint32_t verticesCount, uint32_t indicesCount);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create Vertex buffer                                          //
+            //  return : True if Vertex buffer is successfully created        //
+            ////////////////////////////////////////////////////////////////////
+            bool createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 
@@ -110,9 +127,15 @@
             //  Update Vertex buffer                                          //
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(VkDevice& vulkanDevice,
-                VulkanMemory& vulkanMemory, VkCommandPool& commandPool,
-                VulkanQueue& transferQueue,
+            bool updateBuffer(MeshLoader& loader,
+                const float* vertices, const uint16_t* indices,
+                uint32_t verticesCount, uint32_t indicesCount);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update Vertex buffer                                          //
+            //  return : True if Vertex buffer is successfully updated        //
+            ////////////////////////////////////////////////////////////////////
+            bool updateBuffer(HeightMapLoader& loader,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 
@@ -137,9 +160,7 @@
         public:
             uint32_t        indexCount;             // Indices count
             VulkanBuffer    vertexBuffer;           // Vertex buffer
-            VulkanBuffer    vertexStagingBuffer;    // Vertex staging buffer
             VulkanBuffer    indexBuffer;            // Index buffer
-            VulkanBuffer    indexStagingBuffer;     // Index staging buffer
     };
 
 

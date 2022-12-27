@@ -352,15 +352,221 @@ void MeshLoader::destroyMeshLoader()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Upload vertex buffer to graphics memory                                   //
+//  return : True if vertex buffer is successfully uploaded                   //
+////////////////////////////////////////////////////////////////////////////////
+bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
+    const float* vertices, const uint16_t* indices,
+    uint32_t verticesCount, uint32_t indicesCount)
+{
+    // Reset mesh upload memory
+    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_MESHUPLOAD);
+
+    // Create vertices staging buffer
+    if (!m_stagingBuffer.createBuffer(
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VULKAN_MEMORY_MESHUPLOAD, verticesCount))
+    {
+        // Could not create vertices staging buffer
+        return false;
+    }
+
+    // Write vertices into staging buffer memory
+    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+        m_renderer.m_vulkanDevice, m_stagingBuffer,
+        vertices, VULKAN_MEMORY_MESHUPLOAD))
+    {
+        // Could not write vertices into staging buffer memory
+        return false;
+    }
+
+
+    // Reset command pool
+    if (vkResetCommandPool(
+        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    {
+        // Could not reset command pool
+        return false;
+    }
+
+    // Transfert staging buffer data to vertex buffer
+    VkCommandBufferBeginInfo bufferBeginInfo;
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(m_commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    VkBufferCopy bufferCopy;
+    bufferCopy.srcOffset = 0;
+    bufferCopy.dstOffset = 0;
+    bufferCopy.size = m_stagingBuffer.size;
+
+    vkCmdCopyBuffer(
+        m_commandBuffer, m_stagingBuffer.handle,
+        vertexBuffer.vertexBuffer.handle, 1, &bufferCopy
+    );
+
+    if (vkEndCommandBuffer(m_commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    // Reset staging fence
+    if (vkResetFences(
+        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    {
+        // Could not reset staging fence
+        return false;
+    }
+
+    // Submit queue
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &m_commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(
+        m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    // Wait for transfer to finish
+    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+        &m_fence, VK_FALSE, MeshFenceTimeout) != VK_SUCCESS)
+    {
+        // Transfer timed out
+        return false;
+    }
+
+    // Destroy vertices staging buffer
+    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+
+
+    // Reset mesh upload memory
+    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_MESHUPLOAD);
+
+    // Create indices staging buffer
+    if (!m_stagingBuffer.createBuffer(
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VULKAN_MEMORY_MESHUPLOAD, indicesCount))
+    {
+        // Could not create indices staging buffer
+        return false;
+    }
+
+    // Write indices into staging buffer memory
+    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+        m_renderer.m_vulkanDevice, m_stagingBuffer,
+        indices, VULKAN_MEMORY_MESHUPLOAD))
+    {
+        // Could not write indices into staging buffer memory
+        return false;
+    }
+
+
+    // Reset command pool
+    if (vkResetCommandPool(
+        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    {
+        // Could not reset command pool
+        return false;
+    }
+
+    // Transfert staging buffer indices to vertex buffer
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(m_commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    bufferCopy.srcOffset = 0;
+    bufferCopy.dstOffset = 0;
+    bufferCopy.size = m_stagingBuffer.size;
+
+    vkCmdCopyBuffer(
+        m_commandBuffer, m_stagingBuffer.handle,
+        vertexBuffer.indexBuffer.handle, 1, &bufferCopy
+    );
+
+    if (vkEndCommandBuffer(m_commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    // Reset staging fence
+    if (vkResetFences(
+        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    {
+        // Could not reset staging fence
+        return false;
+    }
+
+    // Submit queue
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &m_commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(
+        m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    // Wait for transfer to finish
+    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+        &m_fence, VK_FALSE, MeshFenceTimeout) != VK_SUCCESS)
+    {
+        // Transfer timed out
+        return false;
+    }
+
+    // Destroy indices staging buffer
+    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+
+
+    // Vertex buffer successfully uploaded
+    return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Load embedded meshes                                                      //
 //  return : True if embedded meshes are successfully loaded                  //
 ////////////////////////////////////////////////////////////////////////////////
 bool MeshLoader::loadEmbeddedMeshes()
 {
     // Load default vertex buffer
-    if (!m_meshes[MESHES_DEFAULT].createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        m_commandPool, m_transferQueue,
+    if (!m_meshes[MESHES_DEFAULT].createBuffer(m_renderer, *this,
         DefaultVertices, DefaultIndices,
         DefaultVerticesCount, DefaultIndicesCount))
     {
@@ -369,9 +575,7 @@ bool MeshLoader::loadEmbeddedMeshes()
     }
 
     // Load skybox vertex buffer
-    if (!m_meshes[MESHES_SKYBOX].createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        m_commandPool, m_transferQueue,
+    if (!m_meshes[MESHES_SKYBOX].createBuffer(m_renderer, *this,
         SkyBoxVertices, SkyBoxIndices,
         SkyBoxVerticesCount, SkyBoxIndicesCount))
     {
@@ -380,9 +584,7 @@ bool MeshLoader::loadEmbeddedMeshes()
     }
 
     // Load cuboid vertex buffer
-    if (!m_meshes[MESHES_CUBOID].createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        m_commandPool, m_transferQueue,
+    if (!m_meshes[MESHES_CUBOID].createBuffer(m_renderer, *this,
         CuboidShapeVertices, CuboidShapeIndices,
         CuboidShapeVerticesCount, CuboidShapeIndicesCount))
     {
@@ -497,9 +699,7 @@ bool MeshLoader::loadVMSH(VertexBuffer& vertexBuffer,
     }
 
     // Create vertex buffer
-    if (!vertexBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        m_commandPool, m_transferQueue,
+    if (!vertexBuffer.createBuffer(m_renderer, *this,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
