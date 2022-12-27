@@ -79,34 +79,6 @@ View::~View()
 ////////////////////////////////////////////////////////////////////////////////
 bool View::init(Renderer& renderer)
 {
-    // Check physical device
-    if (!renderer.m_physicalDevice)
-    {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check transfer commands pool
-    if (!renderer.m_transferCommandPool)
-    {
-        // Invalid transfer commands pool
-        return false;
-    }
-
-    // Check transfer queue
-    if (!renderer.m_transferQueue.handle)
-    {
-        // Invalid transfer queue
-        return false;
-    }
-
     // Reset view transformations
     resetTransforms();
 
@@ -132,7 +104,7 @@ bool View::init(Renderer& renderer)
     {
         if (!m_uniformBuffers[i].updateBuffer(renderer.m_physicalDevice,
             renderer.m_vulkanDevice, renderer.m_vulkanMemory,
-            renderer.m_transferCommandPool, renderer.m_transferQueue,
+            renderer.m_swapchain.commandPools[i], renderer.m_graphicsQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
@@ -237,41 +209,6 @@ void View::compute(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 bool View::bind(Renderer& renderer)
 {
-    // Check physical device
-    if (!renderer.m_physicalDevice)
-    {
-        // Invalid physical device
-        return false;
-    }
-
-    // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
-    {
-        // Invalid Vulkan device
-        return false;
-    }
-
-    // Check transfer commands pool
-    if (!renderer.m_transferCommandPool)
-    {
-        // Invalid transfer commands pool
-        return false;
-    }
-
-    // Check transfer queue
-    if (!renderer.m_transferQueue.handle)
-    {
-        // Invalid transfer queue
-        return false;
-    }
-
-    // Check swapchain handle
-    if (!renderer.m_swapchain.handle)
-    {
-        // Invalid swapchain handle
-        return false;
-    }
-
     // Copy matrices data into uniform data
     UniformData uniformData;
     memcpy(
@@ -281,8 +218,9 @@ bool View::bind(Renderer& renderer)
     // Update uniform buffer
     if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
         renderer.m_physicalDevice, renderer.m_vulkanDevice,
-        renderer.m_vulkanMemory, renderer.m_transferCommandPool,
-        renderer.m_transferQueue, &uniformData, sizeof(uniformData)))
+        renderer.m_vulkanMemory,
+        renderer.m_swapchain.commandPools[renderer.m_swapchain.current],
+        renderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
         return false;
