@@ -48,6 +48,35 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  HeightMapLoader settings                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint64_t HeightMapFenceTimeout = 100000000000;
+    const double HeightMapLoaderIdleSleepTime = 0.01;
+    const double HeightMapLoaderErrorSleepTime = 0.1;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  HeightMapLoaderState enumeration                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    enum HeightMapLoaderState
+    {
+        HEIGHTMAPLOADER_STATE_NONE = 0,
+        HEIGHTMAPLOADER_STATE_INIT = 1,
+
+        HEIGHTMAPLOADER_STATE_IDLE = 2,
+        HEIGHTMAPLOADER_STATE_LOAD = 3,
+
+        HEIGHTMAPLOADER_STATE_ERROR = 4
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer class declaration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    class Renderer;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  HeightMapLoader class definition                                      //
     ////////////////////////////////////////////////////////////////////////////
     class HeightMapLoader : public SysThread
@@ -56,7 +85,7 @@
             ////////////////////////////////////////////////////////////////////
             //  HeightMapLoader default constructor                           //
             ////////////////////////////////////////////////////////////////////
-            HeightMapLoader();
+            HeightMapLoader(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
             //  HeightMapLoader virtual destructor                            //
@@ -71,9 +100,29 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Init HeightMapLoader                                          //
+            //  return : True if heightmap loader is ready                    //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get heightmap loader state                                    //
+            //  return : Current heightmap loader state                       //
+            ////////////////////////////////////////////////////////////////////
+            HeightMapLoaderState getState();
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy heightmap loader                                      //
             ////////////////////////////////////////////////////////////////////
             void destroyHeightMapLoader();
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  Load heightmaps assets                                        //
+            //  return : True if heightmaps assets are loaded                 //
+            ////////////////////////////////////////////////////////////////////
+            bool loadHeightMaps();
 
 
         private:
@@ -89,6 +138,9 @@
 
 
         private:
+            Renderer&               m_renderer;         // Renderer
+            HeightMapLoaderState    m_state;            // HeightMapLoader state
+            SysMutex                m_stateMutex;       // State mutex
     };
 
 

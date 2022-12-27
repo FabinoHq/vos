@@ -40,12 +40,16 @@
 //     Resources/HeightMapLoader.cpp : HeightMap loading management           //
 ////////////////////////////////////////////////////////////////////////////////
 #include "HeightMapLoader.h"
+#include "../Renderer/Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //  HeightMapLoader default constructor                                       //
 ////////////////////////////////////////////////////////////////////////////////
-HeightMapLoader::HeightMapLoader()
+HeightMapLoader::HeightMapLoader(Renderer& renderer) :
+m_renderer(renderer),
+m_state(HEIGHTMAPLOADER_STATE_NONE),
+m_stateMutex()
 {
 
 }
@@ -64,9 +68,94 @@ HeightMapLoader::~HeightMapLoader()
 ////////////////////////////////////////////////////////////////////////////////
 void HeightMapLoader::process()
 {
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
 
+    switch (m_state)
+    {
+        case HEIGHTMAPLOADER_STATE_NONE:
+            // Boot to init state
+            m_stateMutex.lock();
+            m_state = HEIGHTMAPLOADER_STATE_INIT;
+            m_stateMutex.unlock();
+            break;
+
+        case HEIGHTMAPLOADER_STATE_INIT:
+            // Init heightmap loader
+            if (init())
+            {
+                m_stateMutex.lock();
+                m_state = HEIGHTMAPLOADER_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = HEIGHTMAPLOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
+
+        case HEIGHTMAPLOADER_STATE_IDLE:
+            // HeightMap loader in idle state
+            SysSleep(HeightMapLoaderIdleSleepTime);
+            break;
+
+        case HEIGHTMAPLOADER_STATE_LOAD:
+            // Load heightmaps assets
+            if (loadHeightMaps())
+            {
+                m_stateMutex.lock();
+                m_state = HEIGHTMAPLOADER_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = HEIGHTMAPLOADER_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
+
+        case HEIGHTMAPLOADER_STATE_ERROR:
+            // HeightMap loader error
+            SysSleep(HeightMapLoaderErrorSleepTime);
+            break;
+
+        default:
+            // Invalid state
+            m_stateMutex.lock();
+            m_state = HEIGHTMAPLOADER_STATE_ERROR;
+            m_stateMutex.unlock();
+            break;
+    }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init HeightMapLoader                                                      //
+//  return : True if heightmap loader is ready                                //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::init()
+{
+    // Heightmap loader ready
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get heightmap loader state                                                //
+//  return : Current heightmap loader state                                   //
+////////////////////////////////////////////////////////////////////////////////
+HeightMapLoaderState HeightMapLoader::getState()
+{
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    return state;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy heightmap loader                                                  //
@@ -74,4 +163,15 @@ void HeightMapLoader::process()
 void HeightMapLoader::destroyHeightMapLoader()
 {
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load heightmaps assets                                                    //
+//  return : True if heightmaps assets are loaded                             //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::loadHeightMaps()
+{
+    // Heightmaps assets are successfully loaded
+    return true;
 }
