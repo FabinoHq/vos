@@ -57,8 +57,6 @@ m_vulkanDevice(0),
 m_vulkanQueues(),
 m_graphicsQueue(),
 m_surfaceQueue(),
-m_transferQueue(),
-m_transferCommandPool(0),
 m_uniformsDescPool(0),
 m_texturesDescPool(0),
 m_vulkanMemory(),
@@ -219,41 +217,11 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Request transfer queue handle
-    if (!m_transferQueue.createTransferQueue(m_vulkanDevice, m_vulkanQueues))
-    {
-        // Could not get surface queue handle
-        return false;
-    }
-
     // Create Vulkan swapchain
     if (!m_swapchain.createSwapchain(m_physicalDevice, m_vulkanDevice,
         m_vulkanSurface, m_surfaceQueue.family, m_vulkanMemory))
     {
         // Could not create Vulkan swapchain
-        return false;
-    }
-
-    // Create transfer commands pool
-    VkCommandPoolCreateInfo commandPoolInfo;
-    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    commandPoolInfo.pNext = 0;
-    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-    commandPoolInfo.queueFamilyIndex = m_transferQueue.family;
-
-    if (vkCreateCommandPool(m_vulkanDevice,
-        &commandPoolInfo, 0, &m_transferCommandPool) != VK_SUCCESS)
-    {
-        // Could not create transfer commands pool
-        SysMessage::box() << "[0x304B] Could not create commands pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-    if (!m_transferCommandPool)
-    {
-        // Invalid transfer commands pool
-        SysMessage::box() << "[0x304C] Invalid transfer commands pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
@@ -276,14 +244,14 @@ bool Renderer::init(SysWindow* sysWindow)
         &uniformsPoolInfo, 0, &m_uniformsDescPool) != VK_SUCCESS)
     {
         // Could not create uniforms descriptor pool
-        SysMessage::box() << "[0x304D] Could not create uniforms desc pool\n";
+        SysMessage::box() << "[0x304B] Could not create uniforms desc pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_uniformsDescPool)
     {
         // Invalid uniforms descriptor pool
-        SysMessage::box() << "[0x304E] Invalid uniforms descriptor pool\n";
+        SysMessage::box() << "[0x304C] Invalid uniforms descriptor pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -307,14 +275,14 @@ bool Renderer::init(SysWindow* sysWindow)
         &texturesPoolInfo, 0, &m_texturesDescPool) != VK_SUCCESS)
     {
         // Could not create textures descriptor pool
-        SysMessage::box() << "[0x304F] Could not create textures desc pool\n";
+        SysMessage::box() << "[0x304D] Could not create textures desc pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!m_texturesDescPool)
     {
         // Invalid textures descriptor pool
-        SysMessage::box() << "[0x3050] Invalid textures descriptor pool\n";
+        SysMessage::box() << "[0x304E] Invalid textures descriptor pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -323,7 +291,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_layout.createLayout(m_vulkanDevice))
     {
         // Could not create default pipeline layout
-        SysMessage::box() << "[0x3053] Could not create default layout\n";
+        SysMessage::box() << "[0x3051] Could not create default layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -338,7 +306,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_pipeline.createPipeline(*this))
     {
         // Could not create default pipeline
-        SysMessage::box() << "[0x3054] Could not create default pipeline\n";
+        SysMessage::box() << "[0x3052] Could not create default pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -353,7 +321,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_ninePatchPipeline.createPipeline(*this))
     {
         // Could not create ninepatch pipeline
-        SysMessage::box() << "[0x3055] Could not create ninepatch pipeline\n";
+        SysMessage::box() << "[0x3053] Could not create ninepatch pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -368,7 +336,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_rectanglePipeline.createPipeline(*this))
     {
         // Could not create rectangle pipeline
-        SysMessage::box() << "[0x3056] Could not create rectangle pipeline\n";
+        SysMessage::box() << "[0x3054] Could not create rectangle pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -383,7 +351,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_ellipsePipeline.createPipeline(*this))
     {
         // Could not create ellipse pipeline
-        SysMessage::box() << "[0x3057] Could not create ellipse pipeline\n";
+        SysMessage::box() << "[0x3055] Could not create ellipse pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -399,7 +367,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create shape pipeline
-        SysMessage::box() << "[0x3058] Could not create shape pipeline\n";
+        SysMessage::box() << "[0x3056] Could not create shape pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -414,7 +382,7 @@ bool Renderer::init(SysWindow* sysWindow)
     if (!m_pxTextPipeline.createPipeline(*this))
     {
         // Could not create pixel text pipeline
-        SysMessage::box() << "[0x3059] Could not create pixel text pipeline\n";
+        SysMessage::box() << "[0x3057] Could not create pixel text pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -430,7 +398,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_CUBEMAP, false, true))
     {
         // Could not create skybox pipeline
-        SysMessage::box() << "[0x305A] Could not create skybox pipeline\n";
+        SysMessage::box() << "[0x3058] Could not create skybox pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -446,7 +414,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
-        SysMessage::box() << "[0x305B] Could not create static mesh pipeline\n";
+        SysMessage::box() << "[0x3059] Could not create static mesh pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -825,12 +793,6 @@ void Renderer::cleanup()
                 vkDestroyDescriptorPool(m_vulkanDevice, m_uniformsDescPool, 0);
             }
 
-            // Destroy transfer commands pool
-            if (m_transferCommandPool && vkDestroyCommandPool)
-            {
-                vkDestroyCommandPool(m_vulkanDevice, m_transferCommandPool, 0);
-            }
-
             // Destroy swapchain
             m_swapchain.destroySwapchain(m_vulkanDevice);
 
@@ -853,7 +815,6 @@ void Renderer::cleanup()
 
     m_uniformsDescPool = 0;
     m_texturesDescPool = 0;
-    m_transferCommandPool = 0;
     m_vulkanDevice = 0;
     m_vulkanSurface = 0;
 }
