@@ -85,7 +85,7 @@ Texture::~Texture()
 //  Create texture                                                            //
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::createTexture(Renderer& renderer,
+bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, bool smooth, bool repeat)
 {
     // Check texture handle
@@ -138,7 +138,7 @@ bool Texture::createTexture(Renderer& renderer,
 
     // Allocate texture memory
     if (!renderer.m_vulkanMemory.allocateTextureMemory(
-        renderer.m_vulkanDevice, *this, VULKAN_MEMORY_RENDERDEVICE))
+        renderer.m_vulkanDevice, *this, memoryPool))
     {
         // Could not allocate texture memory
         return false;
@@ -280,8 +280,8 @@ bool Texture::createTexture(Renderer& renderer,
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
-    uint32_t width, uint32_t height, const unsigned char* data,
-    bool smooth, bool repeat)
+    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
+    const unsigned char* data, bool smooth, bool repeat)
 {
     // Check texture size
     if ((width <= 0) || (width > TextureMaxWidth) ||
@@ -303,7 +303,7 @@ bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
     {
         // Recreate texture
         destroyTexture(renderer);
-        createTexture(renderer, width, height, smooth, repeat);
+        createTexture(renderer, memoryPool, width, height, smooth, repeat);
     }
 
     // Upload texture to graphics memory

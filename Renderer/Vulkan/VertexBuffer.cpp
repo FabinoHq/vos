@@ -70,6 +70,7 @@ VertexBuffer::~VertexBuffer()
 //  return : True if Vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool VertexBuffer::createBuffer(Renderer& m_renderer, MeshLoader& loader,
+    VulkanMemoryPool memoryPool,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
@@ -95,7 +96,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, MeshLoader& loader,
     if (!vertexBuffer.createBuffer(
         m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
         VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_RENDERDEVICE, verticesCount))
+        memoryPool, verticesCount))
     {
         // Could not create vertex buffer
         return false;
@@ -105,7 +106,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, MeshLoader& loader,
     if (!indexBuffer.createBuffer(
         m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_RENDERDEVICE, indicesCount))
+        memoryPool, indicesCount))
     {
         // Could not create index buffer
         return false;
@@ -128,6 +129,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, MeshLoader& loader,
 //  return : True if Vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool VertexBuffer::createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
+    VulkanMemoryPool memoryPool,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
@@ -153,7 +155,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
     if (!vertexBuffer.createBuffer(
         m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
         VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_RENDERDEVICE, verticesCount))
+        memoryPool, verticesCount))
     {
         // Could not create vertex buffer
         return false;
@@ -163,7 +165,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
     if (!indexBuffer.createBuffer(
         m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
         VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VULKAN_MEMORY_RENDERDEVICE, indicesCount))
+        memoryPool, indicesCount))
     {
         // Could not create index buffer
         return false;

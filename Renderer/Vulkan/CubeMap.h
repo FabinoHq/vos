@@ -44,6 +44,7 @@
 
     #include "../../System/System.h"
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
     #include "Swapchain.h"
     #include "VulkanBuffer.h"
 
@@ -82,7 +83,7 @@
             //  Create cubemap                                                //
             //  return : True if cubemap is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createCubeMap(Renderer& renderer,
+            bool createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height, bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////
@@ -90,7 +91,7 @@
             //  return : True if cubemap is successfully updated              //
             ////////////////////////////////////////////////////////////////////
             bool updateCubeMap(Renderer& renderer, TextureLoader& loader,
-                uint32_t width, uint32_t height,
+                VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
                 const unsigned char* data, bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////

@@ -85,7 +85,7 @@ CubeMap::~CubeMap()
 //  Create cubemap                                                            //
 //  return : True if cubemap is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::createCubeMap(Renderer& renderer,
+bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, bool smooth)
 {
     // Check cubemap size
@@ -139,7 +139,7 @@ bool CubeMap::createCubeMap(Renderer& renderer,
 
     // Allocate cubemap memory
     if (!renderer.m_vulkanMemory.allocateCubeMapMemory(
-        renderer.m_vulkanDevice, *this, VULKAN_MEMORY_RENDERDEVICE))
+        renderer.m_vulkanDevice, *this, memoryPool))
     {
         // Could not allocate cubemap memory
         return false;
@@ -273,7 +273,8 @@ bool CubeMap::createCubeMap(Renderer& renderer,
 //  return : True if cubemap is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
-    uint32_t width, uint32_t height, const unsigned char* data, bool smooth)
+    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
+    const unsigned char* data, bool smooth)
 {
     // Check cubemap size
     if ((width <= 0) || (width > CubeMapMaxWidth) ||
@@ -296,7 +297,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
     {
         // Recreate cubemap
         destroyCubeMap(renderer);
-        createCubeMap(renderer, width, height, smooth);
+        createCubeMap(renderer, memoryPool, width, height, smooth);
     }
 
     // Upload cubemap to graphics memory

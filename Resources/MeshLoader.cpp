@@ -567,6 +567,7 @@ bool MeshLoader::loadEmbeddedMeshes()
 {
     // Load default vertex buffer
     if (!m_meshes[MESHES_DEFAULT].createBuffer(m_renderer, *this,
+        VULKAN_MEMORY_MESHES,
         DefaultVertices, DefaultIndices,
         DefaultVerticesCount, DefaultIndicesCount))
     {
@@ -576,6 +577,7 @@ bool MeshLoader::loadEmbeddedMeshes()
 
     // Load skybox vertex buffer
     if (!m_meshes[MESHES_SKYBOX].createBuffer(m_renderer, *this,
+        VULKAN_MEMORY_MESHES,
         SkyBoxVertices, SkyBoxIndices,
         SkyBoxVerticesCount, SkyBoxIndicesCount))
     {
@@ -585,6 +587,7 @@ bool MeshLoader::loadEmbeddedMeshes()
 
     // Load cuboid vertex buffer
     if (!m_meshes[MESHES_CUBOID].createBuffer(m_renderer, *this,
+        VULKAN_MEMORY_MESHES,
         CuboidShapeVertices, CuboidShapeIndices,
         CuboidShapeVerticesCount, CuboidShapeIndicesCount))
     {
@@ -699,7 +702,7 @@ bool MeshLoader::loadVMSH(VertexBuffer& vertexBuffer,
     }
 
     // Create vertex buffer
-    if (!vertexBuffer.createBuffer(m_renderer, *this,
+    if (!vertexBuffer.createBuffer(m_renderer, *this, VULKAN_MEMORY_MESHES,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer

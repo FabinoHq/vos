@@ -66,14 +66,11 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapsAssets enumeration                                          //
+    //  HeightMapsAssets definitions                                          //
     ////////////////////////////////////////////////////////////////////////////
-    enum HeightMapsAssets
-    {
-        HEIGHTMAP_DEFAULT = 0,
-
-        HEIGHTMAP_ASSETSCOUNT = 1
-    };
+    #define HEIGHTMAP_STREAMWIDTH 3
+    #define HEIGHTMAP_STREAMHEIGHT 3
+    #define HEIGHTMAP_ASSETSCOUNT (HEIGHTMAP_STREAMWIDTH*HEIGHTMAP_STREAMHEIGHT)
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -136,7 +133,7 @@
             //  Get heightmap vertex buffer                                   //
             //  return : heightmap vertex buffer                              //
             ////////////////////////////////////////////////////////////////////
-            inline VertexBuffer& heightmap(HeightMapsAssets heightmap)
+            inline VertexBuffer& heightmap(uint32_t heightmap)
             {
                 return m_heightmaps[heightmap];
             }

@@ -180,7 +180,7 @@ bool Game::init()
 
     // Init heightmap chunk
     if (!m_heightMapChunk.init(
-        m_resources.heightmaps.heightmap(HEIGHTMAP_DEFAULT),
+        m_resources.heightmaps.heightmap(4),
         m_resources.textures.high(TEXTURE_TEST)))
     {
         // Could not init heightmap chunk
@@ -412,10 +412,23 @@ void Game::render()
     m_staticMesh.bindVertexBuffer(m_renderer);
     m_staticMesh.render(m_renderer);*/
 
-    // Render heightmap chunk
+    // Render heightmap chunks
     m_renderer.bindStaticMeshPipeline();
-    m_heightMapChunk.bindVertexBuffer(m_renderer);
-    m_heightMapChunk.render(m_renderer);
+    for (int i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        for (int j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+        {
+            m_heightMapChunk.setVertexBuffer(
+                m_resources.heightmaps.heightmap((j*HEIGHTMAP_STREAMWIDTH)+i)
+            );
+            m_heightMapChunk.setPosition(
+                -HeightMapChunkXStride+(i*HeightMapChunkXStride), 0.0f,
+                -HeightMapChunkZStride+(j*HeightMapChunkZStride)
+            );
+            m_heightMapChunk.bindVertexBuffer(m_renderer);
+            m_heightMapChunk.render(m_renderer);
+        }
+    }
 
 
     // Set 2D view

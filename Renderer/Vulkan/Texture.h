@@ -44,6 +44,7 @@
 
     #include "../../System/System.h"
     #include "Vulkan.h"
+    #include "VulkanMemory.h"
     #include "Swapchain.h"
     #include "VulkanBuffer.h"
 
@@ -82,7 +83,7 @@
             //  Create texture                                                //
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createTexture(Renderer& renderer,
+            bool createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height,
                 bool smooth = true, bool repeat = false);
 
@@ -91,7 +92,8 @@
             //  return : True if texture is successfully updated              //
             ////////////////////////////////////////////////////////////////////
             bool updateTexture(Renderer& renderer, TextureLoader& loader,
-                uint32_t width, uint32_t height, const unsigned char* data,
+                VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
+                const unsigned char* data,
                 bool smooth = true, bool repeat = false);
 
             ////////////////////////////////////////////////////////////////////
