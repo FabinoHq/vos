@@ -181,7 +181,7 @@ bool Game::init()
     // Init heightmap chunk
     if (!m_heightMapChunk.init(
         m_resources.heightmaps.heightmap(4),
-        m_resources.textures.high(TEXTURE_TEST)))
+        m_resources.textures.high(TEXTURE_TILE)))
     {
         // Could not init heightmap chunk
         return false;
@@ -408,9 +408,10 @@ void Game::render()
     m_cuboid.render(m_renderer);*/
 
     // Render static mesh
-    /*m_renderer.bindStaticMeshPipeline();
+    m_renderer.bindStaticMeshPipeline();
     m_staticMesh.bindVertexBuffer(m_renderer);
-    m_staticMesh.render(m_renderer);*/
+    m_staticMesh.setPosition(0.0f, 0.5f, 0.0f);
+    m_staticMesh.render(m_renderer);
 
     // Render heightmap chunks
     m_renderer.bindStaticMeshPipeline();

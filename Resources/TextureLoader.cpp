@@ -818,6 +818,21 @@ bool TextureLoader::preloadTextures()
     }
     pngfile.destroyImage();
 
+    // Load tile texture
+    if (!pngfile.loadImage("Textures/tile.png"))
+    {
+        return false;
+    }
+    if (!m_texturesHigh[TEXTURE_TILE].updateTexture(m_renderer, *this,
+        VULKAN_MEMORY_TEXTURES,
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
+        true, true))
+    {
+        // Could not load test texture
+        return false;
+    }
+    pngfile.destroyImage();
+
     // Load cubemap textures
     PNGFile cubeMapRight;
     if (!cubeMapRight.loadImage("Textures/cubemaptest.png")) return false;

@@ -107,8 +107,9 @@
     enum TexturesAssets
     {
         TEXTURE_TEST = 0,
+        TEXTURE_TILE = 1,
 
-        TEXTURE_ASSETSCOUNT = 1
+        TEXTURE_ASSETSCOUNT = 2
     };
 
     ////////////////////////////////////////////////////////////////////////////
