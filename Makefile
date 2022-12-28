@@ -71,7 +71,8 @@ VOS: main.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/SkyBox.o \
-	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
+	Renderer/StaticMesh.o \
+	Renderer/HeightMapChunk.o Renderer/HeightMapStream.o \
 	Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o \
 	Resources/MeshLoader.o Resources/HeightMapLoader.o \
@@ -101,7 +102,8 @@ VOS: main.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/SkyBox.o \
-	Renderer/StaticMesh.o Renderer/HeightMapChunk.o \
+	Renderer/StaticMesh.o \
+	Renderer/HeightMapChunk.o Renderer/HeightMapStream.o \
 	Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o \
 	Resources/MeshLoader.o Resources/HeightMapLoader.o \
@@ -267,6 +269,10 @@ Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 
 Renderer/HeightMapChunk.o: Renderer/HeightMapChunk.cpp
 	$(CC) -o Renderer/HeightMapChunk.o -c Renderer/HeightMapChunk.cpp $(CFLAGS)
+
+Renderer/HeightMapStream.o: Renderer/HeightMapStream.cpp
+	$(CC) -o Renderer/HeightMapStream.o -c \
+	Renderer/HeightMapStream.cpp $(CFLAGS)
 
 
 Renderer/Renderer.o: Renderer/Renderer.cpp

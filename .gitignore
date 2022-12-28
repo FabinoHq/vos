@@ -177,6 +177,8 @@
 !Renderer/StaticMesh.cpp
 !Renderer/HeightMapChunk.h
 !Renderer/HeightMapChunk.cpp
+!Renderer/HeightMapStream.h
+!Renderer/HeightMapStream.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
 

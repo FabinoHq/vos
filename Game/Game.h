@@ -64,6 +64,7 @@
 
     #include "../Renderer/StaticMesh.h"
     #include "../Renderer/HeightMapChunk.h"
+    #include "../Renderer/HeightMapStream.h"
 
     #include "../Physics/Physics.h"
     #include "../Physics/Collision2.h"

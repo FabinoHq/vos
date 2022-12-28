@@ -37,18 +37,20 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/StaticMesh.h : Static mesh management                         //
+//     Renderer/HeightMapStream.h : HeightMap stream management               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_STATICMESH_HEADER
-#define VOS_RENDERER_STATICMESH_HEADER
+#ifndef VOS_RENDERER_HEIGHTMAPSTREAM_HEADER
+#define VOS_RENDERER_HEIGHTMAPSTREAM_HEADER
 
     #include "../System/System.h"
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/Texture.h"
     #include "../Math/Math.h"
-    #include "../Math/Vector4.h"
+    #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
+
+    #include "HeightMapChunk.h"
 
     #include <cstdint>
 
@@ -60,98 +62,48 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  StaticMesh class definition                                           //
+    //  HeightMapStream class definition                                      //
     ////////////////////////////////////////////////////////////////////////////
-    class StaticMesh : public Transform3
+    class HeightMapStream
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  StaticMesh default constructor                                //
+            //  HeightMapStream default constructor                           //
             ////////////////////////////////////////////////////////////////////
-            StaticMesh();
+            HeightMapStream();
 
             ////////////////////////////////////////////////////////////////////
-            //  StaticMesh virtual destructor                                 //
+            //  HeightMapStream destructor                                    //
             ////////////////////////////////////////////////////////////////////
-            virtual ~StaticMesh();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init static mesh                                              //
-            //  return : True if the static mesh is successfully created      //
-            ////////////////////////////////////////////////////////////////////
-            bool init(VertexBuffer& vertexBuffer, Texture& texture);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh vertex buffer                                 //
-            ////////////////////////////////////////////////////////////////////
-            void setVertexBuffer(VertexBuffer& vertexBuffer);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh texture                                       //
-            //  return : True if static mesh texture is successfully set      //
-            ////////////////////////////////////////////////////////////////////
-            bool setTexture(Texture& texture);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh color                                         //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(const Vector4& color);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh color                                         //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(float red, float green, float blue, float alpha);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh red channel                                   //
-            ////////////////////////////////////////////////////////////////////
-            void setRed(float red);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh green channel                                 //
-            ////////////////////////////////////////////////////////////////////
-            void setGreen(float green);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh blue channel                                  //
-            ////////////////////////////////////////////////////////////////////
-            void setBlue(float blue);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh alpha channel                                 //
-            ////////////////////////////////////////////////////////////////////
-            void setAlpha(float alpha);
+            ~HeightMapStream();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind static mesh vertex buffer                                //
+            //  Init heightmap stream                                         //
+            //  return : True if the heightmap stream is successfully created //
             ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer(Renderer& renderer);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Render static mesh                                            //
+            //  Render heightmap stream                                       //
             ////////////////////////////////////////////////////////////////////
             void render(Renderer& renderer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  StaticMesh private copy constructor : Not copyable            //
+            //  HeightMapStream private copy constructor : Not copyable       //
             ////////////////////////////////////////////////////////////////////
-            StaticMesh(const StaticMesh&) = delete;
+            HeightMapStream(const HeightMapStream&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  StaticMesh private copy operator : Not copyable               //
+            //  HeightMapStream private copy operator : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            StaticMesh& operator=(const StaticMesh&) = delete;
+            HeightMapStream& operator=(const HeightMapStream&) = delete;
 
 
         private:
-            VertexBuffer*   m_vertexBuffer;     // Static mesh vertex buffer
-            Texture*        m_texture;          // Static mesh texture pointer
-            Vector4         m_color;            // Static mesh color
     };
 
 
-#endif // VOS_RENDERER_SPRITE_HEADER
+#endif // VOS_RENDERER_HEIGHTMAPSTREAM_HEADER

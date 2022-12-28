@@ -50,10 +50,7 @@
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
 
-    #include <fstream>
-    #include <cstddef>
     #include <cstdint>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////
