@@ -237,6 +237,7 @@
 # Textures files
 !Textures/
 !textures/testsprite.png
+!textures/cubemaptest.png
 
 # Models files
 !Models/

@@ -820,17 +820,17 @@ bool TextureLoader::preloadTextures()
 
     // Load cubemap textures
     PNGFile cubeMapRight;
-    if (!cubeMapRight.loadImage("Textures/testsprite.png")) return false;
+    if (!cubeMapRight.loadImage("Textures/cubemaptest.png")) return false;
     PNGFile cubeMapLeft;
-    if (!cubeMapLeft.loadImage("Textures/testsprite.png")) return false;
+    if (!cubeMapLeft.loadImage("Textures/cubemaptest.png")) return false;
     PNGFile cubeMapTop;
-    if (!cubeMapTop.loadImage("Textures/testsprite.png")) return false;
+    if (!cubeMapTop.loadImage("Textures/cubemaptest.png")) return false;
     PNGFile cubeMapBottom;
-    if (!cubeMapBottom.loadImage("Textures/testsprite.png")) return false;
+    if (!cubeMapBottom.loadImage("Textures/cubemaptest.png")) return false;
     PNGFile cubeMapFront;
-    if (!cubeMapFront.loadImage("Textures/testsprite.png")) return false;
+    if (!cubeMapFront.loadImage("Textures/cubemaptest.png")) return false;
     PNGFile cubeMapBack;
-    if (!cubeMapBack.loadImage("Textures/testsprite.png")) return false;
+    if (!cubeMapBack.loadImage("Textures/cubemaptest.png")) return false;
 
     // Allocate cubemap data
     unsigned int cubemapWidth = cubeMapFront.getWidth();
