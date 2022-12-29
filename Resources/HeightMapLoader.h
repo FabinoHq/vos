@@ -162,10 +162,16 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Generate flat heightmap chunk                                 //
-            //  return : True if the flat heightmap chunk is generated        //
+            //  Generate heightmap chunk                                      //
+            //  return : True if the heightmap chunk is generated             //
             ////////////////////////////////////////////////////////////////////
-            bool generateFlat(VertexBuffer& vertexBuffer);
+            bool generateChunk(VertexBuffer& vertexBuffer, int k, int l);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update heightmap chunk                                        //
+            //  return : True if the heightmap chunk is updated               //
+            ////////////////////////////////////////////////////////////////////
+            bool updateChunk(VertexBuffer& vertexBuffer, int k, int l);
 
 
         private:

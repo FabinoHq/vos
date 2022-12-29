@@ -410,7 +410,8 @@ void Game::render()
     // Render static mesh
     m_renderer.bindStaticMeshPipeline();
     m_staticMesh.bindVertexBuffer(m_renderer);
-    m_staticMesh.setPosition(0.0f, 0.5f, 0.0f);
+    m_staticMesh.setPosition(0.0f, 0.9f, 0.0f);
+    m_staticMesh.setPosition(m_freeflycam.getX()+2.0f, m_freeflycam.getY(), m_freeflycam.getZ()+2.0f);
     m_staticMesh.render(m_renderer);
 
     // Render heightmap chunks

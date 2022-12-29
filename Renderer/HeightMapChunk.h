@@ -58,10 +58,10 @@
     ////////////////////////////////////////////////////////////////////////////
     const uint16_t HeightMapChunkWidth = 64;
     const uint16_t HeightMapChunkHeight = 64;
-    const float HeightMapChunkPlaneWidth = 2.0f;
-    const float HeightMapChunkPlaneHeight = 2.0f;
-    const float HeightMapChunkXStride = 128.0f;
-    const float HeightMapChunkZStride = 128.0f;
+    const float HeightMapChunkPlaneWidth = 4.0f;
+    const float HeightMapChunkPlaneHeight = 4.0f;
+    const float HeightMapChunkXStride = 256.0f;
+    const float HeightMapChunkZStride = 256.0f;
     const float HeightMapChunkTexcoordsWidth = 24.0f;
     const float HeightMapChunkTexcoordsHeight = 24.0f;
 
