@@ -51,10 +51,7 @@
     #include "System/SysSleep.h"
 
     #include "Renderer/Renderer.h"
-
     #include "Resources/Resources.h"
-    #include "Renderer/GUI/GUIPxText.h"
-
     #include "Game/Game.h"
 
     #include <cstddef>
@@ -111,8 +108,6 @@
 
             Resources       m_resources;        // Resources
             Game            m_game;             // Game instance
-
-            GUIPxText       m_pxText;           // Test pixel text
 
             float           m_mouseX;           // Mouse X position
             float           m_mouseY;           // Mouse Y position

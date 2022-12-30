@@ -68,8 +68,8 @@
     ////////////////////////////////////////////////////////////////////////////
     //  HeightMapsAssets definitions                                          //
     ////////////////////////////////////////////////////////////////////////////
-    #define HEIGHTMAP_STREAMWIDTH 3
-    #define HEIGHTMAP_STREAMHEIGHT 3
+    #define HEIGHTMAP_STREAMWIDTH 7
+    #define HEIGHTMAP_STREAMHEIGHT 7
     #define HEIGHTMAP_ASSETSCOUNT (HEIGHTMAP_STREAMWIDTH*HEIGHTMAP_STREAMHEIGHT)
 
 
@@ -130,12 +130,32 @@
             HeightMapLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
+            //  Swap heightmaps pointers towards top                          //
+            ////////////////////////////////////////////////////////////////////
+            void swapTop();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Swap heightmaps pointers towards bottom                       //
+            ////////////////////////////////////////////////////////////////////
+            void swapBottom();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Swap heightmaps pointers towards left                         //
+            ////////////////////////////////////////////////////////////////////
+            void swapLeft();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Swap heightmaps pointers towards right                        //
+            ////////////////////////////////////////////////////////////////////
+            void swapRight();
+
+            ////////////////////////////////////////////////////////////////////
             //  Get heightmap vertex buffer                                   //
             //  return : heightmap vertex buffer                              //
             ////////////////////////////////////////////////////////////////////
             inline VertexBuffer& heightmap(uint32_t heightmap)
             {
-                return m_heightmaps[heightmap];
+                return (*m_heightptrs[heightmap]);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -198,6 +218,7 @@
             VkFence                 m_fence;            // Staging fence
 
             VertexBuffer*           m_heightmaps;       // Heightmaps meshes
+            VertexBuffer*           m_heightptrs[HEIGHTMAP_ASSETSCOUNT];
     };
 
 

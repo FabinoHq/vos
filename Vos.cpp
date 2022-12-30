@@ -52,7 +52,6 @@ m_renderer(m_resources),
 m_clock(),
 m_resources(m_renderer),
 m_game(m_renderer, m_resources),
-m_pxText(),
 m_mouseX(0.0f),
 m_mouseY(0.0f)
 {
@@ -140,16 +139,6 @@ bool Vos::launch()
     }
 
 
-    // Init test pixel text
-    if (!m_pxText.init(m_resources.textures.gui(TEXTURE_PIXELFONT), 0.04f))
-    {
-        // Could not init test pixel text
-        return false;
-    }
-    m_pxText.setSmooth(0.2f);
-    m_pxText.setText("FPS : 0");
-
-
     // Init game
     if (!m_game.init())
     {
@@ -172,10 +161,6 @@ void Vos::run()
 {
     // Framerate
     const float maxFramerate = 300.0f;
-    std::ostringstream framestr;
-    framestr << "FPS : 0";
-    float frameavg = 0.0f;
-    float framecnt = 0.0f;
 
     // Run VOS
     m_clock.reset();
@@ -203,18 +188,6 @@ void Vos::run()
             {
                 framelimit = (m_clock.getElapsedTimeF()-framelimit);
             }
-        }
-
-        // Framerate display
-        frameavg += frametime;
-        framecnt += 1.0f;
-        if ((frameavg >= 0.5f) && (framecnt >= 1.0f))
-        {
-            framestr.clear();
-            framestr.str("");
-            framestr << "FPS : " << (1.0f/(frameavg/framecnt));
-            frameavg = 0.0f;
-            framecnt = 0.0f;
         }
 
         // Get main window event
@@ -268,12 +241,6 @@ void Vos::run()
         {
             // Render game
             m_game.render();
-
-            // Render pixel text (framerate)
-            m_renderer.bindPxTextPipeline();
-            m_pxText.setText(framestr.str());
-            m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
-            m_pxText.render(m_renderer);
 
             // Render cursor
             //m_renderer.bindDefaultPipeline();

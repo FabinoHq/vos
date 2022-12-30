@@ -59,6 +59,7 @@ m_rectanle(),
 m_ellipse(),
 m_cuboid(),
 m_guiWindow(),
+m_pxText(),
 m_staticMesh(),
 m_heightMapChunk(),
 m_boundingCircle(),
@@ -109,6 +110,7 @@ bool Game::init()
     }
     m_freeflycam.setZ(1.0f);
     m_freeflycam.setSpeed(5.0f);
+    m_freeflycam.setY(500.0f);
 
     // Init orbital camera
     if (!m_orbitalcam.init(m_renderer))
@@ -167,6 +169,15 @@ bool Game::init()
         // Could not init GUI window
         return false;
     }
+
+    // Init test pixel text
+    if (!m_pxText.init(m_resources.textures.gui(TEXTURE_PIXELFONT), 0.04f))
+    {
+        // Could not init test pixel text
+        return false;
+    }
+    m_pxText.setSmooth(0.2f);
+    m_pxText.setText("FPS : 0");
 
 
     // Init static mesh
@@ -265,6 +276,22 @@ void Game::events(Event& event)
                     m_freeflycam.setSpeed(50.0f);
                     break;
 
+                case EVENT_KEY_UP:
+                    m_resources.heightmaps.swapTop();
+                    break;
+
+                case EVENT_KEY_DOWN:
+                    m_resources.heightmaps.swapBottom();
+                    break;
+
+                case EVENT_KEY_LEFT:
+                    m_resources.heightmaps.swapLeft();
+                    break;
+
+                case EVENT_KEY_RIGHT:
+                    m_resources.heightmaps.swapRight();
+                    break;
+
                 default:
                     break;
             }
@@ -358,6 +385,24 @@ void Game::events(Event& event)
 ////////////////////////////////////////////////////////////////////////////////
 void Game::compute(float frametime)
 {
+    // Framerate
+    static std::ostringstream framestr;
+    static float frameavg = 0.0f;
+    static float framecnt = 0.0f;
+
+    // Framerate display
+    frameavg += frametime;
+    framecnt += 1.0f;
+    if ((frameavg >= 0.5f) && (framecnt >= 1.0f))
+    {
+        framestr.clear();
+        framestr.str("");
+        framestr << "FPS : " << (1.0f/(frameavg/framecnt));
+        frameavg = 0.0f;
+        framecnt = 0.0f;
+    }
+    m_pxText.setText(framestr.str());
+
     // Compute frame
     m_view.compute(m_renderer);
     m_camera.compute(m_renderer);
@@ -389,6 +434,9 @@ void Game::compute(float frametime)
 ////////////////////////////////////////////////////////////////////////////////
 void Game::render()
 {
+    // Get renderer settings
+    float ratio = m_renderer.getRatio();
+
     // Set freefly camera
     m_renderer.setCamera(m_freeflycam);
 
@@ -411,21 +459,25 @@ void Game::render()
     m_renderer.bindStaticMeshPipeline();
     m_staticMesh.bindVertexBuffer(m_renderer);
     m_staticMesh.setPosition(0.0f, 0.9f, 0.0f);
-    m_staticMesh.setPosition(m_freeflycam.getX()+2.0f, m_freeflycam.getY(), m_freeflycam.getZ()+2.0f);
+    m_staticMesh.setPosition(
+        m_freeflycam.getX()+2.0f,
+        m_freeflycam.getY(),
+        m_freeflycam.getZ()+2.0f
+    );
     m_staticMesh.render(m_renderer);
 
     // Render heightmap chunks
     m_renderer.bindStaticMeshPipeline();
-    for (int i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)
     {
-        for (int j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+        for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
         {
             m_heightMapChunk.setVertexBuffer(
                 m_resources.heightmaps.heightmap((j*HEIGHTMAP_STREAMWIDTH)+i)
             );
             m_heightMapChunk.setPosition(
-                -HeightMapChunkXStride+(i*HeightMapChunkXStride), 0.0f,
-                -HeightMapChunkZStride+(j*HeightMapChunkZStride)
+                -(2.0f*HeightMapChunkXStride)+(i*HeightMapChunkXStride), 0.0f,
+                -(2.0f*HeightMapChunkZStride)+(j*HeightMapChunkZStride)
             );
             m_heightMapChunk.bindVertexBuffer(m_renderer);
             m_heightMapChunk.render(m_renderer);
@@ -502,4 +554,18 @@ void Game::render()
     // Render window
     /*m_renderer.bindNinePatchPipeline();
     m_guiWindow.render(m_renderer);*/
+
+    // Render pixel text (framerate)
+    m_renderer.bindPxTextPipeline();
+    m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
+    m_pxText.render(m_renderer);
+
+    // Render pixel text (camera position)
+    std::ostringstream camerastr;
+    camerastr << "X : " << m_freeflycam.getX() <<
+        " | Y : " << m_freeflycam.getY() <<
+        " | Z : " << m_freeflycam.getZ();
+    m_pxText.setText(camerastr.str());
+    m_pxText.setPosition(-ratio, 0.96f-(m_pxText.getHeight()*0.7f));
+    m_pxText.render(m_renderer);
 }

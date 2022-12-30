@@ -57,6 +57,7 @@
 
     #include "../Resources/Resources.h"
     #include "../Renderer/GUI/GUIWindow.h"
+    #include "../Renderer/GUI/GUIPxText.h"
 
     #include "../Renderer/Shapes/RectangleShape.h"
     #include "../Renderer/Shapes/EllipseShape.h"
@@ -146,6 +147,7 @@
             CuboidShape     m_cuboid;           // Cuboid shape
 
             GUIWindow       m_guiWindow;        // GUI Window
+            GUIPxText       m_pxText;           // Test pixel text
 
             StaticMesh      m_staticMesh;       // Static mesh
             HeightMapChunk  m_heightMapChunk;   // HeightMap chunk

@@ -142,7 +142,7 @@ float fractalHeigthmap(float seed, int i, int j)
                     (crnd2-crnd)*jy3 + ((crnd4+crnd)-(crnd3+crnd2))*ix3*jy3;
 
     // Final fractal heightmap
-    return (bilinear1*0.5f+bilinear2*0.2f+bilinear3*0.1f)*70.0f;
+    return (bilinear1*0.5f+bilinear2*0.2f+bilinear3*0.1f)*350.0f;
 }
 
 
@@ -322,13 +322,20 @@ bool HeightMapLoader::init()
         return false;
     }
 
+    // Set default heightmaps pointers
+    for (uint32_t i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
+    {
+        m_heightptrs[i] = &(m_heightmaps[i]);
+    }
+
     // Create default heightmap
     uint32_t cnt = 0;
-    for (uint32_t i = 0; i < 3; ++i)
+
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
     {
-        for (uint32_t j = 0; j < 3; ++j)
+        for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
         {
-            if (!generateChunk(m_heightmaps[cnt++], j, i))
+            if (!generateChunk(m_heightmaps[cnt++], i, j))
             {
                 // Could not create default heightmap
                 return false;
@@ -351,6 +358,128 @@ HeightMapLoaderState HeightMapLoader::getState()
     state = m_state;
     m_stateMutex.unlock();
     return state;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Swap heightmaps pointers towards top                                      //
+////////////////////////////////////////////////////////////////////////////////
+void HeightMapLoader::swapTop()
+{
+    // Copy bottom row into tmp
+    VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        tmp[i] = m_heightptrs[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ];
+    }
+
+    // Swap pointers towards top
+    for (uint32_t j = (HEIGHTMAP_STREAMHEIGHT-1); j > 0; --j)
+    {
+        for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+        {
+            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_heightptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i];
+        }
+    }
+
+    // Copy tmp into top row
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        m_heightptrs[i] = tmp[i];
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Swap heightmaps pointers towards bottom                                   //
+////////////////////////////////////////////////////////////////////////////////
+void HeightMapLoader::swapBottom()
+{
+    // Copy top row into tmp
+    VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        tmp[i] = m_heightptrs[i];
+    }
+
+    // Swap pointers towards bottom
+    for (uint32_t j = 1; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+        {
+            m_heightptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
+        }
+    }
+
+    // Copy tmp into bottom row
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        m_heightptrs[((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i] =
+            tmp[i];
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Swap heightmaps pointers towards left                                     //
+////////////////////////////////////////////////////////////////////////////////
+void HeightMapLoader::swapLeft()
+{
+    // Copy right row into tmp
+    VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        tmp[j] = m_heightptrs[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ];
+    }
+
+    // Swap pointers towards left
+    for (uint32_t i = (HEIGHTMAP_STREAMWIDTH-1); i > 0; --i)
+    {
+        for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+        {
+            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)];
+        }
+    }
+
+    // Copy tmp into left row
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)] = tmp[j];
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Swap heightmaps pointers towards right                                    //
+////////////////////////////////////////////////////////////////////////////////
+void HeightMapLoader::swapRight()
+{
+    // Copy left row into tmp
+    VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        tmp[j] = m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)];
+    }
+
+    // Swap pointers towards right
+    for (uint32_t i = 1; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+        {
+            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)] =
+                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
+        }
+    }
+
+    // Copy tmp into right row
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)] =
+            tmp[j];
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
