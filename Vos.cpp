@@ -173,7 +173,7 @@ void Vos::run()
         float ratio = m_renderer.getRatio();
 
         // Framerate limiter
-        if (framelimit <= (1.0f/maxFramerate))
+        /*if (framelimit <= (1.0f/maxFramerate))
         {
             // Release some CPU
             float remainingTime = ((1.0f/maxFramerate) - framelimit);
@@ -188,7 +188,7 @@ void Vos::run()
             {
                 framelimit = (m_clock.getElapsedTimeF()-framelimit);
             }
-        }
+        }*/
 
         // Get main window event
         Event event;

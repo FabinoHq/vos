@@ -158,7 +158,9 @@ m_commandPool(0),
 m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
-m_heightmaps(0)
+m_heightmaps(0),
+m_chunkX(50),
+m_chunkY(50)
 {
 
 }
@@ -323,23 +325,29 @@ bool HeightMapLoader::init()
     }
 
     // Set default heightmaps pointers
-    for (uint32_t i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
+    for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
     {
         m_heightptrs[i] = &(m_heightmaps[i]);
     }
 
     // Create default heightmap
-    uint32_t cnt = 0;
-
-    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    int32_t cnt = 0;
+    for (int32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
     {
-        for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+        for (int32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
         {
-            if (!generateChunk(m_heightmaps[cnt++], i, j))
+            if (generateChunk(m_heightmaps[cnt], i, j))
+            {
+                m_chunks[cnt].loading = false;
+                m_chunks[cnt].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
+                m_chunks[cnt].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
+            }
+            else
             {
                 // Could not create default heightmap
                 return false;
             }
+            ++cnt;
         }
     }
 
@@ -362,9 +370,21 @@ HeightMapLoaderState HeightMapLoader::getState()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightmaps pointers towards top                                      //
+//  return : True if heightmaps pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightMapLoader::swapTop()
+bool HeightMapLoader::swapTop()
 {
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
     // Copy bottom row into tmp
     VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
@@ -389,13 +409,42 @@ void HeightMapLoader::swapTop()
     {
         m_heightptrs[i] = tmp[i];
     }
+
+    // Set new chunks loading states
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        m_chunks[i].loading = true;
+        m_chunks[i].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
+        m_chunks[i].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT-1);
+    }
+
+    // Move chunkY
+    --m_chunkY;
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightmaps pointers towards bottom                                   //
+//  return : True if heightmaps pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightMapLoader::swapBottom()
+bool HeightMapLoader::swapBottom()
 {
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
     // Copy top row into tmp
     VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
@@ -419,13 +468,48 @@ void HeightMapLoader::swapBottom()
         m_heightptrs[((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i] =
             tmp[i];
     }
+
+    // Set new chunks loading states
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        m_chunks[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ].loading = true;
+        m_chunks[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
+        m_chunks[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ].chunkY = (m_chunkY+HEIGHTMAP_STREAMHALFHEIGHT+1);
+    }
+
+    // Move chunkY
+    ++m_chunkY;
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightmaps pointers towards left                                     //
+//  return : True if heightmaps pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightMapLoader::swapLeft()
+bool HeightMapLoader::swapLeft()
 {
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
     // Copy right row into tmp
     VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
@@ -450,13 +534,44 @@ void HeightMapLoader::swapLeft()
     {
         m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)] = tmp[j];
     }
+
+    // Set new chunks loading states
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].loading = true;
+        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].chunkX =
+            (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH-1);
+        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].chunkY =
+            (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
+    }
+
+    // Move chunkX
+    --m_chunkX;
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightmaps pointers towards right                                    //
+//  return : True if heightmaps pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightMapLoader::swapRight()
+bool HeightMapLoader::swapRight()
 {
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
     // Copy left row into tmp
     VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
@@ -480,6 +595,29 @@ void HeightMapLoader::swapRight()
         m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)] =
             tmp[j];
     }
+
+    // Set new chunks loading states
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        m_chunks[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ].loading = true;
+        m_chunks[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ].chunkX = (m_chunkX+HEIGHTMAP_STREAMHALFWIDTH+1);
+        m_chunks[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
+    }
+
+    // Move chunkX
+    ++m_chunkX;
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -737,6 +875,24 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::loadHeightMaps()
 {
+    for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
+    {
+        // Heightmap needs update
+        if (m_chunks[i].loading)
+        {
+            if (updateChunk(
+                (*m_heightptrs[i]), m_chunks[i].chunkX, m_chunks[i].chunkY))
+            {
+                m_chunks[i].loading = false;
+            }
+            else
+            {
+                // Could not update heightmap
+                return false;
+            }
+        }
+    }
+
     // Heightmaps assets are successfully loaded
     return true;
 }
@@ -746,7 +902,8 @@ bool HeightMapLoader::loadHeightMaps()
 //  Generate heightmap chunk                                                  //
 //  return : True if the heightmap chunk is generated                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer, int k, int l)
+bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer,
+    int32_t chunkX, int32_t chunkY)
 {
     // Init heightmap chunk data
     float* vertices = 0;
@@ -784,24 +941,42 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer, int k, int l)
         {
             // Median filtering
             float median[9] = {0.0f};
-            median[0] = fractalHeigthmap(0.7154, i-1+(k*HeightMapChunkWidth),
-                j-1+(l*HeightMapChunkHeight));
-            median[1] = fractalHeigthmap(0.7154, i+(k*HeightMapChunkWidth),
-                j-1+(l*HeightMapChunkHeight));
-            median[2] = fractalHeigthmap(0.7154, i+1+(k*HeightMapChunkWidth),
-                j-1+(l*HeightMapChunkHeight));
-            median[3] = fractalHeigthmap(0.7154, i-1+(k*HeightMapChunkWidth),
-                j+(l*HeightMapChunkHeight));
-            median[4] = fractalHeigthmap(0.7154, i+(k*HeightMapChunkWidth),
-                j+(l*HeightMapChunkHeight));
-            median[5] = fractalHeigthmap(0.7154, i+1+(k*HeightMapChunkWidth),
-                j+(l*HeightMapChunkHeight));
-            median[6] = fractalHeigthmap(0.7154, i-1+(k*HeightMapChunkWidth),
-                j+1+(l*HeightMapChunkHeight));
-            median[7] = fractalHeigthmap(0.7154, i+(k*HeightMapChunkWidth),
-                j+1+(l*HeightMapChunkHeight));
-            median[8] = fractalHeigthmap(0.7154, i+1+(k*HeightMapChunkWidth),
-                j+1+(l*HeightMapChunkHeight));
+            median[0] = fractalHeigthmap(0.7154,
+                i-1+(chunkX*HeightMapChunkWidth),
+                j-1+(chunkY*HeightMapChunkHeight)
+            );
+            median[1] = fractalHeigthmap(0.7154,
+                i+(chunkX*HeightMapChunkWidth),
+                j-1+(chunkY*HeightMapChunkHeight)
+            );
+            median[2] = fractalHeigthmap(0.7154,
+                i+1+(chunkX*HeightMapChunkWidth),
+                j-1+(chunkY*HeightMapChunkHeight)
+            );
+            median[3] = fractalHeigthmap(0.7154,
+                i-1+(chunkX*HeightMapChunkWidth),
+                j+(chunkY*HeightMapChunkHeight)
+            );
+            median[4] = fractalHeigthmap(0.7154,
+                i+(chunkX*HeightMapChunkWidth),
+                j+(chunkY*HeightMapChunkHeight)
+            );
+            median[5] = fractalHeigthmap(0.7154,
+                i+1+(chunkX*HeightMapChunkWidth),
+                j+(chunkY*HeightMapChunkHeight)
+            );
+            median[6] = fractalHeigthmap(0.7154,
+                i-1+(chunkX*HeightMapChunkWidth),
+                j+1+(chunkY*HeightMapChunkHeight)
+            );
+            median[7] = fractalHeigthmap(0.7154,
+                i+(chunkX*HeightMapChunkWidth),
+                j+1+(chunkY*HeightMapChunkHeight)
+            );
+            median[8] = fractalHeigthmap(0.7154,
+                i+1+(chunkX*HeightMapChunkWidth),
+                j+1+(chunkY*HeightMapChunkHeight)
+            );
 
             // Sort median data
             for (int o = 0; o < (9-1); ++o)
@@ -880,7 +1055,8 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer, int k, int l)
 //  Update heightmap chunk                                                    //
 //  return : True if the heightmap chunk is updated                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer, int k, int l)
+bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
+    int32_t chunkX, int32_t chunkY)
 {
     // Init heightmap chunk data
     float* vertices = 0;
@@ -918,24 +1094,42 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer, int k, int l)
         {
             // Median filtering
             float median[9] = {0.0f};
-            median[0] = fractalHeigthmap(0.7154, i-1+(k*HeightMapChunkWidth),
-                j-1+(l*HeightMapChunkHeight));
-            median[1] = fractalHeigthmap(0.7154, i+(k*HeightMapChunkWidth),
-                j-1+(l*HeightMapChunkHeight));
-            median[2] = fractalHeigthmap(0.7154, i+1+(k*HeightMapChunkWidth),
-                j-1+(l*HeightMapChunkHeight));
-            median[3] = fractalHeigthmap(0.7154, i-1+(k*HeightMapChunkWidth),
-                j+(l*HeightMapChunkHeight));
-            median[4] = fractalHeigthmap(0.7154, i+(k*HeightMapChunkWidth),
-                j+(l*HeightMapChunkHeight));
-            median[5] = fractalHeigthmap(0.7154, i+1+(k*HeightMapChunkWidth),
-                j+(l*HeightMapChunkHeight));
-            median[6] = fractalHeigthmap(0.7154, i-1+(k*HeightMapChunkWidth),
-                j+1+(l*HeightMapChunkHeight));
-            median[7] = fractalHeigthmap(0.7154, i+(k*HeightMapChunkWidth),
-                j+1+(l*HeightMapChunkHeight));
-            median[8] = fractalHeigthmap(0.7154, i+1+(k*HeightMapChunkWidth),
-                j+1+(l*HeightMapChunkHeight));
+            median[0] = fractalHeigthmap(0.7154,
+                i-1+(chunkX*HeightMapChunkWidth),
+                j-1+(chunkY*HeightMapChunkHeight)
+            );
+            median[1] = fractalHeigthmap(0.7154,
+                i+(chunkX*HeightMapChunkWidth),
+                j-1+(chunkY*HeightMapChunkHeight)
+            );
+            median[2] = fractalHeigthmap(0.7154,
+                i+1+(chunkX*HeightMapChunkWidth),
+                j-1+(chunkY*HeightMapChunkHeight)
+            );
+            median[3] = fractalHeigthmap(0.7154,
+                i-1+(chunkX*HeightMapChunkWidth),
+                j+(chunkY*HeightMapChunkHeight)
+            );
+            median[4] = fractalHeigthmap(0.7154,
+                i+(chunkX*HeightMapChunkWidth),
+                j+(chunkY*HeightMapChunkHeight)
+            );
+            median[5] = fractalHeigthmap(0.7154,
+                i+1+(chunkX*HeightMapChunkWidth),
+                j+(chunkY*HeightMapChunkHeight)
+            );
+            median[6] = fractalHeigthmap(0.7154,
+                i-1+(chunkX*HeightMapChunkWidth),
+                j+1+(chunkY*HeightMapChunkHeight)
+            );
+            median[7] = fractalHeigthmap(0.7154,
+                i+(chunkX*HeightMapChunkWidth),
+                j+1+(chunkY*HeightMapChunkHeight)
+            );
+            median[8] = fractalHeigthmap(0.7154,
+                i+1+(chunkX*HeightMapChunkWidth),
+                j+1+(chunkY*HeightMapChunkHeight)
+            );
 
             // Sort median data
             for (int o = 0; o < (9-1); ++o)

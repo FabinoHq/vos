@@ -70,6 +70,8 @@
     ////////////////////////////////////////////////////////////////////////////
     #define HEIGHTMAP_STREAMWIDTH 7
     #define HEIGHTMAP_STREAMHEIGHT 7
+    #define HEIGHTMAP_STREAMHALFWIDTH 3
+    #define HEIGHTMAP_STREAMHALFHEIGHT 3
     #define HEIGHTMAP_ASSETSCOUNT (HEIGHTMAP_STREAMWIDTH*HEIGHTMAP_STREAMHEIGHT)
 
 
@@ -85,6 +87,17 @@
         HEIGHTMAPLOADER_STATE_LOAD = 3,
 
         HEIGHTMAPLOADER_STATE_ERROR = 4
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  HeightMapChunkState structure                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct HeightMapChunkState
+    {
+        bool loading;
+        int32_t chunkX;
+        int32_t chunkY;
     };
 
 
@@ -131,23 +144,27 @@
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards top                          //
+            //  return : True if heightmaps pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            void swapTop();
+            bool swapTop();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards bottom                       //
+            //  return : True if heightmaps pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            void swapBottom();
+            bool swapBottom();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards left                         //
+            //  return : True if heightmaps pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            void swapLeft();
+            bool swapLeft();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards right                        //
+            //  return : True if heightmaps pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            void swapRight();
+            bool swapRight();
 
             ////////////////////////////////////////////////////////////////////
             //  Get heightmap vertex buffer                                   //
@@ -185,13 +202,15 @@
             //  Generate heightmap chunk                                      //
             //  return : True if the heightmap chunk is generated             //
             ////////////////////////////////////////////////////////////////////
-            bool generateChunk(VertexBuffer& vertexBuffer, int k, int l);
+            bool generateChunk(VertexBuffer& vertexBuffer,
+                int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
             //  Update heightmap chunk                                        //
             //  return : True if the heightmap chunk is updated               //
             ////////////////////////////////////////////////////////////////////
-            bool updateChunk(VertexBuffer& vertexBuffer, int k, int l);
+            bool updateChunk(VertexBuffer& vertexBuffer,
+                int32_t chunkX, int32_t chunkY);
 
 
         private:
@@ -219,6 +238,10 @@
 
             VertexBuffer*           m_heightmaps;       // Heightmaps meshes
             VertexBuffer*           m_heightptrs[HEIGHTMAP_ASSETSCOUNT];
+            HeightMapChunkState     m_chunks[HEIGHTMAP_ASSETSCOUNT];
+
+            int32_t                 m_chunkX;           // Heightmap chunk X
+            int32_t                 m_chunkY;           // Heightmap chunk Y
     };
 
 
