@@ -336,7 +336,9 @@ bool HeightMapLoader::init()
     {
         for (int32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
         {
-            if (generateChunk(m_heightmaps[cnt], i, j))
+            if (generateChunk(m_heightmaps[cnt],
+                (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i,
+                (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j))
             {
                 m_chunks[cnt].loading = false;
                 m_chunks[cnt].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
