@@ -68,10 +68,10 @@
     ////////////////////////////////////////////////////////////////////////////
     //  HeightMapsAssets definitions                                          //
     ////////////////////////////////////////////////////////////////////////////
-    #define HEIGHTMAP_STREAMWIDTH 7
-    #define HEIGHTMAP_STREAMHEIGHT 7
-    #define HEIGHTMAP_STREAMHALFWIDTH 3
-    #define HEIGHTMAP_STREAMHALFHEIGHT 3
+    #define HEIGHTMAP_STREAMWIDTH 9
+    #define HEIGHTMAP_STREAMHEIGHT 9
+    #define HEIGHTMAP_STREAMHALFWIDTH 4
+    #define HEIGHTMAP_STREAMHALFHEIGHT 4
     #define HEIGHTMAP_ASSETSCOUNT (HEIGHTMAP_STREAMWIDTH*HEIGHTMAP_STREAMHEIGHT)
 
 
@@ -141,6 +141,12 @@
             //  return : Current heightmap loader state                       //
             ////////////////////////////////////////////////////////////////////
             HeightMapLoaderState getState();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update heightmaps pointers based on current chunk position    //
+            //  return : True if heightmaps pointers are updated              //
+            ////////////////////////////////////////////////////////////////////
+            bool update(int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards top                          //

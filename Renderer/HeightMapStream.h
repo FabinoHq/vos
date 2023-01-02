@@ -49,6 +49,8 @@
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
+    #include "../Resources/Resources.h"
+    #include "../Resources/HeightMapLoader.h"
 
     #include "HeightMapChunk.h"
 
@@ -70,7 +72,7 @@
             ////////////////////////////////////////////////////////////////////
             //  HeightMapStream default constructor                           //
             ////////////////////////////////////////////////////////////////////
-            HeightMapStream();
+            HeightMapStream(Resources& resources);
 
             ////////////////////////////////////////////////////////////////////
             //  HeightMapStream destructor                                    //
@@ -83,6 +85,21 @@
             //  return : True if the heightmap stream is successfully created //
             ////////////////////////////////////////////////////////////////////
             bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update heightmap stream                                       //
+            //  return : True if the heightmap stream is updated              //
+            ////////////////////////////////////////////////////////////////////
+            inline bool update(int32_t chunkX, int32_t chunkY)
+            {
+                if (m_resources.heightmaps.update(chunkX, chunkY))
+                {
+                    m_chunkX = chunkX;
+                    m_chunkY = chunkY;
+                    return true;
+                }
+                return false;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Render heightmap stream                                       //
@@ -103,6 +120,10 @@
 
 
         private:
+            Resources&          m_resources;        // Resources
+            HeightMapChunk      m_heightMapChunk;   // HeightMap chunk
+            int32_t             m_chunkX;           // Chunk X
+            int32_t             m_chunkY;           // Chunk Y
     };
 
 

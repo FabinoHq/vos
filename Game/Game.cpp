@@ -61,7 +61,7 @@ m_cuboid(),
 m_guiWindow(),
 m_pxText(),
 m_staticMesh(),
-m_heightMapChunk(),
+m_heightMapStream(resources),
 m_boundingCircle(),
 m_boundingCircle2(),
 m_collideCircle(),
@@ -109,8 +109,8 @@ bool Game::init()
         return false;
     }
     m_freeflycam.setZ(1.0f);
-    m_freeflycam.setSpeed(5.0f);
-    m_freeflycam.setY(500.0f);
+    m_freeflycam.setSpeed(10.0f);
+    m_freeflycam.setY(300.0f);
 
     // Init orbital camera
     if (!m_orbitalcam.init(m_renderer))
@@ -189,12 +189,10 @@ bool Game::init()
         return false;
     }
 
-    // Init heightmap chunk
-    if (!m_heightMapChunk.init(
-        m_resources.heightmaps.heightmap(4),
-        m_resources.textures.high(TEXTURE_TILE)))
+    // Init heightmap stream
+    if (!m_heightMapStream.init())
     {
-        // Could not init heightmap chunk
+        // Could not init heightmap stream
         return false;
     }
 
@@ -273,23 +271,7 @@ void Game::events(Event& event)
                     break;
 
                 case EVENT_KEY_LSHIFT:
-                    m_freeflycam.setSpeed(50.0f);
-                    break;
-
-                case EVENT_KEY_UP:
-                    m_resources.heightmaps.swapTop();
-                    break;
-
-                case EVENT_KEY_DOWN:
-                    m_resources.heightmaps.swapBottom();
-                    break;
-
-                case EVENT_KEY_LEFT:
-                    m_resources.heightmaps.swapLeft();
-                    break;
-
-                case EVENT_KEY_RIGHT:
-                    m_resources.heightmaps.swapRight();
+                    m_freeflycam.setSpeed(300.0f);
                     break;
 
                 default:
@@ -322,7 +304,7 @@ void Game::events(Event& event)
                     break;
 
                 case EVENT_KEY_LSHIFT:
-                    m_freeflycam.setSpeed(5.0f);
+                    m_freeflycam.setSpeed(10.0f);
                     break;
 
                 case EVENT_KEY_R:
@@ -409,6 +391,15 @@ void Game::compute(float frametime)
     m_freeflycam.compute(m_renderer, frametime);
     m_orbitalcam.compute(m_renderer, frametime);
 
+    // Update heightmap
+    int32_t chunkX = static_cast<int32_t>(
+        m_freeflycam.getX()/HeightMapChunkXStride
+    );
+    int32_t chunkY = static_cast<int32_t>(
+        m_freeflycam.getZ()/HeightMapChunkZStride
+    );
+    m_heightMapStream.update(chunkX, chunkY);
+
     // Compute physics
     /*Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int64_t>(m_mouseX*100000000);
@@ -456,7 +447,7 @@ void Game::render()
     m_cuboid.render(m_renderer);*/
 
     // Render static mesh
-    m_renderer.bindStaticMeshPipeline();
+    /*m_renderer.bindStaticMeshPipeline();
     m_staticMesh.bindVertexBuffer(m_renderer);
     m_staticMesh.setPosition(0.0f, 0.9f, 0.0f);
     m_staticMesh.setPosition(
@@ -464,25 +455,10 @@ void Game::render()
         m_freeflycam.getY(),
         m_freeflycam.getZ()+2.0f
     );
-    m_staticMesh.render(m_renderer);
+    m_staticMesh.render(m_renderer);*/
 
-    // Render heightmap chunks
-    m_renderer.bindStaticMeshPipeline();
-    for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)
-    {
-        for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
-        {
-            m_heightMapChunk.setVertexBuffer(
-                m_resources.heightmaps.heightmap((j*HEIGHTMAP_STREAMWIDTH)+i)
-            );
-            m_heightMapChunk.setPosition(
-                -(2.0f*HeightMapChunkXStride)+(i*HeightMapChunkXStride), 0.0f,
-                -(2.0f*HeightMapChunkZStride)+(j*HeightMapChunkZStride)
-            );
-            m_heightMapChunk.bindVertexBuffer(m_renderer);
-            m_heightMapChunk.render(m_renderer);
-        }
-    }
+    // Render heightmap stream
+    m_heightMapStream.render(m_renderer);
 
 
     // Set 2D view

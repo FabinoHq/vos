@@ -158,6 +158,25 @@ bool SysWindow::create()
     ShowWindow(m_handle, SW_SHOW);
     m_hasFocus = true;
 
+    // Fullscreen
+    /*DEVMODE devMode;
+    devMode.dmSize = sizeof(DEVMODE);
+    devMode.dmPelsWidth = 1920;
+    devMode.dmPelsHeight = 1080;
+    devMode.dmBitsPerPel = 32;
+    devMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
+    if (ChangeDisplaySettings(
+        &devMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+    {
+        return false;
+    }
+    SetWindowLong(
+        m_handle, GWL_STYLE, WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
+    );
+    SetWindowLong(m_handle, GWL_EXSTYLE, WS_EX_APPWINDOW);
+    SetWindowPos(m_handle, HWND_TOP, 0, 0, 1920, 1080, SWP_FRAMECHANGED);
+    ShowWindow(m_handle, SW_SHOWNORMAL);*/
+
     // System window successfully created
     return true;
 }

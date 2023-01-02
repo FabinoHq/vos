@@ -159,8 +159,8 @@ m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
 m_heightmaps(0),
-m_chunkX(50),
-m_chunkY(50)
+m_chunkX(0),
+m_chunkY(0)
 {
 
 }
@@ -368,6 +368,36 @@ HeightMapLoaderState HeightMapLoader::getState()
     state = m_state;
     m_stateMutex.unlock();
     return state;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Update heightmaps pointers based on current chunk position                //
+//  return : True if heightmaps pointers are updated                          //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::update(int32_t chunkX, int32_t chunkY)
+{
+    // Check Y chunk position
+    if (chunkY < m_chunkY)
+    {
+        return swapTop();
+    }
+    if (chunkY > m_chunkY)
+    {
+        return swapBottom();
+    }
+
+    // Check X chunk position
+    if (chunkX < m_chunkX)
+    {
+        return swapLeft();
+    }
+    if (chunkX > m_chunkX)
+    {
+        return swapRight();
+    }
+
+    // Heightmaps pointers are up to date
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

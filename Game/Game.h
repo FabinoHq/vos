@@ -150,7 +150,7 @@
             GUIPxText       m_pxText;           // Test pixel text
 
             StaticMesh      m_staticMesh;       // Static mesh
-            HeightMapChunk  m_heightMapChunk;   // HeightMap chunk
+            HeightMapStream m_heightMapStream;  // HeightMap stream
 
             BoundingCircle  m_boundingCircle;   // Bounding circle
             BoundingCircle  m_boundingCircle2;  // Bounding circle 2

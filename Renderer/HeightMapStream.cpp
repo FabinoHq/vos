@@ -46,7 +46,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  HeightMapStream default constructor                                       //
 ////////////////////////////////////////////////////////////////////////////////
-HeightMapStream::HeightMapStream()
+HeightMapStream::HeightMapStream(Resources& resources) :
+m_resources(resources),
+m_heightMapChunk(),
+m_chunkX(0),
+m_chunkY(0)
 {
 
 }
@@ -66,6 +70,15 @@ HeightMapStream::~HeightMapStream()
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapStream::init()
 {
+    // Init heightmap chunk
+    if (!m_heightMapChunk.init(
+        m_resources.heightmaps.heightmap(0),
+        m_resources.textures.high(TEXTURE_TILE)))
+    {
+        // Could not init heightmap chunk
+        return false;
+    }
+
     // Heightmap stream successfully created
     return true;
 }
@@ -75,5 +88,24 @@ bool HeightMapStream::init()
 ////////////////////////////////////////////////////////////////////////////////
 void HeightMapStream::render(Renderer& renderer)
 {
-
+    // Render heightmap chunks
+    renderer.bindStaticMeshPipeline();
+    for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)
+    {
+        for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
+        {
+            m_heightMapChunk.setVertexBuffer(
+                m_resources.heightmaps.heightmap((j*HEIGHTMAP_STREAMWIDTH)+i)
+            );
+            m_heightMapChunk.setPosition(
+                -(HEIGHTMAP_STREAMHALFWIDTH*HeightMapChunkXStride)+
+                (m_chunkX*HeightMapChunkXStride)+(i*HeightMapChunkXStride),
+                0.0f,
+                -(HEIGHTMAP_STREAMHALFHEIGHT*HeightMapChunkZStride)+
+                (m_chunkY*HeightMapChunkXStride)+(j*HeightMapChunkZStride)
+            );
+            m_heightMapChunk.bindVertexBuffer(renderer);
+            m_heightMapChunk.render(renderer);
+        }
+    }
 }
