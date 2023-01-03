@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/Default.vert : Default vertex shader          //
+//     Renderer/Shaders/Sources/StaticMesh.vert : Static mesh vertex shader   //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision highp float;

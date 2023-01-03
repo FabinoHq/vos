@@ -458,6 +458,7 @@ void Game::render()
     m_staticMesh.render(m_renderer);*/
 
     // Render heightmap stream
+    m_renderer.bindHeightMapPipeline();
     m_heightMapStream.render(m_renderer);
 
 

@@ -76,6 +76,7 @@
     #include "Shaders/SkyBox.h"
     #include "Shaders/StaticMesh.h"
     #include "Shaders/StaticProc.h"
+    #include "Shaders/HeightMap.h"
 
     #include "../Resources/Resources.h"
 
@@ -202,6 +203,11 @@
             //  Bind renderer static mesh pipeline                            //
             ////////////////////////////////////////////////////////////////////
             void bindStaticMeshPipeline();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer heightmap pipeline                              //
+            ////////////////////////////////////////////////////////////////////
+            void bindHeightMapPipeline();
 
 
             ////////////////////////////////////////////////////////////////////
@@ -353,6 +359,7 @@
             Pipeline            m_pxTextPipeline;       // Pixel text pipeline
             Pipeline            m_skyBoxPipeline;       // SkyBox pipeline
             Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
+            Pipeline            m_heightMapPipeline;    // Heightmap pipeline
             View                m_view;                 // Default view
 
             Resources&          m_resources;            // Resources

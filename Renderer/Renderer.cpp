@@ -70,6 +70,7 @@ m_shapePipeline(),
 m_pxTextPipeline(),
 m_skyBoxPipeline(),
 m_staticMeshPipeline(),
+m_heightMapPipeline(),
 m_view(),
 m_resources(resources),
 m_cursorOffset(0.0f, 0.0f),
@@ -419,6 +420,22 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create heightmap pipeline
+    m_heightMapPipeline.createVertexShader(
+        *this, HeightMapVertexShader, HeightMapVertexShaderSize
+    );
+    m_heightMapPipeline.createFragmentShader(
+        *this, HeightMapFragmentShader, HeightMapFragmentShaderSize
+    );
+    if (!m_heightMapPipeline.createPipeline(
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
+    {
+        // Could not create heightmap pipeline
+        SysMessage::box() << "[0x305A] Could not create heightmap pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Init default view
     if (!m_view.init(*this))
     {
@@ -754,6 +771,9 @@ void Renderer::cleanup()
             // Destroy default view
             m_view.destroyView(*this);
 
+            // Destroy heightmap pipeline
+            m_heightMapPipeline.destroyPipeline(*this);
+
             // Destroy static mesh pipeline
             m_staticMeshPipeline.destroyPipeline(*this);
 
@@ -882,6 +902,14 @@ void Renderer::bindSkyBoxPipeline()
 void Renderer::bindStaticMeshPipeline()
 {
     m_staticMeshPipeline.bind(*this);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer heightmap pipeline                                          //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::bindHeightMapPipeline()
+{
+    m_heightMapPipeline.bind(*this);
 }
 
 

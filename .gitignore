@@ -197,6 +197,8 @@
 !Renderer/Shaders/Sources/StaticMesh.vert
 !Renderer/Shaders/Sources/StaticMesh.frag
 !Renderer/Shaders/Sources/StaticProc.frag
+!Renderer/Shaders/Sources/HeightMap.vert
+!Renderer/Shaders/Sources/HeightMap.frag
 !Renderer/Shaders/Default.h
 !Renderer/Shaders/DefaultProc.h
 !Renderer/Shaders/NinePatch.h
@@ -206,6 +208,7 @@
 !Renderer/Shaders/SkyBox.h
 !Renderer/Shaders/StaticMesh.h
 !Renderer/Shaders/StaticProc.h
+!Renderer/Shaders/HeightMap.h
 
 # Shapes
 !Renderer/Shapes/

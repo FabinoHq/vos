@@ -89,7 +89,6 @@ bool HeightMapStream::init()
 void HeightMapStream::render(Renderer& renderer)
 {
     // Render heightmap chunks
-    renderer.bindStaticMeshPipeline();
     for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)
     {
         for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)

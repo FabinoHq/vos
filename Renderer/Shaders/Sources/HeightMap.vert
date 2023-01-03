@@ -37,31 +37,41 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/StaticMesh.frag : Static mesh fragment shader //
+//     Renderer/Shaders/Sources/HeightMap.vert : Heightmap vertex shader      //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision highp float;
 precision highp int;
 
-// Texture sampler
-layout(set = 1, binding = 0) uniform sampler2D texSampler;
-
-// Color, position, offset, and time (push constant)
-layout(push_constant) uniform Constants
+// Matrices buffer (projection and view)
+layout(set = 0, binding = 0) uniform MatricesBuffer
 {
-	layout(offset = 64)
-    vec4 color;
-    vec2 offset;
-    vec2 size;
-    float time;
-} constants;
+    mat4 projview;
+} mats;
 
-// Input texture coordinates and output color
-layout(location = 0) in vec2 i_texCoords;
-layout(location = 1) in vec3 i_normals;
-layout(location = 0) out vec4 o_color;
+// Model matrix (push constant)
+layout(push_constant) uniform ModelMatrix
+{
+    mat4 model;
+} matrix;
+
+// Input and output position and texture coordinates
+layout(location = 0) in vec3 i_position;
+layout(location = 1) in vec2 i_texCoords;
+layout(location = 2) in vec3 i_normals;
+layout(location = 0) out vec2 o_texCoords;
+layout(location = 1) out vec3 o_normals;
+layout(location = 2) out float o_dist;
+out gl_PerVertex
+{
+    vec4 gl_Position;
+};
 void main()
 {
-    // Compute output color
-    o_color = texture(texSampler, i_texCoords)*constants.color;
+    // Compute vertex position
+    vec4 vertexPos = (mats.projview*matrix.model*vec4(i_position, 1.0));
+    o_texCoords = i_texCoords;
+    o_normals = i_normals;
+    o_dist = vertexPos.w;
+    gl_Position = vertexPos;
 }
