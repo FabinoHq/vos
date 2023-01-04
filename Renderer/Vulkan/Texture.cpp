@@ -169,8 +169,11 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
         samplerInfo.magFilter = VK_FILTER_NEAREST;
         samplerInfo.minFilter = VK_FILTER_NEAREST;
     }
-    //samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    if (mipLevels > 1)
+    {
+        samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+    }
     if (repeat)
     {
         samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
