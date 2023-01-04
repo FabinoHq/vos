@@ -70,6 +70,8 @@ float pseudoRand(float seed, float x, float y)
 ////////////////////////////////////////////////////////////////////////////////
 float fractalHeigthmap(float seed, int i, int j)
 {
+    i += 2500;
+    j += 2500;
     float ix = i*1.0f;
     float jy = j*1.0f;
 
@@ -732,7 +734,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
         return false;
     }
 
-    // Transfert staging buffer data to vertex buffer
+    // Transfer staging buffer data to vertex buffer
     VkCommandBufferBeginInfo bufferBeginInfo;
     bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     bufferBeginInfo.pNext = 0;
@@ -831,7 +833,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
         return false;
     }
 
-    // Transfert staging buffer indices to vertex buffer
+    // Transfer staging buffer indices to vertex buffer
     bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     bufferBeginInfo.pNext = 0;
     bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;

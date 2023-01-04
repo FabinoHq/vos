@@ -390,7 +390,8 @@ void TextureLoader::destroyTextureLoader()
 //  return : True if texture is successfully uploaded                         //
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureLoader::uploadTexture(VkImage& handle,
-    uint32_t width, uint32_t height, const unsigned char* data)
+    uint32_t width, uint32_t height, uint32_t mipLevels,
+    const unsigned char* data)
 {
     // Reset texture upload memory
     m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
@@ -423,7 +424,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
         return false;
     }
 
-    // Transfert staging buffer data to texture buffer
+    // Transfer staging buffer data to texture buffer
     VkCommandBufferBeginInfo bufferBeginInfo;
     bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     bufferBeginInfo.pNext = 0;
@@ -436,10 +437,11 @@ bool TextureLoader::uploadTexture(VkImage& handle,
         return false;
     }
 
+    // Transfer barriers structures
     VkImageSubresourceRange subresourceRange;
     subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresourceRange.baseMipLevel = 0;
-    subresourceRange.levelCount = 1;
+    subresourceRange.levelCount = mipLevels;
     subresourceRange.baseArrayLayer = 0;
     subresourceRange.layerCount = 1;
 
@@ -467,6 +469,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     transferToShader.image = handle;
     transferToShader.subresourceRange = subresourceRange;
 
+    // Barrier from undefined to transfer optimal
     vkCmdPipelineBarrier(
         m_commandBuffer,
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
@@ -489,11 +492,230 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     imageCopy.imageExtent.height = height;
     imageCopy.imageExtent.depth = 1;
 
+    // Copy staging buffer into texture buffer
     vkCmdCopyBufferToImage(
         m_commandBuffer, m_stagingBuffer.handle, handle,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy
     );
 
+    // Barrier from transfer to shader read-only (done after mipmaps if any)
+    if (mipLevels <= 1)
+    {
+        vkCmdPipelineBarrier(
+            m_commandBuffer,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            0, 0, 0, 0, 0, 1, &transferToShader
+        );
+    }
+
+    if (vkEndCommandBuffer(m_commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    // Reset staging fence
+    if (vkResetFences(
+        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    {
+        // Could not reset staging fence
+        return false;
+    }
+
+    // Submit queue
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &m_commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(m_graphicsQueue.handle,
+        1, &submitInfo, m_fence) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    // Wait for transfer to finish
+    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+        &m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
+    {
+        // Transfer timed out
+        return false;
+    }
+
+    // Destroy staging buffer
+    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+
+    // Generate texture mipmaps
+    if (!generateTextureMipmaps(handle, width, height, mipLevels))
+    {
+        // Could not generate texture mipmaps
+        return false;
+    }
+
+    // Texture successfully uploaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Generate texture mipmaps                                                  //
+//  return : True if texture mipmaps are generated                            //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::generateTextureMipmaps(VkImage& handle,
+    uint32_t width, uint32_t height, uint32_t mipLevels)
+{
+    // Check mip levels
+    if (mipLevels <= 1)
+    {
+        // No mipmaps generation
+        return true;
+    }
+
+    // Reset command pool
+    if (vkResetCommandPool(
+        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    {
+        // Could not reset command pool
+        return false;
+    }
+
+    // Transfer staging buffer data to texture buffer
+    VkCommandBufferBeginInfo bufferBeginInfo;
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(m_commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    // Transfer barrier structure
+    VkImageSubresourceRange subresourceRange;
+    subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresourceRange.baseMipLevel = 0;
+    subresourceRange.levelCount = 1;
+    subresourceRange.baseArrayLayer = 0;
+    subresourceRange.layerCount = 1;
+
+    VkImageMemoryBarrier transferToTransfer;
+    transferToTransfer.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    transferToTransfer.pNext = 0;
+    transferToTransfer.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+    transferToTransfer.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    transferToTransfer.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    transferToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToTransfer.image = handle;
+    transferToTransfer.subresourceRange = subresourceRange;
+
+    // Mipmap blit structures
+    VkImageSubresourceLayers srcSubresource;
+    srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    srcSubresource.mipLevel = 0;
+    srcSubresource.baseArrayLayer = 0;
+    srcSubresource.layerCount = 1;
+
+    VkImageSubresourceLayers dstSubresource;
+    dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    dstSubresource.mipLevel = 1;
+    dstSubresource.baseArrayLayer = 0;
+    dstSubresource.layerCount = 1;
+
+    VkImageBlit blit;
+    blit.srcSubresource = srcSubresource;
+    blit.srcOffsets[0].x = 0;
+    blit.srcOffsets[0].y = 0;
+    blit.srcOffsets[0].z = 0;
+    blit.srcOffsets[1].x = 0;
+    blit.srcOffsets[1].y = 0;
+    blit.srcOffsets[1].z = 1;
+    blit.dstSubresource = dstSubresource;
+    blit.dstOffsets[0].x = 0;
+    blit.dstOffsets[0].y = 0;
+    blit.dstOffsets[0].z = 0;
+    blit.dstOffsets[1].x = 0;
+    blit.dstOffsets[1].y = 0;
+    blit.dstOffsets[1].z = 1;
+
+    // Transfer to shader barrier structure
+    VkImageMemoryBarrier transferToShader;
+    transferToShader.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    transferToShader.pNext = 0;
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.image = handle;
+    transferToShader.subresourceRange = subresourceRange;
+
+    // Generate mipmaps
+    uint32_t mipWidth = width;
+    uint32_t mipHeight = height;
+    for (uint32_t i = 1; i < mipLevels; ++i)
+    {
+        subresourceRange.baseMipLevel = (i-1);
+        transferToTransfer.subresourceRange = subresourceRange;
+        transferToShader.subresourceRange = subresourceRange;
+        srcSubresource.mipLevel = (i-1);
+        dstSubresource.mipLevel = i;
+
+        // Barrier from transfer dst to transfer src
+        vkCmdPipelineBarrier(
+            m_commandBuffer,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            0, 0, 0, 0, 0, 1, &transferToTransfer
+        );
+
+        blit.srcSubresource = srcSubresource;
+        blit.srcOffsets[1].x = mipWidth;
+        blit.srcOffsets[1].y = mipHeight;
+        blit.dstSubresource = dstSubresource;
+        blit.dstOffsets[1].x = ((mipWidth > 1) ? (mipWidth >> 1) : 1);
+        blit.dstOffsets[1].y = ((mipHeight > 1) ? (mipHeight >> 1) : 1);
+
+        // Blit mipmap image with linear filter
+        vkCmdBlitImage(
+            m_commandBuffer,
+            handle, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            handle, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            1, &blit, VK_FILTER_LINEAR
+        );
+
+        // Barrier from transfer to shader read-only
+        vkCmdPipelineBarrier(
+            m_commandBuffer,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            0, 0, 0, 0, 0, 1, &transferToShader
+        );
+
+        // Next mipmap
+        if (mipWidth > 1) { mipWidth >>= 1; }   // mipWidth = mipWidth/2
+        if (mipHeight > 1) { mipHeight >>= 1; } // mipHeight = mipHeight/2
+    }
+
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    subresourceRange.baseMipLevel = (mipLevels - 1);
+    transferToShader.subresourceRange = subresourceRange;
+
+    // Barrier from transfer to shader read-only (last mip level)
     vkCmdPipelineBarrier(
         m_commandBuffer,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -542,10 +764,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
         return false;
     }
 
-    // Destroy staging buffer
-    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
-
-    // Texture successfully uploaded
+    // Texture mipmaps generated
     return true;
 }
 
@@ -587,7 +806,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
         return false;
     }
 
-    // Transfert staging buffer data to cubemap buffer
+    // Transfer staging buffer data to cubemap buffer
     VkCommandBufferBeginInfo bufferBeginInfo;
     bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     bufferBeginInfo.pNext = 0;
@@ -600,6 +819,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
         return false;
     }
 
+    // Transfer barriers structures
     VkImageSubresourceRange subresourceRange;
     subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresourceRange.baseMipLevel = 0;
@@ -631,6 +851,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     transferToShader.image = handle;
     transferToShader.subresourceRange = subresourceRange;
 
+    // Barrier from undefined to transfer optimal
     vkCmdPipelineBarrier(
         m_commandBuffer,
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
@@ -656,11 +877,13 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
         imageCopy[i].imageExtent.depth = 1;
     }
 
+    // Copy staging buffer into texture buffer
     vkCmdCopyBufferToImage(
         m_commandBuffer, m_stagingBuffer.handle, handle,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 6, imageCopy
     );
 
+    // Barrier from transfer to shader read-only (done after mipmaps if any)
     vkCmdPipelineBarrier(
         m_commandBuffer,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -736,7 +959,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_NSCURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         NSCursorImageWidth, NSCursorImageHeight, NSCursorImage,
-        false, false))
+        false, false, false))
     {
         // Could not load NS cursor texture
         return false;
@@ -746,7 +969,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_EWCURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         EWCursorImageWidth, EWCursorImageHeight, EWCursorImage,
-        false, false))
+        false, false, false))
     {
         // Could not load EW cursor texture
         return false;
@@ -756,7 +979,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_NESWCURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         NESWCursorImageWidth, NESWCursorImageHeight, NESWCursorImage,
-        false, false))
+        false, false, false))
     {
         // Could not load NE-SW cursor texture
         return false;
@@ -766,7 +989,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_NWSECURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         NWSECursorImageWidth, NWSECursorImageHeight, NWSECursorImage,
-        false, false))
+        false, false, false))
     {
         // Could not load NW-SE cursor texture
         return false;
@@ -776,7 +999,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_WINDOW].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         WindowImageWidth, WindowImageHeight, WindowImage,
-        true, false))
+        true, false, false))
     {
         // Could not load window texture
         return false;
@@ -786,7 +1009,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_PIXELFONT].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         PxFontImageWidth, PxFontImageHeight, PxFontImage,
-        true, false))
+        true, false, false))
     {
         // Could not load pixel font texture
         return false;
@@ -811,7 +1034,7 @@ bool TextureLoader::preloadTextures()
     if (!m_texturesHigh[TEXTURE_TEST].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
-        false, true))
+        false, true, false))
     {
         // Could not load test texture
         return false;
@@ -826,7 +1049,7 @@ bool TextureLoader::preloadTextures()
     if (!m_texturesHigh[TEXTURE_TILE].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
-        true, true))
+        true, true, true))
     {
         // Could not load test texture
         return false;

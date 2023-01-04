@@ -148,7 +148,7 @@ bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
     }
 
 
-    // Transfert staging buffer data to uniform buffer
+    // Transfer staging buffer data to uniform buffer
     VkCommandBufferBeginInfo bufferBeginInfo;
     bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     bufferBeginInfo.pNext = 0;

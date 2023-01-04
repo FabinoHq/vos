@@ -86,7 +86,8 @@ Texture::~Texture()
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
-    uint32_t width, uint32_t height, bool smooth, bool repeat)
+    uint32_t width, uint32_t height, uint32_t mipLevels,
+    bool smooth, bool repeat)
 {
     // Check texture handle
     if (m_handle)
@@ -113,12 +114,21 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
     imageInfo.extent.width = width;
     imageInfo.extent.height = height;
     imageInfo.extent.depth = 1;
-    imageInfo.mipLevels = 1;
+    imageInfo.mipLevels = mipLevels;
     imageInfo.arrayLayers = 1;
     imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
     imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-    imageInfo.usage =
-        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+    if (mipLevels > 1)
+    {
+        imageInfo.usage =
+            VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+            VK_IMAGE_USAGE_SAMPLED_BIT;
+    }
+    else
+    {
+        imageInfo.usage =
+            VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+    }
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.queueFamilyIndexCount = 0;
     imageInfo.pQueueFamilyIndices = 0;
@@ -159,7 +169,8 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
         samplerInfo.magFilter = VK_FILTER_NEAREST;
         samplerInfo.minFilter = VK_FILTER_NEAREST;
     }
-    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    //samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
     if (repeat)
     {
         samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
@@ -178,6 +189,10 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
     samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
     samplerInfo.minLod = 0.0f;
     samplerInfo.maxLod = 0.0f;
+    if (mipLevels > 1)
+    {
+        samplerInfo.maxLod = (mipLevels*1.0f);
+    }
     samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
@@ -207,7 +222,7 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
     viewInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
     viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     viewInfo.subresourceRange.baseMipLevel = 0;
-    viewInfo.subresourceRange.levelCount = 1;
+    viewInfo.subresourceRange.levelCount = mipLevels;
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 1;
 
@@ -281,7 +296,7 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
     VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
-    const unsigned char* data, bool smooth, bool repeat)
+    const unsigned char* data, bool smooth, bool repeat, bool mipmaps)
 {
     // Check texture size
     if ((width <= 0) || (width > TextureMaxWidth) ||
@@ -298,16 +313,26 @@ bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
         return false;
     }
 
+    // Set mip levels
+    uint32_t mipLevels = 1;
+    if (mipmaps)
+    {
+        mipLevels = (Math::log2(((width > height) ? width : height)) + 1);
+    }
+    if (mipLevels <= 1) { mipLevels = 1; }
+
     // Check current texture
     if (!m_handle || (width != m_width) || (height != m_height))
     {
         // Recreate texture
         destroyTexture(renderer);
-        createTexture(renderer, memoryPool, width, height, smooth, repeat);
+        createTexture(
+            renderer, memoryPool, width, height, mipLevels, smooth, repeat
+        );
     }
 
     // Upload texture to graphics memory
-    if (!loader.uploadTexture(m_handle, width, height, data))
+    if (!loader.uploadTexture(m_handle, width, height, mipLevels, data))
     {
         // Could not upload texture to graphics memory
         return false;

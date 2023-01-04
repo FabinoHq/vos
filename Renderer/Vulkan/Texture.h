@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_TEXTURE_HEADER
 
     #include "../../System/System.h"
+    #include "../../Math/Math.h"
     #include "Vulkan.h"
     #include "VulkanMemory.h"
     #include "Swapchain.h"
@@ -84,7 +85,7 @@
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
             bool createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
-                uint32_t width, uint32_t height,
+                uint32_t width, uint32_t height, uint32_t mipLevels,
                 bool smooth = true, bool repeat = false);
 
             ////////////////////////////////////////////////////////////////////
@@ -94,7 +95,7 @@
             bool updateTexture(Renderer& renderer, TextureLoader& loader,
                 VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
                 const unsigned char* data,
-                bool smooth = true, bool repeat = false);
+                bool smooth = true, bool repeat = false, bool mipmaps = false);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture                                                  //

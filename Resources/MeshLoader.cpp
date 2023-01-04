@@ -390,7 +390,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
         return false;
     }
 
-    // Transfert staging buffer data to vertex buffer
+    // Transfer staging buffer data to vertex buffer
     VkCommandBufferBeginInfo bufferBeginInfo;
     bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     bufferBeginInfo.pNext = 0;
@@ -489,7 +489,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
         return false;
     }
 
-    // Transfert staging buffer indices to vertex buffer
+    // Transfer staging buffer indices to vertex buffer
     bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     bufferBeginInfo.pNext = 0;
     bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
