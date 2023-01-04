@@ -182,6 +182,24 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get heightmap chunk X                                         //
+            //  return : heightmap chunk X                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkX()
+            {
+                return m_chunkX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get heightmap chunk Y                                         //
+            //  return : heightmap chunk Y                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkY()
+            {
+                return m_chunkY;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Destroy heightmap loader                                      //
             ////////////////////////////////////////////////////////////////////
             void destroyHeightMapLoader();
@@ -205,7 +223,7 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Generate heightmap chunk                                      //
+            //  Generate flat heightmap chunk                                 //
             //  return : True if the heightmap chunk is generated             //
             ////////////////////////////////////////////////////////////////////
             bool generateChunk(VertexBuffer& vertexBuffer,

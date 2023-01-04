@@ -94,8 +94,8 @@
             {
                 if (m_resources.heightmaps.update(chunkX, chunkY))
                 {
-                    m_chunkX = chunkX;
-                    m_chunkY = chunkY;
+                    m_chunkX = m_resources.heightmaps.getChunkX();
+                    m_chunkY = m_resources.heightmaps.getChunkY();
                     return true;
                 }
                 return false;

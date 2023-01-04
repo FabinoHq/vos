@@ -933,7 +933,7 @@ bool HeightMapLoader::loadHeightMaps()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Generate heightmap chunk                                                  //
+//  Generate flat heightmap chunk                                             //
 //  return : True if the heightmap chunk is generated                         //
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer,
@@ -973,62 +973,9 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer,
 
         for (uint32_t i = 0; i <= HeightMapChunkWidth; ++i)
         {
-            // Median filtering
-            float median[9] = {0.0f};
-            median[0] = fractalHeigthmap(0.7154,
-                i-1+(chunkX*HeightMapChunkWidth),
-                j-1+(chunkY*HeightMapChunkHeight)
-            );
-            median[1] = fractalHeigthmap(0.7154,
-                i+(chunkX*HeightMapChunkWidth),
-                j-1+(chunkY*HeightMapChunkHeight)
-            );
-            median[2] = fractalHeigthmap(0.7154,
-                i+1+(chunkX*HeightMapChunkWidth),
-                j-1+(chunkY*HeightMapChunkHeight)
-            );
-            median[3] = fractalHeigthmap(0.7154,
-                i-1+(chunkX*HeightMapChunkWidth),
-                j+(chunkY*HeightMapChunkHeight)
-            );
-            median[4] = fractalHeigthmap(0.7154,
-                i+(chunkX*HeightMapChunkWidth),
-                j+(chunkY*HeightMapChunkHeight)
-            );
-            median[5] = fractalHeigthmap(0.7154,
-                i+1+(chunkX*HeightMapChunkWidth),
-                j+(chunkY*HeightMapChunkHeight)
-            );
-            median[6] = fractalHeigthmap(0.7154,
-                i-1+(chunkX*HeightMapChunkWidth),
-                j+1+(chunkY*HeightMapChunkHeight)
-            );
-            median[7] = fractalHeigthmap(0.7154,
-                i+(chunkX*HeightMapChunkWidth),
-                j+1+(chunkY*HeightMapChunkHeight)
-            );
-            median[8] = fractalHeigthmap(0.7154,
-                i+1+(chunkX*HeightMapChunkWidth),
-                j+1+(chunkY*HeightMapChunkHeight)
-            );
-
-            // Sort median data
-            for (int o = 0; o < (9-1); ++o)
-            {
-                for (int m = 0; m < ((9-1)-o); ++m)
-                {
-                    if (median[m] > median[m+1])
-                    {
-                        float tmp = median[m];
-                        median[m] = median[m+1];
-                        median[m+1] = tmp;
-                    }
-                }
-            }
-
-            // Set test heightmap
+            // Set flat heightmap
             vertices[vIndex+0] = vertX;
-            vertices[vIndex+1] = median[4];
+            vertices[vIndex+1] = 0.0f;
             vertices[vIndex+2] = vertZ;
 
             vertices[vIndex+3] = texCoordX;
@@ -1218,7 +1165,7 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
         ++iOffset;
     }
 
-    // Create vertex buffer
+    // Update vertex buffer
     if (!vertexBuffer.updateBuffer(*this,
         vertices, indices, verticesCount, indicesCount))
     {
