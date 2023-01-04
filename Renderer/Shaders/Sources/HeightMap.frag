@@ -66,6 +66,6 @@ void main()
     // Compute output color
     vec4 texColor = texture(texSampler, i_texCoords)*constants.color;
     vec4 farColor = texture(texSampler, (i_texCoords*0.125))*constants.color;
-    float renderDist = clamp(i_dist*0.005, 0.0, 1.0);
+    float renderDist = clamp((i_dist-50.0)*0.005, 0.0, 1.0);
     o_color = mix(texColor, farColor, renderDist);
 }

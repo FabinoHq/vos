@@ -143,34 +143,16 @@
             HeightMapLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
+            //  Reload heightmaps pointers based on current chunk position    //
+            //  return : True if heightmaps pointers are reloaded             //
+            ////////////////////////////////////////////////////////////////////
+            bool reload(int32_t chunkX, int32_t chunkY);
+
+            ////////////////////////////////////////////////////////////////////
             //  Update heightmaps pointers based on current chunk position    //
             //  return : True if heightmaps pointers are updated              //
             ////////////////////////////////////////////////////////////////////
             bool update(int32_t chunkX, int32_t chunkY);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Swap heightmaps pointers towards top                          //
-            //  return : True if heightmaps pointers are swapped              //
-            ////////////////////////////////////////////////////////////////////
-            bool swapTop();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Swap heightmaps pointers towards bottom                       //
-            //  return : True if heightmaps pointers are swapped              //
-            ////////////////////////////////////////////////////////////////////
-            bool swapBottom();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Swap heightmaps pointers towards left                         //
-            //  return : True if heightmaps pointers are swapped              //
-            ////////////////////////////////////////////////////////////////////
-            bool swapLeft();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Swap heightmaps pointers towards right                        //
-            //  return : True if heightmaps pointers are swapped              //
-            ////////////////////////////////////////////////////////////////////
-            bool swapRight();
 
             ////////////////////////////////////////////////////////////////////
             //  Get heightmap vertex buffer                                   //
@@ -226,8 +208,7 @@
             //  Generate flat heightmap chunk                                 //
             //  return : True if the heightmap chunk is generated             //
             ////////////////////////////////////////////////////////////////////
-            bool generateChunk(VertexBuffer& vertexBuffer,
-                int32_t chunkX, int32_t chunkY);
+            bool generateChunk(VertexBuffer& vertexBuffer);
 
             ////////////////////////////////////////////////////////////////////
             //  Update heightmap chunk                                        //
@@ -235,6 +216,30 @@
             ////////////////////////////////////////////////////////////////////
             bool updateChunk(VertexBuffer& vertexBuffer,
                 int32_t chunkX, int32_t chunkY);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Swap heightmaps pointers towards top                          //
+            //  return : True if heightmaps pointers are swapped              //
+            ////////////////////////////////////////////////////////////////////
+            bool swapTop();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Swap heightmaps pointers towards bottom                       //
+            //  return : True if heightmaps pointers are swapped              //
+            ////////////////////////////////////////////////////////////////////
+            bool swapBottom();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Swap heightmaps pointers towards left                         //
+            //  return : True if heightmaps pointers are swapped              //
+            ////////////////////////////////////////////////////////////////////
+            bool swapLeft();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Swap heightmaps pointers towards right                        //
+            //  return : True if heightmaps pointers are swapped              //
+            ////////////////////////////////////////////////////////////////////
+            bool swapRight();
 
 
         private:

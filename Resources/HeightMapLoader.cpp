@@ -338,9 +338,7 @@ bool HeightMapLoader::init()
     {
         for (int32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
         {
-            if (generateChunk(m_heightmaps[cnt],
-                (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i,
-                (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j))
+            if (generateChunk(m_heightmaps[cnt]))
             {
                 m_chunks[cnt].loading = false;
                 m_chunks[cnt].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
@@ -373,6 +371,47 @@ HeightMapLoaderState HeightMapLoader::getState()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Reload heightmaps pointers based on current chunk position                //
+//  return : True if heightmaps pointers are reloaded                         //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::reload(int32_t chunkX, int32_t chunkY)
+{
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
+    // Set chunkX and chunkY
+    m_chunkX = chunkX;
+    m_chunkY = chunkY;
+
+    // Set chunks loading states
+    int32_t cnt = 0;
+    for (int32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        for (int32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+        {
+            m_chunks[cnt].loading = true;
+            m_chunks[cnt].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
+            m_chunks[cnt].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
+            ++cnt;
+        }
+    }
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Update heightmaps pointers based on current chunk position                //
 //  return : True if heightmaps pointers are updated                          //
 ////////////////////////////////////////////////////////////////////////////////
@@ -400,258 +439,6 @@ bool HeightMapLoader::update(int32_t chunkX, int32_t chunkY)
 
     // Heightmaps pointers are up to date
     return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Swap heightmaps pointers towards top                                      //
-//  return : True if heightmaps pointers are swapped                          //
-////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::swapTop()
-{
-    // Check current loading state
-    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTMAPLOADER_STATE_IDLE)
-    {
-        // Heightmap loader is still in loading state
-        return false;
-    }
-
-    // Copy bottom row into tmp
-    VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
-    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
-    {
-        tmp[i] = m_heightptrs[
-            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
-        ];
-    }
-
-    // Swap pointers towards top
-    for (uint32_t j = (HEIGHTMAP_STREAMHEIGHT-1); j > 0; --j)
-    {
-        for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
-        {
-            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
-                m_heightptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i];
-        }
-    }
-
-    // Copy tmp into top row
-    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
-    {
-        m_heightptrs[i] = tmp[i];
-    }
-
-    // Set new chunks loading states
-    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
-    {
-        m_chunks[i].loading = true;
-        m_chunks[i].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
-        m_chunks[i].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT-1);
-    }
-
-    // Move chunkY
-    --m_chunkY;
-
-    // Load new chunks
-    m_stateMutex.lock();
-    m_state = HEIGHTMAPLOADER_STATE_LOAD;
-    m_stateMutex.unlock();
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Swap heightmaps pointers towards bottom                                   //
-//  return : True if heightmaps pointers are swapped                          //
-////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::swapBottom()
-{
-    // Check current loading state
-    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTMAPLOADER_STATE_IDLE)
-    {
-        // Heightmap loader is still in loading state
-        return false;
-    }
-
-    // Copy top row into tmp
-    VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
-    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
-    {
-        tmp[i] = m_heightptrs[i];
-    }
-
-    // Swap pointers towards bottom
-    for (uint32_t j = 1; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-    {
-        for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
-        {
-            m_heightptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i] =
-                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
-        }
-    }
-
-    // Copy tmp into bottom row
-    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
-    {
-        m_heightptrs[((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i] =
-            tmp[i];
-    }
-
-    // Set new chunks loading states
-    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
-    {
-        m_chunks[
-            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
-        ].loading = true;
-        m_chunks[
-            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
-        ].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
-        m_chunks[
-            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
-        ].chunkY = (m_chunkY+HEIGHTMAP_STREAMHALFHEIGHT+1);
-    }
-
-    // Move chunkY
-    ++m_chunkY;
-
-    // Load new chunks
-    m_stateMutex.lock();
-    m_state = HEIGHTMAPLOADER_STATE_LOAD;
-    m_stateMutex.unlock();
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Swap heightmaps pointers towards left                                     //
-//  return : True if heightmaps pointers are swapped                          //
-////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::swapLeft()
-{
-    // Check current loading state
-    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTMAPLOADER_STATE_IDLE)
-    {
-        // Heightmap loader is still in loading state
-        return false;
-    }
-
-    // Copy right row into tmp
-    VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
-    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-    {
-        tmp[j] = m_heightptrs[
-            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
-        ];
-    }
-
-    // Swap pointers towards left
-    for (uint32_t i = (HEIGHTMAP_STREAMWIDTH-1); i > 0; --i)
-    {
-        for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-        {
-            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
-                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)];
-        }
-    }
-
-    // Copy tmp into left row
-    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-    {
-        m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)] = tmp[j];
-    }
-
-    // Set new chunks loading states
-    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-    {
-        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].loading = true;
-        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].chunkX =
-            (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH-1);
-        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].chunkY =
-            (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
-    }
-
-    // Move chunkX
-    --m_chunkX;
-
-    // Load new chunks
-    m_stateMutex.lock();
-    m_state = HEIGHTMAPLOADER_STATE_LOAD;
-    m_stateMutex.unlock();
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Swap heightmaps pointers towards right                                    //
-//  return : True if heightmaps pointers are swapped                          //
-////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::swapRight()
-{
-    // Check current loading state
-    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTMAPLOADER_STATE_IDLE)
-    {
-        // Heightmap loader is still in loading state
-        return false;
-    }
-
-    // Copy left row into tmp
-    VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
-    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-    {
-        tmp[j] = m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)];
-    }
-
-    // Swap pointers towards right
-    for (uint32_t i = 1; i < HEIGHTMAP_STREAMWIDTH; ++i)
-    {
-        for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-        {
-            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)] =
-                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
-        }
-    }
-
-    // Copy tmp into right row
-    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-    {
-        m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)] =
-            tmp[j];
-    }
-
-    // Set new chunks loading states
-    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
-    {
-        m_chunks[
-            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
-        ].loading = true;
-        m_chunks[
-            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
-        ].chunkX = (m_chunkX+HEIGHTMAP_STREAMHALFWIDTH+1);
-        m_chunks[
-            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
-        ].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
-    }
-
-    // Move chunkX
-    ++m_chunkX;
-
-    // Load new chunks
-    m_stateMutex.lock();
-    m_state = HEIGHTMAPLOADER_STATE_LOAD;
-    m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -936,8 +723,7 @@ bool HeightMapLoader::loadHeightMaps()
 //  Generate flat heightmap chunk                                             //
 //  return : True if the heightmap chunk is generated                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer,
-    int32_t chunkX, int32_t chunkY)
+bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
 {
     // Init heightmap chunk data
     float* vertices = 0;
@@ -1030,7 +816,6 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer,
     // Heightmap chunk successfully generated
     return true;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Update heightmap chunk                                                    //
@@ -1180,5 +965,257 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
     if (indices) { delete[] indices; }
 
     // Heightmap chunk successfully updated
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Swap heightmaps pointers towards top                                      //
+//  return : True if heightmaps pointers are swapped                          //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::swapTop()
+{
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
+    // Copy bottom row into tmp
+    VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        tmp[i] = m_heightptrs[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ];
+    }
+
+    // Swap pointers towards top
+    for (uint32_t j = (HEIGHTMAP_STREAMHEIGHT-1); j > 0; --j)
+    {
+        for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+        {
+            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_heightptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i];
+        }
+    }
+
+    // Copy tmp into top row
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        m_heightptrs[i] = tmp[i];
+    }
+
+    // Set new chunks loading states
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        m_chunks[i].loading = true;
+        m_chunks[i].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
+        m_chunks[i].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT-1);
+    }
+
+    // Move chunkY
+    --m_chunkY;
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Swap heightmaps pointers towards bottom                                   //
+//  return : True if heightmaps pointers are swapped                          //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::swapBottom()
+{
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
+    // Copy top row into tmp
+    VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        tmp[i] = m_heightptrs[i];
+    }
+
+    // Swap pointers towards bottom
+    for (uint32_t j = 1; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+        {
+            m_heightptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
+        }
+    }
+
+    // Copy tmp into bottom row
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        m_heightptrs[((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i] =
+            tmp[i];
+    }
+
+    // Set new chunks loading states
+    for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        m_chunks[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ].loading = true;
+        m_chunks[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
+        m_chunks[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ].chunkY = (m_chunkY+HEIGHTMAP_STREAMHALFHEIGHT+1);
+    }
+
+    // Move chunkY
+    ++m_chunkY;
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Swap heightmaps pointers towards left                                     //
+//  return : True if heightmaps pointers are swapped                          //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::swapLeft()
+{
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
+    // Copy right row into tmp
+    VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        tmp[j] = m_heightptrs[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ];
+    }
+
+    // Swap pointers towards left
+    for (uint32_t i = (HEIGHTMAP_STREAMWIDTH-1); i > 0; --i)
+    {
+        for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+        {
+            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)];
+        }
+    }
+
+    // Copy tmp into left row
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)] = tmp[j];
+    }
+
+    // Set new chunks loading states
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].loading = true;
+        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].chunkX =
+            (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH-1);
+        m_chunks[(j*HEIGHTMAP_STREAMWIDTH)].chunkY =
+            (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
+    }
+
+    // Move chunkX
+    --m_chunkX;
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Swap heightmaps pointers towards right                                    //
+//  return : True if heightmaps pointers are swapped                          //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::swapRight()
+{
+    // Check current loading state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
+    {
+        // Heightmap loader is still in loading state
+        return false;
+    }
+
+    // Copy left row into tmp
+    VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        tmp[j] = m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)];
+    }
+
+    // Swap pointers towards right
+    for (uint32_t i = 1; i < HEIGHTMAP_STREAMWIDTH; ++i)
+    {
+        for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+        {
+            m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)] =
+                m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
+        }
+    }
+
+    // Copy tmp into right row
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)] =
+            tmp[j];
+    }
+
+    // Set new chunks loading states
+    for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
+    {
+        m_chunks[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ].loading = true;
+        m_chunks[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ].chunkX = (m_chunkX+HEIGHTMAP_STREAMHALFWIDTH+1);
+        m_chunks[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
+    }
+
+    // Move chunkX
+    ++m_chunkX;
+
+    // Load new chunks
+    m_stateMutex.lock();
+    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_stateMutex.unlock();
     return true;
 }

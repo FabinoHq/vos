@@ -196,6 +196,24 @@ bool Game::init()
         return false;
     }
 
+    // Load spawn heightmap chunks
+    m_heightMapStream.reload(0, 0);
+
+    // Wait for heightmap spawn chunks
+    bool heightmapLoaded = false;
+    while (!heightmapLoaded)
+    {
+        if (m_heightMapStream.isReady())
+        {
+            heightmapLoaded = true;
+        }
+        else
+        {
+            // Release some CPU while loading
+            SysSleep(ResourcesWaitSleepTime);
+        }
+    }
+
 
     // Init bounding circle
     m_boundingCircle.setPosition(-20000000, 0);

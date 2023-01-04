@@ -87,6 +87,31 @@
             bool init();
 
             ////////////////////////////////////////////////////////////////////
+            //  Reload heightmap stream                                       //
+            //  return : True if the heightmap stream is reloading            //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isReady()
+            {
+                return (m_resources.heightmaps.getState() ==
+                    HEIGHTMAPLOADER_STATE_IDLE);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Reload heightmap stream                                       //
+            //  return : True if the heightmap stream is reloading            //
+            ////////////////////////////////////////////////////////////////////
+            inline bool reload(int32_t chunkX, int32_t chunkY)
+            {
+                if (m_resources.heightmaps.reload(chunkX, chunkY))
+                {
+                    m_chunkX = m_resources.heightmaps.getChunkX();
+                    m_chunkY = m_resources.heightmaps.getChunkY();
+                    return true;
+                }
+                return false;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Update heightmap stream                                       //
             //  return : True if the heightmap stream is updated              //
             ////////////////////////////////////////////////////////////////////
