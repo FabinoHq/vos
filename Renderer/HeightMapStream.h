@@ -44,13 +44,13 @@
 
     #include "../System/System.h"
     #include "Vulkan/VertexBuffer.h"
-    #include "Vulkan/Texture.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
     #include "../Resources/Resources.h"
     #include "../Resources/HeightMapLoader.h"
+    #include "../Resources/TextureLoader.h"
 
     #include "HeightMapChunk.h"
 

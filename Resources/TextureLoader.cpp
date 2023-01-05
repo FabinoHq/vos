@@ -57,6 +57,7 @@ m_stagingBuffer(),
 m_fence(0),
 m_texturesGUI(0),
 m_texturesHigh(0),
+m_texturesArrays(0),
 m_cubemaps(0)
 {
 
@@ -258,6 +259,14 @@ bool TextureLoader::init()
     if (!m_texturesHigh)
     {
         // Could not allocate high textures
+        return false;
+    }
+
+    // Allocate textures arrays
+    m_texturesArrays = new (std::nothrow) TextureArray[TEXTURE_ARRAYSCOUNT];
+    if (!m_texturesArrays)
+    {
+        // Could not allocate textures arrays
         return false;
     }
 
@@ -1052,10 +1061,29 @@ bool TextureLoader::preloadTextures()
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
         true, true, TEXTUREMODE_REPEAT))
     {
-        // Could not load test texture
+        // Could not load tile texture
         return false;
     }
     pngfile.destroyImage();
+
+
+    // Load texture array
+    PNGFile texArray1;
+    if (!texArray1.loadImage("Textures/tile.png")) return false;
+    PNGFile texArray2;
+    if (!texArray2.loadImage("Textures/tile2.png")) return false;
+
+    if (!m_texturesArrays[TEXTURE_ARRAY1].updateTextureArray(m_renderer, *this,
+        VULKAN_MEMORY_TEXTURES,
+        texArray1.getWidth(), texArray1.getHeight(), texArray1.getImage(),
+        true, true, TEXTUREMODE_REPEAT))
+    {
+        // Could not load texture array
+        return false;
+    }
+    texArray1.destroyImage();
+    texArray2.destroyImage();
+
 
     // Load cubemap textures
     PNGFile cubeMapRight;

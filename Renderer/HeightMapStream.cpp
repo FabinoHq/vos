@@ -73,7 +73,7 @@ bool HeightMapStream::init()
     // Init heightmap chunk
     if (!m_heightMapChunk.init(
         m_resources.heightmaps.heightmap(0),
-        m_resources.textures.high(TEXTURE_TILE)))
+        m_resources.textures.array(TEXTURE_ARRAY1)))
     {
         // Could not init heightmap chunk
         return false;

@@ -49,7 +49,7 @@
 HeightMapChunk::HeightMapChunk() :
 Transform3(),
 m_vertexBuffer(0),
-m_texture(0)
+m_textureArray(0)
 {
 
 }
@@ -59,7 +59,7 @@ m_texture(0)
 ////////////////////////////////////////////////////////////////////////////////
 HeightMapChunk::~HeightMapChunk()
 {
-    m_texture = 0;
+    m_textureArray = 0;
     m_vertexBuffer = 0;
 }
 
@@ -68,20 +68,21 @@ HeightMapChunk::~HeightMapChunk()
 //  Init heightmap chunk                                                      //
 //  return : True if the heightmap chunk is successfully created              //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapChunk::init(VertexBuffer& vertexBuffer, Texture& texture)
+bool HeightMapChunk::init(VertexBuffer& vertexBuffer,
+    TextureArray& textureArray)
 {
-    // Check texture handle
-    if (!texture.isValid())
+    // Check texture array handle
+    if (!textureArray.isValid())
     {
-        // Invalid texture handle
+        // Invalid texture array handle
         return false;
     }
 
     // Set static mesh vertex buffer pointer
     m_vertexBuffer = &vertexBuffer;
 
-    // Set heightmap chunk texture pointer
-    m_texture = &texture;
+    // Set heightmap chunk texture array pointer
+    m_textureArray = &textureArray;
 
     // Reset heightmap chunk transformations
     resetTransforms();
@@ -99,20 +100,20 @@ void HeightMapChunk::setVertexBuffer(VertexBuffer& vertexBuffer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk texture                                               //
-//  return : True if heightmap chunk texture is successfully set              //
+//  Set heightmap chunk texture array                                         //
+//  return : True if heightmap chunk texture array is set                     //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapChunk::setTexture(Texture& texture)
+bool HeightMapChunk::setTextureArray(TextureArray& textureArray)
 {
-    // Check texture handle
-    if (!texture.isValid())
+    // Check texture array handle
+    if (!textureArray.isValid())
     {
-        // Invalid texture handle
+        // Invalid texture array handle
         return false;
     }
 
-    // Set heightmap chunk texture pointer
-    m_texture = &texture;
+    // Set heightmap chunk texture array pointer
+    m_textureArray = &textureArray;
     return true;
 }
 
@@ -149,8 +150,8 @@ void HeightMapChunk::render(Renderer& renderer)
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
-    // Bind heightmap chunk texture
-    m_texture->bind(renderer);
+    // Bind heightmap chunk texture array
+    m_textureArray->bind(renderer);
 
     // Draw heightmap chunk triangles
     vkCmdDrawIndexed(

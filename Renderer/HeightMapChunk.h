@@ -44,7 +44,7 @@
 
     #include "../System/System.h"
     #include "Vulkan/VertexBuffer.h"
-    #include "Vulkan/Texture.h"
+    #include "Vulkan/TextureArray.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
@@ -93,7 +93,7 @@
             //  Init heightmap chunk                                          //
             //  return : True if the heightmap chunk is successfully created  //
             ////////////////////////////////////////////////////////////////////
-            bool init(VertexBuffer& vertexBuffer, Texture& texture);
+            bool init(VertexBuffer& vertexBuffer, TextureArray& textureArray);
 
             ////////////////////////////////////////////////////////////////////
             //  Set heightmap chunk vertex buffer                             //
@@ -101,10 +101,10 @@
             void setVertexBuffer(VertexBuffer& vertexBuffer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set heightmap chunk texture                                   //
-            //  return : True if heightmap chunk texture is successfully set  //
+            //  Set heightmap chunk texture array                             //
+            //  return : True if heightmap chunk texture array is set         //
             ////////////////////////////////////////////////////////////////////
-            bool setTexture(Texture& texture);
+            bool setTextureArray(TextureArray& textureArray);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind heightmap chunk vertex buffer                            //
@@ -131,7 +131,7 @@
 
         private:
             VertexBuffer*   m_vertexBuffer;     // Heightmap chunk vertex buffer
-            Texture*        m_texture;          // Heightmap chunk texture ptr
+            TextureArray*   m_textureArray;     // Heightmap chunk texture ptr
     };
 
 

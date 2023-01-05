@@ -50,6 +50,7 @@
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/Texture.h"
+    #include "../Renderer/Vulkan/TextureArray.h"
     #include "../Renderer/Vulkan/CubeMap.h"
 
     #include "../Images/BMPFile.h"
@@ -110,6 +111,16 @@
         TEXTURE_TILE = 1,
 
         TEXTURE_ASSETSCOUNT = 2
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TexturesArrays enumeration                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    enum TexturesArrays
+    {
+        TEXTURE_ARRAY1 = 0,
+
+        TEXTURE_ARRAYSCOUNT = 1
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -212,6 +223,15 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get texture array                                             //
+            //  return : texture array                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline TextureArray& array(TexturesArrays texture)
+            {
+                return m_texturesArrays[texture];
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Get CubeMap texture                                           //
             //  return : CubeMap texture                                      //
             ////////////////////////////////////////////////////////////////////
@@ -294,6 +314,7 @@
 
             Texture*                m_texturesGUI;      // GUI textures
             Texture*                m_texturesHigh;     // High textures
+            TextureArray*           m_texturesArrays;   // Textures arrays
             CubeMap*                m_cubemaps;         // CubeMaps textures
     };
 
