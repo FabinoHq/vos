@@ -56,6 +56,10 @@ layout(push_constant) uniform Constants
     float time;
 } constants;
 
+// Distance fades
+const float mixFadeDistance = 50.0f;
+const float alphaFadeDistance = 500.0f;
+
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
 layout(location = 1) in vec3 i_normals;
@@ -63,9 +67,16 @@ layout(location = 2) in float i_dist;
 layout(location = 0) out vec4 o_color;
 void main()
 {
-    // Compute output color
+    // Sample textures
     vec4 texColor = texture(texSampler, i_texCoords)*constants.color;
     vec4 farColor = texture(texSampler, (i_texCoords*0.125))*constants.color;
-    float renderDist = clamp((i_dist-50.0)*0.005, 0.0, 1.0);
-    o_color = mix(texColor, farColor, renderDist);
+
+    // Compute distance fades
+    float distanceMix = clamp((i_dist-mixFadeDistance)*0.005, 0.0, 1.0);
+    float alphaFade = clamp(1.0-((i_dist-alphaFadeDistance)*0.01), 0.0, 1.0);
+
+    // Compute output color
+    vec4 fragOutput = mix(texColor, farColor, distanceMix);
+    fragOutput.a *= alphaFade;
+    o_color = fragOutput;
 }

@@ -70,81 +70,80 @@ float pseudoRand(float seed, float x, float y)
 ////////////////////////////////////////////////////////////////////////////////
 float fractalHeigthmap(float seed, int i, int j)
 {
-    i += 2500;
-    j += 2500;
+    i += 25000;
+    j += 25000;
     float ix = i*1.0f;
     float jy = j*1.0f;
 
     // Fractal frequencies
-    float freq = 33.2f;
-    float freq2 = 24.37f;
-    float freq3 = 7.18f;
+    const int freqsCnt = 8;
+    float freqs[8] = {0.0f};
+    freqs[0] = 434.2f;
+    freqs[1] = 278.37f;
+    freqs[2] = 387.18f;
+    freqs[3] = 186.75f;
+    freqs[4] = 52.23f;
+    freqs[5] = 34.78f;
+    freqs[6] = 18.32f;
+    freqs[7] = 7.12f;
 
-    float ix1 = ((std::fmod(ix, freq))/freq)*1.0f;
-    float jy1 = ((std::fmod(jy, freq))/freq)*1.0f;
-    ix1 = (ix1*ix1*(3.0f-2.0f*ix1));
-    jy1 = (jy1*jy1*(3.0f-2.0f*jy1));
+    // Fractal amplitudes
+    float amplitudes[8] = {0.0f};
+    amplitudes[0] = 0.8f;
+    amplitudes[1] = 0.3f;
+    amplitudes[2] = 0.8f;
+    amplitudes[3] = 0.4f;
+    amplitudes[4] = 0.2f;
+    amplitudes[5] = 0.12f;
+    amplitudes[6] = 0.05f;
+    amplitudes[7] = 0.02f;
 
-    float ix2 = ((std::fmod(ix, freq2))/freq2)*1.0f;
-    float jy2 = ((std::fmod(jy, freq2))/freq2)*1.0f;
-    ix2 = (ix2*ix2*(3.0f-2.0f*ix2));
-    jy2 = (jy2*jy2*(3.0f-2.0f*jy2));
+    // Compute fractal heightmap
+    float fondamentalValue = 0.0f;
+    float fractalValue = 0.0f;
+    for (int k = 0; k < freqsCnt; ++k)
+    {
+        float ixf = ((std::fmod(ix, freqs[k]))/freqs[k])*1.0f;
+        float jyf = ((std::fmod(jy, freqs[k]))/freqs[k])*1.0f;
+        ixf = (ixf*ixf*(3.0f-2.0f*ixf));
+        jyf = (jyf*jyf*(3.0f-2.0f*jyf));
 
-    float ix3 = ((std::fmod(ix, freq3))/freq3)*1.0f;
-    float jy3 = ((std::fmod(jy, freq3))/freq3)*1.0f;
-    ix3 = (ix3*ix3*(3.0f-2.0f*ix3));
-    jy3 = (jy3*jy3*(3.0f-2.0f*jy3));
+        float rnd = pseudoRand(
+            seed, std::floor(ix/freqs[k]),
+            std::floor(jy/freqs[k])
+        );
+        float rnd2 = pseudoRand(
+            seed, std::floor(ix/freqs[k]),
+            std::floor((jy+freqs[k])/freqs[k])
+        );
+        float rnd3 = pseudoRand(
+            seed, std::floor((ix+freqs[k])/freqs[k]),
+            std::floor(jy/freqs[k])
+        );
+        float rnd4 = pseudoRand(
+            seed, std::floor((ix+freqs[k])/freqs[k]),
+            std::floor((jy+freqs[k])/freqs[k])
+        );
 
-    // Fondamental noise
-    float rnd = pseudoRand(
-        seed, std::floor(ix/freq), std::floor(jy/freq)
-    );
-    float rnd2 = pseudoRand(
-        seed, std::floor(ix/freq), std::floor((jy+freq)/freq)
-    );
-    float rnd3 = pseudoRand(
-        seed, std::floor((ix+freq)/freq), std::floor(jy/freq)
-    );
-    float rnd4 = pseudoRand(
-        seed, std::floor((ix+freq)/freq), std::floor((jy+freq)/freq)
-    );
-    float bilinear1 = rnd + (rnd3-rnd)*ix1 +
-                    (rnd2-rnd)*jy1 + ((rnd4+rnd)-(rnd3+rnd2))*ix1*jy1;
-
-    // Second harmonic noise
-    float brnd = pseudoRand(
-        seed, std::floor(ix/freq2), std::floor(jy/freq2)
-    );
-    float brnd2 = pseudoRand(
-        seed, std::floor(ix/freq2), std::floor((jy+freq2)/freq2)
-    );
-    float brnd3 = pseudoRand(
-        seed, std::floor((ix+freq2)/freq2), std::floor(jy/freq2)
-    );
-    float brnd4 = pseudoRand(
-        seed, std::floor((ix+freq2)/freq2), std::floor((jy+freq2)/freq2)
-    );
-    float bilinear2 = brnd + (brnd3-brnd)*ix2 +
-                    (brnd2-brnd)*jy2 + ((brnd4+brnd)-(brnd3+brnd2))*ix2*jy2;
-
-    // Third harmonic noise
-    float crnd = pseudoRand(
-        seed, std::floor(ix/freq3), std::floor(jy/freq3)
-    );
-    float crnd2 = pseudoRand(
-        seed, std::floor(ix/freq3), std::floor((jy+freq3)/freq3)
-    );
-    float crnd3 = pseudoRand(
-        seed, std::floor((ix+freq3)/freq3), std::floor(jy/freq3)
-    );
-    float crnd4 = pseudoRand(
-        seed, std::floor((ix+freq3)/freq3), std::floor((jy+freq3)/freq3)
-    );
-    float bilinear3 = crnd + (crnd3-crnd)*ix3 +
-                    (crnd2-crnd)*jy3 + ((crnd4+crnd)-(crnd3+crnd2))*ix3*jy3;
+        if (k < 2)
+        {
+            fondamentalValue += (
+                (rnd + (rnd3-rnd)*ixf + (rnd2-rnd)*jyf +
+                ((rnd4+rnd)-(rnd3+rnd2))*ixf*jyf
+            )*amplitudes[k]);
+        }
+        else
+        {
+            fractalValue += (
+                (rnd + (rnd3-rnd)*ixf + (rnd2-rnd)*jyf +
+                ((rnd4+rnd)-(rnd3+rnd2))*ixf*jyf
+            )*amplitudes[k]);
+        }
+    }
+    fractalValue *= fondamentalValue;
 
     // Final fractal heightmap
-    return (bilinear1*0.5f+bilinear2*0.2f+bilinear3*0.1f)*350.0f;
+    return ((fractalValue*1000.0f)-100.0f);
 }
 
 
