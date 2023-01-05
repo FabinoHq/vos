@@ -258,6 +258,13 @@
                 const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
+            //  Generate texture mipmaps                                      //
+            //  return : True if texture mipmaps are generated                //
+            ////////////////////////////////////////////////////////////////////
+            bool generateTextureMipmaps(VkImage& handle,
+                uint32_t width, uint32_t height, uint32_t mipLevels);
+
+            ////////////////////////////////////////////////////////////////////
             //  Upload texture array to graphics memory                       //
             //  return : True if texture array is successfully uploaded       //
             ////////////////////////////////////////////////////////////////////
@@ -266,11 +273,12 @@
                 uint32_t mipLevels, const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
-            //  Generate texture mipmaps                                      //
-            //  return : True if texture mipmaps are generated                //
+            //  Generate texture array mipmaps                                //
+            //  return : True if texture array mipmaps are generated          //
             ////////////////////////////////////////////////////////////////////
-            bool generateTextureMipmaps(VkImage& handle,
-                uint32_t width, uint32_t height, uint32_t mipLevels);
+            bool generateTextureArrayMipmaps(VkImage& handle,
+                uint32_t width, uint32_t height, uint32_t layers,
+                uint32_t mipLevels);
 
             ////////////////////////////////////////////////////////////////////
             //  Upload cubemap to graphics memory                             //
