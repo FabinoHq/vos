@@ -61,7 +61,7 @@ layout(location = 1) in vec2 i_texCoords;
 layout(location = 2) in vec3 i_normals;
 layout(location = 0) out vec2 o_texCoords;
 layout(location = 1) out vec3 o_normals;
-layout(location = 2) out float o_dist;
+layout(location = 2) out float o_height;
 out gl_PerVertex
 {
     vec4 gl_Position;
@@ -69,9 +69,8 @@ out gl_PerVertex
 void main()
 {
     // Compute vertex position
-    vec4 vertexPos = (mats.projview*matrix.model*vec4(i_position, 1.0));
     o_texCoords = i_texCoords;
     o_normals = i_normals;
-    o_dist = vertexPos.w;
-    gl_Position = vertexPos;
+    o_height = i_position.y;
+    gl_Position = mats.projview*matrix.model*vec4(i_position, 1.0);
 }

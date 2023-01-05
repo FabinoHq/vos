@@ -63,21 +63,29 @@ const float alphaFadeDistance = 500.0;
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
 layout(location = 1) in vec3 i_normals;
-layout(location = 2) in float i_dist;
+layout(location = 2) in float i_height;
 layout(location = 0) out vec4 o_color;
 void main()
 {
+    // Heightmap texture layer
+    float yLayer = clamp((i_height*0.01)-0.4, 0.0, 1.0);
+
     // Sample textures
     vec4 texColor = texture(
-        texSampler, vec3(i_texCoords, 0)
+        texSampler, vec3(i_texCoords, yLayer)
     )*constants.color;
     vec4 farColor = texture(
-        texSampler, vec3((i_texCoords*0.125), 0)
+        texSampler, vec3((i_texCoords*0.125), yLayer)
     )*constants.color;
 
     // Compute distance fades
-    float distanceMix = clamp((i_dist-mixFadeDistance)*0.005, 0.0, 1.0);
-    float alphaFade = clamp(1.0-((i_dist-alphaFadeDistance)*0.01), 0.0, 1.0);
+    float zDistance = (gl_FragCoord.z / gl_FragCoord.w);
+    float distanceMix = clamp(
+        (zDistance-mixFadeDistance)*0.005, 0.0, 1.0
+    );
+    float alphaFade = clamp(
+        1.0-((zDistance-alphaFadeDistance)*0.01), 0.0, 1.0
+    );
 
     // Compute output color
     vec4 fragOutput = mix(texColor, farColor, distanceMix);
