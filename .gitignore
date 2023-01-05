@@ -157,6 +157,8 @@
 !Renderer/Vulkan/Shader.cpp
 !Renderer/Vulkan/Texture.h
 !Renderer/Vulkan/Texture.cpp
+!Renderer/Vulkan/TextureArray.h
+!Renderer/Vulkan/TextureArray.cpp
 !Renderer/Vulkan/CubeMap.h
 !Renderer/Vulkan/CubeMap.cpp
 !Renderer/View.h

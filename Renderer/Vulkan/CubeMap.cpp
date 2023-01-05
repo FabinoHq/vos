@@ -307,7 +307,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
         return false;
     }
 
-    // CubeMap successfully loaded
+    // CubeMap successfully updated
     return true;
 }
 

@@ -37,17 +37,17 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/Texture.cpp : Texture management                       //
+//     Renderer/Vulkan/TextureArray.cpp : Texture array management            //
 ////////////////////////////////////////////////////////////////////////////////
-#include "Texture.h"
+#include "TextureArray.h"
 #include "../Renderer.h"
 #include "../../Resources/TextureLoader.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Texture default constructor                                               //
+//  TextureArray default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
-Texture::Texture() :
+TextureArray::TextureArray() :
 m_handle(0),
 m_sampler(0),
 m_view(0),
@@ -63,9 +63,9 @@ m_height(0)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Texture destructor                                                        //
+//  TextureArray destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-Texture::~Texture()
+TextureArray::~TextureArray()
 {
     m_height = 0;
     m_width = 0;
@@ -82,25 +82,25 @@ Texture::~Texture()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create texture                                                            //
-//  return : True if texture is successfully created                          //
+//  Create texture array                                                      //
+//  return : True if texture array is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
-    uint32_t width, uint32_t height, uint32_t mipLevels,
-    bool smooth, TextureRepeatMode repeat)
+bool TextureArray::createTextureArray(Renderer& renderer,
+    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
+    uint32_t mipLevels, bool smooth, TextureRepeatMode repeat)
 {
-    // Check texture handle
+    // Check texture array handle
     if (m_handle)
     {
-        // Destroy current texture
-        destroyTexture(renderer);
+        // Destroy current texture array
+        destroyTextureArray(renderer);
     }
 
-    // Check texture size
+    // Check texture array size
     if ((width <= 0) || (width > TextureMaxWidth) ||
         (height <= 0) || (height > TextureMaxHeight))
     {
-        // Invalid texture size
+        // Invalid texture array size
         return false;
     }
 
@@ -146,11 +146,11 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
         return false;
     }
 
-    // Allocate texture memory
-    if (!renderer.m_vulkanMemory.allocateTextureMemory(
+    // Allocate texture array memory
+    if (!renderer.m_vulkanMemory.allocateTextureArrayMemory(
         renderer.m_vulkanDevice, *this, memoryPool))
     {
-        // Could not allocate texture memory
+        // Could not allocate texture array memory
         return false;
     }
 
@@ -246,7 +246,7 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
         return false;
     }
 
-    // Create texture descriptor sets
+    // Create texture array descriptor sets
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
@@ -259,13 +259,13 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
     if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
         &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
-        // Could not allocate texture descriptor sets
+        // Could not allocate texture array descriptor sets
         return false;
     }
 
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        // Update texture descriptor sets
+        // Update texture array descriptor sets
         VkDescriptorImageInfo descImageInfo;
         descImageInfo.sampler = m_sampler;
         descImageInfo.imageView = m_view;
@@ -290,35 +290,35 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
         );
     }
 
-    // Set texture size
+    // Set texture array size
     m_width = width;
     m_height = height;
 
-    // Texture successfully created
+    // Texture array successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update texture                                                            //
-//  return : True if texture is successfully updated                          //
+//  Update texture array                                                      //
+//  return : True if texture array is successfully updated                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
+bool TextureArray::updateTextureArray(Renderer& renderer, TextureLoader& loader,
     VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
     const unsigned char* data,
     bool mipmaps, bool smooth, TextureRepeatMode repeat)
 {
-    // Check texture size
+    // Check texture array size
     if ((width <= 0) || (width > TextureMaxWidth) ||
         (height <= 0) || (height > TextureMaxHeight))
     {
-        // Invalid texture size
+        // Invalid texture array size
         return false;
     }
 
-    // Check texture data
+    // Check texture array data
     if (!data)
     {
-        // Invalid texture data
+        // Invalid texture array data
         return false;
     }
 
@@ -330,33 +330,33 @@ bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
     }
     if (mipLevels <= 1) { mipLevels = 1; }
 
-    // Check current texture
+    // Check current texture array
     if (!m_handle || (width != m_width) || (height != m_height))
     {
-        // Recreate texture
-        destroyTexture(renderer);
-        createTexture(
+        // Recreate texture array
+        destroyTextureArray(renderer);
+        createTextureArray(
             renderer, memoryPool, width, height, mipLevels, smooth, repeat
         );
     }
 
-    // Upload texture to graphics memory
+    // Upload texture array to graphics memory
     if (!loader.uploadTexture(m_handle, width, height, mipLevels, data))
     {
-        // Could not upload texture to graphics memory
+        // Could not upload texture array to graphics memory
         return false;
     }
 
-    // Texture successfully updated
+    // Texture array successfully updated
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind texture                                                              //
+//  Bind texture array                                                        //
 ////////////////////////////////////////////////////////////////////////////////
-void Texture::bind(Renderer& renderer)
+void TextureArray::bind(Renderer& renderer)
 {
-    // Bind texture descriptor set
+    // Bind texture array descriptor set
     vkCmdBindDescriptorSets(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
@@ -365,9 +365,9 @@ void Texture::bind(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy texture                                                           //
+//  Destroy texture array                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void Texture::destroyTexture(Renderer& renderer)
+void TextureArray::destroyTextureArray(Renderer& renderer)
 {
     if (renderer.m_vulkanDevice)
     {
@@ -405,39 +405,39 @@ void Texture::destroyTexture(Renderer& renderer)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Check if the texture has a valid handle                                   //
-//  return : True if the texture is valid                                     //
+//  Check if the texture array has a valid handle                             //
+//  return : True if the texture array is valid                               //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::isValid()
+bool TextureArray::isValid()
 {
     return m_handle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get texture memory requirements                                           //
+//  Get texture array memory requirements                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void Texture::getMemoryRequirements(VkDevice& vulkanDevice,
+void TextureArray::getMemoryRequirements(VkDevice& vulkanDevice,
     VkMemoryRequirements* memoryRequirements)
 {
     vkGetImageMemoryRequirements(vulkanDevice, m_handle, memoryRequirements);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind texture memory                                                       //
-//  return : True if texture memory is successfully binded                    //
+//  Bind texture array memory                                                 //
+//  return : True if texture array memory is successfully binded              //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::bindTextureMemory(VkDevice& vulkanDevice,
+bool TextureArray::bindTextureArrayMemory(VkDevice& vulkanDevice,
     VkDeviceMemory& deviceMemory, VkDeviceSize size, VkDeviceSize offset)
 {
-    // Bind texture memory
+    // Bind texture array memory
     if (vkBindImageMemory(
         vulkanDevice, m_handle, deviceMemory, offset) != VK_SUCCESS)
     {
-        // Could not bind texture memory
+        // Could not bind texture array memory
         return false;
     }
 
-    // Texture memory successfully binded
+    // Texture array memory successfully binded
     m_memorySize = size;
     m_memoryOffset = offset;
     return true;

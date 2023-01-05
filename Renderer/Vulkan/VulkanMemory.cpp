@@ -42,6 +42,7 @@
 #include "VulkanMemory.h"
 #include "VulkanBuffer.h"
 #include "Texture.h"
+#include "TextureArray.h"
 #include "CubeMap.h"
 
 
@@ -589,6 +590,94 @@ bool VulkanMemory::allocateTextureMemory(VkDevice& vulkanDevice,
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Allocate texture array memory                                             //
+//  return : True if texture array memory is allocated                        //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanMemory::allocateTextureArrayMemory(VkDevice& vulkanDevice,
+    TextureArray& textureArray, VulkanMemoryPool memoryPool)
+{
+    // Check texture array handle
+    if (!textureArray.isValid())
+    {
+        // Invalid texture array handle
+        return false;
+    }
+
+    // Check memory type
+    if (m_index[memoryPool] != m_deviceMemoryIndex)
+    {
+        // Invalid memory type
+        return false;
+    }
+
+    // Get memory requirements
+    VkMemoryRequirements memoryRequirements;
+    textureArray.getMemoryRequirements(vulkanDevice, &memoryRequirements);
+
+    // Check memory requirements size
+    if (memoryRequirements.size <= 0)
+    {
+        // Invalid memory requirements size
+        return false;
+    }
+
+    // Check memory type bits
+    if (!(memoryRequirements.memoryTypeBits & (1 << m_index[memoryPool])))
+    {
+        // Invalid memory type bits
+        return false;
+    }
+
+    // Compute memory alignment
+    VkDeviceSize size = memoryRequirements.size;
+    VkDeviceSize alignment = m_memoryAlignment;
+    if (memoryRequirements.alignment >= alignment)
+    {
+        alignment = memoryRequirements.alignment;
+        if ((alignment % m_memoryAlignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+    else
+    {
+        if ((alignment % memoryRequirements.alignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+
+    // Adjust memory size according to alignment
+    VkDeviceSize sizeOffset = (size % alignment);
+    if (sizeOffset != 0)
+    {
+        size += (alignment - sizeOffset);
+    }
+
+    // Adjust memory start offset according to alignment
+    VkDeviceSize startOffset = (m_offset[memoryPool] % alignment);
+    if (startOffset != 0)
+    {
+        m_offset[memoryPool] += (alignment - startOffset);
+    }
+
+    // Bind texture array memory
+    if (!textureArray.bindTextureArrayMemory(vulkanDevice,
+        m_memory[memoryPool], size, m_offset[memoryPool]))
+    {
+        // Could not bind texture array memory
+        return false;
+    }
+
+    // Update current memory offset
+    m_offset[memoryPool] += size;
+
+    // Texture array memory successfully allocated
+    return true;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Allocate cubemap memory                                                   //

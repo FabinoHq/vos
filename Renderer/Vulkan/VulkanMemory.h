@@ -60,6 +60,11 @@
     class Texture;
 
     ////////////////////////////////////////////////////////////////////////////
+    //  TextureArray class declaration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    class TextureArray;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  CubeMap class declaration                                             //
     ////////////////////////////////////////////////////////////////////////////
     class CubeMap;
@@ -192,6 +197,12 @@
             bool allocateTextureMemory(VkDevice& vulkanDevice,
                 Texture& texture, VulkanMemoryPool memoryPool);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Allocate texture array memory                                 //
+            //  return : True if texture array memory is allocated            //
+            ////////////////////////////////////////////////////////////////////
+            bool allocateTextureArrayMemory(VkDevice& vulkanDevice,
+                TextureArray& textureArray, VulkanMemoryPool memoryPool);
 
             ////////////////////////////////////////////////////////////////////
             //  Allocate cubemap memory                                       //

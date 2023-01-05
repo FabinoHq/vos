@@ -237,6 +237,7 @@
     <ClCompile Include="Renderer\Vulkan\Shader.cpp" />
     <ClCompile Include="Renderer\Vulkan\Swapchain.cpp" />
     <ClCompile Include="Renderer\Vulkan\Texture.cpp" />
+    <ClCompile Include="Renderer\Vulkan\TextureArray.cpp" />
     <ClCompile Include="Renderer\Vulkan\UniformBuffer.cpp" />
     <ClCompile Include="Renderer\Vulkan\VertexBuffer.cpp" />
     <ClCompile Include="Renderer\Vulkan\Vulkan.cpp" />
@@ -320,6 +321,7 @@
     <ClInclude Include="Renderer\Vulkan\Shader.h" />
     <ClInclude Include="Renderer\Vulkan\Swapchain.h" />
     <ClInclude Include="Renderer\Vulkan\Texture.h" />
+    <ClInclude Include="Renderer\Vulkan\TextureArray.h" />
     <ClInclude Include="Renderer\Vulkan\UniformBuffer.h" />
     <ClInclude Include="Renderer\Vulkan\VertexBuffer.h" />
     <ClInclude Include="Renderer\Vulkan\Vulkan.h" />

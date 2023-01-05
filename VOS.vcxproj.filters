@@ -209,6 +209,9 @@
     <ClCompile Include="Renderer\HeightMapStream.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\TextureArray.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -481,6 +484,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\HeightMapStream.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\TextureArray.h">
+      <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

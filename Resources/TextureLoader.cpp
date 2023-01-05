@@ -1050,7 +1050,7 @@ bool TextureLoader::preloadTextures()
     if (!m_texturesHigh[TEXTURE_TILE].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
-        true, true, TEXTUREMODE_MIRROR))
+        true, true, TEXTUREMODE_REPEAT))
     {
         // Could not load test texture
         return false;
