@@ -44,7 +44,7 @@ precision highp float;
 precision highp int;
 
 // Texture sampler
-layout(set = 1, binding = 0) uniform sampler2D texSampler;
+layout(set = 1, binding = 0) uniform sampler2DArray texSampler;
 
 // Color, position, offset, and time (push constant)
 layout(push_constant) uniform Constants
@@ -68,8 +68,12 @@ layout(location = 0) out vec4 o_color;
 void main()
 {
     // Sample textures
-    vec4 texColor = texture(texSampler, i_texCoords)*constants.color;
-    vec4 farColor = texture(texSampler, (i_texCoords*0.125))*constants.color;
+    vec4 texColor = texture(
+        texSampler, vec3(i_texCoords, 0)
+    )*constants.color;
+    vec4 farColor = texture(
+        texSampler, vec3((i_texCoords*0.125), 0)
+    )*constants.color;
 
     // Compute distance fades
     float distanceMix = clamp((i_dist-mixFadeDistance)*0.005, 0.0, 1.0);

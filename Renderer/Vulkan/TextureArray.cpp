@@ -54,7 +54,8 @@ m_view(0),
 m_memorySize(0),
 m_memoryOffset(0),
 m_width(0),
-m_height(0)
+m_height(0),
+m_layers(0)
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -67,6 +68,7 @@ m_height(0)
 ////////////////////////////////////////////////////////////////////////////////
 TextureArray::~TextureArray()
 {
+    m_layers = 0;
     m_height = 0;
     m_width = 0;
     m_memoryOffset = 0;
@@ -86,7 +88,8 @@ TextureArray::~TextureArray()
 //  return : True if texture array is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureArray::createTextureArray(Renderer& renderer,
-    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
+    VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height, uint32_t layers,
     uint32_t mipLevels, bool smooth, TextureRepeatMode repeat)
 {
     // Check texture array handle
@@ -98,7 +101,8 @@ bool TextureArray::createTextureArray(Renderer& renderer,
 
     // Check texture array size
     if ((width <= 0) || (width > TextureMaxWidth) ||
-        (height <= 0) || (height > TextureMaxHeight))
+        (height <= 0) || (height > TextureMaxHeight) ||
+        (layers <= 0) || (layers > TextureMaxLayers))
     {
         // Invalid texture array size
         return false;
@@ -115,7 +119,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     imageInfo.extent.height = height;
     imageInfo.extent.depth = 1;
     imageInfo.mipLevels = mipLevels;
-    imageInfo.arrayLayers = 1;
+    imageInfo.arrayLayers = layers;
     imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
     imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
     if (mipLevels > 1)
@@ -222,7 +226,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     viewInfo.pNext = 0;
     viewInfo.flags = 0;
     viewInfo.image = m_handle;
-    viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY;
     viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
     viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -232,7 +236,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     viewInfo.subresourceRange.baseMipLevel = 0;
     viewInfo.subresourceRange.levelCount = mipLevels;
     viewInfo.subresourceRange.baseArrayLayer = 0;
-    viewInfo.subresourceRange.layerCount = 1;
+    viewInfo.subresourceRange.layerCount = layers;
 
     if (vkCreateImageView(
         renderer.m_vulkanDevice, &viewInfo, 0, &m_view) != VK_SUCCESS)
@@ -293,6 +297,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     // Set texture array size
     m_width = width;
     m_height = height;
+    m_layers = layers;
 
     // Texture array successfully created
     return true;
@@ -303,8 +308,8 @@ bool TextureArray::createTextureArray(Renderer& renderer,
 //  return : True if texture array is successfully updated                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool TextureArray::updateTextureArray(Renderer& renderer, TextureLoader& loader,
-    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
-    const unsigned char* data,
+    VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height, uint32_t layers, const unsigned char* data,
     bool mipmaps, bool smooth, TextureRepeatMode repeat)
 {
     // Check texture array size
@@ -331,17 +336,20 @@ bool TextureArray::updateTextureArray(Renderer& renderer, TextureLoader& loader,
     if (mipLevels <= 1) { mipLevels = 1; }
 
     // Check current texture array
-    if (!m_handle || (width != m_width) || (height != m_height))
+    if (!m_handle ||
+        (width != m_width) || (height != m_height) || (layers != m_layers))
     {
         // Recreate texture array
         destroyTextureArray(renderer);
         createTextureArray(
-            renderer, memoryPool, width, height, mipLevels, smooth, repeat
+            renderer, memoryPool, width, height, layers,
+            mipLevels, smooth, repeat
         );
     }
 
     // Upload texture array to graphics memory
-    if (!loader.uploadTexture(m_handle, width, height, mipLevels, data))
+    if (!loader.uploadTextureArray(
+        m_handle, width, height, layers, mipLevels, data))
     {
         // Could not upload texture array to graphics memory
         return false;
@@ -390,6 +398,7 @@ void TextureArray::destroyTextureArray(Renderer& renderer)
         }
     }
 
+    m_layers = 0;
     m_height = 0;
     m_width = 0;
     m_memoryOffset = 0;

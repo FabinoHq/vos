@@ -350,6 +350,14 @@ void TextureLoader::destroyTextureLoader()
     if (m_cubemaps) { delete[] m_cubemaps; }
     m_cubemaps = 0;
 
+    // Destroy textures arrays
+    for (int i = 0; i < TEXTURE_ARRAYSCOUNT; ++i)
+    {
+        m_texturesArrays[i].destroyTextureArray(m_renderer);
+    }
+    if (m_texturesArrays) { delete[] m_texturesArrays; }
+    m_texturesArrays = 0;
+
     // Destroy high textures
     for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
     {
@@ -574,6 +582,178 @@ bool TextureLoader::uploadTexture(VkImage& handle,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Upload texture array to graphics memory                                   //
+//  return : True if texture array is successfully uploaded                   //
+////////////////////////////////////////////////////////////////////////////////
+bool TextureLoader::uploadTextureArray(VkImage& handle,
+    uint32_t width, uint32_t height, uint32_t layers,
+    uint32_t mipLevels, const unsigned char* data)
+{
+    // Reset texture upload memory
+    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
+
+    // Create staging buffer
+    uint32_t textureSize = (width*height*layers*4);
+    if (!m_stagingBuffer.createBuffer(
+        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
+    {
+        // Could not create staging buffer
+        return false;
+    }
+
+    // Write data into staging buffer memory
+    if (!m_renderer.m_vulkanMemory.writeBufferMemory(m_renderer.m_vulkanDevice,
+        m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
+    {
+        // Could not write data into staging buffer memory
+        return false;
+    }
+
+
+    // Reset command pool
+    if (vkResetCommandPool(
+        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    {
+        // Could not reset command pool
+        return false;
+    }
+
+    // Transfer staging buffer data to cubemap buffer
+    VkCommandBufferBeginInfo bufferBeginInfo;
+    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bufferBeginInfo.pNext = 0;
+    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    bufferBeginInfo.pInheritanceInfo = 0;
+
+    if (vkBeginCommandBuffer(m_commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
+    {
+        // Could not record command buffer
+        return false;
+    }
+
+    // Transfer barriers structures
+    VkImageSubresourceRange subresourceRange;
+    subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresourceRange.baseMipLevel = 0;
+    subresourceRange.levelCount = 1;
+    subresourceRange.baseArrayLayer = 0;
+    subresourceRange.layerCount = layers;
+
+    VkImageMemoryBarrier undefinedToTransfer;
+    undefinedToTransfer.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    undefinedToTransfer.pNext = 0;
+    undefinedToTransfer.srcAccessMask = 0;
+    undefinedToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    undefinedToTransfer.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    undefinedToTransfer.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    undefinedToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    undefinedToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    undefinedToTransfer.image = handle;
+    undefinedToTransfer.subresourceRange = subresourceRange;
+
+    VkImageMemoryBarrier transferToShader;
+    transferToShader.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    transferToShader.pNext = 0;
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.image = handle;
+    transferToShader.subresourceRange = subresourceRange;
+
+    // Barrier from undefined to transfer optimal
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        0, 0, 0, 0, 0, 1, &undefinedToTransfer
+    );
+
+    VkBufferImageCopy imageCopy[TextureMaxLayers];
+    for (uint32_t i = 0; i < layers; ++i)
+    {
+        imageCopy[i].bufferOffset = ((width*height*4) * i);
+        imageCopy[i].bufferRowLength = 0;
+        imageCopy[i].bufferImageHeight = 0;
+        imageCopy[i].imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        imageCopy[i].imageSubresource.mipLevel = 0;
+        imageCopy[i].imageSubresource.baseArrayLayer = i;
+        imageCopy[i].imageSubresource.layerCount = 1;
+        imageCopy[i].imageOffset.x = 0;
+        imageCopy[i].imageOffset.y = 0;
+        imageCopy[i].imageOffset.z = 0;
+        imageCopy[i].imageExtent.width = width;
+        imageCopy[i].imageExtent.height = height;
+        imageCopy[i].imageExtent.depth = 1;
+    }
+
+    // Copy staging buffer into texture buffer
+    vkCmdCopyBufferToImage(
+        m_commandBuffer, m_stagingBuffer.handle, handle,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, layers, imageCopy
+    );
+
+    // Barrier from transfer to shader read-only (done after mipmaps if any)
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+        0, 0, 0, 0, 0, 1, &transferToShader
+    );
+
+    if (vkEndCommandBuffer(m_commandBuffer) != VK_SUCCESS)
+    {
+        // Could not end command buffer
+        return false;
+    }
+
+    // Reset staging fence
+    if (vkResetFences(
+        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    {
+        // Could not reset staging fence
+        return false;
+    }
+
+    // Submit queue
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = 0;
+    submitInfo.waitSemaphoreCount = 0;
+    submitInfo.pWaitSemaphores = 0;
+    submitInfo.pWaitDstStageMask = 0;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &m_commandBuffer;
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = 0;
+
+    if (vkQueueSubmit(m_graphicsQueue.handle,
+        1, &submitInfo, m_fence) != VK_SUCCESS)
+    {
+        // Could not submit queue
+        return false;
+    }
+
+    // Wait for transfer to finish
+    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+        &m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
+    {
+        // Transfer timed out
+        return false;
+    }
+
+    // Destroy staging buffer
+    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+
+    // Texture array successfully uploaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Generate texture mipmaps                                                  //
 //  return : True if texture mipmaps are generated                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -788,7 +968,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
 
     // Create staging buffer
-    uint32_t textureSize = (width*height*4*6);
+    uint32_t textureSize = (width*height*6*4);
     if (!m_stagingBuffer.createBuffer(
         m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -1068,21 +1248,42 @@ bool TextureLoader::preloadTextures()
 
 
     // Load texture array
+    unsigned int texArrayLayers = 2;
     PNGFile texArray1;
     if (!texArray1.loadImage("Textures/tile.png")) return false;
     PNGFile texArray2;
     if (!texArray2.loadImage("Textures/tile2.png")) return false;
 
+    // Allocate texture array data
+    unsigned int texArrayWidth = texArray1.getWidth();
+    unsigned int texArrayHeight = texArray1.getHeight();
+    unsigned char* texArrayData = new (std::nothrow)
+        unsigned char[texArrayWidth*texArrayHeight*4*texArrayLayers];
+    if (!texArrayData) return false;
+
+    // Copy texture array data
+    memcpy(
+        &texArrayData[texArrayWidth*texArrayHeight*4*0],
+        texArray1.getImage(), texArrayWidth*texArrayHeight*4
+    );
+    memcpy(
+        &texArrayData[texArrayWidth*texArrayHeight*4*1],
+        texArray2.getImage(), texArrayWidth*texArrayHeight*4
+    );
+
+    // Cleanup array textures
+    texArray1.destroyImage();
+    texArray2.destroyImage();
+
+    // Create texture array
     if (!m_texturesArrays[TEXTURE_ARRAY1].updateTextureArray(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
-        texArray1.getWidth(), texArray1.getHeight(), texArray1.getImage(),
-        true, true, TEXTUREMODE_REPEAT))
+        texArrayWidth, texArrayHeight, texArrayLayers, texArrayData,
+        false, true, TEXTUREMODE_REPEAT))
     {
         // Could not load texture array
         return false;
     }
-    texArray1.destroyImage();
-    texArray2.destroyImage();
 
 
     // Load cubemap textures

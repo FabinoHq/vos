@@ -77,9 +77,12 @@
     ////////////////////////////////////////////////////////////////////////////
     const uint32_t TextureMaxWidth = 4096;
     const uint32_t TextureMaxHeight = 4096;
+    const uint32_t TextureMaxLayers = 8;
     const uint32_t CubeMapMaxWidth = 2048;
     const uint32_t CubeMapMaxHeight = 2048;
     const uint32_t TextureMaxSize = (TextureMaxWidth*TextureMaxHeight*4);
+    const uint32_t TextureArrayMaxSize =
+        (TextureMaxWidth*TextureMaxHeight*TextureMaxLayers*4);
     const uint32_t CubeMapMaxSize = (CubeMapMaxWidth*CubeMapMaxHeight*4*6);
     const uint64_t TextureFenceTimeout = 100000000000;
     const double TextureLoaderIdleSleepTime = 0.01;
@@ -253,6 +256,14 @@
             bool uploadTexture(VkImage& handle,
                 uint32_t width, uint32_t height, uint32_t mipLevels,
                 const unsigned char* data);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Upload texture array to graphics memory                       //
+            //  return : True if texture array is successfully uploaded       //
+            ////////////////////////////////////////////////////////////////////
+            bool uploadTextureArray(VkImage& handle,
+                uint32_t width, uint32_t height, uint32_t layers,
+                uint32_t mipLevels, const unsigned char* data);
 
             ////////////////////////////////////////////////////////////////////
             //  Generate texture mipmaps                                      //
