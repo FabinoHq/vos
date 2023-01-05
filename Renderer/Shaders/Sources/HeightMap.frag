@@ -57,8 +57,8 @@ layout(push_constant) uniform Constants
 } constants;
 
 // Distance fades
-const float mixFadeDistance = 50.0f;
-const float alphaFadeDistance = 500.0f;
+const float mixFadeDistance = 50.0;
+const float alphaFadeDistance = 500.0;
 
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
