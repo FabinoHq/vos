@@ -1467,11 +1467,15 @@ bool TextureLoader::preloadTextures()
 
 
     // Load texture array
-    unsigned int texArrayLayers = 2;
+    unsigned int texArrayLayers = 4;
     PNGFile texArray1;
     if (!texArray1.loadImage("Textures/tile.png")) return false;
     PNGFile texArray2;
     if (!texArray2.loadImage("Textures/tile2.png")) return false;
+    PNGFile texArray3;
+    if (!texArray3.loadImage("Textures/tile3.png")) return false;
+    PNGFile texArray4;
+    if (!texArray4.loadImage("Textures/tile4.png")) return false;
 
     // Allocate texture array data
     unsigned int texArrayWidth = texArray1.getWidth();
@@ -1489,10 +1493,20 @@ bool TextureLoader::preloadTextures()
         &texArrayData[texArrayWidth*texArrayHeight*4*1],
         texArray2.getImage(), texArrayWidth*texArrayHeight*4
     );
+    memcpy(
+        &texArrayData[texArrayWidth*texArrayHeight*4*2],
+        texArray3.getImage(), texArrayWidth*texArrayHeight*4
+    );
+    memcpy(
+        &texArrayData[texArrayWidth*texArrayHeight*4*3],
+        texArray4.getImage(), texArrayWidth*texArrayHeight*4
+    );
 
     // Cleanup array textures
     texArray1.destroyImage();
     texArray2.destroyImage();
+    texArray3.destroyImage();
+    texArray4.destroyImage();
 
     // Create texture array
     if (!m_texturesArrays[TEXTURE_ARRAY1].updateTextureArray(m_renderer, *this,

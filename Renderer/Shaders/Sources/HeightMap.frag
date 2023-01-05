@@ -68,7 +68,7 @@ layout(location = 0) out vec4 o_color;
 void main()
 {
     // Heightmap texture layer
-    float yLayer = clamp((i_height*0.01)-0.4, 0.0, 1.0);
+    float yLayer = clamp((i_height-100.0)*0.004, 0.0, 3.0);
 
     // Sample textures
     vec4 texColor = texture(
