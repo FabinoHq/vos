@@ -1008,7 +1008,7 @@ bool TextureLoader::generateTextureArrayMipmaps(VkImage& handle,
     subresourceRange.baseMipLevel = 0;
     subresourceRange.levelCount = 1;
     subresourceRange.baseArrayLayer = 0;
-    subresourceRange.layerCount = 1;
+    subresourceRange.layerCount = layers;
 
     VkImageMemoryBarrier transferToTransfer;
     transferToTransfer.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -1069,25 +1069,24 @@ bool TextureLoader::generateTextureArrayMipmaps(VkImage& handle,
     uint32_t mipHeight = height;
     for (uint32_t i = 1; i < mipLevels; ++i)
     {
+        subresourceRange.baseMipLevel = (i-1);
+        transferToTransfer.subresourceRange = subresourceRange;
+        transferToShader.subresourceRange = subresourceRange;
+
+        // Barrier from transfer dst to transfer src
+        vkCmdPipelineBarrier(
+            m_commandBuffer,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            0, 0, 0, 0, 0, 1, &transferToTransfer
+        );
+
         for (uint32_t j = 0; j < layers; ++j)
         {
-            subresourceRange.baseArrayLayer = j;
-            subresourceRange.baseMipLevel = (i-1);
-            transferToTransfer.subresourceRange = subresourceRange;
-            transferToShader.subresourceRange = subresourceRange;
             srcSubresource.mipLevel = (i-1);
             srcSubresource.baseArrayLayer = j;
             dstSubresource.mipLevel = i;
             dstSubresource.baseArrayLayer = j;
-
-            // Barrier from transfer dst to transfer src
-            vkCmdPipelineBarrier(
-                m_commandBuffer,
-                VK_PIPELINE_STAGE_TRANSFER_BIT,
-                VK_PIPELINE_STAGE_TRANSFER_BIT,
-                0, 0, 0, 0, 0, 1, &transferToTransfer
-            );
-
             blit.srcSubresource = srcSubresource;
             blit.srcOffsets[1].x = mipWidth;
             blit.srcOffsets[1].y = mipHeight;
@@ -1102,39 +1101,35 @@ bool TextureLoader::generateTextureArrayMipmaps(VkImage& handle,
                 handle, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 1, &blit, VK_FILTER_LINEAR
             );
-
-            // Barrier from transfer to shader read-only
-            vkCmdPipelineBarrier(
-                m_commandBuffer,
-                VK_PIPELINE_STAGE_TRANSFER_BIT,
-                VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-                0, 0, 0, 0, 0, 1, &transferToShader
-            );
         }
 
-        // Next mipmap
-        if (mipWidth > 1) { mipWidth >>= 1; }   // mipWidth = mipWidth/2
-        if (mipHeight > 1) { mipHeight >>= 1; } // mipHeight = mipHeight/2
-    }
-
-    for (uint32_t j = 0; j < layers; ++j)
-    {
-        transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-        transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        subresourceRange.baseMipLevel = (mipLevels - 1);
-        subresourceRange.baseArrayLayer = j;
-        transferToShader.subresourceRange = subresourceRange;
-
-        // Barrier from transfer to shader read-only (last mip level)
+        // Barrier from transfer to shader read-only
         vkCmdPipelineBarrier(
             m_commandBuffer,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             0, 0, 0, 0, 0, 1, &transferToShader
         );
+
+        // Next mipmap
+        if (mipWidth > 1) { mipWidth >>= 1; }   // mipWidth = mipWidth/2
+        if (mipHeight > 1) { mipHeight >>= 1; } // mipHeight = mipHeight/2
     }
+
+    subresourceRange.baseMipLevel = (mipLevels - 1);
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    transferToShader.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    transferToShader.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    transferToShader.subresourceRange = subresourceRange;
+
+    // Barrier from transfer to shader read-only (last mip level)
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+        0, 0, 0, 0, 0, 1, &transferToShader
+    );
 
     if (vkEndCommandBuffer(m_commandBuffer) != VK_SUCCESS)
     {
