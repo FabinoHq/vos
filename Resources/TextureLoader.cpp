@@ -949,7 +949,8 @@ bool TextureLoader::loadEmbeddedTextures()
     // Load cursor texture
     if (!m_texturesGUI[TEXTURE_CURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
-        CursorImageWidth, CursorImageHeight, CursorImage, false, false))
+        CursorImageWidth, CursorImageHeight, CursorImage,
+        false, false, TEXTUREMODE_CLAMP))
     {
         // Could not load cursor texture
         return false;
@@ -959,7 +960,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_NSCURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         NSCursorImageWidth, NSCursorImageHeight, NSCursorImage,
-        false, false, false))
+        false, false, TEXTUREMODE_CLAMP))
     {
         // Could not load NS cursor texture
         return false;
@@ -969,7 +970,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_EWCURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         EWCursorImageWidth, EWCursorImageHeight, EWCursorImage,
-        false, false, false))
+        false, false, TEXTUREMODE_CLAMP))
     {
         // Could not load EW cursor texture
         return false;
@@ -979,7 +980,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_NESWCURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         NESWCursorImageWidth, NESWCursorImageHeight, NESWCursorImage,
-        false, false, false))
+        false, false, TEXTUREMODE_CLAMP))
     {
         // Could not load NE-SW cursor texture
         return false;
@@ -989,7 +990,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_NWSECURSOR].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         NWSECursorImageWidth, NWSECursorImageHeight, NWSECursorImage,
-        false, false, false))
+        false, false, TEXTUREMODE_CLAMP))
     {
         // Could not load NW-SE cursor texture
         return false;
@@ -999,7 +1000,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_WINDOW].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         WindowImageWidth, WindowImageHeight, WindowImage,
-        true, false, false))
+        false, true, TEXTUREMODE_CLAMP))
     {
         // Could not load window texture
         return false;
@@ -1009,7 +1010,7 @@ bool TextureLoader::loadEmbeddedTextures()
     if (!m_texturesGUI[TEXTURE_PIXELFONT].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         PxFontImageWidth, PxFontImageHeight, PxFontImage,
-        true, false, false))
+        false, true, TEXTUREMODE_CLAMP))
     {
         // Could not load pixel font texture
         return false;
@@ -1034,7 +1035,7 @@ bool TextureLoader::preloadTextures()
     if (!m_texturesHigh[TEXTURE_TEST].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
-        false, true, false))
+        false, false, TEXTUREMODE_CLAMP))
     {
         // Could not load test texture
         return false;
@@ -1049,7 +1050,7 @@ bool TextureLoader::preloadTextures()
     if (!m_texturesHigh[TEXTURE_TILE].updateTexture(m_renderer, *this,
         VULKAN_MEMORY_TEXTURES,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
-        true, true, true))
+        true, true, TEXTUREMODE_MIRROR))
     {
         // Could not load test texture
         return false;

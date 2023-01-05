@@ -87,7 +87,7 @@ Texture::~Texture()
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, uint32_t mipLevels,
-    bool smooth, bool repeat)
+    bool smooth, TextureRepeatMode repeat)
 {
     // Check texture handle
     if (m_handle)
@@ -174,10 +174,15 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
     {
         samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
     }
-    if (repeat)
+    if (repeat == TEXTUREMODE_REPEAT)
     {
         samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+    }
+    else if (repeat == TEXTUREMODE_MIRROR)
+    {
+        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
     }
     else
     {
@@ -299,7 +304,8 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
 ////////////////////////////////////////////////////////////////////////////////
 bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
     VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
-    const unsigned char* data, bool smooth, bool repeat, bool mipmaps)
+    const unsigned char* data,
+    bool mipmaps, bool smooth, TextureRepeatMode repeat)
 {
     // Check texture size
     if ((width <= 0) || (width > TextureMaxWidth) ||

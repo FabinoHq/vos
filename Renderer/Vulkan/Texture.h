@@ -53,6 +53,17 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  TextureRepeatMode enumeration                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    enum TextureRepeatMode
+    {
+        TEXTUREMODE_CLAMP = 0,
+        TEXTUREMODE_REPEAT = 1,
+        TEXTUREMODE_MIRROR = 2
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Renderer class declaration                                            //
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
@@ -86,7 +97,8 @@
             ////////////////////////////////////////////////////////////////////
             bool createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height, uint32_t mipLevels,
-                bool smooth = true, bool repeat = false);
+                bool smooth = true,
+                TextureRepeatMode repeat = TEXTUREMODE_CLAMP);
 
             ////////////////////////////////////////////////////////////////////
             //  Update texture                                                //
@@ -95,7 +107,8 @@
             bool updateTexture(Renderer& renderer, TextureLoader& loader,
                 VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
                 const unsigned char* data,
-                bool smooth = true, bool repeat = false, bool mipmaps = false);
+                bool mipmaps = false, bool smooth = true,
+                TextureRepeatMode repeat = TEXTUREMODE_CLAMP);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture                                                  //
