@@ -67,16 +67,19 @@ layout(location = 2) in float i_height;
 layout(location = 0) out vec4 o_color;
 void main()
 {
-    // Heightmap texture layer
-    float yLayer = clamp((i_height-100.0)*0.004, 0.0, 3.0);
+    // Heightmap texture layers
+    float yHeight = ((i_height-100.0)*0.004);
+    float yLayer = clamp(floor(yHeight), 0.0, 3.0);
+    float yLayer2 = clamp(ceil(yHeight-0.8), 0.0, 3.0);
+    float mixLayers = clamp(((yHeight-0.8)-yLayer)*5.0, 0.0, 1.0);
 
     // Sample textures
-    vec4 texColor = texture(
-        texSampler, vec3(i_texCoords, yLayer)
-    )*constants.color;
-    vec4 farColor = texture(
-        texSampler, vec3((i_texCoords*0.125), yLayer)
-    )*constants.color;
+    vec4 texColor = texture(texSampler, vec3(i_texCoords, yLayer));
+    vec4 farColor = texture(texSampler, vec3((i_texCoords*0.125), yLayer));
+    vec4 texColor2 = texture(texSampler, vec3(i_texCoords, yLayer2));
+    vec4 farColor2 = texture(texSampler, vec3((i_texCoords*0.125), yLayer2));
+    vec4 finalNear = mix(texColor, texColor2, mixLayers);
+    vec4 finalFar = mix(farColor, farColor2, mixLayers);
 
     // Compute distance fades
     float zDistance = (gl_FragCoord.z / gl_FragCoord.w);
@@ -88,7 +91,7 @@ void main()
     );
 
     // Compute output color
-    vec4 fragOutput = mix(texColor, farColor, distanceMix);
+    vec4 fragOutput = mix(finalNear, finalFar, distanceMix);
     fragOutput.a *= alphaFade;
-    o_color = fragOutput;
+    o_color = fragOutput*constants.color;
 }
