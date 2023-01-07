@@ -47,6 +47,14 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  BackRenderer settings                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t BackRendererMaxFrames = 2;
+    const uint32_t BackRendererMaxWidth = 4096;
+    const uint32_t BackRendererMaxHeight = 4096;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  BackRenderer class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
     class BackRenderer
@@ -67,12 +75,12 @@
             //  Init back renderer                                            //
             //  return : True if the back renderer is successfully loaded     //
             ////////////////////////////////////////////////////////////////////
-            bool init();
+            bool init(VkDevice& vulkanDevice, uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
             //  Cleanup back renderer                                         //
             ////////////////////////////////////////////////////////////////////
-            void cleanup();
+            void cleanup(VkDevice& vulkanDevice);
 
 
         private:
@@ -88,6 +96,13 @@
 
 
         public:
+            VkExtent2D          m_extent;       // Back renderer extent
+
+            VkImage             m_images[BackRendererMaxFrames];
+            VkImage             m_depthImages[BackRendererMaxFrames];
+            VkImageView         m_views[BackRendererMaxFrames];
+            VkImageView         m_depthViews[BackRendererMaxFrames];
+            VkFramebuffer       m_framebuffers[BackRendererMaxFrames];
     };
 
 

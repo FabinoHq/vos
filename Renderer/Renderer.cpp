@@ -697,8 +697,7 @@ bool Renderer::endFrame()
     submitInfo.pCommandBuffers =
         &m_swapchain.commandBuffers[m_swapchain.current];
     submitInfo.signalSemaphoreCount = 1;
-    submitInfo.pSignalSemaphores =
-        &m_swapchain.renderFinished[m_swapchain.current];
+    submitInfo.pSignalSemaphores = &m_swapchain.renderDone[m_swapchain.current];
 
     if (vkQueueSubmit(m_surfaceQueue.handle, 1, &submitInfo,
         m_swapchain.fences[m_swapchain.current]) != VK_SUCCESS)
@@ -712,7 +711,7 @@ bool Renderer::endFrame()
     present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     present.pNext = 0;
     present.waitSemaphoreCount = 1;
-    present.pWaitSemaphores = &m_swapchain.renderFinished[m_swapchain.current];
+    present.pWaitSemaphores = &m_swapchain.renderDone[m_swapchain.current];
     present.swapchainCount = 1;
     present.pSwapchains = &m_swapchain.handle;
     present.pImageIndices = &m_frameIndex;

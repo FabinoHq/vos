@@ -64,7 +64,7 @@ ratio(0.0f)
         depthViews[i] = 0;
         framebuffers[i] = 0;
         renderReady[i] = 0;
-        renderFinished[i] = 0;
+        renderDone[i] = 0;
         fences[i] = 0;
         commandPools[i] = 0;
         commandBuffers[i] = 0;
@@ -81,11 +81,11 @@ Swapchain::~Swapchain()
         commandBuffers[i] = 0;
         commandPools[i] = 0;
         fences[i] = 0;
-        renderFinished[i] = 0;
+        renderDone[i] = 0;
         renderReady[i] = 0;
         framebuffers[i] = 0;
         depthViews[i] = 0;
-        views[i]= 0;
+        views[i] = 0;
         depthImages[i] = 0;
         images[i] = 0;
     }
@@ -517,12 +517,6 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     // Create swapchain images views
-    VkComponentMapping components;
-    components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-    components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-    components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-    components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-
     VkImageSubresourceRange subresource;
     subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresource.baseMipLevel = 0;
@@ -540,7 +534,10 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         imageView.image = images[i];
         imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
         imageView.format = format;
-        imageView.components = components;
+        imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         imageView.subresourceRange = subresource;
 
         if (vkCreateImageView(
@@ -554,12 +551,6 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     // Create swapchain depth images views
-    VkComponentMapping depthComponents;
-    depthComponents.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-    depthComponents.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-    depthComponents.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-    depthComponents.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-
     VkImageSubresourceRange depthSubresource;
     depthSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
     depthSubresource.baseMipLevel = 0;
@@ -577,7 +568,10 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         depthImageView.image = depthImages[i];
         depthImageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
         depthImageView.format = VK_FORMAT_D32_SFLOAT;
-        depthImageView.components = depthComponents;
+        depthImageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         depthImageView.subresourceRange = depthSubresource;
 
         if (vkCreateImageView(
@@ -755,7 +749,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 
         // Create render finished semaphore
         if (vkCreateSemaphore(
-            vulkanDevice, &semaphoreInfo, 0, &renderFinished[i]) != VK_SUCCESS)
+            vulkanDevice, &semaphoreInfo, 0, &renderDone[i]) != VK_SUCCESS)
         {
             // Could not create render finished semaphore
             SysMessage::box() << "[0x3044] Could not create finish semaphore\n";
@@ -1247,12 +1241,6 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     // Recreate swapchain images views
-    VkComponentMapping components;
-    components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-    components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-    components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-    components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-
     VkImageSubresourceRange subresource;
     subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresource.baseMipLevel = 0;
@@ -1270,7 +1258,10 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         imageView.image = images[i];
         imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
         imageView.format = format;
-        imageView.components = components;
+        imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         imageView.subresourceRange = subresource;
 
         if (vkCreateImageView(
@@ -1282,12 +1273,6 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     // Recreate swapchain depth images views
-    VkComponentMapping depthComponents;
-    depthComponents.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-    depthComponents.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-    depthComponents.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-    depthComponents.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-
     VkImageSubresourceRange depthSubresource;
     depthSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
     depthSubresource.baseMipLevel = 0;
@@ -1305,7 +1290,10 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         depthImageView.image = depthImages[i];
         depthImageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
         depthImageView.format = VK_FORMAT_D32_SFLOAT;
-        depthImageView.components = depthComponents;
+        depthImageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         depthImageView.subresourceRange = depthSubresource;
 
         if (vkCreateImageView(
@@ -1392,7 +1380,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
                     vkDestroyRenderPass(vulkanDevice, renderPass, 0);
                 }
 
-                for (uint32_t i = 0; i < frames; ++i)
+                for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
                 {
                     // Destroy command buffer
                     if (commandPools[i] && vkFreeCommandBuffers)
@@ -1420,10 +1408,10 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
                     // Destroy semaphores
                     if (vkDestroySemaphore)
                     {
-                        if (renderFinished[i])
+                        if (renderDone[i])
                         {
                             vkDestroySemaphore(
-                                vulkanDevice, renderFinished[i], 0
+                                vulkanDevice, renderDone[i], 0
                             );
                         }
                         if (renderReady[i])
@@ -1475,10 +1463,12 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
         commandBuffers[i] = 0;
         commandPools[i] = 0;
         fences[i] = 0;
-        renderFinished[i] = 0;
+        renderDone[i] = 0;
         renderReady[i] = 0;
         framebuffers[i] = 0;
+        depthViews[i] = 0;
         views[i]= 0;
+        depthImages[i] = 0;
         images[i] = 0;
     }
     ratio = 0.0f;

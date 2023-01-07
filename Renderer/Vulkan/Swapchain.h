@@ -124,7 +124,7 @@
             VkImageView         depthViews[RendererMaxSwapchainFrames];
             VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
             VkSemaphore         renderReady[RendererMaxSwapchainFrames];
-            VkSemaphore         renderFinished[RendererMaxSwapchainFrames];
+            VkSemaphore         renderDone[RendererMaxSwapchainFrames];
             VkFence             fences[RendererMaxSwapchainFrames];
             VkCommandPool       commandPools[RendererMaxSwapchainFrames];
             VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];

@@ -46,6 +46,7 @@
     #include "../System/SysEvent.h"
 
     #include "../Renderer/Renderer.h"
+    #include "../Renderer/BackRenderer.h"
     #include "../Renderer/Vulkan/CubeMap.h"
     #include "../Renderer/View.h"
     #include "../Renderer/Camera.h"
@@ -132,6 +133,7 @@
         private:
             Renderer&       m_renderer;         // Renderer
             Resources&      m_resources;        // Resources
+            BackRenderer    m_backRenderer;     // Back renderer
 
             View            m_view;             // View
             Camera          m_camera;           // Camera

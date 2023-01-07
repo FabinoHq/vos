@@ -48,6 +48,7 @@
 Game::Game(Renderer& renderer, Resources& resources) :
 m_renderer(renderer),
 m_resources(resources),
+m_backRenderer(),
 m_view(),
 m_camera(),
 m_freeflycam(),
@@ -87,6 +88,13 @@ Game::~Game()
 ////////////////////////////////////////////////////////////////////////////////
 bool Game::init()
 {
+    // Init back renderer
+    if (!m_backRenderer.init(m_renderer.m_vulkanDevice, 256, 256))
+    {
+        // Could not init back renderer
+        return false;
+    }
+
     // Init view
     if (!m_view.init(m_renderer))
     {
@@ -250,6 +258,9 @@ void Game::destroy()
 
     // Destroy view
     m_view.destroyView(m_renderer);
+
+    // Cleanup back renderer
+    m_backRenderer.cleanup(m_renderer.m_vulkanDevice);
 }
 
 

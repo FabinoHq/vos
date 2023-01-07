@@ -125,7 +125,10 @@
             //  Check if the texture has a valid handle                       //
             //  return : True if the texture is valid                         //
             ////////////////////////////////////////////////////////////////////
-            bool isValid();
+            inline bool isValid()
+            {
+                return m_handle;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get texture memory requirements                               //
