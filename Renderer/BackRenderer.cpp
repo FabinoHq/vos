@@ -82,13 +82,13 @@ BackRenderer::~BackRenderer()
 //  Init back renderer                                                        //
 //  return : True if the back renderer is successfully loaded                 //
 ////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::init(VkDevice& vulkanDevice, uint32_t width, uint32_t height)
+bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
 {
     // Check back renderer size
     if ((width <= 0) || (width > BackRendererMaxWidth) ||
         (height <= 0) || (height > BackRendererMaxHeight))
     {
-        // Invalid texture size
+        // Invalid back renderer size
         return false;
     }
 
@@ -116,7 +116,7 @@ bool BackRenderer::init(VkDevice& vulkanDevice, uint32_t width, uint32_t height)
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
         if (vkCreateImage(
-            vulkanDevice, &imageInfo, 0, &m_images[i]) != VK_SUCCESS)
+            renderer.m_vulkanDevice, &imageInfo, 0, &m_images[i]) != VK_SUCCESS)
         {
             // Could not create image
             return false;
@@ -128,12 +128,12 @@ bool BackRenderer::init(VkDevice& vulkanDevice, uint32_t width, uint32_t height)
         }
 
         // Allocate image memory
-        /*if (!renderer.m_vulkanMemory.allocateTextureMemory(
-            renderer.m_vulkanDevice, *this, memoryPool))
+        if (!renderer.m_vulkanMemory.allocateBackRendererImage(
+            renderer.m_vulkanDevice, m_images[i]))
         {
             // Could not allocate image memory
             return false;
-        }*/
+        }
     }
 
     // Create back renderer depth images
@@ -159,7 +159,7 @@ bool BackRenderer::init(VkDevice& vulkanDevice, uint32_t width, uint32_t height)
         imageInfo.pQueueFamilyIndices = 0;
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-        if (vkCreateImage(vulkanDevice,
+        if (vkCreateImage(renderer.m_vulkanDevice,
             &imageInfo, 0, &m_depthImages[i]) != VK_SUCCESS)
         {
             // Could not create depth image
@@ -172,12 +172,12 @@ bool BackRenderer::init(VkDevice& vulkanDevice, uint32_t width, uint32_t height)
         }
 
         // Allocate depth image memory
-        /*if (!vulkanMemory.allocateSwapchainImage(
-            vulkanDevice, m_depthImages[i]))
+        if (!renderer.m_vulkanMemory.allocateBackRendererImage(
+            renderer.m_vulkanDevice, m_depthImages[i]))
         {
             // Could not allocate depth image memory
             return false;
-        }*/
+        }
     }
 
     // Create back renderer images views
@@ -205,7 +205,7 @@ bool BackRenderer::init(VkDevice& vulkanDevice, uint32_t width, uint32_t height)
         imageView.subresourceRange = subresource;
 
         if (vkCreateImageView(
-            vulkanDevice, &imageView, 0, &m_views[i]) != VK_SUCCESS)
+            renderer.m_vulkanDevice, &imageView, 0, &m_views[i]) != VK_SUCCESS)
         {
             return false;
         }
@@ -235,8 +235,8 @@ bool BackRenderer::init(VkDevice& vulkanDevice, uint32_t width, uint32_t height)
         depthImageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         depthImageView.subresourceRange = depthSubresource;
 
-        if (vkCreateImageView(
-            vulkanDevice, &depthImageView, 0, &m_depthViews[i]) != VK_SUCCESS)
+        if (vkCreateImageView(renderer.m_vulkanDevice,
+            &depthImageView, 0, &m_depthViews[i]) != VK_SUCCESS)
         {
             return false;
         }
@@ -253,13 +253,13 @@ bool BackRenderer::init(VkDevice& vulkanDevice, uint32_t width, uint32_t height)
 ////////////////////////////////////////////////////////////////////////////////
 //  Cleanup back renderer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void BackRenderer::cleanup(VkDevice& vulkanDevice)
+void BackRenderer::cleanup(Renderer& renderer)
 {
-    if (vulkanDevice)
+    if (renderer.m_vulkanDevice)
     {
         if (vkDeviceWaitIdle)
         {
-            if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
+            if (vkDeviceWaitIdle(renderer.m_vulkanDevice) == VK_SUCCESS)
             {
                 for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
                 {
@@ -267,28 +267,42 @@ void BackRenderer::cleanup(VkDevice& vulkanDevice)
                     if (m_framebuffers[i] && vkDestroyFramebuffer)
                     {
                         vkDestroyFramebuffer(
-                            vulkanDevice, m_framebuffers[i], 0
+                            renderer.m_vulkanDevice, m_framebuffers[i], 0
                         );
                     }
 
-                    // Destroy swapchain depth images views
+                    // Destroy back renderer depth images views
                     if (m_depthViews[i] && vkDestroyImageView)
                     {
                         // Destroy image view
-                        vkDestroyImageView(vulkanDevice, m_depthViews[i], 0);
+                        vkDestroyImageView(
+                            renderer.m_vulkanDevice, m_depthViews[i], 0
+                        );
                     }
 
-                    // Destroy swapchain images views
+                    // Destroy back renderer images views
                     if (m_views[i] && vkDestroyImageView)
                     {
                         // Destroy image view
-                        vkDestroyImageView(vulkanDevice, m_views[i], 0);
+                        vkDestroyImageView(
+                            renderer.m_vulkanDevice, m_views[i], 0
+                        );
                     }
 
-                    // Destroy swapchain depth images
+                    // Destroy back renderer depth images
                     if (m_depthImages[i] && vkDestroyImage)
                     {
-                        vkDestroyImage(vulkanDevice, m_depthImages[i], 0);
+                        vkDestroyImage(
+                            renderer.m_vulkanDevice, m_depthImages[i], 0
+                        );
+                    }
+
+                    // Destroy back renderer images
+                    if (m_depthImages[i] && vkDestroyImage)
+                    {
+                        vkDestroyImage(
+                            renderer.m_vulkanDevice, m_images[i], 0
+                        );
                     }
                 }
             }

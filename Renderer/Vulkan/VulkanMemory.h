@@ -86,18 +86,19 @@
     enum VulkanMemoryPool
     {
         VULKAN_MEMORY_SWAPCHAIN = 0,
-        VULKAN_MEMORY_RENDERDEVICE = 1,
-        VULKAN_MEMORY_RENDERHOST = 2,
+        VULKAN_MEMORY_BACKRENDERER = 1,
+        VULKAN_MEMORY_RENDERDEVICE = 2,
+        VULKAN_MEMORY_RENDERHOST = 3,
 
-        VULKAN_MEMORY_TEXTUREUPLOAD = 3,
-        VULKAN_MEMORY_MESHUPLOAD = 4,
-        VULKAN_MEMORY_HEIGHTMAPUPLOAD = 5,
+        VULKAN_MEMORY_TEXTUREUPLOAD = 4,
+        VULKAN_MEMORY_MESHUPLOAD = 5,
+        VULKAN_MEMORY_HEIGHTMAPUPLOAD = 6,
 
-        VULKAN_MEMORY_TEXTURES = 6,
-        VULKAN_MEMORY_MESHES = 7,
-        VULKAN_MEMORY_HEIGHTMAPS = 8,
+        VULKAN_MEMORY_TEXTURES = 7,
+        VULKAN_MEMORY_MESHES = 8,
+        VULKAN_MEMORY_HEIGHTMAPS = 9,
 
-        VULKAN_MEMORY_POOLSCOUNT = 9
+        VULKAN_MEMORY_POOLSCOUNT = 10
     };
 
 
@@ -118,6 +119,7 @@
     const VulkanMemoryList VulkanMemoryArray[VULKAN_MEMORY_POOLSCOUNT] =
     {
         VULKAN_MEMORY_SWAPCHAIN, VULKAN_MEMORY_DEVICE, 0x20000000,
+        VULKAN_MEMORY_BACKRENDERER, VULKAN_MEMORY_DEVICE, 0x20000000,
         VULKAN_MEMORY_RENDERDEVICE, VULKAN_MEMORY_DEVICE, 0x20000000,
         VULKAN_MEMORY_RENDERHOST, VULKAN_MEMORY_HOST, 0x20000000,
 
@@ -173,6 +175,13 @@
             //  return : True if swapchain image is successfully allocated    //
             ////////////////////////////////////////////////////////////////////
             bool allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Allocate back renderer image memory                           //
+            //  return : True if back renderer image is allocated             //
+            ////////////////////////////////////////////////////////////////////
+            bool allocateBackRendererImage(VkDevice& vulkanDevice,
+                VkImage& image);
 
 
             ////////////////////////////////////////////////////////////////////

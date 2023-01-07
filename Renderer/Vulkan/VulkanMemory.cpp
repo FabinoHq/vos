@@ -342,7 +342,91 @@ bool VulkanMemory::allocateSwapchainImage(VkDevice& vulkanDevice,
     // Update current memory offset
     m_offset[VULKAN_MEMORY_SWAPCHAIN] += size;
 
-    // Texture memory successfully allocated
+    // Swapchain image successfully allocated
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Allocate back renderer image memory                                       //
+//  return : True if back renderer image is allocated                         //
+////////////////////////////////////////////////////////////////////////////////
+bool VulkanMemory::allocateBackRendererImage(VkDevice& vulkanDevice,
+    VkImage& image)
+{
+    // Check image handle
+    if (!image)
+    {
+        // Invalid image handle
+        return false;
+    }
+
+    // Get memory requirements
+    VkMemoryRequirements memoryRequirements;
+    vkGetImageMemoryRequirements(vulkanDevice, image, &memoryRequirements);
+
+    // Check memory requirements size
+    if (memoryRequirements.size <= 0)
+    {
+        // Invalid memory requirements size
+        return false;
+    }
+
+    // Check memory type bits
+    if (!(memoryRequirements.memoryTypeBits & (1 << m_deviceMemoryIndex)))
+    {
+        // Invalid memory type bits
+        return false;
+    }
+
+    // Compute memory alignment
+    VkDeviceSize size = memoryRequirements.size;
+    VkDeviceSize alignment = m_memoryAlignment;
+    if (memoryRequirements.alignment >= alignment)
+    {
+        alignment = memoryRequirements.alignment;
+        if ((alignment % m_memoryAlignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+    else
+    {
+        if ((alignment % memoryRequirements.alignment) != 0)
+        {
+            // Invalid memory alignment
+            return false;
+        }
+    }
+
+    // Adjust memory size according to alignment
+    VkDeviceSize sizeOffset = (size % alignment);
+    if (sizeOffset != 0)
+    {
+        size += (alignment - sizeOffset);
+    }
+
+    // Adjust memory start offset according to alignment
+    VkDeviceSize startOffset =
+        (m_offset[VULKAN_MEMORY_BACKRENDERER] % alignment);
+    if (startOffset != 0)
+    {
+        m_offset[VULKAN_MEMORY_BACKRENDERER] += (alignment - startOffset);
+    }
+
+    // Bind image memory
+    if (vkBindImageMemory(vulkanDevice, image,
+        m_memory[VULKAN_MEMORY_BACKRENDERER],
+        m_offset[VULKAN_MEMORY_BACKRENDERER]) != VK_SUCCESS)
+    {
+        // Could not bind image memory
+        return false;
+    }
+
+    // Update current memory offset
+    m_offset[VULKAN_MEMORY_BACKRENDERER] += size;
+
+    // Swapchain image successfully allocated
     return true;
 }
 

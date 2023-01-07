@@ -89,7 +89,7 @@ Game::~Game()
 bool Game::init()
 {
     // Init back renderer
-    if (!m_backRenderer.init(m_renderer.m_vulkanDevice, 256, 256))
+    if (!m_backRenderer.init(m_renderer, 256, 256))
     {
         // Could not init back renderer
         return false;
@@ -260,7 +260,7 @@ void Game::destroy()
     m_view.destroyView(m_renderer);
 
     // Cleanup back renderer
-    m_backRenderer.cleanup(m_renderer.m_vulkanDevice);
+    m_backRenderer.cleanup(m_renderer);
 }
 
 

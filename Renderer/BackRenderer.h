@@ -44,6 +44,7 @@
 
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
+    #include "Renderer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -75,12 +76,12 @@
             //  Init back renderer                                            //
             //  return : True if the back renderer is successfully loaded     //
             ////////////////////////////////////////////////////////////////////
-            bool init(VkDevice& vulkanDevice, uint32_t width, uint32_t height);
+            bool init(Renderer& renderer, uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
             //  Cleanup back renderer                                         //
             ////////////////////////////////////////////////////////////////////
-            void cleanup(VkDevice& vulkanDevice);
+            void cleanup(Renderer& renderer);
 
 
         private:
