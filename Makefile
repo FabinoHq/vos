@@ -74,7 +74,7 @@ VOS: main.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightMapStream.o \
-	Renderer/Renderer.o \
+	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o \
 	Resources/MeshLoader.o Resources/HeightMapLoader.o \
 	Game/Game.o
@@ -106,7 +106,7 @@ VOS: main.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightMapStream.o \
-	Renderer/Renderer.o \
+	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o \
 	Resources/MeshLoader.o Resources/HeightMapLoader.o \
 	Game/Game.o \
@@ -280,6 +280,9 @@ Renderer/HeightMapStream.o: Renderer/HeightMapStream.cpp
 	$(CC) -o Renderer/HeightMapStream.o -c \
 	Renderer/HeightMapStream.cpp $(CFLAGS)
 
+
+Renderer/BackRenderer.o: Renderer/BackRenderer.cpp
+	$(CC) -o Renderer/BackRenderer.o -c Renderer/BackRenderer.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)

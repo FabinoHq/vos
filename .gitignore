@@ -181,6 +181,8 @@
 !Renderer/HeightMapChunk.cpp
 !Renderer/HeightMapStream.h
 !Renderer/HeightMapStream.cpp
+!Renderer/BackRenderer.h
+!Renderer/BackRenderer.cpp
 !Renderer/Renderer.h
 !Renderer/Renderer.cpp
 

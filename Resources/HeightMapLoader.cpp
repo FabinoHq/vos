@@ -70,7 +70,7 @@ float pseudoRand(float seed, float x, float y)
 ////////////////////////////////////////////////////////////////////////////////
 float fractalHeigthmap(float seed, int i, int j)
 {
-    i += 25000;
+    /*i += 25000;
     j += 25000;
     float ix = i*1.0f;
     float jy = j*1.0f;
@@ -143,7 +143,8 @@ float fractalHeigthmap(float seed, int i, int j)
     fractalValue *= fondamentalValue;
 
     // Final fractal heightmap
-    return ((fractalValue*1000.0f)-100.0f);
+    return ((fractalValue*1000.0f)-100.0f);*/
+    return 0.0f;
 }
 
 
