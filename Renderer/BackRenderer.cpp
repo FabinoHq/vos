@@ -65,6 +65,8 @@ m_ratio(0.0f)
         m_fences[i] = 0;
         m_commandPools[i] = 0;
         m_commandBuffers[i] = 0;
+        m_samplers[i] = 0;
+        m_descriptorSets[i] = 0;
     }
 }
 
@@ -75,6 +77,8 @@ BackRenderer::~BackRenderer()
 {
     for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
     {
+        m_descriptorSets[i] = 0;
+        m_samplers[i] = 0;
         m_commandBuffers[i] = 0;
         m_commandPools[i] = 0;
         m_fences[i] = 0;
@@ -266,7 +270,8 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
     attachmentDescription[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     attachmentDescription[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     attachmentDescription[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    attachmentDescription[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    attachmentDescription[0].finalLayout =
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
     VkAttachmentReference colorAttachmentReference;
     colorAttachmentReference.attachment = 0;
@@ -391,6 +396,86 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
             // Invalid framebuffer
             return false;
         }
+    }
+
+    // Create image samplers
+    for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
+    {
+        VkSamplerCreateInfo samplerInfo;
+        samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        samplerInfo.pNext = 0;
+        samplerInfo.flags = 0;
+        samplerInfo.magFilter = VK_FILTER_NEAREST;
+        samplerInfo.minFilter = VK_FILTER_NEAREST;
+        samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        samplerInfo.mipLodBias = 0.0f;
+        samplerInfo.anisotropyEnable = VK_FALSE;
+        samplerInfo.maxAnisotropy = 1.0f;
+        samplerInfo.compareEnable = VK_FALSE;
+        samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
+        samplerInfo.minLod = 0.0f;
+        samplerInfo.maxLod = 0.0f;
+        samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+        samplerInfo.unnormalizedCoordinates = VK_FALSE;
+
+        if (vkCreateSampler(renderer.m_vulkanDevice,
+            &samplerInfo, 0, &m_samplers[i]) != VK_SUCCESS)
+        {
+            // Could not create image sampler
+            return false;
+        }
+        if (!m_samplers[i])
+        {
+            // Invalid image sampler
+            return false;
+        }
+    }
+
+    // Create descriptor sets
+    VkDescriptorSetAllocateInfo descriptorInfo;
+    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorInfo.pNext = 0;
+    descriptorInfo.descriptorPool = renderer.m_texturesDescPool;
+    descriptorInfo.descriptorSetCount = BackRendererMaxFrames;
+    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
+        DESC_TEXTURE*BackRendererMaxFrames
+    ];
+
+    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
+        &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
+    {
+        // Could not allocate descriptor sets
+        return false;
+    }
+
+    for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
+    {
+        // Update descriptor sets
+        VkDescriptorImageInfo descImageInfo;
+        descImageInfo.sampler = m_samplers[i];
+        descImageInfo.imageView = m_views[i];
+        descImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+        VkWriteDescriptorSet descriptorWrites;
+
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.pNext = 0;
+        descriptorWrites.dstSet = m_descriptorSets[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.descriptorType =
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrites.pImageInfo = &descImageInfo;
+        descriptorWrites.pBufferInfo = 0;
+        descriptorWrites.pTexelBufferView = 0;
+
+        vkUpdateDescriptorSets(
+            renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
+        );
     }
 
     // Create fences
@@ -701,6 +786,19 @@ bool BackRenderer::endFrame(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind back renderer texture                                                //
+////////////////////////////////////////////////////////////////////////////////
+void BackRenderer::bind(Renderer& renderer)
+{
+    // Bind texture descriptor set
+    vkCmdBindDescriptorSets(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
+        DESC_TEXTURE, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Cleanup back renderer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void BackRenderer::cleanup(Renderer& renderer)
@@ -730,6 +828,14 @@ void BackRenderer::cleanup(Renderer& renderer)
 
                 for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
                 {
+                    // Destroy image sampler
+                    if (m_samplers[i] && vkDestroySampler)
+                    {
+                        vkDestroySampler(
+                            renderer.m_vulkanDevice, m_samplers[i], 0
+                        );
+                    }
+
                     // Destroy command buffer
                     if (m_commandPools[i] && vkFreeCommandBuffers)
                     {
@@ -803,6 +909,8 @@ void BackRenderer::cleanup(Renderer& renderer)
 
     for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
     {
+        m_descriptorSets[i] = 0;
+        m_samplers[i] = 0;
         m_commandBuffers[i] = 0;
         m_commandPools[i] = 0;
         m_fences[i] = 0;

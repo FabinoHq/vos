@@ -92,6 +92,11 @@
             bool endFrame(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
+            //  Bind back renderer texture                                    //
+            ////////////////////////////////////////////////////////////////////
+            void bind(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
             //  Cleanup back renderer                                         //
             ////////////////////////////////////////////////////////////////////
             void cleanup(Renderer& renderer);
@@ -126,6 +131,8 @@
             VkFence             m_fences[RendererMaxSwapchainFrames];
             VkCommandPool       m_commandPools[BackRendererMaxFrames];
             VkCommandBuffer     m_commandBuffers[BackRendererMaxFrames];
+            VkSampler           m_samplers[BackRendererMaxFrames];
+            VkDescriptorSet     m_descriptorSets[BackRendererMaxFrames];
     };
 
 

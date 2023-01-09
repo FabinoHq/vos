@@ -303,7 +303,7 @@ void Sprite::render(Renderer& renderer)
     );
 
     // Bind sprite texture
-    m_texture->bind(renderer);
+    //m_texture->bind(renderer);
 
     // Draw sprite triangles
     vkCmdDrawIndexed(

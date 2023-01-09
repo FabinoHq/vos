@@ -564,6 +564,11 @@ void Game::render()
     // Bind default vertex buffer
     m_renderer.bindDefaultVertexBuffer();
 
+    // Render back rendered frame
+    m_renderer.bindDefaultPipeline();
+    m_backRenderer.bind(m_renderer);
+    m_sprite.render(m_renderer);
+
     // Render sprite
     /*m_renderer.bindDefaultPipeline();
     m_sprite.render(m_renderer);*/
