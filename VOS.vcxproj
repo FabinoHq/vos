@@ -232,6 +232,7 @@
     <ClCompile Include="Renderer\Sprite.cpp" />
     <ClCompile Include="Renderer\StaticMesh.cpp" />
     <ClCompile Include="Renderer\View.cpp" />
+    <ClCompile Include="Renderer\Vulkan\Backchain.cpp" />
     <ClCompile Include="Renderer\Vulkan\CubeMap.cpp" />
     <ClCompile Include="Renderer\Vulkan\GraphicsLayout.cpp" />
     <ClCompile Include="Renderer\Vulkan\Pipeline.cpp" />
@@ -317,6 +318,7 @@
     <ClInclude Include="Renderer\Sprite.h" />
     <ClInclude Include="Renderer\StaticMesh.h" />
     <ClInclude Include="Renderer\View.h" />
+    <ClInclude Include="Renderer\Vulkan\Backchain.h" />
     <ClInclude Include="Renderer\Vulkan\CubeMap.h" />
     <ClInclude Include="Renderer\Vulkan\GraphicsLayout.h" />
     <ClInclude Include="Renderer\Vulkan\Pipeline.h" />

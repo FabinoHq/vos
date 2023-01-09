@@ -44,14 +44,13 @@
 
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Backchain.h"
     #include "Renderer.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
     //  BackRenderer settings                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t BackRendererMaxFrames = 2;
-    const uint64_t BackRendererFenceTimeout = 5000000000;
     const uint32_t BackRendererMaxWidth = 4096;
     const uint32_t BackRendererMaxHeight = 4096;
 
@@ -115,24 +114,13 @@
 
 
         public:
-            VkExtent2D          m_extent;       // Extent
-            VkRenderPass        m_renderPass;   // Render pass
+            Backchain           m_backchain;    // Backchain
             GraphicsLayout      m_layout;       // Graphics layout
             Pipeline            m_pipeline;     // Default pipeline
             View                m_view;         // Default view
-            uint32_t            m_current;      // Current frame
-            float               m_ratio;        // Aspect ratio
 
-            VkImage             m_images[BackRendererMaxFrames];
-            VkImage             m_depthImages[BackRendererMaxFrames];
-            VkImageView         m_views[BackRendererMaxFrames];
-            VkImageView         m_depthViews[BackRendererMaxFrames];
-            VkFramebuffer       m_framebuffers[BackRendererMaxFrames];
-            VkFence             m_fences[RendererMaxSwapchainFrames];
-            VkCommandPool       m_commandPools[BackRendererMaxFrames];
-            VkCommandBuffer     m_commandBuffers[BackRendererMaxFrames];
-            VkSampler           m_samplers[BackRendererMaxFrames];
-            VkDescriptorSet     m_descriptorSets[BackRendererMaxFrames];
+            VkSampler           m_samplers[RendererMaxSwapchainFrames];
+            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
     };
 
 

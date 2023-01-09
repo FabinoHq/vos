@@ -544,7 +544,7 @@ bool Pipeline::createPipeline(Renderer& renderer, BackRenderer& backRenderer,
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = backRenderer.m_layout.handle;
-    pipelineInfo.renderPass = backRenderer.m_renderPass;
+    pipelineInfo.renderPass = backRenderer.m_backchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
@@ -582,7 +582,9 @@ void Pipeline::bind(Renderer& renderer)
 void Pipeline::bind(BackRenderer& backRenderer)
 {
     vkCmdBindPipeline(
-        backRenderer.m_commandBuffers[backRenderer.m_current],
+        backRenderer.m_backchain.commandBuffers[
+            backRenderer.m_backchain.current
+        ],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
     );
 }

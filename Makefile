@@ -59,7 +59,8 @@ VOS: main.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o Physics/Collision2.o Physics/BoundingCircle.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
-	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
+	Renderer/Vulkan/VulkanQueue.o \
+	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Vulkan/Pipeline.o Renderer/Vulkan/Shader.o \
@@ -91,7 +92,8 @@ VOS: main.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o Physics/Collision2.o Physics/BoundingCircle.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
-	Renderer/Vulkan/VulkanQueue.o Renderer/Vulkan/Swapchain.o \
+	Renderer/Vulkan/VulkanQueue.o \
+	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Vulkan/Pipeline.o Renderer/Vulkan/Shader.o \
@@ -194,6 +196,10 @@ Renderer/Vulkan/VulkanQueue.o: Renderer/Vulkan/VulkanQueue.cpp
 Renderer/Vulkan/Swapchain.o: Renderer/Vulkan/Swapchain.cpp
 	$(CC) -o Renderer/Vulkan/Swapchain.o -c \
 	Renderer/Vulkan/Swapchain.cpp $(CFLAGS)
+
+Renderer/Vulkan/Backchain.o: Renderer/Vulkan/Backchain.cpp
+	$(CC) -o Renderer/Vulkan/Backchain.o -c \
+	Renderer/Vulkan/Backchain.cpp $(CFLAGS)
 
 Renderer/Vulkan/VulkanBuffer.o: Renderer/Vulkan/VulkanBuffer.cpp
 	$(CC) -o Renderer/Vulkan/VulkanBuffer.o -c \

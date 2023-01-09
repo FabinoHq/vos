@@ -117,20 +117,20 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Check Vulkan device
+    // Check device
     if (!vulkanDevice)
     {
-        // Invalid Vulkan device
-        SysMessage::box() << "[0x3029] Invalid Vulkan device\n";
+        // Invalid device
+        SysMessage::box() << "[0x3029] Invalid device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
-    // Check Vulkan surface
+    // Check surface
     if (!vulkanSurface)
     {
-        // Invalid Vulkan surface
-        SysMessage::box() << "[0x302A] Invalid Vulkan surface\n";
+        // Invalid surface
+        SysMessage::box() << "[0x302A] Invalid surface\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -402,8 +402,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     if (vkCreateSwapchainKHR(
         vulkanDevice, &swapchainInfos, 0, &handle) != VK_SUCCESS)
     {
-        // Could not create Vulkan swapchain
-        SysMessage::box() << "[0x3038] Could not create Vulkan swapchain\n";
+        // Could not create swapchain
+        SysMessage::box() << "[0x3038] Could not create swapchain\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -839,7 +839,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         return false;
     }
 
-    // Vulkan swapchain successfully created
+    // Swapchain successfully created
     return true;
 }
 
@@ -1136,7 +1136,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     if (vkCreateSwapchainKHR(
         vulkanDevice, &swapchainInfos, 0, &handle) != VK_SUCCESS)
     {
-        // Could not create Vulkan swapchain
+        // Could not create swapchain
         return false;
     }
 
@@ -1431,14 +1431,12 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
                     // Destroy swapchain depth images views
                     if (depthViews[i] && vkDestroyImageView)
                     {
-                        // Destroy image view
                         vkDestroyImageView(vulkanDevice, depthViews[i], 0);
                     }
 
                     // Destroy swapchain images views
                     if (views[i] && vkDestroyImageView)
                     {
-                        // Destroy image view
                         vkDestroyImageView(vulkanDevice, views[i], 0);
                     }
 
@@ -1449,7 +1447,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
                     }
                 }
 
-                // Destroy Vulkan swapchain
+                // Destroy swapchain
                 if (handle && vkDestroySwapchainKHR)
                 {
                     vkDestroySwapchainKHR(vulkanDevice, handle, 0);

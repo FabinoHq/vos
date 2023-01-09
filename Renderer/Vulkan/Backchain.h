@@ -37,10 +37,10 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/Swapchain.h : Swapchain management                     //
+//     Renderer/Vulkan/Backchain.h : Backchain management                     //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
-#define VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
+#ifndef VOS_RENDERER_VULKAN_BACKCHAIN_HEADER
+#define VOS_RENDERER_VULKAN_BACKCHAIN_HEADER
 
     #include "../../System/System.h"
     #include "Vulkan.h"
@@ -48,87 +48,74 @@
 
     #include <cstddef>
     #include <cstdint>
-    #include <vector>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer swapchain settings                                           //
+    //  Renderer backchain settings                                           //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxSwapchainFrames = 2;
-    const uint64_t RendererSwapchainFenceTimeout = 5000000000;
+    const uint32_t RendererMaxBackchainFrames = 2;
+    const uint64_t RendererBackchainFenceTimeout = 5000000000;
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Swapchain class definition                                            //
+    //  Backchain class definition                                            //
     ////////////////////////////////////////////////////////////////////////////
-    class Swapchain
+    class Backchain
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain default constructor                                 //
+            //  Backchain default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            Swapchain();
+            Backchain();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain destructor                                          //
+            //  Backchain destructor                                          //
             ////////////////////////////////////////////////////////////////////
-            ~Swapchain();
+            ~Backchain();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create swapchain                                              //
-            //  return : True if swapchain is successfully created            //
+            //  Create backchain                                              //
+            //  return : True if backchain is successfully created            //
             ////////////////////////////////////////////////////////////////////
-            bool createSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                uint32_t surfaceQueueFamily, VulkanMemory& vulkanMemory);
+            bool createBackchain(VkDevice& vulkanDevice,
+                uint32_t graphicsQueueFamily, VulkanMemory& vulkanMemory,
+                uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Resize swapchain                                              //
-            //  return : True if swapchain is successfully resized            //
+            //  Destroy backchain                                             //
             ////////////////////////////////////////////////////////////////////
-            bool resizeSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                VulkanMemory& vulkanMemory);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy swapchain                                             //
-            ////////////////////////////////////////////////////////////////////
-            void destroySwapchain(VkDevice& vulkanDevice);
+            void destroyBackchain(VkDevice& vulkanDevice);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain private copy constructor : Not copyable             //
+            //  Backchain private copy constructor : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            Swapchain(const Swapchain&) = delete;
+            Backchain(const Backchain&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Swapchain private copy operator : Not copyable                //
+            //  Backchain private copy operator : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            Swapchain& operator=(const Swapchain&) = delete;
+            Backchain& operator=(const Backchain&) = delete;
 
 
         public:
-            VkSwapchainKHR      handle;         // Swapchain handle
-            VkFormat            format;         // Swapchain format
-            VkExtent2D          extent;         // Swapchain extent
-            VkRenderPass        renderPass;     // Swapchain render pass
-            uint32_t            frames;         // Swapchain frames count
-            uint32_t            current;        // Swapchain current frame
-            float               ratio;          // Swapchain aspect ratio
+            VkExtent2D          extent;         // Backchain extent
+            VkRenderPass        renderPass;     // Backchain render pass
+            uint32_t            frames;         // Backchain frames count
+            uint32_t            current;        // Backchain current frame
+            float               ratio;          // Backchain aspect ratio
 
-            VkImage             images[RendererMaxSwapchainFrames];
-            VkImage             depthImages[RendererMaxSwapchainFrames];
-            VkImageView         views[RendererMaxSwapchainFrames];
-            VkImageView         depthViews[RendererMaxSwapchainFrames];
-            VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
-            VkSemaphore         renderReady[RendererMaxSwapchainFrames];
-            VkSemaphore         renderDone[RendererMaxSwapchainFrames];
-            VkFence             fences[RendererMaxSwapchainFrames];
-            VkCommandPool       commandPools[RendererMaxSwapchainFrames];
-            VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
+            VkImage             images[RendererMaxBackchainFrames];
+            VkImage             depthImages[RendererMaxBackchainFrames];
+            VkImageView         views[RendererMaxBackchainFrames];
+            VkImageView         depthViews[RendererMaxBackchainFrames];
+            VkFramebuffer       framebuffers[RendererMaxBackchainFrames];
+            VkFence             fences[RendererMaxBackchainFrames];
+            VkCommandPool       commandPools[RendererMaxBackchainFrames];
+            VkCommandBuffer     commandBuffers[RendererMaxBackchainFrames];
     };
 
 
-#endif // VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
+#endif // VOS_RENDERER_VULKAN_BACKCHAIN_HEADER

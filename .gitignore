@@ -143,6 +143,8 @@
 !Renderer/Vulkan/VulkanQueue.cpp
 !Renderer/Vulkan/Swapchain.h
 !Renderer/Vulkan/Swapchain.cpp
+!Renderer/Vulkan/Backchain.h
+!Renderer/Vulkan/Backchain.cpp
 !Renderer/Vulkan/VulkanBuffer.h
 !Renderer/Vulkan/VulkanBuffer.cpp
 !Renderer/Vulkan/VertexBuffer.h

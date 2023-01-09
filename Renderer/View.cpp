@@ -193,7 +193,7 @@ bool View::init(Renderer& renderer, BackRenderer& backRenderer)
     {
         if (!m_uniformBuffers[i].updateBuffer(
             renderer.m_vulkanDevice, renderer.m_vulkanMemory,
-            backRenderer.m_commandPools[i], renderer.m_graphicsQueue,
+            backRenderer.m_backchain.commandPools[i], renderer.m_graphicsQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
@@ -208,7 +208,7 @@ bool View::init(Renderer& renderer, BackRenderer& backRenderer)
     descriptorInfo.descriptorPool = renderer.m_uniformsDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
     descriptorInfo.pSetLayouts = &backRenderer.m_layout.swapSetLayouts[
-        DESC_MATRICES*BackRendererMaxFrames
+        DESC_MATRICES*RendererMaxBackchainFrames
     ];
 
     if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
@@ -299,7 +299,7 @@ void View::compute(BackRenderer& backRenderer)
 {
     // Compute projection matrix
     m_projMatrix.setOrthographic(
-        -backRenderer.m_ratio, backRenderer.m_ratio,
+        -backRenderer.m_backchain.ratio, backRenderer.m_backchain.ratio,
         1.0f, -1.0f, -2.0f, 2.0f
     );
     m_projMatrix.translateZ(-1.0f);
@@ -362,9 +362,9 @@ bool View::bind(Renderer& renderer, BackRenderer& backRenderer)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[backRenderer.m_current].updateBuffer(
+    if (!m_uniformBuffers[backRenderer.m_backchain.current].updateBuffer(
         renderer.m_vulkanDevice, renderer.m_vulkanMemory,
-        backRenderer.m_commandPools[backRenderer.m_current],
+        backRenderer.m_backchain.commandPools[backRenderer.m_backchain.current],
         renderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
@@ -373,9 +373,12 @@ bool View::bind(Renderer& renderer, BackRenderer& backRenderer)
 
     // Bind matrices descriptor set
     vkCmdBindDescriptorSets(
-        backRenderer.m_commandBuffers[backRenderer.m_current],
+        backRenderer.m_backchain.commandBuffers[
+            backRenderer.m_backchain.current
+        ],
         VK_PIPELINE_BIND_POINT_GRAPHICS, backRenderer.m_layout.handle,
-        DESC_MATRICES, 1, &m_descriptorSets[backRenderer.m_current], 0, 0
+        DESC_MATRICES, 1,
+        &m_descriptorSets[backRenderer.m_backchain.current], 0, 0
     );
 
     // View successfully binded

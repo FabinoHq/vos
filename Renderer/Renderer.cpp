@@ -218,11 +218,11 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create Vulkan swapchain
+    // Create swapchain
     if (!m_swapchain.createSwapchain(m_physicalDevice, m_vulkanDevice,
         m_vulkanSurface, m_surfaceQueue.family, m_vulkanMemory))
     {
-        // Could not create Vulkan swapchain
+        // Could not create swapchain
         return false;
     }
 
