@@ -307,10 +307,10 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     subpassDependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[1].dstSubpass = 0;
     subpassDependencies[1].srcStageMask =
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
     subpassDependencies[1].dstStageMask =
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    subpassDependencies[1].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[1].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
     subpassDependencies[1].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     subpassDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
@@ -319,9 +319,9 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     subpassDependencies[2].srcStageMask =
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     subpassDependencies[2].dstStageMask =
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
     subpassDependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    subpassDependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[2].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
     subpassDependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
     // Create render pass
