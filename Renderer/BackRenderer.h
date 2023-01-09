@@ -51,6 +51,7 @@
     //  BackRenderer settings                                                 //
     ////////////////////////////////////////////////////////////////////////////
     const uint32_t BackRendererMaxFrames = 2;
+    const uint64_t BackRendererFenceTimeout = 5000000000;
     const uint32_t BackRendererMaxWidth = 4096;
     const uint32_t BackRendererMaxHeight = 4096;
 
@@ -79,6 +80,18 @@
             bool init(Renderer& renderer, uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
+            //  Start rendering frame                                         //
+            //  return : True if the rendering frame is ready                 //
+            ////////////////////////////////////////////////////////////////////
+            bool startFrame(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  End rendering frame                                           //
+            //  return : True if the frame is rendering                       //
+            ////////////////////////////////////////////////////////////////////
+            bool endFrame(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
             //  Cleanup back renderer                                         //
             ////////////////////////////////////////////////////////////////////
             void cleanup(Renderer& renderer);
@@ -101,13 +114,16 @@
             VkRenderPass        m_renderPass;   // Render pass
             GraphicsLayout      m_layout;       // Graphics layout
             Pipeline            m_pipeline;     // Default pipeline
+            View                m_view;         // Default view
             uint32_t            m_current;      // Current frame
+            float               m_ratio;        // Aspect ratio
 
             VkImage             m_images[BackRendererMaxFrames];
             VkImage             m_depthImages[BackRendererMaxFrames];
             VkImageView         m_views[BackRendererMaxFrames];
             VkImageView         m_depthViews[BackRendererMaxFrames];
             VkFramebuffer       m_framebuffers[BackRendererMaxFrames];
+            VkFence             m_fences[RendererMaxSwapchainFrames];
             VkCommandPool       m_commandPools[BackRendererMaxFrames];
             VkCommandBuffer     m_commandBuffers[BackRendererMaxFrames];
     };

@@ -454,6 +454,12 @@ void Game::compute(float frametime)
 ////////////////////////////////////////////////////////////////////////////////
 void Game::render()
 {
+    // Back rendering
+    if (m_backRenderer.startFrame(m_renderer))
+    {
+        m_backRenderer.endFrame(m_renderer);
+    }
+
     // Get renderer settings
     float ratio = m_renderer.getRatio();
 

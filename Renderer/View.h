@@ -60,6 +60,11 @@
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  BackRenderer class declaration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    class BackRenderer;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  View class definition                                                 //
@@ -79,10 +84,16 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init view                                                     //
-            //  return : True if the view is successfully created             //
+            //  Init renderer view                                            //
+            //  return : True if the renderer view is successfully created    //
             ////////////////////////////////////////////////////////////////////
             bool init(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Init back renderer view                                       //
+            //  return : True if the back renderer view is created            //
+            ////////////////////////////////////////////////////////////////////
+            bool init(Renderer& renderer, BackRenderer& backRenderer);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy view                                                  //
@@ -90,15 +101,26 @@
             void destroyView(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute view                                                  //
+            //  Compute renderer view                                         //
             ////////////////////////////////////////////////////////////////////
             void compute(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind view                                                     //
-            //  return : True if the view is successfully binded              //
+            //  Compute back renderer view                                    //
+            ////////////////////////////////////////////////////////////////////
+            void compute(BackRenderer& backRenderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer view                                            //
+            //  return : True if the renderer view is successfully binded     //
             ////////////////////////////////////////////////////////////////////
             bool bind(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind back renderer view                                       //
+            //  return : True if the back renderer view is binded             //
+            ////////////////////////////////////////////////////////////////////
+            bool bind(Renderer& renderer, BackRenderer& backRenderer);
 
 
         private:
