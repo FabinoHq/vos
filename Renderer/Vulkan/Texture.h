@@ -123,7 +123,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind texture                                                  //
             ////////////////////////////////////////////////////////////////////
-            void bind(BackRenderer& backRenderer);
+            void bind(Renderer& renderer, BackRenderer& backRenderer);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy texture                                               //

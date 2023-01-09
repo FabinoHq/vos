@@ -548,104 +548,6 @@ bool Renderer::startFrame()
         return false;
     }
 
-    // Set clear values
-    VkClearValue clearValues[2];
-    clearValues[0].color = RendererClearColor;
-    clearValues[1].depthStencil = RendererClearDepth;
-
-    // Begin render pass
-    VkRenderPassBeginInfo renderPassInfo;
-    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    renderPassInfo.pNext = 0;
-    renderPassInfo.renderPass = m_swapchain.renderPass;
-    renderPassInfo.framebuffer = m_swapchain.framebuffers[m_frameIndex];
-    renderPassInfo.renderArea.offset.x = 0;
-    renderPassInfo.renderArea.offset.y = 0;
-    renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
-    renderPassInfo.renderArea.extent.height = m_swapchain.extent.height;
-    renderPassInfo.clearValueCount = 2;
-    renderPassInfo.pClearValues = clearValues;
-
-    vkCmdBeginRenderPass(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
-    );
-
-    // Bind default pipeline
-    m_pipeline.bind(*this);
-
-    // Set viewport
-    VkViewport viewport;
-    viewport.x = 0.0f;
-    viewport.y = m_swapchain.extent.height*1.0f;
-    viewport.width = m_swapchain.extent.width*1.0f;
-    viewport.height = m_swapchain.extent.height*-1.0f;
-    viewport.minDepth = 0.0f;
-    viewport.maxDepth = 1.0f;
-
-    vkCmdSetViewport(
-        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &viewport
-    );
-
-    // Set scissor
-    VkRect2D scissor;
-    scissor.offset.x = 0;
-    scissor.offset.y = 0;
-    scissor.extent.width = m_swapchain.extent.width;
-    scissor.extent.height = m_swapchain.extent.height;
-
-    vkCmdSetScissor(
-        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
-    );
-
-    // Bind default view
-    if (!m_view.bind(*this))
-    {
-        // Could not bind default view
-        m_rendererReady = false;
-        return false;
-    }
-
-    // Bind default vertex buffer
-    VkDeviceSize offset = 0;
-    vkCmdBindVertexBuffers(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        0, 1, &(m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle),
-        &offset
-    );
-
-    vkCmdBindIndexBuffer(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        (m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle),
-        0, VK_INDEX_TYPE_UINT16
-    );
-
-    // Push default model matrix into command buffer
-    Matrix4x4 defaultMatrix;
-    defaultMatrix.setIdentity();
-    vkCmdPushConstants(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
-    );
-
-    // Push default constants into command buffer
-    PushConstantData pushConstants;
-    pushConstants.color[0] = 1.0f;
-    pushConstants.color[1] = 1.0f;
-    pushConstants.color[2] = 1.0f;
-    pushConstants.color[3] = 1.0f;
-    pushConstants.offset[0] = 0.0f;
-    pushConstants.offset[1] = 0.0f;
-    pushConstants.size[0] = 1.0f;
-    pushConstants.size[1] = 1.0f;
-    pushConstants.time = 0.0f;
-    vkCmdPushConstants(
-        m_swapchain.commandBuffers[m_swapchain.current],
-        m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantDataOffset, PushConstantDataSize, &pushConstants
-    );
-
     // Rendering frame is ready
     return true;
 }
@@ -662,9 +564,6 @@ bool Renderer::endFrame()
         // Renderer is not ready
         return false;
     }
-
-    // End render pass
-    vkCmdEndRenderPass(m_swapchain.commandBuffers[m_swapchain.current]);
 
     // End command buffer
     if (vkEndCommandBuffer(
@@ -732,6 +631,94 @@ bool Renderer::endFrame()
 
     // Current frame is submitted for rendering
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Start render pass                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::startRenderPass()
+{
+    // Set clear values
+    VkClearValue clearValues[2];
+    clearValues[0].color = RendererClearColor;
+    clearValues[1].depthStencil = RendererClearDepth;
+
+    // Begin render pass
+    VkRenderPassBeginInfo renderPassInfo;
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    renderPassInfo.pNext = 0;
+    renderPassInfo.renderPass = m_swapchain.renderPass;
+    renderPassInfo.framebuffer = m_swapchain.framebuffers[m_frameIndex];
+    renderPassInfo.renderArea.offset.x = 0;
+    renderPassInfo.renderArea.offset.y = 0;
+    renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
+    renderPassInfo.renderArea.extent.height = m_swapchain.extent.height;
+    renderPassInfo.clearValueCount = 2;
+    renderPassInfo.pClearValues = clearValues;
+
+    vkCmdBeginRenderPass(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
+    );
+
+    // Set viewport
+    VkViewport viewport;
+    viewport.x = 0.0f;
+    viewport.y = m_swapchain.extent.height*1.0f;
+    viewport.width = m_swapchain.extent.width*1.0f;
+    viewport.height = m_swapchain.extent.height*-1.0f;
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+
+    vkCmdSetViewport(
+        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &viewport
+    );
+
+    // Set scissor
+    VkRect2D scissor;
+    scissor.offset.x = 0;
+    scissor.offset.y = 0;
+    scissor.extent.width = m_swapchain.extent.width;
+    scissor.extent.height = m_swapchain.extent.height;
+
+    vkCmdSetScissor(
+        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
+    );
+
+    // Push default model matrix into command buffer
+    Matrix4x4 defaultMatrix;
+    defaultMatrix.setIdentity();
+    vkCmdPushConstants(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
+    );
+
+    // Push default constants into command buffer
+    PushConstantData pushConstants;
+    pushConstants.color[0] = 1.0f;
+    pushConstants.color[1] = 1.0f;
+    pushConstants.color[2] = 1.0f;
+    pushConstants.color[3] = 1.0f;
+    pushConstants.offset[0] = 0.0f;
+    pushConstants.offset[1] = 0.0f;
+    pushConstants.size[0] = 1.0f;
+    pushConstants.size[1] = 1.0f;
+    pushConstants.time = 0.0f;
+    vkCmdPushConstants(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  End render pass                                                           //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::endRenderPass()
+{
+    // End render pass
+    vkCmdEndRenderPass(m_swapchain.commandBuffers[m_swapchain.current]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

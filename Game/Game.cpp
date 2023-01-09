@@ -463,16 +463,23 @@ void Game::compute(float frametime)
 void Game::render()
 {
     // Back rendering
-    if (m_backRenderer.startFrame(m_renderer))
+    if (m_backRenderer.startRenderPass(m_renderer))
     {
+        // Set back renderer view
+        m_backRenderer.setDefaultView(m_renderer);
+
         // Render sprite
-        //m_backRenderer.bindDefaultPipeline();
-        m_sprite.bindTexture(m_backRenderer);
-        m_sprite.render(m_backRenderer);
+        m_backRenderer.bindDefaultPipeline(m_renderer);
+        m_renderer.bindDefaultVertexBuffer();
+        m_sprite.bindTexture(m_renderer, m_backRenderer);
+        m_sprite.render(m_renderer, m_backRenderer);
 
         // End back rendering
-        m_backRenderer.endFrame(m_renderer);
+        m_backRenderer.endRenderPass(m_renderer);
     }
+
+    // Start rendering
+    m_renderer.startRenderPass();
 
     // Get renderer settings
     float ratio = m_renderer.getRatio();
@@ -608,4 +615,7 @@ void Game::render()
     m_pxText.setText(camerastr.str());
     m_pxText.setPosition(-ratio, 0.96f-(m_pxText.getHeight()*0.7f));
     m_pxText.render(m_renderer);
+
+    // End rendering
+    m_renderer.endRenderPass();
 }

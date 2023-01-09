@@ -79,8 +79,7 @@
             //  return : True if backchain is successfully created            //
             ////////////////////////////////////////////////////////////////////
             bool createBackchain(VkDevice& vulkanDevice,
-                uint32_t graphicsQueueFamily, VulkanMemory& vulkanMemory,
-                uint32_t width, uint32_t height);
+                VulkanMemory& vulkanMemory, uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy backchain                                             //
@@ -103,8 +102,6 @@
         public:
             VkExtent2D          extent;         // Backchain extent
             VkRenderPass        renderPass;     // Backchain render pass
-            uint32_t            frames;         // Backchain frames count
-            uint32_t            current;        // Backchain current frame
             float               ratio;          // Backchain aspect ratio
 
             VkImage             images[RendererMaxBackchainFrames];
@@ -112,9 +109,6 @@
             VkImageView         views[RendererMaxBackchainFrames];
             VkImageView         depthViews[RendererMaxBackchainFrames];
             VkFramebuffer       framebuffers[RendererMaxBackchainFrames];
-            VkFence             fences[RendererMaxBackchainFrames];
-            VkCommandPool       commandPools[RendererMaxBackchainFrames];
-            VkCommandBuffer     commandBuffers[RendererMaxBackchainFrames];
     };
 
 

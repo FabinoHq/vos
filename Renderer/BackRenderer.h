@@ -79,16 +79,15 @@
             bool init(Renderer& renderer, uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Start rendering frame                                         //
-            //  return : True if the rendering frame is ready                 //
+            //  Start back renderer pass                                      //
+            //  return : True if the back renderer pass is started            //
             ////////////////////////////////////////////////////////////////////
-            bool startFrame(Renderer& renderer);
+            bool startRenderPass(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
-            //  End rendering frame                                           //
-            //  return : True if the frame is rendering                       //
+            //  End back renderer pass                                        //
             ////////////////////////////////////////////////////////////////////
-            bool endFrame(Renderer& renderer);
+            void endRenderPass(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind back renderer texture                                    //
@@ -99,6 +98,18 @@
             //  Cleanup back renderer                                         //
             ////////////////////////////////////////////////////////////////////
             void cleanup(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind back renderer default pipeline                           //
+            ////////////////////////////////////////////////////////////////////
+            void bindDefaultPipeline(Renderer& renderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set back renderer default view                                //
+            //  return : True if the default view is successfully set         //
+            ////////////////////////////////////////////////////////////////////
+            bool setDefaultView(Renderer& renderer);
 
 
         private:

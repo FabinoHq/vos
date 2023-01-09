@@ -193,7 +193,7 @@ bool View::init(Renderer& renderer, BackRenderer& backRenderer)
     {
         if (!m_uniformBuffers[i].updateBuffer(
             renderer.m_vulkanDevice, renderer.m_vulkanMemory,
-            backRenderer.m_backchain.commandPools[i], renderer.m_graphicsQueue,
+            renderer.m_swapchain.commandPools[i], renderer.m_graphicsQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
@@ -362,9 +362,9 @@ bool View::bind(Renderer& renderer, BackRenderer& backRenderer)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[backRenderer.m_backchain.current].updateBuffer(
+    if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
         renderer.m_vulkanDevice, renderer.m_vulkanMemory,
-        backRenderer.m_backchain.commandPools[backRenderer.m_backchain.current],
+        renderer.m_swapchain.commandPools[renderer.m_swapchain.current],
         renderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
@@ -373,12 +373,10 @@ bool View::bind(Renderer& renderer, BackRenderer& backRenderer)
 
     // Bind matrices descriptor set
     vkCmdBindDescriptorSets(
-        backRenderer.m_backchain.commandBuffers[
-            backRenderer.m_backchain.current
-        ],
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, backRenderer.m_layout.handle,
         DESC_MATRICES, 1,
-        &m_descriptorSets[backRenderer.m_backchain.current], 0, 0
+        &m_descriptorSets[renderer.m_swapchain.current], 0, 0
     );
 
     // View successfully binded

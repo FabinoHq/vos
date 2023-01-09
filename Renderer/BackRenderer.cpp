@@ -79,8 +79,7 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
 
     // Create backchain
     if (!m_backchain.createBackchain(
-        renderer.m_vulkanDevice, renderer.m_graphicsQueue.family,
-        renderer.m_vulkanMemory, width, height))
+        renderer.m_vulkanDevice, renderer.m_vulkanMemory, width, height))
     {
         // Could not create backchain
         return false;
@@ -198,53 +197,11 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Start rendering frame                                                     //
-//  return : True if the rendering frame is ready                             //
+//  Start back renderer pass                                                  //
+//  return : True if the back renderer pass is started                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::startFrame(Renderer& renderer)
+bool BackRenderer::startRenderPass(Renderer& renderer)
 {
-    // Clamp current frame index
-    if (m_backchain.current <= 0)
-    {
-        m_backchain.current = 0;
-    }
-    if (m_backchain.current >= (RendererMaxBackchainFrames-1))
-    {
-        m_backchain.current = (RendererMaxBackchainFrames-1);
-    }
-
-    // Wait for current frame rendering fence
-    if (vkWaitForFences(renderer.m_vulkanDevice, 1,
-        &m_backchain.fences[m_backchain.current],
-        VK_FALSE, RendererBackchainFenceTimeout) != VK_SUCCESS)
-    {
-        // Rendering fence timed out
-        return false;
-    }
-
-    // Reset command pool
-    if (vkResetCommandPool(renderer.m_vulkanDevice,
-        m_backchain.commandPools[m_backchain.current], 0) != VK_SUCCESS)
-    {
-        // Could not reset command pool
-        return false;
-    }
-
-    // Command buffer begin
-    VkCommandBufferBeginInfo commandBegin;
-    commandBegin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    commandBegin.pNext = 0;
-    commandBegin.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    commandBegin.pInheritanceInfo = 0;
-
-    // Begin command buffer
-    if (vkBeginCommandBuffer(m_backchain.commandBuffers[m_backchain.current],
-        &commandBegin) != VK_SUCCESS)
-    {
-        // Could not begin command buffer
-        return false;
-    }
-
     // Set clear values
     VkClearValue clearValues[2];
     clearValues[0].color = RendererClearColor;
@@ -255,7 +212,8 @@ bool BackRenderer::startFrame(Renderer& renderer)
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
     renderPassInfo.renderPass = m_backchain.renderPass;
-    renderPassInfo.framebuffer = m_backchain.framebuffers[m_backchain.current];
+    renderPassInfo.framebuffer =
+        m_backchain.framebuffers[renderer.m_swapchain.current];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width = m_backchain.extent.width;
@@ -264,12 +222,9 @@ bool BackRenderer::startFrame(Renderer& renderer)
     renderPassInfo.pClearValues = clearValues;
 
     vkCmdBeginRenderPass(
-        m_backchain.commandBuffers[m_backchain.current],
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
-
-    // Bind default pipeline
-    m_pipeline.bind(*this);
 
     // Set viewport
     VkViewport viewport;
@@ -281,7 +236,8 @@ bool BackRenderer::startFrame(Renderer& renderer)
     viewport.maxDepth = 1.0f;
 
     vkCmdSetViewport(
-        m_backchain.commandBuffers[m_backchain.current], 0, 1, &viewport
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        0, 1, &viewport
     );
 
     // Set scissor
@@ -292,35 +248,15 @@ bool BackRenderer::startFrame(Renderer& renderer)
     scissor.extent.height = m_backchain.extent.height;
 
     vkCmdSetScissor(
-        m_backchain.commandBuffers[m_backchain.current], 0, 1, &scissor
-    );
-
-    // Bind default view
-    if (!m_view.bind(renderer, *this))
-    {
-        // Could not bind default view
-        return false;
-    }
-
-    // Bind default vertex buffer
-    VkDeviceSize offset = 0;
-    vkCmdBindVertexBuffers(
-        m_backchain.commandBuffers[m_backchain.current], 0, 1,
-        &(renderer.m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle),
-        &offset
-    );
-
-    vkCmdBindIndexBuffer(
-        m_backchain.commandBuffers[m_backchain.current],
-        (renderer.m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle),
-        0, VK_INDEX_TYPE_UINT16
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        0, 1, &scissor
     );
 
     // Push default model matrix into command buffer
     Matrix4x4 defaultMatrix;
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
-        m_backchain.commandBuffers[m_backchain.current],
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
@@ -337,7 +273,7 @@ bool BackRenderer::startFrame(Renderer& renderer)
     pushConstants.size[1] = 1.0f;
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
-        m_backchain.commandBuffers[m_backchain.current],
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
@@ -347,59 +283,14 @@ bool BackRenderer::startFrame(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  End rendering frame                                                       //
-//  return : True if the frame is rendering                                   //
+//  End back renderer pass                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::endFrame(Renderer& renderer)
+void BackRenderer::endRenderPass(Renderer& renderer)
 {
     // End render pass
-    vkCmdEndRenderPass(m_backchain.commandBuffers[m_backchain.current]);
-
-    // End command buffer
-    if (vkEndCommandBuffer(
-        m_backchain.commandBuffers[m_backchain.current]) != VK_SUCCESS)
-    {
-        // Could not end command buffer
-        return false;
-    }
-
-    // Reset current frame rendering fence
-    if (vkResetFences(renderer.m_vulkanDevice, 1,
-        &m_backchain.fences[m_backchain.current]) != VK_SUCCESS)
-    {
-        // Could not reset fence
-        return false;
-    }
-
-    // Submit current frame
-    VkPipelineStageFlags waitDstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-    VkSubmitInfo submitInfo;
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = &waitDstStage;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers =
-        &m_backchain.commandBuffers[m_backchain.current];
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (vkQueueSubmit(renderer.m_graphicsQueue.handle, 1, &submitInfo,
-        m_backchain.fences[m_backchain.current]) != VK_SUCCESS)
-    {
-        return false;
-    }
-
-    // Next backchain frame index
-    ++m_backchain.current;
-    if (m_backchain.current >= RendererMaxBackchainFrames)
-    {
-        m_backchain.current = 0;
-    }
-
-    // Current frame is submitted for rendering
-    return true;
+    vkCmdEndRenderPass(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current]
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -451,4 +342,33 @@ void BackRenderer::cleanup(Renderer& renderer)
             }
         }
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind back renderer default pipeline                                       //
+////////////////////////////////////////////////////////////////////////////////
+void BackRenderer::bindDefaultPipeline(Renderer& renderer)
+{
+    m_pipeline.bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set back renderer default view                                            //
+//  return : True if the default view is successfully set                     //
+////////////////////////////////////////////////////////////////////////////////
+bool BackRenderer::setDefaultView(Renderer& renderer)
+{
+    // Compute default view
+    m_view.compute(*this);
+
+    // Bind default view
+    if (!m_view.bind(renderer, *this))
+    {
+        // Could not bind default view
+        return false;
+    }
+
+    // Default view successfully set
+    return true;
 }

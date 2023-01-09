@@ -242,10 +242,6 @@ void Vos::run()
             // Render game
             m_game.render();
 
-            // Render cursor
-            //m_renderer.bindDefaultPipeline();
-            //m_renderer.renderCursor(m_mouseX, m_mouseY);
-
             // End rendering
             m_renderer.endFrame();
         }

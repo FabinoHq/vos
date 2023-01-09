@@ -368,16 +368,14 @@ void Texture::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind texture                                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void Texture::bind(BackRenderer& backRenderer)
+void Texture::bind(Renderer& renderer, BackRenderer& backRenderer)
 {
     // Bind texture descriptor set
     vkCmdBindDescriptorSets(
-        backRenderer.m_backchain.commandBuffers[
-            backRenderer.m_backchain.current
-        ],
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, backRenderer.m_layout.handle,
         DESC_TEXTURE, 1,
-        &m_descriptorSets[backRenderer.m_backchain.current], 0, 0
+        &m_descriptorSets[renderer.m_swapchain.current], 0, 0
     );
 }
 

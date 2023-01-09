@@ -577,19 +577,6 @@ void Pipeline::bind(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind back renderer pipeline                                               //
-////////////////////////////////////////////////////////////////////////////////
-void Pipeline::bind(BackRenderer& backRenderer)
-{
-    vkCmdBindPipeline(
-        backRenderer.m_backchain.commandBuffers[
-            backRenderer.m_backchain.current
-        ],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Destroy pipeline                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 void Pipeline::destroyPipeline(Renderer& renderer)

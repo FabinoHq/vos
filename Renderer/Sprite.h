@@ -182,7 +182,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind sprite texture                                           //
             ////////////////////////////////////////////////////////////////////
-            void bindTexture(BackRenderer& backRenderer);
+            void bindTexture(Renderer& renderer, BackRenderer& backRenderer);
 
             ////////////////////////////////////////////////////////////////////
             //  Render sprite                                                 //
@@ -192,7 +192,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Render sprite                                                 //
             ////////////////////////////////////////////////////////////////////
-            void render(BackRenderer& backRenderer);
+            void render(Renderer& renderer, BackRenderer& backRenderer);
 
 
         private:

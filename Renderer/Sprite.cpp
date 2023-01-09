@@ -281,9 +281,9 @@ void Sprite::bindTexture(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind sprite texture                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void Sprite::bindTexture(BackRenderer& backRenderer)
+void Sprite::bindTexture(Renderer& renderer, BackRenderer& backRenderer)
 {
-    m_texture->bind(backRenderer);
+    m_texture->bind(renderer, backRenderer);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -328,16 +328,14 @@ void Sprite::render(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Render sprite                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void Sprite::render(BackRenderer& backRenderer)
+void Sprite::render(Renderer& renderer, BackRenderer& backRenderer)
 {
     // Compute sprite transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        backRenderer.m_backchain.commandBuffers[
-            backRenderer.m_backchain.current
-        ],
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         backRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
@@ -354,18 +352,14 @@ void Sprite::render(BackRenderer& backRenderer)
     pushConstants.size[1] = m_uvSize.vec[1];
 
     vkCmdPushConstants(
-        backRenderer.m_backchain.commandBuffers[
-            backRenderer.m_backchain.current
-        ],
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         backRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
     );
 
     // Draw sprite triangles
     vkCmdDrawIndexed(
-        backRenderer.m_backchain.commandBuffers[
-            backRenderer.m_backchain.current
-        ],
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         6, 1, 0, 0, 0
     );
 }

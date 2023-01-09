@@ -48,8 +48,6 @@
 Backchain::Backchain() :
 extent(),
 renderPass(0),
-frames(0),
-current(0),
 ratio(0.0f)
 {
     extent.width = 0;
@@ -61,9 +59,6 @@ ratio(0.0f)
         views[i] = 0;
         depthViews[i] = 0;
         framebuffers[i] = 0;
-        fences[i] = 0;
-        commandPools[i] = 0;
-        commandBuffers[i] = 0;
     }
 }
 
@@ -74,9 +69,6 @@ Backchain::~Backchain()
 {
     for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
     {
-        commandBuffers[i] = 0;
-        commandPools[i] = 0;
-        fences[i] = 0;
         framebuffers[i] = 0;
         depthViews[i] = 0;
         views[i] = 0;
@@ -84,8 +76,6 @@ Backchain::~Backchain()
         images[i] = 0;
     }
     ratio = 0.0f;
-    current = 0;
-    frames = 0;
     renderPass = 0;
     extent.height = 0;
     extent.width = 0;
@@ -97,8 +87,7 @@ Backchain::~Backchain()
 //  return : True if backchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
 bool Backchain::createBackchain(VkDevice& vulkanDevice,
-    uint32_t graphicsQueueFamily, VulkanMemory& vulkanMemory,
-    uint32_t width, uint32_t height)
+    VulkanMemory& vulkanMemory, uint32_t width, uint32_t height)
 {
     // Create back renderer images
     for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
@@ -318,10 +307,10 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     subpassDependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[1].dstSubpass = 0;
     subpassDependencies[1].srcStageMask =
-        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
     subpassDependencies[1].dstStageMask =
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    subpassDependencies[1].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    subpassDependencies[1].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     subpassDependencies[1].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     subpassDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
@@ -330,9 +319,9 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     subpassDependencies[2].srcStageMask =
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     subpassDependencies[2].dstStageMask =
-        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
     subpassDependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    subpassDependencies[2].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    subpassDependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     subpassDependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
     // Create render pass
@@ -390,68 +379,6 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
         }
     }
 
-    // Create fences
-    VkFenceCreateInfo fenceInfo;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
-    {
-        if (vkCreateFence(
-            vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
-        {
-            // Could not create fence
-            return false;
-        }
-        if (!fences[i])
-        {
-            // Invalid fence
-            return false;
-        }
-    }
-
-    // Create commands pools
-    VkCommandPoolCreateInfo commandPoolInfo;
-    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    commandPoolInfo.pNext = 0;
-    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-    commandPoolInfo.queueFamilyIndex = graphicsQueueFamily;
-
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
-    {
-        if (vkCreateCommandPool(
-            vulkanDevice, &commandPoolInfo, 0, &commandPools[i]) != VK_SUCCESS)
-        {
-            // Could not create commands pool
-            return false;
-        }
-        if (!commandPools[i])
-        {
-            // Invalid commands pool
-            return false;
-        }
-    }
-
-    // Allocate command buffers
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
-    {
-        VkCommandBufferAllocateInfo commandBufferInfo;
-        commandBufferInfo.sType =
-            VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        commandBufferInfo.pNext = 0;
-        commandBufferInfo.commandPool = commandPools[i];
-        commandBufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        commandBufferInfo.commandBufferCount = 1;
-
-        if (vkAllocateCommandBuffers(
-            vulkanDevice, &commandBufferInfo, &commandBuffers[i]) != VK_SUCCESS)
-        {
-            // Could not allocate command buffers
-            return false;
-        }
-    }
-
     // Set backchain extent
     extent.width = width;
     extent.height = height;
@@ -486,29 +413,6 @@ void Backchain::destroyBackchain(VkDevice& vulkanDevice)
 
                 for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
                 {
-                    // Destroy command buffer
-                    if (commandPools[i] && vkFreeCommandBuffers)
-                    {
-                        if (commandBuffers[i])
-                        {
-                            vkFreeCommandBuffers(vulkanDevice,
-                                commandPools[i], 1, &commandBuffers[i]
-                            );
-                        }
-                    }
-
-                    // Destroy commands pool
-                    if (commandPools[i] && vkDestroyCommandPool)
-                    {
-                        vkDestroyCommandPool(vulkanDevice, commandPools[i], 0);
-                    }
-
-                    // Destroy fences
-                    if (fences[i] && vkDestroyFence)
-                    {
-                        vkDestroyFence(vulkanDevice, fences[i], 0);
-                    }
-
                     // Destroy framebuffers
                     if (framebuffers[i] && vkDestroyFramebuffer)
                     {
@@ -547,9 +451,6 @@ void Backchain::destroyBackchain(VkDevice& vulkanDevice)
 
     for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
     {
-        commandBuffers[i] = 0;
-        commandPools[i] = 0;
-        fences[i] = 0;
         framebuffers[i] = 0;
         depthViews[i] = 0;
         views[i]= 0;
@@ -557,8 +458,6 @@ void Backchain::destroyBackchain(VkDevice& vulkanDevice)
         images[i] = 0;
     }
     ratio = 0.0f;
-    current = 0;
-    frames = 0;
     renderPass = 0;
     extent.height = 0;
     extent.width = 0;
