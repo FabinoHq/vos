@@ -136,6 +136,14 @@ void HeightMapChunk::bindVertexBuffer(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind heightmap chunk texture array                                        //
+////////////////////////////////////////////////////////////////////////////////
+void HeightMapChunk::bindTextureArray(Renderer& renderer)
+{
+    m_textureArray->bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render heightmap chunk                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 void HeightMapChunk::render(Renderer& renderer)
@@ -149,9 +157,6 @@ void HeightMapChunk::render(Renderer& renderer)
         renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
-
-    // Bind heightmap chunk texture array
-    m_textureArray->bind(renderer);
 
     // Draw heightmap chunk triangles
     vkCmdDrawIndexed(

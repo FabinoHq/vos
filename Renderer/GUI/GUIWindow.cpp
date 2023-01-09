@@ -770,6 +770,14 @@ bool GUIWindow::updateCursor(Renderer& renderer, float mouseX, float mouseY)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind window texture                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void GUIWindow::bindTexture(Renderer& renderer)
+{
+    m_texture->bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render window                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 void GUIWindow::render(Renderer& renderer)
@@ -802,15 +810,13 @@ void GUIWindow::render(Renderer& renderer)
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
-    // Bind window texture
-    m_texture->bind(renderer);
-
     // Draw window triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         6, 1, 0, 0, 0
     );
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Clamp window size                                                         //

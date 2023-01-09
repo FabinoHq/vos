@@ -467,6 +467,7 @@ void Game::render()
     {
         // Render sprite
         //m_backRenderer.bindDefaultPipeline();
+        m_sprite.bindTexture(m_backRenderer);
         m_sprite.render(m_backRenderer);
 
         // End back rendering
@@ -487,6 +488,7 @@ void Game::render()
     m_skybox.setPosition(m_freeflycam.getPosition());
     //m_skybox.setPosition(m_orbitalcam.getPosition());
     m_skybox.bindVertexBuffer(m_renderer);
+    m_skybox.bindCubeMap(m_renderer);
     m_skybox.render(m_renderer);
 
     // Render cuboid shape
@@ -497,6 +499,7 @@ void Game::render()
     // Render static mesh
     /*m_renderer.bindStaticMeshPipeline();
     m_staticMesh.bindVertexBuffer(m_renderer);
+    m_staticMesh.bindTexture(m_renderer);
     m_staticMesh.setPosition(0.0f, 0.9f, 0.0f);
     m_staticMesh.setPosition(
         m_freeflycam.getX()+2.0f,
@@ -571,6 +574,7 @@ void Game::render()
 
     // Render sprite
     /*m_renderer.bindDefaultPipeline();
+    m_sprite.bindTexture(m_renderer);
     m_sprite.render(m_renderer);*/
 
     // Render procedural sprite
@@ -587,10 +591,12 @@ void Game::render()
 
     // Render window
     /*m_renderer.bindNinePatchPipeline();
+    m_guiWindow.bindTexture(m_renderer);
     m_guiWindow.render(m_renderer);*/
 
     // Render pixel text (framerate)
     m_renderer.bindPxTextPipeline();
+    m_pxText.bindTexture(m_renderer);
     m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
     m_pxText.render(m_renderer);
 

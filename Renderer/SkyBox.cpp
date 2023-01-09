@@ -170,6 +170,14 @@ void SkyBox::bindVertexBuffer(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind skybox cubemap                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void SkyBox::bindCubeMap(Renderer& renderer)
+{
+    m_cubemap->bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render skybox                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 void SkyBox::render(Renderer& renderer)
@@ -196,9 +204,6 @@ void SkyBox::render(Renderer& renderer)
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
-
-    // Bind skybox cubemap
-    m_cubemap->bind(renderer);
 
     // Draw skybox triangles
     vkCmdDrawIndexed(

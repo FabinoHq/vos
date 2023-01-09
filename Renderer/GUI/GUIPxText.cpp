@@ -222,6 +222,14 @@ size_t GUIPxText::getLength()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind pixel text texture                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::bindTexture(Renderer& renderer)
+{
+    m_texture->bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render pixel text                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 void GUIPxText::render(Renderer& renderer)
@@ -250,9 +258,6 @@ void GUIPxText::render(Renderer& renderer)
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
-
-    // Bind pixel text texture
-    m_texture->bind(renderer);
 
     // Draw pixel text characters
     for (size_t i = 0; i < m_text.length(); ++i)

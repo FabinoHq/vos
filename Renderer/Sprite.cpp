@@ -271,6 +271,22 @@ void Sprite::setVSize(float vSize)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind sprite texture                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::bindTexture(Renderer& renderer)
+{
+    m_texture->bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind sprite texture                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::bindTexture(BackRenderer& backRenderer)
+{
+    m_texture->bind(backRenderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render sprite                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 void Sprite::render(Renderer& renderer)
@@ -301,9 +317,6 @@ void Sprite::render(Renderer& renderer)
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
     );
-
-    // Bind sprite texture
-    //m_texture->bind(renderer);
 
     // Draw sprite triangles
     vkCmdDrawIndexed(
@@ -343,9 +356,6 @@ void Sprite::render(BackRenderer& backRenderer)
         backRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
     );
-
-    // Bind sprite texture
-    m_texture->bind(backRenderer);
 
     // Draw sprite triangles
     vkCmdDrawIndexed(

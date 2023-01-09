@@ -195,6 +195,14 @@ void StaticMesh::bindVertexBuffer(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Bind static mesh texture                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void StaticMesh::bindTexture(Renderer& renderer)
+{
+    m_texture->bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render static mesh                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 void StaticMesh::render(Renderer& renderer)
@@ -221,9 +229,6 @@ void StaticMesh::render(Renderer& renderer)
         renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
-
-    // Bind static mesh texture
-    m_texture->bind(renderer);
 
     // Draw static mesh triangles
     vkCmdDrawIndexed(
