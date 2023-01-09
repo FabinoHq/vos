@@ -41,6 +41,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Sprite.h"
 #include "Renderer.h"
+#include "BackRenderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -307,6 +308,48 @@ void Sprite::render(Renderer& renderer)
     // Draw sprite triangles
     vkCmdDrawIndexed(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        6, 1, 0, 0, 0
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Render sprite                                                             //
+////////////////////////////////////////////////////////////////////////////////
+void Sprite::render(BackRenderer& backRenderer)
+{
+    // Compute sprite transformations
+    computeTransforms();
+
+    // Push model matrix into command buffer
+    vkCmdPushConstants(
+        backRenderer.m_commandBuffers[backRenderer.m_current],
+        backRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
+    );
+
+    // Push constants into command buffer
+    PushConstantData pushConstants;
+    pushConstants.color[0] = m_color.vec[0];
+    pushConstants.color[1] = m_color.vec[1];
+    pushConstants.color[2] = m_color.vec[2];
+    pushConstants.color[3] = m_color.vec[3];
+    pushConstants.offset[0] = m_uvOffset.vec[0];
+    pushConstants.offset[1] = m_uvOffset.vec[1];
+    pushConstants.size[0] = m_uvSize.vec[0];
+    pushConstants.size[1] = m_uvSize.vec[1];
+
+    vkCmdPushConstants(
+        backRenderer.m_commandBuffers[backRenderer.m_current],
+        backRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
+    );
+
+    // Bind sprite texture
+    m_texture->bind(backRenderer);
+
+    // Draw sprite triangles
+    vkCmdDrawIndexed(
+        backRenderer.m_commandBuffers[backRenderer.m_current],
         6, 1, 0, 0, 0
     );
 }

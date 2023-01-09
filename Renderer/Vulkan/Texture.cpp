@@ -41,6 +41,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Texture.h"
 #include "../Renderer.h"
+#include "../BackRenderer.h"
 #include "../../Resources/TextureLoader.h"
 
 
@@ -361,6 +362,19 @@ void Texture::bind(Renderer& renderer)
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
         DESC_TEXTURE, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind texture                                                              //
+////////////////////////////////////////////////////////////////////////////////
+void Texture::bind(BackRenderer& backRenderer)
+{
+    // Bind texture descriptor set
+    vkCmdBindDescriptorSets(
+        backRenderer.m_commandBuffers[backRenderer.m_current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, backRenderer.m_layout.handle,
+        DESC_TEXTURE, 1, &m_descriptorSets[backRenderer.m_current], 0, 0
     );
 }
 

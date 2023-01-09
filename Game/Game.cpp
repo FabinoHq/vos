@@ -55,6 +55,7 @@ m_freeflycam(),
 m_orbitalcam(),
 m_cubemap(),
 m_skybox(),
+m_sprite(),
 m_procSprite(),
 m_rectanle(),
 m_ellipse(),
@@ -140,6 +141,13 @@ bool Game::init()
         return false;
     }
 
+
+    // Init sprite
+    if (!m_sprite.init(m_resources.textures.high(TEXTURE_TEST), 1.0f, 1.0f))
+    {
+        // Could not init sprite
+        return false;
+    }
 
     // Init procedural sprite
     if (!m_procSprite.init(m_renderer, 0, 0, 1.0f, 1.0f))
@@ -457,6 +465,11 @@ void Game::render()
     // Back rendering
     if (m_backRenderer.startFrame(m_renderer))
     {
+        // Render sprite
+        //m_backRenderer.bindDefaultPipeline();
+        m_sprite.render(m_backRenderer);
+
+        // End back rendering
         m_backRenderer.endFrame(m_renderer);
     }
 
@@ -498,14 +511,14 @@ void Game::render()
 
 
     // Set 2D view
-    m_renderer.setView(m_view);
+    /*m_renderer.setView(m_view);
 
     // Bind default vertex buffer
     m_renderer.bindDefaultVertexBuffer();
 
 
     // Render bounding circle
-    /*m_renderer.bindEllipsePipeline();
+    m_renderer.bindEllipsePipeline();
     float positionX =
         m_boundingCircle.position.vec[0]*PhysicsToRenderer;
     float positionY =
@@ -551,6 +564,14 @@ void Game::render()
     // Bind default vertex buffer
     m_renderer.bindDefaultVertexBuffer();
 
+    // Render sprite
+    /*m_renderer.bindDefaultPipeline();
+    m_sprite.render(m_renderer);*/
+
+    // Render procedural sprite
+    /*m_procSprite.bindPipeline(m_renderer);
+    m_procSprite.render(m_renderer);*/
+
     // Render rectangle
     /*m_renderer.bindRectanglePipeline();
     m_rectanle.render(m_renderer);*/
@@ -558,10 +579,6 @@ void Game::render()
     // Render ellipse
     /*m_renderer.bindEllipsePipeline();
     m_ellipse.render(m_renderer);*/
-
-    // Render procedural sprite
-    /*m_procSprite.bindPipeline(m_renderer);
-    m_procSprite.render(m_renderer);*/
 
     // Render window
     /*m_renderer.bindNinePatchPipeline();

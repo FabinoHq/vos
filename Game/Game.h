@@ -143,6 +143,7 @@
             CubeMap         m_cubemap;          // CubeMap
             SkyBox          m_skybox;           // SkyBox
 
+            Sprite          m_sprite;           // Sprite
             ProcSprite      m_procSprite;       // Procedural sprite
             RectangleShape  m_rectanle;         // Rectangle shape
             EllipseShape    m_ellipse;          // Ellipse shape
