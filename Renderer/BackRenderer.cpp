@@ -46,7 +46,11 @@
 //  BackRenderer default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 BackRenderer::BackRenderer() :
-m_extent()
+m_extent(),
+m_renderPass(0),
+m_layout(),
+m_pipeline(),
+m_current(0)
 {
     m_extent.width = 0;
     m_extent.height = 0;
@@ -57,6 +61,8 @@ m_extent()
         m_views[i] = 0;
         m_depthViews[i] = 0;
         m_framebuffers[i] = 0;
+        m_commandPools[i] = 0;
+        m_commandBuffers[i] = 0;
     }
 }
 
@@ -67,12 +73,16 @@ BackRenderer::~BackRenderer()
 {
     for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
     {
+        m_commandBuffers[i] = 0;
+        m_commandPools[i] = 0;
         m_framebuffers[i] = 0;
         m_depthViews[i] = 0;
         m_views[i] = 0;
         m_depthImages[i] = 0;
         m_images[i] = 0;
     }
+    m_current = 0;
+    m_renderPass = 0;
     m_extent.height = 0;
     m_extent.width = 0;
 }
@@ -242,6 +252,173 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
         }
     }
 
+    // Set color attachment
+    VkAttachmentDescription attachmentDescription[2];
+    attachmentDescription[0].flags = 0;
+    attachmentDescription[0].format = VK_FORMAT_R8G8B8A8_UNORM;
+    attachmentDescription[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachmentDescription[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachmentDescription[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachmentDescription[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachmentDescription[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachmentDescription[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentReference colorAttachmentReference;
+    colorAttachmentReference.attachment = 0;
+    colorAttachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    // Set depth attachment
+    attachmentDescription[1].flags = 0;
+    attachmentDescription[1].format = VK_FORMAT_D32_SFLOAT;
+    attachmentDescription[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachmentDescription[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachmentDescription[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachmentDescription[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachmentDescription[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachmentDescription[1].finalLayout =
+        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference depthAttachmentReference;
+    depthAttachmentReference.attachment = 1;
+    depthAttachmentReference.layout =
+        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    // Create render pass
+    VkSubpassDescription subpassDescription;
+    subpassDescription.flags = 0;
+    subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpassDescription.inputAttachmentCount = 0;
+    subpassDescription.pInputAttachments = 0;
+    subpassDescription.colorAttachmentCount = 1;
+    subpassDescription.pColorAttachments = &colorAttachmentReference;
+    subpassDescription.pResolveAttachments = 0;
+    subpassDescription.pDepthStencilAttachment = &depthAttachmentReference;
+    subpassDescription.preserveAttachmentCount = 0;
+    subpassDescription.pPreserveAttachments = 0;
+
+    VkSubpassDependency subpassDependencies[3];
+
+    subpassDependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+    subpassDependencies[0].dstSubpass = 0;
+    subpassDependencies[0].srcStageMask =
+        (VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
+        VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT);
+    subpassDependencies[0].dstStageMask =
+        (VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
+        VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT);
+    subpassDependencies[0].srcAccessMask =
+        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    subpassDependencies[0].dstAccessMask =
+        (VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT |
+        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT);
+    subpassDependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    subpassDependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
+    subpassDependencies[1].dstSubpass = 0;
+    subpassDependencies[1].srcStageMask =
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    subpassDependencies[1].dstStageMask =
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    subpassDependencies[1].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[1].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    subpassDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    subpassDependencies[2].srcSubpass = 0;
+    subpassDependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
+    subpassDependencies[2].srcStageMask =
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    subpassDependencies[2].dstStageMask =
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    subpassDependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    subpassDependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    VkRenderPassCreateInfo renderPassInfo;
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.pNext = 0;
+    renderPassInfo.flags = 0;
+    renderPassInfo.attachmentCount = 2;
+    renderPassInfo.pAttachments = attachmentDescription;
+    renderPassInfo.subpassCount = 1;
+    renderPassInfo.pSubpasses = &subpassDescription;
+    renderPassInfo.dependencyCount = 3;
+    renderPassInfo.pDependencies = subpassDependencies;
+
+    if (vkCreateRenderPass(renderer.m_vulkanDevice,
+        &renderPassInfo, 0, &m_renderPass) != VK_SUCCESS)
+    {
+        // Could not create render pass
+        return false;
+    }
+    if (!m_renderPass)
+    {
+        // Invalid render pass
+        return false;
+    }
+
+    // Create commands pools
+    VkCommandPoolCreateInfo commandPoolInfo;
+    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.pNext = 0;
+    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.queueFamilyIndex = renderer.m_graphicsQueue.family;
+
+    for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
+    {
+        if (vkCreateCommandPool(renderer.m_vulkanDevice,
+            &commandPoolInfo, 0, &m_commandPools[i]) != VK_SUCCESS)
+        {
+            // Could not create commands pool
+            return false;
+        }
+        if (!m_commandPools[i])
+        {
+            // Invalid commands pool
+            return false;
+        }
+    }
+
+    // Allocate command buffers
+    for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
+    {
+        VkCommandBufferAllocateInfo commandBufferInfo;
+        commandBufferInfo.sType =
+            VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        commandBufferInfo.pNext = 0;
+        commandBufferInfo.commandPool = m_commandPools[i];
+        commandBufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        commandBufferInfo.commandBufferCount = 1;
+
+        if (vkAllocateCommandBuffers(renderer.m_vulkanDevice,
+            &commandBufferInfo, &m_commandBuffers[i]) != VK_SUCCESS)
+        {
+            // Could not allocate command buffers
+            return false;
+        }
+    }
+
+    // Create pipeline layout
+    if (!m_layout.createLayout(renderer.m_vulkanDevice))
+    {
+        // Could not create pipeline layout
+        return false;
+    }
+
+    // Create default pipeline
+    m_pipeline.createVertexShader(
+        renderer, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pipeline.createFragmentShader(
+        renderer, DefaultFragmentShader, DefaultFragmentShaderSize
+    );
+    if (!m_pipeline.createPipeline(renderer, *this))
+    {
+        // Could not create default pipeline
+        return false;
+    }
+
     // Set back renderer extent
     m_extent.width = width;
     m_extent.height = height;
@@ -261,8 +438,41 @@ void BackRenderer::cleanup(Renderer& renderer)
         {
             if (vkDeviceWaitIdle(renderer.m_vulkanDevice) == VK_SUCCESS)
             {
+                // Destroy default pipeline
+                m_pipeline.destroyPipeline(renderer);
+
+                // Destroy default pipeline layout
+                m_layout.destroyLayout(renderer.m_vulkanDevice);
+
+                // Destroy render pass
+                if (m_renderPass && vkDestroyRenderPass)
+                {
+                    vkDestroyRenderPass(
+                        renderer.m_vulkanDevice, m_renderPass, 0
+                    );
+                }
+
                 for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
                 {
+                    // Destroy command buffer
+                    if (m_commandPools[i] && vkFreeCommandBuffers)
+                    {
+                        if (m_commandBuffers[i])
+                        {
+                            vkFreeCommandBuffers(renderer.m_vulkanDevice,
+                                m_commandPools[i], 1, &m_commandBuffers[i]
+                            );
+                        }
+                    }
+
+                    // Destroy commands pool
+                    if (m_commandPools[i] && vkDestroyCommandPool)
+                    {
+                        vkDestroyCommandPool(
+                            renderer.m_vulkanDevice, m_commandPools[i], 0
+                        );
+                    }
+
                     // Destroy framebuffers
                     if (m_framebuffers[i] && vkDestroyFramebuffer)
                     {
@@ -311,12 +521,15 @@ void BackRenderer::cleanup(Renderer& renderer)
 
     for (uint32_t i = 0; i < BackRendererMaxFrames; ++i)
     {
+        m_commandBuffers[i] = 0;
+        m_commandPools[i] = 0;
         m_framebuffers[i] = 0;
         m_depthViews[i] = 0;
         m_views[i]= 0;
         m_depthImages[i] = 0;
         m_images[i] = 0;
     }
+    m_renderPass = 0;
     m_extent.height = 0;
     m_extent.width = 0;
 }

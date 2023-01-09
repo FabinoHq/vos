@@ -56,6 +56,11 @@
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  BackRenderer class declaration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    class BackRenderer;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vertex inputs types enumeration                                       //
@@ -101,20 +106,33 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Pipeline                                               //
-            //  return : True if Pipeline is successfully created             //
+            //  Create renderer pipeline                                      //
+            //  return : True if renderer pipeline is successfully created    //
             ////////////////////////////////////////////////////////////////////
             bool createPipeline(Renderer& renderer,
                 VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
                 bool depthTest = false, bool backFaceCulling = false);
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind Pipeline                                                 //
+            //  Create back renderer pipeline                                 //
+            //  return : True if back renderer pipeline is created            //
+            ////////////////////////////////////////////////////////////////////
+            bool createPipeline(Renderer& renderer, BackRenderer& backRenderer,
+                VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
+                bool depthTest = false, bool backFaceCulling = false);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer pipeline                                        //
             ////////////////////////////////////////////////////////////////////
             void bind(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy Pipeline                                              //
+            //  Bind back renderer pipeline                                   //
+            ////////////////////////////////////////////////////////////////////
+            void bind(BackRenderer& backRenderer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy pipeline                                              //
             ////////////////////////////////////////////////////////////////////
             void destroyPipeline(Renderer& renderer);
 
@@ -123,7 +141,10 @@
             //  Check if the pipeline is valid                                //
             //  return : True if the pipeline is valid                        //
             ////////////////////////////////////////////////////////////////////
-            bool isValid();
+            inline bool isValid()
+            {
+                return m_pipeline;
+            }
 
 
         private:

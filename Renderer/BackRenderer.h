@@ -97,13 +97,19 @@
 
 
         public:
-            VkExtent2D          m_extent;       // Back renderer extent
+            VkExtent2D          m_extent;       // Extent
+            VkRenderPass        m_renderPass;   // Render pass
+            GraphicsLayout      m_layout;       // Graphics layout
+            Pipeline            m_pipeline;     // Default pipeline
+            uint32_t            m_current;      // Current frame
 
             VkImage             m_images[BackRendererMaxFrames];
             VkImage             m_depthImages[BackRendererMaxFrames];
             VkImageView         m_views[BackRendererMaxFrames];
             VkImageView         m_depthViews[BackRendererMaxFrames];
             VkFramebuffer       m_framebuffers[BackRendererMaxFrames];
+            VkCommandPool       m_commandPools[BackRendererMaxFrames];
+            VkCommandBuffer     m_commandBuffers[BackRendererMaxFrames];
     };
 
 

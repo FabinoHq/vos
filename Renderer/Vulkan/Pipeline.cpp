@@ -41,6 +41,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Pipeline.h"
 #include "../Renderer.h"
+#include "../BackRenderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,8 +114,8 @@ bool Pipeline::createFragmentShader(Renderer& renderer,
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Pipeline                                                           //
-//  return : True if Pipeline is successfully created                         //
+//  Create renderer pipeline                                                  //
+//  return : True if renderer pipeline is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
 bool Pipeline::createPipeline(Renderer& renderer,
     VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling)
@@ -339,7 +340,233 @@ bool Pipeline::createPipeline(Renderer& renderer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind Pipeline                                                             //
+//  Create back renderer pipeline                                             //
+//  return : True if back renderer pipeline is created                        //
+////////////////////////////////////////////////////////////////////////////////
+bool Pipeline::createPipeline(Renderer& renderer, BackRenderer& backRenderer,
+    VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling)
+{
+    // Check current pipeline
+    if (m_pipeline)
+    {
+        // Destroy current pipeline
+        destroyPipeline(renderer);
+    }
+
+    // Check vertex shader
+    if (!m_vertexShader.isValid())
+    {
+        // Invalid vertex shader
+        return false;
+    }
+
+    // Check fragment shader
+    if (!m_fragmentShader.isValid())
+    {
+        // Invalid fragment shader
+        return false;
+    }
+
+    // Shader stages
+    std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+    setShaderStages(shaderStages);
+
+    // Vertex attributes
+    VkVertexInputBindingDescription vertexBinding;
+    std::vector<VkVertexInputAttributeDescription> vertexAttributes;
+    setVertexInputs(
+        vertexBinding, vertexAttributes, vertexInputsType
+    );
+
+    // Vertex input
+    VkPipelineVertexInputStateCreateInfo vertexInput;
+    vertexInput.sType =
+        VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    vertexInput.pNext = 0;
+    vertexInput.flags = 0;
+    vertexInput.vertexBindingDescriptionCount = 1;
+    vertexInput.pVertexBindingDescriptions = &vertexBinding;
+    vertexInput.vertexAttributeDescriptionCount = static_cast<uint32_t>(
+        vertexAttributes.size()
+    );
+    vertexInput.pVertexAttributeDescriptions = vertexAttributes.data();
+
+    // Input assembly
+    VkPipelineInputAssemblyStateCreateInfo inputAssembly;
+    inputAssembly.sType =
+        VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    inputAssembly.pNext = 0;
+    inputAssembly.flags = 0;
+    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    inputAssembly.primitiveRestartEnable = VK_FALSE;
+
+    // Viewport
+    VkPipelineViewportStateCreateInfo viewportInfo;
+    viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    viewportInfo.pNext = 0;
+    viewportInfo.flags = 0;
+    viewportInfo.viewportCount = 1;
+    viewportInfo.pViewports = 0;
+    viewportInfo.scissorCount = 1;
+    viewportInfo.pScissors = 0;
+
+    // Rasterizer
+    VkPipelineRasterizationStateCreateInfo rasterizerInfo;
+    rasterizerInfo.sType =
+        VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+    rasterizerInfo.pNext = 0;
+    rasterizerInfo.flags = 0;
+    rasterizerInfo.depthClampEnable = VK_FALSE;
+    rasterizerInfo.rasterizerDiscardEnable = VK_FALSE;
+    rasterizerInfo.polygonMode = VK_POLYGON_MODE_FILL;
+    if (backFaceCulling)
+    {
+        rasterizerInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+    }
+    else
+    {
+        rasterizerInfo.cullMode = VK_CULL_MODE_NONE;
+    }
+    rasterizerInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    rasterizerInfo.depthBiasEnable = VK_FALSE;
+    rasterizerInfo.depthBiasConstantFactor = 0.0f;
+    rasterizerInfo.depthBiasClamp = 0.0f;
+    rasterizerInfo.depthBiasSlopeFactor = 0.0f;
+    rasterizerInfo.lineWidth = 1.0f;
+
+    // Multisample
+    VkPipelineMultisampleStateCreateInfo multisampleInfo;
+    multisampleInfo.sType =
+        VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+    multisampleInfo.pNext = 0;
+    multisampleInfo.flags = 0;
+    multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+    multisampleInfo.sampleShadingEnable = VK_FALSE;
+    multisampleInfo.minSampleShading = 1.0f;
+    multisampleInfo.pSampleMask = 0;
+    multisampleInfo.alphaToCoverageEnable = VK_FALSE;
+    multisampleInfo.alphaToOneEnable = VK_FALSE;
+
+    // Depth stencil
+    VkStencilOpState stencilOpFront;
+    stencilOpFront.failOp = VK_STENCIL_OP_ZERO;
+    stencilOpFront.passOp = VK_STENCIL_OP_ZERO;
+    stencilOpFront.depthFailOp = VK_STENCIL_OP_ZERO;
+    stencilOpFront.compareOp = VK_COMPARE_OP_NEVER;
+    stencilOpFront.compareMask = 0;
+    stencilOpFront.writeMask = 0;
+    stencilOpFront.reference = 0;
+
+    VkStencilOpState stencilOpBack;
+    stencilOpBack.failOp = VK_STENCIL_OP_ZERO;
+    stencilOpBack.passOp = VK_STENCIL_OP_ZERO;
+    stencilOpBack.depthFailOp = VK_STENCIL_OP_ZERO;
+    stencilOpBack.compareOp = VK_COMPARE_OP_NEVER;
+    stencilOpBack.compareMask = 0;
+    stencilOpBack.writeMask = 0;
+    stencilOpBack.reference = 0;
+
+    VkPipelineDepthStencilStateCreateInfo depthStencil;
+    depthStencil.sType =
+        VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    depthStencil.pNext = 0;
+    depthStencil.flags = 0;
+    if (depthTest)
+    {
+        depthStencil.depthTestEnable = VK_TRUE;
+        depthStencil.depthWriteEnable = VK_TRUE;
+    }
+    else
+    {
+        depthStencil.depthTestEnable = VK_FALSE;
+        depthStencil.depthWriteEnable = VK_FALSE;
+    }
+    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+    depthStencil.depthBoundsTestEnable = VK_FALSE;
+    depthStencil.stencilTestEnable = VK_FALSE;
+    depthStencil.front = stencilOpFront;
+    depthStencil.back = stencilOpBack;
+    depthStencil.minDepthBounds = 0.0f;
+    depthStencil.maxDepthBounds = 1.0f;
+
+    // Blend
+    VkPipelineColorBlendAttachmentState colorBlend;
+    colorBlend.blendEnable = VK_TRUE;
+    colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlend.alphaBlendOp = VK_BLEND_OP_ADD;
+    colorBlend.colorWriteMask =
+        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
+        VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+
+    VkPipelineColorBlendStateCreateInfo blendState;
+    blendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+    blendState.pNext = 0;
+    blendState.flags = 0;
+    blendState.logicOpEnable = VK_FALSE;
+    blendState.logicOp = VK_LOGIC_OP_COPY;
+    blendState.attachmentCount = 1;
+    blendState.pAttachments = &colorBlend;
+    blendState.blendConstants[0] = 0.0f;
+    blendState.blendConstants[1] = 0.0f;
+    blendState.blendConstants[2] = 0.0f;
+    blendState.blendConstants[3] = 0.0f;
+
+    // Dynamic states
+    VkDynamicState dynamicStates[2];
+    dynamicStates[0] = VK_DYNAMIC_STATE_VIEWPORT;
+    dynamicStates[1] = VK_DYNAMIC_STATE_SCISSOR;
+
+    VkPipelineDynamicStateCreateInfo dynamicInfo;
+    dynamicInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    dynamicInfo.pNext = 0;
+    dynamicInfo.flags = 0;
+    dynamicInfo.dynamicStateCount = 2;
+    dynamicInfo.pDynamicStates = dynamicStates;
+
+    // Create graphics pipeline
+    VkGraphicsPipelineCreateInfo pipelineInfo;
+    pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    pipelineInfo.pNext = 0;
+    pipelineInfo.flags = 0;
+    pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
+    pipelineInfo.pStages = shaderStages.data();
+    pipelineInfo.pVertexInputState = &vertexInput;
+    pipelineInfo.pInputAssemblyState = &inputAssembly;
+    pipelineInfo.pTessellationState = 0;
+    pipelineInfo.pViewportState = &viewportInfo;
+    pipelineInfo.pRasterizationState = &rasterizerInfo;
+    pipelineInfo.pMultisampleState = &multisampleInfo;
+    pipelineInfo.pDepthStencilState = &depthStencil;
+    pipelineInfo.pColorBlendState = &blendState;
+    pipelineInfo.pDynamicState = &dynamicInfo;
+    pipelineInfo.layout = backRenderer.m_layout.handle;
+    pipelineInfo.renderPass = backRenderer.m_renderPass;
+    pipelineInfo.subpass = 0;
+    pipelineInfo.basePipelineHandle = 0;
+    pipelineInfo.basePipelineIndex = -1;
+
+    if (vkCreateGraphicsPipelines(renderer.m_vulkanDevice,
+        0, 1, &pipelineInfo, 0, &m_pipeline) != VK_SUCCESS)
+    {
+        // Could not create pipeline
+        return false;
+    }
+    if (!m_pipeline)
+    {
+        // Invalid pipeline handle
+        return false;
+    }
+
+    // Pipeline successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind renderer pipeline                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 void Pipeline::bind(Renderer& renderer)
 {
@@ -350,7 +577,18 @@ void Pipeline::bind(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy Pipeline                                                          //
+//  Bind back renderer pipeline                                               //
+////////////////////////////////////////////////////////////////////////////////
+void Pipeline::bind(BackRenderer& backRenderer)
+{
+    vkCmdBindPipeline(
+        backRenderer.m_commandBuffers[backRenderer.m_current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy pipeline                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 void Pipeline::destroyPipeline(Renderer& renderer)
 {
@@ -367,16 +605,6 @@ void Pipeline::destroyPipeline(Renderer& renderer)
 
     // Destroy vertex shader
     m_vertexShader.destroyShader(renderer);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Check if the pipeline is valid                                            //
-//  return : True if the pipeline is valid                                    //
-////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::isValid()
-{
-    return m_pipeline;
 }
 
 
