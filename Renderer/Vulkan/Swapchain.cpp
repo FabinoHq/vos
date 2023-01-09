@@ -617,7 +617,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     depthAttachmentReference.layout =
         VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    // Create render pass
+    // Render subpass
     VkSubpassDescription subpassDescription;
     subpassDescription.flags = 0;
     subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -632,6 +632,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 
     VkSubpassDependency subpassDependencies[3];
 
+    // Depth dependency
     subpassDependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[0].dstSubpass = 0;
     subpassDependencies[0].srcStageMask =
@@ -647,6 +648,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT);
     subpassDependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
+    // Color dependencies
     subpassDependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[1].dstSubpass = 0;
     subpassDependencies[1].srcStageMask =
@@ -667,6 +669,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     subpassDependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     subpassDependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
+    // Create render pass
     VkRenderPassCreateInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.pNext = 0;

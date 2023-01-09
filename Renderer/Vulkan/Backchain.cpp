@@ -283,7 +283,7 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     depthAttachmentReference.layout =
         VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    // Create render pass
+    // Render subpass
     VkSubpassDescription subpassDescription;
     subpassDescription.flags = 0;
     subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -298,6 +298,7 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
 
     VkSubpassDependency subpassDependencies[3];
 
+    // Depth dependency
     subpassDependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[0].dstSubpass = 0;
     subpassDependencies[0].srcStageMask =
@@ -313,13 +314,14 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
         VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT);
     subpassDependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
+    // Color dependencies
     subpassDependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[1].dstSubpass = 0;
     subpassDependencies[1].srcStageMask =
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
     subpassDependencies[1].dstStageMask =
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    subpassDependencies[1].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[1].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
     subpassDependencies[1].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     subpassDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
@@ -328,11 +330,12 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     subpassDependencies[2].srcStageMask =
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     subpassDependencies[2].dstStageMask =
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
     subpassDependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    subpassDependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[2].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
     subpassDependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
+    // Create render pass
     VkRenderPassCreateInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.pNext = 0;
