@@ -90,7 +90,11 @@
     //  Renderer clear color                                                  //
     ////////////////////////////////////////////////////////////////////////////
     const VkClearColorValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
-    const VkClearDepthStencilValue RendererClearDepth = {1.0f, 0};
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer compositing quad offset                                      //
+    ////////////////////////////////////////////////////////////////////////////
+    const float RendererCompositingQuadOffset = 0.0000001f;
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer max uniforms descriptor sets                                 //

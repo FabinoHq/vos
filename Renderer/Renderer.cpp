@@ -223,7 +223,7 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create swapchain
     if (!m_swapchain.createSwapchain(m_physicalDevice, m_vulkanDevice,
-        m_vulkanSurface, m_surfaceQueue.family, m_vulkanMemory))
+        m_vulkanSurface, m_surfaceQueue.family))
     {
         // Could not create swapchain
         return false;
@@ -322,7 +322,10 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create main sprite
-    m_mainSprite.setSize(m_swapchain.ratio*2.0f, 2.0f);
+    m_mainSprite.setSize(
+        (m_swapchain.ratio*2.0f)+RendererCompositingQuadOffset,
+        2.0f+RendererCompositingQuadOffset
+    );
     m_mainSprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_mainSprite.setUVSize(1.0f, 1.0f);
     m_mainSprite.setUVOffset(0.0f, 0.0f);
@@ -671,7 +674,7 @@ void Renderer::startRenderPass()
     // Set clear values
     VkClearValue clearValues[2];
     clearValues[0].color = RendererClearColor;
-    clearValues[1].depthStencil = RendererClearDepth;
+    clearValues[1].depthStencil = BackRendererClearDepth;
 
     // Begin render pass
     VkRenderPassBeginInfo renderPassInfo;
@@ -751,9 +754,8 @@ void Renderer::startRenderPass()
 void Renderer::startFinalPass()
 {
     // Set clear values
-    VkClearValue clearValues[2];
+    VkClearValue clearValues[1];
     clearValues[0].color = RendererClearColor;
-    clearValues[1].depthStencil = RendererClearDepth;
 
     // Begin render pass
     VkRenderPassBeginInfo renderPassInfo;
@@ -765,7 +767,7 @@ void Renderer::startFinalPass()
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
     renderPassInfo.renderArea.extent.height = m_swapchain.extent.height;
-    renderPassInfo.clearValueCount = 2;
+    renderPassInfo.clearValueCount = 1;
     renderPassInfo.pClearValues = clearValues;
 
     vkCmdBeginRenderPass(

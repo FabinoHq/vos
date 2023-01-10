@@ -111,7 +111,7 @@
             ////////////////////////////////////////////////////////////////////
             bool createPipeline(Renderer& renderer,
                 VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
-                bool depthTest = false, bool backFaceCulling = false);
+                bool backFaceCulling = false);
 
             ////////////////////////////////////////////////////////////////////
             //  Create back renderer pipeline                                 //

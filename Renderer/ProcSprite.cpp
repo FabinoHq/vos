@@ -80,7 +80,7 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
         m_pipeline.createFragmentShader(
             renderer, fragmentSource, fragmentSize
         );
-        if (m_pipeline.createPipeline(renderer))
+        if (m_pipeline.createPipeline(renderer, renderer.m_mainRenderer))
         {
             shaderCreated = true;
         }
@@ -95,7 +95,7 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
         m_pipeline.createFragmentShader(
             renderer, DefaultProcFragmentShader, DefaultProcFragmentShaderSize
         );
-        if (!m_pipeline.createPipeline(renderer))
+        if (!m_pipeline.createPipeline(renderer, renderer.m_mainRenderer))
         {
             // Could not create default procedural sprite pipeline
             return false;

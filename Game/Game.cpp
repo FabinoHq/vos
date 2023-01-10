@@ -624,12 +624,15 @@ void Game::render()
     // Start final pass
     m_renderer.startFinalPass();
 
-    // Render main frame
-    m_renderer.m_mainRenderer.setDefaultView(m_renderer);
+    // Render main compositing quad
+    m_renderer.setDefaultView();
     m_renderer.m_mainPipeline.bind(m_renderer);
     m_renderer.bindDefaultVertexBuffer();
     m_renderer.m_mainRenderer.bind(m_renderer);
-    m_renderer.m_mainSprite.setSize(m_renderer.m_swapchain.ratio*2.0f, 2.0f);
+    m_renderer.m_mainSprite.setSize(
+        (m_renderer.m_swapchain.ratio*2.0f)+RendererCompositingQuadOffset,
+        2.0f+RendererCompositingQuadOffset
+    );
     m_renderer.m_mainSprite.centerOrigin();
     m_renderer.m_mainSprite.render(m_renderer);
 

@@ -81,7 +81,7 @@
             ////////////////////////////////////////////////////////////////////
             bool createSwapchain(VkPhysicalDevice& physicalDevice,
                 VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                uint32_t surfaceQueueFamily, VulkanMemory& vulkanMemory);
+                uint32_t surfaceQueueFamily);
 
             ////////////////////////////////////////////////////////////////////
             //  Resize swapchain                                              //
@@ -119,9 +119,7 @@
             float               ratio;          // Swapchain aspect ratio
 
             VkImage             images[RendererMaxSwapchainFrames];
-            VkImage             depthImages[RendererMaxSwapchainFrames];
             VkImageView         views[RendererMaxSwapchainFrames];
-            VkImageView         depthViews[RendererMaxSwapchainFrames];
             VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
             VkSemaphore         renderReady[RendererMaxSwapchainFrames];
             VkSemaphore         renderDone[RendererMaxSwapchainFrames];

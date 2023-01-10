@@ -59,9 +59,7 @@ ratio(0.0f)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         images[i] = 0;
-        depthImages[i] = 0;
         views[i] = 0;
-        depthViews[i] = 0;
         framebuffers[i] = 0;
         renderReady[i] = 0;
         renderDone[i] = 0;
@@ -84,9 +82,7 @@ Swapchain::~Swapchain()
         renderDone[i] = 0;
         renderReady[i] = 0;
         framebuffers[i] = 0;
-        depthViews[i] = 0;
         views[i] = 0;
-        depthImages[i] = 0;
         images[i] = 0;
     }
     ratio = 0.0f;
@@ -106,7 +102,7 @@ Swapchain::~Swapchain()
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-    uint32_t surfaceQueueFamily, VulkanMemory& vulkanMemory)
+    uint32_t surfaceQueueFamily)
 {
     // Check physical device
     if (!physicalDevice)
@@ -473,49 +469,6 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         ratio = (extent.width*1.0f) / (extent.height*1.0f);
     }
 
-    // Create swapchain depth images
-    for (uint32_t i = 0; i < frames; ++i)
-    {
-        // Create depth image
-        VkImageCreateInfo imageInfo;
-        imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-        imageInfo.pNext = 0;
-        imageInfo.flags = 0;
-        imageInfo.imageType = VK_IMAGE_TYPE_2D;
-        imageInfo.format = VK_FORMAT_D32_SFLOAT;
-        imageInfo.extent.width = extent.width;
-        imageInfo.extent.height = extent.height;
-        imageInfo.extent.depth = 1;
-        imageInfo.mipLevels = 1;
-        imageInfo.arrayLayers = 1;
-        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-        imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-        imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        imageInfo.queueFamilyIndexCount = 0;
-        imageInfo.pQueueFamilyIndices = 0;
-        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-        if (vkCreateImage(vulkanDevice,
-            &imageInfo, 0, &depthImages[i]) != VK_SUCCESS)
-        {
-            // Could not create depth image
-            return false;
-        }
-        if (!depthImages[i])
-        {
-            // Invalid depth image
-            return false;
-        }
-
-        // Allocate depth image memory
-        if (!vulkanMemory.allocateSwapchainImage(vulkanDevice, depthImages[i]))
-        {
-            // Could not allocate depth image memory
-            return false;
-        }
-    }
-
     // Create swapchain images views
     VkImageSubresourceRange subresource;
     subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -550,42 +503,8 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         }
     }
 
-    // Create swapchain depth images views
-    VkImageSubresourceRange depthSubresource;
-    depthSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-    depthSubresource.baseMipLevel = 0;
-    depthSubresource.levelCount = 1;
-    depthSubresource.baseArrayLayer = 0;
-    depthSubresource.layerCount = 1;
-
-    for (uint32_t i = 0; i < frames; ++i)
-    {
-        // Create depth image view
-        VkImageViewCreateInfo depthImageView;
-        depthImageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        depthImageView.pNext = 0;
-        depthImageView.flags = 0;
-        depthImageView.image = depthImages[i];
-        depthImageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        depthImageView.format = VK_FORMAT_D32_SFLOAT;
-        depthImageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-        depthImageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-        depthImageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-        depthImageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-        depthImageView.subresourceRange = depthSubresource;
-
-        if (vkCreateImageView(
-            vulkanDevice, &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
-        {
-            // Could not create swapchain depth image view
-            SysMessage::box() << "[0x303E] Could not create swapchain view\n";
-            SysMessage::box() << "Please update your graphics drivers";
-            return false;
-        }
-    }
-
     // Set color attachment
-    VkAttachmentDescription attachmentDescription[2];
+    VkAttachmentDescription attachmentDescription[1];
     attachmentDescription[0].flags = 0;
     attachmentDescription[0].format = format;
     attachmentDescription[0].samples = VK_SAMPLE_COUNT_1_BIT;
@@ -600,23 +519,6 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     colorAttachmentReference.attachment = 0;
     colorAttachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-    // Set depth attachment
-    attachmentDescription[1].flags = 0;
-    attachmentDescription[1].format = VK_FORMAT_D32_SFLOAT;
-    attachmentDescription[1].samples = VK_SAMPLE_COUNT_1_BIT;
-    attachmentDescription[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    attachmentDescription[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    attachmentDescription[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    attachmentDescription[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    attachmentDescription[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    attachmentDescription[1].finalLayout =
-        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-    VkAttachmentReference depthAttachmentReference;
-    depthAttachmentReference.attachment = 1;
-    depthAttachmentReference.layout =
-        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
     // Render subpass
     VkSubpassDescription subpassDescription;
     subpassDescription.flags = 0;
@@ -626,59 +528,43 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     subpassDescription.colorAttachmentCount = 1;
     subpassDescription.pColorAttachments = &colorAttachmentReference;
     subpassDescription.pResolveAttachments = 0;
-    subpassDescription.pDepthStencilAttachment = &depthAttachmentReference;
+    subpassDescription.pDepthStencilAttachment = 0;
     subpassDescription.preserveAttachmentCount = 0;
     subpassDescription.pPreserveAttachments = 0;
 
-    VkSubpassDependency subpassDependencies[3];
+    VkSubpassDependency subpassDependencies[2];
 
-    // Depth dependency
+    // Color dependencies
     subpassDependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[0].dstSubpass = 0;
     subpassDependencies[0].srcStageMask =
-        (VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
-        VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT);
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
     subpassDependencies[0].dstStageMask =
-        (VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
-        VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT);
-    subpassDependencies[0].srcAccessMask =
-        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-    subpassDependencies[0].dstAccessMask =
-        (VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT |
-        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT);
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    subpassDependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     subpassDependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
-    // Color dependencies
-    subpassDependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
-    subpassDependencies[1].dstSubpass = 0;
+    subpassDependencies[1].srcSubpass = 0;
+    subpassDependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
     subpassDependencies[1].srcStageMask =
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     subpassDependencies[1].dstStageMask =
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    subpassDependencies[1].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-    subpassDependencies[1].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    subpassDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-    subpassDependencies[2].srcSubpass = 0;
-    subpassDependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
-    subpassDependencies[2].srcStageMask =
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    subpassDependencies[2].dstStageMask =
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-    subpassDependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    subpassDependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-    subpassDependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+    subpassDependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    subpassDependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    subpassDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
     // Create render pass
     VkRenderPassCreateInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.pNext = 0;
     renderPassInfo.flags = 0;
-    renderPassInfo.attachmentCount = 2;
+    renderPassInfo.attachmentCount = 1;
     renderPassInfo.pAttachments = attachmentDescription;
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpassDescription;
-    renderPassInfo.dependencyCount = 3;
+    renderPassInfo.dependencyCount = 2;
     renderPassInfo.pDependencies = subpassDependencies;
 
     if (vkCreateRenderPass(
@@ -700,16 +586,15 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Create framebuffers
     for (uint32_t i = 0; i < frames; ++i)
     {
-        VkImageView imageViews[2];
+        VkImageView imageViews[1];
         imageViews[0] = views[i];
-        imageViews[1] = depthViews[i];
 
         VkFramebufferCreateInfo framebufferInfo;
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferInfo.pNext = 0;
         framebufferInfo.flags = 0;
         framebufferInfo.renderPass = renderPass;
-        framebufferInfo.attachmentCount = 2;
+        framebufferInfo.attachmentCount = 1;
         framebufferInfo.pAttachments = imageViews;
         framebufferInfo.width = extent.width;
         framebufferInfo.height = extent.height;
@@ -876,22 +761,10 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
                         vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
                     }
 
-                    // Destroy swapchain depth images views
-                    if (depthViews[i] && vkDestroyImageView)
-                    {
-                        vkDestroyImageView(vulkanDevice, depthViews[i], 0);
-                    }
-
                     // Destroy swapchain images views
                     if (views[i] && vkDestroyImageView)
                     {
                         vkDestroyImageView(vulkanDevice, views[i], 0);
-                    }
-
-                    // Destroy swapchain depth images
-                    if (depthImages[i] && vkDestroyImage)
-                    {
-                        vkDestroyImage(vulkanDevice, depthImages[i], 0);
                     }
                 }
             }
@@ -1200,49 +1073,6 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         ratio = (extent.width*1.0f) / (extent.height*1.0f);
     }
 
-    // Recreate swapchain depth images
-    for (uint32_t i = 0; i < frames; ++i)
-    {
-        // Recreate depth image
-        VkImageCreateInfo imageInfo;
-        imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-        imageInfo.pNext = 0;
-        imageInfo.flags = 0;
-        imageInfo.imageType = VK_IMAGE_TYPE_2D;
-        imageInfo.format = VK_FORMAT_D32_SFLOAT;
-        imageInfo.extent.width = extent.width;
-        imageInfo.extent.height = extent.height;
-        imageInfo.extent.depth = 1;
-        imageInfo.mipLevels = 1;
-        imageInfo.arrayLayers = 1;
-        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-        imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-        imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        imageInfo.queueFamilyIndexCount = 0;
-        imageInfo.pQueueFamilyIndices = 0;
-        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-        if (vkCreateImage(vulkanDevice,
-            &imageInfo, 0, &depthImages[i]) != VK_SUCCESS)
-        {
-            // Could not create depth image
-            return false;
-        }
-        if (!depthImages[i])
-        {
-            // Invalid depth image
-            return false;
-        }
-
-        // Allocate depth image memory
-        if (!vulkanMemory.allocateSwapchainImage(vulkanDevice, depthImages[i]))
-        {
-            // Could not allocate depth image memory
-            return false;
-        }
-    }
-
     // Recreate swapchain images views
     VkImageSubresourceRange subresource;
     subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1275,51 +1105,18 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         }
     }
 
-    // Recreate swapchain depth images views
-    VkImageSubresourceRange depthSubresource;
-    depthSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-    depthSubresource.baseMipLevel = 0;
-    depthSubresource.levelCount = 1;
-    depthSubresource.baseArrayLayer = 0;
-    depthSubresource.layerCount = 1;
-
-    for (uint32_t i = 0; i < frames; ++i)
-    {
-        // Recreate depth image view
-        VkImageViewCreateInfo depthImageView;
-        depthImageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        depthImageView.pNext = 0;
-        depthImageView.flags = 0;
-        depthImageView.image = depthImages[i];
-        depthImageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        depthImageView.format = VK_FORMAT_D32_SFLOAT;
-        depthImageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-        depthImageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-        depthImageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-        depthImageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-        depthImageView.subresourceRange = depthSubresource;
-
-        if (vkCreateImageView(
-            vulkanDevice, &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
-        {
-            // Could not recreate swapchain depth image view
-            return false;
-        }
-    }
-
     // Recreate framebuffers
     for (uint32_t i = 0; i < frames; ++i)
     {
-        VkImageView imageViews[2];
+        VkImageView imageViews[1];
         imageViews[0] = views[i];
-        imageViews[1] = depthViews[i];
 
         VkFramebufferCreateInfo framebufferInfo;
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferInfo.pNext = 0;
         framebufferInfo.flags = 0;
         framebufferInfo.renderPass = renderPass;
-        framebufferInfo.attachmentCount = 2;
+        framebufferInfo.attachmentCount = 1;
         framebufferInfo.pAttachments = imageViews;
         framebufferInfo.width = extent.width;
         framebufferInfo.height = extent.height;
@@ -1431,22 +1228,10 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
                         );
                     }
 
-                    // Destroy swapchain depth images views
-                    if (depthViews[i] && vkDestroyImageView)
-                    {
-                        vkDestroyImageView(vulkanDevice, depthViews[i], 0);
-                    }
-
                     // Destroy swapchain images views
                     if (views[i] && vkDestroyImageView)
                     {
                         vkDestroyImageView(vulkanDevice, views[i], 0);
-                    }
-
-                    // Destroy swapchain depth images
-                    if (depthImages[i] && vkDestroyImage)
-                    {
-                        vkDestroyImage(vulkanDevice, depthImages[i], 0);
                     }
                 }
 
@@ -1467,9 +1252,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
         renderDone[i] = 0;
         renderReady[i] = 0;
         framebuffers[i] = 0;
-        depthViews[i] = 0;
         views[i]= 0;
-        depthImages[i] = 0;
         images[i] = 0;
     }
     ratio = 0.0f;
