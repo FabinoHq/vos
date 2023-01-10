@@ -209,7 +209,7 @@ void Camera::destroyCamera(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute camera                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Camera::compute(Renderer& renderer)
+void Camera::compute(float ratio)
 {
     // Compute camera target
     m_target.vec[0] = std::cos(m_angles.vec[0]);
@@ -220,9 +220,7 @@ void Camera::compute(Renderer& renderer)
     m_target.normalize();
 
     // Compute projection matrix
-    m_projMatrix.setPerspective(
-        m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
-    );
+    m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
 
     // Compute view matrix
     m_matrix.setIdentity();

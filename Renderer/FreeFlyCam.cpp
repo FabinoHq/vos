@@ -75,7 +75,7 @@ FreeFlyCam::~FreeFlyCam()
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute freefly camera                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void FreeFlyCam::compute(Renderer& renderer, float frametime)
+void FreeFlyCam::compute(float ratio, float frametime)
 {
     // Compute freefly camera speed
     float speed = m_speed*frametime;
@@ -192,9 +192,7 @@ void FreeFlyCam::compute(Renderer& renderer, float frametime)
     }
 
     // Compute projection matrix
-    m_projMatrix.setPerspective(
-        m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
-    );
+    m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
 
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);

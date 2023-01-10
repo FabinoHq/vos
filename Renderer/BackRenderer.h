@@ -45,7 +45,6 @@
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Backchain.h"
-    #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/Pipeline.h"
     #include "View.h"
 
@@ -134,7 +133,6 @@
 
         public:
             Backchain           m_backchain;    // Backchain
-            GraphicsLayout      m_layout;       // Graphics layout
             Pipeline            m_pipeline;     // Default pipeline
             View                m_view;         // Default view
 

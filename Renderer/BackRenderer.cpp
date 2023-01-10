@@ -48,7 +48,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 BackRenderer::BackRenderer() :
 m_backchain(),
-m_layout(),
 m_pipeline(),
 m_view()
 {
@@ -166,13 +165,6 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
         );
     }
 
-    // Create pipeline layout
-    if (!m_layout.createLayout(renderer.m_vulkanDevice))
-    {
-        // Could not create pipeline layout
-        return false;
-    }
-
     // Create default pipeline
     m_pipeline.createVertexShader(
         renderer, DefaultVertexShader, DefaultVertexShaderSize
@@ -187,7 +179,7 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
     }
 
     // Init default view
-    if (!m_view.init(renderer, *this))
+    if (!m_view.init(renderer))
     {
         // Could not init default view
         return false;
@@ -258,7 +250,7 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
 
@@ -275,7 +267,7 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
@@ -335,9 +327,6 @@ void BackRenderer::cleanup(Renderer& renderer)
                 // Destroy default pipeline
                 m_pipeline.destroyPipeline(renderer);
 
-                // Destroy default pipeline layout
-                m_layout.destroyLayout(renderer.m_vulkanDevice);
-
                 // Destroy backchain
                 m_backchain.destroyBackchain(renderer.m_vulkanDevice);
             }
@@ -361,10 +350,10 @@ void BackRenderer::bindDefaultPipeline(Renderer& renderer)
 bool BackRenderer::setDefaultView(Renderer& renderer)
 {
     // Compute default view
-    m_view.compute(*this);
+    m_view.compute(m_backchain.ratio);
 
     // Bind default view
-    if (!m_view.bind(renderer, *this))
+    if (!m_view.bind(renderer))
     {
         // Could not bind default view
         return false;

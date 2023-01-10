@@ -543,7 +543,7 @@ bool Pipeline::createPipeline(Renderer& renderer, BackRenderer& backRenderer,
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
-    pipelineInfo.layout = backRenderer.m_layout.handle;
+    pipelineInfo.layout = renderer.m_layout.handle;
     pipelineInfo.renderPass = backRenderer.m_backchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;

@@ -75,7 +75,7 @@ OrbitalCam::~OrbitalCam()
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute orbital camera                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void OrbitalCam::compute(Renderer& renderer, float frametime)
+void OrbitalCam::compute(float ratio, float frametime)
 {
     // Compute orbital camera speed
     float speed = m_speed*frametime;
@@ -112,9 +112,7 @@ void OrbitalCam::compute(Renderer& renderer, float frametime)
     m_position += m_target;
 
     // Compute projection matrix
-    m_projMatrix.setPerspective(
-        m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
-    );
+    m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
 
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);

@@ -423,10 +423,10 @@ void Game::compute(float frametime)
     m_pxText.setText(framestr.str());
 
     // Compute frame
-    m_view.compute(m_renderer);
-    m_camera.compute(m_renderer);
-    m_freeflycam.compute(m_renderer, frametime);
-    m_orbitalcam.compute(m_renderer, frametime);
+    m_view.compute(m_renderer.m_swapchain.ratio);
+    m_camera.compute(m_renderer.m_swapchain.ratio);
+    m_freeflycam.compute(m_renderer.m_swapchain.ratio, frametime);
+    m_orbitalcam.compute(m_renderer.m_swapchain.ratio, frametime);
 
     // Update heightmap
     int32_t chunkX = static_cast<int32_t>(
@@ -583,8 +583,8 @@ void Game::render()
     m_renderer.m_mainRenderer.setDefaultView(m_renderer);
     m_renderer.m_mainRenderer.bindDefaultPipeline(m_renderer);
     m_renderer.bindDefaultVertexBuffer();
-    m_sprite.bindTexture(m_renderer, m_renderer.m_mainRenderer);
-    m_sprite.render(m_renderer, m_renderer.m_mainRenderer);
+    m_sprite.bindTexture(m_renderer);
+    m_sprite.render(m_renderer);
 
     // Render procedural sprite
     /*m_procSprite.bindPipeline(m_renderer);

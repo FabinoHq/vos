@@ -1045,7 +1045,7 @@ void Renderer::bindDefaultVertexBuffer()
 bool Renderer::setDefaultView()
 {
     // Compute default view
-    m_view.compute(*this);
+    m_view.compute(m_swapchain.ratio);
 
     // Bind default view
     if (!m_view.bind(*this))
