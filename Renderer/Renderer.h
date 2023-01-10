@@ -58,6 +58,7 @@
     #include "Vulkan/Shader.h"
     #include "Vulkan/Texture.h"
     #include "Vulkan/CubeMap.h"
+    #include "BackRenderer.h"
     #include "View.h"
     #include "Camera.h"
     #include "FreeFlyCam.h"
@@ -156,6 +157,11 @@
             //  Start render pass                                             //
             ////////////////////////////////////////////////////////////////////
             void startRenderPass();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Start final render pass                                       //
+            ////////////////////////////////////////////////////////////////////
+            void startFinalPass();
 
             ////////////////////////////////////////////////////////////////////
             //  End render pass                                               //
@@ -361,6 +367,11 @@
             VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain
             GraphicsLayout      m_layout;               // Graphics layout
+
+            BackRenderer        m_mainRenderer;         // Main renderer
+            Pipeline            m_mainPipeline;         // Main pipeline
+            Sprite              m_mainSprite;           // Main sprite
+
             Pipeline            m_pipeline;             // Default pipeline
             Pipeline            m_ninePatchPipeline;    // NinePatch pipeline
             Pipeline            m_rectanglePipeline;    // Rectangle pipeline
@@ -370,8 +381,8 @@
             Pipeline            m_skyBoxPipeline;       // SkyBox pipeline
             Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
             Pipeline            m_heightMapPipeline;    // Heightmap pipeline
-            View                m_view;                 // Default view
 
+            View                m_view;                 // Default view
             Resources&          m_resources;            // Resources
             Vector2             m_cursorOffset;         // Cursor offset
             Sprite              m_cursor;               // Cursor sprite

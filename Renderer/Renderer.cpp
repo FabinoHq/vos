@@ -62,6 +62,9 @@ m_texturesDescPool(0),
 m_vulkanMemory(),
 m_swapchain(),
 m_layout(),
+m_mainRenderer(),
+m_mainPipeline(),
+m_mainSprite(),
 m_pipeline(),
 m_ninePatchPipeline(),
 m_rectanglePipeline(),
@@ -297,6 +300,33 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
+    // Create main renderer
+    if (!m_mainRenderer.init(
+        *this, m_swapchain.extent.width, m_swapchain.extent.height))
+    {
+        // Could not init main renderer
+        return false;
+    }
+
+    // Create main pipeline
+    m_mainPipeline.createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_mainPipeline.createFragmentShader(
+        *this, DefaultFragmentShader, DefaultFragmentShaderSize
+    );
+    if (!m_mainPipeline.createPipeline(*this))
+    {
+        // Could not create main pipeline
+        return false;
+    }
+
+    // Create main sprite
+    m_mainSprite.setSize(m_swapchain.ratio*2.0f, 2.0f);
+    m_mainSprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    m_mainSprite.setUVSize(1.0f, 1.0f);
+    m_mainSprite.setUVOffset(0.0f, 0.0f);
+
     // Create default pipeline
     m_pipeline.createVertexShader(
         *this, DefaultVertexShader, DefaultVertexShaderSize
@@ -304,7 +334,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_pipeline.createFragmentShader(
         *this, DefaultFragmentShader, DefaultFragmentShaderSize
     );
-    if (!m_pipeline.createPipeline(*this))
+    if (!m_pipeline.createPipeline(*this, m_mainRenderer))
     {
         // Could not create default pipeline
         SysMessage::box() << "[0x3052] Could not create default pipeline\n";
@@ -319,7 +349,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_ninePatchPipeline.createFragmentShader(
         *this, NinePatchFragmentShader, NinePatchFragmentShaderSize
     );
-    if (!m_ninePatchPipeline.createPipeline(*this))
+    if (!m_ninePatchPipeline.createPipeline(*this, m_mainRenderer))
     {
         // Could not create ninepatch pipeline
         SysMessage::box() << "[0x3053] Could not create ninepatch pipeline\n";
@@ -334,7 +364,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_rectanglePipeline.createFragmentShader(
         *this, RectangleFragmentShader, RectangleFragmentShaderSize
     );
-    if (!m_rectanglePipeline.createPipeline(*this))
+    if (!m_rectanglePipeline.createPipeline(*this, m_mainRenderer))
     {
         // Could not create rectangle pipeline
         SysMessage::box() << "[0x3054] Could not create rectangle pipeline\n";
@@ -349,7 +379,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_ellipsePipeline.createFragmentShader(
         *this, EllipseFragmentShader, EllipseFragmentShaderSize
     );
-    if (!m_ellipsePipeline.createPipeline(*this))
+    if (!m_ellipsePipeline.createPipeline(*this, m_mainRenderer))
     {
         // Could not create ellipse pipeline
         SysMessage::box() << "[0x3055] Could not create ellipse pipeline\n";
@@ -365,7 +395,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
     if (!m_shapePipeline.createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, m_mainRenderer, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create shape pipeline
         SysMessage::box() << "[0x3056] Could not create shape pipeline\n";
@@ -380,7 +410,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_pxTextPipeline.createFragmentShader(
         *this, PxTextFragmentShader, PxTextFragmentShaderSize
     );
-    if (!m_pxTextPipeline.createPipeline(*this))
+    if (!m_pxTextPipeline.createPipeline(*this, m_mainRenderer))
     {
         // Could not create pixel text pipeline
         SysMessage::box() << "[0x3057] Could not create pixel text pipeline\n";
@@ -396,7 +426,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
     if (!m_skyBoxPipeline.createPipeline(
-        *this, VERTEX_INPUTS_CUBEMAP, false, true))
+        *this, m_mainRenderer, VERTEX_INPUTS_CUBEMAP, false, true))
     {
         // Could not create skybox pipeline
         SysMessage::box() << "[0x3058] Could not create skybox pipeline\n";
@@ -412,7 +442,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_staticMeshPipeline.createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, m_mainRenderer, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
         SysMessage::box() << "[0x3059] Could not create static mesh pipeline\n";
@@ -428,7 +458,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, HeightMapFragmentShader, HeightMapFragmentShaderSize
     );
     if (!m_heightMapPipeline.createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, m_mainRenderer, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create heightmap pipeline
         SysMessage::box() << "[0x305A] Could not create heightmap pipeline\n";
@@ -647,6 +677,88 @@ void Renderer::startRenderPass()
     VkRenderPassBeginInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
+    renderPassInfo.renderPass = m_mainRenderer.m_backchain.renderPass;
+    renderPassInfo.framebuffer =
+        m_mainRenderer.m_backchain.framebuffers[m_frameIndex];
+    renderPassInfo.renderArea.offset.x = 0;
+    renderPassInfo.renderArea.offset.y = 0;
+    renderPassInfo.renderArea.extent.width =
+        m_mainRenderer.m_backchain.extent.width;
+    renderPassInfo.renderArea.extent.height =
+        m_mainRenderer.m_backchain.extent.height;
+    renderPassInfo.clearValueCount = 2;
+    renderPassInfo.pClearValues = clearValues;
+
+    vkCmdBeginRenderPass(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
+    );
+
+    // Set viewport
+    VkViewport viewport;
+    viewport.x = 0.0f;
+    viewport.y = m_mainRenderer.m_backchain.extent.height*1.0f;
+    viewport.width = m_mainRenderer.m_backchain.extent.width*1.0f;
+    viewport.height = m_mainRenderer.m_backchain.extent.height*-1.0f;
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+
+    vkCmdSetViewport(
+        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &viewport
+    );
+
+    // Set scissor
+    VkRect2D scissor;
+    scissor.offset.x = 0;
+    scissor.offset.y = 0;
+    scissor.extent.width = m_mainRenderer.m_backchain.extent.width;
+    scissor.extent.height = m_mainRenderer.m_backchain.extent.height;
+
+    vkCmdSetScissor(
+        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
+    );
+
+    // Push default model matrix into command buffer
+    Matrix4x4 defaultMatrix;
+    defaultMatrix.setIdentity();
+    vkCmdPushConstants(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
+    );
+
+    // Push default constants into command buffer
+    PushConstantData pushConstants;
+    pushConstants.color[0] = 1.0f;
+    pushConstants.color[1] = 1.0f;
+    pushConstants.color[2] = 1.0f;
+    pushConstants.color[3] = 1.0f;
+    pushConstants.offset[0] = 0.0f;
+    pushConstants.offset[1] = 0.0f;
+    pushConstants.size[0] = 1.0f;
+    pushConstants.size[1] = 1.0f;
+    pushConstants.time = 0.0f;
+    vkCmdPushConstants(
+        m_swapchain.commandBuffers[m_swapchain.current],
+        m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Start final render pass                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::startFinalPass()
+{
+    // Set clear values
+    VkClearValue clearValues[2];
+    clearValues[0].color = RendererClearColor;
+    clearValues[1].depthStencil = RendererClearDepth;
+
+    // Begin render pass
+    VkRenderPassBeginInfo renderPassInfo;
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    renderPassInfo.pNext = 0;
     renderPassInfo.renderPass = m_swapchain.renderPass;
     renderPassInfo.framebuffer = m_swapchain.framebuffers[m_frameIndex];
     renderPassInfo.renderArea.offset.x = 0;
@@ -783,6 +895,12 @@ void Renderer::cleanup()
 
             // Destroy default pipeline
             m_pipeline.destroyPipeline(*this);
+
+            // Destroy main pipeline
+            m_mainPipeline.destroyPipeline(*this);
+
+            // Destroy main renderer
+            m_mainRenderer.cleanup(*this);
 
             // Destroy default pipeline layout
             m_layout.destroyLayout(m_vulkanDevice);

@@ -463,7 +463,7 @@ void Game::compute(float frametime)
 void Game::render()
 {
     // Back rendering
-    if (m_backRenderer.startRenderPass(m_renderer))
+    /*if (m_backRenderer.startRenderPass(m_renderer))
     {
         // Set back renderer view
         m_backRenderer.setDefaultView(m_renderer);
@@ -476,13 +476,13 @@ void Game::render()
 
         // End back rendering
         m_backRenderer.endRenderPass(m_renderer);
-    }
+    }*/
 
     // Start rendering
     m_renderer.startRenderPass();
 
     // Get renderer settings
-    float ratio = m_renderer.getRatio();
+    /*float ratio = m_renderer.getRatio();
 
     // Set freefly camera
     m_renderer.setCamera(m_freeflycam);
@@ -496,7 +496,7 @@ void Game::render()
     //m_skybox.setPosition(m_orbitalcam.getPosition());
     m_skybox.bindVertexBuffer(m_renderer);
     m_skybox.bindCubeMap(m_renderer);
-    m_skybox.render(m_renderer);
+    m_skybox.render(m_renderer);*/
 
     // Render cuboid shape
     /*m_renderer.bindShapePipeline();
@@ -516,8 +516,8 @@ void Game::render()
     m_staticMesh.render(m_renderer);*/
 
     // Render heightmap stream
-    m_renderer.bindHeightMapPipeline();
-    m_heightMapStream.render(m_renderer);
+    /*m_renderer.bindHeightMapPipeline();
+    m_heightMapStream.render(m_renderer);*/
 
 
     // Set 2D view
@@ -569,7 +569,7 @@ void Game::render()
 
 
     // Set default screen view
-    m_renderer.setDefaultView();
+    /*m_renderer.setDefaultView();
 
     // Bind default vertex buffer
     m_renderer.bindDefaultVertexBuffer();
@@ -577,12 +577,14 @@ void Game::render()
     // Render back rendered frame
     m_renderer.bindDefaultPipeline();
     m_backRenderer.bind(m_renderer);
-    m_sprite.render(m_renderer);
+    m_sprite.render(m_renderer);*/
 
     // Render sprite
-    /*m_renderer.bindDefaultPipeline();
-    m_sprite.bindTexture(m_renderer);
-    m_sprite.render(m_renderer);*/
+    m_renderer.m_mainRenderer.setDefaultView(m_renderer);
+    m_renderer.m_mainRenderer.bindDefaultPipeline(m_renderer);
+    m_renderer.bindDefaultVertexBuffer();
+    m_sprite.bindTexture(m_renderer, m_renderer.m_mainRenderer);
+    m_sprite.render(m_renderer, m_renderer.m_mainRenderer);
 
     // Render procedural sprite
     /*m_procSprite.bindPipeline(m_renderer);
@@ -602,7 +604,7 @@ void Game::render()
     m_guiWindow.render(m_renderer);*/
 
     // Render pixel text (framerate)
-    m_renderer.bindPxTextPipeline();
+    /*m_renderer.bindPxTextPipeline();
     m_pxText.bindTexture(m_renderer);
     m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
     m_pxText.render(m_renderer);
@@ -614,8 +616,24 @@ void Game::render()
         " | Z : " << m_freeflycam.getZ();
     m_pxText.setText(camerastr.str());
     m_pxText.setPosition(-ratio, 0.96f-(m_pxText.getHeight()*0.7f));
-    m_pxText.render(m_renderer);
+    m_pxText.render(m_renderer);*/
 
     // End rendering
+    m_renderer.endRenderPass();
+
+
+    // Start final pass
+    m_renderer.startFinalPass();
+
+    // Render main frame
+    m_renderer.m_mainRenderer.setDefaultView(m_renderer);
+    m_renderer.m_mainPipeline.bind(m_renderer);
+    m_renderer.bindDefaultVertexBuffer();
+    m_renderer.m_mainRenderer.bind(m_renderer);
+    m_renderer.m_mainSprite.setSize(m_renderer.m_swapchain.ratio*2.0f, 2.0f);
+    m_renderer.m_mainSprite.centerOrigin();
+    m_renderer.m_mainSprite.render(m_renderer);
+
+    // End final pass
     m_renderer.endRenderPass();
 }
