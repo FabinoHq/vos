@@ -52,7 +52,7 @@ ratio(0.0f)
 {
     extent.width = 0;
     extent.height = 0;
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         images[i] = 0;
         depthImages[i] = 0;
@@ -67,7 +67,7 @@ ratio(0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 Backchain::~Backchain()
 {
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         framebuffers[i] = 0;
         depthViews[i] = 0;
@@ -90,7 +90,7 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     VulkanMemory& vulkanMemory, uint32_t width, uint32_t height)
 {
     // Create back renderer images
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         VkImageCreateInfo imageInfo;
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -133,7 +133,7 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     }
 
     // Create back renderer depth images
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Create depth image
         VkImageCreateInfo imageInfo;
@@ -184,7 +184,7 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     subresource.baseArrayLayer = 0;
     subresource.layerCount = 1;
 
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Create image view
         VkImageViewCreateInfo imageView;
@@ -215,7 +215,7 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     depthSubresource.baseArrayLayer = 0;
     depthSubresource.layerCount = 1;
 
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Create depth image view
         VkImageViewCreateInfo depthImageView;
@@ -349,7 +349,7 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
     }
 
     // Create framebuffers
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         VkImageView imageViews[2];
         imageViews[0] = views[i];
@@ -411,7 +411,7 @@ void Backchain::destroyBackchain(VkDevice& vulkanDevice)
                     vkDestroyRenderPass(vulkanDevice, renderPass, 0);
                 }
 
-                for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+                for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
                 {
                     // Destroy framebuffers
                     if (framebuffers[i] && vkDestroyFramebuffer)
@@ -449,7 +449,7 @@ void Backchain::destroyBackchain(VkDevice& vulkanDevice)
         }
     }
 
-    for (uint32_t i = 0; i < RendererMaxBackchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         framebuffers[i] = 0;
         depthViews[i] = 0;

@@ -208,7 +208,7 @@ bool View::init(Renderer& renderer, BackRenderer& backRenderer)
     descriptorInfo.descriptorPool = renderer.m_uniformsDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
     descriptorInfo.pSetLayouts = &backRenderer.m_layout.swapSetLayouts[
-        DESC_MATRICES*RendererMaxBackchainFrames
+        DESC_MATRICES*RendererMaxSwapchainFrames
     ];
 
     if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,

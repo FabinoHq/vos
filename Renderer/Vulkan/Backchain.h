@@ -45,16 +45,10 @@
     #include "../../System/System.h"
     #include "Vulkan.h"
     #include "VulkanMemory.h"
+    #include "Swapchain.h"
 
     #include <cstddef>
     #include <cstdint>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer backchain settings                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxBackchainFrames = 2;
-    const uint64_t RendererBackchainFenceTimeout = 5000000000;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -104,11 +98,11 @@
             VkRenderPass        renderPass;     // Backchain render pass
             float               ratio;          // Backchain aspect ratio
 
-            VkImage             images[RendererMaxBackchainFrames];
-            VkImage             depthImages[RendererMaxBackchainFrames];
-            VkImageView         views[RendererMaxBackchainFrames];
-            VkImageView         depthViews[RendererMaxBackchainFrames];
-            VkFramebuffer       framebuffers[RendererMaxBackchainFrames];
+            VkImage             images[RendererMaxSwapchainFrames];
+            VkImage             depthImages[RendererMaxSwapchainFrames];
+            VkImageView         views[RendererMaxSwapchainFrames];
+            VkImageView         depthViews[RendererMaxSwapchainFrames];
+            VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];
     };
 
 
