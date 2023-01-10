@@ -495,8 +495,8 @@ bool Pipeline::createPipeline(Renderer& renderer, BackRenderer& backRenderer,
     colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
     colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
-    colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
     colorBlend.alphaBlendOp = VK_BLEND_OP_ADD;
     colorBlend.colorWriteMask =
         VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |

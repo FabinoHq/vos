@@ -482,7 +482,7 @@ void Game::render()
     m_renderer.startRenderPass();
 
     // Get renderer settings
-    /*float ratio = m_renderer.getRatio();
+    float ratio = m_renderer.getRatio();
 
     // Set freefly camera
     m_renderer.setCamera(m_freeflycam);
@@ -496,7 +496,7 @@ void Game::render()
     //m_skybox.setPosition(m_orbitalcam.getPosition());
     m_skybox.bindVertexBuffer(m_renderer);
     m_skybox.bindCubeMap(m_renderer);
-    m_skybox.render(m_renderer);*/
+    m_skybox.render(m_renderer);
 
     // Render cuboid shape
     /*m_renderer.bindShapePipeline();
@@ -516,8 +516,8 @@ void Game::render()
     m_staticMesh.render(m_renderer);*/
 
     // Render heightmap stream
-    /*m_renderer.bindHeightMapPipeline();
-    m_heightMapStream.render(m_renderer);*/
+    m_renderer.bindHeightMapPipeline();
+    m_heightMapStream.render(m_renderer);
 
 
     // Set 2D view
@@ -569,22 +569,21 @@ void Game::render()
 
 
     // Set default screen view
-    /*m_renderer.setDefaultView();
+    m_renderer.m_mainRenderer.setDefaultView(m_renderer);
 
     // Bind default vertex buffer
     m_renderer.bindDefaultVertexBuffer();
 
     // Render back rendered frame
-    m_renderer.bindDefaultPipeline();
+    /*m_renderer.bindDefaultPipeline();
     m_backRenderer.bind(m_renderer);
     m_sprite.render(m_renderer);*/
 
     // Render sprite
-    m_renderer.m_mainRenderer.setDefaultView(m_renderer);
-    m_renderer.m_mainRenderer.bindDefaultPipeline(m_renderer);
+    /*m_renderer.m_mainRenderer.bindDefaultPipeline(m_renderer);
     m_renderer.bindDefaultVertexBuffer();
     m_sprite.bindTexture(m_renderer);
-    m_sprite.render(m_renderer);
+    m_sprite.render(m_renderer);*/
 
     // Render procedural sprite
     /*m_procSprite.bindPipeline(m_renderer);
@@ -604,7 +603,7 @@ void Game::render()
     m_guiWindow.render(m_renderer);*/
 
     // Render pixel text (framerate)
-    /*m_renderer.bindPxTextPipeline();
+    m_renderer.bindPxTextPipeline();
     m_pxText.bindTexture(m_renderer);
     m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
     m_pxText.render(m_renderer);
@@ -616,7 +615,7 @@ void Game::render()
         " | Z : " << m_freeflycam.getZ();
     m_pxText.setText(camerastr.str());
     m_pxText.setPosition(-ratio, 0.96f-(m_pxText.getHeight()*0.7f));
-    m_pxText.render(m_renderer);*/
+    m_pxText.render(m_renderer);
 
     // End rendering
     m_renderer.endRenderPass();
