@@ -41,7 +41,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Pipeline.h"
 #include "../Renderer.h"
-#include "../BackRenderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,11 +113,10 @@ bool Pipeline::createFragmentShader(Renderer& renderer,
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create renderer pipeline                                                  //
-//  return : True if renderer pipeline is successfully created                //
+//  Create compositing pipeline                                               //
+//  return : True if compositing pipeline is successfully created             //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createPipeline(Renderer& renderer,
-    VertexInputsType vertexInputsType, bool backFaceCulling)
+bool Pipeline::createCompositingPipeline(Renderer& renderer)
 {
     // Check current pipeline
     if (m_pipeline)
@@ -149,7 +147,7 @@ bool Pipeline::createPipeline(Renderer& renderer,
     VkVertexInputBindingDescription vertexBinding;
     std::vector<VkVertexInputAttributeDescription> vertexAttributes;
     setVertexInputs(
-        vertexBinding, vertexAttributes, vertexInputsType
+        vertexBinding, vertexAttributes, VERTEX_INPUTS_DEFAULT
     );
 
     // Vertex input
@@ -193,14 +191,7 @@ bool Pipeline::createPipeline(Renderer& renderer,
     rasterizerInfo.depthClampEnable = VK_FALSE;
     rasterizerInfo.rasterizerDiscardEnable = VK_FALSE;
     rasterizerInfo.polygonMode = VK_POLYGON_MODE_FILL;
-    if (backFaceCulling)
-    {
-        rasterizerInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-    }
-    else
-    {
-        rasterizerInfo.cullMode = VK_CULL_MODE_NONE;
-    }
+    rasterizerInfo.cullMode = VK_CULL_MODE_BACK_BIT;
     rasterizerInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizerInfo.depthBiasEnable = VK_FALSE;
     rasterizerInfo.depthBiasConstantFactor = 0.0f;
@@ -332,10 +323,10 @@ bool Pipeline::createPipeline(Renderer& renderer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create back renderer pipeline                                             //
-//  return : True if back renderer pipeline is created                        //
+//  Create pipeline                                                           //
+//  return : True if pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createPipeline(Renderer& renderer, BackRenderer& backRenderer,
+bool Pipeline::createPipeline(Renderer& renderer,
     VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling)
 {
     // Check current pipeline
@@ -536,7 +527,7 @@ bool Pipeline::createPipeline(Renderer& renderer, BackRenderer& backRenderer,
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = renderer.m_layout.handle;
-    pipelineInfo.renderPass = backRenderer.m_backchain.renderPass;
+    pipelineInfo.renderPass = renderer.m_mainRenderer.m_backchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;

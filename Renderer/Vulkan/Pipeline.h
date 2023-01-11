@@ -56,11 +56,6 @@
     ////////////////////////////////////////////////////////////////////////////
     class Renderer;
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  BackRenderer class declaration                                        //
-    ////////////////////////////////////////////////////////////////////////////
-    class BackRenderer;
-
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vertex inputs types enumeration                                       //
@@ -106,18 +101,16 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create renderer pipeline                                      //
-            //  return : True if renderer pipeline is successfully created    //
+            //  Create compositing pipeline                                   //
+            //  return : True if compositing pipeline is successfully created //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(Renderer& renderer,
-                VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
-                bool backFaceCulling = false);
+            bool createCompositingPipeline(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Create back renderer pipeline                                 //
-            //  return : True if back renderer pipeline is created            //
+            //  Create pipeline                                               //
+            //  return : True if pipeline is successfully created             //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(Renderer& renderer, BackRenderer& backRenderer,
+            bool createPipeline(Renderer& renderer,
                 VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
                 bool depthTest = false, bool backFaceCulling = false);
 

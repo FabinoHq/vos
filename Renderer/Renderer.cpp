@@ -315,7 +315,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_mainPipeline.createFragmentShader(
         *this, DefaultFragmentShader, DefaultFragmentShaderSize
     );
-    if (!m_mainPipeline.createPipeline(*this))
+    if (!m_mainPipeline.createCompositingPipeline(*this))
     {
         // Could not create main pipeline
         return false;
@@ -337,7 +337,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_pipeline.createFragmentShader(
         *this, DefaultFragmentShader, DefaultFragmentShaderSize
     );
-    if (!m_pipeline.createPipeline(*this, m_mainRenderer))
+    if (!m_pipeline.createPipeline(*this))
     {
         // Could not create default pipeline
         SysMessage::box() << "[0x3052] Could not create default pipeline\n";
@@ -352,7 +352,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_ninePatchPipeline.createFragmentShader(
         *this, NinePatchFragmentShader, NinePatchFragmentShaderSize
     );
-    if (!m_ninePatchPipeline.createPipeline(*this, m_mainRenderer))
+    if (!m_ninePatchPipeline.createPipeline(*this))
     {
         // Could not create ninepatch pipeline
         SysMessage::box() << "[0x3053] Could not create ninepatch pipeline\n";
@@ -367,7 +367,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_rectanglePipeline.createFragmentShader(
         *this, RectangleFragmentShader, RectangleFragmentShaderSize
     );
-    if (!m_rectanglePipeline.createPipeline(*this, m_mainRenderer))
+    if (!m_rectanglePipeline.createPipeline(*this))
     {
         // Could not create rectangle pipeline
         SysMessage::box() << "[0x3054] Could not create rectangle pipeline\n";
@@ -382,7 +382,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_ellipsePipeline.createFragmentShader(
         *this, EllipseFragmentShader, EllipseFragmentShaderSize
     );
-    if (!m_ellipsePipeline.createPipeline(*this, m_mainRenderer))
+    if (!m_ellipsePipeline.createPipeline(*this))
     {
         // Could not create ellipse pipeline
         SysMessage::box() << "[0x3055] Could not create ellipse pipeline\n";
@@ -398,7 +398,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
     if (!m_shapePipeline.createPipeline(
-        *this, m_mainRenderer, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create shape pipeline
         SysMessage::box() << "[0x3056] Could not create shape pipeline\n";
@@ -413,7 +413,7 @@ bool Renderer::init(SysWindow* sysWindow)
     m_pxTextPipeline.createFragmentShader(
         *this, PxTextFragmentShader, PxTextFragmentShaderSize
     );
-    if (!m_pxTextPipeline.createPipeline(*this, m_mainRenderer))
+    if (!m_pxTextPipeline.createPipeline(*this))
     {
         // Could not create pixel text pipeline
         SysMessage::box() << "[0x3057] Could not create pixel text pipeline\n";
@@ -429,7 +429,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
     if (!m_skyBoxPipeline.createPipeline(
-        *this, m_mainRenderer, VERTEX_INPUTS_CUBEMAP, false, true))
+        *this, VERTEX_INPUTS_CUBEMAP, false, true))
     {
         // Could not create skybox pipeline
         SysMessage::box() << "[0x3058] Could not create skybox pipeline\n";
@@ -445,7 +445,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_staticMeshPipeline.createPipeline(
-        *this, m_mainRenderer, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create static mesh pipeline
         SysMessage::box() << "[0x3059] Could not create static mesh pipeline\n";
@@ -461,7 +461,7 @@ bool Renderer::init(SysWindow* sysWindow)
         *this, HeightMapFragmentShader, HeightMapFragmentShaderSize
     );
     if (!m_heightMapPipeline.createPipeline(
-        *this, m_mainRenderer, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
     {
         // Could not create heightmap pipeline
         SysMessage::box() << "[0x305A] Could not create heightmap pipeline\n";
