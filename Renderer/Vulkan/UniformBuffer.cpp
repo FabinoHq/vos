@@ -86,7 +86,7 @@ bool UniformBuffer::createBuffer(VkDevice& vulkanDevice,
     // Create uniform buffer
     if (!uniformBuffer.createBuffer(
         vulkanDevice, vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        (VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT),
         VULKAN_MEMORY_RENDERDEVICE, size))
     {
         // Could not create uniform buffer

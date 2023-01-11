@@ -673,7 +673,7 @@ void Renderer::startRenderPass()
 {
     // Set clear values
     VkClearValue clearValues[2];
-    clearValues[0].color = RendererClearColor;
+    clearValues[0].color = BackRendererClearColor;
     clearValues[1].depthStencil = BackRendererClearDepth;
 
     // Begin render pass

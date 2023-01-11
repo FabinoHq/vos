@@ -262,11 +262,11 @@ bool Pipeline::createPipeline(Renderer& renderer,
     colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
     colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     colorBlend.alphaBlendOp = VK_BLEND_OP_ADD;
     colorBlend.colorWriteMask =
-        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-        VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+        (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
+        VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
 
     VkPipelineColorBlendStateCreateInfo blendState;
     blendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -487,12 +487,12 @@ bool Pipeline::createPipeline(Renderer& renderer, BackRenderer& backRenderer,
     colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
     colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
-    colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     colorBlend.alphaBlendOp = VK_BLEND_OP_ADD;
     colorBlend.colorWriteMask =
-        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-        VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+        (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
+        VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
 
     VkPipelineColorBlendStateCreateInfo blendState;
     blendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
