@@ -48,7 +48,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 BackRenderer::BackRenderer() :
 m_backchain(),
-m_pipeline(),
 m_view()
 {
 
@@ -163,19 +162,6 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
         vkUpdateDescriptorSets(
             renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
         );
-    }
-
-    // Create default pipeline
-    m_pipeline.createVertexShader(
-        renderer, DefaultVertexShader, DefaultVertexShaderSize
-    );
-    m_pipeline.createFragmentShader(
-        renderer, DefaultFragmentShader, DefaultFragmentShaderSize
-    );
-    if (!m_pipeline.createPipeline(renderer, *this))
-    {
-        // Could not create default pipeline
-        return false;
     }
 
     // Init default view
@@ -324,9 +310,6 @@ void BackRenderer::cleanup(Renderer& renderer)
                 // Destroy default view
                 m_view.destroyView(renderer);
 
-                // Destroy default pipeline
-                m_pipeline.destroyPipeline(renderer);
-
                 // Destroy backchain
                 m_backchain.destroyBackchain(renderer.m_vulkanDevice);
             }
@@ -334,14 +317,6 @@ void BackRenderer::cleanup(Renderer& renderer)
     }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind back renderer default pipeline                                       //
-////////////////////////////////////////////////////////////////////////////////
-void BackRenderer::bindDefaultPipeline(Renderer& renderer)
-{
-    m_pipeline.bind(renderer);
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set back renderer default view                                            //

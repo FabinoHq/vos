@@ -45,7 +45,6 @@
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Backchain.h"
-    #include "Vulkan/Pipeline.h"
     #include "View.h"
 
 
@@ -114,11 +113,6 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind back renderer default pipeline                           //
-            ////////////////////////////////////////////////////////////////////
-            void bindDefaultPipeline(Renderer& renderer);
-
-            ////////////////////////////////////////////////////////////////////
             //  Set back renderer default view                                //
             //  return : True if the default view is successfully set         //
             ////////////////////////////////////////////////////////////////////
@@ -139,7 +133,6 @@
 
         public:
             Backchain           m_backchain;    // Backchain
-            Pipeline            m_pipeline;     // Default pipeline
             View                m_view;         // Default view
 
             VkSampler           m_samplers[RendererMaxSwapchainFrames];

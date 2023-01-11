@@ -469,7 +469,7 @@ void Game::render()
         m_backRenderer.setDefaultView(m_renderer);
 
         // Render sprite
-        m_backRenderer.bindDefaultPipeline(m_renderer);
+        m_renderer.bindDefaultPipeline();
         m_renderer.bindDefaultVertexBuffer();
         m_sprite.bindTexture(m_renderer);
         m_sprite.render(m_renderer);
