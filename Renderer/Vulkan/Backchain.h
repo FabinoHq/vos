@@ -73,7 +73,16 @@
             //  return : True if backchain is successfully created            //
             ////////////////////////////////////////////////////////////////////
             bool createBackchain(VkDevice& vulkanDevice,
-                VulkanMemory& vulkanMemory, uint32_t width, uint32_t height);
+                VulkanMemory& vulkanMemory, VulkanMemoryPool memoryPool,
+                uint32_t width, uint32_t height);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Resize backchain                                              //
+            //  return : True if backchain is successfully resized            //
+            ////////////////////////////////////////////////////////////////////
+            bool resizeBackchain(VkDevice& vulkanDevice,
+                VulkanMemory& vulkanMemory, VulkanMemoryPool memoryPool,
+                uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy backchain                                             //

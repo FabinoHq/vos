@@ -736,8 +736,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 //  return : True if swapchain is successfully resized                        //
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-    VulkanMemory& vulkanMemory)
+    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface)
 {
     // Recreate swapchain
     if (vulkanDevice)
@@ -781,9 +780,6 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         framebuffers[i] = 0;
         views[i] = 0;
     }
-
-    // Reset swapchain memory
-    vulkanMemory.resetMemory(VULKAN_MEMORY_SWAPCHAIN);
 
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;

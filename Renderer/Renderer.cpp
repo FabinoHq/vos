@@ -302,7 +302,8 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Create main renderer
     if (!m_mainRenderer.init(
-        *this, m_swapchain.extent.width, m_swapchain.extent.height))
+        *this, VULKAN_MEMORY_SWAPCHAIN,
+        m_swapchain.extent.width, m_swapchain.extent.height))
     {
         // Could not init main renderer
         return false;
@@ -1681,7 +1682,14 @@ bool Renderer::resize()
 
     // Resize swapchain
     if (!m_swapchain.resizeSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface, m_vulkanMemory))
+        m_physicalDevice, m_vulkanDevice, m_vulkanSurface))
+    {
+        return false;
+    }
+
+    // Resize main renderer
+    if (!m_mainRenderer.resize(*this, VULKAN_MEMORY_SWAPCHAIN,
+        m_swapchain.extent.width, m_swapchain.extent.height))
     {
         return false;
     }

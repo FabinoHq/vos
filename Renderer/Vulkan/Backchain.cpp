@@ -87,9 +87,17 @@ Backchain::~Backchain()
 //  return : True if backchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
 bool Backchain::createBackchain(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory, uint32_t width, uint32_t height)
+    VulkanMemory& vulkanMemory, VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height)
 {
-    // Create back renderer images
+    // Check backchain size
+    if ((width <= 0) || (height <= 0))
+    {
+        // Invalid backchain size
+        return false;
+    }
+
+    // Create backchain images
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         VkImageCreateInfo imageInfo;
@@ -125,14 +133,15 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
         }
 
         // Allocate image memory
-        if (!vulkanMemory.allocateBackRendererImage(vulkanDevice, images[i]))
+        if (!vulkanMemory.allocateSwapchainImage(
+            vulkanDevice, images[i], memoryPool))
         {
             // Could not allocate image memory
             return false;
         }
     }
 
-    // Create back renderer depth images
+    // Create backchain depth images
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Create depth image
@@ -168,15 +177,15 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
         }
 
         // Allocate depth image memory
-        if (!vulkanMemory.allocateBackRendererImage(
-            vulkanDevice, depthImages[i]))
+        if (!vulkanMemory.allocateSwapchainImage(
+            vulkanDevice, depthImages[i], memoryPool))
         {
             // Could not allocate depth image memory
             return false;
         }
     }
 
-    // Create back renderer images views
+    // Create backchain images views
     VkImageSubresourceRange subresource;
     subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresource.baseMipLevel = 0;
@@ -207,7 +216,7 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
         }
     }
 
-    // Create back renderer depth images views
+    // Create backchain depth images views
     VkImageSubresourceRange depthSubresource;
     depthSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
     depthSubresource.baseMipLevel = 0;
@@ -395,55 +404,322 @@ bool Backchain::createBackchain(VkDevice& vulkanDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Resize backchain                                                          //
+//  return : True if backchain is successfully resized                        //
+////////////////////////////////////////////////////////////////////////////////
+bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
+    VulkanMemory& vulkanMemory, VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height)
+{
+    // Check vulkan device
+    if (!vulkanDevice)
+    {
+        // Invalid vulkan device
+        return false;
+    }
+
+    // Check backchain size
+    if ((width <= 0) || (height <= 0))
+    {
+        // Invalid backchain size
+        return false;
+    }
+
+    // Wait for device idle
+    if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
+    {
+        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+        {
+            // Destroy framebuffers
+            if (framebuffers[i] && vkDestroyFramebuffer)
+            {
+                vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
+            }
+
+            // Destroy backchain depth images views
+            if (depthViews[i] && vkDestroyImageView)
+            {
+                vkDestroyImageView(vulkanDevice, depthViews[i], 0);
+            }
+
+            // Destroy backchain images views
+            if (views[i] && vkDestroyImageView)
+            {
+                vkDestroyImageView(vulkanDevice, views[i], 0);
+            }
+
+            // Destroy backchain depth images
+            if (depthImages[i] && vkDestroyImage)
+            {
+                vkDestroyImage(vulkanDevice, depthImages[i], 0);
+            }
+
+            // Destroy backchain images
+            if (images[i] && vkDestroyImage)
+            {
+                vkDestroyImage(vulkanDevice, images[i], 0);
+            }
+        }
+    }
+    else
+    {
+        // Could not wait for device idle
+        return false;
+    }
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        framebuffers[i] = 0;
+        depthViews[i] = 0;
+        views[i]= 0;
+        depthImages[i] = 0;
+        images[i] = 0;
+    }
+
+    // Reset backchain memory
+    vulkanMemory.resetMemory(memoryPool);
+
+    // Recreate backchain images
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        VkImageCreateInfo imageInfo;
+        imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imageInfo.pNext = 0;
+        imageInfo.flags = 0;
+        imageInfo.imageType = VK_IMAGE_TYPE_2D;
+        imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+        imageInfo.extent.width = width;
+        imageInfo.extent.height = height;
+        imageInfo.extent.depth = 1;
+        imageInfo.mipLevels = 1;
+        imageInfo.arrayLayers = 1;
+        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+        imageInfo.usage =
+            (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.queueFamilyIndexCount = 0;
+        imageInfo.pQueueFamilyIndices = 0;
+        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+        if (vkCreateImage(
+            vulkanDevice, &imageInfo, 0, &images[i]) != VK_SUCCESS)
+        {
+            // Could not recreate image
+            return false;
+        }
+        if (!images[i])
+        {
+            // Invalid image
+            return false;
+        }
+
+        // Allocate image memory
+        if (!vulkanMemory.allocateSwapchainImage(
+            vulkanDevice, images[i], memoryPool))
+        {
+            // Could not allocate image memory
+            return false;
+        }
+    }
+
+    // Recreate backchain depth images
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        // Recreate depth image
+        VkImageCreateInfo imageInfo;
+        imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imageInfo.pNext = 0;
+        imageInfo.flags = 0;
+        imageInfo.imageType = VK_IMAGE_TYPE_2D;
+        imageInfo.format = VK_FORMAT_D32_SFLOAT;
+        imageInfo.extent.width = width;
+        imageInfo.extent.height = height;
+        imageInfo.extent.depth = 1;
+        imageInfo.mipLevels = 1;
+        imageInfo.arrayLayers = 1;
+        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+        imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.queueFamilyIndexCount = 0;
+        imageInfo.pQueueFamilyIndices = 0;
+        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+        if (vkCreateImage(vulkanDevice,
+            &imageInfo, 0, &depthImages[i]) != VK_SUCCESS)
+        {
+            // Could not create depth image
+            return false;
+        }
+        if (!depthImages[i])
+        {
+            // Invalid depth image
+            return false;
+        }
+
+        // Allocate depth image memory
+        if (!vulkanMemory.allocateSwapchainImage(
+            vulkanDevice, depthImages[i], memoryPool))
+        {
+            // Could not allocate depth image memory
+            return false;
+        }
+    }
+
+    // Recreate backchain images views
+    VkImageSubresourceRange subresource;
+    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresource.baseMipLevel = 0;
+    subresource.levelCount = 1;
+    subresource.baseArrayLayer = 0;
+    subresource.layerCount = 1;
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        // Recreate image view
+        VkImageViewCreateInfo imageView;
+        imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        imageView.pNext = 0;
+        imageView.flags = 0;
+        imageView.image = images[i];
+        imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        imageView.format = VK_FORMAT_R8G8B8A8_UNORM;
+        imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        imageView.subresourceRange = subresource;
+
+        if (vkCreateImageView(
+            vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
+        {
+            return false;
+        }
+    }
+
+    // Recreate backchain depth images views
+    VkImageSubresourceRange depthSubresource;
+    depthSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    depthSubresource.baseMipLevel = 0;
+    depthSubresource.levelCount = 1;
+    depthSubresource.baseArrayLayer = 0;
+    depthSubresource.layerCount = 1;
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        // Recreate depth image view
+        VkImageViewCreateInfo depthImageView;
+        depthImageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        depthImageView.pNext = 0;
+        depthImageView.flags = 0;
+        depthImageView.image = depthImages[i];
+        depthImageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        depthImageView.format = VK_FORMAT_D32_SFLOAT;
+        depthImageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        depthImageView.subresourceRange = depthSubresource;
+
+        if (vkCreateImageView(
+            vulkanDevice, &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
+        {
+            return false;
+        }
+    }
+
+    // Recreate framebuffers
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        VkImageView imageViews[2];
+        imageViews[0] = views[i];
+        imageViews[1] = depthViews[i];
+
+        VkFramebufferCreateInfo framebufferInfo;
+        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferInfo.pNext = 0;
+        framebufferInfo.flags = 0;
+        framebufferInfo.renderPass = renderPass;
+        framebufferInfo.attachmentCount = 2;
+        framebufferInfo.pAttachments = imageViews;
+        framebufferInfo.width = width;
+        framebufferInfo.height = height;
+        framebufferInfo.layers = 1;
+
+        if (vkCreateFramebuffer(
+            vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        {
+            // Could not recreate framebuffer
+            return false;
+        }
+        if (!framebuffers[i])
+        {
+            // Invalid framebuffer
+            return false;
+        }
+    }
+
+    // Set backchain extent
+    extent.width = width;
+    extent.height = height;
+
+    // Set backchain aspect ratio
+    ratio = 1.0f;
+    if ((extent.width > 0) && (extent.height > 0))
+    {
+        ratio = (extent.width*1.0f) / (extent.height*1.0f);
+    }
+
+    // Backchain successfully resized
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy backchain                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 void Backchain::destroyBackchain(VkDevice& vulkanDevice)
 {
     if (vulkanDevice)
     {
-        if (vkDeviceWaitIdle)
+        if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
         {
-            if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
+            // Destroy render pass
+            if (renderPass && vkDestroyRenderPass)
             {
-                // Destroy render pass
-                if (renderPass && vkDestroyRenderPass)
+                vkDestroyRenderPass(vulkanDevice, renderPass, 0);
+            }
+
+            for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+            {
+                // Destroy framebuffers
+                if (framebuffers[i] && vkDestroyFramebuffer)
                 {
-                    vkDestroyRenderPass(vulkanDevice, renderPass, 0);
+                    vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
                 }
 
-                for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+                // Destroy backchain depth images views
+                if (depthViews[i] && vkDestroyImageView)
                 {
-                    // Destroy framebuffers
-                    if (framebuffers[i] && vkDestroyFramebuffer)
-                    {
-                        vkDestroyFramebuffer(
-                            vulkanDevice, framebuffers[i], 0
-                        );
-                    }
+                    vkDestroyImageView(vulkanDevice, depthViews[i], 0);
+                }
 
-                    // Destroy backchain depth images views
-                    if (depthViews[i] && vkDestroyImageView)
-                    {
-                        vkDestroyImageView(vulkanDevice, depthViews[i], 0);
-                    }
+                // Destroy backchain images views
+                if (views[i] && vkDestroyImageView)
+                {
+                    vkDestroyImageView(vulkanDevice, views[i], 0);
+                }
 
-                    // Destroy backchain images views
-                    if (views[i] && vkDestroyImageView)
-                    {
-                        vkDestroyImageView(vulkanDevice, views[i], 0);
-                    }
+                // Destroy backchain depth images
+                if (depthImages[i] && vkDestroyImage)
+                {
+                    vkDestroyImage(vulkanDevice, depthImages[i], 0);
+                }
 
-                    // Destroy backchain depth images
-                    if (depthImages[i] && vkDestroyImage)
-                    {
-                        vkDestroyImage(vulkanDevice, depthImages[i], 0);
-                    }
-
-                    // Destroy backchain images
-                    if (images[i] && vkDestroyImage)
-                    {
-                        vkDestroyImage(vulkanDevice, images[i], 0);
-                    }
+                // Destroy backchain images
+                if (images[i] && vkDestroyImage)
+                {
+                    vkDestroyImage(vulkanDevice, images[i], 0);
                 }
             }
         }

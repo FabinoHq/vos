@@ -174,14 +174,8 @@
             //  Allocate swapchain image memory                               //
             //  return : True if swapchain image is successfully allocated    //
             ////////////////////////////////////////////////////////////////////
-            bool allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Allocate back renderer image memory                           //
-            //  return : True if back renderer image is allocated             //
-            ////////////////////////////////////////////////////////////////////
-            bool allocateBackRendererImage(VkDevice& vulkanDevice,
-                VkImage& image);
+            bool allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image,
+                VulkanMemoryPool memoryPool);
 
 
             ////////////////////////////////////////////////////////////////////

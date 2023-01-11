@@ -88,8 +88,7 @@
             //  return : True if swapchain is successfully resized            //
             ////////////////////////////////////////////////////////////////////
             bool resizeSwapchain(VkPhysicalDevice& physicalDevice,
-                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-                VulkanMemory& vulkanMemory);
+                VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy swapchain                                             //

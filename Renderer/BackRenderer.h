@@ -44,6 +44,7 @@
 
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
+    #include "Vulkan/VulkanMemory.h"
     #include "Vulkan/Backchain.h"
     #include "View.h"
 
@@ -88,7 +89,8 @@
             //  Init back renderer                                            //
             //  return : True if the back renderer is successfully loaded     //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer, uint32_t width, uint32_t height);
+            bool init(Renderer& renderer, VulkanMemoryPool memoryPool,
+                uint32_t width, uint32_t height);
 
             ////////////////////////////////////////////////////////////////////
             //  Start back renderer pass                                      //
@@ -117,6 +119,14 @@
             //  return : True if the default view is successfully set         //
             ////////////////////////////////////////////////////////////////////
             bool setDefaultView(Renderer& renderer);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Resize back renderer frame                                    //
+            //  return : True if the back renderer is successfully resized    //
+            ////////////////////////////////////////////////////////////////////
+            bool resize(Renderer& renderer, VulkanMemoryPool memoryPool,
+                uint32_t width, uint32_t height);
 
 
         private:

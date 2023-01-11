@@ -66,7 +66,8 @@ BackRenderer::~BackRenderer()
 //  Init back renderer                                                        //
 //  return : True if the back renderer is successfully loaded                 //
 ////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
+bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height)
 {
     // Check back renderer size
     if ((width <= 0) || (width > BackRendererMaxWidth) ||
@@ -77,8 +78,8 @@ bool BackRenderer::init(Renderer& renderer, uint32_t width, uint32_t height)
     }
 
     // Create backchain
-    if (!m_backchain.createBackchain(
-        renderer.m_vulkanDevice, renderer.m_vulkanMemory, width, height))
+    if (!m_backchain.createBackchain(renderer.m_vulkanDevice,
+        renderer.m_vulkanMemory, memoryPool, width, height))
     {
         // Could not create backchain
         return false;
@@ -292,28 +293,28 @@ void BackRenderer::cleanup(Renderer& renderer)
 {
     if (renderer.m_vulkanDevice)
     {
-        if (vkDeviceWaitIdle)
+        if (vkDeviceWaitIdle(renderer.m_vulkanDevice) == VK_SUCCESS)
         {
-            if (vkDeviceWaitIdle(renderer.m_vulkanDevice) == VK_SUCCESS)
+            // Destroy image samplers
+            for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
             {
-                // Destroy image samplers
-                for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+                if (m_samplers[i] && vkDestroySampler)
                 {
-                    if (m_samplers[i] && vkDestroySampler)
-                    {
-                        vkDestroySampler(
-                            renderer.m_vulkanDevice, m_samplers[i], 0
-                        );
-                    }
+                    vkDestroySampler(renderer.m_vulkanDevice, m_samplers[i], 0);
                 }
-
-                // Destroy default view
-                m_view.destroyView(renderer);
-
-                // Destroy backchain
-                m_backchain.destroyBackchain(renderer.m_vulkanDevice);
             }
+
+            // Destroy default view
+            m_view.destroyView(renderer);
+
+            // Destroy backchain
+            m_backchain.destroyBackchain(renderer.m_vulkanDevice);
         }
+    }
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_samplers[i] = 0;
     }
 }
 
@@ -335,5 +336,76 @@ bool BackRenderer::setDefaultView(Renderer& renderer)
     }
 
     // Default view successfully set
+    return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Resize back renderer frame                                                //
+//  return : True if the back renderer is successfully resized                //
+////////////////////////////////////////////////////////////////////////////////
+bool BackRenderer::resize(Renderer& renderer, VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height)
+{
+    // Check vulkan device
+    if (!renderer.m_vulkanDevice)
+    {
+        // Invalid vulkan device
+        return false;
+    }
+
+    // Resize backchain
+    if (!m_backchain.resizeBackchain(renderer.m_vulkanDevice,
+        renderer.m_vulkanMemory, memoryPool, width, height))
+    {
+        // Could not resize backchain
+        return false;
+    }
+
+    // Recreate descriptor sets
+    VkDescriptorSetAllocateInfo descriptorInfo;
+    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorInfo.pNext = 0;
+    descriptorInfo.descriptorPool = renderer.m_texturesDescPool;
+    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
+    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
+        DESC_TEXTURE*RendererMaxSwapchainFrames
+    ];
+
+    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
+        &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
+    {
+        // Could not allocate descriptor sets
+        return false;
+    }
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        // Update descriptor sets
+        VkDescriptorImageInfo descImageInfo;
+        descImageInfo.sampler = m_samplers[i];
+        descImageInfo.imageView = m_backchain.views[i];
+        descImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+        VkWriteDescriptorSet descriptorWrites;
+
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.pNext = 0;
+        descriptorWrites.dstSet = m_descriptorSets[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.descriptorType =
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrites.pImageInfo = &descImageInfo;
+        descriptorWrites.pBufferInfo = 0;
+        descriptorWrites.pTexelBufferView = 0;
+
+        vkUpdateDescriptorSets(
+            renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
+        );
+    }
+
+    // Back renderer successfully resized
     return true;
 }

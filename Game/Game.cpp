@@ -90,7 +90,7 @@ Game::~Game()
 bool Game::init()
 {
     // Init back renderer
-    if (!m_backRenderer.init(m_renderer, 256, 256))
+    if (!m_backRenderer.init(m_renderer, VULKAN_MEMORY_BACKRENDERER, 256, 256))
     {
         // Could not init back renderer
         return false;
@@ -463,7 +463,7 @@ void Game::compute(float frametime)
 void Game::render()
 {
     // Back rendering
-    if (m_backRenderer.startRenderPass(m_renderer))
+    /*if (m_backRenderer.startRenderPass(m_renderer))
     {
         // Set back renderer view
         m_backRenderer.setDefaultView(m_renderer);
@@ -476,7 +476,7 @@ void Game::render()
 
         // End back rendering
         m_backRenderer.endRenderPass(m_renderer);
-    }
+    }*/
 
     // Start rendering
     m_renderer.startRenderPass();
@@ -575,9 +575,9 @@ void Game::render()
     m_renderer.bindDefaultVertexBuffer();
 
     // Render back rendered frame
-    m_renderer.bindDefaultPipeline();
+    /*m_renderer.bindDefaultPipeline();
     m_backRenderer.bind(m_renderer);
-    m_sprite.render(m_renderer);
+    m_sprite.render(m_renderer);*/
 
     // Render sprite
     /*m_renderer.m_mainRenderer.bindDefaultPipeline(m_renderer);
