@@ -49,7 +49,9 @@
 GUICursor::GUICursor() :
 Transform2(),
 m_texture(0),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_offset(0.0f, 0.0f),
+m_scale(1.0f)
 {
 
 }
@@ -59,6 +61,8 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 GUICursor::~GUICursor()
 {
+    m_scale = 1.0f;
+    m_offset.reset();
 	m_color.reset();
     m_texture = 0;
 }
@@ -68,7 +72,7 @@ GUICursor::~GUICursor()
 //  Init cursor                                                               //
 //  return : True if the cursor is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool GUICursor::init(Texture& texture, float width, float height)
+bool GUICursor::init(Texture& texture, float scale)
 {
     // Check texture handle
     if (!texture.isValid())
@@ -80,20 +84,54 @@ bool GUICursor::init(Texture& texture, float width, float height)
     // Reset cursor transformations
     resetTransforms();
 
-    // Set cursor size
-    setSize(width, height);
-
-    // Center cursor origin (anchor)
-    centerOrigin();
-
     // Set cursor texture pointer
     m_texture = &texture;
 
     // Reset cursor color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 
+    // Set cursor scale
+    m_scale = scale;
+
+    // Set cursor offset
+    m_offset = GUICusorDefaultOffset;
+
     // Cursor successfully created
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set cursor                                                                //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::setCursor(Resources& resources, GUICursorType cursorType)
+{
+    switch (cursorType)
+    {
+        case GUICURSOR_NS:
+            m_texture = &resources.textures.gui(TEXTURE_NSCURSOR);
+            m_offset = GUICusorNSCursorOffset;
+            break;
+
+        case GUICURSOR_EW:
+            m_texture = &resources.textures.gui(TEXTURE_EWCURSOR);
+            m_offset = GUICusorEWCursorOffset;
+            break;
+
+        case GUICURSOR_NESW:
+            m_texture = &resources.textures.gui(TEXTURE_NESWCURSOR);
+            m_offset = GUICusorNESWCursorOffset;
+            break;
+
+        case GUICURSOR_NWSE:
+            m_texture = &resources.textures.gui(TEXTURE_NWSECURSOR);
+            m_offset = GUICusorNWSECursorOffset;
+            break;
+
+        default:
+            m_texture = &resources.textures.gui(TEXTURE_CURSOR);
+            m_offset = GUICusorDefaultOffset;
+            break;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,6 +221,10 @@ void GUICursor::bindTexture(Renderer& renderer)
 void GUICursor::render(Renderer& renderer)
 {
     // Compute cursor transformations
+    float scale = renderer.getScale();
+    float cursorSize = (scale*m_scale);
+    setSize(cursorSize, cursorSize);
+    setOrigin((m_offset.vec[0]*scale), (cursorSize - (m_offset.vec[1]*scale)));
     computeTransforms();
 
     // Push model matrix into command buffer

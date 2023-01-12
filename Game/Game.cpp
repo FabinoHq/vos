@@ -181,7 +181,7 @@ bool Game::init()
 
 
     // Init GUI cursor
-    if (!m_cursor.init(m_resources.textures.gui(TEXTURE_CURSOR), 1.0f, 1.0f))
+    if (!m_cursor.init(m_resources.textures.gui(TEXTURE_CURSOR), 64.0f))
     {
         // Could not init GUI cursor
         return false;
@@ -376,8 +376,10 @@ void Game::events(Event& event)
             /*m_orbitalcam.mouseMove(
                 event.mouse.x*1.0f, event.mouse.y*1.0f
             );*/
-            //m_guiWindow.mouseMove(m_mouseX, m_mouseY);
-            //m_guiWindow.updateCursor(m_renderer, m_mouseX, m_mouseY);
+            /*m_guiWindow.mouseMove(m_mouseX, m_mouseY);
+            m_cursor.setCursor(
+                m_resources, m_guiWindow.updateCursor(m_mouseX, m_mouseY)
+            );*/
             break;
 
         // Mouse button pressed
@@ -478,7 +480,7 @@ void Game::render()
     }
 
     // Get renderer scale and ratio
-    float scale = m_renderer.getScale();
+    //float scale = m_renderer.getScale();
     float ratio = m_renderer.getRatio();
 
     // Back rendering
@@ -633,16 +635,10 @@ void Game::render()
     m_pxText.render(m_renderer);
 
     // Render cursor
-    m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
-    float cursorSize = (scale*64.0f);
-    m_cursor.setSize(cursorSize, cursorSize);
-    m_cursor.setOrigin(
-        GUICusorDefaultOffset.vec[0]*scale,
-        cursorSize - (GUICusorDefaultOffset.vec[1]*scale)
-    );
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
     m_cursor.setPosition(m_mouseX, m_mouseY);
     m_cursor.bindTexture(m_renderer);
-    m_cursor.render(m_renderer);
+    m_cursor.render(m_renderer);*/
 
     // End rendering
     m_renderer.endRenderPass();
@@ -665,6 +661,7 @@ void Game::render()
 
     // End final pass
     m_renderer.endRenderPass();
+
 
     // End frame rendering
     m_renderer.endFrame();

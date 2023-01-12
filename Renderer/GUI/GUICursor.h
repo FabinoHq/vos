@@ -49,6 +49,7 @@
     #include "../../Math/Vector4.h"
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
+    #include "../../Resources/Resources.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -101,7 +102,12 @@
             //  Init cursor                                                   //
             //  return : True if the cursor is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(Texture& texture, float width, float height);
+            bool init(Texture& texture, float scale);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set cursor                                                    //
+            ////////////////////////////////////////////////////////////////////
+            void setCursor(Resources& resources, GUICursorType cursorType);
 
             ////////////////////////////////////////////////////////////////////
             //  Set cursor texture                                            //
@@ -166,6 +172,8 @@
         private:
             Texture*            m_texture;          // Cursor texture pointer
             Vector4             m_color;            // Cursor color
+            Vector2             m_offset;           // Cursor offset
+            float               m_scale;            // Cursor scale
     };
 
 

@@ -668,104 +668,86 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 //  Update renderer current cursor                                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool GUIWindow::updateCursor(Renderer& renderer, float mouseX, float mouseY)
+GUICursorType GUIWindow::updateCursor(float mouseX, float mouseY)
 {
-    /*if (m_resizable)
+    if (m_resizable)
     {
         if (m_grabTop && m_grabLeft)
         {
-            renderer.setNWSECursor();
-            return true;
+            return GUICURSOR_NWSE;
         }
         if (m_grabTop && m_grabRight)
         {
-            renderer.setNESWCursor();
-            return true;
+            return GUICURSOR_NESW;
         }
         if (m_grabBottom && m_grabLeft)
         {
-            renderer.setNESWCursor();
-            return true;
+            return GUICURSOR_NESW;
         }
         if (m_grabBottom && m_grabRight)
         {
-            renderer.setNWSECursor();
-            return true;
+            return GUICURSOR_NWSE;
         }
         if (m_grabTop)
         {
-            renderer.setNSCursor();
-            return true;
+            return GUICURSOR_NS;
         }
         if (m_grabBottom)
         {
-            renderer.setNSCursor();
-            return true;
+            return GUICURSOR_NS;
         }
         if (m_grabLeft)
         {
-            renderer.setEWCursor();
-            return true;
+            return GUICURSOR_EW;
         }
         if (m_grabRight)
         {
-            renderer.setEWCursor();
-            return true;
+            return GUICURSOR_EW;
         }
         if (m_grabWindow)
         {
-            renderer.setDefaultCursor();
-            return true;
+            return GUICURSOR_DEFAULT;
         }
 
         if (isTopResizePicking(mouseX, mouseY) &&
             isLeftResizePicking(mouseX, mouseY))
         {
-            renderer.setNWSECursor();
-            return true;
+            return GUICURSOR_NWSE;
         }
         if (isTopResizePicking(mouseX, mouseY) &&
             isRightResizePicking(mouseX, mouseY))
         {
-            renderer.setNESWCursor();
-            return true;
+            return GUICURSOR_NESW;
         }
         if (isBottomResizePicking(mouseX, mouseY) &&
             isLeftResizePicking(mouseX, mouseY))
         {
-            renderer.setNESWCursor();
-            return true;
+            return GUICURSOR_NESW;
         }
         if (isBottomResizePicking(mouseX, mouseY) &&
             isRightResizePicking(mouseX, mouseY))
         {
-            renderer.setNWSECursor();
-            return true;
+            return GUICURSOR_NWSE;
         }
         if (isTopResizePicking(mouseX, mouseY))
         {
-            renderer.setNSCursor();
-            return true;
+            return GUICURSOR_NS;
         }
         if (isBottomResizePicking(mouseX, mouseY))
         {
-            renderer.setNSCursor();
-            return true;
+            return GUICURSOR_NS;
         }
         if (isLeftResizePicking(mouseX, mouseY))
         {
-            renderer.setEWCursor();
-            return true;
+            return GUICURSOR_EW;
         }
         if (isRightResizePicking(mouseX, mouseY))
         {
-            renderer.setEWCursor();
-            return true;
+            return GUICURSOR_EW;
         }
     }
 
-    renderer.setDefaultCursor();*/
-    return false;
+    return GUICURSOR_DEFAULT;
 }
 
 

@@ -49,6 +49,7 @@
     #include "../../Math/Vector4.h"
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
+    #include "GUICursor.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -261,7 +262,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Update renderer current cursor                                //
             ////////////////////////////////////////////////////////////////////
-            bool updateCursor(Renderer& renderer, float mouseX, float mouseY);
+            GUICursorType updateCursor(float mouseX, float mouseY);
 
 
             ////////////////////////////////////////////////////////////////////
