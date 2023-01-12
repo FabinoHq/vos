@@ -140,6 +140,12 @@
             bool init(SysWindow* sysWindow);
 
             ////////////////////////////////////////////////////////////////////
+            //  Init renderer pipelines                                       //
+            //  return : True if the renderer pipelines are ready             //
+            ////////////////////////////////////////////////////////////////////
+            bool initPipelines();
+
+            ////////////////////////////////////////////////////////////////////
             //  Init embedded resources                                       //
             //  return : True if the renderer embedded resources are ready    //
             ////////////////////////////////////////////////////////////////////
@@ -185,50 +191,9 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer default pipeline                                //
+            //  Bind renderer pipeline                                        //
             ////////////////////////////////////////////////////////////////////
-            void bindDefaultPipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer ninepatch pipeline                              //
-            ////////////////////////////////////////////////////////////////////
-            void bindNinePatchPipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer rectangle pipeline                              //
-            ////////////////////////////////////////////////////////////////////
-            void bindRectanglePipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer ellipse pipeline                                //
-            ////////////////////////////////////////////////////////////////////
-            void bindEllipsePipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer shape pipeline                                  //
-            ////////////////////////////////////////////////////////////////////
-            void bindShapePipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer pixel text pipeline                             //
-            ////////////////////////////////////////////////////////////////////
-            void bindPxTextPipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer skybox pipeline                                 //
-            ////////////////////////////////////////////////////////////////////
-            void bindSkyBoxPipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer static mesh pipeline                            //
-            ////////////////////////////////////////////////////////////////////
-            void bindStaticMeshPipeline();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer heightmap pipeline                              //
-            ////////////////////////////////////////////////////////////////////
-            void bindHeightMapPipeline();
-
+            void bindPipeline(RendererPipeline rendererPipeline);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer default vertex buffer                           //
@@ -373,18 +338,9 @@
             GraphicsLayout      m_layout;               // Graphics layout
 
             BackRenderer        m_mainRenderer;         // Main renderer
-            Pipeline            m_mainPipeline;         // Main pipeline
             Sprite              m_mainSprite;           // Main sprite
 
-            Pipeline            m_pipeline;             // Default pipeline
-            Pipeline            m_ninePatchPipeline;    // NinePatch pipeline
-            Pipeline            m_rectanglePipeline;    // Rectangle pipeline
-            Pipeline            m_ellipsePipeline;      // Ellipse pipeline
-            Pipeline            m_shapePipeline;        // Shape pipeline
-            Pipeline            m_pxTextPipeline;       // Pixel text pipeline
-            Pipeline            m_skyBoxPipeline;       // SkyBox pipeline
-            Pipeline            m_staticMeshPipeline;   // Static mesh pipeline
-            Pipeline            m_heightMapPipeline;    // Heightmap pipeline
+            Pipeline            m_pipelines[RENDERER_PIPELINE_PIPELINESCOUNT];
 
             View                m_view;                 // Default view
             Resources&          m_resources;            // Resources

@@ -63,17 +63,7 @@ m_vulkanMemory(),
 m_swapchain(),
 m_layout(),
 m_mainRenderer(),
-m_mainPipeline(),
 m_mainSprite(),
-m_pipeline(),
-m_ninePatchPipeline(),
-m_rectanglePipeline(),
-m_ellipsePipeline(),
-m_shapePipeline(),
-m_pxTextPipeline(),
-m_skyBoxPipeline(),
-m_staticMeshPipeline(),
-m_heightMapPipeline(),
 m_view(),
 m_resources(resources),
 m_cursorOffset(0.0f, 0.0f),
@@ -309,16 +299,10 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Create main pipeline
-    m_mainPipeline.createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
-    );
-    m_mainPipeline.createFragmentShader(
-        *this, DefaultFragmentShader, DefaultFragmentShaderSize
-    );
-    if (!m_mainPipeline.createCompositingPipeline(*this))
+    // Init renderer pipelines
+    if (!initPipelines())
     {
-        // Could not create main pipeline
+        // Could not init renderer pipelines
         return false;
     }
 
@@ -330,145 +314,6 @@ bool Renderer::init(SysWindow* sysWindow)
     m_mainSprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_mainSprite.setUVSize(1.0f, 1.0f);
     m_mainSprite.setUVOffset(0.0f, 0.0f);
-
-    // Create default pipeline
-    m_pipeline.createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
-    );
-    m_pipeline.createFragmentShader(
-        *this, DefaultFragmentShader, DefaultFragmentShaderSize
-    );
-    if (!m_pipeline.createPipeline(*this))
-    {
-        // Could not create default pipeline
-        SysMessage::box() << "[0x3053] Could not create default pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create ninepatch pipeline
-    m_ninePatchPipeline.createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
-    );
-    m_ninePatchPipeline.createFragmentShader(
-        *this, NinePatchFragmentShader, NinePatchFragmentShaderSize
-    );
-    if (!m_ninePatchPipeline.createPipeline(*this))
-    {
-        // Could not create ninepatch pipeline
-        SysMessage::box() << "[0x3054] Could not create ninepatch pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create rectangle pipeline
-    m_rectanglePipeline.createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
-    );
-    m_rectanglePipeline.createFragmentShader(
-        *this, RectangleFragmentShader, RectangleFragmentShaderSize
-    );
-    if (!m_rectanglePipeline.createPipeline(*this))
-    {
-        // Could not create rectangle pipeline
-        SysMessage::box() << "[0x3055] Could not create rectangle pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create ellipse pipeline
-    m_ellipsePipeline.createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
-    );
-    m_ellipsePipeline.createFragmentShader(
-        *this, EllipseFragmentShader, EllipseFragmentShaderSize
-    );
-    if (!m_ellipsePipeline.createPipeline(*this))
-    {
-        // Could not create ellipse pipeline
-        SysMessage::box() << "[0x3056] Could not create ellipse pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create shape pipeline
-    m_shapePipeline.createVertexShader(
-        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
-    );
-    m_shapePipeline.createFragmentShader(
-        *this, StaticProcFragmentShader, StaticProcFragmentShaderSize
-    );
-    if (!m_shapePipeline.createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
-    {
-        // Could not create shape pipeline
-        SysMessage::box() << "[0x3057] Could not create shape pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create pixel text pipeline
-    m_pxTextPipeline.createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
-    );
-    m_pxTextPipeline.createFragmentShader(
-        *this, PxTextFragmentShader, PxTextFragmentShaderSize
-    );
-    if (!m_pxTextPipeline.createPipeline(*this))
-    {
-        // Could not create pixel text pipeline
-        SysMessage::box() << "[0x3058] Could not create pixel text pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create skybox pipeline
-    m_skyBoxPipeline.createVertexShader(
-        *this, SkyBoxVertexShader, SkyBoxVertexShaderSize
-    );
-    m_skyBoxPipeline.createFragmentShader(
-        *this, SkyBoxFragmentShader, SkyBoxFragmentShaderSize
-    );
-    if (!m_skyBoxPipeline.createPipeline(
-        *this, VERTEX_INPUTS_CUBEMAP, false, true))
-    {
-        // Could not create skybox pipeline
-        SysMessage::box() << "[0x3059] Could not create skybox pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create static mesh pipeline
-    m_staticMeshPipeline.createVertexShader(
-        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
-    );
-    m_staticMeshPipeline.createFragmentShader(
-        *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
-    );
-    if (!m_staticMeshPipeline.createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
-    {
-        // Could not create static mesh pipeline
-        SysMessage::box() << "[0x305A] Could not create static mesh pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Create heightmap pipeline
-    m_heightMapPipeline.createVertexShader(
-        *this, HeightMapVertexShader, HeightMapVertexShaderSize
-    );
-    m_heightMapPipeline.createFragmentShader(
-        *this, HeightMapFragmentShader, HeightMapFragmentShaderSize
-    );
-    if (!m_heightMapPipeline.createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
-    {
-        // Could not create heightmap pipeline
-        SysMessage::box() << "[0x305B] Could not create heightmap pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
 
     // Init default view
     if (!m_view.init(*this))
@@ -482,6 +327,171 @@ bool Renderer::init(SysWindow* sysWindow)
 
     // Renderer successfully loaded
     m_rendererReady = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init renderer pipelines                                                   //
+//  return : True if the renderer pipelines are ready                         //
+////////////////////////////////////////////////////////////////////////////////
+bool Renderer::initPipelines()
+{
+    // Create compositing pipeline
+    m_pipelines[RENDERER_PIPELINE_COMPOSITING].createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_COMPOSITING].createFragmentShader(
+        *this, DefaultFragmentShader, DefaultFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_COMPOSITING].createCompositingPipeline(
+        *this))
+    {
+        // Could not create compositing pipeline
+        return false;
+    }
+
+
+    // Create sprite pipeline
+    m_pipelines[RENDERER_PIPELINE_SPRITE].createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_SPRITE].createFragmentShader(
+        *this, DefaultFragmentShader, DefaultFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_SPRITE].createPipeline(*this))
+    {
+        // Could not create sprite pipeline
+        SysMessage::box() << "[0x3053] Could not create sprite pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create ninepatch pipeline
+    m_pipelines[RENDERER_PIPELINE_NINEPATCH].createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_NINEPATCH].createFragmentShader(
+        *this, NinePatchFragmentShader, NinePatchFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(*this))
+    {
+        // Could not create ninepatch pipeline
+        SysMessage::box() << "[0x3054] Could not create ninepatch pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create rectangle pipeline
+    m_pipelines[RENDERER_PIPELINE_RECTANGLE].createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_RECTANGLE].createFragmentShader(
+        *this, RectangleFragmentShader, RectangleFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(*this))
+    {
+        // Could not create rectangle pipeline
+        SysMessage::box() << "[0x3055] Could not create rectangle pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create ellipse pipeline
+    m_pipelines[RENDERER_PIPELINE_ELLISPE].createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_ELLISPE].createFragmentShader(
+        *this, EllipseFragmentShader, EllipseFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(*this))
+    {
+        // Could not create ellipse pipeline
+        SysMessage::box() << "[0x3056] Could not create ellipse pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create pixel text pipeline
+    m_pipelines[RENDERER_PIPELINE_PXTEXT].createVertexShader(
+        *this, DefaultVertexShader, DefaultVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_PXTEXT].createFragmentShader(
+        *this, PxTextFragmentShader, PxTextFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(*this))
+    {
+        // Could not create pixel text pipeline
+        SysMessage::box() << "[0x3058] Could not create pixel text pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+
+    // Create skybox pipeline
+    m_pipelines[RENDERER_PIPELINE_SKYBOX].createVertexShader(
+        *this, SkyBoxVertexShader, SkyBoxVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_SKYBOX].createFragmentShader(
+        *this, SkyBoxFragmentShader, SkyBoxFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_SKYBOX].createPipeline(
+        *this, VERTEX_INPUTS_CUBEMAP, false, true))
+    {
+        // Could not create skybox pipeline
+        SysMessage::box() << "[0x3059] Could not create skybox pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create shape pipeline
+    m_pipelines[RENDERER_PIPELINE_SHAPE].createVertexShader(
+        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_SHAPE].createFragmentShader(
+        *this, StaticProcFragmentShader, StaticProcFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
+    {
+        // Could not create shape pipeline
+        SysMessage::box() << "[0x3057] Could not create shape pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create static mesh pipeline
+    m_pipelines[RENDERER_PIPELINE_STATICMESH].createVertexShader(
+        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_STATICMESH].createFragmentShader(
+        *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_STATICMESH].createPipeline(
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
+    {
+        // Could not create static mesh pipeline
+        SysMessage::box() << "[0x305A] Could not create static mesh pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create heightmap pipeline
+    m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createVertexShader(
+        *this, HeightMapVertexShader, HeightMapVertexShaderSize
+    );
+    m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createFragmentShader(
+        *this, HeightMapFragmentShader, HeightMapFragmentShaderSize
+    );
+    if (!m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createPipeline(
+        *this, VERTEX_INPUTS_STATICMESH, true, true))
+    {
+        // Could not create heightmap pipeline
+        SysMessage::box() << "[0x305B] Could not create heightmap pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Renderer pipelines are ready
     return true;
 }
 
@@ -876,35 +886,11 @@ void Renderer::cleanup()
     // Destroy default view
     m_view.destroyView(*this);
 
-    // Destroy heightmap pipeline
-    m_heightMapPipeline.destroyPipeline(*this);
-
-    // Destroy static mesh pipeline
-    m_staticMeshPipeline.destroyPipeline(*this);
-
-    // Destroy skybox pipeline
-    m_skyBoxPipeline.destroyPipeline(*this);
-
-    // Destroy pixel text pipeline
-    m_pxTextPipeline.destroyPipeline(*this);
-
-    // Destroy shape pipepline
-    m_shapePipeline.destroyPipeline(*this);
-
-    // Destroy ellipse pipeline
-    m_ellipsePipeline.destroyPipeline(*this);
-
-    // Destroy rectangle pipeline
-    m_rectanglePipeline.destroyPipeline(*this);
-
-    // Destroy ninepatch pipeline
-    m_ninePatchPipeline.destroyPipeline(*this);
-
-    // Destroy default pipeline
-    m_pipeline.destroyPipeline(*this);
-
-    // Destroy main pipeline
-    m_mainPipeline.destroyPipeline(*this);
+    // Destroy pipeplines
+    for (int i = 0; i < RENDERER_PIPELINE_PIPELINESCOUNT; ++i)
+    {
+        m_pipelines[i].destroyPipeline(*this);
+    }
 
     // Destroy main renderer
     m_mainRenderer.cleanup(*this);
@@ -950,77 +936,12 @@ void Renderer::cleanup()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer default pipeline                                            //
+//  Bind renderer pipeline                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindDefaultPipeline()
+void Renderer::bindPipeline(RendererPipeline rendererPipeline)
 {
-    m_pipeline.bind(*this);
+    m_pipelines[rendererPipeline].bind(*this);
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer ninepatch pipeline                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindNinePatchPipeline()
-{
-    m_ninePatchPipeline.bind(*this);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer rectangle pipeline                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindRectanglePipeline()
-{
-    m_rectanglePipeline.bind(*this);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer ellipse pipeline                                            //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindEllipsePipeline()
-{
-    m_ellipsePipeline.bind(*this);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer shape pipeline                                              //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindShapePipeline()
-{
-    m_shapePipeline.bind(*this);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer pixel text pipeline                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindPxTextPipeline()
-{
-    m_pxTextPipeline.bind(*this);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer skybox pipeline                                             //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindSkyBoxPipeline()
-{
-    m_skyBoxPipeline.bind(*this);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer static mesh pipeline                                        //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindStaticMeshPipeline()
-{
-    m_staticMeshPipeline.bind(*this);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer heightmap pipeline                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindHeightMapPipeline()
-{
-    m_heightMapPipeline.bind(*this);
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind renderer default vertex buffer                                       //

@@ -476,7 +476,7 @@ void Game::render()
         m_backRenderer.setDefaultView(m_renderer);
 
         // Render sprite
-        m_renderer.bindDefaultPipeline();
+        m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
         m_renderer.bindDefaultVertexBuffer();
         m_sprite.bindTexture(m_renderer);
         m_sprite.render(m_renderer);
@@ -498,7 +498,7 @@ void Game::render()
     //m_renderer.setCamera(m_orbitalcam);
 
     // Render skybox
-    m_renderer.bindSkyBoxPipeline();
+    m_renderer.bindPipeline(RENDERER_PIPELINE_SKYBOX);
     m_skybox.setPosition(m_freeflycam.getPosition());
     //m_skybox.setPosition(m_orbitalcam.getPosition());
     m_skybox.bindVertexBuffer(m_renderer);
@@ -506,12 +506,12 @@ void Game::render()
     m_skybox.render(m_renderer);
 
     // Render cuboid shape
-    /*m_renderer.bindShapePipeline();
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
     m_cuboid.bindVertexBuffer(m_renderer);
     m_cuboid.render(m_renderer);*/
 
     // Render static mesh
-    /*m_renderer.bindStaticMeshPipeline();
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
     m_staticMesh.bindVertexBuffer(m_renderer);
     m_staticMesh.bindTexture(m_renderer);
     m_staticMesh.setPosition(0.0f, 0.9f, 0.0f);
@@ -523,7 +523,7 @@ void Game::render()
     m_staticMesh.render(m_renderer);*/
 
     // Render heightmap stream
-    m_renderer.bindHeightMapPipeline();
+    m_renderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
     m_heightMapStream.render(m_renderer);
 
 
@@ -535,7 +535,7 @@ void Game::render()
 
 
     // Render bounding circle
-    m_renderer.bindEllipsePipeline();
+    m_renderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     float positionX =
         m_boundingCircle.position.vec[0]*PhysicsToRenderer;
     float positionY =
@@ -582,13 +582,12 @@ void Game::render()
     m_renderer.bindDefaultVertexBuffer();
 
     // Render back rendered frame
-    m_renderer.bindDefaultPipeline();
+    m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
     m_backRenderer.bind(m_renderer);
     m_sprite.render(m_renderer);
 
     // Render sprite
-    /*m_renderer.m_mainRenderer.bindDefaultPipeline(m_renderer);
-    m_renderer.bindDefaultVertexBuffer();
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
     m_sprite.bindTexture(m_renderer);
     m_sprite.render(m_renderer);*/
 
@@ -597,20 +596,20 @@ void Game::render()
     m_procSprite.render(m_renderer);*/
 
     // Render rectangle
-    /*m_renderer.bindRectanglePipeline();
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
     m_rectanle.render(m_renderer);*/
 
     // Render ellipse
-    /*m_renderer.bindEllipsePipeline();
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     m_ellipse.render(m_renderer);*/
 
     // Render window
-    /*m_renderer.bindNinePatchPipeline();
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
     m_guiWindow.bindTexture(m_renderer);
     m_guiWindow.render(m_renderer);*/
 
     // Render pixel text (framerate)
-    m_renderer.bindPxTextPipeline();
+    m_renderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
     m_pxText.bindTexture(m_renderer);
     m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
     m_pxText.render(m_renderer);
@@ -633,7 +632,7 @@ void Game::render()
 
     // Render main compositing quad
     m_renderer.setDefaultView();
-    m_renderer.m_mainPipeline.bind(m_renderer);
+    m_renderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
     m_renderer.bindDefaultVertexBuffer();
     m_renderer.m_mainRenderer.bind(m_renderer);
     m_renderer.m_mainSprite.setSize(

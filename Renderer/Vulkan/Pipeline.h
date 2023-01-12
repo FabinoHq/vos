@@ -62,9 +62,31 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VertexInputsType
     {
-        VERTEX_INPUTS_DEFAULT,
-        VERTEX_INPUTS_CUBEMAP,
-        VERTEX_INPUTS_STATICMESH
+        VERTEX_INPUTS_DEFAULT = 0,
+        VERTEX_INPUTS_CUBEMAP = 1,
+        VERTEX_INPUTS_STATICMESH = 2
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer pipeline enumeration                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    enum RendererPipeline
+    {
+        RENDERER_PIPELINE_COMPOSITING = 0,
+
+        RENDERER_PIPELINE_SPRITE = 1,
+        RENDERER_PIPELINE_NINEPATCH = 2,
+        RENDERER_PIPELINE_RECTANGLE = 3,
+        RENDERER_PIPELINE_ELLISPE = 4,
+        RENDERER_PIPELINE_PXTEXT = 5,
+
+        RENDERER_PIPELINE_SKYBOX = 6,
+        RENDERER_PIPELINE_SHAPE = 7,
+        RENDERER_PIPELINE_STATICMESH = 8,
+        RENDERER_PIPELINE_HEIGHTMAP = 9,
+
+        RENDERER_PIPELINE_PIPELINESCOUNT = 10
     };
 
 
