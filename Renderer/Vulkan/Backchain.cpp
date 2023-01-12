@@ -429,35 +429,35 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Destroy framebuffers
-        if (framebuffers[i] && vkDestroyFramebuffer)
+        if (framebuffers[i])
         {
             vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
         }
         framebuffers[i] = 0;
 
         // Destroy backchain depth images views
-        if (depthViews[i] && vkDestroyImageView)
+        if (depthViews[i])
         {
             vkDestroyImageView(vulkanDevice, depthViews[i], 0);
         }
         depthViews[i] = 0;
 
         // Destroy backchain images views
-        if (views[i] && vkDestroyImageView)
+        if (views[i])
         {
             vkDestroyImageView(vulkanDevice, views[i], 0);
         }
         views[i]= 0;
 
         // Destroy backchain depth images
-        if (depthImages[i] && vkDestroyImage)
+        if (depthImages[i])
         {
             vkDestroyImage(vulkanDevice, depthImages[i], 0);
         }
         depthImages[i] = 0;
 
         // Destroy backchain images
-        if (images[i] && vkDestroyImage)
+        if (images[i])
         {
             vkDestroyImage(vulkanDevice, images[i], 0);
         }
@@ -694,35 +694,35 @@ void Backchain::destroyBackchain(VkDevice& vulkanDevice)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Destroy framebuffers
-        if (framebuffers[i] && vkDestroyFramebuffer)
+        if (framebuffers[i])
         {
             vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
         }
         framebuffers[i] = 0;
 
         // Destroy backchain depth images views
-        if (depthViews[i] && vkDestroyImageView)
+        if (depthViews[i])
         {
             vkDestroyImageView(vulkanDevice, depthViews[i], 0);
         }
         depthViews[i] = 0;
 
         // Destroy backchain images views
-        if (views[i] && vkDestroyImageView)
+        if (views[i])
         {
             vkDestroyImageView(vulkanDevice, views[i], 0);
         }
         views[i]= 0;
 
         // Destroy backchain depth images
-        if (depthImages[i] && vkDestroyImage)
+        if (depthImages[i])
         {
             vkDestroyImage(vulkanDevice, depthImages[i], 0);
         }
         depthImages[i] = 0;
 
         // Destroy backchain images
-        if (images[i] && vkDestroyImage)
+        if (images[i])
         {
             vkDestroyImage(vulkanDevice, images[i], 0);
         }

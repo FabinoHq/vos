@@ -326,38 +326,43 @@ void CubeMap::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void CubeMap::destroyCubeMap(Renderer& renderer)
 {
-    if (renderer.m_vulkanDevice)
+    // Check vulkan device
+    if (!renderer.m_vulkanDevice)
     {
-        // Destroy image view
-        if (m_view && vkDestroyImageView)
-        {
-            vkDestroyImageView(renderer.m_vulkanDevice, m_view, 0);
-        }
+        return;
+    }
 
-        // Destroy image sampler
-        if (m_sampler && vkDestroySampler)
-        {
-            vkDestroySampler(renderer.m_vulkanDevice, m_sampler, 0);
-        }
+    // Destroy image view
+    if (m_view)
+    {
+        vkDestroyImageView(renderer.m_vulkanDevice, m_view, 0);
+    }
+    m_view = 0;
 
-        // Destroy image
-        if (m_handle && vkDestroyImage)
-        {
-            vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
-        }
+    // Destroy image sampler
+    if (m_sampler)
+    {
+        vkDestroySampler(renderer.m_vulkanDevice, m_sampler, 0);
+    }
+    m_sampler = 0;
+
+    // Destroy image
+    if (m_handle)
+    {
+        vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
+    }
+    m_handle = 0;
+
+    // Cleanup descriptor sets
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_descriptorSets[i] = 0;
     }
 
     m_height = 0;
     m_width = 0;
     m_memoryOffset = 0;
     m_memorySize = 0;
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-    {
-        m_descriptorSets[i] = 0;
-    }
-    m_view = 0;
-    m_sampler = 0;
-    m_handle = 0;
 }
 
 

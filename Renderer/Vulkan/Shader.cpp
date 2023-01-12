@@ -111,13 +111,16 @@ bool Shader::createShader(Renderer& renderer,
 ////////////////////////////////////////////////////////////////////////////////
 void Shader::destroyShader(Renderer& renderer)
 {
-    // Destroy shader
-    if (renderer.m_vulkanDevice && vkDestroyShaderModule)
+    // Check vulkan device
+    if (!renderer.m_vulkanDevice)
     {
-        if (m_shader)
-        {
-            vkDestroyShaderModule(renderer.m_vulkanDevice, m_shader, 0);
-        }
+        return;
+    }
+
+    // Destroy shader
+    if (m_shader)
+    {
+        vkDestroyShaderModule(renderer.m_vulkanDevice, m_shader, 0);
     }
     m_shader = 0;
 }

@@ -129,17 +129,20 @@ bool VulkanBuffer::createBuffer(VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice)
 {
-    if (vulkanDevice)
+    // Check vulkan device
+    if (!vulkanDevice)
     {
-        // Destroy buffer
-        if (handle && vkDestroyBuffer)
-        {
-            vkDestroyBuffer(vulkanDevice, handle, 0);
-        }
+        return;
     }
+
+    // Destroy buffer
+    if (handle)
+    {
+        vkDestroyBuffer(vulkanDevice, handle, 0);
+    }
+    handle = 0;
 
     memoryOffset = 0;
     memorySize = 0;
     size = 0;
-    handle = 0;
 }

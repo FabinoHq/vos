@@ -52,7 +52,7 @@ handle(0)
     {
         descSetLayouts[i] = 0;
     }
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DESC_SETS_COUNT; ++i)
+    for (uint32_t i = 0; i < (RendererMaxSwapchainFrames*DESC_SETS_COUNT); ++i)
     {
         swapSetLayouts[i] = 0;
     }
@@ -63,7 +63,7 @@ handle(0)
 ////////////////////////////////////////////////////////////////////////////////
 GraphicsLayout::~GraphicsLayout()
 {
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DESC_SETS_COUNT; ++i)
+    for (uint32_t i = 0; i < (RendererMaxSwapchainFrames*DESC_SETS_COUNT); ++i)
     {
         swapSetLayouts[i] = 0;
     }
@@ -245,33 +245,32 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicsLayout::destroyLayout(VkDevice& vulkanDevice)
 {
-    if (vulkanDevice)
+    // Check vulkan device
+    if (!vulkanDevice)
     {
-        for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
-        {
-            // Destroy descriptor set layout
-            if (descSetLayouts[i] && vkDestroyDescriptorSetLayout)
-            {
-                vkDestroyDescriptorSetLayout(
-                    vulkanDevice, descSetLayouts[i], 0
-                );
-            }
-        }
-
-        // Destroy pipeline layout
-        if (handle && vkDestroyPipelineLayout)
-        {
-            vkDestroyPipelineLayout(vulkanDevice, handle, 0);
-        }
+        return;
     }
 
-    for (uint32_t i = 0; i < RendererMaxSwapchainFrames*DESC_SETS_COUNT; ++i)
+    // Destroy descriptor set layouts
+    for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
+    {
+        if (descSetLayouts[i])
+        {
+            vkDestroyDescriptorSetLayout(vulkanDevice, descSetLayouts[i], 0);
+        }
+        descSetLayouts[i] = 0;
+    }
+
+    // Cleanup swapchain layouts
+    for (uint32_t i = 0; i < (RendererMaxSwapchainFrames*DESC_SETS_COUNT); ++i)
     {
         swapSetLayouts[i] = 0;
     }
-    for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
+
+    // Destroy pipeline layout
+    if (handle)
     {
-        descSetLayouts[i] = 0;
+        vkDestroyPipelineLayout(vulkanDevice, handle, 0);
     }
     handle = 0;
 }

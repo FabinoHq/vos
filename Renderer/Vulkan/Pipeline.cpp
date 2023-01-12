@@ -564,8 +564,14 @@ void Pipeline::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void Pipeline::destroyPipeline(Renderer& renderer)
 {
+    // Check vulkan device
+    if (!renderer.m_vulkanDevice)
+    {
+        return;
+    }
+
     // Destroy pipeline
-    if (renderer.m_vulkanDevice && m_pipeline && vkDestroyPipeline)
+    if (m_pipeline)
     {
         // Destroy pipeline
         vkDestroyPipeline(renderer.m_vulkanDevice, m_pipeline, 0);

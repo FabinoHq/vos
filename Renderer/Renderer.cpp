@@ -91,7 +91,7 @@ Renderer::~Renderer()
     cleanup();
 
     // Destroy Vulkan instance
-    if (m_vulkanInstance && vkDestroyInstance)
+    if (m_vulkanInstance)
     {
         vkDestroyInstance(m_vulkanInstance, 0);
     }
@@ -913,16 +913,18 @@ void Renderer::cleanup()
     m_layout.destroyLayout(m_vulkanDevice);
 
     // Destroy textures descriptor pool
-    if (m_texturesDescPool && vkDestroyDescriptorPool)
+    if (m_texturesDescPool)
     {
         vkDestroyDescriptorPool(m_vulkanDevice, m_texturesDescPool, 0);
     }
+    m_texturesDescPool = 0;
 
     // Destroy uniforms descriptor pool
-    if (m_uniformsDescPool && vkDestroyDescriptorPool)
+    if (m_uniformsDescPool)
     {
         vkDestroyDescriptorPool(m_vulkanDevice, m_uniformsDescPool, 0);
     }
+    m_uniformsDescPool = 0;
 
     // Destroy swapchain
     m_swapchain.destroySwapchain(m_vulkanDevice);
@@ -931,20 +933,18 @@ void Renderer::cleanup()
     m_vulkanMemory.cleanup(m_vulkanDevice);
 
     // Destroy Vulkan device
-    if (vkDestroyDevice)
+    if (m_vulkanDevice)
     {
         vkDestroyDevice(m_vulkanDevice, 0);
     }
+    m_vulkanDevice = 0;
 
     // Destroy Vulkan surface
-    if (m_vulkanInstance && m_vulkanSurface && vkDestroySurfaceKHR)
+    if (m_vulkanInstance && m_vulkanSurface)
     {
         vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
     }
-
-    m_uniformsDescPool = 0;
-    m_texturesDescPool = 0;
-    m_vulkanDevice = 0;
+    m_vulkanInstance = 0;
     m_vulkanSurface = 0;
 }
 
