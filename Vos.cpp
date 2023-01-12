@@ -51,9 +51,7 @@ m_window(),
 m_renderer(m_resources),
 m_clock(),
 m_resources(m_renderer),
-m_game(m_renderer, m_resources),
-m_mouseX(0.0f),
-m_mouseY(0.0f)
+m_game(m_renderer, m_resources)
 {
 
 }
@@ -168,8 +166,6 @@ void Vos::run()
     {
         float frametime = m_clock.getAndResetF();
         float framelimit = frametime;
-        float scale = m_renderer.getScale();
-        float ratio = m_renderer.getRatio();
 
         // Framerate limiter
         if (framelimit <= (1.0f/maxFramerate))
@@ -212,16 +208,6 @@ void Vos::run()
                         default:
                             break;
                     }
-                    break;
-
-                // Mouse moved
-                case EVENT_MOUSEMOVED:
-                    m_mouseX += event.mouse.x*scale*2.0f;
-                    m_mouseY -= event.mouse.y*scale*2.0f;
-                    if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
-                    if (m_mouseX >= ratio) { m_mouseX = ratio; }
-                    if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
-                    if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
                     break;
 
                 default:

@@ -108,9 +108,6 @@
 
             Resources       m_resources;        // Resources
             Game            m_game;             // Game instance
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
     };
 
 

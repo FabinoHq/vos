@@ -57,6 +57,7 @@
     #include "../Renderer/SkyBox.h"
 
     #include "../Resources/Resources.h"
+    #include "../Renderer/GUI/GUICursor.h"
     #include "../Renderer/GUI/GUIWindow.h"
     #include "../Renderer/GUI/GUIPxText.h"
 
@@ -149,8 +150,9 @@
             EllipseShape    m_ellipse;          // Ellipse shape
             CuboidShape     m_cuboid;           // Cuboid shape
 
+            GUICursor       m_cursor;           // GUI Cursor
             GUIWindow       m_guiWindow;        // GUI Window
-            GUIPxText       m_pxText;           // Test pixel text
+            GUIPxText       m_pxText;           // GUI pixel text
 
             StaticMesh      m_staticMesh;       // Static mesh
             HeightMapStream m_heightMapStream;  // HeightMap stream

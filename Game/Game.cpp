@@ -60,6 +60,7 @@ m_procSprite(),
 m_rectanle(),
 m_ellipse(),
 m_cuboid(),
+m_cursor(),
 m_guiWindow(),
 m_pxText(),
 m_staticMesh(),
@@ -179,6 +180,13 @@ bool Game::init()
     }
 
 
+    // Init GUI cursor
+    if (!m_cursor.init(m_resources.textures.gui(TEXTURE_CURSOR), 1.0f, 1.0f))
+    {
+        // Could not init GUI cursor
+        return false;
+    }
+
     // Init GUI window
     if (!m_guiWindow.init(
         m_resources.textures.gui(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
@@ -278,7 +286,7 @@ void Game::destroy()
 ////////////////////////////////////////////////////////////////////////////////
 void Game::events(Event& event)
 {
-    // Renderer scale and ratio
+    // Get renderer scale and ratio
     float scale = m_renderer.getScale();
     float ratio = m_renderer.getRatio();
 
@@ -469,6 +477,10 @@ void Game::render()
         return;
     }
 
+    // Get renderer scale and ratio
+    float scale = m_renderer.getScale();
+    float ratio = m_renderer.getRatio();
+
     // Back rendering
     if (m_backRenderer.startRenderPass(m_renderer))
     {
@@ -487,9 +499,6 @@ void Game::render()
 
     // Start rendering
     m_renderer.startRenderPass();
-
-    // Get renderer settings
-    float ratio = m_renderer.getRatio();
 
     // Set freefly camera
     m_renderer.setCamera(m_freeflycam);
@@ -623,6 +632,18 @@ void Game::render()
     m_pxText.setPosition(-ratio, 0.96f-(m_pxText.getHeight()*0.7f));
     m_pxText.render(m_renderer);
 
+    // Render cursor
+    m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
+    float cursorSize = (scale*64.0f);
+    m_cursor.setSize(cursorSize, cursorSize);
+    m_cursor.setOrigin(
+        GUICusorDefaultOffset.vec[0]*scale,
+        cursorSize - (GUICusorDefaultOffset.vec[1]*scale)
+    );
+    m_cursor.setPosition(m_mouseX, m_mouseY);
+    m_cursor.bindTexture(m_renderer);
+    m_cursor.render(m_renderer);
+
     // End rendering
     m_renderer.endRenderPass();
 
@@ -633,7 +654,6 @@ void Game::render()
     // Render main compositing quad
     m_renderer.setDefaultView();
     m_renderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
-    m_renderer.bindDefaultVertexBuffer();
     m_renderer.m_mainRenderer.bind(m_renderer);
     m_renderer.m_mainSprite.setSize(
         (m_renderer.m_swapchain.ratio*2.0f)+RendererCompositingQuadOffset,
