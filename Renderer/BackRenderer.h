@@ -90,7 +90,7 @@
             //  return : True if the back renderer is successfully loaded     //
             ////////////////////////////////////////////////////////////////////
             bool init(Renderer& renderer, VulkanMemoryPool memoryPool,
-                uint32_t width, uint32_t height);
+                uint32_t width, uint32_t height, bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////
             //  Start back renderer pass                                      //

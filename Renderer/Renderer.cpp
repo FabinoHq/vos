@@ -303,7 +303,7 @@ bool Renderer::init(SysWindow* sysWindow)
     // Create main renderer
     if (!m_mainRenderer.init(
         *this, VULKAN_MEMORY_BACKCHAIN,
-        m_swapchain.extent.width, m_swapchain.extent.height))
+        m_swapchain.extent.width, m_swapchain.extent.height, true))
     {
         // Could not init main renderer
         return false;
@@ -563,6 +563,7 @@ bool Renderer::startFrame()
         m_swapchain.commandPools[m_swapchain.current], 0) != VK_SUCCESS)
     {
         // Could not reset command pool
+        m_rendererReady = false;
         return false;
     }
 

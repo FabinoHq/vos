@@ -90,7 +90,8 @@ Game::~Game()
 bool Game::init()
 {
     // Init back renderer
-    if (!m_backRenderer.init(m_renderer, VULKAN_MEMORY_BACKRENDERER, 256, 256))
+    if (!m_backRenderer.init(m_renderer,
+        VULKAN_MEMORY_BACKRENDERER, 256, 256, false))
     {
         // Could not init back renderer
         return false;

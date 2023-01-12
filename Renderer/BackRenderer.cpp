@@ -67,7 +67,7 @@ BackRenderer::~BackRenderer()
 //  return : True if the back renderer is successfully loaded                 //
 ////////////////////////////////////////////////////////////////////////////////
 bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
-    uint32_t width, uint32_t height)
+    uint32_t width, uint32_t height, bool smooth)
 {
     // Check back renderer size
     if ((width <= 0) || (width > BackRendererMaxWidth) ||
@@ -92,6 +92,11 @@ bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
     samplerInfo.flags = 0;
     samplerInfo.magFilter = VK_FILTER_NEAREST;
     samplerInfo.minFilter = VK_FILTER_NEAREST;
+    if (smooth)
+    {
+        samplerInfo.magFilter = VK_FILTER_LINEAR;
+        samplerInfo.minFilter = VK_FILTER_LINEAR;
+    }
     samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
     samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
     samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
@@ -360,23 +365,6 @@ bool BackRenderer::resize(Renderer& renderer, VulkanMemoryPool memoryPool,
         renderer.m_vulkanMemory, memoryPool, width, height))
     {
         // Could not resize backchain
-        return false;
-    }
-
-    // Recreate descriptor sets
-    VkDescriptorSetAllocateInfo descriptorInfo;
-    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = renderer.m_texturesDescPool;
-    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
-        DESC_TEXTURE*RendererMaxSwapchainFrames
-    ];
-
-    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
-        &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
-    {
-        // Could not allocate descriptor sets
         return false;
     }
 
