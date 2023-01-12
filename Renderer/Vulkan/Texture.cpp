@@ -41,7 +41,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Texture.h"
 #include "../Renderer.h"
-#include "../BackRenderer.h"
 #include "../../Resources/TextureLoader.h"
 
 
