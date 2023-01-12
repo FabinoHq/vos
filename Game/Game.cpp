@@ -462,8 +462,14 @@ void Game::compute(float frametime)
 ////////////////////////////////////////////////////////////////////////////////
 void Game::render()
 {
+    // Start frame rendering
+    if (!m_renderer.startFrame())
+    {
+        return;
+    }
+
     // Back rendering
-    /*if (m_backRenderer.startRenderPass(m_renderer))
+    if (m_backRenderer.startRenderPass(m_renderer))
     {
         // Set back renderer view
         m_backRenderer.setDefaultView(m_renderer);
@@ -476,7 +482,7 @@ void Game::render()
 
         // End back rendering
         m_backRenderer.endRenderPass(m_renderer);
-    }*/
+    }
 
     // Start rendering
     m_renderer.startRenderPass();
@@ -575,9 +581,9 @@ void Game::render()
     m_renderer.bindDefaultVertexBuffer();
 
     // Render back rendered frame
-    /*m_renderer.bindDefaultPipeline();
+    m_renderer.bindDefaultPipeline();
     m_backRenderer.bind(m_renderer);
-    m_sprite.render(m_renderer);*/
+    m_sprite.render(m_renderer);
 
     // Render sprite
     /*m_renderer.m_mainRenderer.bindDefaultPipeline(m_renderer);
@@ -639,4 +645,7 @@ void Game::render()
 
     // End final pass
     m_renderer.endRenderPass();
+
+    // End frame rendering
+    m_renderer.endFrame();
 }

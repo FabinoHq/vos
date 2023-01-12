@@ -476,9 +476,6 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
         images[i] = 0;
     }
 
-    // Reset backchain memory
-    vulkanMemory.resetMemory(memoryPool);
-
     // Recreate backchain images
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -680,61 +677,59 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void Backchain::destroyBackchain(VkDevice& vulkanDevice)
 {
-    if (vulkanDevice)
+    // Check vulkan device
+    if (!vulkanDevice)
     {
-        if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
-        {
-            // Destroy render pass
-            if (renderPass && vkDestroyRenderPass)
-            {
-                vkDestroyRenderPass(vulkanDevice, renderPass, 0);
-            }
-
-            for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-            {
-                // Destroy framebuffers
-                if (framebuffers[i] && vkDestroyFramebuffer)
-                {
-                    vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
-                }
-
-                // Destroy backchain depth images views
-                if (depthViews[i] && vkDestroyImageView)
-                {
-                    vkDestroyImageView(vulkanDevice, depthViews[i], 0);
-                }
-
-                // Destroy backchain images views
-                if (views[i] && vkDestroyImageView)
-                {
-                    vkDestroyImageView(vulkanDevice, views[i], 0);
-                }
-
-                // Destroy backchain depth images
-                if (depthImages[i] && vkDestroyImage)
-                {
-                    vkDestroyImage(vulkanDevice, depthImages[i], 0);
-                }
-
-                // Destroy backchain images
-                if (images[i] && vkDestroyImage)
-                {
-                    vkDestroyImage(vulkanDevice, images[i], 0);
-                }
-            }
-        }
+        // Invalid vulkan device
+        return;
     }
+
+    // Destroy render pass
+    if (renderPass)
+    {
+        vkDestroyRenderPass(vulkanDevice, renderPass, 0);
+    }
+    renderPass = 0;
 
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
+        // Destroy framebuffers
+        if (framebuffers[i] && vkDestroyFramebuffer)
+        {
+            vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
+        }
         framebuffers[i] = 0;
+
+        // Destroy backchain depth images views
+        if (depthViews[i] && vkDestroyImageView)
+        {
+            vkDestroyImageView(vulkanDevice, depthViews[i], 0);
+        }
         depthViews[i] = 0;
+
+        // Destroy backchain images views
+        if (views[i] && vkDestroyImageView)
+        {
+            vkDestroyImageView(vulkanDevice, views[i], 0);
+        }
         views[i]= 0;
+
+        // Destroy backchain depth images
+        if (depthImages[i] && vkDestroyImage)
+        {
+            vkDestroyImage(vulkanDevice, depthImages[i], 0);
+        }
         depthImages[i] = 0;
+
+        // Destroy backchain images
+        if (images[i] && vkDestroyImage)
+        {
+            vkDestroyImage(vulkanDevice, images[i], 0);
+        }
         images[i] = 0;
     }
+
     ratio = 0.0f;
-    renderPass = 0;
     extent.height = 0;
     extent.width = 0;
 }

@@ -86,28 +86,29 @@ bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
     }
 
     // Create image samplers
+    VkSamplerCreateInfo samplerInfo;
+    samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    samplerInfo.pNext = 0;
+    samplerInfo.flags = 0;
+    samplerInfo.magFilter = VK_FILTER_NEAREST;
+    samplerInfo.minFilter = VK_FILTER_NEAREST;
+    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.mipLodBias = 0.0f;
+    samplerInfo.anisotropyEnable = VK_FALSE;
+    samplerInfo.maxAnisotropy = 1.0f;
+    samplerInfo.compareEnable = VK_FALSE;
+    samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
+    samplerInfo.minLod = 0.0f;
+    samplerInfo.maxLod = 0.0f;
+    samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+    samplerInfo.unnormalizedCoordinates = VK_FALSE;
+
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        VkSamplerCreateInfo samplerInfo;
-        samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        samplerInfo.pNext = 0;
-        samplerInfo.flags = 0;
-        samplerInfo.magFilter = VK_FILTER_NEAREST;
-        samplerInfo.minFilter = VK_FILTER_NEAREST;
-        samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-        samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-        samplerInfo.mipLodBias = 0.0f;
-        samplerInfo.anisotropyEnable = VK_FALSE;
-        samplerInfo.maxAnisotropy = 1.0f;
-        samplerInfo.compareEnable = VK_FALSE;
-        samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
-        samplerInfo.minLod = 0.0f;
-        samplerInfo.maxLod = 0.0f;
-        samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
-        samplerInfo.unnormalizedCoordinates = VK_FALSE;
-
+        // Create image sampler
         if (vkCreateSampler(renderer.m_vulkanDevice,
             &samplerInfo, 0, &m_samplers[i]) != VK_SUCCESS)
         {
@@ -138,27 +139,31 @@ bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
         return false;
     }
 
+    // Update descriptor sets
+    VkDescriptorImageInfo descImageInfo;
+    descImageInfo.sampler = 0;
+    descImageInfo.imageView = 0;
+    descImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    VkWriteDescriptorSet descriptorWrites;
+    descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    descriptorWrites.pNext = 0;
+    descriptorWrites.dstSet = 0;
+    descriptorWrites.dstBinding = 0;
+    descriptorWrites.dstArrayElement = 0;
+    descriptorWrites.descriptorCount = 1;
+    descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    descriptorWrites.pImageInfo = 0;
+    descriptorWrites.pBufferInfo = 0;
+    descriptorWrites.pTexelBufferView = 0;
+
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        // Update descriptor sets
-        VkDescriptorImageInfo descImageInfo;
+        // Update descriptor set
         descImageInfo.sampler = m_samplers[i];
         descImageInfo.imageView = m_backchain.views[i];
-        descImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-        VkWriteDescriptorSet descriptorWrites;
-
-        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites.pNext = 0;
         descriptorWrites.dstSet = m_descriptorSets[i];
-        descriptorWrites.dstBinding = 0;
-        descriptorWrites.dstArrayElement = 0;
-        descriptorWrites.descriptorCount = 1;
-        descriptorWrites.descriptorType =
-            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         descriptorWrites.pImageInfo = &descImageInfo;
-        descriptorWrites.pBufferInfo = 0;
-        descriptorWrites.pTexelBufferView = 0;
 
         vkUpdateDescriptorSets(
             renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
@@ -379,27 +384,31 @@ bool BackRenderer::resize(Renderer& renderer, VulkanMemoryPool memoryPool,
         return false;
     }
 
+    // Update descriptor sets
+    VkDescriptorImageInfo descImageInfo;
+    descImageInfo.sampler = 0;
+    descImageInfo.imageView = 0;
+    descImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    VkWriteDescriptorSet descriptorWrites;
+    descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    descriptorWrites.pNext = 0;
+    descriptorWrites.dstSet = 0;
+    descriptorWrites.dstBinding = 0;
+    descriptorWrites.dstArrayElement = 0;
+    descriptorWrites.descriptorCount = 1;
+    descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    descriptorWrites.pImageInfo = 0;
+    descriptorWrites.pBufferInfo = 0;
+    descriptorWrites.pTexelBufferView = 0;
+
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        // Update descriptor sets
-        VkDescriptorImageInfo descImageInfo;
+        // Update descriptor set
         descImageInfo.sampler = m_samplers[i];
         descImageInfo.imageView = m_backchain.views[i];
-        descImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-        VkWriteDescriptorSet descriptorWrites;
-
-        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites.pNext = 0;
         descriptorWrites.dstSet = m_descriptorSets[i];
-        descriptorWrites.dstBinding = 0;
-        descriptorWrites.dstArrayElement = 0;
-        descriptorWrites.descriptorCount = 1;
-        descriptorWrites.descriptorType =
-            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         descriptorWrites.pImageInfo = &descImageInfo;
-        descriptorWrites.pBufferInfo = 0;
-        descriptorWrites.pTexelBufferView = 0;
 
         vkUpdateDescriptorSets(
             renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0

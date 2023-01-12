@@ -85,7 +85,7 @@ bool GraphicsLayout::createLayout(VkDevice& vulkanDevice)
     if (!createDescriptorSetLayouts(vulkanDevice))
     {
         // Could not create descriptor set layouts
-        SysMessage::box() << "[0x304F] Could not create descriptor layouts\n";
+        SysMessage::box() << "[0x3050] Could not create descriptor layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -94,7 +94,7 @@ bool GraphicsLayout::createLayout(VkDevice& vulkanDevice)
     if (!createPipelineLayouts(vulkanDevice))
     {
         // Could not create pipeline layouts
-        SysMessage::box() << "[0x3050] Could not create pipeline layouts\n";
+        SysMessage::box() << "[0x3051] Could not create pipeline layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }

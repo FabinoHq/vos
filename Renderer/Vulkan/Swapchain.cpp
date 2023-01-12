@@ -409,6 +409,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     {
         vkDestroySwapchainKHR(vulkanDevice, oldSwapchain, 0);
     }
+    oldSwapchain = 0;
 
     // Set swapchain format
     format = surfaceFormat.format;
@@ -469,35 +470,44 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         ratio = (extent.width*1.0f) / (extent.height*1.0f);
     }
 
-    // Create swapchain images views
+    // Create image views
     VkImageSubresourceRange subresource;
     subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresource.baseMipLevel = 0;
     subresource.levelCount = 1;
     subresource.baseArrayLayer = 0;
     subresource.layerCount = 1;
+    
+    VkImageViewCreateInfo imageView;
+    imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    imageView.pNext = 0;
+    imageView.flags = 0;
+    imageView.image = 0;
+    imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    imageView.format = format;
+    imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    imageView.subresourceRange = subresource;
 
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Create image view
-        VkImageViewCreateInfo imageView;
-        imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        imageView.pNext = 0;
-        imageView.flags = 0;
         imageView.image = images[i];
-        imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        imageView.format = format;
-        imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-        imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-        imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-        imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-        imageView.subresourceRange = subresource;
 
         if (vkCreateImageView(
             vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
         {
-            // Could not create swapchain image view
-            SysMessage::box() << "[0x303D] Could not create swapchain view\n";
+            // Could not create image view
+            SysMessage::box() << "[0x303D] Could not create image view\n";
+            SysMessage::box() << "Please update your graphics drivers";
+            return false;
+        }
+        if (!images[i])
+        {
+            // Invalid image view
+            SysMessage::box() << "[0x303E] Invalid image view\n";
             SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
@@ -584,21 +594,25 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     // Create framebuffers
+    VkImageView imageViews[1];
+    imageViews[0] = 0;
+
+    VkFramebufferCreateInfo framebufferInfo;
+    framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.pNext = 0;
+    framebufferInfo.flags = 0;
+    framebufferInfo.renderPass = renderPass;
+    framebufferInfo.attachmentCount = 1;
+    framebufferInfo.pAttachments = 0;
+    framebufferInfo.width = extent.width;
+    framebufferInfo.height = extent.height;
+    framebufferInfo.layers = 1;
+
     for (uint32_t i = 0; i < frames; ++i)
     {
-        VkImageView imageViews[1];
+        // Create framebuffer
         imageViews[0] = views[i];
-
-        VkFramebufferCreateInfo framebufferInfo;
-        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.pNext = 0;
-        framebufferInfo.flags = 0;
-        framebufferInfo.renderPass = renderPass;
-        framebufferInfo.attachmentCount = 1;
         framebufferInfo.pAttachments = imageViews;
-        framebufferInfo.width = extent.width;
-        framebufferInfo.height = extent.height;
-        framebufferInfo.layers = 1;
 
         if (vkCreateFramebuffer(
             vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
@@ -654,6 +668,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 
     for (uint32_t i = 0; i < frames; ++i)
     {
+        // Create fence
         if (vkCreateFence(
             vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
         {
@@ -680,6 +695,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 
     for (uint32_t i = 0; i < frames; ++i)
     {
+        // Create command pool
         if (vkCreateCommandPool(
             vulkanDevice, &commandPoolInfo, 0, &commandPools[i]) != VK_SUCCESS)
         {
@@ -698,15 +714,17 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     // Allocate command buffers
+    VkCommandBufferAllocateInfo commandBufferInfo;
+    commandBufferInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    commandBufferInfo.pNext = 0;
+    commandBufferInfo.commandPool = 0;
+    commandBufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    commandBufferInfo.commandBufferCount = 1;
+
     for (uint32_t i = 0; i < frames; ++i)
     {
-        VkCommandBufferAllocateInfo commandBufferInfo;
-        commandBufferInfo.sType =
-            VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        commandBufferInfo.pNext = 0;
+        // Allocate command buffer
         commandBufferInfo.commandPool = commandPools[i];
-        commandBufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        commandBufferInfo.commandBufferCount = 1;
 
         if (vkAllocateCommandBuffers(
             vulkanDevice, &commandBufferInfo, &commandBuffers[i]) != VK_SUCCESS)
@@ -716,13 +734,20 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
             SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
+        if (!commandBuffers[i])
+        {
+            // Invalid commands buffer
+            SysMessage::box() << "[0x304A] Invalid commands buffer\n";
+            SysMessage::box() << "Please update your graphics drivers";
+            return false;
+        }
     }
 
     // Wait for device idle
     if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
     {
         // Could not get the device ready
-        SysMessage::box() << "[0x304A] Could not get the device ready\n";
+        SysMessage::box() << "[0x304B] Could not get the device ready\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -738,46 +763,28 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface)
 {
-    // Recreate swapchain
-    if (vulkanDevice)
-    {
-        // Wait for device idle
-        if (vkDeviceWaitIdle)
-        {
-            if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
-            {
-                for (uint32_t i = 0; i < frames; ++i)
-                {
-                    // Destroy fences
-                    if (fences[i] && vkDestroyFence)
-                    {
-                        vkDestroyFence(vulkanDevice, fences[i], 0);
-                    }
-
-                    // Destroy framebuffers
-                    if (framebuffers[i] && vkDestroyFramebuffer)
-                    {
-                        vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
-                    }
-
-                    // Destroy swapchain images views
-                    if (views[i] && vkDestroyImageView)
-                    {
-                        vkDestroyImageView(vulkanDevice, views[i], 0);
-                    }
-                }
-            }
-            else
-            {
-                // Could not wait for device idle
-                return false;
-            }
-        }
-    }
+    // Cleanup current swapchain
     for (uint32_t i = 0; i < frames; ++i)
     {
+        // Destroy fences
+        if (fences[i])
+        {
+            vkDestroyFence(vulkanDevice, fences[i], 0);
+        }
         fences[i] = 0;
+
+        // Destroy framebuffers
+        if (framebuffers[i])
+        {
+            vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
+        }
         framebuffers[i] = 0;
+
+        // Destroy swapchain images views
+        if (views[i])
+        {
+            vkDestroyImageView(vulkanDevice, views[i], 0);
+        }
         views[i] = 0;
     }
 
@@ -1077,21 +1084,24 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     subresource.baseArrayLayer = 0;
     subresource.layerCount = 1;
 
+    // Recreate image views
+    VkImageViewCreateInfo imageView;
+    imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    imageView.pNext = 0;
+    imageView.flags = 0;
+    imageView.image = 0;
+    imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    imageView.format = format;
+    imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    imageView.subresourceRange = subresource;
+
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Recreate image view
-        VkImageViewCreateInfo imageView;
-        imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        imageView.pNext = 0;
-        imageView.flags = 0;
         imageView.image = images[i];
-        imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        imageView.format = format;
-        imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-        imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-        imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-        imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-        imageView.subresourceRange = subresource;
 
         if (vkCreateImageView(
             vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
@@ -1099,24 +1109,33 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
             // Could not recreate swapchain image view
             return false;
         }
+        if (!views[i])
+        {
+            // Invalid image view
+            return false;
+        }
     }
 
     // Recreate framebuffers
+    VkImageView imageViews[1];
+    imageViews[0] = 0;
+
+    VkFramebufferCreateInfo framebufferInfo;
+    framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.pNext = 0;
+    framebufferInfo.flags = 0;
+    framebufferInfo.renderPass = renderPass;
+    framebufferInfo.attachmentCount = 1;
+    framebufferInfo.pAttachments = 0;
+    framebufferInfo.width = extent.width;
+    framebufferInfo.height = extent.height;
+    framebufferInfo.layers = 1;
+
     for (uint32_t i = 0; i < frames; ++i)
     {
-        VkImageView imageViews[1];
+        // Recreate framebuffer
         imageViews[0] = views[i];
-
-        VkFramebufferCreateInfo framebufferInfo;
-        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.pNext = 0;
-        framebufferInfo.flags = 0;
-        framebufferInfo.renderPass = renderPass;
-        framebufferInfo.attachmentCount = 1;
         framebufferInfo.pAttachments = imageViews;
-        framebufferInfo.width = extent.width;
-        framebufferInfo.height = extent.height;
-        framebufferInfo.layers = 1;
 
         if (vkCreateFramebuffer(
             vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
@@ -1139,6 +1158,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
 
     for (uint32_t i = 0; i < frames; ++i)
     {
+        // Recreate fence
         if (vkCreateFence(
             vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
         {
@@ -1164,99 +1184,85 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
 {
-    if (vulkanDevice)
+    // Check vulkan device
+    if (!vulkanDevice)
     {
-        if (vkDeviceWaitIdle)
-        {
-            if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
-            {
-                // Destroy render pass
-                if (renderPass && vkDestroyRenderPass)
-                {
-                    vkDestroyRenderPass(vulkanDevice, renderPass, 0);
-                }
-
-                for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-                {
-                    // Destroy command buffer
-                    if (commandPools[i] && vkFreeCommandBuffers)
-                    {
-                        if (commandBuffers[i])
-                        {
-                            vkFreeCommandBuffers(vulkanDevice,
-                                commandPools[i], 1, &commandBuffers[i]
-                            );
-                        }
-                    }
-
-                    // Destroy commands pool
-                    if (commandPools[i] && vkDestroyCommandPool)
-                    {
-                        vkDestroyCommandPool(vulkanDevice, commandPools[i], 0);
-                    }
-
-                    // Destroy fences
-                    if (fences[i] && vkDestroyFence)
-                    {
-                        vkDestroyFence(vulkanDevice, fences[i], 0);
-                    }
-
-                    // Destroy semaphores
-                    if (vkDestroySemaphore)
-                    {
-                        if (renderDone[i])
-                        {
-                            vkDestroySemaphore(
-                                vulkanDevice, renderDone[i], 0
-                            );
-                        }
-                        if (renderReady[i])
-                        {
-                            vkDestroySemaphore(vulkanDevice, renderReady[i], 0);
-                        }
-                    }
-
-                    // Destroy framebuffers
-                    if (framebuffers[i] && vkDestroyFramebuffer)
-                    {
-                        vkDestroyFramebuffer(
-                            vulkanDevice, framebuffers[i], 0
-                        );
-                    }
-
-                    // Destroy swapchain images views
-                    if (views[i] && vkDestroyImageView)
-                    {
-                        vkDestroyImageView(vulkanDevice, views[i], 0);
-                    }
-                }
-
-                // Destroy swapchain
-                if (handle && vkDestroySwapchainKHR)
-                {
-                    vkDestroySwapchainKHR(vulkanDevice, handle, 0);
-                }
-            }
-        }
+        // Invalid vulkan device
+        return;
     }
+
+    // Destroy render pass
+    if (renderPass)
+    {
+        vkDestroyRenderPass(vulkanDevice, renderPass, 0);
+    }
+    renderPass = 0;
 
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
+        if (commandPools[i])
+        {
+            // Destroy command buffer
+            if (commandBuffers[i])
+            {
+                vkFreeCommandBuffers(
+                    vulkanDevice, commandPools[i], 1, &commandBuffers[i]
+                );
+            }
+
+            // Destroy commands pool
+            vkDestroyCommandPool(vulkanDevice, commandPools[i], 0);
+        }
         commandBuffers[i] = 0;
         commandPools[i] = 0;
+
+        // Destroy fences
+        if (fences[i])
+        {
+            vkDestroyFence(vulkanDevice, fences[i], 0);
+        }
         fences[i] = 0;
+
+        // Destroy semaphores
+        if (renderDone[i])
+        {
+            vkDestroySemaphore(vulkanDevice, renderDone[i], 0);
+        }
         renderDone[i] = 0;
+
+        if (renderReady[i])
+        {
+            vkDestroySemaphore(vulkanDevice, renderReady[i], 0);
+        }
         renderReady[i] = 0;
+
+        // Destroy framebuffers
+        if (framebuffers[i])
+        {
+            vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
+        }
         framebuffers[i] = 0;
+
+        // Destroy swapchain images views
+        if (views[i])
+        {
+            vkDestroyImageView(vulkanDevice, views[i], 0);
+        }
         views[i]= 0;
         images[i] = 0;
     }
+
+    // Destroy swapchain
+    if (handle)
+    {
+        vkDestroySwapchainKHR(vulkanDevice, handle, 0);
+    }
+    handle = 0;
+
     ratio = 0.0f;
     current = 0;
     frames = 0;
-    renderPass = 0;
     extent.height = 0;
     extent.width = 0;
     format = VK_FORMAT_UNDEFINED;
-    handle = 0;
 }

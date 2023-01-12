@@ -85,7 +85,7 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VulkanMemoryPool
     {
-        VULKAN_MEMORY_SWAPCHAIN = 0,
+        VULKAN_MEMORY_BACKCHAIN = 0,
         VULKAN_MEMORY_BACKRENDERER = 1,
         VULKAN_MEMORY_RENDERDEVICE = 2,
         VULKAN_MEMORY_RENDERHOST = 3,
@@ -118,7 +118,7 @@
     ////////////////////////////////////////////////////////////////////////////
     const VulkanMemoryList VulkanMemoryArray[VULKAN_MEMORY_POOLSCOUNT] =
     {
-        VULKAN_MEMORY_SWAPCHAIN, VULKAN_MEMORY_DEVICE, 0x20000000,
+        VULKAN_MEMORY_BACKCHAIN, VULKAN_MEMORY_DEVICE, 0x20000000,
         VULKAN_MEMORY_BACKRENDERER, VULKAN_MEMORY_DEVICE, 0x20000000,
         VULKAN_MEMORY_RENDERDEVICE, VULKAN_MEMORY_DEVICE, 0x20000000,
         VULKAN_MEMORY_RENDERHOST, VULKAN_MEMORY_HOST, 0x20000000,

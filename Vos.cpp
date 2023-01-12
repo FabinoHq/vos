@@ -237,14 +237,7 @@ void Vos::run()
         m_game.compute(frametime);
 
         // Render frame
-        if (m_renderer.startFrame())
-        {
-            // Render game
-            m_game.render();
-
-            // End rendering
-            m_renderer.endFrame();
-        }
+        m_game.render();
     }
 
     // Wait for renderer device idle state
