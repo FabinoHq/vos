@@ -227,6 +227,8 @@
 
 # GUI
 !Renderer/GUI/
+!Renderer/GUI/GUICursor.h
+!Renderer/GUI/GUICursor.cpp
 !Renderer/GUI/GUIPxText.h
 !Renderer/GUI/GUIPxText.cpp
 !Renderer/GUI/GUIWindow.h

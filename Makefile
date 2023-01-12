@@ -71,6 +71,7 @@ VOS: main.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
+	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o \
@@ -104,6 +105,7 @@ VOS: main.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
+	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o \
@@ -265,6 +267,9 @@ Renderer/Shapes/CuboidShape.o: Renderer/Shapes/CuboidShape.cpp
 	$(CC) -o Renderer/Shapes/CuboidShape.o -c \
 	Renderer/Shapes/CuboidShape.cpp $(CFLAGS)
 
+
+Renderer/GUI/GUICursor.o: Renderer/GUI/GUICursor.cpp
+	$(CC) -o Renderer/GUI/GUICursor.o -c Renderer/GUI/GUICursor.cpp $(CFLAGS)
 
 Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
 	$(CC) -o Renderer/GUI/GUIPxText.o -c Renderer/GUI/GUIPxText.cpp $(CFLAGS)

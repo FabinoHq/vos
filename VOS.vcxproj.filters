@@ -218,6 +218,9 @@
     <ClCompile Include="Renderer\Vulkan\Backchain.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUICursor.cpp">
+      <Filter>Renderer\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -499,6 +502,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Vulkan\Backchain.h">
       <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUICursor.h">
+      <Filter>Renderer\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

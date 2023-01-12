@@ -218,6 +218,7 @@
     <ClCompile Include="Renderer\BackRenderer.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
     <ClCompile Include="Renderer\FreeFlyCam.cpp" />
+    <ClCompile Include="Renderer\GUI\GUICursor.cpp" />
     <ClCompile Include="Renderer\GUI\GUIPxText.cpp" />
     <ClCompile Include="Renderer\GUI\GUIWindow.cpp" />
     <ClCompile Include="Renderer\HeightMapChunk.cpp" />
@@ -296,6 +297,7 @@
     <ClInclude Include="Renderer\BackRenderer.h" />
     <ClInclude Include="Renderer\Camera.h" />
     <ClInclude Include="Renderer\FreeFlyCam.h" />
+    <ClInclude Include="Renderer\GUI\GUICursor.h" />
     <ClInclude Include="Renderer\GUI\GUIPxText.h" />
     <ClInclude Include="Renderer\GUI\GUIWindow.h" />
     <ClInclude Include="Renderer\HeightMapChunk.h" />
