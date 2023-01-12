@@ -842,15 +842,17 @@ void Renderer::endRenderPass()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::waitDeviceIdle()
 {
-    m_rendererReady = false;
-
-    if (m_vulkanDevice && vkDeviceWaitIdle)
+    // Check vulkan device
+    if (!m_vulkanDevice)
     {
-        if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
-        {
-            // Renderer device is in idle state
-            return true;
-        }
+        return false;
+    }
+
+    // Wait for renderer device idle
+    if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+    {
+        // Renderer device is in idle state
+        return true;
     }
 
     // Could not wait for renderer device idle state
@@ -864,74 +866,73 @@ void Renderer::cleanup()
 {
     m_rendererReady = false;
 
-    // Destroy swapchain and device
-    if (m_vulkanDevice)
+    // Check vulkan device
+    if (!m_vulkanDevice)
     {
-        if (waitDeviceIdle())
-        {
-            // Destroy default view
-            m_view.destroyView(*this);
+        return;
+    }
 
-            // Destroy heightmap pipeline
-            m_heightMapPipeline.destroyPipeline(*this);
+    // Destroy default view
+    m_view.destroyView(*this);
 
-            // Destroy static mesh pipeline
-            m_staticMeshPipeline.destroyPipeline(*this);
+    // Destroy heightmap pipeline
+    m_heightMapPipeline.destroyPipeline(*this);
 
-            // Destroy skybox pipeline
-            m_skyBoxPipeline.destroyPipeline(*this);
+    // Destroy static mesh pipeline
+    m_staticMeshPipeline.destroyPipeline(*this);
 
-            // Destroy pixel text pipeline
-            m_pxTextPipeline.destroyPipeline(*this);
+    // Destroy skybox pipeline
+    m_skyBoxPipeline.destroyPipeline(*this);
 
-            // Destroy shape pipepline
-            m_shapePipeline.destroyPipeline(*this);
+    // Destroy pixel text pipeline
+    m_pxTextPipeline.destroyPipeline(*this);
 
-            // Destroy ellipse pipeline
-            m_ellipsePipeline.destroyPipeline(*this);
+    // Destroy shape pipepline
+    m_shapePipeline.destroyPipeline(*this);
 
-            // Destroy rectangle pipeline
-            m_rectanglePipeline.destroyPipeline(*this);
+    // Destroy ellipse pipeline
+    m_ellipsePipeline.destroyPipeline(*this);
 
-            // Destroy ninepatch pipeline
-            m_ninePatchPipeline.destroyPipeline(*this);
+    // Destroy rectangle pipeline
+    m_rectanglePipeline.destroyPipeline(*this);
 
-            // Destroy default pipeline
-            m_pipeline.destroyPipeline(*this);
+    // Destroy ninepatch pipeline
+    m_ninePatchPipeline.destroyPipeline(*this);
 
-            // Destroy main pipeline
-            m_mainPipeline.destroyPipeline(*this);
+    // Destroy default pipeline
+    m_pipeline.destroyPipeline(*this);
 
-            // Destroy main renderer
-            m_mainRenderer.cleanup(*this);
+    // Destroy main pipeline
+    m_mainPipeline.destroyPipeline(*this);
 
-            // Destroy default pipeline layout
-            m_layout.destroyLayout(m_vulkanDevice);
+    // Destroy main renderer
+    m_mainRenderer.cleanup(*this);
 
-            // Destroy textures descriptor pool
-            if (m_texturesDescPool && vkDestroyDescriptorPool)
-            {
-                vkDestroyDescriptorPool(m_vulkanDevice, m_texturesDescPool, 0);
-            }
+    // Destroy default pipeline layout
+    m_layout.destroyLayout(m_vulkanDevice);
 
-            // Destroy uniforms descriptor pool
-            if (m_uniformsDescPool && vkDestroyDescriptorPool)
-            {
-                vkDestroyDescriptorPool(m_vulkanDevice, m_uniformsDescPool, 0);
-            }
+    // Destroy textures descriptor pool
+    if (m_texturesDescPool && vkDestroyDescriptorPool)
+    {
+        vkDestroyDescriptorPool(m_vulkanDevice, m_texturesDescPool, 0);
+    }
 
-            // Destroy swapchain
-            m_swapchain.destroySwapchain(m_vulkanDevice);
+    // Destroy uniforms descriptor pool
+    if (m_uniformsDescPool && vkDestroyDescriptorPool)
+    {
+        vkDestroyDescriptorPool(m_vulkanDevice, m_uniformsDescPool, 0);
+    }
 
-            // Cleanup Vulkan memory
-            m_vulkanMemory.cleanup(m_vulkanDevice);
+    // Destroy swapchain
+    m_swapchain.destroySwapchain(m_vulkanDevice);
 
-            // Destroy Vulkan device
-            if (vkDestroyDevice)
-            {
-                vkDestroyDevice(m_vulkanDevice, 0);
-            }
-        }
+    // Cleanup Vulkan memory
+    m_vulkanMemory.cleanup(m_vulkanDevice);
+
+    // Destroy Vulkan device
+    if (vkDestroyDevice)
+    {
+        vkDestroyDevice(m_vulkanDevice, 0);
     }
 
     // Destroy Vulkan surface

@@ -146,6 +146,12 @@ bool Vos::launch()
         return false;
     }
 
+    // Wait for renderer device idle state
+    if (!m_renderer.waitDeviceIdle())
+    {
+        // Could not wait for renderer device idle state
+        return false;
+    }
 
     // Run VOS
     run();
@@ -248,9 +254,11 @@ void Vos::run()
 
         // Destroy resources
         m_resources.destroyResources();
+
+        // Cleanup renderer
+        m_renderer.cleanup();
     }
 
     // Close VOS
-    m_renderer.cleanup();
     m_window.close();
 }

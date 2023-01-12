@@ -425,54 +425,42 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Wait for device idle
-    if (vkDeviceWaitIdle(vulkanDevice) == VK_SUCCESS)
-    {
-        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-        {
-            // Destroy framebuffers
-            if (framebuffers[i] && vkDestroyFramebuffer)
-            {
-                vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
-            }
-
-            // Destroy backchain depth images views
-            if (depthViews[i] && vkDestroyImageView)
-            {
-                vkDestroyImageView(vulkanDevice, depthViews[i], 0);
-            }
-
-            // Destroy backchain images views
-            if (views[i] && vkDestroyImageView)
-            {
-                vkDestroyImageView(vulkanDevice, views[i], 0);
-            }
-
-            // Destroy backchain depth images
-            if (depthImages[i] && vkDestroyImage)
-            {
-                vkDestroyImage(vulkanDevice, depthImages[i], 0);
-            }
-
-            // Destroy backchain images
-            if (images[i] && vkDestroyImage)
-            {
-                vkDestroyImage(vulkanDevice, images[i], 0);
-            }
-        }
-    }
-    else
-    {
-        // Could not wait for device idle
-        return false;
-    }
-
+    // Cleanup current backchain
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
+        // Destroy framebuffers
+        if (framebuffers[i] && vkDestroyFramebuffer)
+        {
+            vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
+        }
         framebuffers[i] = 0;
+
+        // Destroy backchain depth images views
+        if (depthViews[i] && vkDestroyImageView)
+        {
+            vkDestroyImageView(vulkanDevice, depthViews[i], 0);
+        }
         depthViews[i] = 0;
+
+        // Destroy backchain images views
+        if (views[i] && vkDestroyImageView)
+        {
+            vkDestroyImageView(vulkanDevice, views[i], 0);
+        }
         views[i]= 0;
+
+        // Destroy backchain depth images
+        if (depthImages[i] && vkDestroyImage)
+        {
+            vkDestroyImage(vulkanDevice, depthImages[i], 0);
+        }
         depthImages[i] = 0;
+
+        // Destroy backchain images
+        if (images[i] && vkDestroyImage)
+        {
+            vkDestroyImage(vulkanDevice, images[i], 0);
+        }
         images[i] = 0;
     }
 
@@ -511,11 +499,11 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
             return false;
         }
 
-        // Allocate image memory
+        // Reallocate image memory
         if (!vulkanMemory.allocateSwapchainImage(
             vulkanDevice, images[i], memoryPool))
         {
-            // Could not allocate image memory
+            // Could not reallocate image memory
             return false;
         }
     }
@@ -555,11 +543,11 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
             return false;
         }
 
-        // Allocate depth image memory
+        // Reallocate depth image memory
         if (!vulkanMemory.allocateSwapchainImage(
             vulkanDevice, depthImages[i], memoryPool))
         {
-            // Could not allocate depth image memory
+            // Could not reallocate depth image memory
             return false;
         }
     }
@@ -591,6 +579,12 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
         if (vkCreateImageView(
             vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
         {
+            // Could not recreate image view
+            return false;
+        }
+        if (!views[i])
+        {
+            // Invalid image view
             return false;
         }
     }
@@ -622,6 +616,12 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
         if (vkCreateImageView(
             vulkanDevice, &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
         {
+            // Could not recreate depth image view
+            return false;
+        }
+        if (!depthViews[i])
+        {
+            // Invalid depth image view
             return false;
         }
     }

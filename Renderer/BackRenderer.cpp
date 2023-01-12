@@ -296,31 +296,27 @@ void BackRenderer::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void BackRenderer::cleanup(Renderer& renderer)
 {
-    if (renderer.m_vulkanDevice)
+    // Check vulkan device
+    if (!renderer.m_vulkanDevice)
     {
-        if (vkDeviceWaitIdle(renderer.m_vulkanDevice) == VK_SUCCESS)
-        {
-            // Destroy image samplers
-            for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
-            {
-                if (m_samplers[i] && vkDestroySampler)
-                {
-                    vkDestroySampler(renderer.m_vulkanDevice, m_samplers[i], 0);
-                }
-            }
-
-            // Destroy default view
-            m_view.destroyView(renderer);
-
-            // Destroy backchain
-            m_backchain.destroyBackchain(renderer.m_vulkanDevice);
-        }
+        return;
     }
 
+    // Destroy image samplers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
+        if (m_samplers[i])
+        {
+            vkDestroySampler(renderer.m_vulkanDevice, m_samplers[i], 0);
+        }
         m_samplers[i] = 0;
     }
+
+    // Destroy default view
+    m_view.destroyView(renderer);
+
+    // Destroy backchain
+    m_backchain.destroyBackchain(renderer.m_vulkanDevice);
 }
 
 
