@@ -670,7 +670,7 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::updateCursor(Renderer& renderer, float mouseX, float mouseY)
 {
-    if (m_resizable)
+    /*if (m_resizable)
     {
         if (m_grabTop && m_grabLeft)
         {
@@ -764,7 +764,7 @@ bool GUIWindow::updateCursor(Renderer& renderer, float mouseX, float mouseY)
         }
     }
 
-    renderer.setDefaultCursor();
+    renderer.setDefaultCursor();*/
     return false;
 }
 

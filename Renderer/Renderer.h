@@ -106,15 +106,6 @@
     ////////////////////////////////////////////////////////////////////////////
     const uint32_t RendererMaxTexturesDesc = 2048;
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer cursors offsets                                              //
-    ////////////////////////////////////////////////////////////////////////////
-    const Vector2 RendererDefaultCursorOffset = Vector2(2.0f, 2.0f);
-    const Vector2 RendererNSCursorOffset = Vector2(10.0f, 24.0f);
-    const Vector2 RendererEWCursorOffset = Vector2(24.0f, 10.0f);
-    const Vector2 RendererNESWCursorOffset = Vector2(18.0f, 18.0f);
-    const Vector2 RendererNWSECursorOffset = Vector2(18.0f, 18.0f);
-
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
@@ -144,12 +135,6 @@
             //  return : True if the renderer pipelines are ready             //
             ////////////////////////////////////////////////////////////////////
             bool initPipelines();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init embedded resources                                       //
-            //  return : True if the renderer embedded resources are ready    //
-            ////////////////////////////////////////////////////////////////////
-            bool initEmbedded();
 
             ////////////////////////////////////////////////////////////////////
             //  Start rendering frame                                         //
@@ -218,42 +203,6 @@
             //  return : True if the camera is successfully set               //
             ////////////////////////////////////////////////////////////////////
             bool setCamera(Camera& camera);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer default cursor                                   //
-            ////////////////////////////////////////////////////////////////////
-            bool setDefaultCursor();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer NS cursor                                        //
-            ////////////////////////////////////////////////////////////////////
-            bool setNSCursor();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer EW cursor                                        //
-            ////////////////////////////////////////////////////////////////////
-            bool setEWCursor();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer NE-SW cursor                                     //
-            ////////////////////////////////////////////////////////////////////
-            bool setNESWCursor();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer NW-SE cursor                                     //
-            ////////////////////////////////////////////////////////////////////
-            bool setNWSECursor();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer cursor texture                                   //
-            ////////////////////////////////////////////////////////////////////
-            bool setCursorTexture(Texture& texture, const Vector2& offset);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Render mouse cursor                                           //
-            ////////////////////////////////////////////////////////////////////
-            void renderCursor(float mouseX, float mouseY);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -344,8 +293,6 @@
 
             View                m_view;                 // Default view
             Resources&          m_resources;            // Resources
-            Vector2             m_cursorOffset;         // Cursor offset
-            Sprite              m_cursor;               // Cursor sprite
     };
 
 

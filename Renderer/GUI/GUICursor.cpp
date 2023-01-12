@@ -47,7 +47,9 @@
 //  GUICursor default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
 GUICursor::GUICursor() :
-Transform2()
+Transform2(),
+m_texture(0),
+m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
 
 }
@@ -57,5 +59,159 @@ Transform2()
 ////////////////////////////////////////////////////////////////////////////////
 GUICursor::~GUICursor()
 {
+	m_color.reset();
+    m_texture = 0;
+}
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init cursor                                                               //
+//  return : True if the cursor is successfully created                       //
+////////////////////////////////////////////////////////////////////////////////
+bool GUICursor::init(Texture& texture, float width, float height)
+{
+    // Check texture handle
+    if (!texture.isValid())
+    {
+        // Invalid texture handle
+        return false;
+    }
+
+    // Reset cursor transformations
+    resetTransforms();
+
+    // Set cursor size
+    setSize(width, height);
+
+    // Center cursor origin (anchor)
+    centerOrigin();
+
+    // Set cursor texture pointer
+    m_texture = &texture;
+
+    // Reset cursor color
+    m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Cursor successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set cursor texture                                                        //
+//  return : True if cursor texture is successfully set                       //
+////////////////////////////////////////////////////////////////////////////////
+bool GUICursor::setTexture(Texture& texture)
+{
+    // Check texture handle
+    if (!texture.isValid())
+    {
+        // Invalid texture handle
+        return false;
+    }
+
+    // Set cursor texture pointer
+    m_texture = &texture;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set cursor color                                                          //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::setColor(const Vector4& color)
+{
+    m_color.vec[0] = color.vec[0];
+    m_color.vec[1] = color.vec[1];
+    m_color.vec[2] = color.vec[2];
+    m_color.vec[3] = color.vec[3];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set cursor color                                                          //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::setColor(float red, float green, float blue, float alpha)
+{
+    m_color.vec[0] = red;
+    m_color.vec[1] = green;
+    m_color.vec[2] = blue;
+    m_color.vec[3] = alpha;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set cursor red channel                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::setRed(float red)
+{
+    m_color.vec[0] = red;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set cursor green channel                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::setGreen(float green)
+{
+    m_color.vec[1] = green;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set cursor blue channel                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::setBlue(float blue)
+{
+    m_color.vec[2] = blue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set cursor alpha channel                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::setAlpha(float alpha)
+{
+    m_color.vec[3] = alpha;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind cursor texture                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::bindTexture(Renderer& renderer)
+{
+    m_texture->bind(renderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Render cursor                                                             //
+////////////////////////////////////////////////////////////////////////////////
+void GUICursor::render(Renderer& renderer)
+{
+    // Compute cursor transformations
+    computeTransforms();
+
+    // Push model matrix into command buffer
+    vkCmdPushConstants(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
+    );
+
+    // Push constants into command buffer
+    PushConstantData pushConstants;
+    pushConstants.color[0] = m_color.vec[0];
+    pushConstants.color[1] = m_color.vec[1];
+    pushConstants.color[2] = m_color.vec[2];
+    pushConstants.color[3] = m_color.vec[3];
+    pushConstants.offset[0] = 0.0f;
+    pushConstants.offset[1] = 0.0f;
+    pushConstants.size[0] = 1.0f;
+    pushConstants.size[1] = 1.0f;
+
+    vkCmdPushConstants(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
+    );
+
+    // Draw cursor triangles
+    vkCmdDrawIndexed(
+        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        6, 1, 0, 0, 0
+    );
 }

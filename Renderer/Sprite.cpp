@@ -64,6 +64,7 @@ Sprite::~Sprite()
     m_uvSize.reset();
     m_uvOffset.reset();
     m_color.reset();
+    m_texture = 0;
 }
 
 

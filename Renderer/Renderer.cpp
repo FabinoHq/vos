@@ -65,9 +65,7 @@ m_layout(),
 m_mainRenderer(),
 m_mainSprite(),
 m_view(),
-m_resources(resources),
-m_cursorOffset(0.0f, 0.0f),
-m_cursor()
+m_resources(resources)
 {
 
 }
@@ -322,9 +320,6 @@ bool Renderer::init(SysWindow* sysWindow)
         return false;
     }
 
-    // Set default cursor offset
-    m_cursorOffset.set(RendererDefaultCursorOffset);
-
     // Renderer successfully loaded
     m_rendererReady = true;
     return true;
@@ -492,23 +487,6 @@ bool Renderer::initPipelines()
     }
 
     // Renderer pipelines are ready
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Init embedded resources                                                   //
-//  return : True if the renderer embedded resources are ready                //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::initEmbedded()
-{
-    // Init cursor sprite
-    if (!m_cursor.init(m_resources.textures.gui(TEXTURE_CURSOR), 1.0f, 1.0f))
-    {
-        // Could not init cursor sprite
-        return false;
-    }
-
-    // Renderer embedded resources are ready
     return true;
 }
 
@@ -1025,76 +1003,6 @@ bool Renderer::setCamera(Camera& camera)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set renderer default cursor                                               //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setDefaultCursor()
-{
-    m_cursorOffset.set(RendererDefaultCursorOffset);
-    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_CURSOR));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set renderer NS cursor                                                    //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setNSCursor()
-{
-    m_cursorOffset.set(RendererNSCursorOffset);
-    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_NSCURSOR));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set renderer EW cursor                                                    //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setEWCursor()
-{
-    m_cursorOffset.set(RendererEWCursorOffset);
-    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_EWCURSOR));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set renderer NE-SW cursor                                                 //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setNESWCursor()
-{
-    m_cursorOffset.set(RendererNESWCursorOffset);
-    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_NESWCURSOR));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set renderer NW-SE cursor                                                 //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setNWSECursor()
-{
-    m_cursorOffset.set(RendererNWSECursorOffset);
-    return m_cursor.setTexture(m_resources.textures.gui(TEXTURE_NWSECURSOR));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set renderer cursor texture                                               //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setCursorTexture(Texture& texture, const Vector2& offset)
-{
-    m_cursorOffset.set(offset);
-    return m_cursor.setTexture(texture);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Render mouse cursor                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void Renderer::renderCursor(float mouseX, float mouseY)
-{
-    float scale = getScale();
-    float cursorSize = 64.0f*scale;
-    m_cursor.setSize(cursorSize, cursorSize);
-    m_cursor.setOrigin(
-        m_cursorOffset.vec[0]*scale, cursorSize - (m_cursorOffset.vec[1]*scale)
-    );
-    m_cursor.setPosition(mouseX, mouseY);
-    m_cursor.render(*this);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 //  Get renderer ready state                                                  //
 //  return : True if the renderer is ready, false otherwise                   //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1129,7 +1037,7 @@ float Renderer::getScale()
 {
     if (m_swapchain.extent.height > 0)
     {
-        return 1.0f/(m_swapchain.extent.height*1.0f);
+        return (1.0f/(m_swapchain.extent.height*1.0f));
     }
     return 1.0f;
 }

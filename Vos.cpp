@@ -101,13 +101,6 @@ bool Vos::launch()
         return false;
     }
 
-    // Init VOS embedded resources
-    if (!m_renderer.initEmbedded())
-    {
-        // Unable to init VOS embedded resources
-        return false;
-    }
-
     // Preload resources
     if (!m_resources.preload())
     {

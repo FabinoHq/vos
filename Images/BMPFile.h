@@ -66,8 +66,8 @@
     ////////////////////////////////////////////////////////////////////////////
     enum BMPFileImageFormat
     {
-        BMP_FILE_BGR_24BITS,
-        BMP_FILE_BGR_16BITS
+        BMP_FILE_BGR_24BITS = 0,
+        BMP_FILE_BGR_16BITS = 1
     };
 
 
