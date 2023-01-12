@@ -564,9 +564,10 @@ void Pipeline::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void Pipeline::destroyPipeline(Renderer& renderer)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!renderer.m_vulkanDevice)
     {
+        // Invalid Vulkan device
         return;
     }
 

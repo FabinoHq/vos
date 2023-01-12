@@ -221,7 +221,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
             return false;
         }
 
-        // Allocate vulkan memory
+        // Allocate Vulkan memory
         VkMemoryAllocateInfo allocateInfo;
         allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocateInfo.pNext = 0;
@@ -243,7 +243,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy vulkan memory                                                     //
+//  Destroy Vulkan memory                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanMemory::destroyVulkanMemory(VkDevice& vulkanDevice)
 {

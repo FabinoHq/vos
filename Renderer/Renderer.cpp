@@ -223,14 +223,14 @@ bool Renderer::init(SysWindow* sysWindow)
     VkDescriptorPoolSize uniformsPoolSize;
     uniformsPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     uniformsPoolSize.descriptorCount =
-        RendererMaxUniformsDesc*RendererMaxSwapchainFrames;
+        (RendererMaxUniformsDesc*RendererMaxSwapchainFrames);
 
     VkDescriptorPoolCreateInfo uniformsPoolInfo;
     uniformsPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     uniformsPoolInfo.pNext = 0;
     uniformsPoolInfo.flags = 0;
     uniformsPoolInfo.maxSets =
-        RendererMaxUniformsDesc*RendererMaxSwapchainFrames;
+        (RendererMaxUniformsDesc*RendererMaxSwapchainFrames);
     uniformsPoolInfo.poolSizeCount = 1;
     uniformsPoolInfo.pPoolSizes = &uniformsPoolSize;
 
@@ -254,14 +254,14 @@ bool Renderer::init(SysWindow* sysWindow)
     VkDescriptorPoolSize texturesPoolSize;
     texturesPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     texturesPoolSize.descriptorCount =
-        RendererMaxTexturesDesc*RendererMaxSwapchainFrames;
+        (RendererMaxTexturesDesc*RendererMaxSwapchainFrames);
 
     VkDescriptorPoolCreateInfo texturesPoolInfo;
     texturesPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     texturesPoolInfo.pNext = 0;
     texturesPoolInfo.flags = 0;
     texturesPoolInfo.maxSets =
-        RendererMaxTexturesDesc*RendererMaxSwapchainFrames;
+        (RendererMaxTexturesDesc*RendererMaxSwapchainFrames);
     texturesPoolInfo.poolSizeCount = 1;
     texturesPoolInfo.pPoolSizes = &texturesPoolSize;
 
@@ -853,9 +853,10 @@ void Renderer::endRenderPass()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::waitDeviceIdle()
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!m_vulkanDevice)
     {
+        // Invalid Vulkan device
         return false;
     }
 
@@ -877,9 +878,10 @@ void Renderer::destroyRenderer()
 {
     m_rendererReady = false;
 
-    // Check vulkan device
+    // Check Vulkan device
     if (!m_vulkanDevice)
     {
+        // Invalid Vulkan device
         return;
     }
 
@@ -915,7 +917,7 @@ void Renderer::destroyRenderer()
     // Destroy swapchain
     m_swapchain.destroySwapchain(m_vulkanDevice);
 
-    // Destroy vulkan memory
+    // Destroy Vulkan memory
     m_vulkanMemory.destroyVulkanMemory(m_vulkanDevice);
 
     // Destroy Vulkan device
@@ -1265,8 +1267,8 @@ bool Renderer::selectVulkanDevice()
     // Check Vulkan surface
     if (!m_vulkanSurface)
     {
-        // Invalid vulkan surface
-        SysMessage::box() << "[0x300F] Invalid vulkan surface\n";
+        // Invalid Vulkan surface
+        SysMessage::box() << "[0x300F] Invalid Vulkan surface\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -1472,7 +1474,7 @@ bool Renderer::selectVulkanDevice()
         return false;
     }
 
-    // Set vulkan queues
+    // Set Vulkan queues
     uint32_t graphicsQueues = RendererMaxGraphicsQueues;
     uint32_t surfaceQueues = RendererMaxSurfaceQueues;
     uint32_t transferQueues = RendererMaxTransferQueues;

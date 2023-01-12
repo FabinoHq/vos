@@ -1184,10 +1184,10 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!vulkanDevice)
     {
-        // Invalid vulkan device
+        // Invalid Vulkan device
         return;
     }
 

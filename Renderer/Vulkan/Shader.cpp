@@ -111,9 +111,10 @@ bool Shader::createShader(Renderer& renderer,
 ////////////////////////////////////////////////////////////////////////////////
 void Shader::destroyShader(Renderer& renderer)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!renderer.m_vulkanDevice)
     {
+        // Invalid Vulkan device
         return;
     }
 

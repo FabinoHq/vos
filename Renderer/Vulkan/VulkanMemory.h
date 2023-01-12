@@ -165,7 +165,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy vulkan memory                                         //
+            //  Destroy Vulkan memory                                         //
             ////////////////////////////////////////////////////////////////////
             void destroyVulkanMemory(VkDevice& vulkanDevice);
 

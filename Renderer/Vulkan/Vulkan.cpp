@@ -1003,7 +1003,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     // Check Vulkan device
     if (!vulkanDevice)
     {
-        // Vulkan device is invalid
+        // Invalid Vulkan device
         return false;
     }
 

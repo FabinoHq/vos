@@ -411,10 +411,10 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
     VulkanMemory& vulkanMemory, VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!vulkanDevice)
     {
-        // Invalid vulkan device
+        // Invalid Vulkan device
         return false;
     }
 
@@ -677,10 +677,10 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void Backchain::destroyBackchain(VkDevice& vulkanDevice)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!vulkanDevice)
     {
-        // Invalid vulkan device
+        // Invalid Vulkan device
         return;
     }
 

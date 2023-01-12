@@ -245,9 +245,10 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicsLayout::destroyLayout(VkDevice& vulkanDevice)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!vulkanDevice)
     {
+        // Invalid Vulkan device
         return;
     }
 

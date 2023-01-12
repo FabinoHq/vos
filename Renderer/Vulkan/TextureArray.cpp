@@ -371,9 +371,10 @@ void TextureArray::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void TextureArray::destroyTextureArray(Renderer& renderer)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!renderer.m_vulkanDevice)
     {
+        // Invalid Vulkan device
         return;
     }
 

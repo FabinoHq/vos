@@ -301,9 +301,10 @@ void BackRenderer::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void BackRenderer::destroyBackRenderer(Renderer& renderer)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!renderer.m_vulkanDevice)
     {
+        // Invalid Vulkan device
         return;
     }
 
@@ -353,10 +354,10 @@ bool BackRenderer::setDefaultView(Renderer& renderer)
 bool BackRenderer::resize(Renderer& renderer, VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!renderer.m_vulkanDevice)
     {
-        // Invalid vulkan device
+        // Invalid Vulkan device
         return false;
     }
 

@@ -129,9 +129,10 @@ bool VulkanBuffer::createBuffer(VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!vulkanDevice)
     {
+        // Invalid Vulkan device
         return;
     }
 

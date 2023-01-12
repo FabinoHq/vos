@@ -326,9 +326,10 @@ void CubeMap::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 void CubeMap::destroyCubeMap(Renderer& renderer)
 {
-    // Check vulkan device
+    // Check Vulkan device
     if (!renderer.m_vulkanDevice)
     {
+        // Invalid Vulkan device
         return;
     }
 
