@@ -353,7 +353,7 @@ void CubeMap::destroyCubeMap(Renderer& renderer)
     }
     m_handle = 0;
 
-    // Cleanup descriptor sets
+    // Destroy descriptor sets
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         m_descriptorSets[i] = 0;

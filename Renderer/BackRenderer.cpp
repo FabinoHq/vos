@@ -297,9 +297,9 @@ void BackRenderer::bind(Renderer& renderer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Cleanup back renderer                                                     //
+//  Destroy back renderer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void BackRenderer::cleanup(Renderer& renderer)
+void BackRenderer::destroyBackRenderer(Renderer& renderer)
 {
     // Check vulkan device
     if (!renderer.m_vulkanDevice)

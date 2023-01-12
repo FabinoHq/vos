@@ -377,7 +377,7 @@ void TextureArray::destroyTextureArray(Renderer& renderer)
         return;
     }
 
-    // Cleanup descriptor sets
+    // Destroy descriptor sets
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         m_descriptorSets[i] = 0;

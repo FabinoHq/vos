@@ -62,7 +62,7 @@ struct NetworkInit
     ////////////////////////////////////////////////////////////////////////////
     ~NetworkInit()
     {
-        // Cleanup windows network automatically
+        // Destroy windows network automatically
         WSACleanup();
     }
 };

@@ -243,9 +243,9 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Cleanup Vulkan memory                                                     //
+//  Destroy vulkan memory                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void VulkanMemory::cleanup(VkDevice& vulkanDevice)
+void VulkanMemory::destroyVulkanMemory(VkDevice& vulkanDevice)
 {
     if (vulkanDevice)
     {

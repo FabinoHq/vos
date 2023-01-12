@@ -261,7 +261,7 @@ void GraphicsLayout::destroyLayout(VkDevice& vulkanDevice)
         descSetLayouts[i] = 0;
     }
 
-    // Cleanup swapchain layouts
+    // Destroy swapchain layouts
     for (uint32_t i = 0; i < (RendererMaxSwapchainFrames*DESC_SETS_COUNT); ++i)
     {
         swapSetLayouts[i] = 0;

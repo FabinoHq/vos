@@ -109,9 +109,9 @@
             void bind(Renderer& renderer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Cleanup back renderer                                         //
+            //  Destroy back renderer                                         //
             ////////////////////////////////////////////////////////////////////
-            void cleanup(Renderer& renderer);
+            void destroyBackRenderer(Renderer& renderer);
 
 
             ////////////////////////////////////////////////////////////////////

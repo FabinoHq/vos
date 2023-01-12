@@ -165,9 +165,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Cleanup Vulkan memory                                         //
+            //  Destroy vulkan memory                                         //
             ////////////////////////////////////////////////////////////////////
-            void cleanup(VkDevice& vulkanDevice);
+            void destroyVulkanMemory(VkDevice& vulkanDevice);
 
 
             ////////////////////////////////////////////////////////////////////

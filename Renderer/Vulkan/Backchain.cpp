@@ -425,7 +425,7 @@ bool Backchain::resizeBackchain(VkDevice& vulkanDevice,
         return false;
     }
 
-    // Cleanup current backchain
+    // Destroy current backchain
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Destroy framebuffers

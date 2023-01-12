@@ -763,7 +763,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface)
 {
-    // Cleanup current swapchain
+    // Destroy current swapchain
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Destroy fences

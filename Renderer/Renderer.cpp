@@ -77,8 +77,8 @@ m_cursor()
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::~Renderer()
 {
-    // Cleanup renderer
-    cleanup();
+    // Destroy renderer
+    destroyRenderer();
 
     // Destroy Vulkan instance
     if (m_vulkanInstance)
@@ -871,9 +871,9 @@ bool Renderer::waitDeviceIdle()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Cleanup renderer                                                          //
+//  Destroy renderer                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::cleanup()
+void Renderer::destroyRenderer()
 {
     m_rendererReady = false;
 
@@ -893,7 +893,7 @@ void Renderer::cleanup()
     }
 
     // Destroy main renderer
-    m_mainRenderer.cleanup(*this);
+    m_mainRenderer.destroyBackRenderer(*this);
 
     // Destroy default pipeline layout
     m_layout.destroyLayout(m_vulkanDevice);
@@ -915,8 +915,8 @@ void Renderer::cleanup()
     // Destroy swapchain
     m_swapchain.destroySwapchain(m_vulkanDevice);
 
-    // Cleanup Vulkan memory
-    m_vulkanMemory.cleanup(m_vulkanDevice);
+    // Destroy vulkan memory
+    m_vulkanMemory.destroyVulkanMemory(m_vulkanDevice);
 
     // Destroy Vulkan device
     if (m_vulkanDevice)

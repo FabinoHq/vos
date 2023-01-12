@@ -255,8 +255,8 @@ void Vos::run()
         // Destroy resources
         m_resources.destroyResources();
 
-        // Cleanup renderer
-        m_renderer.cleanup();
+        // Destroy renderer
+        m_renderer.destroyRenderer();
     }
 
     // Close VOS

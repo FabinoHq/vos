@@ -1502,7 +1502,7 @@ bool TextureLoader::preloadTextures()
         texArray4.getImage(), texArrayWidth*texArrayHeight*4
     );
 
-    // Cleanup array textures
+    // Destroy array textures
     texArray1.destroyImage();
     texArray2.destroyImage();
     texArray3.destroyImage();
@@ -1566,7 +1566,7 @@ bool TextureLoader::preloadTextures()
         cubeMapBack.getImage(), cubemapWidth*cubemapHeight*4
     );
 
-    // Cleanup cubemap textures
+    // Destroy cubemap textures
     cubeMapRight.destroyImage();
     cubeMapLeft.destroyImage();
     cubeMapTop.destroyImage();

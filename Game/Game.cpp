@@ -268,8 +268,8 @@ void Game::destroy()
     // Destroy view
     m_view.destroyView(m_renderer);
 
-    // Cleanup back renderer
-    m_backRenderer.cleanup(m_renderer);
+    // Destroy back renderer
+    m_backRenderer.destroyBackRenderer(m_renderer);
 }
 
 
