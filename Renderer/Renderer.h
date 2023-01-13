@@ -289,7 +289,7 @@
             BackRenderer        m_mainRenderer;         // Main renderer
             Sprite              m_mainSprite;           // Main sprite
 
-            Pipeline            m_pipelines[RENDERER_PIPELINE_PIPELINESCOUNT];
+            Pipeline*           m_pipelines;            // Pipelines
 
             View                m_view;                 // Default view
             Resources&          m_resources;            // Resources

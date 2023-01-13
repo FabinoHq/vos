@@ -490,7 +490,7 @@ void Game::render()
         m_backRenderer.setDefaultView(m_renderer);
 
         // Render sprite
-        m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
+        m_renderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
         m_renderer.bindDefaultVertexBuffer();
         m_sprite.bindTexture(m_renderer);
         m_sprite.render(m_renderer);
@@ -593,12 +593,12 @@ void Game::render()
     m_renderer.bindDefaultVertexBuffer();
 
     // Render back rendered frame
-    m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
+    m_renderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_backRenderer.bind(m_renderer);
     m_sprite.render(m_renderer);
 
     // Render sprite
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_sprite.bindTexture(m_renderer);
     m_sprite.render(m_renderer);*/
 
@@ -635,7 +635,7 @@ void Game::render()
     m_pxText.render(m_renderer);
 
     // Render cursor
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_SPRITE);
+    /*m_renderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_cursor.setPosition(m_mouseX, m_mouseY);
     m_cursor.bindTexture(m_renderer);
     m_cursor.render(m_renderer);*/

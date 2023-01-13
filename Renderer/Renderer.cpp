@@ -64,6 +64,7 @@ m_swapchain(),
 m_layout(),
 m_mainRenderer(),
 m_mainSprite(),
+m_pipelines(0),
 m_view(),
 m_resources(resources)
 {
@@ -331,6 +332,22 @@ bool Renderer::init(SysWindow* sysWindow)
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::initPipelines()
 {
+    // Check pipelines
+    if (m_pipelines)
+    {
+        // Pipelines already allocated
+        return false;
+    }
+
+    // Allocate pipelines
+    m_pipelines = new (std::nothrow) Pipeline[RENDERER_PIPELINE_PIPELINESCOUNT];
+    if (!m_pipelines)
+    {
+        // Could not allocate pipelines
+        return false;
+    }
+
+
     // Create compositing pipeline
     m_pipelines[RENDERER_PIPELINE_COMPOSITING].createVertexShader(
         *this, DefaultVertexShader, DefaultVertexShaderSize
@@ -347,13 +364,13 @@ bool Renderer::initPipelines()
 
 
     // Create sprite pipeline
-    m_pipelines[RENDERER_PIPELINE_SPRITE].createVertexShader(
+    m_pipelines[RENDERER_PIPELINE_DEFAULT].createVertexShader(
         *this, DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_SPRITE].createFragmentShader(
+    m_pipelines[RENDERER_PIPELINE_DEFAULT].createFragmentShader(
         *this, DefaultFragmentShader, DefaultFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_SPRITE].createPipeline(*this))
+    if (!m_pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(*this))
     {
         // Could not create sprite pipeline
         SysMessage::box() << "[0x3053] Could not create sprite pipeline\n";
@@ -867,10 +884,15 @@ void Renderer::destroyRenderer()
     m_view.destroyView(*this);
 
     // Destroy pipeplines
-    for (int i = 0; i < RENDERER_PIPELINE_PIPELINESCOUNT; ++i)
+    if (m_pipelines)
     {
-        m_pipelines[i].destroyPipeline(*this);
+        for (int i = 0; i < RENDERER_PIPELINE_PIPELINESCOUNT; ++i)
+        {
+            m_pipelines[i].destroyPipeline(*this);
+        }
+        delete[] m_pipelines;
     }
+    m_pipelines = 0;
 
     // Destroy main renderer
     m_mainRenderer.destroyBackRenderer(*this);
