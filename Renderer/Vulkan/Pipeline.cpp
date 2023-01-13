@@ -327,7 +327,8 @@ bool Pipeline::createCompositingPipeline(Renderer& renderer)
 //  return : True if pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
 bool Pipeline::createPipeline(Renderer& renderer,
-    VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling)
+    VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling,
+    bool colorAlpha)
 {
     // Check current pipeline
     if (m_pipeline)
@@ -402,13 +403,10 @@ bool Pipeline::createPipeline(Renderer& renderer,
     rasterizerInfo.depthClampEnable = VK_FALSE;
     rasterizerInfo.rasterizerDiscardEnable = VK_FALSE;
     rasterizerInfo.polygonMode = VK_POLYGON_MODE_FILL;
+    rasterizerInfo.cullMode = VK_CULL_MODE_NONE;
     if (backFaceCulling)
     {
         rasterizerInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-    }
-    else
-    {
-        rasterizerInfo.cullMode = VK_CULL_MODE_NONE;
     }
     rasterizerInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizerInfo.depthBiasEnable = VK_FALSE;
@@ -454,15 +452,12 @@ bool Pipeline::createPipeline(Renderer& renderer,
         VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     depthStencil.pNext = 0;
     depthStencil.flags = 0;
+    depthStencil.depthTestEnable = VK_FALSE;
+    depthStencil.depthWriteEnable = VK_FALSE;
     if (depthTest)
     {
         depthStencil.depthTestEnable = VK_TRUE;
         depthStencil.depthWriteEnable = VK_TRUE;
-    }
-    else
-    {
-        depthStencil.depthTestEnable = VK_FALSE;
-        depthStencil.depthWriteEnable = VK_FALSE;
     }
     depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
     depthStencil.depthBoundsTestEnable = VK_FALSE;
@@ -475,7 +470,11 @@ bool Pipeline::createPipeline(Renderer& renderer,
     // Blend
     VkPipelineColorBlendAttachmentState colorBlend;
     colorBlend.blendEnable = VK_TRUE;
-    colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    if (colorAlpha)
+    {
+        colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    }
     colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
     colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;

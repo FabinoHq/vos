@@ -430,7 +430,8 @@ bool Renderer::initPipelines()
     m_pipelines[RENDERER_PIPELINE_PXTEXT].createFragmentShader(
         *this, PxTextFragmentShader, PxTextFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(*this))
+    if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(
+        *this, VERTEX_INPUTS_DEFAULT, false, false, true))
     {
         // Could not create pixel text pipeline
         SysMessage::box() << "[0x3058] Could not create pixel text pipeline\n";
