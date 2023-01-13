@@ -144,6 +144,7 @@
         public:
             Backchain           m_backchain;    // Backchain
             View                m_view;         // Default view
+            uint32_t            m_current;      // Current frame
 
             VkSampler           m_samplers[RendererMaxSwapchainFrames];
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];

@@ -650,6 +650,7 @@ void Game::render()
     // Render main compositing quad
     m_renderer.setDefaultView();
     m_renderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
+    m_renderer.bindDefaultVertexBuffer();
     m_renderer.m_mainRenderer.bind(m_renderer);
     m_renderer.m_mainSprite.setSize(
         (m_renderer.m_swapchain.ratio*2.0f)+RendererCompositingQuadOffset,
@@ -660,7 +661,7 @@ void Game::render()
     m_renderer.m_mainSprite.render(m_renderer);
 
     // End final pass
-    m_renderer.endRenderPass();
+    m_renderer.endFinalPass();
 
 
     // End frame rendering

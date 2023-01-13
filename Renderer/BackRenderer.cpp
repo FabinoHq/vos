@@ -48,7 +48,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 BackRenderer::BackRenderer() :
 m_backchain(),
-m_view()
+m_view(),
+m_current(0)
 {
 
 }
@@ -281,6 +282,7 @@ void BackRenderer::endRenderPass(Renderer& renderer)
     vkCmdEndRenderPass(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current]
     );
+    m_current = renderer.m_swapchain.current;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -292,7 +294,7 @@ void BackRenderer::bind(Renderer& renderer)
     vkCmdBindDescriptorSets(
         renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
+        DESC_TEXTURE, 1, &m_descriptorSets[m_current], 0, 0
     );
 }
 
@@ -307,6 +309,9 @@ void BackRenderer::destroyBackRenderer(Renderer& renderer)
         // Invalid Vulkan device
         return;
     }
+
+    // Reset current frame
+    m_current = 0;
 
     // Destroy image samplers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
