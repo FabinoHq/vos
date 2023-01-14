@@ -356,7 +356,7 @@ bool Renderer::initPipelines()
         *this, DefaultFragmentShader, DefaultFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_COMPOSITING].createCompositingPipeline(
-        *this))
+        *this, ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create compositing pipeline
         return false;
@@ -370,7 +370,9 @@ bool Renderer::initPipelines()
     m_pipelines[RENDERER_PIPELINE_DEFAULT].createFragmentShader(
         *this, DefaultFragmentShader, DefaultFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(*this))
+    if (!m_pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(
+        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create sprite pipeline
         SysMessage::box() << "[0x3053] Could not create sprite pipeline\n";
@@ -385,7 +387,9 @@ bool Renderer::initPipelines()
     m_pipelines[RENDERER_PIPELINE_NINEPATCH].createFragmentShader(
         *this, NinePatchFragmentShader, NinePatchFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(*this))
+    if (!m_pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(
+        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create ninepatch pipeline
         SysMessage::box() << "[0x3054] Could not create ninepatch pipeline\n";
@@ -400,7 +404,9 @@ bool Renderer::initPipelines()
     m_pipelines[RENDERER_PIPELINE_RECTANGLE].createFragmentShader(
         *this, RectangleFragmentShader, RectangleFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(*this))
+    if (!m_pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(
+        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create rectangle pipeline
         SysMessage::box() << "[0x3055] Could not create rectangle pipeline\n";
@@ -415,7 +421,9 @@ bool Renderer::initPipelines()
     m_pipelines[RENDERER_PIPELINE_ELLISPE].createFragmentShader(
         *this, EllipseFragmentShader, EllipseFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(*this))
+    if (!m_pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(
+        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create ellipse pipeline
         SysMessage::box() << "[0x3056] Could not create ellipse pipeline\n";
@@ -431,7 +439,8 @@ bool Renderer::initPipelines()
         *this, PxTextFragmentShader, PxTextFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(
-        *this, VERTEX_INPUTS_DEFAULT, false, false, true))
+        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create pixel text pipeline
         SysMessage::box() << "[0x3058] Could not create pixel text pipeline\n";
@@ -448,7 +457,8 @@ bool Renderer::initPipelines()
         *this, SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SKYBOX].createPipeline(
-        *this, VERTEX_INPUTS_CUBEMAP, false, true))
+        *this, VERTEX_INPUTS_CUBEMAP, false, true,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create skybox pipeline
         SysMessage::box() << "[0x3059] Could not create skybox pipeline\n";
@@ -464,7 +474,8 @@ bool Renderer::initPipelines()
         *this, StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, VERTEX_INPUTS_STATICMESH, true, true,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create shape pipeline
         SysMessage::box() << "[0x3057] Could not create shape pipeline\n";
@@ -480,7 +491,8 @@ bool Renderer::initPipelines()
         *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_STATICMESH].createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, VERTEX_INPUTS_STATICMESH, true, true,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create static mesh pipeline
         SysMessage::box() << "[0x305A] Could not create static mesh pipeline\n";
@@ -496,7 +508,8 @@ bool Renderer::initPipelines()
         *this, HeightMapFragmentShader, HeightMapFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true))
+        *this, VERTEX_INPUTS_STATICMESH, true, true,
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create heightmap pipeline
         SysMessage::box() << "[0x305B] Could not create heightmap pipeline\n";

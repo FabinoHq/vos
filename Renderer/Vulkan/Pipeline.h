@@ -69,6 +69,17 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Alpha blending mode enumeration                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum AlphaBlendingMode
+    {
+        ALPHA_BLENDING_NONE = 0,
+        ALPHA_BLENDING_PREMULTIPLIED = 1,
+        ALPHA_BLENDING_STRAIGHT = 2
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Renderer pipeline enumeration                                         //
     ////////////////////////////////////////////////////////////////////////////
     enum RendererPipeline
@@ -126,7 +137,8 @@
             //  Create compositing pipeline                                   //
             //  return : True if compositing pipeline is successfully created //
             ////////////////////////////////////////////////////////////////////
-            bool createCompositingPipeline(Renderer& renderer);
+            bool createCompositingPipeline(Renderer& renderer,
+                AlphaBlendingMode blendingMode = ALPHA_BLENDING_NONE);
 
             ////////////////////////////////////////////////////////////////////
             //  Create pipeline                                               //
@@ -135,7 +147,7 @@
             bool createPipeline(Renderer& renderer,
                 VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
                 bool depthTest = false, bool backFaceCulling = false,
-                bool colorAlpha = true);
+                AlphaBlendingMode blendingMode = ALPHA_BLENDING_NONE);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer pipeline                                        //

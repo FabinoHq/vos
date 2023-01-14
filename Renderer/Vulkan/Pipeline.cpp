@@ -116,7 +116,8 @@ bool Pipeline::createFragmentShader(Renderer& renderer,
 //  Create compositing pipeline                                               //
 //  return : True if compositing pipeline is successfully created             //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createCompositingPipeline(Renderer& renderer)
+bool Pipeline::createCompositingPipeline(Renderer& renderer,
+    AlphaBlendingMode blendingMode)
 {
     // Check current pipeline
     if (m_pipeline)
@@ -248,16 +249,28 @@ bool Pipeline::createCompositingPipeline(Renderer& renderer)
 
     // Blend
     VkPipelineColorBlendAttachmentState colorBlend;
-    colorBlend.blendEnable = VK_TRUE;
-    colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-    colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlend.blendEnable = VK_FALSE;
+    colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
     colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
     colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
     colorBlend.alphaBlendOp = VK_BLEND_OP_ADD;
     colorBlend.colorWriteMask =
         (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
         VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
+    if (blendingMode != ALPHA_BLENDING_NONE)
+    {
+        colorBlend.blendEnable = VK_TRUE;
+        colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+        if (blendingMode == ALPHA_BLENDING_STRAIGHT)
+        {
+            colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+        }
+        colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+        colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    }
 
     VkPipelineColorBlendStateCreateInfo blendState;
     blendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -328,7 +341,7 @@ bool Pipeline::createCompositingPipeline(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pipeline::createPipeline(Renderer& renderer,
     VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling,
-    bool colorAlpha)
+    AlphaBlendingMode blendingMode)
 {
     // Check current pipeline
     if (m_pipeline)
@@ -469,20 +482,28 @@ bool Pipeline::createPipeline(Renderer& renderer,
 
     // Blend
     VkPipelineColorBlendAttachmentState colorBlend;
-    colorBlend.blendEnable = VK_TRUE;
+    colorBlend.blendEnable = VK_FALSE;
     colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
-    if (colorAlpha)
-    {
-        colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-    }
-    colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
     colorBlend.colorBlendOp = VK_BLEND_OP_ADD;
     colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
     colorBlend.alphaBlendOp = VK_BLEND_OP_ADD;
     colorBlend.colorWriteMask =
         (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
         VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
+    if (blendingMode != ALPHA_BLENDING_NONE)
+    {
+        colorBlend.blendEnable = VK_TRUE;
+        colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+        if (blendingMode == ALPHA_BLENDING_STRAIGHT)
+        {
+            colorBlend.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+        }
+        colorBlend.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        colorBlend.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+        colorBlend.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    }
 
     VkPipelineColorBlendStateCreateInfo blendState;
     blendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
