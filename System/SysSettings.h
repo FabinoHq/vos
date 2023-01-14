@@ -37,66 +37,72 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/SysClock.h : System Clock management                            //
+//     System/SysSettings.h : System Settings management                      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SYSTEM_SYSCLOCK_HEADER
-#define VOS_SYSTEM_SYSCLOCK_HEADER
+#ifndef VOS_SYSTEM_SYSSETTINGS_HEADER
+#define VOS_SYSTEM_SYSSETTINGS_HEADER
 
     #include "System.h"
 
-    #include <chrono>
-
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SysClock class definition                                             //
+    //  Anisotropic filtering mode enumeration                                //
     ////////////////////////////////////////////////////////////////////////////
-    class SysClock
+    enum AnisotropicFilteringMode
     {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  SysClock default constructor                                  //
-            ////////////////////////////////////////////////////////////////////
-            SysClock();
-
-            ////////////////////////////////////////////////////////////////////
-            //  SysClock destructor                                           //
-            ////////////////////////////////////////////////////////////////////
-            ~SysClock();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Reset the clock                                               //
-            ////////////////////////////////////////////////////////////////////
-            void reset();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get elapsed time since last reset in seconds                  //
-            ////////////////////////////////////////////////////////////////////
-            double getElapsedTime();
-            float getElapsedTimeF();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get elapsed time in seconds and reset the clock               //
-            ////////////////////////////////////////////////////////////////////
-            double getAndReset();
-            float getAndResetF();
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  SysClock private copy constructor : Not copyable              //
-            ////////////////////////////////////////////////////////////////////
-            SysClock(const SysClock&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  SysClock private copy operator : Not copyable                 //
-            ////////////////////////////////////////////////////////////////////
-            SysClock& operator=(const SysClock&) = delete;
-
-
-        private:
-            std::chrono::time_point<std::chrono::steady_clock>  m_start;
+        ANISOTROPIC_FILTERING_NONE = 0,
+        ANISOTROPIC_FILTERING_2X = 1,
+        ANISOTROPIC_FILTERING_4X = 2,
+        ANISOTROPIC_FILTERING_8X = 3,
+        ANISOTROPIC_FILTERING_16X = 4
     };
 
 
-#endif // VOS_SYSTEM_SYSCLOCK_HEADER
+    ////////////////////////////////////////////////////////////////////////////
+    //  Multisampling mode enumeration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    enum MultiSamplingMode
+    {
+        MULTI_SAMPLING_NONE = 0,
+        MULTI_SAMPLING_2X = 1,
+        MULTI_SAMPLING_4X = 2,
+        MULTI_SAMPLING_8X = 3
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysSettings class definition                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    class SysSettings
+    {
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  SysSettings default constructor                               //
+            ////////////////////////////////////////////////////////////////////
+            SysSettings();
+
+            ////////////////////////////////////////////////////////////////////
+            //  SysSettings destructor                                        //
+            ////////////////////////////////////////////////////////////////////
+            ~SysSettings();
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  SysSettings private copy constructor : Not copyable           //
+            ////////////////////////////////////////////////////////////////////
+            SysSettings(const SysSettings&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  SysSettings private copy operator : Not copyable              //
+            ////////////////////////////////////////////////////////////////////
+            SysSettings& operator=(const SysSettings&) = delete;
+
+
+        private:
+            AnisotropicFilteringMode    m_anisotropicFiltering;
+            MultiSamplingMode           m_multiSampling;
+    };
+
+
+#endif // VOS_SYSTEM_SYSSETTINGS_HEADER

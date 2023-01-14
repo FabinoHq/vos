@@ -253,6 +253,7 @@
     <ClCompile Include="Resources\TextureLoader.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysCPU.cpp" />
+    <ClCompile Include="System\SysSettings.cpp" />
     <ClCompile Include="System\SysSleep.cpp" />
     <ClCompile Include="System\SysThread.cpp" />
     <ClCompile Include="System\Win\SysDisplayMode.cpp" />
@@ -346,6 +347,7 @@
     <ClInclude Include="System\SysMessage.h" />
     <ClInclude Include="System\SysMutex.h" />
     <ClInclude Include="System\SysMutexLocker.h" />
+    <ClInclude Include="System\SysSettings.h" />
     <ClInclude Include="System\SysSleep.h" />
     <ClInclude Include="System\System.h" />
     <ClInclude Include="System\SysThread.h" />

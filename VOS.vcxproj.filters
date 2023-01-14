@@ -221,6 +221,9 @@
     <ClCompile Include="Renderer\GUI\GUICursor.cpp">
       <Filter>Renderer\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="System\SysSettings.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -505,6 +508,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\GUI\GUICursor.h">
       <Filter>Renderer\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysSettings.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

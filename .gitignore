@@ -44,6 +44,8 @@
 !System/SysVulkan.h
 !System/SysClock.h
 !System/SysClock.cpp
+!System/SysSettings.h
+!System/SysSettings.cpp
 !System/Lin/SysMessage.h
 !System/Lin/SysMessage.cpp
 !System/Lin/SysCPU.h
