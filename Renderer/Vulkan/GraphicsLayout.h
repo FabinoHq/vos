@@ -128,24 +128,24 @@
             //  Create graphics pipeline layout                               //
             //  return : True if graphics layout is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool createLayout(VkDevice& vulkanDevice);
+            bool createLayout();
 
             ////////////////////////////////////////////////////////////////////
             //  Create descriptor set layouts                                 //
             //  return : True if descriptor layout is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool createDescriptorSetLayouts(VkDevice& vulkanDevice);
+            bool createDescriptorSetLayouts();
 
             ////////////////////////////////////////////////////////////////////
             //  Create pipeline layouts                                       //
             //  return : True if pipeline layout is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool createPipelineLayouts(VkDevice& vulkanDevice);
+            bool createPipelineLayouts();
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy pipeline layout                                       //
             ////////////////////////////////////////////////////////////////////
-            void destroyLayout(VkDevice& vulkanDevice);
+            void destroyLayout();
 
 
         private:

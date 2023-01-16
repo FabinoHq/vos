@@ -96,7 +96,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     if (m_handle)
     {
         // Destroy current texture array
-        destroyTextureArray(renderer);
+        destroyTextureArray();
     }
 
     // Check texture array size
@@ -138,8 +138,8 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     imageInfo.pQueueFamilyIndices = 0;
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    if (vkCreateImage(
-        renderer.m_vulkanDevice, &imageInfo, 0, &m_handle) != VK_SUCCESS)
+    if (vkCreateImage(GVulkanDevice,
+        &imageInfo, 0, &m_handle) != VK_SUCCESS)
     {
         // Could not create image
         return false;
@@ -151,8 +151,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     }
 
     // Allocate texture array memory
-    if (!renderer.m_vulkanMemory.allocateTextureArrayMemory(
-        renderer.m_vulkanDevice, *this, memoryPool))
+    if (!renderer.m_vulkanMemory.allocateTextureArrayMemory(*this, memoryPool))
     {
         // Could not allocate texture array memory
         return false;
@@ -202,8 +201,8 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-    if (vkCreateSampler(
-        renderer.m_vulkanDevice, &samplerInfo, 0, &m_sampler) != VK_SUCCESS)
+    if (vkCreateSampler(GVulkanDevice,
+        &samplerInfo, 0, &m_sampler) != VK_SUCCESS)
     {
         // Could not create image sampler
         return false;
@@ -232,8 +231,8 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = layers;
 
-    if (vkCreateImageView(
-        renderer.m_vulkanDevice, &viewInfo, 0, &m_view) != VK_SUCCESS)
+    if (vkCreateImageView(GVulkanDevice,
+        &viewInfo, 0, &m_view) != VK_SUCCESS)
     {
         // Could not create image view
         return false;
@@ -254,7 +253,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
-    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
+    if (vkAllocateDescriptorSets(GVulkanDevice,
         &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
         // Could not allocate texture array descriptor sets
@@ -283,9 +282,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
         descriptorWrites.pBufferInfo = 0;
         descriptorWrites.pTexelBufferView = 0;
 
-        vkUpdateDescriptorSets(
-            renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
-        );
+        vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
     // Set texture array size
@@ -334,7 +331,7 @@ bool TextureArray::updateTextureArray(Renderer& renderer, TextureLoader& loader,
         (width != m_width) || (height != m_height) || (layers != m_layers))
     {
         // Recreate texture array
-        destroyTextureArray(renderer);
+        destroyTextureArray();
         createTextureArray(
             renderer, memoryPool, width, height, layers,
             mipLevels, smooth, repeat
@@ -369,10 +366,10 @@ void TextureArray::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy texture array                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void TextureArray::destroyTextureArray(Renderer& renderer)
+void TextureArray::destroyTextureArray()
 {
     // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return;
@@ -387,21 +384,21 @@ void TextureArray::destroyTextureArray(Renderer& renderer)
     // Destroy image view
     if (m_view)
     {
-        vkDestroyImageView(renderer.m_vulkanDevice, m_view, 0);
+        vkDestroyImageView(GVulkanDevice, m_view, 0);
     }
     m_view = 0;
 
     // Destroy image sampler
     if (m_sampler)
     {
-        vkDestroySampler(renderer.m_vulkanDevice, m_sampler, 0);
+        vkDestroySampler(GVulkanDevice, m_sampler, 0);
     }
     m_sampler = 0;
 
     // Destroy image
     if (m_handle)
     {
-        vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
+        vkDestroyImage(GVulkanDevice, m_handle, 0);
     }
     m_handle = 0;
 
@@ -425,22 +422,22 @@ bool TextureArray::isValid()
 ////////////////////////////////////////////////////////////////////////////////
 //  Get texture array memory requirements                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void TextureArray::getMemoryRequirements(VkDevice& vulkanDevice,
+void TextureArray::getMemoryRequirements(
     VkMemoryRequirements* memoryRequirements)
 {
-    vkGetImageMemoryRequirements(vulkanDevice, m_handle, memoryRequirements);
+    vkGetImageMemoryRequirements(GVulkanDevice, m_handle, memoryRequirements);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind texture array memory                                                 //
 //  return : True if texture array memory is successfully binded              //
 ////////////////////////////////////////////////////////////////////////////////
-bool TextureArray::bindTextureArrayMemory(VkDevice& vulkanDevice,
-    VkDeviceMemory& deviceMemory, VkDeviceSize size, VkDeviceSize offset)
+bool TextureArray::bindTextureArrayMemory(VkDeviceMemory& deviceMemory,
+    VkDeviceSize size, VkDeviceSize offset)
 {
     // Bind texture array memory
-    if (vkBindImageMemory(
-        vulkanDevice, m_handle, deviceMemory, offset) != VK_SUCCESS)
+    if (vkBindImageMemory(GVulkanDevice,
+        m_handle, deviceMemory, offset) != VK_SUCCESS)
     {
         // Could not bind texture array memory
         return false;

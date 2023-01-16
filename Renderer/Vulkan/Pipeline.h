@@ -122,14 +122,14 @@
             //  Create vertex shader                                          //
             //  return : True if the vertex shader is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool createVertexShader(Renderer& renderer,
+            bool createVertexShader(
                 const uint32_t* vertexSource, const size_t vertexSize);
 
             ////////////////////////////////////////////////////////////////////
             //  Create fragment shader                                        //
             //  return : True if the fragment shader is successfully created  //
             ////////////////////////////////////////////////////////////////////
-            bool createFragmentShader(Renderer& renderer,
+            bool createFragmentShader(
                 const uint32_t* fragmentSource, const size_t fragmentSize);
 
 
@@ -157,7 +157,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Destroy pipeline                                              //
             ////////////////////////////////////////////////////////////////////
-            void destroyPipeline(Renderer& renderer);
+            void destroyPipeline();
 
 
             ////////////////////////////////////////////////////////////////////

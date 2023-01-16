@@ -76,13 +76,12 @@
             //  Create Shader                                                 //
             //  return : True if Shader is successfully created               //
             ////////////////////////////////////////////////////////////////////
-            bool createShader(Renderer& renderer,
-                const uint32_t* source, const size_t size);
+            bool createShader(const uint32_t* source, const size_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Shader                                                //
             ////////////////////////////////////////////////////////////////////
-            void destroyShader(Renderer& renderer);
+            void destroyShader();
 
 
             ////////////////////////////////////////////////////////////////////

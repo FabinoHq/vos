@@ -79,19 +79,18 @@
             //  Create swapchain                                              //
             //  return : True if swapchain is successfully created            //
             ////////////////////////////////////////////////////////////////////
-            bool createSwapchain(VkDevice& vulkanDevice,
-                uint32_t surfaceQueueFamily);
+            bool createSwapchain(uint32_t surfaceQueueFamily);
 
             ////////////////////////////////////////////////////////////////////
             //  Resize swapchain                                              //
             //  return : True if swapchain is successfully resized            //
             ////////////////////////////////////////////////////////////////////
-            bool resizeSwapchain(VkDevice& vulkanDevice);
+            bool resizeSwapchain();
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy swapchain                                             //
             ////////////////////////////////////////////////////////////////////
-            void destroySwapchain(VkDevice& vulkanDevice);
+            void destroySwapchain();
 
 
         private:

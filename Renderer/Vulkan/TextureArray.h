@@ -110,7 +110,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Destroy texture array                                         //
             ////////////////////////////////////////////////////////////////////
-            void destroyTextureArray(Renderer& renderer);
+            void destroyTextureArray();
 
 
             ////////////////////////////////////////////////////////////////////
@@ -122,16 +122,15 @@
             ////////////////////////////////////////////////////////////////////
             //  Get texture array memory requirements                         //
             ////////////////////////////////////////////////////////////////////
-            void getMemoryRequirements(VkDevice& vulkanDevice,
+            void getMemoryRequirements(
                 VkMemoryRequirements* memoryRequirements);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture array memory                                     //
             //  return : True if texture array memory is successfully binded  //
             ////////////////////////////////////////////////////////////////////
-            bool bindTextureArrayMemory(VkDevice& vulkanDevice,
-                VkDeviceMemory& deviceMemory, VkDeviceSize size,
-                VkDeviceSize offset);
+            bool bindTextureArrayMemory(VkDeviceMemory& deviceMemory,
+                VkDeviceSize size, VkDeviceSize offset);
 
 
         private:

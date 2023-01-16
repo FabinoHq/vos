@@ -70,7 +70,7 @@ VulkanBuffer::~VulkanBuffer()
 //  Create Vulkan buffer                                                      //
 //  return : True if Vulkan buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanBuffer::createBuffer(VkDevice& vulkanDevice,
+bool VulkanBuffer::createBuffer(
     VulkanMemory& vulkanMemory, VkBufferUsageFlags usage,
     VulkanMemoryPool memoryPool, uint32_t bufferSize)
 {
@@ -78,7 +78,7 @@ bool VulkanBuffer::createBuffer(VkDevice& vulkanDevice,
     if (handle)
     {
         // Destroy Vulkan Buffer
-        destroyBuffer(vulkanDevice);
+        destroyBuffer();
     }
 
     // Check buffer size
@@ -99,7 +99,7 @@ bool VulkanBuffer::createBuffer(VkDevice& vulkanDevice,
     bufferInfo.queueFamilyIndexCount = 0;
     bufferInfo.pQueueFamilyIndices = 0;
 
-    if (vkCreateBuffer(vulkanDevice, &bufferInfo, 0, &handle) != VK_SUCCESS)
+    if (vkCreateBuffer(GVulkanDevice, &bufferInfo, 0, &handle) != VK_SUCCESS)
     {
         // Could not create buffer
         return false;
@@ -114,7 +114,7 @@ bool VulkanBuffer::createBuffer(VkDevice& vulkanDevice,
     size = bufferSize;
 
     // Allocate buffer memory
-    if (!vulkanMemory.allocateBufferMemory(vulkanDevice, *this, memoryPool))
+    if (!vulkanMemory.allocateBufferMemory(*this, memoryPool))
     {
         // Could not allocate buffer memory
         return false;
@@ -127,10 +127,10 @@ bool VulkanBuffer::createBuffer(VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vulkan buffer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice)
+void VulkanBuffer::destroyBuffer()
 {
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return;
@@ -139,7 +139,7 @@ void VulkanBuffer::destroyBuffer(VkDevice& vulkanDevice)
     // Destroy buffer
     if (handle)
     {
-        vkDestroyBuffer(vulkanDevice, handle, 0);
+        vkDestroyBuffer(GVulkanDevice, handle, 0);
     }
     handle = 0;
 

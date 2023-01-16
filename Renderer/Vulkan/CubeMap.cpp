@@ -101,7 +101,7 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
     if (m_handle)
     {
         // Destroy current cubemap
-        destroyCubeMap(renderer);
+        destroyCubeMap();
     }
 
     // Create image
@@ -125,8 +125,8 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
     imageInfo.pQueueFamilyIndices = 0;
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    if (vkCreateImage(
-        renderer.m_vulkanDevice, &imageInfo, 0, &m_handle) != VK_SUCCESS)
+    if (vkCreateImage(GVulkanDevice,
+        &imageInfo, 0, &m_handle) != VK_SUCCESS)
     {
         // Could not create image
         return false;
@@ -138,8 +138,7 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
     }
 
     // Allocate cubemap memory
-    if (!renderer.m_vulkanMemory.allocateCubeMapMemory(
-        renderer.m_vulkanDevice, *this, memoryPool))
+    if (!renderer.m_vulkanMemory.allocateCubeMapMemory(*this, memoryPool))
     {
         // Could not allocate cubemap memory
         return false;
@@ -171,8 +170,8 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
     samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-    if (vkCreateSampler(
-        renderer.m_vulkanDevice, &samplerInfo, 0, &m_sampler) != VK_SUCCESS)
+    if (vkCreateSampler(GVulkanDevice,
+        &samplerInfo, 0, &m_sampler) != VK_SUCCESS)
     {
         // Could not create image sampler
         return false;
@@ -201,8 +200,8 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 6;
 
-    if (vkCreateImageView(
-        renderer.m_vulkanDevice, &viewInfo, 0, &m_view) != VK_SUCCESS)
+    if (vkCreateImageView(GVulkanDevice,
+        &viewInfo, 0, &m_view) != VK_SUCCESS)
     {
         // Could not create image view
         return false;
@@ -223,7 +222,7 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
-    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
+    if (vkAllocateDescriptorSets(GVulkanDevice,
         &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
         // Could not allocate cubemap descriptor sets
@@ -252,9 +251,7 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
         descriptorWrites.pBufferInfo = 0;
         descriptorWrites.pTexelBufferView = 0;
 
-        vkUpdateDescriptorSets(
-            renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
-        );
+        vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
     // Set cubemap size
@@ -293,7 +290,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
     if (!m_handle || (width != m_width) || (height != m_height))
     {
         // Recreate cubemap
-        destroyCubeMap(renderer);
+        destroyCubeMap();
         createCubeMap(renderer, memoryPool, width, height, smooth);
     }
 
@@ -324,10 +321,10 @@ void CubeMap::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy cubemap                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-void CubeMap::destroyCubeMap(Renderer& renderer)
+void CubeMap::destroyCubeMap()
 {
     // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return;
@@ -336,21 +333,21 @@ void CubeMap::destroyCubeMap(Renderer& renderer)
     // Destroy image view
     if (m_view)
     {
-        vkDestroyImageView(renderer.m_vulkanDevice, m_view, 0);
+        vkDestroyImageView(GVulkanDevice, m_view, 0);
     }
     m_view = 0;
 
     // Destroy image sampler
     if (m_sampler)
     {
-        vkDestroySampler(renderer.m_vulkanDevice, m_sampler, 0);
+        vkDestroySampler(GVulkanDevice, m_sampler, 0);
     }
     m_sampler = 0;
 
     // Destroy image
     if (m_handle)
     {
-        vkDestroyImage(renderer.m_vulkanDevice, m_handle, 0);
+        vkDestroyImage(GVulkanDevice, m_handle, 0);
     }
     m_handle = 0;
 
@@ -379,22 +376,21 @@ bool CubeMap::isValid()
 ////////////////////////////////////////////////////////////////////////////////
 //  Get cubemap memory requirements                                           //
 ////////////////////////////////////////////////////////////////////////////////
-void CubeMap::getMemoryRequirements(VkDevice& vulkanDevice,
-    VkMemoryRequirements* memoryRequirements)
+void CubeMap::getMemoryRequirements(VkMemoryRequirements* memoryRequirements)
 {
-    vkGetImageMemoryRequirements(vulkanDevice, m_handle, memoryRequirements);
+    vkGetImageMemoryRequirements(GVulkanDevice, m_handle, memoryRequirements);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind cubemap memory                                                       //
 //  return : True if cubemap memory is successfully binded                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::bindCubeMapMemory(VkDevice& vulkanDevice,
-    VkDeviceMemory& deviceMemory, VkDeviceSize size, VkDeviceSize offset)
+bool CubeMap::bindCubeMapMemory(VkDeviceMemory& deviceMemory,
+    VkDeviceSize size, VkDeviceSize offset)
 {
     // Bind cubemap memory
-    if (vkBindImageMemory(
-        vulkanDevice, m_handle, deviceMemory, offset) != VK_SUCCESS)
+    if (vkBindImageMemory(GVulkanDevice,
+        m_handle, deviceMemory, offset) != VK_SUCCESS)
     {
         // Could not bind cubemap memory
         return false;

@@ -68,11 +68,10 @@ VulkanQueue::~VulkanQueue()
 //  Create graphics queue                                                     //
 //  return : True if the graphics queue is successfully created               //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createGraphicsQueue(VkDevice& vulkanDevice,
-    VulkanDeviceQueues& vulkanQueues)
+bool VulkanQueue::createGraphicsQueue(VulkanDeviceQueues& vulkanQueues)
 {
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         SysMessage::box() << "[0x301F] Invalid Vulkan device\n";
@@ -92,7 +91,7 @@ bool VulkanQueue::createGraphicsQueue(VkDevice& vulkanDevice,
     }
 
     // Get queue handle
-    vkGetDeviceQueue(vulkanDevice, family, index, &handle);
+    vkGetDeviceQueue(GVulkanDevice, family, index, &handle);
     if (!handle)
     {
         // Invalid queue handle
@@ -120,11 +119,10 @@ bool VulkanQueue::createGraphicsQueue(VkDevice& vulkanDevice,
 //  Create surface queue                                                      //
 //  return : True if the surface queue is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createSurfaceQueue(VkDevice& vulkanDevice,
-    VulkanDeviceQueues& vulkanQueues)
+bool VulkanQueue::createSurfaceQueue(VulkanDeviceQueues& vulkanQueues)
 {
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         SysMessage::box() << "[0x3022] Invalid Vulkan device\n";
@@ -144,7 +142,7 @@ bool VulkanQueue::createSurfaceQueue(VkDevice& vulkanDevice,
     }
 
     // Get queue handle
-    vkGetDeviceQueue(vulkanDevice, family, index, &handle);
+    vkGetDeviceQueue(GVulkanDevice, family, index, &handle);
     if (!handle)
     {
         // Invalid queue handle
@@ -172,11 +170,10 @@ bool VulkanQueue::createSurfaceQueue(VkDevice& vulkanDevice,
 //  Create transfer queue                                                     //
 //  return : True if the transfer queue is successfully created               //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createTransferQueue(VkDevice& vulkanDevice,
-    VulkanDeviceQueues& vulkanQueues)
+bool VulkanQueue::createTransferQueue(VulkanDeviceQueues& vulkanQueues)
 {
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         SysMessage::box() << "[0x3025] Invalid Vulkan device\n";
@@ -196,7 +193,7 @@ bool VulkanQueue::createTransferQueue(VkDevice& vulkanDevice,
     }
 
     // Get queue handle
-    vkGetDeviceQueue(vulkanDevice, family, index, &handle);
+    vkGetDeviceQueue(GVulkanDevice, family, index, &handle);
     if (!handle)
     {
         // Invalid queue handle

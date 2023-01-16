@@ -182,8 +182,7 @@ void TextureLoader::process()
 bool TextureLoader::init()
 {
     // Request graphics queue handle
-    if (!m_graphicsQueue.createGraphicsQueue(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanQueues))
+    if (!m_graphicsQueue.createGraphicsQueue(m_renderer.m_vulkanQueues))
     {
         // Could not get graphics queue handle
         return false;
@@ -196,7 +195,7 @@ bool TextureLoader::init()
     commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = m_graphicsQueue.family;
 
-    if (vkCreateCommandPool(m_renderer.m_vulkanDevice,
+    if (vkCreateCommandPool(GVulkanDevice,
         &commandPoolInfo, 0, &m_commandPool) != VK_SUCCESS)
     {
         // Could not create commands pool
@@ -216,7 +215,7 @@ bool TextureLoader::init()
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
-    if (vkAllocateCommandBuffers(m_renderer.m_vulkanDevice,
+    if (vkAllocateCommandBuffers(GVulkanDevice,
         &bufferAllocate, &m_commandBuffer) != VK_SUCCESS)
     {
         // Could not allocate command buffer
@@ -234,8 +233,7 @@ bool TextureLoader::init()
     fenceInfo.pNext = 0;
     fenceInfo.flags = 0;
 
-    if (vkCreateFence(
-        m_renderer.m_vulkanDevice, &fenceInfo, 0, &m_fence) != VK_SUCCESS)
+    if (vkCreateFence(GVulkanDevice, &fenceInfo, 0, &m_fence) != VK_SUCCESS)
     {
         // Could not create staging fence
         return false;
@@ -345,7 +343,7 @@ void TextureLoader::destroyTextureLoader()
     // Destroy cubemaps textures
     for (int i = 0; i < TEXTURE_CUBEMAPCOUNT; ++i)
     {
-        m_cubemaps[i].destroyCubeMap(m_renderer);
+        m_cubemaps[i].destroyCubeMap();
     }
     if (m_cubemaps) { delete[] m_cubemaps; }
     m_cubemaps = 0;
@@ -353,7 +351,7 @@ void TextureLoader::destroyTextureLoader()
     // Destroy textures arrays
     for (int i = 0; i < TEXTURE_ARRAYSCOUNT; ++i)
     {
-        m_texturesArrays[i].destroyTextureArray(m_renderer);
+        m_texturesArrays[i].destroyTextureArray();
     }
     if (m_texturesArrays) { delete[] m_texturesArrays; }
     m_texturesArrays = 0;
@@ -361,7 +359,7 @@ void TextureLoader::destroyTextureLoader()
     // Destroy high textures
     for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
     {
-        m_texturesHigh[i].destroyTexture(m_renderer);
+        m_texturesHigh[i].destroyTexture();
     }
     if (m_texturesHigh) { delete[] m_texturesHigh; }
     m_texturesHigh = 0;
@@ -369,7 +367,7 @@ void TextureLoader::destroyTextureLoader()
     // Destroy GUI textures
     for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
     {
-        m_texturesGUI[i].destroyTexture(m_renderer);
+        m_texturesGUI[i].destroyTexture();
     }
     if (m_texturesGUI) { delete[] m_texturesGUI; }
     m_texturesGUI = 0;
@@ -377,26 +375,24 @@ void TextureLoader::destroyTextureLoader()
     // Destroy staging fence
     if (m_fence)
     {
-        vkDestroyFence(m_renderer.m_vulkanDevice, m_fence, 0);
+        vkDestroyFence(GVulkanDevice, m_fence, 0);
     }
     m_fence = 0;
 
     // Destroy staging buffer
-    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+    m_stagingBuffer.destroyBuffer();
 
     // Destroy command buffer
     if (m_commandBuffer)
     {
-        vkFreeCommandBuffers(m_renderer.m_vulkanDevice,
-            m_commandPool, 1, &m_commandBuffer
-        );
+        vkFreeCommandBuffers(GVulkanDevice, m_commandPool, 1, &m_commandBuffer);
     }
     m_commandBuffer = 0;
 
     // Destroy command pool
     if (m_commandPool)
     {
-        vkDestroyCommandPool(m_renderer.m_vulkanDevice, m_commandPool, 0);
+        vkDestroyCommandPool(GVulkanDevice, m_commandPool, 0);
     }
     m_commandPool = 0;
 }
@@ -416,8 +412,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     // Create staging buffer
     uint32_t textureSize = (width*height*4);
     if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
@@ -425,7 +420,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     }
 
     // Write texture into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(m_renderer.m_vulkanDevice,
+    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
         m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
         // Could not write texture into staging buffer memory
@@ -434,8 +429,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
 
 
     // Reset command pool
-    if (vkResetCommandPool(
-        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    if (vkResetCommandPool(GVulkanDevice, m_commandPool, 0) != VK_SUCCESS)
     {
         // Could not reset command pool
         return false;
@@ -533,8 +527,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     }
 
     // Reset staging fence
-    if (vkResetFences(
-        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    if (vkResetFences(GVulkanDevice, 1, &m_fence) != VK_SUCCESS)
     {
         // Could not reset staging fence
         return false;
@@ -560,7 +553,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
@@ -568,7 +561,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     }
 
     // Destroy staging buffer
-    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+    m_stagingBuffer.destroyBuffer();
 
     // Generate texture mipmaps
     if (!generateTextureMipmaps(handle, width, height, mipLevels))
@@ -596,8 +589,7 @@ bool TextureLoader::generateTextureMipmaps(VkImage& handle,
     }
 
     // Reset command pool
-    if (vkResetCommandPool(
-        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    if (vkResetCommandPool(GVulkanDevice, m_commandPool, 0) != VK_SUCCESS)
     {
         // Could not reset command pool
         return false;
@@ -747,8 +739,7 @@ bool TextureLoader::generateTextureMipmaps(VkImage& handle,
     }
 
     // Reset staging fence
-    if (vkResetFences(
-        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    if (vkResetFences(GVulkanDevice, 1, &m_fence) != VK_SUCCESS)
     {
         // Could not reset staging fence
         return false;
@@ -774,7 +765,7 @@ bool TextureLoader::generateTextureMipmaps(VkImage& handle,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
@@ -799,8 +790,7 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
     // Create staging buffer
     uint32_t textureSize = (width*height*layers*4);
     if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
@@ -808,7 +798,7 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
     }
 
     // Write data into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(m_renderer.m_vulkanDevice,
+    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
         m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
         // Could not write data into staging buffer memory
@@ -817,8 +807,7 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
 
 
     // Reset command pool
-    if (vkResetCommandPool(
-        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    if (vkResetCommandPool(GVulkanDevice, m_commandPool, 0) != VK_SUCCESS)
     {
         // Could not reset command pool
         return false;
@@ -919,8 +908,7 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
     }
 
     // Reset staging fence
-    if (vkResetFences(
-        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    if (vkResetFences(GVulkanDevice, 1, &m_fence) != VK_SUCCESS)
     {
         // Could not reset staging fence
         return false;
@@ -946,7 +934,7 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
@@ -954,7 +942,7 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
     }
 
     // Destroy staging buffer
-    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+    m_stagingBuffer.destroyBuffer();
 
     // Generate texture array mipmaps
     if (!generateTextureArrayMipmaps(handle, width, height, layers, mipLevels))
@@ -982,8 +970,7 @@ bool TextureLoader::generateTextureArrayMipmaps(VkImage& handle,
     }
 
     // Reset command pool
-    if (vkResetCommandPool(
-        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    if (vkResetCommandPool(GVulkanDevice, m_commandPool, 0) != VK_SUCCESS)
     {
         // Could not reset command pool
         return false;
@@ -1138,8 +1125,7 @@ bool TextureLoader::generateTextureArrayMipmaps(VkImage& handle,
     }
 
     // Reset staging fence
-    if (vkResetFences(
-        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    if (vkResetFences(GVulkanDevice, 1, &m_fence) != VK_SUCCESS)
     {
         // Could not reset staging fence
         return false;
@@ -1165,7 +1151,7 @@ bool TextureLoader::generateTextureArrayMipmaps(VkImage& handle,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
@@ -1189,8 +1175,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     // Create staging buffer
     uint32_t textureSize = (width*height*6*4);
     if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
@@ -1198,7 +1183,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     }
 
     // Write data into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(m_renderer.m_vulkanDevice,
+    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
         m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
         // Could not write data into staging buffer memory
@@ -1207,8 +1192,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
 
 
     // Reset command pool
-    if (vkResetCommandPool(
-        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    if (vkResetCommandPool(GVulkanDevice, m_commandPool, 0) != VK_SUCCESS)
     {
         // Could not reset command pool
         return false;
@@ -1306,8 +1290,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     }
 
     // Reset staging fence
-    if (vkResetFences(
-        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    if (vkResetFences(GVulkanDevice, 1, &m_fence) != VK_SUCCESS)
     {
         // Could not reset staging fence
         return false;
@@ -1333,7 +1316,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &m_fence, VK_FALSE, TextureFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
@@ -1341,7 +1324,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     }
 
     // Destroy staging buffer
-    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+    m_stagingBuffer.destroyBuffer();
 
     // CubeMap successfully uploaded
     return true;

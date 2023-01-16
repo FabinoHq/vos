@@ -154,7 +154,7 @@
             //  Init Vulkan memory                                            //
             //  return : True if Vulkan memory is ready                       //
             ////////////////////////////////////////////////////////////////////
-            bool init(VkDevice& vulkanDevice);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
             //  Reset Vulkan memory pool                                      //
@@ -167,14 +167,14 @@
             ////////////////////////////////////////////////////////////////////
             //  Destroy Vulkan memory                                         //
             ////////////////////////////////////////////////////////////////////
-            void destroyVulkanMemory(VkDevice& vulkanDevice);
+            void destroyVulkanMemory();
 
 
             ////////////////////////////////////////////////////////////////////
             //  Allocate swapchain image memory                               //
             //  return : True if swapchain image is successfully allocated    //
             ////////////////////////////////////////////////////////////////////
-            bool allocateSwapchainImage(VkDevice& vulkanDevice, VkImage& image,
+            bool allocateSwapchainImage(VkImage& image,
                 VulkanMemoryPool memoryPool);
 
 
@@ -182,14 +182,14 @@
             //  Allocate buffer memory                                        //
             //  return : True if buffer memory is successfully allocated      //
             ////////////////////////////////////////////////////////////////////
-            bool allocateBufferMemory(VkDevice& vulkanDevice,
-                VulkanBuffer& buffer, VulkanMemoryPool memoryPool);
+            bool allocateBufferMemory(VulkanBuffer& buffer,
+                VulkanMemoryPool memoryPool);
 
             ////////////////////////////////////////////////////////////////////
             //  Write buffer memory                                           //
             //  return : True if buffer memory is successfully written        //
             ////////////////////////////////////////////////////////////////////
-            bool writeBufferMemory(VkDevice& vulkanDevice, VulkanBuffer& buffer,
+            bool writeBufferMemory(VulkanBuffer& buffer,
                 const void* data, VulkanMemoryPool memoryPool);
 
 
@@ -197,22 +197,22 @@
             //  Allocate texture memory                                       //
             //  return : True if texture memory is successfully allocated     //
             ////////////////////////////////////////////////////////////////////
-            bool allocateTextureMemory(VkDevice& vulkanDevice,
-                Texture& texture, VulkanMemoryPool memoryPool);
+            bool allocateTextureMemory(Texture& texture,
+                VulkanMemoryPool memoryPool);
 
             ////////////////////////////////////////////////////////////////////
             //  Allocate texture array memory                                 //
             //  return : True if texture array memory is allocated            //
             ////////////////////////////////////////////////////////////////////
-            bool allocateTextureArrayMemory(VkDevice& vulkanDevice,
-                TextureArray& textureArray, VulkanMemoryPool memoryPool);
+            bool allocateTextureArrayMemory(TextureArray& textureArray,
+                VulkanMemoryPool memoryPool);
 
             ////////////////////////////////////////////////////////////////////
             //  Allocate cubemap memory                                       //
             //  return : True if cubemap memory is successfully allocated     //
             ////////////////////////////////////////////////////////////////////
-            bool allocateCubeMapMemory(VkDevice& vulkanDevice,
-                CubeMap& cubemap, VulkanMemoryPool memoryPool);
+            bool allocateCubeMapMemory(CubeMap& cubemap,
+                VulkanMemoryPool memoryPool);
 
 
         private:

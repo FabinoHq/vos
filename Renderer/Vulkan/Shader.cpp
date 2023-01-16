@@ -65,14 +65,13 @@ Shader::~Shader()
 //  Create Shader                                                             //
 //  return : True if Shader is successfully created                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool Shader::createShader(Renderer& renderer,
-    const uint32_t* source, const size_t size)
+bool Shader::createShader(const uint32_t* source, const size_t size)
 {
     // Check current shader
     if (m_shader)
     {
         // Destroy current shader
-        destroyShader(renderer);
+        destroyShader();
     }
 
     // Check shader source
@@ -90,7 +89,7 @@ bool Shader::createShader(Renderer& renderer,
     shaderInfo.codeSize = size;
     shaderInfo.pCode = source;
 
-    if (vkCreateShaderModule(renderer.m_vulkanDevice,
+    if (vkCreateShaderModule(GVulkanDevice,
         &shaderInfo, 0, &m_shader) != VK_SUCCESS)
     {
         // Could not create shader
@@ -109,10 +108,10 @@ bool Shader::createShader(Renderer& renderer,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Shader                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Shader::destroyShader(Renderer& renderer)
+void Shader::destroyShader()
 {
     // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return;
@@ -121,7 +120,7 @@ void Shader::destroyShader(Renderer& renderer)
     // Destroy shader
     if (m_shader)
     {
-        vkDestroyShaderModule(renderer.m_vulkanDevice, m_shader, 0);
+        vkDestroyShaderModule(GVulkanDevice, m_shader, 0);
     }
     m_shader = 0;
 }

@@ -75,10 +75,10 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
     {
         // Create procedural sprite pipeline
         m_pipeline.createVertexShader(
-            renderer, DefaultVertexShader, DefaultVertexShaderSize
+            DefaultVertexShader, DefaultVertexShaderSize
         );
         m_pipeline.createFragmentShader(
-            renderer, fragmentSource, fragmentSize
+            fragmentSource, fragmentSize
         );
         if (m_pipeline.createPipeline(renderer))
         {
@@ -90,10 +90,10 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
     {
         // Create default procedural sprite pipeline
         m_pipeline.createVertexShader(
-            renderer, DefaultVertexShader, DefaultVertexShaderSize
+            DefaultVertexShader, DefaultVertexShaderSize
         );
         m_pipeline.createFragmentShader(
-            renderer, DefaultProcFragmentShader, DefaultProcFragmentShaderSize
+            DefaultProcFragmentShader, DefaultProcFragmentShaderSize
         );
         if (!m_pipeline.createPipeline(renderer))
         {
@@ -121,10 +121,10 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy procedural sprite                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::destroyProcSprite(Renderer& renderer)
+void ProcSprite::destroyProcSprite()
 {
     m_color.reset();
-    m_pipeline.destroyPipeline(renderer);
+    m_pipeline.destroyPipeline();
     resetTransforms();
 }
 

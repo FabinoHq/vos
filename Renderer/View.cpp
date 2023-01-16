@@ -103,7 +103,7 @@ bool View::init(Renderer& renderer)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         if (!m_uniformBuffers[i].updateBuffer(
-            renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+            renderer.m_vulkanMemory,
             renderer.m_swapchain.commandPools[i], renderer.m_graphicsQueue,
             &uniformData, sizeof(uniformData)))
         {
@@ -122,7 +122,7 @@ bool View::init(Renderer& renderer)
         DESC_MATRICES*RendererMaxSwapchainFrames
     ];
 
-    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
+    if (vkAllocateDescriptorSets(GVulkanDevice,
         &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
         // Could not allocate matrices descriptor sets
@@ -152,9 +152,7 @@ bool View::init(Renderer& renderer)
         descriptorWrites.pBufferInfo = &descBufferInfo;
         descriptorWrites.pTexelBufferView = 0;
 
-        vkUpdateDescriptorSets(
-            renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
-        );
+        vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
     // View is successfully created
@@ -164,7 +162,7 @@ bool View::init(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy view                                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void View::destroyView(Renderer& renderer)
+void View::destroyView()
 {
     m_projViewMatrix.reset();
     m_projMatrix.reset();
@@ -172,7 +170,7 @@ void View::destroyView(Renderer& renderer)
     // Destroy uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        m_uniformBuffers[i].destroyBuffer(renderer.m_vulkanDevice);
+        m_uniformBuffers[i].destroyBuffer();
         m_descriptorSets[i] = 0;
     }
 
@@ -214,7 +212,7 @@ bool View::bind(Renderer& renderer)
 
     // Update uniform buffer
     if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
-        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+        renderer.m_vulkanMemory,
         renderer.m_swapchain.commandPools[renderer.m_swapchain.current],
         renderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
     {

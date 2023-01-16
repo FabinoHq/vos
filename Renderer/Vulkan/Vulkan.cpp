@@ -47,6 +47,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 VkPhysicalDevice GPhysicalDevice = 0;
 
+////////////////////////////////////////////////////////////////////////////////
+//  VulkanDevice global instance                                              //
+////////////////////////////////////////////////////////////////////////////////
+VkDevice GVulkanDevice = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Vulkan functions                                                          //
@@ -1004,10 +1009,10 @@ bool LoadVulkanInstanceFunctions()
 //  Load Vulkan device functions                                              //
 //  return : True if Vulkan device functions are successfully loaded         //
 ////////////////////////////////////////////////////////////////////////////////
-bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
+bool LoadVulkanDeviceFunctions()
 {
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return false;
@@ -1016,7 +1021,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateSwapchainKHR
     vkCreateSwapchainKHR = (PFN_vkCreateSwapchainKHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateSwapchainKHR"
+        GVulkanDevice, "vkCreateSwapchainKHR"
     );
     if (!vkCreateSwapchainKHR)
     {
@@ -1026,7 +1031,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroySwapchainKHR
     vkDestroySwapchainKHR = (PFN_vkDestroySwapchainKHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroySwapchainKHR"
+        GVulkanDevice, "vkDestroySwapchainKHR"
     );
     if (!vkDestroySwapchainKHR)
     {
@@ -1036,7 +1041,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetSwapchainImagesKHR
     vkGetSwapchainImagesKHR = (PFN_vkGetSwapchainImagesKHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetSwapchainImagesKHR"
+        GVulkanDevice, "vkGetSwapchainImagesKHR"
     );
     if (!vkGetSwapchainImagesKHR)
     {
@@ -1046,7 +1051,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkAcquireNextImageKHR
     vkAcquireNextImageKHR = (PFN_vkAcquireNextImageKHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkAcquireNextImageKHR"
+        GVulkanDevice, "vkAcquireNextImageKHR"
     );
     if (!vkAcquireNextImageKHR)
     {
@@ -1056,7 +1061,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkQueuePresentKHR
     vkQueuePresentKHR = (PFN_vkQueuePresentKHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkQueuePresentKHR"
+        GVulkanDevice, "vkQueuePresentKHR"
     );
     if (!vkQueuePresentKHR)
     {
@@ -1067,7 +1072,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     // Load vkGetDeviceGroupPresentCapabilitiesKHR
     vkGetDeviceGroupPresentCapabilitiesKHR =
         (PFN_vkGetDeviceGroupPresentCapabilitiesKHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetDeviceGroupPresentCapabilitiesKHR"
+        GVulkanDevice, "vkGetDeviceGroupPresentCapabilitiesKHR"
     );
     if (!vkGetDeviceGroupPresentCapabilitiesKHR)
     {
@@ -1078,7 +1083,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     // Load vkGetDeviceGroupSurfacePresentModesKHR
     vkGetDeviceGroupSurfacePresentModesKHR =
         (PFN_vkGetDeviceGroupSurfacePresentModesKHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetDeviceGroupSurfacePresentModesKHR"
+        GVulkanDevice, "vkGetDeviceGroupSurfacePresentModesKHR"
     );
     if (!vkGetDeviceGroupSurfacePresentModesKHR)
     {
@@ -1089,7 +1094,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     // Load vkGetPhysicalDevicePresentRectanglesKHR
     /*vkGetPhysicalDevicePresentRectanglesKHR =
         (PFN_vkGetPhysicalDevicePresentRectanglesKHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetPhysicalDevicePresentRectanglesKHR"
+        GVulkanDevice, "vkGetPhysicalDevicePresentRectanglesKHR"
     );
     if (!vkGetPhysicalDevicePresentRectanglesKHR)
     {
@@ -1099,7 +1104,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkAcquireNextImage2KHR
     vkAcquireNextImage2KHR = (PFN_vkAcquireNextImage2KHR)vkGetDeviceProcAddr(
-        vulkanDevice, "vkAcquireNextImage2KHR"
+        GVulkanDevice, "vkAcquireNextImage2KHR"
     );
     if (!vkAcquireNextImage2KHR)
     {
@@ -1110,7 +1115,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyDevice
     vkDestroyDevice = (PFN_vkDestroyDevice)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyDevice"
+        GVulkanDevice, "vkDestroyDevice"
     );
     if (!vkDestroyDevice)
     {
@@ -1120,7 +1125,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDeviceWaitIdle
     vkDeviceWaitIdle = (PFN_vkDeviceWaitIdle)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDeviceWaitIdle"
+        GVulkanDevice, "vkDeviceWaitIdle"
     );
     if (!vkDeviceWaitIdle)
     {
@@ -1130,7 +1135,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetDeviceQueue
     vkGetDeviceQueue = (PFN_vkGetDeviceQueue)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetDeviceQueue"
+        GVulkanDevice, "vkGetDeviceQueue"
     );
     if (!vkGetDeviceQueue)
     {
@@ -1140,7 +1145,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkQueueSubmit
     vkQueueSubmit = (PFN_vkQueueSubmit)vkGetDeviceProcAddr(
-        vulkanDevice, "vkQueueSubmit"
+        GVulkanDevice, "vkQueueSubmit"
     );
     if (!vkQueueSubmit)
     {
@@ -1150,7 +1155,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkQueueWaitIdle
     vkQueueWaitIdle = (PFN_vkQueueWaitIdle)vkGetDeviceProcAddr(
-        vulkanDevice, "vkQueueWaitIdle"
+        GVulkanDevice, "vkQueueWaitIdle"
     );
     if (!vkQueueWaitIdle)
     {
@@ -1161,7 +1166,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkAllocateMemory
     vkAllocateMemory = (PFN_vkAllocateMemory)vkGetDeviceProcAddr(
-        vulkanDevice, "vkAllocateMemory"
+        GVulkanDevice, "vkAllocateMemory"
     );
     if (!vkAllocateMemory)
     {
@@ -1171,7 +1176,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkFreeMemory
     vkFreeMemory = (PFN_vkFreeMemory)vkGetDeviceProcAddr(
-        vulkanDevice, "vkFreeMemory"
+        GVulkanDevice, "vkFreeMemory"
     );
     if (!vkFreeMemory)
     {
@@ -1181,7 +1186,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkMapMemory
     vkMapMemory = (PFN_vkMapMemory)vkGetDeviceProcAddr(
-        vulkanDevice, "vkMapMemory"
+        GVulkanDevice, "vkMapMemory"
     );
     if (!vkMapMemory)
     {
@@ -1191,7 +1196,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkUnmapMemory
     vkUnmapMemory = (PFN_vkUnmapMemory)vkGetDeviceProcAddr(
-        vulkanDevice, "vkUnmapMemory"
+        GVulkanDevice, "vkUnmapMemory"
     );
     if (!vkUnmapMemory)
     {
@@ -1201,7 +1206,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkFlushMappedMemoryRanges
     vkFlushMappedMemoryRanges = (PFN_vkFlushMappedMemoryRanges)
-        vkGetDeviceProcAddr(vulkanDevice, "vkFlushMappedMemoryRanges"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkFlushMappedMemoryRanges"
     );
     if (!vkFlushMappedMemoryRanges)
     {
@@ -1211,7 +1216,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkInvalidateMappedMemoryRanges
     vkInvalidateMappedMemoryRanges = (PFN_vkInvalidateMappedMemoryRanges)
-        vkGetDeviceProcAddr(vulkanDevice, "vkInvalidateMappedMemoryRanges"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkInvalidateMappedMemoryRanges"
     );
     if (!vkInvalidateMappedMemoryRanges)
     {
@@ -1221,7 +1226,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetDeviceMemoryCommitment
     vkGetDeviceMemoryCommitment = (PFN_vkGetDeviceMemoryCommitment)
-        vkGetDeviceProcAddr(vulkanDevice, "vkGetDeviceMemoryCommitment"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkGetDeviceMemoryCommitment"
     );
     if (!vkGetDeviceMemoryCommitment)
     {
@@ -1231,7 +1236,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkBindBufferMemory
     vkBindBufferMemory = (PFN_vkBindBufferMemory)vkGetDeviceProcAddr(
-        vulkanDevice, "vkBindBufferMemory"
+        GVulkanDevice, "vkBindBufferMemory"
     );
     if (!vkBindBufferMemory)
     {
@@ -1241,7 +1246,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkBindImageMemory
     vkBindImageMemory = (PFN_vkBindImageMemory)vkGetDeviceProcAddr(
-        vulkanDevice, "vkBindImageMemory"
+        GVulkanDevice, "vkBindImageMemory"
     );
     if (!vkBindImageMemory)
     {
@@ -1252,7 +1257,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateRenderPass
     vkCreateRenderPass = (PFN_vkCreateRenderPass)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateRenderPass"
+        GVulkanDevice, "vkCreateRenderPass"
     );
     if (!vkCreateRenderPass)
     {
@@ -1262,7 +1267,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyRenderPass
     vkDestroyRenderPass = (PFN_vkDestroyRenderPass)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyRenderPass"
+        GVulkanDevice, "vkDestroyRenderPass"
     );
     if (!vkDestroyRenderPass)
     {
@@ -1272,7 +1277,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetRenderAreaGranularity
     vkGetRenderAreaGranularity = (PFN_vkGetRenderAreaGranularity)
-        vkGetDeviceProcAddr(vulkanDevice, "vkGetRenderAreaGranularity"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkGetRenderAreaGranularity"
     );
     if (!vkGetRenderAreaGranularity)
     {
@@ -1282,7 +1287,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateFramebuffer
     vkCreateFramebuffer = (PFN_vkCreateFramebuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateFramebuffer"
+        GVulkanDevice, "vkCreateFramebuffer"
     );
     if (!vkCreateFramebuffer)
     {
@@ -1292,7 +1297,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyFramebuffer
     vkDestroyFramebuffer = (PFN_vkDestroyFramebuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyFramebuffer"
+        GVulkanDevice, "vkDestroyFramebuffer"
     );
     if (!vkDestroyFramebuffer)
     {
@@ -1302,7 +1307,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateImageView
     vkCreateImageView = (PFN_vkCreateImageView)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateImageView"
+        GVulkanDevice, "vkCreateImageView"
     );
     if (!vkCreateImageView)
     {
@@ -1312,7 +1317,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyImageView
     vkDestroyImageView = (PFN_vkDestroyImageView)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyImageView"
+        GVulkanDevice, "vkDestroyImageView"
     );
     if (!vkDestroyImageView)
     {
@@ -1322,7 +1327,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateShaderModule
     vkCreateShaderModule = (PFN_vkCreateShaderModule)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateShaderModule"
+        GVulkanDevice, "vkCreateShaderModule"
     );
     if (!vkCreateShaderModule)
     {
@@ -1332,7 +1337,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyShaderModule
     vkDestroyShaderModule = (PFN_vkDestroyShaderModule)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyShaderModule"
+        GVulkanDevice, "vkDestroyShaderModule"
     );
     if (!vkDestroyShaderModule)
     {
@@ -1342,7 +1347,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreatePipelineCache
     vkCreatePipelineCache = (PFN_vkCreatePipelineCache)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreatePipelineCache"
+        GVulkanDevice, "vkCreatePipelineCache"
     );
     if (!vkCreatePipelineCache)
     {
@@ -1352,7 +1357,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyPipelineCache
     vkDestroyPipelineCache = (PFN_vkDestroyPipelineCache)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyPipelineCache"
+        GVulkanDevice, "vkDestroyPipelineCache"
     );
     if (!vkDestroyPipelineCache)
     {
@@ -1362,7 +1367,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetPipelineCacheData
     vkGetPipelineCacheData = (PFN_vkGetPipelineCacheData)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetPipelineCacheData"
+        GVulkanDevice, "vkGetPipelineCacheData"
     );
     if (!vkGetPipelineCacheData)
     {
@@ -1372,7 +1377,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkMergePipelineCaches
     vkMergePipelineCaches = (PFN_vkMergePipelineCaches)vkGetDeviceProcAddr(
-        vulkanDevice, "vkMergePipelineCaches"
+        GVulkanDevice, "vkMergePipelineCaches"
     );
     if (!vkMergePipelineCaches)
     {
@@ -1382,7 +1387,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreatePipelineLayout
     vkCreatePipelineLayout = (PFN_vkCreatePipelineLayout)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreatePipelineLayout"
+        GVulkanDevice, "vkCreatePipelineLayout"
     );
     if (!vkCreatePipelineLayout)
     {
@@ -1392,7 +1397,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyPipelineLayout
     vkDestroyPipelineLayout = (PFN_vkDestroyPipelineLayout)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyPipelineLayout"
+        GVulkanDevice, "vkDestroyPipelineLayout"
     );
     if (!vkDestroyPipelineLayout)
     {
@@ -1402,7 +1407,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateSampler
     vkCreateSampler = (PFN_vkCreateSampler)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateSampler"
+        GVulkanDevice, "vkCreateSampler"
     );
     if (!vkCreateSampler)
     {
@@ -1412,7 +1417,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroySampler
     vkDestroySampler = (PFN_vkDestroySampler)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroySampler"
+        GVulkanDevice, "vkDestroySampler"
     );
     if (!vkDestroySampler)
     {
@@ -1422,7 +1427,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateGraphicsPipelines
     vkCreateGraphicsPipelines = (PFN_vkCreateGraphicsPipelines)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCreateGraphicsPipelines"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCreateGraphicsPipelines"
     );
     if (!vkCreateGraphicsPipelines)
     {
@@ -1432,7 +1437,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateComputePipelines
     vkCreateComputePipelines = (PFN_vkCreateComputePipelines)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCreateComputePipelines"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCreateComputePipelines"
     );
     if (!vkCreateComputePipelines)
     {
@@ -1442,7 +1447,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyPipeline
     vkDestroyPipeline = (PFN_vkDestroyPipeline)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyPipeline"
+        GVulkanDevice, "vkDestroyPipeline"
     );
     if (!vkDestroyPipeline)
     {
@@ -1452,7 +1457,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateDescriptorSetLayout
     vkCreateDescriptorSetLayout = (PFN_vkCreateDescriptorSetLayout)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCreateDescriptorSetLayout"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCreateDescriptorSetLayout"
     );
     if (!vkCreateDescriptorSetLayout)
     {
@@ -1462,7 +1467,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyDescriptorSetLayout
     vkDestroyDescriptorSetLayout = (PFN_vkDestroyDescriptorSetLayout)
-        vkGetDeviceProcAddr(vulkanDevice, "vkDestroyDescriptorSetLayout"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkDestroyDescriptorSetLayout"
     );
     if (!vkDestroyDescriptorSetLayout)
     {
@@ -1472,7 +1477,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateDescriptorPool
     vkCreateDescriptorPool = (PFN_vkCreateDescriptorPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateDescriptorPool"
+        GVulkanDevice, "vkCreateDescriptorPool"
     );
     if (!vkCreateDescriptorPool)
     {
@@ -1482,7 +1487,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyDescriptorPool
     vkDestroyDescriptorPool = (PFN_vkDestroyDescriptorPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyDescriptorPool"
+        GVulkanDevice, "vkDestroyDescriptorPool"
     );
     if (!vkDestroyDescriptorPool)
     {
@@ -1492,7 +1497,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkResetDescriptorPool
     vkResetDescriptorPool = (PFN_vkResetDescriptorPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkResetDescriptorPool"
+        GVulkanDevice, "vkResetDescriptorPool"
     );
     if (!vkResetDescriptorPool)
     {
@@ -1502,7 +1507,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkAllocateDescriptorSets
     vkAllocateDescriptorSets = (PFN_vkAllocateDescriptorSets)
-        vkGetDeviceProcAddr(vulkanDevice, "vkAllocateDescriptorSets"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkAllocateDescriptorSets"
     );
     if (!vkAllocateDescriptorSets)
     {
@@ -1512,7 +1517,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkFreeDescriptorSets
     vkFreeDescriptorSets = (PFN_vkFreeDescriptorSets)vkGetDeviceProcAddr(
-        vulkanDevice, "vkFreeDescriptorSets"
+        GVulkanDevice, "vkFreeDescriptorSets"
     );
     if (!vkFreeDescriptorSets)
     {
@@ -1522,7 +1527,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkUpdateDescriptorSets
     vkUpdateDescriptorSets = (PFN_vkUpdateDescriptorSets)vkGetDeviceProcAddr(
-        vulkanDevice, "vkUpdateDescriptorSets"
+        GVulkanDevice, "vkUpdateDescriptorSets"
     );
     if (!vkUpdateDescriptorSets)
     {
@@ -1532,7 +1537,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateBuffer
     vkCreateBuffer = (PFN_vkCreateBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateBuffer"
+        GVulkanDevice, "vkCreateBuffer"
     );
     if (!vkCreateBuffer)
     {
@@ -1542,7 +1547,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyBuffer
     vkDestroyBuffer = (PFN_vkDestroyBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyBuffer"
+        GVulkanDevice, "vkDestroyBuffer"
     );
     if (!vkDestroyBuffer)
     {
@@ -1552,7 +1557,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateBufferView
     vkCreateBufferView = (PFN_vkCreateBufferView)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateBufferView"
+        GVulkanDevice, "vkCreateBufferView"
     );
     if (!vkCreateBufferView)
     {
@@ -1562,7 +1567,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyBufferView
     vkDestroyBufferView = (PFN_vkDestroyBufferView)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyBufferView"
+        GVulkanDevice, "vkDestroyBufferView"
     );
     if (!vkDestroyBufferView)
     {
@@ -1572,7 +1577,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateImage
     vkCreateImage = (PFN_vkCreateImage)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateImage"
+        GVulkanDevice, "vkCreateImage"
     );
     if (!vkCreateImage)
     {
@@ -1582,7 +1587,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyImage
     vkDestroyImage = (PFN_vkDestroyImage)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyImage"
+        GVulkanDevice, "vkDestroyImage"
     );
     if (!vkDestroyImage)
     {
@@ -1592,7 +1597,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetImageSubresourceLayout
     vkGetImageSubresourceLayout = (PFN_vkGetImageSubresourceLayout)
-        vkGetDeviceProcAddr(vulkanDevice, "vkGetImageSubresourceLayout"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkGetImageSubresourceLayout"
     );
     if (!vkGetImageSubresourceLayout)
     {
@@ -1602,7 +1607,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetBufferMemoryRequirements
     vkGetBufferMemoryRequirements = (PFN_vkGetBufferMemoryRequirements)
-        vkGetDeviceProcAddr(vulkanDevice, "vkGetBufferMemoryRequirements"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkGetBufferMemoryRequirements"
     );
     if (!vkGetBufferMemoryRequirements)
     {
@@ -1612,7 +1617,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetImageMemoryRequirements
     vkGetImageMemoryRequirements = (PFN_vkGetImageMemoryRequirements)
-        vkGetDeviceProcAddr(vulkanDevice, "vkGetImageMemoryRequirements"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkGetImageMemoryRequirements"
     );
     if (!vkGetImageMemoryRequirements)
     {
@@ -1623,7 +1628,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     // Load vkGetImageSparseMemoryRequirements
     vkGetImageSparseMemoryRequirements =
         (PFN_vkGetImageSparseMemoryRequirements)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetImageSparseMemoryRequirements"
+        GVulkanDevice, "vkGetImageSparseMemoryRequirements"
     );
     if (!vkGetImageSparseMemoryRequirements)
     {
@@ -1633,7 +1638,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkQueueBindSparse
     vkQueueBindSparse = (PFN_vkQueueBindSparse)vkGetDeviceProcAddr(
-        vulkanDevice, "vkQueueBindSparse"
+        GVulkanDevice, "vkQueueBindSparse"
     );
     if (!vkQueueBindSparse)
     {
@@ -1643,7 +1648,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateFence
     vkCreateFence = (PFN_vkCreateFence)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateFence"
+        GVulkanDevice, "vkCreateFence"
     );
     if (!vkCreateFence)
     {
@@ -1653,7 +1658,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyFence
     vkDestroyFence = (PFN_vkDestroyFence)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyFence"
+        GVulkanDevice, "vkDestroyFence"
     );
     if (!vkDestroyFence)
     {
@@ -1663,7 +1668,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkResetFences
     vkResetFences = (PFN_vkResetFences)vkGetDeviceProcAddr(
-        vulkanDevice, "vkResetFences"
+        GVulkanDevice, "vkResetFences"
     );
     if (!vkResetFences)
     {
@@ -1673,7 +1678,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetFenceStatus
     vkGetFenceStatus = (PFN_vkGetFenceStatus)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetFenceStatus"
+        GVulkanDevice, "vkGetFenceStatus"
     );
     if (!vkGetFenceStatus)
     {
@@ -1683,7 +1688,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkWaitForFences
     vkWaitForFences = (PFN_vkWaitForFences)vkGetDeviceProcAddr(
-        vulkanDevice, "vkWaitForFences"
+        GVulkanDevice, "vkWaitForFences"
     );
     if (!vkWaitForFences)
     {
@@ -1693,7 +1698,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateSemaphore
     vkCreateSemaphore = (PFN_vkCreateSemaphore)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateSemaphore"
+        GVulkanDevice, "vkCreateSemaphore"
     );
     if (!vkCreateSemaphore)
     {
@@ -1703,7 +1708,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroySemaphore
     vkDestroySemaphore = (PFN_vkDestroySemaphore)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroySemaphore"
+        GVulkanDevice, "vkDestroySemaphore"
     );
     if (!vkDestroySemaphore)
     {
@@ -1713,7 +1718,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateEvent
     vkCreateEvent = (PFN_vkCreateEvent)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateEvent"
+        GVulkanDevice, "vkCreateEvent"
     );
     if (!vkCreateEvent)
     {
@@ -1723,7 +1728,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyEvent
     vkDestroyEvent = (PFN_vkDestroyEvent)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyEvent"
+        GVulkanDevice, "vkDestroyEvent"
     );
     if (!vkDestroyEvent)
     {
@@ -1733,7 +1738,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetEventStatus
     vkGetEventStatus = (PFN_vkGetEventStatus)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetEventStatus"
+        GVulkanDevice, "vkGetEventStatus"
     );
     if (!vkGetEventStatus)
     {
@@ -1743,7 +1748,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkSetEvent
     vkSetEvent = (PFN_vkSetEvent)vkGetDeviceProcAddr(
-        vulkanDevice, "vkSetEvent"
+        GVulkanDevice, "vkSetEvent"
     );
     if (!vkSetEvent)
     {
@@ -1753,7 +1758,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkResetEvent
     vkResetEvent = (PFN_vkResetEvent)vkGetDeviceProcAddr(
-        vulkanDevice, "vkResetEvent"
+        GVulkanDevice, "vkResetEvent"
     );
     if (!vkResetEvent)
     {
@@ -1763,7 +1768,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateQueryPool
     vkCreateQueryPool = (PFN_vkCreateQueryPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateQueryPool"
+        GVulkanDevice, "vkCreateQueryPool"
     );
     if (!vkCreateQueryPool)
     {
@@ -1773,7 +1778,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyQueryPool
     vkDestroyQueryPool = (PFN_vkDestroyQueryPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyQueryPool"
+        GVulkanDevice, "vkDestroyQueryPool"
     );
     if (!vkDestroyQueryPool)
     {
@@ -1783,7 +1788,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetQueryPoolResults
     vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetQueryPoolResults"
+        GVulkanDevice, "vkGetQueryPoolResults"
     );
     if (!vkGetQueryPoolResults)
     {
@@ -1793,7 +1798,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateCommandPool
     vkCreateCommandPool = (PFN_vkCreateCommandPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCreateCommandPool"
+        GVulkanDevice, "vkCreateCommandPool"
     );
     if (!vkCreateCommandPool)
     {
@@ -1803,7 +1808,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyCommandPool
     vkDestroyCommandPool = (PFN_vkDestroyCommandPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkDestroyCommandPool"
+        GVulkanDevice, "vkDestroyCommandPool"
     );
     if (!vkDestroyCommandPool)
     {
@@ -1813,7 +1818,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkResetCommandPool
     vkResetCommandPool = (PFN_vkResetCommandPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkResetCommandPool"
+        GVulkanDevice, "vkResetCommandPool"
     );
     if (!vkResetCommandPool)
     {
@@ -1823,7 +1828,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkAllocateCommandBuffers
     vkAllocateCommandBuffers = (PFN_vkAllocateCommandBuffers)
-        vkGetDeviceProcAddr(vulkanDevice, "vkAllocateCommandBuffers"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkAllocateCommandBuffers"
     );
     if (!vkAllocateCommandBuffers)
     {
@@ -1833,7 +1838,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkFreeCommandBuffers
     vkFreeCommandBuffers = (PFN_vkFreeCommandBuffers)vkGetDeviceProcAddr(
-        vulkanDevice, "vkFreeCommandBuffers"
+        GVulkanDevice, "vkFreeCommandBuffers"
     );
     if (!vkFreeCommandBuffers)
     {
@@ -1843,7 +1848,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkBeginCommandBuffer
     vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkBeginCommandBuffer"
+        GVulkanDevice, "vkBeginCommandBuffer"
     );
     if (!vkBeginCommandBuffer)
     {
@@ -1853,7 +1858,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkBeginCommandBuffer
     vkEndCommandBuffer = (PFN_vkEndCommandBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkEndCommandBuffer"
+        GVulkanDevice, "vkEndCommandBuffer"
     );
     if (!vkEndCommandBuffer)
     {
@@ -1863,7 +1868,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkResetCommandBuffer
     vkResetCommandBuffer = (PFN_vkResetCommandBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkResetCommandBuffer"
+        GVulkanDevice, "vkResetCommandBuffer"
     );
     if (!vkResetCommandBuffer)
     {
@@ -1874,7 +1879,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdBindPipeline
     vkCmdBindPipeline = (PFN_vkCmdBindPipeline)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdBindPipeline"
+        GVulkanDevice, "vkCmdBindPipeline"
     );
     if (!vkCmdBindPipeline)
     {
@@ -1884,7 +1889,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetViewport
     vkCmdSetViewport = (PFN_vkCmdSetViewport)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdSetViewport"
+        GVulkanDevice, "vkCmdSetViewport"
     );
     if (!vkCmdSetViewport)
     {
@@ -1894,7 +1899,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetScissor
     vkCmdSetScissor = (PFN_vkCmdSetScissor)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdSetScissor"
+        GVulkanDevice, "vkCmdSetScissor"
     );
     if (!vkCmdSetScissor)
     {
@@ -1904,7 +1909,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetLineWidth
     vkCmdSetLineWidth = (PFN_vkCmdSetLineWidth)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdSetLineWidth"
+        GVulkanDevice, "vkCmdSetLineWidth"
     );
     if (!vkCmdSetLineWidth)
     {
@@ -1914,7 +1919,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetDepthBias
     vkCmdSetDepthBias = (PFN_vkCmdSetDepthBias)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdSetDepthBias"
+        GVulkanDevice, "vkCmdSetDepthBias"
     );
     if (!vkCmdSetDepthBias)
     {
@@ -1924,7 +1929,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetBlendConstants
     vkCmdSetBlendConstants = (PFN_vkCmdSetBlendConstants)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdSetBlendConstants"
+        GVulkanDevice, "vkCmdSetBlendConstants"
     );
     if (!vkCmdSetBlendConstants)
     {
@@ -1934,7 +1939,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetDepthBounds
     vkCmdSetDepthBounds = (PFN_vkCmdSetDepthBounds)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdSetDepthBounds"
+        GVulkanDevice, "vkCmdSetDepthBounds"
     );
     if (!vkCmdSetDepthBounds)
     {
@@ -1944,7 +1949,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetStencilCompareMask
     vkCmdSetStencilCompareMask = (PFN_vkCmdSetStencilCompareMask)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCmdSetStencilCompareMask"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCmdSetStencilCompareMask"
     );
     if (!vkCmdSetStencilCompareMask)
     {
@@ -1954,7 +1959,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetStencilWriteMask
     vkCmdSetStencilWriteMask = (PFN_vkCmdSetStencilWriteMask)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCmdSetStencilWriteMask"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCmdSetStencilWriteMask"
     );
     if (!vkCmdSetStencilWriteMask)
     {
@@ -1964,7 +1969,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetStencilReference
     vkCmdSetStencilReference = (PFN_vkCmdSetStencilReference)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCmdSetStencilReference"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCmdSetStencilReference"
     );
     if (!vkCmdSetStencilReference)
     {
@@ -1974,7 +1979,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdBindDescriptorSets
     vkCmdBindDescriptorSets = (PFN_vkCmdBindDescriptorSets)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdBindDescriptorSets"
+        GVulkanDevice, "vkCmdBindDescriptorSets"
     );
     if (!vkCmdBindDescriptorSets)
     {
@@ -1984,7 +1989,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdBindIndexBuffer
     vkCmdBindIndexBuffer = (PFN_vkCmdBindIndexBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdBindIndexBuffer"
+        GVulkanDevice, "vkCmdBindIndexBuffer"
     );
     if (!vkCmdBindIndexBuffer)
     {
@@ -1994,7 +1999,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdBindVertexBuffers
     vkCmdBindVertexBuffers = (PFN_vkCmdBindVertexBuffers)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdBindVertexBuffers"
+        GVulkanDevice, "vkCmdBindVertexBuffers"
     );
     if (!vkCmdBindVertexBuffers)
     {
@@ -2003,7 +2008,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     }
 
     // Load vkCmdDraw
-    vkCmdDraw = (PFN_vkCmdDraw)vkGetDeviceProcAddr(vulkanDevice, "vkCmdDraw");
+    vkCmdDraw = (PFN_vkCmdDraw)vkGetDeviceProcAddr(GVulkanDevice, "vkCmdDraw");
     if (!vkCmdDraw)
     {
         // Could not load vkCmdDraw
@@ -2012,7 +2017,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdDrawIndexed
     vkCmdDrawIndexed = (PFN_vkCmdDrawIndexed)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdDrawIndexed"
+        GVulkanDevice, "vkCmdDrawIndexed"
     );
     if (!vkCmdDrawIndexed)
     {
@@ -2022,7 +2027,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdDrawIndirect
     vkCmdDrawIndirect = (PFN_vkCmdDrawIndirect)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdDrawIndirect"
+        GVulkanDevice, "vkCmdDrawIndirect"
     );
     if (!vkCmdDrawIndirect)
     {
@@ -2032,7 +2037,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdDrawIndexedIndirect
     vkCmdDrawIndexedIndirect = (PFN_vkCmdDrawIndexedIndirect)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCmdDrawIndexedIndirect"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCmdDrawIndexedIndirect"
     );
     if (!vkCmdDrawIndexedIndirect)
     {
@@ -2042,7 +2047,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdDispatch
     vkCmdDispatch = (PFN_vkCmdDispatch)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdDispatch"
+        GVulkanDevice, "vkCmdDispatch"
     );
     if (!vkCmdDispatch)
     {
@@ -2052,7 +2057,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdDispatchIndirect
     vkCmdDispatchIndirect = (PFN_vkCmdDispatchIndirect)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdDispatchIndirect"
+        GVulkanDevice, "vkCmdDispatchIndirect"
     );
     if (!vkCmdDispatchIndirect)
     {
@@ -2062,7 +2067,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdCopyBuffer
     vkCmdCopyBuffer = (PFN_vkCmdCopyBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdCopyBuffer"
+        GVulkanDevice, "vkCmdCopyBuffer"
     );
     if (!vkCmdCopyBuffer)
     {
@@ -2072,7 +2077,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdCopyImage
     vkCmdCopyImage = (PFN_vkCmdCopyImage)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdCopyImage"
+        GVulkanDevice, "vkCmdCopyImage"
     );
     if (!vkCmdCopyImage)
     {
@@ -2082,7 +2087,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdBlitImage
     vkCmdBlitImage = (PFN_vkCmdBlitImage)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdBlitImage"
+        GVulkanDevice, "vkCmdBlitImage"
     );
     if (!vkCmdBlitImage)
     {
@@ -2092,7 +2097,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdCopyBufferToImage
     vkCmdCopyBufferToImage = (PFN_vkCmdCopyBufferToImage)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdCopyBufferToImage"
+        GVulkanDevice, "vkCmdCopyBufferToImage"
     );
     if (!vkCmdCopyBufferToImage)
     {
@@ -2102,7 +2107,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdCopyImageToBuffer
     vkCmdCopyImageToBuffer = (PFN_vkCmdCopyImageToBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdCopyImageToBuffer"
+        GVulkanDevice, "vkCmdCopyImageToBuffer"
     );
     if (!vkCmdCopyImageToBuffer)
     {
@@ -2112,7 +2117,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdUpdateBuffer
     vkCmdUpdateBuffer = (PFN_vkCmdUpdateBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdUpdateBuffer"
+        GVulkanDevice, "vkCmdUpdateBuffer"
     );
     if (!vkCmdUpdateBuffer)
     {
@@ -2122,7 +2127,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdFillBuffer
     vkCmdFillBuffer = (PFN_vkCmdFillBuffer)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdFillBuffer"
+        GVulkanDevice, "vkCmdFillBuffer"
     );
     if (!vkCmdFillBuffer)
     {
@@ -2132,7 +2137,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdClearColorImage
     vkCmdClearColorImage = (PFN_vkCmdClearColorImage)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdClearColorImage"
+        GVulkanDevice, "vkCmdClearColorImage"
     );
     if (!vkCmdClearColorImage)
     {
@@ -2142,7 +2147,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdClearDepthStencilImage
     vkCmdClearDepthStencilImage = (PFN_vkCmdClearDepthStencilImage)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCmdClearDepthStencilImage"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCmdClearDepthStencilImage"
     );
     if (!vkCmdClearDepthStencilImage)
     {
@@ -2152,7 +2157,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdClearAttachments
     vkCmdClearAttachments = (PFN_vkCmdClearAttachments)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdClearAttachments"
+        GVulkanDevice, "vkCmdClearAttachments"
     );
     if (!vkCmdClearAttachments)
     {
@@ -2162,7 +2167,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdResolveImage
     vkCmdResolveImage = (PFN_vkCmdResolveImage)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdResolveImage"
+        GVulkanDevice, "vkCmdResolveImage"
     );
     if (!vkCmdResolveImage)
     {
@@ -2172,7 +2177,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetEvent
     vkCmdSetEvent = (PFN_vkCmdSetEvent)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdSetEvent"
+        GVulkanDevice, "vkCmdSetEvent"
     );
     if (!vkCmdSetEvent)
     {
@@ -2182,7 +2187,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdResetEvent
     vkCmdResetEvent = (PFN_vkCmdResetEvent)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdResetEvent"
+        GVulkanDevice, "vkCmdResetEvent"
     );
     if (!vkCmdResetEvent)
     {
@@ -2192,7 +2197,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdWaitEvents
     vkCmdWaitEvents = (PFN_vkCmdWaitEvents)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdWaitEvents"
+        GVulkanDevice, "vkCmdWaitEvents"
     );
     if (!vkCmdWaitEvents)
     {
@@ -2202,7 +2207,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdPipelineBarrier
     vkCmdPipelineBarrier = (PFN_vkCmdPipelineBarrier)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdPipelineBarrier"
+        GVulkanDevice, "vkCmdPipelineBarrier"
     );
     if (!vkCmdPipelineBarrier)
     {
@@ -2212,7 +2217,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdBeginQuery
     vkCmdBeginQuery = (PFN_vkCmdBeginQuery)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdBeginQuery"
+        GVulkanDevice, "vkCmdBeginQuery"
     );
     if (!vkCmdBeginQuery)
     {
@@ -2222,7 +2227,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdEndQuery
     vkCmdEndQuery = (PFN_vkCmdEndQuery)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdEndQuery"
+        GVulkanDevice, "vkCmdEndQuery"
     );
     if (!vkCmdEndQuery)
     {
@@ -2232,7 +2237,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdResetQueryPool
     vkCmdResetQueryPool = (PFN_vkCmdResetQueryPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdResetQueryPool"
+        GVulkanDevice, "vkCmdResetQueryPool"
     );
     if (!vkCmdResetQueryPool)
     {
@@ -2242,7 +2247,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdWriteTimestamp
     vkCmdWriteTimestamp = (PFN_vkCmdWriteTimestamp)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdWriteTimestamp"
+        GVulkanDevice, "vkCmdWriteTimestamp"
     );
     if (!vkCmdWriteTimestamp)
     {
@@ -2252,7 +2257,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdCopyQueryPoolResults
     vkCmdCopyQueryPoolResults = (PFN_vkCmdCopyQueryPoolResults)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCmdCopyQueryPoolResults"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCmdCopyQueryPoolResults"
     );
     if (!vkCmdCopyQueryPoolResults)
     {
@@ -2262,7 +2267,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdPushConstants
     vkCmdPushConstants = (PFN_vkCmdPushConstants)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdPushConstants"
+        GVulkanDevice, "vkCmdPushConstants"
     );
     if (!vkCmdPushConstants)
     {
@@ -2272,7 +2277,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdBeginRenderPass
     vkCmdBeginRenderPass = (PFN_vkCmdBeginRenderPass)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdBeginRenderPass"
+        GVulkanDevice, "vkCmdBeginRenderPass"
     );
     if (!vkCmdBeginRenderPass)
     {
@@ -2282,7 +2287,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdNextSubpass
     vkCmdNextSubpass = (PFN_vkCmdNextSubpass)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdNextSubpass"
+        GVulkanDevice, "vkCmdNextSubpass"
     );
     if (!vkCmdNextSubpass)
     {
@@ -2292,7 +2297,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdEndRenderPass
     vkCmdEndRenderPass = (PFN_vkCmdEndRenderPass)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdEndRenderPass"
+        GVulkanDevice, "vkCmdEndRenderPass"
     );
     if (!vkCmdEndRenderPass)
     {
@@ -2302,7 +2307,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdExecuteCommands
     vkCmdExecuteCommands = (PFN_vkCmdExecuteCommands)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdExecuteCommands"
+        GVulkanDevice, "vkCmdExecuteCommands"
     );
     if (!vkCmdExecuteCommands)
     {
@@ -2313,7 +2318,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkBindBufferMemory2
     vkBindBufferMemory2 = (PFN_vkBindBufferMemory2)vkGetDeviceProcAddr(
-        vulkanDevice, "vkBindBufferMemory2"
+        GVulkanDevice, "vkBindBufferMemory2"
     );
     if (!vkBindBufferMemory2)
     {
@@ -2323,7 +2328,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkBindImageMemory2
     vkBindImageMemory2 = (PFN_vkBindImageMemory2)vkGetDeviceProcAddr(
-        vulkanDevice, "vkBindImageMemory2"
+        GVulkanDevice, "vkBindImageMemory2"
     );
     if (!vkBindImageMemory2)
     {
@@ -2334,7 +2339,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     // Load vkGetDeviceGroupPeerMemoryFeatures
     vkGetDeviceGroupPeerMemoryFeatures =
         (PFN_vkGetDeviceGroupPeerMemoryFeatures)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetDeviceGroupPeerMemoryFeatures"
+        GVulkanDevice, "vkGetDeviceGroupPeerMemoryFeatures"
     );
     if (!vkGetDeviceGroupPeerMemoryFeatures)
     {
@@ -2344,7 +2349,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdSetDeviceMask
     vkCmdSetDeviceMask = (PFN_vkCmdSetDeviceMask)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdSetDeviceMask"
+        GVulkanDevice, "vkCmdSetDeviceMask"
     );
     if (!vkCmdSetDeviceMask)
     {
@@ -2354,7 +2359,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCmdDispatchBase
     vkCmdDispatchBase = (PFN_vkCmdDispatchBase)vkGetDeviceProcAddr(
-        vulkanDevice, "vkCmdDispatchBase"
+        GVulkanDevice, "vkCmdDispatchBase"
     );
     if (!vkCmdDispatchBase)
     {
@@ -2364,7 +2369,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetImageMemoryRequirements2
     vkGetImageMemoryRequirements2 = (PFN_vkGetImageMemoryRequirements2)
-        vkGetDeviceProcAddr(vulkanDevice, "vkGetImageMemoryRequirements2"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkGetImageMemoryRequirements2"
     );
     if (!vkGetImageMemoryRequirements2)
     {
@@ -2374,7 +2379,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetBufferMemoryRequirements2
     vkGetBufferMemoryRequirements2 = (PFN_vkGetBufferMemoryRequirements2)
-        vkGetDeviceProcAddr(vulkanDevice, "vkGetBufferMemoryRequirements2"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkGetBufferMemoryRequirements2"
     );
     if (!vkGetBufferMemoryRequirements2)
     {
@@ -2385,7 +2390,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
     // Load vkGetImageSparseMemoryRequirements2
     vkGetImageSparseMemoryRequirements2 =
         (PFN_vkGetImageSparseMemoryRequirements2)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetImageSparseMemoryRequirements2"
+        GVulkanDevice, "vkGetImageSparseMemoryRequirements2"
     );
     if (!vkGetImageSparseMemoryRequirements2)
     {
@@ -2395,7 +2400,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkTrimCommandPool
     vkTrimCommandPool = (PFN_vkTrimCommandPool)vkGetDeviceProcAddr(
-        vulkanDevice, "vkTrimCommandPool"
+        GVulkanDevice, "vkTrimCommandPool"
     );
     if (!vkTrimCommandPool)
     {
@@ -2405,7 +2410,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetDeviceQueue2
     vkGetDeviceQueue2 = (PFN_vkGetDeviceQueue2)vkGetDeviceProcAddr(
-        vulkanDevice, "vkGetDeviceQueue2"
+        GVulkanDevice, "vkGetDeviceQueue2"
     );
     if (!vkGetDeviceQueue2)
     {
@@ -2415,7 +2420,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateSamplerYcbcrConversion
     vkCreateSamplerYcbcrConversion = (PFN_vkCreateSamplerYcbcrConversion)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCreateSamplerYcbcrConversion"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCreateSamplerYcbcrConversion"
     );
     if (!vkCreateSamplerYcbcrConversion)
     {
@@ -2425,7 +2430,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroySamplerYcbcrConversion
     vkDestroySamplerYcbcrConversion = (PFN_vkDestroySamplerYcbcrConversion)
-        vkGetDeviceProcAddr(vulkanDevice, "vkDestroySamplerYcbcrConversion"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkDestroySamplerYcbcrConversion"
     );
     if (!vkDestroySamplerYcbcrConversion)
     {
@@ -2435,7 +2440,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkCreateDescriptorUpdateTemplate
     vkCreateDescriptorUpdateTemplate = (PFN_vkCreateDescriptorUpdateTemplate)
-        vkGetDeviceProcAddr(vulkanDevice, "vkCreateDescriptorUpdateTemplate"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkCreateDescriptorUpdateTemplate"
     );
     if (!vkCreateDescriptorUpdateTemplate)
     {
@@ -2445,7 +2450,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkDestroyDescriptorUpdateTemplate
     vkDestroyDescriptorUpdateTemplate = (PFN_vkDestroyDescriptorUpdateTemplate)
-        vkGetDeviceProcAddr(vulkanDevice, "vkDestroyDescriptorUpdateTemplate"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkDestroyDescriptorUpdateTemplate"
     );
     if (!vkDestroyDescriptorUpdateTemplate)
     {
@@ -2455,7 +2460,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkUpdateDescriptorSetWithTemplate
     vkUpdateDescriptorSetWithTemplate = (PFN_vkUpdateDescriptorSetWithTemplate)
-        vkGetDeviceProcAddr(vulkanDevice, "vkUpdateDescriptorSetWithTemplate"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkUpdateDescriptorSetWithTemplate"
     );
     if (!vkUpdateDescriptorSetWithTemplate)
     {
@@ -2465,7 +2470,7 @@ bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice)
 
     // Load vkGetDescriptorSetLayoutSupport
     vkGetDescriptorSetLayoutSupport = (PFN_vkGetDescriptorSetLayoutSupport)
-        vkGetDeviceProcAddr(vulkanDevice, "vkGetDescriptorSetLayoutSupport"
+        vkGetDeviceProcAddr(GVulkanDevice, "vkGetDescriptorSetLayoutSupport"
     );
     if (!vkGetDescriptorSetLayoutSupport)
     {

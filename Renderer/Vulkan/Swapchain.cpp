@@ -100,8 +100,7 @@ Swapchain::~Swapchain()
 //  Create swapchain                                                          //
 //  return : True if swapchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
-    uint32_t surfaceQueueFamily)
+bool Swapchain::createSwapchain(uint32_t surfaceQueueFamily)
 {
     // Check physical device
     if (!GPhysicalDevice)
@@ -113,7 +112,7 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     }
 
     // Check device
-    if (!vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid device
         SysMessage::box() << "[0x3029] Invalid device\n";
@@ -134,11 +133,11 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     if (handle)
     {
         // Destroy current swapchain
-        destroySwapchain(vulkanDevice);
+        destroySwapchain();
     }
 
     // Wait for device idle
-    if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
+    if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
     {
         // Could not get the device ready
         SysMessage::box() << "[0x302B] Could not get the device ready\n";
@@ -394,8 +393,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     swapchainInfos.clipped = VK_TRUE;
     swapchainInfos.oldSwapchain = oldSwapchain;
 
-    if (vkCreateSwapchainKHR(
-        vulkanDevice, &swapchainInfos, 0, &handle) != VK_SUCCESS)
+    if (vkCreateSwapchainKHR(GVulkanDevice,
+        &swapchainInfos, 0, &handle) != VK_SUCCESS)
     {
         // Could not create swapchain
         SysMessage::box() << "[0x3038] Could not create swapchain\n";
@@ -406,7 +405,7 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     // Destroy old swapchain
     if (oldSwapchain)
     {
-        vkDestroySwapchainKHR(vulkanDevice, oldSwapchain, 0);
+        vkDestroySwapchainKHR(GVulkanDevice, oldSwapchain, 0);
     }
     oldSwapchain = 0;
 
@@ -415,8 +414,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
 
     // Get swapchain frames count
     uint32_t swapchainFramesCount = 0;
-    if (vkGetSwapchainImagesKHR(
-        vulkanDevice, handle, &swapchainFramesCount, 0) != VK_SUCCESS)
+    if (vkGetSwapchainImagesKHR(GVulkanDevice,
+        handle, &swapchainFramesCount, 0) != VK_SUCCESS)
     {
         // Could not get swapchain frames count
         SysMessage::box() << "[0x3039] Could not get swapchain frames count\n";
@@ -442,7 +441,7 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
 
     // Get current swapchain images
     VkImage swapchainImages[RendererMaxSwapchainFrames];
-    if (vkGetSwapchainImagesKHR(vulkanDevice,
+    if (vkGetSwapchainImagesKHR(GVulkanDevice,
         handle, &swapchainFramesCount, swapchainImages) != VK_SUCCESS)
     {
         // Could not get swapchain images count
@@ -495,8 +494,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
         // Create image view
         imageView.image = images[i];
 
-        if (vkCreateImageView(
-            vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
+        if (vkCreateImageView(GVulkanDevice,
+            &imageView, 0, &views[i]) != VK_SUCCESS)
         {
             // Could not create image view
             SysMessage::box() << "[0x303D] Could not create image view\n";
@@ -576,8 +575,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     renderPassInfo.dependencyCount = 2;
     renderPassInfo.pDependencies = subpassDependencies;
 
-    if (vkCreateRenderPass(
-        vulkanDevice, &renderPassInfo, 0, &renderPass) != VK_SUCCESS)
+    if (vkCreateRenderPass(GVulkanDevice,
+        &renderPassInfo, 0, &renderPass) != VK_SUCCESS)
     {
         // Could not create render pass
         SysMessage::box() << "[0x303F] Could not create render pass\n";
@@ -613,8 +612,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
         imageViews[0] = views[i];
         framebufferInfo.pAttachments = imageViews;
 
-        if (vkCreateFramebuffer(
-            vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        if (vkCreateFramebuffer(GVulkanDevice,
+            &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
         {
             // Could not create framebuffer
             SysMessage::box() << "[0x3041] Could not create framebuffer\n";
@@ -639,8 +638,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Create render ready semaphore
-        if (vkCreateSemaphore(
-            vulkanDevice, &semaphoreInfo, 0, &renderReady[i]) != VK_SUCCESS)
+        if (vkCreateSemaphore(GVulkanDevice,
+            &semaphoreInfo, 0, &renderReady[i]) != VK_SUCCESS)
         {
             // Could not create render ready semaphore
             SysMessage::box() << "[0x3043] Could not create ready semaphore\n";
@@ -649,8 +648,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
         }
 
         // Create render finished semaphore
-        if (vkCreateSemaphore(
-            vulkanDevice, &semaphoreInfo, 0, &renderDone[i]) != VK_SUCCESS)
+        if (vkCreateSemaphore(GVulkanDevice,
+            &semaphoreInfo, 0, &renderDone[i]) != VK_SUCCESS)
         {
             // Could not create render finished semaphore
             SysMessage::box() << "[0x3044] Could not create finish semaphore\n";
@@ -668,8 +667,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Create fence
-        if (vkCreateFence(
-            vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
+        if (vkCreateFence(GVulkanDevice,
+            &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
         {
             // Could not create fence
             SysMessage::box() << "[0x3045] Could not create fence\n";
@@ -695,8 +694,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Create command pool
-        if (vkCreateCommandPool(
-            vulkanDevice, &commandPoolInfo, 0, &commandPools[i]) != VK_SUCCESS)
+        if (vkCreateCommandPool(GVulkanDevice,
+            &commandPoolInfo, 0, &commandPools[i]) != VK_SUCCESS)
         {
             // Could not create commands pool
             SysMessage::box() << "[0x3047] Could not create commands pool\n";
@@ -725,8 +724,8 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
         // Allocate command buffer
         commandBufferInfo.commandPool = commandPools[i];
 
-        if (vkAllocateCommandBuffers(
-            vulkanDevice, &commandBufferInfo, &commandBuffers[i]) != VK_SUCCESS)
+        if (vkAllocateCommandBuffers(GVulkanDevice,
+            &commandBufferInfo, &commandBuffers[i]) != VK_SUCCESS)
         {
             // Could not allocate command buffers
             SysMessage::box() << "[0x3049] Could not allocate command buffer\n";
@@ -743,7 +742,7 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
     }
 
     // Wait for device idle
-    if (vkDeviceWaitIdle(vulkanDevice) != VK_SUCCESS)
+    if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
     {
         // Could not get the device ready
         SysMessage::box() << "[0x304B] Could not get the device ready\n";
@@ -759,7 +758,7 @@ bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
 //  Resize swapchain                                                          //
 //  return : True if swapchain is successfully resized                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
+bool Swapchain::resizeSwapchain()
 {
     // Destroy current swapchain
     for (uint32_t i = 0; i < frames; ++i)
@@ -767,21 +766,21 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
         // Destroy fences
         if (fences[i])
         {
-            vkDestroyFence(vulkanDevice, fences[i], 0);
+            vkDestroyFence(GVulkanDevice, fences[i], 0);
         }
         fences[i] = 0;
 
         // Destroy framebuffers
         if (framebuffers[i])
         {
-            vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
+            vkDestroyFramebuffer(GVulkanDevice, framebuffers[i], 0);
         }
         framebuffers[i] = 0;
 
         // Destroy swapchain images views
         if (views[i])
         {
-            vkDestroyImageView(vulkanDevice, views[i], 0);
+            vkDestroyImageView(GVulkanDevice, views[i], 0);
         }
         views[i] = 0;
     }
@@ -1010,8 +1009,8 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
     swapchainInfos.clipped = VK_TRUE;
     swapchainInfos.oldSwapchain = oldSwapchain;
 
-    if (vkCreateSwapchainKHR(
-        vulkanDevice, &swapchainInfos, 0, &handle) != VK_SUCCESS)
+    if (vkCreateSwapchainKHR(GVulkanDevice,
+        &swapchainInfos, 0, &handle) != VK_SUCCESS)
     {
         // Could not create swapchain
         return false;
@@ -1020,7 +1019,7 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
     // Destroy old swapchain
     if (oldSwapchain)
     {
-        vkDestroySwapchainKHR(vulkanDevice, oldSwapchain, 0);
+        vkDestroySwapchainKHR(GVulkanDevice, oldSwapchain, 0);
     }
 
     // Set swapchain format
@@ -1028,8 +1027,8 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
 
     // Get swapchain frames count
     uint32_t swapchainFramesCount = 0;
-    if (vkGetSwapchainImagesKHR(
-        vulkanDevice, handle, &swapchainFramesCount, 0) != VK_SUCCESS)
+    if (vkGetSwapchainImagesKHR(GVulkanDevice,
+        handle, &swapchainFramesCount, 0) != VK_SUCCESS)
     {
         // Could not get swapchain frames count
         return false;
@@ -1049,7 +1048,7 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
 
     // Get current swapchain images
     VkImage swapchainImages[RendererMaxSwapchainFrames];
-    if (vkGetSwapchainImagesKHR(vulkanDevice,
+    if (vkGetSwapchainImagesKHR(GVulkanDevice,
         handle, &swapchainFramesCount, swapchainImages) != VK_SUCCESS)
     {
         // Could not get swapchain images count
@@ -1101,8 +1100,8 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
         // Recreate image view
         imageView.image = images[i];
 
-        if (vkCreateImageView(
-            vulkanDevice, &imageView, 0, &views[i]) != VK_SUCCESS)
+        if (vkCreateImageView(GVulkanDevice,
+            &imageView, 0, &views[i]) != VK_SUCCESS)
         {
             // Could not recreate swapchain image view
             return false;
@@ -1135,8 +1134,8 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
         imageViews[0] = views[i];
         framebufferInfo.pAttachments = imageViews;
 
-        if (vkCreateFramebuffer(
-            vulkanDevice, &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        if (vkCreateFramebuffer(GVulkanDevice,
+            &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
         {
             // Could not recreate framebuffer
             return false;
@@ -1157,8 +1156,8 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Recreate fence
-        if (vkCreateFence(
-            vulkanDevice, &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
+        if (vkCreateFence(GVulkanDevice,
+            &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
         {
             // Could not recreate fence
             return false;
@@ -1180,10 +1179,10 @@ bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy swapchain                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
+void Swapchain::destroySwapchain()
 {
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return;
@@ -1192,7 +1191,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
     // Destroy render pass
     if (renderPass)
     {
-        vkDestroyRenderPass(vulkanDevice, renderPass, 0);
+        vkDestroyRenderPass(GVulkanDevice, renderPass, 0);
     }
     renderPass = 0;
 
@@ -1204,12 +1203,12 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
             if (commandBuffers[i])
             {
                 vkFreeCommandBuffers(
-                    vulkanDevice, commandPools[i], 1, &commandBuffers[i]
+                    GVulkanDevice, commandPools[i], 1, &commandBuffers[i]
                 );
             }
 
             // Destroy commands pool
-            vkDestroyCommandPool(vulkanDevice, commandPools[i], 0);
+            vkDestroyCommandPool(GVulkanDevice, commandPools[i], 0);
         }
         commandBuffers[i] = 0;
         commandPools[i] = 0;
@@ -1217,34 +1216,34 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
         // Destroy fences
         if (fences[i])
         {
-            vkDestroyFence(vulkanDevice, fences[i], 0);
+            vkDestroyFence(GVulkanDevice, fences[i], 0);
         }
         fences[i] = 0;
 
         // Destroy semaphores
         if (renderDone[i])
         {
-            vkDestroySemaphore(vulkanDevice, renderDone[i], 0);
+            vkDestroySemaphore(GVulkanDevice, renderDone[i], 0);
         }
         renderDone[i] = 0;
 
         if (renderReady[i])
         {
-            vkDestroySemaphore(vulkanDevice, renderReady[i], 0);
+            vkDestroySemaphore(GVulkanDevice, renderReady[i], 0);
         }
         renderReady[i] = 0;
 
         // Destroy framebuffers
         if (framebuffers[i])
         {
-            vkDestroyFramebuffer(vulkanDevice, framebuffers[i], 0);
+            vkDestroyFramebuffer(GVulkanDevice, framebuffers[i], 0);
         }
         framebuffers[i] = 0;
 
         // Destroy swapchain images views
         if (views[i])
         {
-            vkDestroyImageView(vulkanDevice, views[i], 0);
+            vkDestroyImageView(GVulkanDevice, views[i], 0);
         }
         views[i]= 0;
         images[i] = 0;
@@ -1253,7 +1252,7 @@ void Swapchain::destroySwapchain(VkDevice& vulkanDevice)
     // Destroy swapchain
     if (handle)
     {
-        vkDestroySwapchainKHR(vulkanDevice, handle, 0);
+        vkDestroySwapchainKHR(GVulkanDevice, handle, 0);
     }
     handle = 0;
 

@@ -48,7 +48,6 @@
 Renderer::Renderer(Resources& resources) :
 m_rendererReady(false),
 m_frameIndex(0),
-m_vulkanDevice(0),
 m_vulkanQueues(),
 m_graphicsQueue(),
 m_surfaceQueue(),
@@ -175,7 +174,7 @@ bool Renderer::init()
     }
 
     // Load Vulkan device functions
-    if (!LoadVulkanDeviceFunctions(m_vulkanDevice))
+    if (!LoadVulkanDeviceFunctions())
     {
         // Could not load Vulkan device functions
         SysMessage::box() << "[0x301E] Could not load device functions\n";
@@ -184,27 +183,27 @@ bool Renderer::init()
     }
 
     // Init Vulkan memory
-    if (!m_vulkanMemory.init(m_vulkanDevice))
+    if (!m_vulkanMemory.init())
     {
         return false;
     }
 
     // Request graphics queue handle
-    if (!m_graphicsQueue.createGraphicsQueue(m_vulkanDevice, m_vulkanQueues))
+    if (!m_graphicsQueue.createGraphicsQueue(m_vulkanQueues))
     {
         // Could not get graphics queue handle
         return false;
     }
 
     // Request surface queue handle
-    if (!m_surfaceQueue.createSurfaceQueue(m_vulkanDevice, m_vulkanQueues))
+    if (!m_surfaceQueue.createSurfaceQueue(m_vulkanQueues))
     {
         // Could not get surface queue handle
         return false;
     }
 
     // Create swapchain
-    if (!m_swapchain.createSwapchain(m_vulkanDevice, m_surfaceQueue.family))
+    if (!m_swapchain.createSwapchain(m_surfaceQueue.family))
     {
         // Could not create swapchain
         return false;
@@ -225,7 +224,7 @@ bool Renderer::init()
     uniformsPoolInfo.poolSizeCount = 1;
     uniformsPoolInfo.pPoolSizes = &uniformsPoolSize;
 
-    if (vkCreateDescriptorPool(m_vulkanDevice,
+    if (vkCreateDescriptorPool(GVulkanDevice,
         &uniformsPoolInfo, 0, &m_uniformsDescPool) != VK_SUCCESS)
     {
         // Could not create uniforms descriptor pool
@@ -256,7 +255,7 @@ bool Renderer::init()
     texturesPoolInfo.poolSizeCount = 1;
     texturesPoolInfo.pPoolSizes = &texturesPoolSize;
 
-    if (vkCreateDescriptorPool(m_vulkanDevice,
+    if (vkCreateDescriptorPool(GVulkanDevice,
         &texturesPoolInfo, 0, &m_texturesDescPool) != VK_SUCCESS)
     {
         // Could not create textures descriptor pool
@@ -273,7 +272,7 @@ bool Renderer::init()
     }
 
     // Create default pipeline layout
-    if (!m_layout.createLayout(m_vulkanDevice))
+    if (!m_layout.createLayout())
     {
         // Could not create default pipeline layout
         SysMessage::box() << "[0x3052] Could not create default layout\n";
@@ -342,10 +341,10 @@ bool Renderer::initPipelines()
 
     // Create compositing pipeline
     m_pipelines[RENDERER_PIPELINE_COMPOSITING].createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
+        DefaultVertexShader, DefaultVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_COMPOSITING].createFragmentShader(
-        *this, DefaultFragmentShader, DefaultFragmentShaderSize
+        DefaultFragmentShader, DefaultFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_COMPOSITING].createCompositingPipeline(
         *this, ALPHA_BLENDING_PREMULTIPLIED))
@@ -357,10 +356,10 @@ bool Renderer::initPipelines()
 
     // Create sprite pipeline
     m_pipelines[RENDERER_PIPELINE_DEFAULT].createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
+        DefaultVertexShader, DefaultVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_DEFAULT].createFragmentShader(
-        *this, DefaultFragmentShader, DefaultFragmentShaderSize
+        DefaultFragmentShader, DefaultFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(
         *this, VERTEX_INPUTS_DEFAULT, false, false,
@@ -374,10 +373,10 @@ bool Renderer::initPipelines()
 
     // Create ninepatch pipeline
     m_pipelines[RENDERER_PIPELINE_NINEPATCH].createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
+        DefaultVertexShader, DefaultVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_NINEPATCH].createFragmentShader(
-        *this, NinePatchFragmentShader, NinePatchFragmentShaderSize
+        NinePatchFragmentShader, NinePatchFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(
         *this, VERTEX_INPUTS_DEFAULT, false, false,
@@ -391,10 +390,10 @@ bool Renderer::initPipelines()
 
     // Create rectangle pipeline
     m_pipelines[RENDERER_PIPELINE_RECTANGLE].createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
+        DefaultVertexShader, DefaultVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_RECTANGLE].createFragmentShader(
-        *this, RectangleFragmentShader, RectangleFragmentShaderSize
+        RectangleFragmentShader, RectangleFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(
         *this, VERTEX_INPUTS_DEFAULT, false, false,
@@ -408,10 +407,10 @@ bool Renderer::initPipelines()
 
     // Create ellipse pipeline
     m_pipelines[RENDERER_PIPELINE_ELLISPE].createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
+        DefaultVertexShader, DefaultVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_ELLISPE].createFragmentShader(
-        *this, EllipseFragmentShader, EllipseFragmentShaderSize
+        EllipseFragmentShader, EllipseFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(
         *this, VERTEX_INPUTS_DEFAULT, false, false,
@@ -425,10 +424,10 @@ bool Renderer::initPipelines()
 
     // Create pixel text pipeline
     m_pipelines[RENDERER_PIPELINE_PXTEXT].createVertexShader(
-        *this, DefaultVertexShader, DefaultVertexShaderSize
+        DefaultVertexShader, DefaultVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_PXTEXT].createFragmentShader(
-        *this, PxTextFragmentShader, PxTextFragmentShaderSize
+        PxTextFragmentShader, PxTextFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(
         *this, VERTEX_INPUTS_DEFAULT, false, false,
@@ -443,10 +442,10 @@ bool Renderer::initPipelines()
 
     // Create skybox pipeline
     m_pipelines[RENDERER_PIPELINE_SKYBOX].createVertexShader(
-        *this, SkyBoxVertexShader, SkyBoxVertexShaderSize
+        SkyBoxVertexShader, SkyBoxVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_SKYBOX].createFragmentShader(
-        *this, SkyBoxFragmentShader, SkyBoxFragmentShaderSize
+        SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SKYBOX].createPipeline(
         *this, VERTEX_INPUTS_CUBEMAP, false, true,
@@ -460,10 +459,10 @@ bool Renderer::initPipelines()
 
     // Create shape pipeline
     m_pipelines[RENDERER_PIPELINE_SHAPE].createVertexShader(
-        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
+        StaticMeshVertexShader, StaticMeshVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_SHAPE].createFragmentShader(
-        *this, StaticProcFragmentShader, StaticProcFragmentShaderSize
+        StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
         *this, VERTEX_INPUTS_STATICMESH, true, true,
@@ -477,10 +476,10 @@ bool Renderer::initPipelines()
 
     // Create static mesh pipeline
     m_pipelines[RENDERER_PIPELINE_STATICMESH].createVertexShader(
-        *this, StaticMeshVertexShader, StaticMeshVertexShaderSize
+        StaticMeshVertexShader, StaticMeshVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_STATICMESH].createFragmentShader(
-        *this, StaticMeshFragmentShader, StaticMeshFragmentShaderSize
+        StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_STATICMESH].createPipeline(
         *this, VERTEX_INPUTS_STATICMESH, true, true,
@@ -494,10 +493,10 @@ bool Renderer::initPipelines()
 
     // Create heightmap pipeline
     m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createVertexShader(
-        *this, HeightMapVertexShader, HeightMapVertexShaderSize
+        HeightMapVertexShader, HeightMapVertexShaderSize
     );
     m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createFragmentShader(
-        *this, HeightMapFragmentShader, HeightMapFragmentShaderSize
+        HeightMapFragmentShader, HeightMapFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createPipeline(
         *this, VERTEX_INPUTS_STATICMESH, true, true,
@@ -541,7 +540,7 @@ bool Renderer::startFrame()
     }
 
     // Wait for current frame rendering fence
-    if (vkWaitForFences(m_vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &m_swapchain.fences[m_swapchain.current],
         VK_FALSE, RendererSwapchainFenceTimeout) != VK_SUCCESS)
     {
@@ -551,7 +550,7 @@ bool Renderer::startFrame()
     }
 
     // Acquire current frame
-    if (vkAcquireNextImageKHR(m_vulkanDevice, m_swapchain.handle,
+    if (vkAcquireNextImageKHR(GVulkanDevice, m_swapchain.handle,
         UINT64_MAX, m_swapchain.renderReady[m_swapchain.current],
         0, &m_frameIndex) != VK_SUCCESS)
     {
@@ -570,7 +569,7 @@ bool Renderer::startFrame()
 
 
     // Reset command pool
-    if (vkResetCommandPool(m_vulkanDevice,
+    if (vkResetCommandPool(GVulkanDevice,
         m_swapchain.commandPools[m_swapchain.current], 0) != VK_SUCCESS)
     {
         // Could not reset command pool
@@ -621,7 +620,7 @@ bool Renderer::endFrame()
     }
 
     // Reset current frame rendering fence
-    if (vkResetFences(m_vulkanDevice, 1,
+    if (vkResetFences(GVulkanDevice, 1,
         &m_swapchain.fences[m_swapchain.current]) != VK_SUCCESS)
     {
         // Could not reset fence
@@ -864,14 +863,14 @@ void Renderer::endFinalPass()
 bool Renderer::waitDeviceIdle()
 {
     // Check Vulkan device
-    if (!m_vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return false;
     }
 
     // Wait for renderer device idle
-    if (vkDeviceWaitIdle(m_vulkanDevice) == VK_SUCCESS)
+    if (vkDeviceWaitIdle(GVulkanDevice) == VK_SUCCESS)
     {
         // Renderer device is in idle state
         return true;
@@ -889,58 +888,58 @@ void Renderer::destroyRenderer()
     m_rendererReady = false;
 
     // Check Vulkan device
-    if (!m_vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return;
     }
 
     // Destroy default view
-    m_view.destroyView(*this);
+    m_view.destroyView();
 
     // Destroy pipeplines
     if (m_pipelines)
     {
         for (int i = 0; i < RENDERER_PIPELINE_PIPELINESCOUNT; ++i)
         {
-            m_pipelines[i].destroyPipeline(*this);
+            m_pipelines[i].destroyPipeline();
         }
         delete[] m_pipelines;
     }
     m_pipelines = 0;
 
     // Destroy main renderer
-    m_mainRenderer.destroyBackRenderer(*this);
+    m_mainRenderer.destroyBackRenderer();
 
     // Destroy default pipeline layout
-    m_layout.destroyLayout(m_vulkanDevice);
+    m_layout.destroyLayout();
 
     // Destroy textures descriptor pool
     if (m_texturesDescPool)
     {
-        vkDestroyDescriptorPool(m_vulkanDevice, m_texturesDescPool, 0);
+        vkDestroyDescriptorPool(GVulkanDevice, m_texturesDescPool, 0);
     }
     m_texturesDescPool = 0;
 
     // Destroy uniforms descriptor pool
     if (m_uniformsDescPool)
     {
-        vkDestroyDescriptorPool(m_vulkanDevice, m_uniformsDescPool, 0);
+        vkDestroyDescriptorPool(GVulkanDevice, m_uniformsDescPool, 0);
     }
     m_uniformsDescPool = 0;
 
     // Destroy swapchain
-    m_swapchain.destroySwapchain(m_vulkanDevice);
+    m_swapchain.destroySwapchain();
 
     // Destroy Vulkan memory
-    m_vulkanMemory.destroyVulkanMemory(m_vulkanDevice);
+    m_vulkanMemory.destroyVulkanMemory();
 
     // Destroy Vulkan device
-    if (m_vulkanDevice)
+    if (GVulkanDevice)
     {
-        vkDestroyDevice(m_vulkanDevice, 0);
+        vkDestroyDevice(GVulkanDevice, 0);
     }
-    m_vulkanDevice = 0;
+    GVulkanDevice = 0;
 
     // Destroy Vulkan surface
     if (GVulkanInstance && GVulkanSurface)
@@ -1227,7 +1226,7 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Check Vulkan device
-    if (m_vulkanDevice)
+    if (GVulkanDevice)
     {
         // Vulkan device already selected
         SysMessage::box() << "[0x3011] Vulkan device already selected\n";
@@ -1521,14 +1520,14 @@ bool Renderer::selectVulkanDevice()
     deviceInfos.pEnabledFeatures = 0;
 
     if (vkCreateDevice(
-        GPhysicalDevice, &deviceInfos, 0, &m_vulkanDevice) != VK_SUCCESS)
+        GPhysicalDevice, &deviceInfos, 0, &GVulkanDevice) != VK_SUCCESS)
     {
         // Could not create Vulkan device
         SysMessage::box() << "[0x301C] Could not create Vulkan device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
-    if (!m_vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         SysMessage::box() << "[0x301D] Invalid Vulkan device\n";
@@ -1548,14 +1547,14 @@ bool Renderer::resize()
 {
     // Wait for device idle
     m_rendererReady = false;
-    if (vkDeviceWaitIdle(m_vulkanDevice) != VK_SUCCESS)
+    if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
     {
         // Could not wait for device idle
         return false;
     }
 
     // Resize swapchain
-    if (!m_swapchain.resizeSwapchain(m_vulkanDevice))
+    if (!m_swapchain.resizeSwapchain())
     {
         return false;
     }
@@ -1571,7 +1570,7 @@ bool Renderer::resize()
     }
 
     // Wait for device idle
-    if (vkDeviceWaitIdle(m_vulkanDevice) != VK_SUCCESS)
+    if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
     {
         // Could not wait for device idle
         return false;

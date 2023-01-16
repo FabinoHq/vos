@@ -65,14 +65,13 @@ UniformBuffer::~UniformBuffer()
 //  Create Uniform buffer                                                     //
 //  return : True if Uniform buffer is successfully created                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool UniformBuffer::createBuffer(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory, uint32_t size)
+bool UniformBuffer::createBuffer(VulkanMemory& vulkanMemory, uint32_t size)
 {
     // Check current buffer
     if (uniformBuffer.handle)
     {
         // Destroy current buffer
-        uniformBuffer.destroyBuffer(vulkanDevice);
+        uniformBuffer.destroyBuffer();
     }
 
     // Check UniformData size
@@ -85,7 +84,7 @@ bool UniformBuffer::createBuffer(VkDevice& vulkanDevice,
 
     // Create uniform buffer
     if (!uniformBuffer.createBuffer(
-        vulkanDevice, vulkanMemory,
+        vulkanMemory,
         (VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT),
         VULKAN_MEMORY_RENDERDEVICE, size))
     {
@@ -95,7 +94,7 @@ bool UniformBuffer::createBuffer(VkDevice& vulkanDevice,
 
     // Create staging buffer
     if (!stagingBuffer.createBuffer(
-        vulkanDevice, vulkanMemory,
+        vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_RENDERHOST, size))
     {
         // Could not create staging buffer
@@ -110,8 +109,8 @@ bool UniformBuffer::createBuffer(VkDevice& vulkanDevice,
 //  Update Uniform buffer                                                     //
 //  return : True if Uniform buffer is successfully updated                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
-    VulkanMemory& vulkanMemory, VkCommandPool& transferCommandPool,
+bool UniformBuffer::updateBuffer(VulkanMemory& vulkanMemory,
+    VkCommandPool& transferCommandPool,
     VulkanQueue& transferQueue, void* data, uint32_t size)
 {
     // Check current buffer
@@ -119,13 +118,13 @@ bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
         !stagingBuffer.handle || (stagingBuffer.size != size))
     {
         // Recreate uniform buffer
-        destroyBuffer(vulkanDevice);
-        createBuffer(vulkanDevice, vulkanMemory, size);
+        destroyBuffer();
+        createBuffer(vulkanMemory, size);
     }
 
     // Write data into staging buffer memory
     if (!vulkanMemory.writeBufferMemory(
-        vulkanDevice, stagingBuffer, data, VULKAN_MEMORY_RENDERHOST))
+        stagingBuffer, data, VULKAN_MEMORY_RENDERHOST))
     {
         // Could not write data into staging buffer memory
         return false;
@@ -141,7 +140,7 @@ bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
     bufferAllocate.commandBufferCount = 1;
 
     if (vkAllocateCommandBuffers(
-        vulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
+        GVulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
     {
         // Could not allocate command buffers
         return false;
@@ -183,7 +182,8 @@ bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
     fenceInfo.pNext = 0;
     fenceInfo.flags = 0;
 
-    if (vkCreateFence(vulkanDevice, &fenceInfo, 0, &fence) != VK_SUCCESS)
+    if (vkCreateFence(GVulkanDevice,
+        &fenceInfo, 0, &fence) != VK_SUCCESS)
     {
         // Could not create fence
         return false;
@@ -214,7 +214,7 @@ bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &fence, VK_FALSE, UniformBufferFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
@@ -224,14 +224,14 @@ bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
     // Destroy fence
     if (fence)
     {
-        vkDestroyFence(vulkanDevice, fence, 0);
+        vkDestroyFence(GVulkanDevice, fence, 0);
     }
 
     // Destroy command buffer
     if (commandBuffer)
     {
-        vkFreeCommandBuffers(
-            vulkanDevice, transferCommandPool, 1, &commandBuffer
+        vkFreeCommandBuffers(GVulkanDevice,
+            transferCommandPool, 1, &commandBuffer
         );
     }
 
@@ -242,8 +242,8 @@ bool UniformBuffer::updateBuffer(VkDevice& vulkanDevice,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Uniform buffer                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void UniformBuffer::destroyBuffer(VkDevice& vulkanDevice)
+void UniformBuffer::destroyBuffer()
 {
-    stagingBuffer.destroyBuffer(vulkanDevice);
-    uniformBuffer.destroyBuffer(vulkanDevice);
+    stagingBuffer.destroyBuffer();
+    uniformBuffer.destroyBuffer();
 }

@@ -144,7 +144,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Destroy Vertex buffer                                         //
             ////////////////////////////////////////////////////////////////////
-            void destroyBuffer(VkDevice& vulkanDevice);
+            void destroyBuffer();
 
 
         private:

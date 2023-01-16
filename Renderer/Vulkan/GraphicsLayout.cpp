@@ -79,10 +79,10 @@ GraphicsLayout::~GraphicsLayout()
 //  Create graphics pipeline layout                                           //
 //  return : True if graphics layout is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool GraphicsLayout::createLayout(VkDevice& vulkanDevice)
+bool GraphicsLayout::createLayout()
 {
     // Create descriptor set layouts
-    if (!createDescriptorSetLayouts(vulkanDevice))
+    if (!createDescriptorSetLayouts())
     {
         // Could not create descriptor set layouts
         SysMessage::box() << "[0x3050] Could not create descriptor layouts\n";
@@ -91,7 +91,7 @@ bool GraphicsLayout::createLayout(VkDevice& vulkanDevice)
     }
 
     // Create pipeline layouts
-    if (!createPipelineLayouts(vulkanDevice))
+    if (!createPipelineLayouts())
     {
         // Could not create pipeline layouts
         SysMessage::box() << "[0x3051] Could not create pipeline layouts\n";
@@ -107,7 +107,7 @@ bool GraphicsLayout::createLayout(VkDevice& vulkanDevice)
 //  Create descriptor set layouts                                             //
 //  return : True if descriptor layout is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool GraphicsLayout::createDescriptorSetLayouts(VkDevice& vulkanDevice)
+bool GraphicsLayout::createDescriptorSetLayouts()
 {
     // Descriptor sets bindings
     VkDescriptorSetLayoutBinding descriptorSetBindings[DESC_SETS_COUNT];
@@ -151,8 +151,8 @@ bool GraphicsLayout::createDescriptorSetLayouts(VkDevice& vulkanDevice)
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         // Create current descriptor set layout
-        if (vkCreateDescriptorSetLayout(vulkanDevice, &descriptorSetInfo[i], 0,
-            &descSetLayouts[i]) != VK_SUCCESS)
+        if (vkCreateDescriptorSetLayout(GVulkanDevice,
+            &descriptorSetInfo[i], 0, &descSetLayouts[i]) != VK_SUCCESS)
         {
             // Could not create descriptor set layout
             return false;
@@ -179,7 +179,7 @@ bool GraphicsLayout::createDescriptorSetLayouts(VkDevice& vulkanDevice)
 //  Create pipeline layouts                                                   //
 //  return : True if pipeline layout is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
+bool GraphicsLayout::createPipelineLayouts()
 {
     // Check descriptor set layouts
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
@@ -224,8 +224,8 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
     pipelineInfo.pushConstantRangeCount = PUSH_CONSTANT_COUNT;
     pipelineInfo.pPushConstantRanges = pushConstantRange;
 
-    if (vkCreatePipelineLayout(
-        vulkanDevice, &pipelineInfo, 0, &handle) != VK_SUCCESS)
+    if (vkCreatePipelineLayout(GVulkanDevice,
+        &pipelineInfo, 0, &handle) != VK_SUCCESS)
     {
         // Could not create pipeline layout
         return false;
@@ -243,10 +243,10 @@ bool GraphicsLayout::createPipelineLayouts(VkDevice& vulkanDevice)
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy pipeline layout                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void GraphicsLayout::destroyLayout(VkDevice& vulkanDevice)
+void GraphicsLayout::destroyLayout()
 {
     // Check Vulkan device
-    if (!vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return;
@@ -257,7 +257,7 @@ void GraphicsLayout::destroyLayout(VkDevice& vulkanDevice)
     {
         if (descSetLayouts[i])
         {
-            vkDestroyDescriptorSetLayout(vulkanDevice, descSetLayouts[i], 0);
+            vkDestroyDescriptorSetLayout(GVulkanDevice, descSetLayouts[i], 0);
         }
         descSetLayouts[i] = 0;
     }
@@ -271,7 +271,7 @@ void GraphicsLayout::destroyLayout(VkDevice& vulkanDevice)
     // Destroy pipeline layout
     if (handle)
     {
-        vkDestroyPipelineLayout(vulkanDevice, handle, 0);
+        vkDestroyPipelineLayout(GVulkanDevice, handle, 0);
     }
     handle = 0;
 }

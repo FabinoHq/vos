@@ -179,8 +179,7 @@ void MeshLoader::process()
 bool MeshLoader::init()
 {
     // Request transfer queue handle
-    if (!m_transferQueue.createGraphicsQueue(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanQueues))
+    if (!m_transferQueue.createGraphicsQueue(m_renderer.m_vulkanQueues))
     {
         // Could not get transfer queue handle
         return false;
@@ -193,7 +192,7 @@ bool MeshLoader::init()
     commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = m_transferQueue.family;
 
-    if (vkCreateCommandPool(m_renderer.m_vulkanDevice,
+    if (vkCreateCommandPool(GVulkanDevice,
         &commandPoolInfo, 0, &m_commandPool) != VK_SUCCESS)
     {
         // Could not create commands pool
@@ -213,7 +212,7 @@ bool MeshLoader::init()
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
-    if (vkAllocateCommandBuffers(m_renderer.m_vulkanDevice,
+    if (vkAllocateCommandBuffers(GVulkanDevice,
         &bufferAllocate, &m_commandBuffer) != VK_SUCCESS)
     {
         // Could not allocate command buffer
@@ -231,8 +230,7 @@ bool MeshLoader::init()
     fenceInfo.pNext = 0;
     fenceInfo.flags = 0;
 
-    if (vkCreateFence(
-        m_renderer.m_vulkanDevice, &fenceInfo, 0, &m_fence) != VK_SUCCESS)
+    if (vkCreateFence(GVulkanDevice, &fenceInfo, 0, &m_fence) != VK_SUCCESS)
     {
         // Could not create staging fence
         return false;
@@ -318,7 +316,7 @@ void MeshLoader::destroyMeshLoader()
     // Destroy meshes vertex buffers
     for (int i = 0; i < MESHES_ASSETSCOUNT; ++i)
     {
-        m_meshes[i].destroyBuffer(m_renderer.m_vulkanDevice);
+        m_meshes[i].destroyBuffer();
     }
     if (m_meshes) { delete[] m_meshes; }
     m_meshes = 0;
@@ -326,26 +324,24 @@ void MeshLoader::destroyMeshLoader()
     // Destroy staging fence
     if (m_fence)
     {
-        vkDestroyFence(m_renderer.m_vulkanDevice, m_fence, 0);
+        vkDestroyFence(GVulkanDevice, m_fence, 0);
     }
     m_fence = 0;
 
     // Destroy staging buffer
-    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+    m_stagingBuffer.destroyBuffer();
 
     // Destroy command buffer
     if (m_commandBuffer)
     {
-        vkFreeCommandBuffers(m_renderer.m_vulkanDevice,
-            m_commandPool, 1, &m_commandBuffer
-        );
+        vkFreeCommandBuffers(GVulkanDevice, m_commandPool, 1, &m_commandBuffer);
     }
     m_commandBuffer = 0;
 
     // Destroy command pool
     if (m_commandPool)
     {
-        vkDestroyCommandPool(m_renderer.m_vulkanDevice, m_commandPool, 0);
+        vkDestroyCommandPool(GVulkanDevice, m_commandPool, 0);
     }
     m_commandPool = 0;
 }
@@ -364,8 +360,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
     // Create vertices staging buffer
     if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_MESHUPLOAD, verticesCount))
     {
         // Could not create vertices staging buffer
@@ -374,8 +369,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
     // Write vertices into staging buffer memory
     if (!m_renderer.m_vulkanMemory.writeBufferMemory(
-        m_renderer.m_vulkanDevice, m_stagingBuffer,
-        vertices, VULKAN_MEMORY_MESHUPLOAD))
+        m_stagingBuffer, vertices, VULKAN_MEMORY_MESHUPLOAD))
     {
         // Could not write vertices into staging buffer memory
         return false;
@@ -383,8 +377,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
 
     // Reset command pool
-    if (vkResetCommandPool(
-        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    if (vkResetCommandPool(GVulkanDevice, m_commandPool, 0) != VK_SUCCESS)
     {
         // Could not reset command pool
         return false;
@@ -420,8 +413,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Reset staging fence
-    if (vkResetFences(
-        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    if (vkResetFences(GVulkanDevice, 1, &m_fence) != VK_SUCCESS)
     {
         // Could not reset staging fence
         return false;
@@ -447,7 +439,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &m_fence, VK_FALSE, MeshFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
@@ -455,7 +447,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Destroy vertices staging buffer
-    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+    m_stagingBuffer.destroyBuffer();
 
 
     // Reset mesh upload memory
@@ -463,8 +455,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
     // Create indices staging buffer
     if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_MESHUPLOAD, indicesCount))
     {
         // Could not create indices staging buffer
@@ -473,8 +464,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
     // Write indices into staging buffer memory
     if (!m_renderer.m_vulkanMemory.writeBufferMemory(
-        m_renderer.m_vulkanDevice, m_stagingBuffer,
-        indices, VULKAN_MEMORY_MESHUPLOAD))
+        m_stagingBuffer, indices, VULKAN_MEMORY_MESHUPLOAD))
     {
         // Could not write indices into staging buffer memory
         return false;
@@ -482,8 +472,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
 
     // Reset command pool
-    if (vkResetCommandPool(
-        m_renderer.m_vulkanDevice, m_commandPool, 0) != VK_SUCCESS)
+    if (vkResetCommandPool(GVulkanDevice, m_commandPool, 0) != VK_SUCCESS)
     {
         // Could not reset command pool
         return false;
@@ -517,8 +506,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Reset staging fence
-    if (vkResetFences(
-        m_renderer.m_vulkanDevice, 1, &m_fence) != VK_SUCCESS)
+    if (vkResetFences(GVulkanDevice, 1, &m_fence) != VK_SUCCESS)
     {
         // Could not reset staging fence
         return false;
@@ -543,7 +531,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Wait for transfer to finish
-    if (vkWaitForFences(m_renderer.m_vulkanDevice, 1,
+    if (vkWaitForFences(GVulkanDevice, 1,
         &m_fence, VK_FALSE, MeshFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
@@ -551,7 +539,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Destroy indices staging buffer
-    m_stagingBuffer.destroyBuffer(m_renderer.m_vulkanDevice);
+    m_stagingBuffer.destroyBuffer();
 
 
     // Vertex buffer successfully uploaded

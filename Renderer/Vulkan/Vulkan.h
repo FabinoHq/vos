@@ -5590,7 +5590,7 @@
     //  Load Vulkan device functions                                          //
     //  return : True if Vulkan device functions are successfully loaded      //
     ////////////////////////////////////////////////////////////////////////////
-    bool LoadVulkanDeviceFunctions(VkDevice& vulkanDevice);
+    bool LoadVulkanDeviceFunctions();
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -5603,6 +5603,11 @@
     //  PhysicalDevice global instance                                        //
     ////////////////////////////////////////////////////////////////////////////
     extern VkPhysicalDevice GPhysicalDevice;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanDevice global instance                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    extern VkDevice GVulkanDevice;
 
 
 #endif // VOS_RENDERER_VULKAN_VULKAN_HEADER

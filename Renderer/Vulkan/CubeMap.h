@@ -102,7 +102,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Destroy cubemap                                               //
             ////////////////////////////////////////////////////////////////////
-            void destroyCubeMap(Renderer& renderer);
+            void destroyCubeMap();
 
 
             ////////////////////////////////////////////////////////////////////
@@ -114,16 +114,15 @@
             ////////////////////////////////////////////////////////////////////
             //  Get cubemap memory requirements                               //
             ////////////////////////////////////////////////////////////////////
-            void getMemoryRequirements(VkDevice& vulkanDevice,
+            void getMemoryRequirements(
                 VkMemoryRequirements* memoryRequirements);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind cubemap memory                                           //
             //  return : True if cubemap memory is successfully binded        //
             ////////////////////////////////////////////////////////////////////
-            bool bindCubeMapMemory(VkDevice& vulkanDevice,
-                VkDeviceMemory& deviceMemory, VkDeviceSize size,
-                VkDeviceSize offset);
+            bool bindCubeMapMemory(VkDeviceMemory& deviceMemory,
+                VkDeviceSize size, VkDeviceSize offset);
 
 
         private:

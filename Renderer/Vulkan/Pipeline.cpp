@@ -67,17 +67,17 @@ Pipeline::~Pipeline()
 //  Create vertex shader                                                      //
 //  return : True if the vertex shader is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createVertexShader(Renderer& renderer,
+bool Pipeline::createVertexShader(
     const uint32_t* vertexSource, const size_t vertexSize)
 {
     // Destroy previous vertex shader
     if (m_vertexShader.isValid())
     {
-        m_vertexShader.destroyShader(renderer);
+        m_vertexShader.destroyShader();
     }
 
     // Create vertex shader
-    if (!m_vertexShader.createShader(renderer, vertexSource, vertexSize))
+    if (!m_vertexShader.createShader(vertexSource, vertexSize))
     {
         // Invalid vertex shader
         return false;
@@ -91,17 +91,17 @@ bool Pipeline::createVertexShader(Renderer& renderer,
 //  Create fragment shader                                                    //
 //  return : True if the fragment shader is successfully created              //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createFragmentShader(Renderer& renderer,
+bool Pipeline::createFragmentShader(
     const uint32_t* fragmentSource, const size_t fragmentSize)
 {
     // Destroy previous fragment shader
     if (m_fragmentShader.isValid())
     {
-        m_fragmentShader.destroyShader(renderer);
+        m_fragmentShader.destroyShader();
     }
 
     // Create fragment shader
-    if (!m_fragmentShader.createShader(renderer, fragmentSource, fragmentSize))
+    if (!m_fragmentShader.createShader(fragmentSource, fragmentSize))
     {
         // Invalid fragment shader
         return false;
@@ -123,7 +123,7 @@ bool Pipeline::createCompositingPipeline(Renderer& renderer,
     if (m_pipeline)
     {
         // Destroy current pipeline
-        destroyPipeline(renderer);
+        destroyPipeline();
     }
 
     // Check vertex shader
@@ -319,7 +319,7 @@ bool Pipeline::createCompositingPipeline(Renderer& renderer,
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
 
-    if (vkCreateGraphicsPipelines(renderer.m_vulkanDevice,
+    if (vkCreateGraphicsPipelines(GVulkanDevice,
         0, 1, &pipelineInfo, 0, &m_pipeline) != VK_SUCCESS)
     {
         // Could not create pipeline
@@ -347,7 +347,7 @@ bool Pipeline::createPipeline(Renderer& renderer,
     if (m_pipeline)
     {
         // Destroy current pipeline
-        destroyPipeline(renderer);
+        destroyPipeline();
     }
 
     // Check vertex shader
@@ -552,7 +552,7 @@ bool Pipeline::createPipeline(Renderer& renderer,
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
 
-    if (vkCreateGraphicsPipelines(renderer.m_vulkanDevice,
+    if (vkCreateGraphicsPipelines(GVulkanDevice,
         0, 1, &pipelineInfo, 0, &m_pipeline) != VK_SUCCESS)
     {
         // Could not create pipeline
@@ -582,10 +582,10 @@ void Pipeline::bind(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy pipeline                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void Pipeline::destroyPipeline(Renderer& renderer)
+void Pipeline::destroyPipeline()
 {
     // Check Vulkan device
-    if (!renderer.m_vulkanDevice)
+    if (!GVulkanDevice)
     {
         // Invalid Vulkan device
         return;
@@ -595,15 +595,15 @@ void Pipeline::destroyPipeline(Renderer& renderer)
     if (m_pipeline)
     {
         // Destroy pipeline
-        vkDestroyPipeline(renderer.m_vulkanDevice, m_pipeline, 0);
+        vkDestroyPipeline(GVulkanDevice, m_pipeline, 0);
     }
     m_pipeline = 0;
 
     // Destroy fragment shader
-    m_fragmentShader.destroyShader(renderer);
+    m_fragmentShader.destroyShader();
 
     // Destroy vertex shader
-    m_vertexShader.destroyShader(renderer);
+    m_vertexShader.destroyShader();
 }
 
 

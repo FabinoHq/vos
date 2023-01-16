@@ -258,26 +258,26 @@ bool Game::init()
 void Game::destroy()
 {
     // Destroy procedural sprite
-    m_procSprite.destroyProcSprite(m_renderer);
+    m_procSprite.destroyProcSprite();
 
     // Destroy cubemap
-    m_cubemap.destroyCubeMap(m_renderer);
+    m_cubemap.destroyCubeMap();
 
 
     // Destroy orbital camera
-    m_orbitalcam.destroyCamera(m_renderer);
+    m_orbitalcam.destroyCamera();
 
     // Destroy freefly camera
-    m_freeflycam.destroyCamera(m_renderer);
+    m_freeflycam.destroyCamera();
 
     // Destroy camera
-    m_camera.destroyCamera(m_renderer);
+    m_camera.destroyCamera();
 
     // Destroy view
-    m_view.destroyView(m_renderer);
+    m_view.destroyView();
 
     // Destroy back renderer
-    m_backRenderer.destroyBackRenderer(m_renderer);
+    m_backRenderer.destroyBackRenderer();
 }
 
 

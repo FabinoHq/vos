@@ -124,7 +124,7 @@ bool Camera::init(Renderer& renderer)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         if (!m_uniformBuffers[i].updateBuffer(
-            renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+            renderer.m_vulkanMemory,
             renderer.m_swapchain.commandPools[i], renderer.m_graphicsQueue,
             &uniformData, sizeof(uniformData)))
         {
@@ -143,7 +143,7 @@ bool Camera::init(Renderer& renderer)
         DESC_MATRICES*RendererMaxSwapchainFrames
     ];
 
-    if (vkAllocateDescriptorSets(renderer.m_vulkanDevice,
+    if (vkAllocateDescriptorSets(GVulkanDevice,
         &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
     {
         // Could not allocate matrices descriptor sets
@@ -173,9 +173,7 @@ bool Camera::init(Renderer& renderer)
         descriptorWrites.pBufferInfo = &descBufferInfo;
         descriptorWrites.pTexelBufferView = 0;
 
-        vkUpdateDescriptorSets(
-            renderer.m_vulkanDevice, 1, &descriptorWrites, 0, 0
-        );
+        vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
     // Camera is successfully created
@@ -185,7 +183,7 @@ bool Camera::init(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy camera                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void Camera::destroyCamera(Renderer& renderer)
+void Camera::destroyCamera()
 {
     m_farPlane = 0.0f;
     m_nearPlane = 0.0f;
@@ -199,7 +197,7 @@ void Camera::destroyCamera(Renderer& renderer)
     // Destroy uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        m_uniformBuffers[i].destroyBuffer(renderer.m_vulkanDevice);
+        m_uniformBuffers[i].destroyBuffer();
         m_descriptorSets[i] = 0;
     }
 
@@ -246,7 +244,7 @@ bool Camera::bind(Renderer& renderer)
 
     // Update uniform buffer
     if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
-        renderer.m_vulkanDevice, renderer.m_vulkanMemory,
+        renderer.m_vulkanMemory,
         renderer.m_swapchain.commandPools[renderer.m_swapchain.current],
         renderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
     {

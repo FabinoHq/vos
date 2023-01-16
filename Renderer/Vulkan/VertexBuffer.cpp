@@ -78,7 +78,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, MeshLoader& loader,
     if (vertexBuffer.handle || indexBuffer.handle)
     {
         // Destroy current buffers
-        destroyBuffer(m_renderer.m_vulkanDevice);
+        destroyBuffer();
     }
 
     // Check input vertices and indices
@@ -93,8 +93,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, MeshLoader& loader,
     indicesCount *= sizeof(uint16_t);
 
     // Create vertex buffer
-    if (!vertexBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+    if (!vertexBuffer.createBuffer(m_renderer.m_vulkanMemory,
         (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT),
         memoryPool, verticesCount))
     {
@@ -103,8 +102,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, MeshLoader& loader,
     }
 
     // Create index buffer
-    if (!indexBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+    if (!indexBuffer.createBuffer(m_renderer.m_vulkanMemory,
         (VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT),
         memoryPool, indicesCount))
     {
@@ -137,7 +135,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
     if (vertexBuffer.handle || indexBuffer.handle)
     {
         // Destroy current buffers
-        destroyBuffer(m_renderer.m_vulkanDevice);
+        destroyBuffer();
     }
 
     // Check input vertices and indices
@@ -152,8 +150,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
     indicesCount *= sizeof(uint16_t);
 
     // Create vertex buffer
-    if (!vertexBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+    if (!vertexBuffer.createBuffer(m_renderer.m_vulkanMemory,
         (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT),
         memoryPool, verticesCount))
     {
@@ -162,8 +159,7 @@ bool VertexBuffer::createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
     }
 
     // Create index buffer
-    if (!indexBuffer.createBuffer(
-        m_renderer.m_vulkanDevice, m_renderer.m_vulkanMemory,
+    if (!indexBuffer.createBuffer(m_renderer.m_vulkanMemory,
         (VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT),
         memoryPool, indicesCount))
     {
@@ -262,8 +258,8 @@ bool VertexBuffer::updateBuffer(HeightMapLoader& loader,
 ////////////////////////////////////////////////////////////////////////////////
 //  Destroy Vertex buffer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void VertexBuffer::destroyBuffer(VkDevice& vulkanDevice)
+void VertexBuffer::destroyBuffer()
 {
-    indexBuffer.destroyBuffer(vulkanDevice);
-    vertexBuffer.destroyBuffer(vulkanDevice);
+    indexBuffer.destroyBuffer();
+    vertexBuffer.destroyBuffer();
 }

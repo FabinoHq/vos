@@ -97,22 +97,19 @@
             //  Create graphics queue                                         //
             //  return : True if the graphics queue is successfully created   //
             ////////////////////////////////////////////////////////////////////
-            bool createGraphicsQueue(VkDevice& vulkanDevice,
-                VulkanDeviceQueues& vulkanQueues);
+            bool createGraphicsQueue(VulkanDeviceQueues& vulkanQueues);
 
             ////////////////////////////////////////////////////////////////////
             //  Create surface queue                                          //
             //  return : True if the surface queue is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool createSurfaceQueue(VkDevice& vulkanDevice,
-                VulkanDeviceQueues& vulkanQueues);
+            bool createSurfaceQueue(VulkanDeviceQueues& vulkanQueues);
 
             ////////////////////////////////////////////////////////////////////
             //  Create transfer queue                                         //
             //  return : True if the transfer queue is successfully created   //
             ////////////////////////////////////////////////////////////////////
-            bool createTransferQueue(VkDevice& vulkanDevice,
-                VulkanDeviceQueues& vulkanQueues);
+            bool createTransferQueue(VulkanDeviceQueues& vulkanQueues);
 
 
             ////////////////////////////////////////////////////////////////////
