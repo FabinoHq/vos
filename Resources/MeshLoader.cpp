@@ -356,11 +356,10 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     uint32_t verticesCount, uint32_t indicesCount)
 {
     // Reset mesh upload memory
-    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_MESHUPLOAD);
+    GVulkanMemory.resetMemory(VULKAN_MEMORY_MESHUPLOAD);
 
     // Create vertices staging buffer
-    if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    if (!m_stagingBuffer.createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_MESHUPLOAD, verticesCount))
     {
         // Could not create vertices staging buffer
@@ -368,7 +367,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Write vertices into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+    if (!GVulkanMemory.writeBufferMemory(
         m_stagingBuffer, vertices, VULKAN_MEMORY_MESHUPLOAD))
     {
         // Could not write vertices into staging buffer memory
@@ -451,11 +450,10 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
 
     // Reset mesh upload memory
-    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_MESHUPLOAD);
+    GVulkanMemory.resetMemory(VULKAN_MEMORY_MESHUPLOAD);
 
     // Create indices staging buffer
-    if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    if (!m_stagingBuffer.createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_MESHUPLOAD, indicesCount))
     {
         // Could not create indices staging buffer
@@ -463,7 +461,7 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Write indices into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+    if (!GVulkanMemory.writeBufferMemory(
         m_stagingBuffer, indices, VULKAN_MEMORY_MESHUPLOAD))
     {
         // Could not write indices into staging buffer memory
@@ -554,8 +552,8 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 bool MeshLoader::loadEmbeddedMeshes()
 {
     // Load default vertex buffer
-    if (!m_meshes[MESHES_DEFAULT].createBuffer(m_renderer, *this,
-        VULKAN_MEMORY_MESHES,
+    if (!m_meshes[MESHES_DEFAULT].createBuffer(
+        *this, VULKAN_MEMORY_MESHES,
         DefaultVertices, DefaultIndices,
         DefaultVerticesCount, DefaultIndicesCount))
     {
@@ -564,8 +562,8 @@ bool MeshLoader::loadEmbeddedMeshes()
     }
 
     // Load skybox vertex buffer
-    if (!m_meshes[MESHES_SKYBOX].createBuffer(m_renderer, *this,
-        VULKAN_MEMORY_MESHES,
+    if (!m_meshes[MESHES_SKYBOX].createBuffer(
+        *this, VULKAN_MEMORY_MESHES,
         SkyBoxVertices, SkyBoxIndices,
         SkyBoxVerticesCount, SkyBoxIndicesCount))
     {
@@ -574,8 +572,8 @@ bool MeshLoader::loadEmbeddedMeshes()
     }
 
     // Load cuboid vertex buffer
-    if (!m_meshes[MESHES_CUBOID].createBuffer(m_renderer, *this,
-        VULKAN_MEMORY_MESHES,
+    if (!m_meshes[MESHES_CUBOID].createBuffer(
+        *this, VULKAN_MEMORY_MESHES,
         CuboidShapeVertices, CuboidShapeIndices,
         CuboidShapeVerticesCount, CuboidShapeIndicesCount))
     {
@@ -690,7 +688,7 @@ bool MeshLoader::loadVMSH(VertexBuffer& vertexBuffer,
     }
 
     // Create vertex buffer
-    if (!vertexBuffer.createBuffer(m_renderer, *this, VULKAN_MEMORY_MESHES,
+    if (!vertexBuffer.createBuffer(*this, VULKAN_MEMORY_MESHES,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer

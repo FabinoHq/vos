@@ -125,7 +125,7 @@
             //  Resize back renderer frame                                    //
             //  return : True if the back renderer is successfully resized    //
             ////////////////////////////////////////////////////////////////////
-            bool resize(Renderer& renderer, VulkanMemoryPool memoryPool,
+            bool resize(VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height);
 
 

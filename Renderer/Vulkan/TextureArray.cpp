@@ -151,7 +151,7 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     }
 
     // Allocate texture array memory
-    if (!renderer.m_vulkanMemory.allocateTextureArrayMemory(*this, memoryPool))
+    if (!GVulkanMemory.allocateTextureArrayMemory(*this, memoryPool))
     {
         // Could not allocate texture array memory
         return false;

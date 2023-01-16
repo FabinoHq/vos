@@ -281,7 +281,6 @@
             VkDescriptorPool    m_uniformsDescPool;     // Uniforms desc pool
             VkDescriptorPool    m_texturesDescPool;     // Textures desc pool
 
-            VulkanMemory        m_vulkanMemory;         // Vulkan memory
             Swapchain           m_swapchain;            // Swapchain
             GraphicsLayout      m_layout;               // Graphics layout
 

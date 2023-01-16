@@ -70,8 +70,7 @@ VulkanBuffer::~VulkanBuffer()
 //  Create Vulkan buffer                                                      //
 //  return : True if Vulkan buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanBuffer::createBuffer(
-    VulkanMemory& vulkanMemory, VkBufferUsageFlags usage,
+bool VulkanBuffer::createBuffer(VkBufferUsageFlags usage,
     VulkanMemoryPool memoryPool, uint32_t bufferSize)
 {
     // Check buffer handle
@@ -114,7 +113,7 @@ bool VulkanBuffer::createBuffer(
     size = bufferSize;
 
     // Allocate buffer memory
-    if (!vulkanMemory.allocateBufferMemory(*this, memoryPool))
+    if (!GVulkanMemory.allocateBufferMemory(*this, memoryPool))
     {
         // Could not allocate buffer memory
         return false;

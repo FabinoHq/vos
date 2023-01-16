@@ -79,8 +79,7 @@ bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
     }
 
     // Create backchain
-    if (!m_backchain.createBackchain(
-        renderer.m_vulkanMemory, memoryPool, width, height))
+    if (!m_backchain.createBackchain(memoryPool, width, height))
     {
         // Could not create backchain
         return false;
@@ -354,7 +353,7 @@ bool BackRenderer::setDefaultView(Renderer& renderer)
 //  Resize back renderer frame                                                //
 //  return : True if the back renderer is successfully resized                //
 ////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::resize(Renderer& renderer, VulkanMemoryPool memoryPool,
+bool BackRenderer::resize(VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height)
 {
     // Check Vulkan device
@@ -365,8 +364,7 @@ bool BackRenderer::resize(Renderer& renderer, VulkanMemoryPool memoryPool,
     }
 
     // Resize backchain
-    if (!m_backchain.resizeBackchain(
-        renderer.m_vulkanMemory, memoryPool, width, height))
+    if (!m_backchain.resizeBackchain(memoryPool, width, height))
     {
         // Could not resize backchain
         return false;

@@ -65,7 +65,7 @@ UniformBuffer::~UniformBuffer()
 //  Create Uniform buffer                                                     //
 //  return : True if Uniform buffer is successfully created                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool UniformBuffer::createBuffer(VulkanMemory& vulkanMemory, uint32_t size)
+bool UniformBuffer::createBuffer(uint32_t size)
 {
     // Check current buffer
     if (uniformBuffer.handle)
@@ -84,7 +84,6 @@ bool UniformBuffer::createBuffer(VulkanMemory& vulkanMemory, uint32_t size)
 
     // Create uniform buffer
     if (!uniformBuffer.createBuffer(
-        vulkanMemory,
         (VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT),
         VULKAN_MEMORY_RENDERDEVICE, size))
     {
@@ -94,7 +93,6 @@ bool UniformBuffer::createBuffer(VulkanMemory& vulkanMemory, uint32_t size)
 
     // Create staging buffer
     if (!stagingBuffer.createBuffer(
-        vulkanMemory,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_RENDERHOST, size))
     {
         // Could not create staging buffer
@@ -109,8 +107,7 @@ bool UniformBuffer::createBuffer(VulkanMemory& vulkanMemory, uint32_t size)
 //  Update Uniform buffer                                                     //
 //  return : True if Uniform buffer is successfully updated                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool UniformBuffer::updateBuffer(VulkanMemory& vulkanMemory,
-    VkCommandPool& transferCommandPool,
+bool UniformBuffer::updateBuffer(VkCommandPool& transferCommandPool,
     VulkanQueue& transferQueue, void* data, uint32_t size)
 {
     // Check current buffer
@@ -119,11 +116,11 @@ bool UniformBuffer::updateBuffer(VulkanMemory& vulkanMemory,
     {
         // Recreate uniform buffer
         destroyBuffer();
-        createBuffer(vulkanMemory, size);
+        createBuffer(size);
     }
 
     // Write data into staging buffer memory
-    if (!vulkanMemory.writeBufferMemory(
+    if (!GVulkanMemory.writeBufferMemory(
         stagingBuffer, data, VULKAN_MEMORY_RENDERHOST))
     {
         // Could not write data into staging buffer memory

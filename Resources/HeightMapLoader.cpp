@@ -490,12 +490,10 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     uint32_t verticesCount, uint32_t indicesCount)
 {
     // Reset mesh upload memory
-    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_HEIGHTMAPUPLOAD);
+    GVulkanMemory.resetMemory(VULKAN_MEMORY_HEIGHTMAPUPLOAD);
 
     // Create vertices staging buffer
-    if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanMemory,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    if (!m_stagingBuffer.createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_HEIGHTMAPUPLOAD, verticesCount))
     {
         // Could not create vertices staging buffer
@@ -503,7 +501,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Write vertices into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+    if (!GVulkanMemory.writeBufferMemory(
         m_stagingBuffer, vertices, VULKAN_MEMORY_HEIGHTMAPUPLOAD))
     {
         // Could not write vertices into staging buffer memory
@@ -586,11 +584,10 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
 
     // Reset mesh upload memory
-    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_HEIGHTMAPUPLOAD);
+    GVulkanMemory.resetMemory(VULKAN_MEMORY_HEIGHTMAPUPLOAD);
 
     // Create indices staging buffer
-    if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    if (!m_stagingBuffer.createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_HEIGHTMAPUPLOAD, indicesCount))
     {
         // Could not create indices staging buffer
@@ -598,7 +595,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     }
 
     // Write indices into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+    if (!GVulkanMemory.writeBufferMemory(
         m_stagingBuffer, indices, VULKAN_MEMORY_HEIGHTMAPUPLOAD))
     {
         // Could not write indices into staging buffer memory
@@ -791,8 +788,7 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
     }
 
     // Create vertex buffer
-    if (!vertexBuffer.createBuffer(m_renderer, *this,
-        VULKAN_MEMORY_HEIGHTMAPS,
+    if (!vertexBuffer.createBuffer(*this, VULKAN_MEMORY_HEIGHTMAPS,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer

@@ -407,12 +407,11 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     const unsigned char* data)
 {
     // Reset texture upload memory
-    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
+    GVulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
 
     // Create staging buffer
     uint32_t textureSize = (width*height*4);
-    if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    if (!m_stagingBuffer.createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
@@ -420,7 +419,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     }
 
     // Write texture into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+    if (!GVulkanMemory.writeBufferMemory(
         m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
         // Could not write texture into staging buffer memory
@@ -785,12 +784,11 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
     uint32_t mipLevels, const unsigned char* data)
 {
     // Reset texture upload memory
-    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
+    GVulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
 
     // Create staging buffer
     uint32_t textureSize = (width*height*layers*4);
-    if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    if (!m_stagingBuffer.createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
@@ -798,7 +796,7 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
     }
 
     // Write data into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+    if (!GVulkanMemory.writeBufferMemory(
         m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
         // Could not write data into staging buffer memory
@@ -1170,12 +1168,11 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     uint32_t width, uint32_t height, const unsigned char* data)
 {
     // Reset texture upload memory
-    m_renderer.m_vulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
+    GVulkanMemory.resetMemory(VULKAN_MEMORY_TEXTUREUPLOAD);
 
     // Create staging buffer
     uint32_t textureSize = (width*height*6*4);
-    if (!m_stagingBuffer.createBuffer(
-        m_renderer.m_vulkanMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    if (!m_stagingBuffer.createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VULKAN_MEMORY_TEXTUREUPLOAD, textureSize))
     {
         // Could not create staging buffer
@@ -1183,7 +1180,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     }
 
     // Write data into staging buffer memory
-    if (!m_renderer.m_vulkanMemory.writeBufferMemory(
+    if (!GVulkanMemory.writeBufferMemory(
         m_stagingBuffer, data, VULKAN_MEMORY_TEXTUREUPLOAD))
     {
         // Could not write data into staging buffer memory

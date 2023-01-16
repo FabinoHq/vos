@@ -53,7 +53,6 @@ m_graphicsQueue(),
 m_surfaceQueue(),
 m_uniformsDescPool(0),
 m_texturesDescPool(0),
-m_vulkanMemory(),
 m_swapchain(),
 m_layout(),
 m_mainRenderer(),
@@ -183,7 +182,7 @@ bool Renderer::init()
     }
 
     // Init Vulkan memory
-    if (!m_vulkanMemory.init())
+    if (!GVulkanMemory.init())
     {
         return false;
     }
@@ -932,7 +931,7 @@ void Renderer::destroyRenderer()
     m_swapchain.destroySwapchain();
 
     // Destroy Vulkan memory
-    m_vulkanMemory.destroyVulkanMemory();
+    GVulkanMemory.destroyVulkanMemory();
 
     // Destroy Vulkan device
     if (GVulkanDevice)
@@ -1560,10 +1559,10 @@ bool Renderer::resize()
     }
 
     // Reset backchain memory
-    m_vulkanMemory.resetMemory(VULKAN_MEMORY_BACKCHAIN);
+    GVulkanMemory.resetMemory(VULKAN_MEMORY_BACKCHAIN);
 
     // Resize main renderer
-    if (!m_mainRenderer.resize(*this, VULKAN_MEMORY_BACKCHAIN,
+    if (!m_mainRenderer.resize(VULKAN_MEMORY_BACKCHAIN,
         m_swapchain.extent.width, m_swapchain.extent.height))
     {
         return false;

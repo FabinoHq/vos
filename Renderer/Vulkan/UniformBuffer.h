@@ -87,14 +87,13 @@
             //  Create Uniform buffer                                         //
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(VulkanMemory& vulkanMemory, uint32_t size);
+            bool createBuffer(uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Update Uniform buffer                                         //
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(VulkanMemory& vulkanMemory,
-                VkCommandPool& transferCommandPool,
+            bool updateBuffer(VkCommandPool& transferCommandPool,
                 VulkanQueue& transferQueue, void* data, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////

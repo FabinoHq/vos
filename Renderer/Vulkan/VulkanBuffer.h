@@ -70,8 +70,7 @@
             //  Create Vulkan buffer                                          //
             //  return : True if Vulkan buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(
-                VulkanMemory& vulkanMemory, VkBufferUsageFlags usage,
+            bool createBuffer(VkBufferUsageFlags usage,
                 VulkanMemoryPool memoryPool, uint32_t bufferSize);
 
             ////////////////////////////////////////////////////////////////////

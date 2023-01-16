@@ -86,8 +86,8 @@ Backchain::~Backchain()
 //  Create backchain                                                          //
 //  return : True if backchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool Backchain::createBackchain(VulkanMemory& vulkanMemory,
-    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height)
+bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height)
 {
     // Check backchain size
     if ((width <= 0) || (height <= 0))
@@ -132,7 +132,7 @@ bool Backchain::createBackchain(VulkanMemory& vulkanMemory,
         }
 
         // Allocate image memory
-        if (!vulkanMemory.allocateSwapchainImage(images[i], memoryPool))
+        if (!GVulkanMemory.allocateSwapchainImage(images[i], memoryPool))
         {
             // Could not allocate image memory
             return false;
@@ -175,7 +175,7 @@ bool Backchain::createBackchain(VulkanMemory& vulkanMemory,
         }
 
         // Allocate depth image memory
-        if (!vulkanMemory.allocateSwapchainImage(depthImages[i], memoryPool))
+        if (!GVulkanMemory.allocateSwapchainImage(depthImages[i], memoryPool))
         {
             // Could not allocate depth image memory
             return false;
@@ -404,8 +404,8 @@ bool Backchain::createBackchain(VulkanMemory& vulkanMemory,
 //  Resize backchain                                                          //
 //  return : True if backchain is successfully resized                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool Backchain::resizeBackchain(VulkanMemory& vulkanMemory,
-    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height)
+bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height)
 {
     // Check Vulkan device
     if (!GVulkanDevice)
@@ -496,7 +496,7 @@ bool Backchain::resizeBackchain(VulkanMemory& vulkanMemory,
         }
 
         // Reallocate image memory
-        if (!vulkanMemory.allocateSwapchainImage(images[i], memoryPool))
+        if (!GVulkanMemory.allocateSwapchainImage(images[i], memoryPool))
         {
             // Could not reallocate image memory
             return false;
@@ -539,7 +539,7 @@ bool Backchain::resizeBackchain(VulkanMemory& vulkanMemory,
         }
 
         // Reallocate depth image memory
-        if (!vulkanMemory.allocateSwapchainImage(depthImages[i], memoryPool))
+        if (!GVulkanMemory.allocateSwapchainImage(depthImages[i], memoryPool))
         {
             // Could not reallocate depth image memory
             return false;

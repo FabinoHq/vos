@@ -111,7 +111,7 @@
             //  Create Vertex buffer                                          //
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(Renderer& m_renderer, MeshLoader& loader,
+            bool createBuffer(MeshLoader& loader,
                 VulkanMemoryPool memoryPool,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
@@ -120,7 +120,7 @@
             //  Create Vertex buffer                                          //
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(Renderer& m_renderer, HeightMapLoader& loader,
+            bool createBuffer(HeightMapLoader& loader,
                 VulkanMemoryPool memoryPool,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);

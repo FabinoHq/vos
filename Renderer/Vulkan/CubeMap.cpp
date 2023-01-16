@@ -138,7 +138,7 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
     }
 
     // Allocate cubemap memory
-    if (!renderer.m_vulkanMemory.allocateCubeMapMemory(*this, memoryPool))
+    if (!GVulkanMemory.allocateCubeMapMemory(*this, memoryPool))
     {
         // Could not allocate cubemap memory
         return false;
