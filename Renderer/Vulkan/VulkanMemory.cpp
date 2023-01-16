@@ -72,11 +72,10 @@ VulkanMemory::~VulkanMemory()
 //  Init Vulkan memory                                                        //
 //  return : True if Vulkan memory is ready                                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice)
+bool VulkanMemory::init(VkDevice& vulkanDevice)
 {
     // Check physical device
-    if (!physicalDevice)
+    if (!GPhysicalDevice)
     {
         // Invalid physical device
         SysMessage::box() << "[0x3101] Invalid physical device\n";
@@ -94,7 +93,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
 
     // Get physical device properties
     VkPhysicalDeviceProperties deviceProperties;
-    vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+    vkGetPhysicalDeviceProperties(GPhysicalDevice, &deviceProperties);
     m_maxAllocationCount = deviceProperties.limits.maxMemoryAllocationCount;
 
     // Set memory alignment
@@ -135,7 +134,7 @@ bool VulkanMemory::init(VkPhysicalDevice& physicalDevice,
     // Get physical device memory properties
     VkPhysicalDeviceMemoryProperties physicalMemoryProperties;
     vkGetPhysicalDeviceMemoryProperties(
-        physicalDevice, &physicalMemoryProperties
+        GPhysicalDevice, &physicalMemoryProperties
     );
 
     // Check physical memory types

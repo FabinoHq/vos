@@ -154,7 +154,7 @@
             //  Init Vulkan memory                                            //
             //  return : True if Vulkan memory is ready                       //
             ////////////////////////////////////////////////////////////////////
-            bool init(VkPhysicalDevice& physicalDevice, VkDevice& vulkanDevice);
+            bool init(VkDevice& vulkanDevice);
 
             ////////////////////////////////////////////////////////////////////
             //  Reset Vulkan memory pool                                      //

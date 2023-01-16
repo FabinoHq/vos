@@ -100,11 +100,11 @@ Swapchain::~Swapchain()
 //  Create swapchain                                                          //
 //  return : True if swapchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, uint32_t surfaceQueueFamily)
+bool Swapchain::createSwapchain(VkDevice& vulkanDevice,
+    uint32_t surfaceQueueFamily)
 {
     // Check physical device
-    if (!physicalDevice)
+    if (!GPhysicalDevice)
     {
         // Invalid physical device
         SysMessage::box() << "[0x3028] Invalid physical device\n";
@@ -149,7 +149,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
     if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-        physicalDevice, GVulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
+        GPhysicalDevice, GVulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
     {
         // Could not get device surface capabilities
         SysMessage::box() << "[0x302C] Could not get surface capabilities\n";
@@ -160,7 +160,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Get surface formats
     uint32_t formatsCnt = 0;
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(
-        physicalDevice, GVulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
+        GPhysicalDevice, GVulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
     {
         // Could not get surface formats count
         SysMessage::box() << "[0x302D] Could not get surface formats count\n";
@@ -176,7 +176,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     std::vector<VkSurfaceFormatKHR> surfaceFormats(formatsCnt);
-    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(GPhysicalDevice,
         GVulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
     {
         // Could not get surface formats
@@ -188,7 +188,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Get present modes
     uint32_t presentModesCnt = 0;
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(
-        physicalDevice, GVulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
+        GPhysicalDevice, GVulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
     {
         // Could not get present modes count
         SysMessage::box() << "[0x3030] Could not get present modes count\n";
@@ -203,7 +203,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
         return false;
     }
     std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
-    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(GPhysicalDevice,
         GVulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
     {
         // Could not get present modes
@@ -759,8 +759,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 //  Resize swapchain                                                          //
 //  return : True if swapchain is successfully resized                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice)
+bool Swapchain::resizeSwapchain(VkDevice& vulkanDevice)
 {
     // Destroy current swapchain
     for (uint32_t i = 0; i < frames; ++i)
@@ -790,7 +789,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
     if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-        physicalDevice, GVulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
+        GPhysicalDevice, GVulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
     {
         // Could not get device surface capabilities
         return false;
@@ -799,7 +798,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     // Get surface formats
     uint32_t formatsCnt = 0;
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(
-        physicalDevice, GVulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
+        GPhysicalDevice, GVulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
     {
         // Could not get surface formats count
         return false;
@@ -811,7 +810,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     std::vector<VkSurfaceFormatKHR> surfaceFormats(formatsCnt);
-    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(GPhysicalDevice,
         GVulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
     {
         // Could not get surface formats
@@ -821,7 +820,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     // Get present modes
     uint32_t presentModesCnt = 0;
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(
-        physicalDevice, GVulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
+        GPhysicalDevice, GVulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
     {
         // Could not get present modes count
         return false;
@@ -832,7 +831,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
         return false;
     }
     std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
-    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(GPhysicalDevice,
         GVulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
     {
         // Could not get present modes

@@ -5599,4 +5599,10 @@
     void FreeVulkanFunctions();
 
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  PhysicalDevice global instance                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    extern VkPhysicalDevice GPhysicalDevice;
+
+
 #endif // VOS_RENDERER_VULKAN_VULKAN_HEADER

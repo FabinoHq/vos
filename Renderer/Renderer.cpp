@@ -48,7 +48,6 @@
 Renderer::Renderer(Resources& resources) :
 m_rendererReady(false),
 m_frameIndex(0),
-m_physicalDevice(0),
 m_vulkanDevice(0),
 m_vulkanQueues(),
 m_graphicsQueue(),
@@ -185,7 +184,7 @@ bool Renderer::init()
     }
 
     // Init Vulkan memory
-    if (!m_vulkanMemory.init(m_physicalDevice, m_vulkanDevice))
+    if (!m_vulkanMemory.init(m_vulkanDevice))
     {
         return false;
     }
@@ -205,8 +204,7 @@ bool Renderer::init()
     }
 
     // Create swapchain
-    if (!m_swapchain.createSwapchain(m_physicalDevice, m_vulkanDevice,
-        m_surfaceQueue.family))
+    if (!m_swapchain.createSwapchain(m_vulkanDevice, m_surfaceQueue.family))
     {
         // Could not create swapchain
         return false;
@@ -1220,7 +1218,7 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Check physical device
-    if (m_physicalDevice)
+    if (GPhysicalDevice)
     {
         // Physical device already selected
         SysMessage::box() << "[0x3010] Physical device already selected\n";
@@ -1410,8 +1408,8 @@ bool Renderer::selectVulkanDevice()
         return false;
     }
 
-    m_physicalDevice = physicalDevices[deviceIndex];
-    if (!m_physicalDevice)
+    GPhysicalDevice = physicalDevices[deviceIndex];
+    if (!GPhysicalDevice)
     {
         // Invalid physical device
         SysMessage::box() << "[0x301A] Invalid physical device\n";
@@ -1523,7 +1521,7 @@ bool Renderer::selectVulkanDevice()
     deviceInfos.pEnabledFeatures = 0;
 
     if (vkCreateDevice(
-        m_physicalDevice, &deviceInfos, 0, &m_vulkanDevice) != VK_SUCCESS)
+        GPhysicalDevice, &deviceInfos, 0, &m_vulkanDevice) != VK_SUCCESS)
     {
         // Could not create Vulkan device
         SysMessage::box() << "[0x301C] Could not create Vulkan device\n";
@@ -1557,7 +1555,7 @@ bool Renderer::resize()
     }
 
     // Resize swapchain
-    if (!m_swapchain.resizeSwapchain(m_physicalDevice, m_vulkanDevice))
+    if (!m_swapchain.resizeSwapchain(m_vulkanDevice))
     {
         return false;
     }
