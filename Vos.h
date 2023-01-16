@@ -102,7 +102,6 @@
 
         private:
             bool            m_running;          // VOS running state
-            SysWindow       m_window;           // VOS main window
             Renderer        m_renderer;         // VOS renderer
             SysClock        m_clock;            // VOS clock
 

@@ -43,6 +43,17 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  VulkanLib global instance                                                 //
+////////////////////////////////////////////////////////////////////////////////
+VulkanLibHandle GVulkanLib = 0;
+
+////////////////////////////////////////////////////////////////////////////////
+//  VulkanInstance global instance                                            //
+////////////////////////////////////////////////////////////////////////////////
+VkInstance GVulkanInstance = 0;
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Vulkan extensions for Linux                                               //
 ////////////////////////////////////////////////////////////////////////////////
 const uint32_t VulkanExtensionsSize = 2;
@@ -76,24 +87,24 @@ PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR = 0;
 //  Vulkan library loader for Linux                                           //
 //  return : True if Vulkan library is successfully loaded                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool LoadVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
+bool LoadVulkanLibrary()
 {
     // Load Vulkan library
-    vulkanLibHandle = dlopen("libvulkan.so.1", RTLD_NOW);
-    return vulkanLibHandle;
+    GVulkanLib = dlopen("libvulkan.so.1", RTLD_NOW);
+    return GVulkanLib;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Vulkan library unloader for Linux                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
+void FreeVulkanLibrary()
 {
-    if (vulkanLibHandle)
+    if (GVulkanLib)
     {
         // Free Vulkan library
-        dlclose(vulkanLibHandle);
+        dlclose(GVulkanLib);
     }
-    vulkanLibHandle = 0;
+    GVulkanLib = 0;
     vkCreateXlibSurfaceKHR = 0;
     vkGetInstanceProcAddr = 0;
 }
@@ -103,11 +114,11 @@ void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle)
 //  Load Vulkan GetInstance function                                          //
 //  return : True if Vulkan GetInstance function is successfully loaded       //
 ////////////////////////////////////////////////////////////////////////////////
-bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle)
+bool LoadVulkanGetInstance()
 {
     // Load vkGetInstanceProcAddr
     vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(
-        vulkanLibHandle, "vkGetInstanceProcAddr"
+        GVulkanLib, "vkGetInstanceProcAddr"
     );
     return vkGetInstanceProcAddr;
 }
@@ -116,11 +127,11 @@ bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle)
 //  Load Vulkan CreateSystemSurface function                                  //
 //  return : True if Vulkan CreateSystemSurface function is loaded            //
 ////////////////////////////////////////////////////////////////////////////////
-bool LoadVulkanCreateSystemSurface(VkInstance& vulkanInstance)
+bool LoadVulkanCreateSystemSurface()
 {
     // Load vkCreateXlibSurfaceKHR
     vkCreateXlibSurfaceKHR = (PFN_vkCreateXlibSurfaceKHR)
-        vkGetInstanceProcAddr(vulkanInstance, "vkCreateXlibSurfaceKHR"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkCreateXlibSurfaceKHR"
     );
     return vkCreateXlibSurfaceKHR;
 }
@@ -130,19 +141,17 @@ bool LoadVulkanCreateSystemSurface(VkInstance& vulkanInstance)
 //  Create Vulkan SystemSurface                                               //
 //  return : True if Vulkan SystemSurface is successfully created             //
 ////////////////////////////////////////////////////////////////////////////////
-bool CreateVulkanSystemSurface(
-    VkInstance& vulkanInstance, SysWindow& sysWindow,
-    VkSurfaceKHR& vulkanSurface)
+bool CreateVulkanSystemSurface(VkSurfaceKHR& vulkanSurface)
 {
     VkXlibSurfaceCreateInfoKHR surfaceInfo;
     surfaceInfo.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
     surfaceInfo.pNext = 0;
     surfaceInfo.flags = 0;
-    surfaceInfo.dpy = sysWindow.getDisplay();
-    surfaceInfo.window = sysWindow.getHandle();
+    surfaceInfo.dpy = GSysWindow.getDisplay();
+    surfaceInfo.window = GSysWindow.getHandle();
 
-    if (vkCreateXlibSurfaceKHR(
-        vulkanInstance, &surfaceInfo, 0, &vulkanSurface) != VK_SUCCESS)
+    if (vkCreateXlibSurfaceKHR(GVulkanInstance,
+        &surfaceInfo, 0, &vulkanSurface) != VK_SUCCESS)
     {
         return false;
     }

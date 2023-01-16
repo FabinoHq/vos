@@ -111,13 +111,28 @@
             //  Get window display                                            //
             //  return : Pointer to the window display                        //
             ////////////////////////////////////////////////////////////////////
-            Display* getDisplay();
+            inline Display* getDisplay()
+            {
+                return m_display;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get window handle                                             //
             //  return : Reference to the window handle                       //
             ////////////////////////////////////////////////////////////////////
-            Window& getHandle();
+            inline Window& getHandle()
+            {
+                return m_handle;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if the window has a valid handle                        //
+            //  return : True if the window is valid                          //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isValid()
+            {
+                return m_handle;
+            }
 
 
         private:
@@ -158,6 +173,12 @@
 
             std::queue<Event>   m_events;           // Events FIFO queue
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysWindow global instance                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    extern SysWindow GSysWindow;
 
 
 #endif // VOS_SYSTEM_LIN_SYSWINDOW_HEADER

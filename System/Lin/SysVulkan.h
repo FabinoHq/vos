@@ -534,35 +534,43 @@
     //  Vulkan library loader for Linux                                       //
     //  return : True if Vulkan library is successfully loaded                //
     ////////////////////////////////////////////////////////////////////////////
-    bool LoadVulkanLibrary(VulkanLibHandle& vulkanLibHandle);
+    bool LoadVulkanLibrary();
 
     ////////////////////////////////////////////////////////////////////////////
     //  Vulkan library unloader for Linux                                     //
     ////////////////////////////////////////////////////////////////////////////
-    void FreeVulkanLibrary(VulkanLibHandle& vulkanLibHandle);
+    void FreeVulkanLibrary();
 
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan GetInstance function                                      //
     //  return : True if Vulkan GetInstance function is successfully loaded   //
     ////////////////////////////////////////////////////////////////////////////
-    bool LoadVulkanGetInstance(VulkanLibHandle& vulkanLibHandle);
+    bool LoadVulkanGetInstance();
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan CreateSystemSurface function                              //
     //  return : True if Vulkan CreateSystemSurface function is loaded        //
     ////////////////////////////////////////////////////////////////////////////
-    bool LoadVulkanCreateSystemSurface(VkInstance& vulkanInstance);
+    bool LoadVulkanCreateSystemSurface();
 
 
     ////////////////////////////////////////////////////////////////////////////
     //  Create Vulkan SystemSurface                                           //
     //  return : True if Vulkan SystemSurface is successfully created         //
     ////////////////////////////////////////////////////////////////////////////
-    bool CreateVulkanSystemSurface(
-        VkInstance& vulkanInstance, SysWindow& sysWindow,
-        VkSurfaceKHR& vulkanSurface
-    );
+    bool CreateVulkanSystemSurface(VkSurfaceKHR& vulkanSurface);
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanLib global instance                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    extern VulkanLibHandle GVulkanLib;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanInstance global instance                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    extern VkInstance GVulkanInstance;
 
 
 #endif // VOS_SYSTEM_LIN_SYSVULKAN_HEADER

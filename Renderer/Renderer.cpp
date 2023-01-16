@@ -48,9 +48,6 @@
 Renderer::Renderer(Resources& resources) :
 m_rendererReady(false),
 m_frameIndex(0),
-m_sysWindow(0),
-m_vulkanLibHandle(0),
-m_vulkanInstance(0),
 m_vulkanSurface(0),
 m_physicalDevice(0),
 m_vulkanDevice(0),
@@ -80,17 +77,17 @@ Renderer::~Renderer()
     destroyRenderer();
 
     // Destroy Vulkan instance
-    if (m_vulkanInstance)
+    if (GVulkanInstance)
     {
-        vkDestroyInstance(m_vulkanInstance, 0);
+        vkDestroyInstance(GVulkanInstance, 0);
     }
-    m_vulkanInstance = 0;
+    GVulkanInstance = 0;
 
     // Free Vulkan functions
     FreeVulkanFunctions();
 
     // Free Vulkan library
-    FreeVulkanLibrary(m_vulkanLibHandle);
+    FreeVulkanLibrary();
 }
 
 
@@ -98,22 +95,21 @@ Renderer::~Renderer()
 //  Init renderer                                                             //
 //  return : True if the renderer is successfully loaded                      //
 ////////////////////////////////////////////////////////////////////////////////
-bool Renderer::init(SysWindow* sysWindow)
+bool Renderer::init()
 {
     m_rendererReady = false;
 
     // Check SysWindow
-    if (!sysWindow)
+    if (!GSysWindow.isValid())
     {
         // Invalid SysWindow
         SysMessage::box() << "[0x3001] Invalid system window\n";
         SysMessage::box() << "System window must be valid";
         return false;
     }
-    m_sysWindow = sysWindow;
 
     // Load Vulkan library
-    if (!LoadVulkanLibrary(m_vulkanLibHandle))
+    if (!LoadVulkanLibrary())
     {
         // Could not load Vulkan library
         SysMessage::box() << "[0x3002] Could not load Vulkan library\n";
@@ -122,7 +118,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Load Vulkan GetInstance function
-    if (!LoadVulkanGetInstance(m_vulkanLibHandle))
+    if (!LoadVulkanGetInstance())
     {
         // Could not load Vulkan GetInstance function
         SysMessage::box() << "[0x3003] Could not load Vulkan GetInstance\n";
@@ -147,7 +143,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Load Vulkan CreateSystemSurface
-    if (!LoadVulkanCreateSystemSurface(m_vulkanInstance))
+    if (!LoadVulkanCreateSystemSurface())
     {
         // Could not load Vulkan CreateSystemSurface function
         SysMessage::box() << "[0x300B] Could not load CreateSystemSurface\n";
@@ -156,8 +152,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Create Vulkan SystemSurface
-    if (!CreateVulkanSystemSurface(
-        m_vulkanInstance, *m_sysWindow, m_vulkanSurface))
+    if (!CreateVulkanSystemSurface(m_vulkanSurface))
     {
         // Could not create Vulkan SystemSurface
         SysMessage::box() << "[0x300C] Could not create Vulkan SystemSurface\n";
@@ -166,7 +161,7 @@ bool Renderer::init(SysWindow* sysWindow)
     }
 
     // Load Vulkan instance functions
-    if (!LoadVulkanInstanceFunctions(m_vulkanInstance))
+    if (!LoadVulkanInstanceFunctions())
     {
         // Could not load Vulkan instance functions
         SysMessage::box() << "[0x300D] Could not load instance functions\n";
@@ -951,11 +946,10 @@ void Renderer::destroyRenderer()
     m_vulkanDevice = 0;
 
     // Destroy Vulkan surface
-    if (m_vulkanInstance && m_vulkanSurface)
+    if (GVulkanInstance && m_vulkanSurface)
     {
-        vkDestroySurfaceKHR(m_vulkanInstance, m_vulkanSurface, 0);
+        vkDestroySurfaceKHR(GVulkanInstance, m_vulkanSurface, 0);
     }
-    m_vulkanInstance = 0;
     m_vulkanSurface = 0;
 }
 
@@ -1104,7 +1098,7 @@ float Renderer::getRatio()
 bool Renderer::createVulkanInstance()
 {
     // Check current Vulkan instance
-    if (m_vulkanInstance)
+    if (GVulkanInstance)
     {
         // Vulkan instance already created
         SysMessage::box() << "[0x3005] Vulkan instance already created\n";
@@ -1183,14 +1177,14 @@ bool Renderer::createVulkanInstance()
     createInfos.ppEnabledExtensionNames = VulkanExtensions;
 
     // Create Vulkan instance
-    if (vkCreateInstance(&createInfos, 0, &m_vulkanInstance) != VK_SUCCESS)
+    if (vkCreateInstance(&createInfos, 0, &GVulkanInstance) != VK_SUCCESS)
     {
         // Could not create Vulkan instance
         SysMessage::box() << "[0x3009] Could not create Vulkan instance\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
-    if (!m_vulkanInstance)
+    if (!GVulkanInstance)
     {
         // Could not create Vulkan instance
         SysMessage::box() << "[0x300A] Could not create Vulkan instance\n";
@@ -1209,7 +1203,7 @@ bool Renderer::createVulkanInstance()
 bool Renderer::selectVulkanDevice()
 {
     // Check Vulkan instance
-    if (!m_vulkanInstance)
+    if (!GVulkanInstance)
     {
         // Invalid Vulkan instance
         SysMessage::box() << "[0x300E] Invalid Vulkan instance\n";
@@ -1247,7 +1241,7 @@ bool Renderer::selectVulkanDevice()
     // List devices
     uint32_t devicesCounts = 0;
     if (vkEnumeratePhysicalDevices(
-        m_vulkanInstance, &devicesCounts, 0) != VK_SUCCESS)
+        GVulkanInstance, &devicesCounts, 0) != VK_SUCCESS)
     {
         // Could not enumerate physical devices
         SysMessage::box() << "[0x3012] Could not enumerate physical devices\n";
@@ -1265,7 +1259,7 @@ bool Renderer::selectVulkanDevice()
     // Get physical devices list
     std::vector<VkPhysicalDevice> physicalDevices(devicesCounts);
     if (vkEnumeratePhysicalDevices(
-        m_vulkanInstance, &devicesCounts, physicalDevices.data()) != VK_SUCCESS)
+        GVulkanInstance, &devicesCounts, physicalDevices.data()) != VK_SUCCESS)
     {
         // Could not get physical devices list
         SysMessage::box() << "[0x3014] Could not get physical devices list\n";

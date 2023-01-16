@@ -114,13 +114,28 @@
             //  Get window instance                                           //
             //  return : Reference to the window instance                     //
             ////////////////////////////////////////////////////////////////////
-            HINSTANCE& getInstance();
+            inline HINSTANCE& getInstance()
+            {
+                return m_instance;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get window handle                                             //
             //  return : Reference to the window handle                       //
             ////////////////////////////////////////////////////////////////////
-            HWND& getHandle();
+            inline HWND& getHandle()
+            {
+                return m_handle;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if the window has a valid handle                        //
+            //  return : True if the window is valid                          //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isValid()
+            {
+                return m_handle;
+            }
 
 
         private:
@@ -139,8 +154,7 @@
             //  Window static event callback function                         //
             ////////////////////////////////////////////////////////////////////
             static LRESULT CALLBACK OnEvent(
-                HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
-            );
+                HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
             ////////////////////////////////////////////////////////////////////
             //  Process window events                                         //
@@ -164,6 +178,12 @@
 
             std::queue<Event>   m_events;       // Events FIFO queue
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysWindow global instance                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    extern SysWindow GSysWindow;
 
 
 #endif // VOS_SYSTEM_WIN_SYSWINDOW_HEADER

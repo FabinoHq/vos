@@ -128,7 +128,7 @@
             //  Init renderer                                                 //
             //  return : True if the renderer is successfully loaded          //
             ////////////////////////////////////////////////////////////////////
-            bool init(SysWindow* sysWindow);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
             //  Init renderer pipelines                                       //
@@ -275,9 +275,6 @@
         public:
             bool                m_rendererReady;        // Renderer ready state
             uint32_t            m_frameIndex;           // Current frame index
-            SysWindow*          m_sysWindow;            // SysWindow pointer
-            VulkanLibHandle     m_vulkanLibHandle;      // Vulkan library handle
-            VkInstance          m_vulkanInstance;       // Vulkan instance
             VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
             VkPhysicalDevice    m_physicalDevice;       // Physical device
             VkDevice            m_vulkanDevice;         // Vulkan device

@@ -41,7 +41,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "SysWindow.h"
 
-SysWindow* VOSGlobalWindow = 0;
+
+////////////////////////////////////////////////////////////////////////////////
+//  SysWindow global instance                                                 //
+////////////////////////////////////////////////////////////////////////////////
+SysWindow GSysWindow = SysWindow();
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,11 +59,7 @@ m_systemMode(),
 m_width(0),
 m_height(0)
 {
-    if (!VOSGlobalWindow)
-    {
-        // Set global window pointer
-        VOSGlobalWindow = this;
-    }
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -244,36 +244,13 @@ bool SysWindow::getEvent(Event& event)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get window instance                                                       //
-//  return : Reference to the window instance                                 //
-////////////////////////////////////////////////////////////////////////////////
-HINSTANCE& SysWindow::getInstance()
-{
-    return m_instance;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get window handle                                                         //
-//  return : Reference to the window handle                                   //
-////////////////////////////////////////////////////////////////////////////////
-HWND& SysWindow::getHandle()
-{
-    return m_handle;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 //  Window static event callback function                                     //
 ////////////////////////////////////////////////////////////////////////////////
 LRESULT CALLBACK SysWindow::OnEvent(
-    HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
-)
+    HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Process event
-    if (VOSGlobalWindow)
-    {
-        VOSGlobalWindow->processEvent(msg, wparam, lparam);
-    }
+    GSysWindow.processEvent(msg, wparam, lparam);
 
     // System menu event
     if ((msg == WM_SYSCOMMAND) && (wparam == SC_KEYMENU))

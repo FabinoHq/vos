@@ -47,7 +47,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 Vos::Vos() :
 m_running(false),
-m_window(),
 m_renderer(m_resources),
 m_clock(),
 m_resources(m_renderer),
@@ -78,15 +77,15 @@ bool Vos::launch()
         return false;
     }
 
-    // Create VOS main window
-    if (!m_window.create())
+    // Create VOS global window
+    if (!GSysWindow.create())
     {
-        // Unable to create VOS main window
+        // Unable to create VOS global window
         return false;
     }
 
     // Init VOS renderer
-    if (!m_renderer.init(&m_window))
+    if (!m_renderer.init())
     {
         // Unable to init VOS renderer
         return false;
@@ -187,7 +186,7 @@ void Vos::run()
 
         // Get main window event
         Event event;
-        while (m_window.getEvent(event))
+        while (GSysWindow.getEvent(event))
         {
             // Process event
             switch (event.type)
@@ -239,5 +238,5 @@ void Vos::run()
     }
 
     // Close VOS
-    m_window.close();
+    GSysWindow.close();
 }

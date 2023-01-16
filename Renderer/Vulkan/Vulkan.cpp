@@ -666,10 +666,10 @@ bool LoadVulkanGlobalFunctions()
 //  Load Vulkan instance functions                                            //
 //  return : True if Vulkan instance functions are successfully loaded        //
 ////////////////////////////////////////////////////////////////////////////////
-bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
+bool LoadVulkanInstanceFunctions()
 {
     // Check Vulkan instance
-    if (!vulkanInstance)
+    if (!GVulkanInstance)
     {
         // Vulkan instance is invalid
         return false;
@@ -677,7 +677,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkDestroyInstance
     vkDestroyInstance = (PFN_vkDestroyInstance)
-        vkGetInstanceProcAddr(vulkanInstance, "vkDestroyInstance"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkDestroyInstance"
     );
     if (!vkDestroyInstance)
     {
@@ -687,7 +687,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkEnumeratePhysicalDevices
     vkEnumeratePhysicalDevices = (PFN_vkEnumeratePhysicalDevices)
-        vkGetInstanceProcAddr(vulkanInstance, "vkEnumeratePhysicalDevices"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkEnumeratePhysicalDevices"
     );
     if (!vkEnumeratePhysicalDevices)
     {
@@ -697,7 +697,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkGetPhysicalDeviceProperties
     vkGetPhysicalDeviceProperties = (PFN_vkGetPhysicalDeviceProperties)
-        vkGetInstanceProcAddr(vulkanInstance, "vkGetPhysicalDeviceProperties"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkGetPhysicalDeviceProperties"
     );
     if (!vkGetPhysicalDeviceProperties)
     {
@@ -707,7 +707,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkGetPhysicalDeviceFeatures
     vkGetPhysicalDeviceFeatures = (PFN_vkGetPhysicalDeviceFeatures)
-        vkGetInstanceProcAddr(vulkanInstance, "vkGetPhysicalDeviceFeatures"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkGetPhysicalDeviceFeatures"
     );
     if (!vkGetPhysicalDeviceFeatures)
     {
@@ -718,7 +718,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceFormatProperties
     vkGetPhysicalDeviceFormatProperties =
         (PFN_vkGetPhysicalDeviceFormatProperties)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceFormatProperties"
+        GVulkanInstance, "vkGetPhysicalDeviceFormatProperties"
     );
     if (!vkGetPhysicalDeviceFormatProperties)
     {
@@ -729,7 +729,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceImageFormatProperties
     vkGetPhysicalDeviceImageFormatProperties =
         (PFN_vkGetPhysicalDeviceImageFormatProperties)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceImageFormatProperties"
+        GVulkanInstance, "vkGetPhysicalDeviceImageFormatProperties"
     );
     if (!vkGetPhysicalDeviceImageFormatProperties)
     {
@@ -740,7 +740,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceQueueFamilyProperties
     vkGetPhysicalDeviceQueueFamilyProperties =
         (PFN_vkGetPhysicalDeviceQueueFamilyProperties)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceQueueFamilyProperties"
+        GVulkanInstance, "vkGetPhysicalDeviceQueueFamilyProperties"
     );
     if (!vkGetPhysicalDeviceQueueFamilyProperties)
     {
@@ -750,7 +750,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkCreateDevice
     vkCreateDevice = (PFN_vkCreateDevice)
-        vkGetInstanceProcAddr(vulkanInstance, "vkCreateDevice"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkCreateDevice"
     );
     if (!vkCreateDevice)
     {
@@ -760,7 +760,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkGetDeviceProcAddr
     vkGetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)
-        vkGetInstanceProcAddr(vulkanInstance, "vkGetDeviceProcAddr"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkGetDeviceProcAddr"
     );
     if (!vkGetDeviceProcAddr)
     {
@@ -771,7 +771,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkEnumerateDeviceExtensionProperties
     vkEnumerateDeviceExtensionProperties =
         (PFN_vkEnumerateDeviceExtensionProperties)vkGetInstanceProcAddr(
-        vulkanInstance, "vkEnumerateDeviceExtensionProperties"
+        GVulkanInstance, "vkEnumerateDeviceExtensionProperties"
     );
     if (!vkEnumerateDeviceExtensionProperties)
     {
@@ -782,7 +782,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkEnumerateDeviceLayerProperties
     vkEnumerateDeviceLayerProperties =
         (PFN_vkEnumerateDeviceLayerProperties)vkGetInstanceProcAddr(
-        vulkanInstance, "vkEnumerateDeviceLayerProperties"
+        GVulkanInstance, "vkEnumerateDeviceLayerProperties"
     );
     if (!vkEnumerateDeviceLayerProperties)
     {
@@ -793,7 +793,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceMemoryProperties
     vkGetPhysicalDeviceMemoryProperties =
         (PFN_vkGetPhysicalDeviceMemoryProperties)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceMemoryProperties"
+        GVulkanInstance, "vkGetPhysicalDeviceMemoryProperties"
     );
     if (!vkGetPhysicalDeviceMemoryProperties)
     {
@@ -804,7 +804,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceSparseImageFormatProperties
     vkGetPhysicalDeviceSparseImageFormatProperties =
         (PFN_vkGetPhysicalDeviceSparseImageFormatProperties)
-        vkGetInstanceProcAddr(vulkanInstance,
+        vkGetInstanceProcAddr(GVulkanInstance,
         "vkGetPhysicalDeviceSparseImageFormatProperties"
     );
     if (!vkGetPhysicalDeviceSparseImageFormatProperties)
@@ -815,7 +815,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkEnumeratePhysicalDeviceGroups
     vkEnumeratePhysicalDeviceGroups = (PFN_vkEnumeratePhysicalDeviceGroups)
-        vkGetInstanceProcAddr(vulkanInstance, "vkEnumeratePhysicalDeviceGroups"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkEnumeratePhysicalDeviceGroups"
     );
     if (!vkEnumeratePhysicalDeviceGroups)
     {
@@ -826,7 +826,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkDestroySurfaceKHR
     vkDestroySurfaceKHR = (PFN_vkDestroySurfaceKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkDestroySurfaceKHR"
+        GVulkanInstance, "vkDestroySurfaceKHR"
     );
     if (!vkDestroySurfaceKHR)
     {
@@ -837,7 +837,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceSurfaceSupportKHR
     vkGetPhysicalDeviceSurfaceSupportKHR =
         (PFN_vkGetPhysicalDeviceSurfaceSupportKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceSurfaceSupportKHR"
+        GVulkanInstance, "vkGetPhysicalDeviceSurfaceSupportKHR"
     );
     if (!vkGetPhysicalDeviceSurfaceSupportKHR)
     {
@@ -848,7 +848,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceSurfaceCapabilitiesKHR
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR =
         (PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR"
+        GVulkanInstance, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR"
     );
     if (!vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
     {
@@ -859,7 +859,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceSurfaceFormatsKHR
     vkGetPhysicalDeviceSurfaceFormatsKHR =
         (PFN_vkGetPhysicalDeviceSurfaceFormatsKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceSurfaceFormatsKHR"
+        GVulkanInstance, "vkGetPhysicalDeviceSurfaceFormatsKHR"
     );
     if (!vkGetPhysicalDeviceSurfaceFormatsKHR)
     {
@@ -870,7 +870,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceSurfacePresentModesKHR
     vkGetPhysicalDeviceSurfacePresentModesKHR =
         (PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceSurfacePresentModesKHR"
+        GVulkanInstance, "vkGetPhysicalDeviceSurfacePresentModesKHR"
     );
     if (!vkGetPhysicalDeviceSurfacePresentModesKHR)
     {
@@ -881,7 +881,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkGetPhysicalDeviceFeatures2
     vkGetPhysicalDeviceFeatures2 = (PFN_vkGetPhysicalDeviceFeatures2)
-        vkGetInstanceProcAddr(vulkanInstance, "vkGetPhysicalDeviceFeatures2"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkGetPhysicalDeviceFeatures2"
     );
     if (!vkGetPhysicalDeviceFeatures2)
     {
@@ -891,7 +891,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
 
     // Load vkGetPhysicalDeviceProperties2
     vkGetPhysicalDeviceProperties2 = (PFN_vkGetPhysicalDeviceProperties2)
-        vkGetInstanceProcAddr(vulkanInstance, "vkGetPhysicalDeviceProperties2"
+        vkGetInstanceProcAddr(GVulkanInstance, "vkGetPhysicalDeviceProperties2"
     );
     if (!vkGetPhysicalDeviceProperties2)
     {
@@ -902,7 +902,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceFormatProperties2
     vkGetPhysicalDeviceFormatProperties2 =
         (PFN_vkGetPhysicalDeviceFormatProperties2)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceFormatProperties2"
+        GVulkanInstance, "vkGetPhysicalDeviceFormatProperties2"
     );
     if (!vkGetPhysicalDeviceFormatProperties2)
     {
@@ -913,7 +913,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceImageFormatProperties2
     vkGetPhysicalDeviceImageFormatProperties2 =
         (PFN_vkGetPhysicalDeviceImageFormatProperties2)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceImageFormatProperties2"
+        GVulkanInstance, "vkGetPhysicalDeviceImageFormatProperties2"
     );
     if (!vkGetPhysicalDeviceImageFormatProperties2)
     {
@@ -924,7 +924,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceQueueFamilyProperties2
     vkGetPhysicalDeviceQueueFamilyProperties2 =
         (PFN_vkGetPhysicalDeviceQueueFamilyProperties2)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceQueueFamilyProperties2"
+        GVulkanInstance, "vkGetPhysicalDeviceQueueFamilyProperties2"
     );
     if (!vkGetPhysicalDeviceQueueFamilyProperties2)
     {
@@ -935,7 +935,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceMemoryProperties2
     vkGetPhysicalDeviceMemoryProperties2 =
         (PFN_vkGetPhysicalDeviceMemoryProperties2)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceMemoryProperties2"
+        GVulkanInstance, "vkGetPhysicalDeviceMemoryProperties2"
     );
     if (!vkGetPhysicalDeviceMemoryProperties2)
     {
@@ -946,7 +946,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceSparseImageFormatProperties2
     vkGetPhysicalDeviceSparseImageFormatProperties2 =
         (PFN_vkGetPhysicalDeviceSparseImageFormatProperties2)
-        vkGetInstanceProcAddr(vulkanInstance,
+        vkGetInstanceProcAddr(GVulkanInstance,
         "vkGetPhysicalDeviceSparseImageFormatProperties2"
     );
     if (!vkGetPhysicalDeviceSparseImageFormatProperties2)
@@ -958,7 +958,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceExternalBufferProperties
     vkGetPhysicalDeviceExternalBufferProperties =
         (PFN_vkGetPhysicalDeviceExternalBufferProperties)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceExternalBufferProperties"
+        GVulkanInstance, "vkGetPhysicalDeviceExternalBufferProperties"
     );
     if (!vkGetPhysicalDeviceExternalBufferProperties)
     {
@@ -969,7 +969,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceExternalFenceProperties
     vkGetPhysicalDeviceExternalFenceProperties =
         (PFN_vkGetPhysicalDeviceExternalFenceProperties)vkGetInstanceProcAddr(
-        vulkanInstance, "vkGetPhysicalDeviceExternalFenceProperties"
+        GVulkanInstance, "vkGetPhysicalDeviceExternalFenceProperties"
     );
     if (!vkGetPhysicalDeviceExternalFenceProperties)
     {
@@ -980,7 +980,7 @@ bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance)
     // Load vkGetPhysicalDeviceExternalSemaphoreProperties
     vkGetPhysicalDeviceExternalSemaphoreProperties =
         (PFN_vkGetPhysicalDeviceExternalSemaphoreProperties)
-        vkGetInstanceProcAddr(vulkanInstance,
+        vkGetInstanceProcAddr(GVulkanInstance,
         "vkGetPhysicalDeviceExternalSemaphoreProperties"
     );
     if (!vkGetPhysicalDeviceExternalSemaphoreProperties)

@@ -5584,7 +5584,7 @@
     //  Load Vulkan instance functions                                        //
     //  return : True if Vulkan instance functions are successfully loaded    //
     ////////////////////////////////////////////////////////////////////////////
-    bool LoadVulkanInstanceFunctions(VkInstance& vulkanInstance);
+    bool LoadVulkanInstanceFunctions();
 
     ////////////////////////////////////////////////////////////////////////////
     //  Load Vulkan device functions                                          //
