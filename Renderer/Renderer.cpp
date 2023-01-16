@@ -48,7 +48,6 @@
 Renderer::Renderer(Resources& resources) :
 m_rendererReady(false),
 m_frameIndex(0),
-m_vulkanSurface(0),
 m_physicalDevice(0),
 m_vulkanDevice(0),
 m_vulkanQueues(),
@@ -152,7 +151,7 @@ bool Renderer::init()
     }
 
     // Create Vulkan SystemSurface
-    if (!CreateVulkanSystemSurface(m_vulkanSurface))
+    if (!CreateVulkanSystemSurface())
     {
         // Could not create Vulkan SystemSurface
         SysMessage::box() << "[0x300C] Could not create Vulkan SystemSurface\n";
@@ -207,7 +206,7 @@ bool Renderer::init()
 
     // Create swapchain
     if (!m_swapchain.createSwapchain(m_physicalDevice, m_vulkanDevice,
-        m_vulkanSurface, m_surfaceQueue.family))
+        m_surfaceQueue.family))
     {
         // Could not create swapchain
         return false;
@@ -946,11 +945,11 @@ void Renderer::destroyRenderer()
     m_vulkanDevice = 0;
 
     // Destroy Vulkan surface
-    if (GVulkanInstance && m_vulkanSurface)
+    if (GVulkanInstance && GVulkanSurface)
     {
-        vkDestroySurfaceKHR(GVulkanInstance, m_vulkanSurface, 0);
+        vkDestroySurfaceKHR(GVulkanInstance, GVulkanSurface, 0);
     }
-    m_vulkanSurface = 0;
+    GVulkanSurface = 0;
 }
 
 
@@ -1212,7 +1211,7 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Check Vulkan surface
-    if (!m_vulkanSurface)
+    if (!GVulkanSurface)
     {
         // Invalid Vulkan surface
         SysMessage::box() << "[0x300F] Invalid Vulkan surface\n";
@@ -1341,8 +1340,7 @@ bool Renderer::selectVulkanDevice()
         }
 
         // Get device queue families
-        if (VulkanQueue::getDeviceQueues(
-            m_vulkanSurface, physicalDevices[i], m_vulkanQueues))
+        if (VulkanQueue::getDeviceQueues(physicalDevices[i], m_vulkanQueues))
         {
             // Current device supports graphics, surface, and transfer queues
             VkFormatProperties formatProperties;
@@ -1559,8 +1557,7 @@ bool Renderer::resize()
     }
 
     // Resize swapchain
-    if (!m_swapchain.resizeSwapchain(
-        m_physicalDevice, m_vulkanDevice, m_vulkanSurface))
+    if (!m_swapchain.resizeSwapchain(m_physicalDevice, m_vulkanDevice))
     {
         return false;
     }

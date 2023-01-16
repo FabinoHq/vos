@@ -225,12 +225,11 @@ bool VulkanQueue::createTransferQueue(VkDevice& vulkanDevice,
 //  Get Vulkan queue families availables for the device                       //
 //  return : True if the device supports all queue families                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
-    VkPhysicalDevice& physicalDevice,
+bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice,
     VulkanDeviceQueues& vulkanQueues)
 {
     // Check Vulkan surface
-    if (!vulkanSurface)
+    if (!GVulkanSurface)
     {
         // Invalid Vulkan surface
         SysMessage::box() << "[0x3015] Invalid Vulkan surface\n";
@@ -282,7 +281,7 @@ bool VulkanQueue::getDeviceQueues(VkSurfaceKHR& vulkanSurface,
     for (uint32_t i = 0; i < queueFamilyCount; ++i)
     {
         if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i,
-            vulkanSurface, &queueSurfaceSupport[i]) != VK_SUCCESS)
+            GVulkanSurface, &queueSurfaceSupport[i]) != VK_SUCCESS)
         {
             // Could not get physical device surface support
             continue;

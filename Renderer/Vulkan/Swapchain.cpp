@@ -101,8 +101,7 @@ Swapchain::~Swapchain()
 //  return : True if swapchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface,
-    uint32_t surfaceQueueFamily)
+    VkDevice& vulkanDevice, uint32_t surfaceQueueFamily)
 {
     // Check physical device
     if (!physicalDevice)
@@ -123,7 +122,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     }
 
     // Check surface
-    if (!vulkanSurface)
+    if (!GVulkanSurface)
     {
         // Invalid surface
         SysMessage::box() << "[0x302A] Invalid surface\n";
@@ -150,7 +149,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
     if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-        physicalDevice, vulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
+        physicalDevice, GVulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
     {
         // Could not get device surface capabilities
         SysMessage::box() << "[0x302C] Could not get surface capabilities\n";
@@ -161,7 +160,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Get surface formats
     uint32_t formatsCnt = 0;
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(
-        physicalDevice, vulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
+        physicalDevice, GVulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
     {
         // Could not get surface formats count
         SysMessage::box() << "[0x302D] Could not get surface formats count\n";
@@ -178,7 +177,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 
     std::vector<VkSurfaceFormatKHR> surfaceFormats(formatsCnt);
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,
-        vulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
+        GVulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
     {
         // Could not get surface formats
         SysMessage::box() << "[0x302F] Could not get surface formats\n";
@@ -189,7 +188,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     // Get present modes
     uint32_t presentModesCnt = 0;
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(
-        physicalDevice, vulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
+        physicalDevice, GVulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
     {
         // Could not get present modes count
         SysMessage::box() << "[0x3030] Could not get present modes count\n";
@@ -205,7 +204,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     }
     std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
-        vulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
+        GVulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
     {
         // Could not get present modes
         SysMessage::box() << "[0x3032] Could not get present modes\n";
@@ -379,7 +378,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
     swapchainInfos.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainInfos.pNext = 0;
     swapchainInfos.flags = 0;
-    swapchainInfos.surface = vulkanSurface;
+    swapchainInfos.surface = GVulkanSurface;
     swapchainInfos.minImageCount = imagesCount;
     swapchainInfos.imageFormat = surfaceFormat.format;
     swapchainInfos.imageColorSpace = surfaceFormat.colorSpace;
@@ -761,7 +760,7 @@ bool Swapchain::createSwapchain(VkPhysicalDevice& physicalDevice,
 //  return : True if swapchain is successfully resized                        //
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
-    VkDevice& vulkanDevice, VkSurfaceKHR& vulkanSurface)
+    VkDevice& vulkanDevice)
 {
     // Destroy current swapchain
     for (uint32_t i = 0; i < frames; ++i)
@@ -791,7 +790,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     // Get device surface capabilities
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
     if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-        physicalDevice, vulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
+        physicalDevice, GVulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
     {
         // Could not get device surface capabilities
         return false;
@@ -800,7 +799,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     // Get surface formats
     uint32_t formatsCnt = 0;
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(
-        physicalDevice, vulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
+        physicalDevice, GVulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
     {
         // Could not get surface formats count
         return false;
@@ -813,7 +812,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
 
     std::vector<VkSurfaceFormatKHR> surfaceFormats(formatsCnt);
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,
-        vulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
+        GVulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
     {
         // Could not get surface formats
         return false;
@@ -822,7 +821,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     // Get present modes
     uint32_t presentModesCnt = 0;
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(
-        physicalDevice, vulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
+        physicalDevice, GVulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
     {
         // Could not get present modes count
         return false;
@@ -834,7 +833,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     }
     std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
-        vulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
+        GVulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
     {
         // Could not get present modes
         return false;
@@ -996,7 +995,7 @@ bool Swapchain::resizeSwapchain(VkPhysicalDevice& physicalDevice,
     swapchainInfos.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainInfos.pNext = 0;
     swapchainInfos.flags = 0;
-    swapchainInfos.surface = vulkanSurface;
+    swapchainInfos.surface = GVulkanSurface;
     swapchainInfos.minImageCount = imagesCount;
     swapchainInfos.imageFormat = surfaceFormat.format;
     swapchainInfos.imageColorSpace = surfaceFormat.colorSpace;

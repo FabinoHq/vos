@@ -52,6 +52,11 @@ VulkanLibHandle GVulkanLib = 0;
 ////////////////////////////////////////////////////////////////////////////////
 VkInstance GVulkanInstance = 0;
 
+////////////////////////////////////////////////////////////////////////////////
+//  VulkanSurface global instance                                             //
+////////////////////////////////////////////////////////////////////////////////
+VkSurfaceKHR GVulkanSurface = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Vulkan extensions for Windows                                             //
@@ -141,7 +146,7 @@ bool LoadVulkanCreateSystemSurface()
 //  Create Vulkan SystemSurface                                               //
 //  return : True if Vulkan SystemSurface is successfully created             //
 ////////////////////////////////////////////////////////////////////////////////
-bool CreateVulkanSystemSurface(VkSurfaceKHR& vulkanSurface)
+bool CreateVulkanSystemSurface()
 {
     VkWin32SurfaceCreateInfoKHR surfaceInfo;
     surfaceInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
@@ -151,7 +156,7 @@ bool CreateVulkanSystemSurface(VkSurfaceKHR& vulkanSurface)
     surfaceInfo.hwnd = GSysWindow.getHandle();
 
     if (vkCreateWin32SurfaceKHR(GVulkanInstance,
-        &surfaceInfo, 0, &vulkanSurface) != VK_SUCCESS)
+        &surfaceInfo, 0, &GVulkanSurface) != VK_SUCCESS)
     {
         return false;
     }

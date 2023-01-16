@@ -557,7 +557,7 @@
     //  Create Vulkan SystemSurface                                           //
     //  return : True if Vulkan SystemSurface is successfully created         //
     ////////////////////////////////////////////////////////////////////////////
-    bool CreateVulkanSystemSurface(VkSurfaceKHR& vulkanSurface);
+    bool CreateVulkanSystemSurface();
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -569,6 +569,11 @@
     //  VulkanInstance global instance                                        //
     ////////////////////////////////////////////////////////////////////////////
     extern VkInstance GVulkanInstance;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanSurface global instance                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    extern VkSurfaceKHR GVulkanSurface;
 
 
 #endif // VOS_SYSTEM_WIN_SYSVULKAN_HEADER

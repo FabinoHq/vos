@@ -275,7 +275,6 @@
         public:
             bool                m_rendererReady;        // Renderer ready state
             uint32_t            m_frameIndex;           // Current frame index
-            VkSurfaceKHR        m_vulkanSurface;        // Vulkan surface
             VkPhysicalDevice    m_physicalDevice;       // Physical device
             VkDevice            m_vulkanDevice;         // Vulkan device
             VulkanDeviceQueues  m_vulkanQueues;         // Vulkan queues

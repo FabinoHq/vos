@@ -119,8 +119,7 @@
             //  Get Vulkan queue families availables for the device           //
             //  return : True if the device supports all queue families       //
             ////////////////////////////////////////////////////////////////////
-            static bool getDeviceQueues(VkSurfaceKHR& vulkanSurface,
-                VkPhysicalDevice& physicalDevice,
+            static bool getDeviceQueues(VkPhysicalDevice& physicalDevice,
                 VulkanDeviceQueues& vulkanQueues);
 
 
