@@ -501,10 +501,10 @@ void Game::render()
     GRenderer.startRenderPass();
 
     // Set freefly camera
-    GRenderer.setCamera(m_freeflycam);
+    m_freeflycam.bind();
 
     // Set orbital camera
-    //GRenderer.setCamera(m_orbitalcam);
+    //m_orbitalcam.bind();
 
     // Render skybox
     GRenderer.bindPipeline(RENDERER_PIPELINE_SKYBOX);
@@ -537,7 +537,7 @@ void Game::render()
 
 
     // Set 2D view
-    /*GRenderer.setView(m_view);
+    /*m_view.bind();
 
     // Bind default vertex buffer
     GRenderer.bindDefaultVertexBuffer();
@@ -650,13 +650,13 @@ void Game::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
     GRenderer.bindDefaultVertexBuffer();
     GMainRenderer.bind();
-    GRenderer.m_mainSprite.setSize(
-        (GSwapchain.ratio*2.0f)+RendererCompositingQuadOffset,
-        2.0f+RendererCompositingQuadOffset
+    GRenderer.plane.setSize(
+        (GSwapchain.ratio*2.0f)+RendererCompositingPlaneOffset,
+        2.0f+RendererCompositingPlaneOffset
     );
-    GRenderer.m_mainSprite.centerOrigin();
-    GRenderer.m_mainSprite.setPosition(0.0f, 0.0f);
-    GRenderer.m_mainSprite.render();
+    GRenderer.plane.centerOrigin();
+    GRenderer.plane.setPosition(0.0f, 0.0f);
+    GRenderer.plane.render();
 
     // End final pass
     GRenderer.endFinalPass();

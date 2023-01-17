@@ -52,12 +52,12 @@ Renderer GRenderer = Renderer();
 //  Renderer default constructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
 Renderer::Renderer() :
-m_rendererReady(false),
-m_frameIndex(0),
-m_surfaceQueue(),
-m_mainSprite(),
-m_pipelines(0),
-m_view()
+ready(false),
+frameIndex(0),
+surfaceQueue(),
+pipelines(0),
+view(),
+plane()
 {
 
 }
@@ -91,7 +91,7 @@ Renderer::~Renderer()
 ////////////////////////////////////////////////////////////////////////////////
 bool Renderer::init()
 {
-    m_rendererReady = false;
+    ready = false;
 
     // Check SysWindow
     if (!GSysWindow.isValid())
@@ -186,14 +186,14 @@ bool Renderer::init()
     }
 
     // Request surface queue handle
-    if (!m_surfaceQueue.createSurfaceQueue())
+    if (!surfaceQueue.createSurfaceQueue())
     {
         // Could not get surface queue handle
         return false;
     }
 
     // Create swapchain
-    if (!GSwapchain.createSwapchain(m_surfaceQueue.family))
+    if (!GSwapchain.createSwapchain(surfaceQueue.family))
     {
         // Could not create swapchain
         return false;
@@ -223,24 +223,24 @@ bool Renderer::init()
         return false;
     }
 
-    // Create main sprite
-    m_mainSprite.setSize(
-        (GSwapchain.ratio*2.0f)+RendererCompositingQuadOffset,
-        2.0f+RendererCompositingQuadOffset
-    );
-    m_mainSprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    m_mainSprite.setUVSize(1.0f, 1.0f);
-    m_mainSprite.setUVOffset(0.0f, 0.0f);
-
     // Init default view
-    if (!m_view.init())
+    if (!view.init())
     {
         // Could not init default view
         return false;
     }
 
+    // Create compositing plane
+    plane.setSize(
+        (GSwapchain.ratio*2.0f)+RendererCompositingPlaneOffset,
+        2.0f+RendererCompositingPlaneOffset
+    );
+    plane.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    plane.setUVSize(1.0f, 1.0f);
+    plane.setUVOffset(0.0f, 0.0f);
+
     // Renderer successfully loaded
-    m_rendererReady = true;
+    ready = true;
     return true;
 }
 
@@ -251,15 +251,15 @@ bool Renderer::init()
 bool Renderer::initPipelines()
 {
     // Check pipelines
-    if (m_pipelines)
+    if (pipelines)
     {
         // Pipelines already allocated
         return false;
     }
 
     // Allocate pipelines
-    m_pipelines = new (std::nothrow) Pipeline[RENDERER_PIPELINE_PIPELINESCOUNT];
-    if (!m_pipelines)
+    pipelines = new (std::nothrow) Pipeline[RENDERER_PIPELINE_PIPELINESCOUNT];
+    if (!pipelines)
     {
         // Could not allocate pipelines
         return false;
@@ -267,13 +267,13 @@ bool Renderer::initPipelines()
 
 
     // Create compositing pipeline
-    m_pipelines[RENDERER_PIPELINE_COMPOSITING].createVertexShader(
+    pipelines[RENDERER_PIPELINE_COMPOSITING].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_COMPOSITING].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_COMPOSITING].createFragmentShader(
         DefaultFragmentShader, DefaultFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_COMPOSITING].createCompositingPipeline(
+    if (!pipelines[RENDERER_PIPELINE_COMPOSITING].createCompositingPipeline(
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create compositing pipeline
@@ -282,13 +282,13 @@ bool Renderer::initPipelines()
 
 
     // Create sprite pipeline
-    m_pipelines[RENDERER_PIPELINE_DEFAULT].createVertexShader(
+    pipelines[RENDERER_PIPELINE_DEFAULT].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_DEFAULT].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_DEFAULT].createFragmentShader(
         DefaultFragmentShader, DefaultFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -299,13 +299,13 @@ bool Renderer::initPipelines()
     }
 
     // Create ninepatch pipeline
-    m_pipelines[RENDERER_PIPELINE_NINEPATCH].createVertexShader(
+    pipelines[RENDERER_PIPELINE_NINEPATCH].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_NINEPATCH].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_NINEPATCH].createFragmentShader(
         NinePatchFragmentShader, NinePatchFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -316,13 +316,13 @@ bool Renderer::initPipelines()
     }
 
     // Create rectangle pipeline
-    m_pipelines[RENDERER_PIPELINE_RECTANGLE].createVertexShader(
+    pipelines[RENDERER_PIPELINE_RECTANGLE].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_RECTANGLE].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_RECTANGLE].createFragmentShader(
         RectangleFragmentShader, RectangleFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -333,13 +333,13 @@ bool Renderer::initPipelines()
     }
 
     // Create ellipse pipeline
-    m_pipelines[RENDERER_PIPELINE_ELLISPE].createVertexShader(
+    pipelines[RENDERER_PIPELINE_ELLISPE].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_ELLISPE].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_ELLISPE].createFragmentShader(
         EllipseFragmentShader, EllipseFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -350,13 +350,13 @@ bool Renderer::initPipelines()
     }
 
     // Create pixel text pipeline
-    m_pipelines[RENDERER_PIPELINE_PXTEXT].createVertexShader(
+    pipelines[RENDERER_PIPELINE_PXTEXT].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_PXTEXT].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_PXTEXT].createFragmentShader(
         PxTextFragmentShader, PxTextFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -368,13 +368,13 @@ bool Renderer::initPipelines()
 
 
     // Create skybox pipeline
-    m_pipelines[RENDERER_PIPELINE_SKYBOX].createVertexShader(
+    pipelines[RENDERER_PIPELINE_SKYBOX].createVertexShader(
         SkyBoxVertexShader, SkyBoxVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_SKYBOX].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_SKYBOX].createFragmentShader(
         SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_SKYBOX].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_SKYBOX].createPipeline(
         VERTEX_INPUTS_CUBEMAP, false, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -385,13 +385,13 @@ bool Renderer::initPipelines()
     }
 
     // Create shape pipeline
-    m_pipelines[RENDERER_PIPELINE_SHAPE].createVertexShader(
+    pipelines[RENDERER_PIPELINE_SHAPE].createVertexShader(
         StaticMeshVertexShader, StaticMeshVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_SHAPE].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_SHAPE].createFragmentShader(
         StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -402,13 +402,13 @@ bool Renderer::initPipelines()
     }
 
     // Create static mesh pipeline
-    m_pipelines[RENDERER_PIPELINE_STATICMESH].createVertexShader(
+    pipelines[RENDERER_PIPELINE_STATICMESH].createVertexShader(
         StaticMeshVertexShader, StaticMeshVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_STATICMESH].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_STATICMESH].createFragmentShader(
         StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_STATICMESH].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_STATICMESH].createPipeline(
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -419,13 +419,13 @@ bool Renderer::initPipelines()
     }
 
     // Create heightmap pipeline
-    m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createVertexShader(
+    pipelines[RENDERER_PIPELINE_HEIGHTMAP].createVertexShader(
         HeightMapVertexShader, HeightMapVertexShaderSize
     );
-    m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_HEIGHTMAP].createFragmentShader(
         HeightMapFragmentShader, HeightMapFragmentShaderSize
     );
-    if (!m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_HEIGHTMAP].createPipeline(
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -446,7 +446,7 @@ bool Renderer::initPipelines()
 bool Renderer::startFrame()
 {
     // Check renderer state
-    if (!m_rendererReady)
+    if (!ready)
     {
         // Resize renderer
         if (!resize())
@@ -472,25 +472,25 @@ bool Renderer::startFrame()
         VK_FALSE, RendererSwapchainFenceTimeout) != VK_SUCCESS)
     {
         // Rendering fence timed out
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
     // Acquire current frame
     if (vkAcquireNextImageKHR(GVulkanDevice, GSwapchain.handle,
         UINT64_MAX, GSwapchain.renderReady[GSwapchain.current],
-        0, &m_frameIndex) != VK_SUCCESS)
+        0, &frameIndex) != VK_SUCCESS)
     {
         // Could not acquire swapchain frame
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
     // Check current frame index
-    if (m_frameIndex >= GSwapchain.frames)
+    if (frameIndex >= GSwapchain.frames)
     {
         // Invalid swapchain frame index
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
@@ -500,7 +500,7 @@ bool Renderer::startFrame()
         GSwapchain.commandPools[GSwapchain.current], 0) != VK_SUCCESS)
     {
         // Could not reset command pool
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
@@ -516,7 +516,7 @@ bool Renderer::startFrame()
         &commandBegin) != VK_SUCCESS)
     {
         // Could not begin command buffer
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
@@ -531,7 +531,7 @@ bool Renderer::startFrame()
 bool Renderer::endFrame()
 {
     // Check renderer state
-    if (!m_rendererReady)
+    if (!ready)
     {
         // Renderer is not ready
         return false;
@@ -542,7 +542,7 @@ bool Renderer::endFrame()
         GSwapchain.commandBuffers[GSwapchain.current]) != VK_SUCCESS)
     {
         // Could not end command buffer
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
@@ -551,7 +551,7 @@ bool Renderer::endFrame()
         &GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
     {
         // Could not reset fence
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
@@ -568,10 +568,10 @@ bool Renderer::endFrame()
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = &GSwapchain.renderDone[GSwapchain.current];
 
-    if (vkQueueSubmit(m_surfaceQueue.handle, 1, &submitInfo,
+    if (vkQueueSubmit(surfaceQueue.handle, 1, &submitInfo,
         GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
     {
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
@@ -583,12 +583,12 @@ bool Renderer::endFrame()
     present.pWaitSemaphores = &GSwapchain.renderDone[GSwapchain.current];
     present.swapchainCount = 1;
     present.pSwapchains = &GSwapchain.handle;
-    present.pImageIndices = &m_frameIndex;
+    present.pImageIndices = &frameIndex;
     present.pResults = 0;
 
-    if (vkQueuePresentKHR(m_surfaceQueue.handle, &present) != VK_SUCCESS)
+    if (vkQueuePresentKHR(surfaceQueue.handle, &present) != VK_SUCCESS)
     {
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
@@ -617,15 +617,15 @@ void Renderer::startRenderPass()
     VkRenderPassBeginInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
-    renderPassInfo.renderPass = GMainRenderer.m_backchain.renderPass;
+    renderPassInfo.renderPass = GMainRenderer.backchain.renderPass;
     renderPassInfo.framebuffer =
-        GMainRenderer.m_backchain.framebuffers[m_frameIndex];
+        GMainRenderer.backchain.framebuffers[frameIndex];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width =
-        GMainRenderer.m_backchain.extent.width;
+        GMainRenderer.backchain.extent.width;
     renderPassInfo.renderArea.extent.height =
-        GMainRenderer.m_backchain.extent.height;
+        GMainRenderer.backchain.extent.height;
     renderPassInfo.clearValueCount = 2;
     renderPassInfo.pClearValues = clearValues;
 
@@ -637,9 +637,9 @@ void Renderer::startRenderPass()
     // Set viewport
     VkViewport viewport;
     viewport.x = 0.0f;
-    viewport.y = GMainRenderer.m_backchain.extent.height*1.0f;
-    viewport.width = GMainRenderer.m_backchain.extent.width*1.0f;
-    viewport.height = GMainRenderer.m_backchain.extent.height*-1.0f;
+    viewport.y = GMainRenderer.backchain.extent.height*1.0f;
+    viewport.width = GMainRenderer.backchain.extent.width*1.0f;
+    viewport.height = GMainRenderer.backchain.extent.height*-1.0f;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
@@ -651,8 +651,8 @@ void Renderer::startRenderPass()
     VkRect2D scissor;
     scissor.offset.x = 0;
     scissor.offset.y = 0;
-    scissor.extent.width = GMainRenderer.m_backchain.extent.width;
-    scissor.extent.height = GMainRenderer.m_backchain.extent.height;
+    scissor.extent.width = GMainRenderer.backchain.extent.width;
+    scissor.extent.height = GMainRenderer.backchain.extent.height;
 
     vkCmdSetScissor(
         GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &scissor
@@ -708,7 +708,7 @@ void Renderer::startFinalPass()
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
     renderPassInfo.renderPass = GSwapchain.renderPass;
-    renderPassInfo.framebuffer = GSwapchain.framebuffers[m_frameIndex];
+    renderPassInfo.framebuffer = GSwapchain.framebuffers[frameIndex];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width = GSwapchain.extent.width;
@@ -810,7 +810,7 @@ bool Renderer::waitDeviceIdle()
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::destroyRenderer()
 {
-    m_rendererReady = false;
+    ready = false;
 
     // Check Vulkan device
     if (!GVulkanDevice)
@@ -820,18 +820,18 @@ void Renderer::destroyRenderer()
     }
 
     // Destroy default view
-    m_view.destroyView();
+    view.destroyView();
 
     // Destroy pipeplines
-    if (m_pipelines)
+    if (pipelines)
     {
         for (int i = 0; i < RENDERER_PIPELINE_PIPELINESCOUNT; ++i)
         {
-            m_pipelines[i].destroyPipeline();
+            pipelines[i].destroyPipeline();
         }
-        delete[] m_pipelines;
+        delete[] pipelines;
     }
-    m_pipelines = 0;
+    pipelines = 0;
 
     // Destroy main renderer
     GMainRenderer.destroyBackRenderer();
@@ -866,7 +866,7 @@ void Renderer::destroyRenderer()
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::bindPipeline(RendererPipeline rendererPipeline)
 {
-    m_pipelines[rendererPipeline].bind();
+    pipelines[rendererPipeline].bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -897,82 +897,18 @@ void Renderer::bindDefaultVertexBuffer()
 bool Renderer::setDefaultView()
 {
     // Compute default view
-    m_view.compute(GSwapchain.ratio);
+    view.compute(GSwapchain.ratio);
 
     // Bind default view
-    if (!m_view.bind())
+    if (!view.bind())
     {
         // Could not bind default view
-        m_rendererReady = false;
+        ready = false;
         return false;
     }
 
     // Default view successfully set
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set renderer view                                                         //
-//  return : True if the view is successfully set                             //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setView(View& view)
-{
-    // Bind view
-    if (!view.bind())
-    {
-        // Could not bind view
-        m_rendererReady = false;
-        return false;
-    }
-
-    // View successfully set
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set renderer camera                                                       //
-//  return : True if the camera is successfully set                           //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setCamera(Camera& camera)
-{
-    // Bind camera
-    if (!camera.bind())
-    {
-        // Could not bind view
-        m_rendererReady = false;
-        return false;
-    }
-
-    // Camera successfully set
-    return true;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get renderer ready state                                                  //
-//  return : True if the renderer is ready, false otherwise                   //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::isReady()
-{
-    return m_rendererReady;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get renderer width                                                        //
-//  return : Renderer width                                                   //
-////////////////////////////////////////////////////////////////////////////////
-uint32_t Renderer::getWidth()
-{
-    return GSwapchain.extent.width;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get renderer height                                                       //
-//  return : Renderer height                                                  //
-////////////////////////////////////////////////////////////////////////////////
-uint32_t Renderer::getHeight()
-{
-    return GSwapchain.extent.height;
 }
 
 
@@ -1435,7 +1371,7 @@ bool Renderer::selectVulkanDevice()
 bool Renderer::resize()
 {
     // Wait for device idle
-    m_rendererReady = false;
+    ready = false;
     if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
     {
         // Could not wait for device idle
@@ -1466,6 +1402,6 @@ bool Renderer::resize()
     }
 
     // Renderer successfully resized
-    m_rendererReady = true;
+    ready = true;
     return true;
 }

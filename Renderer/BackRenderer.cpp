@@ -52,9 +52,9 @@ BackRenderer GMainRenderer = BackRenderer();
 //  BackRenderer default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 BackRenderer::BackRenderer() :
-m_backchain(),
-m_view(),
-m_current(0)
+backchain(),
+view(),
+current(0)
 {
 
 }
@@ -84,7 +84,7 @@ bool BackRenderer::init(VulkanMemoryPool memoryPool,
     }
 
     // Create backchain
-    if (!m_backchain.createBackchain(memoryPool, width, height))
+    if (!backchain.createBackchain(memoryPool, width, height))
     {
         // Could not create backchain
         return false;
@@ -120,12 +120,12 @@ bool BackRenderer::init(VulkanMemoryPool memoryPool,
     {
         // Create image sampler
         if (vkCreateSampler(GVulkanDevice,
-            &samplerInfo, 0, &m_samplers[i]) != VK_SUCCESS)
+            &samplerInfo, 0, &samplers[i]) != VK_SUCCESS)
         {
             // Could not create image sampler
             return false;
         }
-        if (!m_samplers[i])
+        if (!samplers[i])
         {
             // Invalid image sampler
             return false;
@@ -143,7 +143,7 @@ bool BackRenderer::init(VulkanMemoryPool memoryPool,
     ];
 
     if (vkAllocateDescriptorSets(GVulkanDevice,
-        &descriptorInfo, m_descriptorSets) != VK_SUCCESS)
+        &descriptorInfo, descriptorSets) != VK_SUCCESS)
     {
         // Could not allocate descriptor sets
         return false;
@@ -170,16 +170,16 @@ bool BackRenderer::init(VulkanMemoryPool memoryPool,
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Update descriptor set
-        descImageInfo.sampler = m_samplers[i];
-        descImageInfo.imageView = m_backchain.views[i];
-        descriptorWrites.dstSet = m_descriptorSets[i];
+        descImageInfo.sampler = samplers[i];
+        descImageInfo.imageView = backchain.views[i];
+        descriptorWrites.dstSet = descriptorSets[i];
         descriptorWrites.pImageInfo = &descImageInfo;
 
         vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
     // Init default view
-    if (!m_view.init())
+    if (!view.init())
     {
         // Could not init default view
         return false;
@@ -204,13 +204,12 @@ bool BackRenderer::startRenderPass()
     VkRenderPassBeginInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
-    renderPassInfo.renderPass = m_backchain.renderPass;
-    renderPassInfo.framebuffer =
-        m_backchain.framebuffers[GSwapchain.current];
+    renderPassInfo.renderPass = backchain.renderPass;
+    renderPassInfo.framebuffer = backchain.framebuffers[GSwapchain.current];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
-    renderPassInfo.renderArea.extent.width = m_backchain.extent.width;
-    renderPassInfo.renderArea.extent.height = m_backchain.extent.height;
+    renderPassInfo.renderArea.extent.width = backchain.extent.width;
+    renderPassInfo.renderArea.extent.height = backchain.extent.height;
     renderPassInfo.clearValueCount = 2;
     renderPassInfo.pClearValues = clearValues;
 
@@ -222,9 +221,9 @@ bool BackRenderer::startRenderPass()
     // Set viewport
     VkViewport viewport;
     viewport.x = 0.0f;
-    viewport.y = m_backchain.extent.height*1.0f;
-    viewport.width = m_backchain.extent.width*1.0f;
-    viewport.height = m_backchain.extent.height*-1.0f;
+    viewport.y = backchain.extent.height*1.0f;
+    viewport.width = backchain.extent.width*1.0f;
+    viewport.height = backchain.extent.height*-1.0f;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
@@ -236,8 +235,8 @@ bool BackRenderer::startRenderPass()
     VkRect2D scissor;
     scissor.offset.x = 0;
     scissor.offset.y = 0;
-    scissor.extent.width = m_backchain.extent.width;
-    scissor.extent.height = m_backchain.extent.height;
+    scissor.extent.width = backchain.extent.width;
+    scissor.extent.height = backchain.extent.height;
 
     vkCmdSetScissor(
         GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &scissor
@@ -280,7 +279,7 @@ void BackRenderer::endRenderPass()
 {
     // End render pass
     vkCmdEndRenderPass(GSwapchain.commandBuffers[GSwapchain.current]);
-    m_current = GSwapchain.current;
+    current = GSwapchain.current;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -292,7 +291,7 @@ void BackRenderer::bind()
     vkCmdBindDescriptorSets(
         GSwapchain.commandBuffers[GSwapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[m_current], 0, 0
+        DESC_TEXTURE, 1, &descriptorSets[current], 0, 0
     );
 }
 
@@ -309,23 +308,23 @@ void BackRenderer::destroyBackRenderer()
     }
 
     // Reset current frame
-    m_current = 0;
+    current = 0;
 
     // Destroy image samplers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        if (m_samplers[i])
+        if (samplers[i])
         {
-            vkDestroySampler(GVulkanDevice, m_samplers[i], 0);
+            vkDestroySampler(GVulkanDevice, samplers[i], 0);
         }
-        m_samplers[i] = 0;
+        samplers[i] = 0;
     }
 
     // Destroy default view
-    m_view.destroyView();
+    view.destroyView();
 
     // Destroy backchain
-    m_backchain.destroyBackchain();
+    backchain.destroyBackchain();
 }
 
 
@@ -336,10 +335,10 @@ void BackRenderer::destroyBackRenderer()
 bool BackRenderer::setDefaultView()
 {
     // Compute default view
-    m_view.compute(m_backchain.ratio);
+    view.compute(backchain.ratio);
 
     // Bind default view
-    if (!m_view.bind())
+    if (!view.bind())
     {
         // Could not bind default view
         return false;
@@ -365,7 +364,7 @@ bool BackRenderer::resize(VulkanMemoryPool memoryPool,
     }
 
     // Resize backchain
-    if (!m_backchain.resizeBackchain(memoryPool, width, height))
+    if (!backchain.resizeBackchain(memoryPool, width, height))
     {
         // Could not resize backchain
         return false;
@@ -392,9 +391,9 @@ bool BackRenderer::resize(VulkanMemoryPool memoryPool,
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Update descriptor set
-        descImageInfo.sampler = m_samplers[i];
-        descImageInfo.imageView = m_backchain.views[i];
-        descriptorWrites.dstSet = m_descriptorSets[i];
+        descImageInfo.sampler = samplers[i];
+        descImageInfo.imageView = backchain.views[i];
+        descriptorWrites.dstSet = descriptorSets[i];
         descriptorWrites.pImageInfo = &descImageInfo;
 
         vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);

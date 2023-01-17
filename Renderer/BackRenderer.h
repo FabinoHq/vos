@@ -138,12 +138,13 @@
 
 
         public:
-            Backchain           m_backchain;    // Backchain
-            View                m_view;         // Default view
-            uint32_t            m_current;      // Current frame
+            Backchain           backchain;    // Backchain
+            uint32_t            current;      // Current frame
 
-            VkSampler           m_samplers[RendererMaxSwapchainFrames];
-            VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
+            View                view;         // Default view
+
+            VkSampler           samplers[RendererMaxSwapchainFrames];
+            VkDescriptorSet     descriptorSets[RendererMaxSwapchainFrames];
     };
 
 

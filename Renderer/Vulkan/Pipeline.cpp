@@ -545,7 +545,7 @@ bool Pipeline::createPipeline(
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = GGraphicsLayout.handle;
-    pipelineInfo.renderPass = GMainRenderer.m_backchain.renderPass;
+    pipelineInfo.renderPass = GMainRenderer.backchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;

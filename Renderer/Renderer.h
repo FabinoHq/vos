@@ -92,9 +92,9 @@
     const VkClearColorValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer compositing quad offset                                      //
+    //  Renderer compositing plane offset                                     //
     ////////////////////////////////////////////////////////////////////////////
-    const float RendererCompositingQuadOffset = 0.00001f;
+    const float RendererCompositingPlaneOffset = 0.00001f;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -187,36 +187,15 @@
             ////////////////////////////////////////////////////////////////////
             bool setDefaultView();
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer view                                             //
-            //  return : True if the view is successfully set                 //
-            ////////////////////////////////////////////////////////////////////
-            bool setView(View& view);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set renderer camera                                           //
-            //  return : True if the camera is successfully set               //
-            ////////////////////////////////////////////////////////////////////
-            bool setCamera(Camera& camera);
-
 
             ////////////////////////////////////////////////////////////////////
             //  Get renderer ready state                                      //
             //  return : True if the renderer is ready, false otherwise       //
             ////////////////////////////////////////////////////////////////////
-            bool isReady();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get renderer width                                            //
-            //  return : Renderer width                                       //
-            ////////////////////////////////////////////////////////////////////
-            uint32_t getWidth();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get renderer height                                           //
-            //  return : Renderer height                                      //
-            ////////////////////////////////////////////////////////////////////
-            uint32_t getHeight();
+            inline bool isReady()
+            {
+                return ready;
+            }
 
 
         private:
@@ -251,15 +230,13 @@
 
 
         public:
-            bool                m_rendererReady;        // Renderer ready state
-            uint32_t            m_frameIndex;           // Current frame index
-            VulkanQueue         m_surfaceQueue;         // Surface queue
+            bool                ready;                  // Renderer ready state
+            uint32_t            frameIndex;             // Current frame index
+            VulkanQueue         surfaceQueue;           // Surface queue
 
-            Sprite              m_mainSprite;           // Main sprite
-
-            Pipeline*           m_pipelines;            // Pipelines
-
-            View                m_view;                 // Default view
+            Pipeline*           pipelines;              // Pipelines
+            View                view;                   // Default view
+            Sprite              plane;                  // Compositing plane
     };
 
 
