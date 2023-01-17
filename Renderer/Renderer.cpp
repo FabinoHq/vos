@@ -878,13 +878,13 @@ void Renderer::bindDefaultVertexBuffer()
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         GSwapchain.commandBuffers[GSwapchain.current],
-        0, 1, &(GResources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle),
+        0, 1, &GResources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle,
         &offset
     );
 
     vkCmdBindIndexBuffer(
         GSwapchain.commandBuffers[GSwapchain.current],
-        (GResources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle),
+        GResources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle,
         0, VK_INDEX_TYPE_UINT16
     );
 }

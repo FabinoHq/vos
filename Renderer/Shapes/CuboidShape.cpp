@@ -146,12 +146,12 @@ void CuboidShape::bindVertexBuffer()
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         GSwapchain.commandBuffers[GSwapchain.current],
-        0, 1, &(m_vertexBuffer->vertexBuffer.handle), &offset
+        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
     );
 
     vkCmdBindIndexBuffer(
         GSwapchain.commandBuffers[GSwapchain.current],
-        (m_vertexBuffer->indexBuffer.handle), 0, VK_INDEX_TYPE_UINT16
+        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
     );
 }
 

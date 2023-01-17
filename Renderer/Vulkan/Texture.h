@@ -91,18 +91,9 @@
             //  Create texture                                                //
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createTexture(VulkanMemoryPool memoryPool,
-                uint32_t width, uint32_t height, uint32_t mipLevels,
-                bool smooth = true,
-                TextureRepeatMode repeat = TEXTUREMODE_CLAMP);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Update texture                                                //
-            //  return : True if texture is successfully updated              //
-            ////////////////////////////////////////////////////////////////////
-            bool updateTexture(TextureLoader& loader,
-                VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
-                const unsigned char* data,
+            bool createTexture(TextureLoader& loader,
+                VulkanMemoryPool memoryPool,
+                uint32_t width, uint32_t height, const unsigned char* data,
                 bool mipmaps = false, bool smooth = true,
                 TextureRepeatMode repeat = TEXTUREMODE_CLAMP);
 

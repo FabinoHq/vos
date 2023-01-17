@@ -79,14 +79,7 @@
             //  Create cubemap                                                //
             //  return : True if cubemap is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createCubeMap(VulkanMemoryPool memoryPool,
-                uint32_t width, uint32_t height, bool smooth = true);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Update cubemap                                                //
-            //  return : True if cubemap is successfully updated              //
-            ////////////////////////////////////////////////////////////////////
-            bool updateCubeMap(TextureLoader& loader,
+            bool createCubeMap(TextureLoader& loader,
                 VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
                 const unsigned char* data, bool smooth = true);
 

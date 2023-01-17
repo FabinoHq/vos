@@ -326,7 +326,7 @@ bool HeightMapLoader::init()
     // Set default heightmaps pointers
     for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
     {
-        m_heightptrs[i] = &(m_heightmaps[i]);
+        m_heightptrs[i] = &m_heightmaps[i];
     }
 
     // Create default heightmap

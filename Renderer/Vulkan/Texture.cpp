@@ -84,9 +84,9 @@ Texture::~Texture()
 //  Create texture                                                            //
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::createTexture(VulkanMemoryPool memoryPool,
-    uint32_t width, uint32_t height, uint32_t mipLevels,
-    bool smooth, TextureRepeatMode repeat)
+bool Texture::createTexture(TextureLoader& loader, VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height, const unsigned char* data,
+    bool mipmaps, bool smooth, TextureRepeatMode repeat)
 {
     // Check texture handle
     if (m_handle)
@@ -102,6 +102,21 @@ bool Texture::createTexture(VulkanMemoryPool memoryPool,
         // Invalid texture size
         return false;
     }
+
+    // Check texture data
+    if (!data)
+    {
+        // Invalid texture data
+        return false;
+    }
+
+    // Set mip levels
+    uint32_t mipLevels = 1;
+    if (mipmaps)
+    {
+        mipLevels = (Math::log2(((width > height) ? width : height)) + 1);
+    }
+    if (mipLevels <= 1) { mipLevels = 1; }
 
     // Create image
     VkImageCreateInfo imageInfo;
@@ -280,56 +295,6 @@ bool Texture::createTexture(VulkanMemoryPool memoryPool,
         vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
-    // Set texture size
-    m_width = width;
-    m_height = height;
-
-    // Texture successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Update texture                                                            //
-//  return : True if texture is successfully updated                          //
-////////////////////////////////////////////////////////////////////////////////
-bool Texture::updateTexture(TextureLoader& loader,
-    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
-    const unsigned char* data,
-    bool mipmaps, bool smooth, TextureRepeatMode repeat)
-{
-    // Check texture size
-    if ((width <= 0) || (width > TextureMaxWidth) ||
-        (height <= 0) || (height > TextureMaxHeight))
-    {
-        // Invalid texture size
-        return false;
-    }
-
-    // Check texture data
-    if (!data)
-    {
-        // Invalid texture data
-        return false;
-    }
-
-    // Set mip levels
-    uint32_t mipLevels = 1;
-    if (mipmaps)
-    {
-        mipLevels = (Math::log2(((width > height) ? width : height)) + 1);
-    }
-    if (mipLevels <= 1) { mipLevels = 1; }
-
-    // Check current texture
-    if (!m_handle || (width != m_width) || (height != m_height))
-    {
-        // Recreate texture
-        destroyTexture();
-        createTexture(
-            memoryPool, width, height, mipLevels, smooth, repeat
-        );
-    }
-
     // Upload texture to graphics memory
     if (!loader.uploadTexture(m_handle, width, height, mipLevels, data))
     {
@@ -337,7 +302,11 @@ bool Texture::updateTexture(TextureLoader& loader,
         return false;
     }
 
-    // Texture successfully updated
+    // Set texture size
+    m_width = width;
+    m_height = height;
+
+    // Texture successfully created
     return true;
 }
 

@@ -86,9 +86,10 @@ TextureArray::~TextureArray()
 //  Create texture array                                                      //
 //  return : True if texture array is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool TextureArray::createTextureArray(VulkanMemoryPool memoryPool,
-    uint32_t width, uint32_t height, uint32_t layers,
-    uint32_t mipLevels, bool smooth, TextureRepeatMode repeat)
+bool TextureArray::createTextureArray(TextureLoader& loader,
+    VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height, uint32_t layers, const unsigned char* data,
+    bool mipmaps, bool smooth, TextureRepeatMode repeat)
 {
     // Check texture array handle
     if (m_handle)
@@ -105,6 +106,21 @@ bool TextureArray::createTextureArray(VulkanMemoryPool memoryPool,
         // Invalid texture array size
         return false;
     }
+
+    // Check texture array data
+    if (!data)
+    {
+        // Invalid texture array data
+        return false;
+    }
+
+    // Set mip levels
+    uint32_t mipLevels = 1;
+    if (mipmaps)
+    {
+        mipLevels = (Math::log2(((width > height) ? width : height)) + 1);
+    }
+    if (mipLevels <= 1) { mipLevels = 1; }
 
     // Create image
     VkImageCreateInfo imageInfo;
@@ -283,59 +299,6 @@ bool TextureArray::createTextureArray(VulkanMemoryPool memoryPool,
         vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
-    // Set texture array size
-    m_width = width;
-    m_height = height;
-    m_layers = layers;
-
-    // Texture array successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Update texture array                                                      //
-//  return : True if texture array is successfully updated                    //
-////////////////////////////////////////////////////////////////////////////////
-bool TextureArray::updateTextureArray(
-    TextureLoader& loader, VulkanMemoryPool memoryPool,
-    uint32_t width, uint32_t height, uint32_t layers, const unsigned char* data,
-    bool mipmaps, bool smooth, TextureRepeatMode repeat)
-{
-    // Check texture array size
-    if ((width <= 0) || (width > TextureMaxWidth) ||
-        (height <= 0) || (height > TextureMaxHeight))
-    {
-        // Invalid texture array size
-        return false;
-    }
-
-    // Check texture array data
-    if (!data)
-    {
-        // Invalid texture array data
-        return false;
-    }
-
-    // Set mip levels
-    uint32_t mipLevels = 1;
-    if (mipmaps)
-    {
-        mipLevels = (Math::log2(((width > height) ? width : height)) + 1);
-    }
-    if (mipLevels <= 1) { mipLevels = 1; }
-
-    // Check current texture array
-    if (!m_handle ||
-        (width != m_width) || (height != m_height) || (layers != m_layers))
-    {
-        // Recreate texture array
-        destroyTextureArray();
-        createTextureArray(
-            memoryPool, width, height, layers,
-            mipLevels, smooth, repeat
-        );
-    }
-
     // Upload texture array to graphics memory
     if (!loader.uploadTextureArray(
         m_handle, width, height, layers, mipLevels, data))
@@ -344,7 +307,12 @@ bool TextureArray::updateTextureArray(
         return false;
     }
 
-    // Texture array successfully updated
+    // Set texture array size
+    m_width = width;
+    m_height = height;
+    m_layers = layers;
+
+    // Texture array successfully created
     return true;
 }
 

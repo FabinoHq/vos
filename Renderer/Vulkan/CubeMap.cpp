@@ -84,9 +84,17 @@ CubeMap::~CubeMap()
 //  Create cubemap                                                            //
 //  return : True if cubemap is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
-    uint32_t width, uint32_t height, bool smooth)
+bool CubeMap::createCubeMap(TextureLoader& loader,
+    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
+    const unsigned char* data, bool smooth)
 {
+    // Check cubemap handle
+    if (m_handle)
+    {
+        // Destroy current cubemap
+        destroyCubeMap();
+    }
+
     // Check cubemap size
     if ((width <= 0) || (width > CubeMapMaxWidth) ||
         (height <= 0) || (height > CubeMapMaxHeight) ||
@@ -96,11 +104,11 @@ bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
         return false;
     }
 
-    // Check cubemap handle
-    if (m_handle)
+    // Check cubemap data
+    if (!data)
     {
-        // Destroy current cubemap
-        destroyCubeMap();
+        // Invalid cubemap data
+        return false;
     }
 
     // Create image
@@ -253,46 +261,6 @@ bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
         vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
     }
 
-    // Set cubemap size
-    m_width = width;
-    m_height = height;
-
-    // CubeMap successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Update cubemap                                                            //
-//  return : True if cubemap is successfully updated                          //
-////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::updateCubeMap(TextureLoader& loader,
-    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
-    const unsigned char* data, bool smooth)
-{
-    // Check cubemap size
-    if ((width <= 0) || (width > CubeMapMaxWidth) ||
-        (height <= 0) || (height > CubeMapMaxHeight) ||
-        (width != height))
-    {
-        // Invalid cubemap size
-        return false;
-    }
-
-    // Check cubemap data
-    if (!data)
-    {
-        // Invalid cubemap data
-        return false;
-    }
-
-    // Check current cubemap
-    if (!m_handle || (width != m_width) || (height != m_height))
-    {
-        // Recreate cubemap
-        destroyCubeMap();
-        createCubeMap(memoryPool, width, height, smooth);
-    }
-
     // Upload cubemap to graphics memory
     if (!loader.uploadCubeMap(m_handle, width, height, data))
     {
@@ -300,7 +268,11 @@ bool CubeMap::updateCubeMap(TextureLoader& loader,
         return false;
     }
 
-    // CubeMap successfully updated
+    // Set cubemap size
+    m_width = width;
+    m_height = height;
+
+    // CubeMap successfully created
     return true;
 }
 
