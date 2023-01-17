@@ -288,7 +288,7 @@ void Sprite::render()
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
@@ -305,14 +305,14 @@ void Sprite::render()
     pushConstants.size[1] = m_uvSize.vec[1];
 
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
     );
 
     // Draw sprite triangles
     vkCmdDrawIndexed(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         6, 1, 0, 0, 0
     );
 }

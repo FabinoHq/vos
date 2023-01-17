@@ -312,9 +312,9 @@ void CubeMap::bind()
 {
     // Bind cubemap descriptor set
     vkCmdBindDescriptorSets(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[GRenderer.m_swapchain.current], 0, 0
+        DESC_TEXTURE, 1, &m_descriptorSets[GSwapchain.current], 0, 0
     );
 }
 

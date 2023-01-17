@@ -281,7 +281,6 @@
             VkDescriptorPool    m_uniformsDescPool;     // Uniforms desc pool
             VkDescriptorPool    m_texturesDescPool;     // Textures desc pool
 
-            Swapchain           m_swapchain;            // Swapchain
             GraphicsLayout      m_layout;               // Graphics layout
 
             BackRenderer        m_mainRenderer;         // Main renderer

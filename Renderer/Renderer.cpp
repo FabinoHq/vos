@@ -59,7 +59,6 @@ m_graphicsQueue(),
 m_surfaceQueue(),
 m_uniformsDescPool(0),
 m_texturesDescPool(0),
-m_swapchain(),
 m_layout(),
 m_mainRenderer(),
 m_mainSprite(),
@@ -207,7 +206,7 @@ bool Renderer::init()
     }
 
     // Create swapchain
-    if (!m_swapchain.createSwapchain(m_surfaceQueue.family))
+    if (!GSwapchain.createSwapchain(m_surfaceQueue.family))
     {
         // Could not create swapchain
         return false;
@@ -286,7 +285,7 @@ bool Renderer::init()
 
     // Create main renderer
     if (!m_mainRenderer.init(VULKAN_MEMORY_BACKCHAIN,
-        m_swapchain.extent.width, m_swapchain.extent.height, true))
+        GSwapchain.extent.width, GSwapchain.extent.height, true))
     {
         // Could not init main renderer
         return false;
@@ -301,7 +300,7 @@ bool Renderer::init()
 
     // Create main sprite
     m_mainSprite.setSize(
-        (m_swapchain.ratio*2.0f)+RendererCompositingQuadOffset,
+        (GSwapchain.ratio*2.0f)+RendererCompositingQuadOffset,
         2.0f+RendererCompositingQuadOffset
     );
     m_mainSprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -533,18 +532,18 @@ bool Renderer::startFrame()
     }
 
     // Clamp swapchain current frame index
-    if (m_swapchain.current <= 0)
+    if (GSwapchain.current <= 0)
     {
-        m_swapchain.current = 0;
+        GSwapchain.current = 0;
     }
-    if (m_swapchain.current >= (m_swapchain.frames-1))
+    if (GSwapchain.current >= (GSwapchain.frames-1))
     {
-        m_swapchain.current = (m_swapchain.frames-1);
+        GSwapchain.current = (GSwapchain.frames-1);
     }
 
     // Wait for current frame rendering fence
     if (vkWaitForFences(GVulkanDevice, 1,
-        &m_swapchain.fences[m_swapchain.current],
+        &GSwapchain.fences[GSwapchain.current],
         VK_FALSE, RendererSwapchainFenceTimeout) != VK_SUCCESS)
     {
         // Rendering fence timed out
@@ -553,8 +552,8 @@ bool Renderer::startFrame()
     }
 
     // Acquire current frame
-    if (vkAcquireNextImageKHR(GVulkanDevice, m_swapchain.handle,
-        UINT64_MAX, m_swapchain.renderReady[m_swapchain.current],
+    if (vkAcquireNextImageKHR(GVulkanDevice, GSwapchain.handle,
+        UINT64_MAX, GSwapchain.renderReady[GSwapchain.current],
         0, &m_frameIndex) != VK_SUCCESS)
     {
         // Could not acquire swapchain frame
@@ -563,7 +562,7 @@ bool Renderer::startFrame()
     }
 
     // Check current frame index
-    if (m_frameIndex >= m_swapchain.frames)
+    if (m_frameIndex >= GSwapchain.frames)
     {
         // Invalid swapchain frame index
         m_rendererReady = false;
@@ -573,7 +572,7 @@ bool Renderer::startFrame()
 
     // Reset command pool
     if (vkResetCommandPool(GVulkanDevice,
-        m_swapchain.commandPools[m_swapchain.current], 0) != VK_SUCCESS)
+        GSwapchain.commandPools[GSwapchain.current], 0) != VK_SUCCESS)
     {
         // Could not reset command pool
         m_rendererReady = false;
@@ -588,7 +587,7 @@ bool Renderer::startFrame()
     commandBegin.pInheritanceInfo = 0;
 
     // Begin command buffer
-    if (vkBeginCommandBuffer(m_swapchain.commandBuffers[m_swapchain.current],
+    if (vkBeginCommandBuffer(GSwapchain.commandBuffers[GSwapchain.current],
         &commandBegin) != VK_SUCCESS)
     {
         // Could not begin command buffer
@@ -615,7 +614,7 @@ bool Renderer::endFrame()
 
     // End command buffer
     if (vkEndCommandBuffer(
-        m_swapchain.commandBuffers[m_swapchain.current]) != VK_SUCCESS)
+        GSwapchain.commandBuffers[GSwapchain.current]) != VK_SUCCESS)
     {
         // Could not end command buffer
         m_rendererReady = false;
@@ -624,7 +623,7 @@ bool Renderer::endFrame()
 
     // Reset current frame rendering fence
     if (vkResetFences(GVulkanDevice, 1,
-        &m_swapchain.fences[m_swapchain.current]) != VK_SUCCESS)
+        &GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
     {
         // Could not reset fence
         m_rendererReady = false;
@@ -637,17 +636,15 @@ bool Renderer::endFrame()
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo.pNext = 0;
     submitInfo.waitSemaphoreCount = 1;
-    submitInfo.pWaitSemaphores =
-        &m_swapchain.renderReady[m_swapchain.current];
+    submitInfo.pWaitSemaphores = &GSwapchain.renderReady[GSwapchain.current];
     submitInfo.pWaitDstStageMask = &waitDstStage;
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers =
-        &m_swapchain.commandBuffers[m_swapchain.current];
+    submitInfo.pCommandBuffers = &GSwapchain.commandBuffers[GSwapchain.current];
     submitInfo.signalSemaphoreCount = 1;
-    submitInfo.pSignalSemaphores = &m_swapchain.renderDone[m_swapchain.current];
+    submitInfo.pSignalSemaphores = &GSwapchain.renderDone[GSwapchain.current];
 
     if (vkQueueSubmit(m_surfaceQueue.handle, 1, &submitInfo,
-        m_swapchain.fences[m_swapchain.current]) != VK_SUCCESS)
+        GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
     {
         m_rendererReady = false;
         return false;
@@ -658,9 +655,9 @@ bool Renderer::endFrame()
     present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     present.pNext = 0;
     present.waitSemaphoreCount = 1;
-    present.pWaitSemaphores = &m_swapchain.renderDone[m_swapchain.current];
+    present.pWaitSemaphores = &GSwapchain.renderDone[GSwapchain.current];
     present.swapchainCount = 1;
-    present.pSwapchains = &m_swapchain.handle;
+    present.pSwapchains = &GSwapchain.handle;
     present.pImageIndices = &m_frameIndex;
     present.pResults = 0;
 
@@ -671,10 +668,10 @@ bool Renderer::endFrame()
     }
 
     // Next swapchain frame index
-    ++m_swapchain.current;
-    if (m_swapchain.current >= m_swapchain.frames)
+    ++GSwapchain.current;
+    if (GSwapchain.current >= GSwapchain.frames)
     {
-        m_swapchain.current = 0;
+        GSwapchain.current = 0;
     }
 
     // Current frame is submitted for rendering
@@ -708,7 +705,7 @@ void Renderer::startRenderPass()
     renderPassInfo.pClearValues = clearValues;
 
     vkCmdBeginRenderPass(
-        m_swapchain.commandBuffers[m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
@@ -722,7 +719,7 @@ void Renderer::startRenderPass()
     viewport.maxDepth = 1.0f;
 
     vkCmdSetViewport(
-        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &viewport
+        GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &viewport
     );
 
     // Set scissor
@@ -733,14 +730,14 @@ void Renderer::startRenderPass()
     scissor.extent.height = m_mainRenderer.m_backchain.extent.height;
 
     vkCmdSetScissor(
-        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
+        GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &scissor
     );
 
     // Push default model matrix into command buffer
     Matrix4x4 defaultMatrix;
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
-        m_swapchain.commandBuffers[m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
@@ -757,7 +754,7 @@ void Renderer::startRenderPass()
     pushConstants.size[1] = 1.0f;
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
-        m_swapchain.commandBuffers[m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
@@ -785,49 +782,49 @@ void Renderer::startFinalPass()
     VkRenderPassBeginInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
-    renderPassInfo.renderPass = m_swapchain.renderPass;
-    renderPassInfo.framebuffer = m_swapchain.framebuffers[m_frameIndex];
+    renderPassInfo.renderPass = GSwapchain.renderPass;
+    renderPassInfo.framebuffer = GSwapchain.framebuffers[m_frameIndex];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
-    renderPassInfo.renderArea.extent.width = m_swapchain.extent.width;
-    renderPassInfo.renderArea.extent.height = m_swapchain.extent.height;
+    renderPassInfo.renderArea.extent.width = GSwapchain.extent.width;
+    renderPassInfo.renderArea.extent.height = GSwapchain.extent.height;
     renderPassInfo.clearValueCount = 1;
     renderPassInfo.pClearValues = clearValues;
 
     vkCmdBeginRenderPass(
-        m_swapchain.commandBuffers[m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
     // Set viewport
     VkViewport viewport;
     viewport.x = 0.0f;
-    viewport.y = m_swapchain.extent.height*1.0f;
-    viewport.width = m_swapchain.extent.width*1.0f;
-    viewport.height = m_swapchain.extent.height*-1.0f;
+    viewport.y = GSwapchain.extent.height*1.0f;
+    viewport.width = GSwapchain.extent.width*1.0f;
+    viewport.height = GSwapchain.extent.height*-1.0f;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
     vkCmdSetViewport(
-        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &viewport
+        GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &viewport
     );
 
     // Set scissor
     VkRect2D scissor;
     scissor.offset.x = 0;
     scissor.offset.y = 0;
-    scissor.extent.width = m_swapchain.extent.width;
-    scissor.extent.height = m_swapchain.extent.height;
+    scissor.extent.width = GSwapchain.extent.width;
+    scissor.extent.height = GSwapchain.extent.height;
 
     vkCmdSetScissor(
-        m_swapchain.commandBuffers[m_swapchain.current], 0, 1, &scissor
+        GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &scissor
     );
 
     // Push default model matrix into command buffer
     Matrix4x4 defaultMatrix;
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
-        m_swapchain.commandBuffers[m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
@@ -844,7 +841,7 @@ void Renderer::startFinalPass()
     pushConstants.size[1] = 1.0f;
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
-        m_swapchain.commandBuffers[m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
@@ -856,7 +853,7 @@ void Renderer::startFinalPass()
 void Renderer::endFinalPass()
 {
     // End render pass
-    vkCmdEndRenderPass(m_swapchain.commandBuffers[m_swapchain.current]);
+    vkCmdEndRenderPass(GSwapchain.commandBuffers[GSwapchain.current]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -932,7 +929,7 @@ void Renderer::destroyRenderer()
     m_uniformsDescPool = 0;
 
     // Destroy swapchain
-    m_swapchain.destroySwapchain();
+    GSwapchain.destroySwapchain();
 
     // Destroy Vulkan memory
     GVulkanMemory.destroyVulkanMemory();
@@ -969,13 +966,13 @@ void Renderer::bindDefaultVertexBuffer()
     // Bind default vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        m_swapchain.commandBuffers[m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         0, 1, &(GResources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle),
         &offset
     );
 
     vkCmdBindIndexBuffer(
-        m_swapchain.commandBuffers[m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         (GResources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle),
         0, VK_INDEX_TYPE_UINT16
     );
@@ -989,7 +986,7 @@ void Renderer::bindDefaultVertexBuffer()
 bool Renderer::setDefaultView()
 {
     // Compute default view
-    m_view.compute(m_swapchain.ratio);
+    m_view.compute(GSwapchain.ratio);
 
     // Bind default view
     if (!m_view.bind())
@@ -1055,7 +1052,7 @@ bool Renderer::isReady()
 ////////////////////////////////////////////////////////////////////////////////
 uint32_t Renderer::getWidth()
 {
-    return m_swapchain.extent.width;
+    return GSwapchain.extent.width;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1064,7 +1061,7 @@ uint32_t Renderer::getWidth()
 ////////////////////////////////////////////////////////////////////////////////
 uint32_t Renderer::getHeight()
 {
-    return m_swapchain.extent.height;
+    return GSwapchain.extent.height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1073,9 +1070,9 @@ uint32_t Renderer::getHeight()
 ////////////////////////////////////////////////////////////////////////////////
 float Renderer::getScale()
 {
-    if (m_swapchain.extent.height > 0)
+    if (GSwapchain.extent.height > 0)
     {
-        return (1.0f/(m_swapchain.extent.height*1.0f));
+        return (1.0f/(GSwapchain.extent.height*1.0f));
     }
     return 1.0f;
 }
@@ -1086,7 +1083,7 @@ float Renderer::getScale()
 ////////////////////////////////////////////////////////////////////////////////
 float Renderer::getRatio()
 {
-    return m_swapchain.ratio;
+    return GSwapchain.ratio;
 }
 
 
@@ -1557,7 +1554,7 @@ bool Renderer::resize()
     }
 
     // Resize swapchain
-    if (!m_swapchain.resizeSwapchain())
+    if (!GSwapchain.resizeSwapchain())
     {
         return false;
     }
@@ -1567,7 +1564,7 @@ bool Renderer::resize()
 
     // Resize main renderer
     if (!m_mainRenderer.resize(VULKAN_MEMORY_BACKCHAIN,
-        m_swapchain.extent.width, m_swapchain.extent.height))
+        GSwapchain.extent.width, GSwapchain.extent.height))
     {
         return false;
     }

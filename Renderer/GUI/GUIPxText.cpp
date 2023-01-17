@@ -254,7 +254,7 @@ void GUIPxText::render()
     pushConstants.time = m_smooth*PixelTextDefaultSmoothFactor;
 
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
@@ -275,7 +275,7 @@ void GUIPxText::render()
 
         // Push model matrix into command buffer
         vkCmdPushConstants(
-            GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+            GSwapchain.commandBuffers[GSwapchain.current],
             GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
             PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
         );
@@ -285,7 +285,7 @@ void GUIPxText::render()
         pushConstants.offset[1] = charY*PixelTextDefaultUVHeight;
 
         vkCmdPushConstants(
-            GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+            GSwapchain.commandBuffers[GSwapchain.current],
             GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
             PushConstantOffsetOffset, PushConstantOffsetSize,
             &pushConstants.offset
@@ -293,7 +293,7 @@ void GUIPxText::render()
 
         // Draw current character triangles
         vkCmdDrawIndexed(
-            GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+            GSwapchain.commandBuffers[GSwapchain.current],
             6, 1, 0, 0, 0
         );
 

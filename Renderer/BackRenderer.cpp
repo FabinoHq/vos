@@ -201,7 +201,7 @@ bool BackRenderer::startRenderPass()
     renderPassInfo.pNext = 0;
     renderPassInfo.renderPass = m_backchain.renderPass;
     renderPassInfo.framebuffer =
-        m_backchain.framebuffers[GRenderer.m_swapchain.current];
+        m_backchain.framebuffers[GSwapchain.current];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width = m_backchain.extent.width;
@@ -210,7 +210,7 @@ bool BackRenderer::startRenderPass()
     renderPassInfo.pClearValues = clearValues;
 
     vkCmdBeginRenderPass(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
@@ -224,8 +224,7 @@ bool BackRenderer::startRenderPass()
     viewport.maxDepth = 1.0f;
 
     vkCmdSetViewport(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
-        0, 1, &viewport
+        GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &viewport
     );
 
     // Set scissor
@@ -236,15 +235,14 @@ bool BackRenderer::startRenderPass()
     scissor.extent.height = m_backchain.extent.height;
 
     vkCmdSetScissor(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
-        0, 1, &scissor
+        GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &scissor
     );
 
     // Push default model matrix into command buffer
     Matrix4x4 defaultMatrix;
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
@@ -261,7 +259,7 @@ bool BackRenderer::startRenderPass()
     pushConstants.size[1] = 1.0f;
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
@@ -276,10 +274,8 @@ bool BackRenderer::startRenderPass()
 void BackRenderer::endRenderPass()
 {
     // End render pass
-    vkCmdEndRenderPass(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current]
-    );
-    m_current = GRenderer.m_swapchain.current;
+    vkCmdEndRenderPass(GSwapchain.commandBuffers[GSwapchain.current]);
+    m_current = GSwapchain.current;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -289,7 +285,7 @@ void BackRenderer::bind()
 {
     // Bind texture descriptor set
     vkCmdBindDescriptorSets(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
         DESC_TEXTURE, 1, &m_descriptorSets[m_current], 0, 0
     );

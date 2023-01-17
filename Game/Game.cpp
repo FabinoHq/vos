@@ -430,10 +430,10 @@ void Game::compute(float frametime)
     m_pxText.setText(framestr.str());
 
     // Compute frame
-    m_view.compute(GRenderer.m_swapchain.ratio);
-    m_camera.compute(GRenderer.m_swapchain.ratio);
-    m_freeflycam.compute(GRenderer.m_swapchain.ratio, frametime);
-    m_orbitalcam.compute(GRenderer.m_swapchain.ratio, frametime);
+    m_view.compute(GSwapchain.ratio);
+    m_camera.compute(GSwapchain.ratio);
+    m_freeflycam.compute(GSwapchain.ratio, frametime);
+    m_orbitalcam.compute(GSwapchain.ratio, frametime);
 
     // Update heightmap
     int32_t chunkX = static_cast<int32_t>(
@@ -649,7 +649,7 @@ void Game::render()
     GRenderer.bindDefaultVertexBuffer();
     GRenderer.m_mainRenderer.bind();
     GRenderer.m_mainSprite.setSize(
-        (GRenderer.m_swapchain.ratio*2.0f)+RendererCompositingQuadOffset,
+        (GSwapchain.ratio*2.0f)+RendererCompositingQuadOffset,
         2.0f+RendererCompositingQuadOffset
     );
     GRenderer.m_mainSprite.centerOrigin();

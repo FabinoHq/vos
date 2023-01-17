@@ -313,7 +313,7 @@ bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = GRenderer.m_layout.handle;
-    pipelineInfo.renderPass = GRenderer.m_swapchain.renderPass;
+    pipelineInfo.renderPass = GSwapchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
@@ -572,7 +572,7 @@ bool Pipeline::createPipeline(VertexInputsType vertexInputsType,
 void Pipeline::bind()
 {
     vkCmdBindPipeline(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
     );
 }

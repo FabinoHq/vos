@@ -229,7 +229,7 @@ void GUICursor::render()
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
@@ -246,14 +246,14 @@ void GUICursor::render()
     pushConstants.size[1] = 1.0f;
 
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
     );
 
     // Draw cursor triangles
     vkCmdDrawIndexed(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         6, 1, 0, 0, 0
     );
 }

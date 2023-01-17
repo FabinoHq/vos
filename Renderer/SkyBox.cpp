@@ -159,12 +159,12 @@ void SkyBox::bindVertexBuffer()
     // Bind vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
     );
 
     vkCmdBindIndexBuffer(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
     );
 }
@@ -187,7 +187,7 @@ void SkyBox::render()
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
@@ -200,14 +200,14 @@ void SkyBox::render()
     pushConstants.color[3] = m_color.vec[3];
 
     vkCmdPushConstants(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
     // Draw skybox triangles
     vkCmdDrawIndexed(
-        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GSwapchain.commandBuffers[GSwapchain.current],
         SkyBoxIndicesCount, 1, 0, 0, 0
     );
 }
