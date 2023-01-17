@@ -255,7 +255,6 @@
             uint32_t            m_frameIndex;           // Current frame index
             VulkanQueue         m_surfaceQueue;         // Surface queue
 
-            BackRenderer        m_mainRenderer;         // Main renderer
             Sprite              m_mainSprite;           // Main sprite
 
             Pipeline*           m_pipelines;            // Pipelines

@@ -55,7 +55,6 @@ Renderer::Renderer() :
 m_rendererReady(false),
 m_frameIndex(0),
 m_surfaceQueue(),
-m_mainRenderer(),
 m_mainSprite(),
 m_pipelines(0),
 m_view()
@@ -210,7 +209,7 @@ bool Renderer::init()
     }
 
     // Create main renderer
-    if (!m_mainRenderer.init(VULKAN_MEMORY_BACKCHAIN,
+    if (!GMainRenderer.init(VULKAN_MEMORY_BACKCHAIN,
         GSwapchain.extent.width, GSwapchain.extent.height, true))
     {
         // Could not init main renderer
@@ -290,7 +289,6 @@ bool Renderer::initPipelines()
         DefaultFragmentShader, DefaultFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -308,7 +306,6 @@ bool Renderer::initPipelines()
         NinePatchFragmentShader, NinePatchFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -326,7 +323,6 @@ bool Renderer::initPipelines()
         RectangleFragmentShader, RectangleFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -344,7 +340,6 @@ bool Renderer::initPipelines()
         EllipseFragmentShader, EllipseFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -362,7 +357,6 @@ bool Renderer::initPipelines()
         PxTextFragmentShader, PxTextFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -381,7 +375,6 @@ bool Renderer::initPipelines()
         SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SKYBOX].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_CUBEMAP, false, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -399,7 +392,6 @@ bool Renderer::initPipelines()
         StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -417,7 +409,6 @@ bool Renderer::initPipelines()
         StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_STATICMESH].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -435,7 +426,6 @@ bool Renderer::initPipelines()
         HeightMapFragmentShader, HeightMapFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createPipeline(
-        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -627,15 +617,15 @@ void Renderer::startRenderPass()
     VkRenderPassBeginInfo renderPassInfo;
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.pNext = 0;
-    renderPassInfo.renderPass = m_mainRenderer.m_backchain.renderPass;
+    renderPassInfo.renderPass = GMainRenderer.m_backchain.renderPass;
     renderPassInfo.framebuffer =
-        m_mainRenderer.m_backchain.framebuffers[m_frameIndex];
+        GMainRenderer.m_backchain.framebuffers[m_frameIndex];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width =
-        m_mainRenderer.m_backchain.extent.width;
+        GMainRenderer.m_backchain.extent.width;
     renderPassInfo.renderArea.extent.height =
-        m_mainRenderer.m_backchain.extent.height;
+        GMainRenderer.m_backchain.extent.height;
     renderPassInfo.clearValueCount = 2;
     renderPassInfo.pClearValues = clearValues;
 
@@ -647,9 +637,9 @@ void Renderer::startRenderPass()
     // Set viewport
     VkViewport viewport;
     viewport.x = 0.0f;
-    viewport.y = m_mainRenderer.m_backchain.extent.height*1.0f;
-    viewport.width = m_mainRenderer.m_backchain.extent.width*1.0f;
-    viewport.height = m_mainRenderer.m_backchain.extent.height*-1.0f;
+    viewport.y = GMainRenderer.m_backchain.extent.height*1.0f;
+    viewport.width = GMainRenderer.m_backchain.extent.width*1.0f;
+    viewport.height = GMainRenderer.m_backchain.extent.height*-1.0f;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
@@ -661,8 +651,8 @@ void Renderer::startRenderPass()
     VkRect2D scissor;
     scissor.offset.x = 0;
     scissor.offset.y = 0;
-    scissor.extent.width = m_mainRenderer.m_backchain.extent.width;
-    scissor.extent.height = m_mainRenderer.m_backchain.extent.height;
+    scissor.extent.width = GMainRenderer.m_backchain.extent.width;
+    scissor.extent.height = GMainRenderer.m_backchain.extent.height;
 
     vkCmdSetScissor(
         GSwapchain.commandBuffers[GSwapchain.current], 0, 1, &scissor
@@ -701,7 +691,7 @@ void Renderer::startRenderPass()
 void Renderer::endRenderPass()
 {
     // End render pass
-    m_mainRenderer.endRenderPass();
+    GMainRenderer.endRenderPass();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -844,7 +834,7 @@ void Renderer::destroyRenderer()
     m_pipelines = 0;
 
     // Destroy main renderer
-    m_mainRenderer.destroyBackRenderer();
+    GMainRenderer.destroyBackRenderer();
 
     // Destroy default graphics layout
     GGraphicsLayout.destroyLayout();
@@ -1462,7 +1452,7 @@ bool Renderer::resize()
     GVulkanMemory.resetMemory(VULKAN_MEMORY_BACKCHAIN);
 
     // Resize main renderer
-    if (!m_mainRenderer.resize(VULKAN_MEMORY_BACKCHAIN,
+    if (!GMainRenderer.resize(VULKAN_MEMORY_BACKCHAIN,
         GSwapchain.extent.width, GSwapchain.extent.height))
     {
         return false;

@@ -337,7 +337,7 @@ bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
 //  Create pipeline                                                           //
 //  return : True if pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createPipeline(VkRenderPass& renderPass,
+bool Pipeline::createPipeline(
     VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling,
     AlphaBlendingMode blendingMode)
 {
@@ -545,7 +545,7 @@ bool Pipeline::createPipeline(VkRenderPass& renderPass,
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = GGraphicsLayout.handle;
-    pipelineInfo.renderPass = renderPass;
+    pipelineInfo.renderPass = GMainRenderer.m_backchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;

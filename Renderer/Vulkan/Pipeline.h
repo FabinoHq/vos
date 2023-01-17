@@ -47,6 +47,7 @@
     #include "Swapchain.h"
     #include "GraphicsLayout.h"
     #include "Shader.h"
+    #include "../BackRenderer.h"
 
     #include <cstddef>
     #include <cstdint>
@@ -140,7 +141,7 @@
             //  Create pipeline                                               //
             //  return : True if pipeline is successfully created             //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(VkRenderPass& renderPass,
+            bool createPipeline(
                 VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
                 bool depthTest = false, bool backFaceCulling = false,
                 AlphaBlendingMode blendingMode = ALPHA_BLENDING_NONE);
