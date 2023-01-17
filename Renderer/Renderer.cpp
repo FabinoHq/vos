@@ -59,7 +59,6 @@ m_graphicsQueue(),
 m_surfaceQueue(),
 m_uniformsDescPool(0),
 m_texturesDescPool(0),
-m_layout(),
 m_mainRenderer(),
 m_mainSprite(),
 m_pipelines(0),
@@ -274,10 +273,10 @@ bool Renderer::init()
         return false;
     }
 
-    // Create default pipeline layout
-    if (!m_layout.createLayout())
+    // Create default graphics layout
+    if (!GGraphicsLayout.createLayout())
     {
-        // Could not create default pipeline layout
+        // Could not create default graphics layout
         SysMessage::box() << "[0x3052] Could not create default layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
@@ -738,7 +737,7 @@ void Renderer::startRenderPass()
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
-        m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
 
@@ -755,7 +754,7 @@ void Renderer::startRenderPass()
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
-        m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 }
@@ -825,7 +824,7 @@ void Renderer::startFinalPass()
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
-        m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
 
@@ -842,7 +841,7 @@ void Renderer::startFinalPass()
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
-        m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 }
@@ -911,8 +910,8 @@ void Renderer::destroyRenderer()
     // Destroy main renderer
     m_mainRenderer.destroyBackRenderer();
 
-    // Destroy default pipeline layout
-    m_layout.destroyLayout();
+    // Destroy default graphics layout
+    GGraphicsLayout.destroyLayout();
 
     // Destroy textures descriptor pool
     if (m_texturesDescPool)

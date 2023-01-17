@@ -138,7 +138,7 @@ bool Camera::init()
     descriptorInfo.pNext = 0;
     descriptorInfo.descriptorPool = GRenderer.m_uniformsDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GGraphicsLayout.swapSetLayouts[
         DESC_MATRICES*RendererMaxSwapchainFrames
     ];
 
@@ -253,7 +253,7 @@ bool Camera::bind()
     // Bind matrices descriptor set
     vkCmdBindDescriptorSets(
         GSwapchain.commandBuffers[GSwapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
         DESC_MATRICES, 1, &m_descriptorSets[GSwapchain.current], 0, 0
     );
 

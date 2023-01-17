@@ -213,7 +213,7 @@ void StaticMesh::render()
     // Push model matrix into command buffer
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
-        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -226,7 +226,7 @@ void StaticMesh::render()
 
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
-        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 

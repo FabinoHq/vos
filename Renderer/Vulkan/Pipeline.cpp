@@ -312,7 +312,7 @@ bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
-    pipelineInfo.layout = GRenderer.m_layout.handle;
+    pipelineInfo.layout = GGraphicsLayout.handle;
     pipelineInfo.renderPass = GSwapchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
@@ -544,7 +544,7 @@ bool Pipeline::createPipeline(VertexInputsType vertexInputsType,
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
-    pipelineInfo.layout = GRenderer.m_layout.handle;
+    pipelineInfo.layout = GGraphicsLayout.handle;
     pipelineInfo.renderPass = GRenderer.m_mainRenderer.m_backchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;

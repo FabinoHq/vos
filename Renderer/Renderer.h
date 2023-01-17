@@ -281,8 +281,6 @@
             VkDescriptorPool    m_uniformsDescPool;     // Uniforms desc pool
             VkDescriptorPool    m_texturesDescPool;     // Textures desc pool
 
-            GraphicsLayout      m_layout;               // Graphics layout
-
             BackRenderer        m_mainRenderer;         // Main renderer
             Sprite              m_mainSprite;           // Main sprite
 

@@ -133,7 +133,7 @@ bool BackRenderer::init(VulkanMemoryPool memoryPool,
     descriptorInfo.pNext = 0;
     descriptorInfo.descriptorPool = GRenderer.m_texturesDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GGraphicsLayout.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
@@ -243,7 +243,7 @@ bool BackRenderer::startRenderPass()
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
-        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
 
@@ -260,7 +260,7 @@ bool BackRenderer::startRenderPass()
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
-        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
@@ -286,7 +286,7 @@ void BackRenderer::bind()
     // Bind texture descriptor set
     vkCmdBindDescriptorSets(
         GSwapchain.commandBuffers[GSwapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
         DESC_TEXTURE, 1, &m_descriptorSets[m_current], 0, 0
     );
 }

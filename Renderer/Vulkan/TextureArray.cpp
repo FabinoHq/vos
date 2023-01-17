@@ -248,7 +248,7 @@ bool TextureArray::createTextureArray(VulkanMemoryPool memoryPool,
     descriptorInfo.pNext = 0;
     descriptorInfo.descriptorPool = GRenderer.m_texturesDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GGraphicsLayout.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
@@ -357,7 +357,7 @@ void TextureArray::bind()
     // Bind texture array descriptor set
     vkCmdBindDescriptorSets(
         GSwapchain.commandBuffers[GSwapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
         DESC_TEXTURE, 1, &m_descriptorSets[GSwapchain.current], 0, 0
     );
 }
