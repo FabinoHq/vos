@@ -243,7 +243,7 @@ bool Texture::createTexture(VulkanMemoryPool memoryPool,
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = GRenderer.m_texturesDescPool;
+    descriptorInfo.descriptorPool = GGraphicsLayout.texturesDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
     descriptorInfo.pSetLayouts = &GGraphicsLayout.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames

@@ -115,7 +115,7 @@ bool View::init()
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = GRenderer.m_uniformsDescPool;
+    descriptorInfo.descriptorPool = GGraphicsLayout.uniformsDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
     descriptorInfo.pSetLayouts = &GGraphicsLayout.swapSetLayouts[
         DESC_MATRICES*RendererMaxSwapchainFrames

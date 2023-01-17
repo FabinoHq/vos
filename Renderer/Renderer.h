@@ -96,16 +96,6 @@
     ////////////////////////////////////////////////////////////////////////////
     const float RendererCompositingQuadOffset = 0.00001f;
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer max uniforms descriptor sets                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxUniformsDesc = 256;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer max textures descriptor sets                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxTexturesDesc = 2048;
-
 
     ////////////////////////////////////////////////////////////////////////////
     //  Renderer class definition                                             //
@@ -265,8 +255,6 @@
             uint32_t            m_frameIndex;           // Current frame index
             VulkanQueue         m_graphicsQueue;        // Graphics queue
             VulkanQueue         m_surfaceQueue;         // Surface queue
-            VkDescriptorPool    m_uniformsDescPool;     // Uniforms desc pool
-            VkDescriptorPool    m_texturesDescPool;     // Textures desc pool
 
             BackRenderer        m_mainRenderer;         // Main renderer
             Sprite              m_mainSprite;           // Main sprite

@@ -87,6 +87,68 @@ GraphicsLayout::~GraphicsLayout()
 ////////////////////////////////////////////////////////////////////////////////
 bool GraphicsLayout::createLayout()
 {
+    // Create uniforms descriptor pool
+    VkDescriptorPoolSize uniformsPoolSize;
+    uniformsPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    uniformsPoolSize.descriptorCount =
+        (RendererMaxUniformsDesc*RendererMaxSwapchainFrames);
+
+    VkDescriptorPoolCreateInfo uniformsPoolInfo;
+    uniformsPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    uniformsPoolInfo.pNext = 0;
+    uniformsPoolInfo.flags = 0;
+    uniformsPoolInfo.maxSets =
+        (RendererMaxUniformsDesc*RendererMaxSwapchainFrames);
+    uniformsPoolInfo.poolSizeCount = 1;
+    uniformsPoolInfo.pPoolSizes = &uniformsPoolSize;
+
+    if (vkCreateDescriptorPool(GVulkanDevice,
+        &uniformsPoolInfo, 0, &uniformsDescPool) != VK_SUCCESS)
+    {
+        // Could not create uniforms descriptor pool
+        SysMessage::box() << "[0x304C] Could not create uniforms desc pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+    if (!uniformsDescPool)
+    {
+        // Invalid uniforms descriptor pool
+        SysMessage::box() << "[0x304D] Invalid uniforms descriptor pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create textures descriptor pool
+    VkDescriptorPoolSize texturesPoolSize;
+    texturesPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    texturesPoolSize.descriptorCount =
+        (RendererMaxTexturesDesc*RendererMaxSwapchainFrames);
+
+    VkDescriptorPoolCreateInfo texturesPoolInfo;
+    texturesPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    texturesPoolInfo.pNext = 0;
+    texturesPoolInfo.flags = 0;
+    texturesPoolInfo.maxSets =
+        (RendererMaxTexturesDesc*RendererMaxSwapchainFrames);
+    texturesPoolInfo.poolSizeCount = 1;
+    texturesPoolInfo.pPoolSizes = &texturesPoolSize;
+
+    if (vkCreateDescriptorPool(GVulkanDevice,
+        &texturesPoolInfo, 0, &texturesDescPool) != VK_SUCCESS)
+    {
+        // Could not create textures descriptor pool
+        SysMessage::box() << "[0x304E] Could not create textures desc pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+    if (!texturesDescPool)
+    {
+        // Invalid textures descriptor pool
+        SysMessage::box() << "[0x304F] Invalid textures descriptor pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create descriptor set layouts
     if (!createDescriptorSetLayouts())
     {
@@ -280,4 +342,18 @@ void GraphicsLayout::destroyLayout()
         vkDestroyPipelineLayout(GVulkanDevice, handle, 0);
     }
     handle = 0;
+
+    // Destroy textures descriptor pool
+    if (texturesDescPool)
+    {
+        vkDestroyDescriptorPool(GVulkanDevice, texturesDescPool, 0);
+    }
+    texturesDescPool = 0;
+
+    // Destroy uniforms descriptor pool
+    if (uniformsDescPool)
+    {
+        vkDestroyDescriptorPool(GVulkanDevice, uniformsDescPool, 0);
+    }
+    uniformsDescPool = 0;
 }

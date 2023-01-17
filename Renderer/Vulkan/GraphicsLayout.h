@@ -57,6 +57,17 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Renderer max uniforms descriptor sets                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t RendererMaxUniformsDesc = 256;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer max textures descriptor sets                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t RendererMaxTexturesDesc = 2048;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Descriptor sets types                                                 //
     ////////////////////////////////////////////////////////////////////////////
     enum DescriptorSetsType
@@ -162,6 +173,10 @@
 
         public:
             VkPipelineLayout        handle;         // Pipeline layout handle
+
+            // Descriptor pools
+            VkDescriptorPool        uniformsDescPool;   // Uniforms desc pool
+            VkDescriptorPool        texturesDescPool;   // Textures desc pool
 
             // Descriptor set layouts
             VkDescriptorSetLayout   descSetLayouts[DESC_SETS_COUNT];
