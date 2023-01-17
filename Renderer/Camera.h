@@ -90,7 +90,7 @@
             //  Init camera                                                   //
             //  return : True if the camera is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy camera                                                //
@@ -106,7 +106,7 @@
             //  Bind camera                                                   //
             //  return : True if the camera is successfully binded            //
             ////////////////////////////////////////////////////////////////////
-            bool bind(Renderer& renderer);
+            bool bind();
 
 
             ////////////////////////////////////////////////////////////////////

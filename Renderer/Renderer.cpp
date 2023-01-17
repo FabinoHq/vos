@@ -43,9 +43,15 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Renderer global instance                                                  //
+////////////////////////////////////////////////////////////////////////////////
+Renderer GRenderer = Renderer();
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Renderer default constructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
-Renderer::Renderer(Resources& resources) :
+Renderer::Renderer() :
 m_rendererReady(false),
 m_frameIndex(0),
 m_vulkanQueues(),
@@ -58,8 +64,7 @@ m_layout(),
 m_mainRenderer(),
 m_mainSprite(),
 m_pipelines(0),
-m_view(),
-m_resources(resources)
+m_view()
 {
 
 }
@@ -280,8 +285,7 @@ bool Renderer::init()
     }
 
     // Create main renderer
-    if (!m_mainRenderer.init(
-        *this, VULKAN_MEMORY_BACKCHAIN,
+    if (!m_mainRenderer.init(VULKAN_MEMORY_BACKCHAIN,
         m_swapchain.extent.width, m_swapchain.extent.height, true))
     {
         // Could not init main renderer
@@ -305,7 +309,7 @@ bool Renderer::init()
     m_mainSprite.setUVOffset(0.0f, 0.0f);
 
     // Init default view
-    if (!m_view.init(*this))
+    if (!m_view.init())
     {
         // Could not init default view
         return false;
@@ -346,7 +350,7 @@ bool Renderer::initPipelines()
         DefaultFragmentShader, DefaultFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_COMPOSITING].createCompositingPipeline(
-        *this, ALPHA_BLENDING_PREMULTIPLIED))
+        ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create compositing pipeline
         return false;
@@ -361,7 +365,7 @@ bool Renderer::initPipelines()
         DefaultFragmentShader, DefaultFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(
-        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create sprite pipeline
@@ -378,7 +382,7 @@ bool Renderer::initPipelines()
         NinePatchFragmentShader, NinePatchFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(
-        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create ninepatch pipeline
@@ -395,7 +399,7 @@ bool Renderer::initPipelines()
         RectangleFragmentShader, RectangleFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(
-        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create rectangle pipeline
@@ -412,7 +416,7 @@ bool Renderer::initPipelines()
         EllipseFragmentShader, EllipseFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(
-        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create ellipse pipeline
@@ -429,7 +433,7 @@ bool Renderer::initPipelines()
         PxTextFragmentShader, PxTextFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(
-        *this, VERTEX_INPUTS_DEFAULT, false, false,
+        VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create pixel text pipeline
@@ -447,7 +451,7 @@ bool Renderer::initPipelines()
         SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SKYBOX].createPipeline(
-        *this, VERTEX_INPUTS_CUBEMAP, false, true,
+        VERTEX_INPUTS_CUBEMAP, false, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create skybox pipeline
@@ -464,7 +468,7 @@ bool Renderer::initPipelines()
         StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true,
+        VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create shape pipeline
@@ -481,7 +485,7 @@ bool Renderer::initPipelines()
         StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_STATICMESH].createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true,
+        VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create static mesh pipeline
@@ -498,7 +502,7 @@ bool Renderer::initPipelines()
         HeightMapFragmentShader, HeightMapFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createPipeline(
-        *this, VERTEX_INPUTS_STATICMESH, true, true,
+        VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create heightmap pipeline
@@ -765,7 +769,7 @@ void Renderer::startRenderPass()
 void Renderer::endRenderPass()
 {
     // End render pass
-    m_mainRenderer.endRenderPass(*this);
+    m_mainRenderer.endRenderPass();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -954,7 +958,7 @@ void Renderer::destroyRenderer()
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::bindPipeline(RendererPipeline rendererPipeline)
 {
-    m_pipelines[rendererPipeline].bind(*this);
+    m_pipelines[rendererPipeline].bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -966,13 +970,13 @@ void Renderer::bindDefaultVertexBuffer()
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         m_swapchain.commandBuffers[m_swapchain.current],
-        0, 1, &(m_resources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle),
+        0, 1, &(GResources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle),
         &offset
     );
 
     vkCmdBindIndexBuffer(
         m_swapchain.commandBuffers[m_swapchain.current],
-        (m_resources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle),
+        (GResources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle),
         0, VK_INDEX_TYPE_UINT16
     );
 }
@@ -988,7 +992,7 @@ bool Renderer::setDefaultView()
     m_view.compute(m_swapchain.ratio);
 
     // Bind default view
-    if (!m_view.bind(*this))
+    if (!m_view.bind())
     {
         // Could not bind default view
         m_rendererReady = false;
@@ -1006,7 +1010,7 @@ bool Renderer::setDefaultView()
 bool Renderer::setView(View& view)
 {
     // Bind view
-    if (!view.bind(*this))
+    if (!view.bind())
     {
         // Could not bind view
         m_rendererReady = false;
@@ -1024,7 +1028,7 @@ bool Renderer::setView(View& view)
 bool Renderer::setCamera(Camera& camera)
 {
     // Bind camera
-    if (!camera.bind(*this))
+    if (!camera.bind())
     {
         // Could not bind view
         m_rendererReady = false;

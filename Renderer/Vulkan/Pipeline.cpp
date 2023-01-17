@@ -116,8 +116,7 @@ bool Pipeline::createFragmentShader(
 //  Create compositing pipeline                                               //
 //  return : True if compositing pipeline is successfully created             //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createCompositingPipeline(Renderer& renderer,
-    AlphaBlendingMode blendingMode)
+bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
 {
     // Check current pipeline
     if (m_pipeline)
@@ -313,8 +312,8 @@ bool Pipeline::createCompositingPipeline(Renderer& renderer,
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
-    pipelineInfo.layout = renderer.m_layout.handle;
-    pipelineInfo.renderPass = renderer.m_swapchain.renderPass;
+    pipelineInfo.layout = GRenderer.m_layout.handle;
+    pipelineInfo.renderPass = GRenderer.m_swapchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
@@ -339,9 +338,8 @@ bool Pipeline::createCompositingPipeline(Renderer& renderer,
 //  Create pipeline                                                           //
 //  return : True if pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createPipeline(Renderer& renderer,
-    VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling,
-    AlphaBlendingMode blendingMode)
+bool Pipeline::createPipeline(VertexInputsType vertexInputsType,
+    bool depthTest, bool backFaceCulling, AlphaBlendingMode blendingMode)
 {
     // Check current pipeline
     if (m_pipeline)
@@ -546,8 +544,8 @@ bool Pipeline::createPipeline(Renderer& renderer,
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
-    pipelineInfo.layout = renderer.m_layout.handle;
-    pipelineInfo.renderPass = renderer.m_mainRenderer.m_backchain.renderPass;
+    pipelineInfo.layout = GRenderer.m_layout.handle;
+    pipelineInfo.renderPass = GRenderer.m_mainRenderer.m_backchain.renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
@@ -571,10 +569,10 @@ bool Pipeline::createPipeline(Renderer& renderer,
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind renderer pipeline                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void Pipeline::bind(Renderer& renderer)
+void Pipeline::bind()
 {
     vkCmdBindPipeline(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
     );
 }

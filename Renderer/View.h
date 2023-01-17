@@ -82,7 +82,7 @@
             //  Init renderer view                                            //
             //  return : True if the renderer view is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy view                                                  //
@@ -98,7 +98,7 @@
             //  Bind renderer view                                            //
             //  return : True if the renderer view is successfully binded     //
             ////////////////////////////////////////////////////////////////////
-            bool bind(Renderer& renderer);
+            bool bind();
 
 
         private:

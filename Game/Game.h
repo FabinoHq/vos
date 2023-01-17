@@ -83,7 +83,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Game default constructor                                      //
             ////////////////////////////////////////////////////////////////////
-            Game(Renderer& renderer, Resources& resources);
+            Game();
 
             ////////////////////////////////////////////////////////////////////
             //  Game destructor                                               //
@@ -132,8 +132,6 @@
 
 
         private:
-            Renderer&       m_renderer;         // Renderer
-            Resources&      m_resources;        // Resources
             BackRenderer    m_backRenderer;     // Back renderer
 
             View            m_view;             // View

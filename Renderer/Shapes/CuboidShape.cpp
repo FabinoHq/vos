@@ -69,10 +69,10 @@ CuboidShape::~CuboidShape()
 //  Init cuboid                                                               //
 //  return : True if the cuboid is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool CuboidShape::init(Resources& resources)
+bool CuboidShape::init()
 {
     // Set cuboid vertex buffer
-    m_vertexBuffer = &(resources.meshes.mesh(MESHES_CUBOID));
+    m_vertexBuffer = &(GResources.meshes.mesh(MESHES_CUBOID));
 
     // Reset cuboid transformations
     resetTransforms();
@@ -142,17 +142,17 @@ void CuboidShape::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind cuboid vertex buffer                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void CuboidShape::bindVertexBuffer(Renderer& renderer)
+void CuboidShape::bindVertexBuffer()
 {
     // Bind vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         0, 1, &(m_vertexBuffer->vertexBuffer.handle), &offset
     );
 
     vkCmdBindIndexBuffer(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         (m_vertexBuffer->indexBuffer.handle), 0, VK_INDEX_TYPE_UINT16
     );
 }
@@ -160,15 +160,15 @@ void CuboidShape::bindVertexBuffer(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Render cuboid                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void CuboidShape::render(Renderer& renderer)
+void CuboidShape::render()
 {
     // Compute cuboid transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -180,14 +180,14 @@ void CuboidShape::render(Renderer& renderer)
     pushConstants.color[3] = m_color.vec[3];
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
     // Draw cuboid triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         CuboidShapeIndicesCount, 1, 0, 0, 0
     );
 }

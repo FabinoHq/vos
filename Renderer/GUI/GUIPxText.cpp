@@ -224,15 +224,15 @@ size_t GUIPxText::getLength()
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind pixel text texture                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void GUIPxText::bindTexture(Renderer& renderer)
+void GUIPxText::bindTexture()
 {
-    m_texture->bind(renderer);
+    m_texture->bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render pixel text                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void GUIPxText::render(Renderer& renderer)
+void GUIPxText::render()
 {
     // Compute pixel text transformations
     m_matrix.setIdentity();
@@ -254,8 +254,8 @@ void GUIPxText::render(Renderer& renderer)
     pushConstants.time = m_smooth*PixelTextDefaultSmoothFactor;
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
@@ -275,8 +275,8 @@ void GUIPxText::render(Renderer& renderer)
 
         // Push model matrix into command buffer
         vkCmdPushConstants(
-            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-            renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+            GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+            GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
             PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
         );
 
@@ -285,15 +285,15 @@ void GUIPxText::render(Renderer& renderer)
         pushConstants.offset[1] = charY*PixelTextDefaultUVHeight;
 
         vkCmdPushConstants(
-            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-            renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+            GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+            GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
             PushConstantOffsetOffset, PushConstantOffsetSize,
             &pushConstants.offset
         );
 
         // Draw current character triangles
         vkCmdDrawIndexed(
-            renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+            GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
             6, 1, 0, 0, 0
         );
 

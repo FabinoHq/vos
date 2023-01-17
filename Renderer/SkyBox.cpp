@@ -71,7 +71,7 @@ SkyBox::~SkyBox()
 //  Init skybox                                                               //
 //  return : True if the skybox is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool SkyBox::init(Resources& resources, CubeMap& cubemap)
+bool SkyBox::init(CubeMap& cubemap)
 {
     // Check cubemap handle
     if (!cubemap.isValid())
@@ -81,7 +81,7 @@ bool SkyBox::init(Resources& resources, CubeMap& cubemap)
     }
 
     // Set cuboid vertex buffer
-    m_vertexBuffer = &(resources.meshes.mesh(MESHES_SKYBOX));
+    m_vertexBuffer = &(GResources.meshes.mesh(MESHES_SKYBOX));
 
     // Set skybox cubemap pointer
     m_cubemap = &cubemap;
@@ -154,17 +154,17 @@ void SkyBox::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind skybox vertex buffer                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void SkyBox::bindVertexBuffer(Renderer& renderer)
+void SkyBox::bindVertexBuffer()
 {
     // Bind vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
     );
 
     vkCmdBindIndexBuffer(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
     );
 }
@@ -172,23 +172,23 @@ void SkyBox::bindVertexBuffer(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind skybox cubemap                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void SkyBox::bindCubeMap(Renderer& renderer)
+void SkyBox::bindCubeMap()
 {
-    m_cubemap->bind(renderer);
+    m_cubemap->bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render skybox                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void SkyBox::render(Renderer& renderer)
+void SkyBox::render()
 {
     // Compute skybox transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -200,14 +200,14 @@ void SkyBox::render(Renderer& renderer)
     pushConstants.color[3] = m_color.vec[3];
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
     // Draw skybox triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         SkyBoxIndicesCount, 1, 0, 0, 0
     );
 }

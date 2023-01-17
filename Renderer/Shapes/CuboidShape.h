@@ -144,7 +144,7 @@
             //  Init cuboid                                                   //
             //  return : True if the cuboid is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(Resources& resources);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
             //  Set cuboid color                                              //
@@ -180,12 +180,12 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind cuboid vertex buffer                                     //
             ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer(Renderer& renderer);
+            void bindVertexBuffer();
 
             ////////////////////////////////////////////////////////////////////
             //  Render cuboid                                                 //
             ////////////////////////////////////////////////////////////////////
-            void render(Renderer& renderer);
+            void render();
 
 
         private:

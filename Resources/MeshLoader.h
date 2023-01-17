@@ -116,7 +116,7 @@
             ////////////////////////////////////////////////////////////////////
             //  MeshLoader default constructor                                //
             ////////////////////////////////////////////////////////////////////
-            MeshLoader(Renderer& renderer);
+            MeshLoader();
 
             ////////////////////////////////////////////////////////////////////
             //  MeshLoader virtual destructor                                 //
@@ -219,7 +219,6 @@
 
 
         private:
-            Renderer&               m_renderer;         // Renderer
             MeshLoaderState         m_state;            // MeshLoader state
             SysMutex                m_stateMutex;       // State mutex
 

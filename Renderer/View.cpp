@@ -77,7 +77,7 @@ View::~View()
 //  Init renderer view                                                        //
 //  return : True if the renderer view is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool View::init(Renderer& renderer)
+bool View::init()
 {
     // Reset view transformations
     resetTransforms();
@@ -103,7 +103,7 @@ bool View::init(Renderer& renderer)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         if (!m_uniformBuffers[i].updateBuffer(
-            renderer.m_swapchain.commandPools[i], renderer.m_graphicsQueue,
+            GRenderer.m_swapchain.commandPools[i], GRenderer.m_graphicsQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
@@ -115,9 +115,9 @@ bool View::init(Renderer& renderer)
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = renderer.m_uniformsDescPool;
+    descriptorInfo.descriptorPool = GRenderer.m_uniformsDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
         DESC_MATRICES*RendererMaxSwapchainFrames
     ];
 
@@ -201,7 +201,7 @@ void View::compute(float ratio)
 //  Bind renderer view                                                        //
 //  return : True if the renderer view is successfully binded                 //
 ////////////////////////////////////////////////////////////////////////////////
-bool View::bind(Renderer& renderer)
+bool View::bind()
 {
     // Copy matrices data into uniform data
     UniformData uniformData;
@@ -210,9 +210,9 @@ bool View::bind(Renderer& renderer)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
-        renderer.m_swapchain.commandPools[renderer.m_swapchain.current],
-        renderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
+    if (!m_uniformBuffers[GRenderer.m_swapchain.current].updateBuffer(
+        GRenderer.m_swapchain.commandPools[GRenderer.m_swapchain.current],
+        GRenderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
         return false;
@@ -220,9 +220,9 @@ bool View::bind(Renderer& renderer)
 
     // Bind matrices descriptor set
     vkCmdBindDescriptorSets(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
-        DESC_MATRICES, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
+        DESC_MATRICES, 1, &m_descriptorSets[GRenderer.m_swapchain.current], 0, 0
     );
 
     // View successfully binded

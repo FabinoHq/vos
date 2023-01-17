@@ -144,7 +144,7 @@
             //  Init skybox                                                   //
             //  return : True if the skybox is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(Resources& resources, CubeMap& cubemap);
+            bool init(CubeMap& cubemap);
 
             ////////////////////////////////////////////////////////////////////
             //  Set skybox color                                              //
@@ -180,17 +180,17 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind skybox vertex buffer                                     //
             ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer(Renderer& renderer);
+            void bindVertexBuffer();
 
             ////////////////////////////////////////////////////////////////////
             //  Bind skybox cubemap                                           //
             ////////////////////////////////////////////////////////////////////
-            void bindCubeMap(Renderer& renderer);
+            void bindCubeMap();
 
             ////////////////////////////////////////////////////////////////////
             //  Render skybox                                                 //
             ////////////////////////////////////////////////////////////////////
-            void render(Renderer& renderer);
+            void render();
 
 
         private:

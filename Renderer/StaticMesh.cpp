@@ -179,17 +179,17 @@ void StaticMesh::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind static mesh vertex buffer                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::bindVertexBuffer(Renderer& renderer)
+void StaticMesh::bindVertexBuffer()
 {
     // Bind vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         0, 1, &(m_vertexBuffer->vertexBuffer.handle), &offset
     );
 
     vkCmdBindIndexBuffer(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         (m_vertexBuffer->indexBuffer.handle), 0, VK_INDEX_TYPE_UINT16
     );
 }
@@ -197,23 +197,23 @@ void StaticMesh::bindVertexBuffer(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind static mesh texture                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::bindTexture(Renderer& renderer)
+void StaticMesh::bindTexture()
 {
-    m_texture->bind(renderer);
+    m_texture->bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render static mesh                                                        //
 ////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::render(Renderer& renderer)
+void StaticMesh::render()
 {
     // Compute static mesh transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -225,14 +225,14 @@ void StaticMesh::render(Renderer& renderer)
     pushConstants.color[3] = m_color.vec[3];
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
     // Draw static mesh triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         (m_vertexBuffer->indexCount), 1, 0, 0, 0
     );
 }

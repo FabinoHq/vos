@@ -102,10 +102,8 @@
 
         private:
             bool            m_running;          // VOS running state
-            Renderer        m_renderer;         // VOS renderer
             SysClock        m_clock;            // VOS clock
 
-            Resources       m_resources;        // Resources
             Game            m_game;             // Game instance
     };
 

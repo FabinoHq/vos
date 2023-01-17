@@ -72,7 +72,7 @@
             ////////////////////////////////////////////////////////////////////
             //  HeightMapStream default constructor                           //
             ////////////////////////////////////////////////////////////////////
-            HeightMapStream(Resources& resources);
+            HeightMapStream();
 
             ////////////////////////////////////////////////////////////////////
             //  HeightMapStream destructor                                    //
@@ -92,7 +92,7 @@
             ////////////////////////////////////////////////////////////////////
             inline bool isReady()
             {
-                return (m_resources.heightmaps.getState() ==
+                return (GResources.heightmaps.getState() ==
                     HEIGHTMAPLOADER_STATE_IDLE);
             }
 
@@ -102,10 +102,10 @@
             ////////////////////////////////////////////////////////////////////
             inline bool reload(int32_t chunkX, int32_t chunkY)
             {
-                if (m_resources.heightmaps.reload(chunkX, chunkY))
+                if (GResources.heightmaps.reload(chunkX, chunkY))
                 {
-                    m_chunkX = m_resources.heightmaps.getChunkX();
-                    m_chunkY = m_resources.heightmaps.getChunkY();
+                    m_chunkX = GResources.heightmaps.getChunkX();
+                    m_chunkY = GResources.heightmaps.getChunkY();
                     return true;
                 }
                 return false;
@@ -117,10 +117,10 @@
             ////////////////////////////////////////////////////////////////////
             inline bool update(int32_t chunkX, int32_t chunkY)
             {
-                if (m_resources.heightmaps.update(chunkX, chunkY))
+                if (GResources.heightmaps.update(chunkX, chunkY))
                 {
-                    m_chunkX = m_resources.heightmaps.getChunkX();
-                    m_chunkY = m_resources.heightmaps.getChunkY();
+                    m_chunkX = GResources.heightmaps.getChunkX();
+                    m_chunkY = GResources.heightmaps.getChunkY();
                     return true;
                 }
                 return false;
@@ -129,7 +129,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Render heightmap stream                                       //
             ////////////////////////////////////////////////////////////////////
-            void render(Renderer& renderer);
+            void render();
 
 
         private:
@@ -145,7 +145,6 @@
 
 
         private:
-            Resources&          m_resources;        // Resources
             HeightMapChunk      m_heightMapChunk;   // HeightMap chunk
             int32_t             m_chunkX;           // Chunk X
             int32_t             m_chunkY;           // Chunk Y

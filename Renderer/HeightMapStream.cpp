@@ -46,8 +46,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  HeightMapStream default constructor                                       //
 ////////////////////////////////////////////////////////////////////////////////
-HeightMapStream::HeightMapStream(Resources& resources) :
-m_resources(resources),
+HeightMapStream::HeightMapStream() :
 m_heightMapChunk(),
 m_chunkX(0),
 m_chunkY(0)
@@ -72,8 +71,8 @@ bool HeightMapStream::init()
 {
     // Init heightmap chunk
     if (!m_heightMapChunk.init(
-        m_resources.heightmaps.heightmap(0),
-        m_resources.textures.array(TEXTURE_ARRAY1)))
+        GResources.heightmaps.heightmap(0),
+        GResources.textures.array(TEXTURE_ARRAY1)))
     {
         // Could not init heightmap chunk
         return false;
@@ -86,16 +85,16 @@ bool HeightMapStream::init()
 ////////////////////////////////////////////////////////////////////////////////
 //  Render heightmap stream                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightMapStream::render(Renderer& renderer)
+void HeightMapStream::render()
 {
     // Render heightmap chunks
-    m_heightMapChunk.bindTextureArray(renderer);
+    m_heightMapChunk.bindTextureArray();
     for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)
     {
         for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
         {
             m_heightMapChunk.setVertexBuffer(
-                m_resources.heightmaps.heightmap((j*HEIGHTMAP_STREAMWIDTH)+i)
+                GResources.heightmaps.heightmap((j*HEIGHTMAP_STREAMWIDTH)+i)
             );
             m_heightMapChunk.setPosition(
                 -(HEIGHTMAP_STREAMHALFWIDTH*HeightMapChunkXStride)+
@@ -104,8 +103,8 @@ void HeightMapStream::render(Renderer& renderer)
                 -(HEIGHTMAP_STREAMHALFHEIGHT*HeightMapChunkZStride)+
                 (m_chunkY*HeightMapChunkXStride)+(j*HeightMapChunkZStride)
             );
-            m_heightMapChunk.bindVertexBuffer(renderer);
-            m_heightMapChunk.render(renderer);
+            m_heightMapChunk.bindVertexBuffer();
+            m_heightMapChunk.render();
         }
     }
 }

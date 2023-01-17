@@ -273,23 +273,23 @@ void Sprite::setVSize(float vSize)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind sprite texture                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void Sprite::bindTexture(Renderer& renderer)
+void Sprite::bindTexture()
 {
-    m_texture->bind(renderer);
+    m_texture->bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render sprite                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void Sprite::render(Renderer& renderer)
+void Sprite::render()
 {
     // Compute sprite transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -305,14 +305,14 @@ void Sprite::render(Renderer& renderer)
     pushConstants.size[1] = m_uvSize.vec[1];
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
     );
 
     // Draw sprite triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         6, 1, 0, 0, 0
     );
 }

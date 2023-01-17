@@ -160,15 +160,15 @@ void EllipseShape::setSmooth(float smooth)
 ////////////////////////////////////////////////////////////////////////////////
 //  Render ellipse                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-void EllipseShape::render(Renderer& renderer)
+void EllipseShape::render()
 {
     // Compute ellipse transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -185,14 +185,14 @@ void EllipseShape::render(Renderer& renderer)
     pushConstants.time = m_smooth;
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
     // Draw ellipse triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         6, 1, 0, 0, 0
     );
 }

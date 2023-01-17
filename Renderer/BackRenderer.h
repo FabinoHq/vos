@@ -89,24 +89,24 @@
             //  Init back renderer                                            //
             //  return : True if the back renderer is successfully loaded     //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer, VulkanMemoryPool memoryPool,
+            bool init(VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height, bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////
             //  Start back renderer pass                                      //
             //  return : True if the back renderer pass is started            //
             ////////////////////////////////////////////////////////////////////
-            bool startRenderPass(Renderer& renderer);
+            bool startRenderPass();
 
             ////////////////////////////////////////////////////////////////////
             //  End back renderer pass                                        //
             ////////////////////////////////////////////////////////////////////
-            void endRenderPass(Renderer& renderer);
+            void endRenderPass();
 
             ////////////////////////////////////////////////////////////////////
             //  Bind back renderer texture                                    //
             ////////////////////////////////////////////////////////////////////
-            void bind(Renderer& renderer);
+            void bind();
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy back renderer                                         //
@@ -118,7 +118,7 @@
             //  Set back renderer default view                                //
             //  return : True if the default view is successfully set         //
             ////////////////////////////////////////////////////////////////////
-            bool setDefaultView(Renderer& renderer);
+            bool setDefaultView();
 
 
             ////////////////////////////////////////////////////////////////////

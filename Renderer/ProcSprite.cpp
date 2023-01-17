@@ -67,7 +67,7 @@ ProcSprite::~ProcSprite()
 //  Init procedural sprite                                                    //
 //  return : True if the proc sprite is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
+bool ProcSprite::init(const uint32_t* fragmentSource,
     const size_t fragmentSize, float width, float height)
 {
     bool shaderCreated = false;
@@ -80,7 +80,7 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
         m_pipeline.createFragmentShader(
             fragmentSource, fragmentSize
         );
-        if (m_pipeline.createPipeline(renderer))
+        if (m_pipeline.createPipeline())
         {
             shaderCreated = true;
         }
@@ -95,7 +95,7 @@ bool ProcSprite::init(Renderer& renderer, const uint32_t* fragmentSource,
         m_pipeline.createFragmentShader(
             DefaultProcFragmentShader, DefaultProcFragmentShaderSize
         );
-        if (!m_pipeline.createPipeline(renderer))
+        if (!m_pipeline.createPipeline())
         {
             // Could not create default procedural sprite pipeline
             return false;
@@ -186,24 +186,24 @@ void ProcSprite::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind procedural sprite pipeline                                           //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::bindPipeline(Renderer& renderer)
+void ProcSprite::bindPipeline()
 {
     // Bind procedural sprite shader
-    m_pipeline.bind(renderer);
+    m_pipeline.bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render procedural sprite                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void ProcSprite::render(Renderer& renderer)
+void ProcSprite::render()
 {
     // Compute sprite transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -220,14 +220,14 @@ void ProcSprite::render(Renderer& renderer)
     pushConstants.time = 0.0f;
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
     // Draw procedural sprite triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         6, 1, 0, 0, 0
     );
 }

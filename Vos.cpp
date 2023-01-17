@@ -47,10 +47,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 Vos::Vos() :
 m_running(false),
-m_renderer(m_resources),
 m_clock(),
-m_resources(m_renderer),
-m_game(m_renderer, m_resources)
+m_game()
 {
 
 }
@@ -85,28 +83,28 @@ bool Vos::launch()
     }
 
     // Init VOS renderer
-    if (!m_renderer.init())
+    if (!GRenderer.init())
     {
         // Unable to init VOS renderer
         return false;
     }
 
     // Init VOS resources
-    if (!m_resources.init())
+    if (!GResources.init())
     {
         // Unable to init VOS resources
         return false;
     }
 
     // Preload resources
-    if (!m_resources.preload())
+    if (!GResources.preload())
     {
         // Unable to preload resources
         return false;
     }
 
     // Start resources loading
-    if (!m_resources.startLoading())
+    if (!GResources.startLoading())
     {
         // Unable to start resources loading
         return false;
@@ -117,7 +115,7 @@ bool Vos::launch()
     bool resourcesLoaded = false;
     while (!resourcesLoaded)
     {
-        if (m_resources.isLoadingDone())
+        if (GResources.isLoadingDone())
         {
             resourcesLoaded = true;
         }
@@ -137,7 +135,7 @@ bool Vos::launch()
     }
 
     // Wait for renderer device idle state
-    if (!m_renderer.waitDeviceIdle())
+    if (!GRenderer.waitDeviceIdle())
     {
         // Could not wait for renderer device idle state
         return false;
@@ -225,16 +223,16 @@ void Vos::run()
     }
 
     // Wait for renderer device idle state
-    if (m_renderer.waitDeviceIdle())
+    if (GRenderer.waitDeviceIdle())
     {
         // Destroy game
         m_game.destroy();
 
         // Destroy resources
-        m_resources.destroyResources();
+        GResources.destroyResources();
 
         // Destroy renderer
-        m_renderer.destroyRenderer();
+        GRenderer.destroyRenderer();
     }
 
     // Close VOS

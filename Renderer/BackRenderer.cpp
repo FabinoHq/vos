@@ -67,7 +67,7 @@ BackRenderer::~BackRenderer()
 //  Init back renderer                                                        //
 //  return : True if the back renderer is successfully loaded                 //
 ////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
+bool BackRenderer::init(VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, bool smooth)
 {
     // Check back renderer size
@@ -131,9 +131,9 @@ bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = renderer.m_texturesDescPool;
+    descriptorInfo.descriptorPool = GRenderer.m_texturesDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
@@ -174,7 +174,7 @@ bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
     }
 
     // Init default view
-    if (!m_view.init(renderer))
+    if (!m_view.init())
     {
         // Could not init default view
         return false;
@@ -188,7 +188,7 @@ bool BackRenderer::init(Renderer& renderer, VulkanMemoryPool memoryPool,
 //  Start back renderer pass                                                  //
 //  return : True if the back renderer pass is started                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::startRenderPass(Renderer& renderer)
+bool BackRenderer::startRenderPass()
 {
     // Set clear values
     VkClearValue clearValues[2];
@@ -201,7 +201,7 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
     renderPassInfo.pNext = 0;
     renderPassInfo.renderPass = m_backchain.renderPass;
     renderPassInfo.framebuffer =
-        m_backchain.framebuffers[renderer.m_swapchain.current];
+        m_backchain.framebuffers[GRenderer.m_swapchain.current];
     renderPassInfo.renderArea.offset.x = 0;
     renderPassInfo.renderArea.offset.y = 0;
     renderPassInfo.renderArea.extent.width = m_backchain.extent.width;
@@ -210,7 +210,7 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
     renderPassInfo.pClearValues = clearValues;
 
     vkCmdBeginRenderPass(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE
     );
 
@@ -224,7 +224,7 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
     viewport.maxDepth = 1.0f;
 
     vkCmdSetViewport(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         0, 1, &viewport
     );
 
@@ -236,7 +236,7 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
     scissor.extent.height = m_backchain.extent.height;
 
     vkCmdSetScissor(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         0, 1, &scissor
     );
 
@@ -244,8 +244,8 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
     Matrix4x4 defaultMatrix;
     defaultMatrix.setIdentity();
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, defaultMatrix.mat
     );
 
@@ -261,8 +261,8 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
     pushConstants.size[1] = 1.0f;
     pushConstants.time = 0.0f;
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
@@ -273,24 +273,24 @@ bool BackRenderer::startRenderPass(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  End back renderer pass                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void BackRenderer::endRenderPass(Renderer& renderer)
+void BackRenderer::endRenderPass()
 {
     // End render pass
     vkCmdEndRenderPass(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current]
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current]
     );
-    m_current = renderer.m_swapchain.current;
+    m_current = GRenderer.m_swapchain.current;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind back renderer texture                                                //
 ////////////////////////////////////////////////////////////////////////////////
-void BackRenderer::bind(Renderer& renderer)
+void BackRenderer::bind()
 {
     // Bind texture descriptor set
     vkCmdBindDescriptorSets(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
         DESC_TEXTURE, 1, &m_descriptorSets[m_current], 0, 0
     );
 }
@@ -332,13 +332,13 @@ void BackRenderer::destroyBackRenderer()
 //  Set back renderer default view                                            //
 //  return : True if the default view is successfully set                     //
 ////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::setDefaultView(Renderer& renderer)
+bool BackRenderer::setDefaultView()
 {
     // Compute default view
     m_view.compute(m_backchain.ratio);
 
     // Bind default view
-    if (!m_view.bind(renderer))
+    if (!m_view.bind())
     {
         // Could not bind default view
         return false;

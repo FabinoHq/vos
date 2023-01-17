@@ -45,9 +45,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Game default constructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-Game::Game(Renderer& renderer, Resources& resources) :
-m_renderer(renderer),
-m_resources(resources),
+Game::Game() :
 m_backRenderer(),
 m_view(),
 m_camera(),
@@ -64,7 +62,7 @@ m_cursor(),
 m_guiWindow(),
 m_pxText(),
 m_staticMesh(),
-m_heightMapStream(resources),
+m_heightMapStream(),
 m_boundingCircle(),
 m_boundingCircle2(),
 m_collideCircle(),
@@ -91,22 +89,21 @@ Game::~Game()
 bool Game::init()
 {
     // Init back renderer
-    if (!m_backRenderer.init(m_renderer,
-        VULKAN_MEMORY_BACKRENDERER, 256, 256, false))
+    if (!m_backRenderer.init(VULKAN_MEMORY_BACKRENDERER, 256, 256, false))
     {
         // Could not init back renderer
         return false;
     }
 
     // Init view
-    if (!m_view.init(m_renderer))
+    if (!m_view.init())
     {
         // Could not init view
         return false;
     }
 
     // Init camera
-    if (!m_camera.init(m_renderer))
+    if (!m_camera.init())
     {
         // Could not init camera
         return false;
@@ -114,7 +111,7 @@ bool Game::init()
     m_camera.setZ(1.0f);
 
     // Init freefly camera
-    if (!m_freeflycam.init(m_renderer))
+    if (!m_freeflycam.init())
     {
         // Could not init freefly camera
         return false;
@@ -124,7 +121,7 @@ bool Game::init()
     m_freeflycam.setY(300.0f);
 
     // Init orbital camera
-    if (!m_orbitalcam.init(m_renderer))
+    if (!m_orbitalcam.init())
     {
         // Could not init orbital camera
         return false;
@@ -136,8 +133,7 @@ bool Game::init()
 
 
     // Init skybox
-    if (!m_skybox.init(m_resources,
-        m_resources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
+    if (!m_skybox.init(GResources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
     {
         // Could not init skybox
         return false;
@@ -145,14 +141,14 @@ bool Game::init()
 
 
     // Init sprite
-    if (!m_sprite.init(m_resources.textures.high(TEXTURE_TEST), 1.0f, 1.0f))
+    if (!m_sprite.init(GResources.textures.high(TEXTURE_TEST), 1.0f, 1.0f))
     {
         // Could not init sprite
         return false;
     }
 
     // Init procedural sprite
-    if (!m_procSprite.init(m_renderer, 0, 0, 1.0f, 1.0f))
+    if (!m_procSprite.init(0, 0, 1.0f, 1.0f))
     {
         // Could not init procedural sprite
         return false;
@@ -173,7 +169,7 @@ bool Game::init()
     }
 
     // Init cuboid shape
-    if (!m_cuboid.init(m_resources))
+    if (!m_cuboid.init())
     {
         // Could not init cuboid shape
         return false;
@@ -181,7 +177,7 @@ bool Game::init()
 
 
     // Init GUI cursor
-    if (!m_cursor.init(m_resources.textures.gui(TEXTURE_CURSOR), 64.0f))
+    if (!m_cursor.init(GResources.textures.gui(TEXTURE_CURSOR), 64.0f))
     {
         // Could not init GUI cursor
         return false;
@@ -189,14 +185,14 @@ bool Game::init()
 
     // Init GUI window
     if (!m_guiWindow.init(
-        m_resources.textures.gui(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
+        GResources.textures.gui(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
     {
         // Could not init GUI window
         return false;
     }
 
     // Init test pixel text
-    if (!m_pxText.init(m_resources.textures.gui(TEXTURE_PIXELFONT), 0.04f))
+    if (!m_pxText.init(GResources.textures.gui(TEXTURE_PIXELFONT), 0.04f))
     {
         // Could not init test pixel text
         return false;
@@ -207,8 +203,8 @@ bool Game::init()
 
     // Init static mesh
     if (!m_staticMesh.init(
-        m_resources.meshes.mesh(MESHES_TEST),
-        m_resources.textures.high(TEXTURE_TEST)))
+        GResources.meshes.mesh(MESHES_TEST),
+        GResources.textures.high(TEXTURE_TEST)))
     {
         // Could not init static mesh
         return false;
@@ -287,8 +283,8 @@ void Game::destroy()
 void Game::events(Event& event)
 {
     // Get renderer scale and ratio
-    float scale = m_renderer.getScale();
-    float ratio = m_renderer.getRatio();
+    float scale = GRenderer.getScale();
+    float ratio = GRenderer.getRatio();
 
     // Process event
     switch (event.type)
@@ -378,7 +374,7 @@ void Game::events(Event& event)
             );*/
             /*m_guiWindow.mouseMove(m_mouseX, m_mouseY);
             m_cursor.setCursor(
-                m_resources, m_guiWindow.updateCursor(m_mouseX, m_mouseY)
+                GResources, m_guiWindow.updateCursor(m_mouseX, m_mouseY)
             );*/
             break;
 
@@ -434,10 +430,10 @@ void Game::compute(float frametime)
     m_pxText.setText(framestr.str());
 
     // Compute frame
-    m_view.compute(m_renderer.m_swapchain.ratio);
-    m_camera.compute(m_renderer.m_swapchain.ratio);
-    m_freeflycam.compute(m_renderer.m_swapchain.ratio, frametime);
-    m_orbitalcam.compute(m_renderer.m_swapchain.ratio, frametime);
+    m_view.compute(GRenderer.m_swapchain.ratio);
+    m_camera.compute(GRenderer.m_swapchain.ratio);
+    m_freeflycam.compute(GRenderer.m_swapchain.ratio, frametime);
+    m_orbitalcam.compute(GRenderer.m_swapchain.ratio, frametime);
 
     // Update heightmap
     int32_t chunkX = static_cast<int32_t>(
@@ -474,79 +470,79 @@ void Game::compute(float frametime)
 void Game::render()
 {
     // Start frame rendering
-    if (!m_renderer.startFrame())
+    if (!GRenderer.startFrame())
     {
         return;
     }
 
     // Get renderer scale and ratio
-    //float scale = m_renderer.getScale();
-    float ratio = m_renderer.getRatio();
+    //float scale = GRenderer.getScale();
+    float ratio = GRenderer.getRatio();
 
     // Back rendering
-    if (m_backRenderer.startRenderPass(m_renderer))
+    if (m_backRenderer.startRenderPass())
     {
         // Set back renderer view
-        m_backRenderer.setDefaultView(m_renderer);
+        m_backRenderer.setDefaultView();
 
         // Render sprite
-        m_renderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-        m_renderer.bindDefaultVertexBuffer();
-        m_sprite.bindTexture(m_renderer);
-        m_sprite.render(m_renderer);
+        GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+        GRenderer.bindDefaultVertexBuffer();
+        m_sprite.bindTexture();
+        m_sprite.render();
 
         // End back rendering
-        m_backRenderer.endRenderPass(m_renderer);
+        m_backRenderer.endRenderPass();
     }
 
     // Start rendering
-    m_renderer.startRenderPass();
+    GRenderer.startRenderPass();
 
     // Set freefly camera
-    m_renderer.setCamera(m_freeflycam);
+    GRenderer.setCamera(m_freeflycam);
 
     // Set orbital camera
-    //m_renderer.setCamera(m_orbitalcam);
+    //GRenderer.setCamera(m_orbitalcam);
 
     // Render skybox
-    m_renderer.bindPipeline(RENDERER_PIPELINE_SKYBOX);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_SKYBOX);
     m_skybox.setPosition(m_freeflycam.getPosition());
     //m_skybox.setPosition(m_orbitalcam.getPosition());
-    m_skybox.bindVertexBuffer(m_renderer);
-    m_skybox.bindCubeMap(m_renderer);
-    m_skybox.render(m_renderer);
+    m_skybox.bindVertexBuffer();
+    m_skybox.bindCubeMap();
+    m_skybox.render();
 
     // Render cuboid shape
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
-    m_cuboid.bindVertexBuffer(m_renderer);
-    m_cuboid.render(m_renderer);*/
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
+    m_cuboid.bindVertexBuffer();
+    m_cuboid.render();*/
 
     // Render static mesh
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
-    m_staticMesh.bindVertexBuffer(m_renderer);
-    m_staticMesh.bindTexture(m_renderer);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    m_staticMesh.bindVertexBuffer();
+    m_staticMesh.bindTexture();
     m_staticMesh.setPosition(0.0f, 0.9f, 0.0f);
     m_staticMesh.setPosition(
         m_freeflycam.getX()+2.0f,
         m_freeflycam.getY(),
         m_freeflycam.getZ()+2.0f
     );
-    m_staticMesh.render(m_renderer);*/
+    m_staticMesh.render();*/
 
     // Render heightmap stream
-    m_renderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
-    m_heightMapStream.render(m_renderer);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
+    m_heightMapStream.render();
 
 
     // Set 2D view
-    /*m_renderer.setView(m_view);
+    /*GRenderer.setView(m_view);
 
     // Bind default vertex buffer
-    m_renderer.bindDefaultVertexBuffer();
+    GRenderer.bindDefaultVertexBuffer();
 
 
     // Render bounding circle
-    m_renderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     float positionX =
         m_boundingCircle.position.vec[0]*PhysicsToRenderer;
     float positionY =
@@ -557,7 +553,7 @@ void Game::render()
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setSmooth(0.025f);
-    m_ellipse.render(m_renderer);
+    m_ellipse.render();
 
     // Render bounding circle 2
     positionX = m_boundingCircle2.position.vec[0]*PhysicsToRenderer;
@@ -568,7 +564,7 @@ void Game::render()
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.04f, radius*2.04f);
     m_ellipse.setSmooth(0.022f);
-    m_ellipse.render(m_renderer);
+    m_ellipse.render();
 
     // Render bounding circle 2 projection
     positionX = m_collideCircle.position.vec[0]*PhysicsToRenderer;
@@ -583,47 +579,47 @@ void Game::render()
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.07f, radius*2.07f);
     m_ellipse.setSmooth(0.028f);
-    m_ellipse.render(m_renderer);*/
+    m_ellipse.render();*/
 
 
     // Set default screen view
-    m_renderer.m_mainRenderer.setDefaultView(m_renderer);
+    GRenderer.m_mainRenderer.setDefaultView();
 
     // Bind default vertex buffer
-    m_renderer.bindDefaultVertexBuffer();
+    GRenderer.bindDefaultVertexBuffer();
 
     // Render back rendered frame
-    m_renderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_backRenderer.bind(m_renderer);
-    m_sprite.render(m_renderer);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_backRenderer.bind();
+    m_sprite.render();
 
     // Render sprite
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_sprite.bindTexture(m_renderer);
-    m_sprite.render(m_renderer);*/
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_sprite.bindTexture();
+    m_sprite.render();*/
 
     // Render procedural sprite
-    /*m_procSprite.bindPipeline(m_renderer);
-    m_procSprite.render(m_renderer);*/
+    /*m_procSprite.bindPipeline();
+    m_procSprite.render();*/
 
     // Render rectangle
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
-    m_rectanle.render(m_renderer);*/
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectanle.render();*/
 
     // Render ellipse
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
-    m_ellipse.render(m_renderer);*/
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    m_ellipse.render();*/
 
     // Render window
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
-    m_guiWindow.bindTexture(m_renderer);
-    m_guiWindow.render(m_renderer);*/
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
+    m_guiWindow.bindTexture();
+    m_guiWindow.render();*/
 
     // Render pixel text (framerate)
-    m_renderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
-    m_pxText.bindTexture(m_renderer);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
+    m_pxText.bindTexture();
     m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
-    m_pxText.render(m_renderer);
+    m_pxText.render();
 
     // Render pixel text (camera position)
     std::ostringstream camerastr;
@@ -632,38 +628,38 @@ void Game::render()
         " | Z : " << m_freeflycam.getZ();
     m_pxText.setText(camerastr.str());
     m_pxText.setPosition(-ratio, 0.96f-(m_pxText.getHeight()*0.7f));
-    m_pxText.render(m_renderer);
+    m_pxText.render();
 
     // Render cursor
-    /*m_renderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_cursor.setPosition(m_mouseX, m_mouseY);
-    m_cursor.bindTexture(m_renderer);
-    m_cursor.render(m_renderer);*/
+    m_cursor.bindTexture();
+    m_cursor.render();*/
 
     // End rendering
-    m_renderer.endRenderPass();
+    GRenderer.endRenderPass();
 
 
     // Start final pass
-    m_renderer.startFinalPass();
+    GRenderer.startFinalPass();
 
     // Render main compositing quad
-    m_renderer.setDefaultView();
-    m_renderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
-    m_renderer.bindDefaultVertexBuffer();
-    m_renderer.m_mainRenderer.bind(m_renderer);
-    m_renderer.m_mainSprite.setSize(
-        (m_renderer.m_swapchain.ratio*2.0f)+RendererCompositingQuadOffset,
+    GRenderer.setDefaultView();
+    GRenderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
+    GRenderer.bindDefaultVertexBuffer();
+    GRenderer.m_mainRenderer.bind();
+    GRenderer.m_mainSprite.setSize(
+        (GRenderer.m_swapchain.ratio*2.0f)+RendererCompositingQuadOffset,
         2.0f+RendererCompositingQuadOffset
     );
-    m_renderer.m_mainSprite.centerOrigin();
-    m_renderer.m_mainSprite.setPosition(0.0f, 0.0f);
-    m_renderer.m_mainSprite.render(m_renderer);
+    GRenderer.m_mainSprite.centerOrigin();
+    GRenderer.m_mainSprite.setPosition(0.0f, 0.0f);
+    GRenderer.m_mainSprite.render();
 
     // End final pass
-    m_renderer.endFinalPass();
+    GRenderer.endFinalPass();
 
 
     // End frame rendering
-    m_renderer.endFrame();
+    GRenderer.endFrame();
 }

@@ -151,8 +151,7 @@ float fractalHeigthmap(float seed, int i, int j)
 ////////////////////////////////////////////////////////////////////////////////
 //  HeightMapLoader default constructor                                       //
 ////////////////////////////////////////////////////////////////////////////////
-HeightMapLoader::HeightMapLoader(Renderer& renderer) :
-m_renderer(renderer),
+HeightMapLoader::HeightMapLoader() :
 m_state(HEIGHTMAPLOADER_STATE_NONE),
 m_stateMutex(),
 m_transferQueue(),
@@ -254,7 +253,7 @@ void HeightMapLoader::process()
 bool HeightMapLoader::init()
 {
     // Request transfer queue handle
-    if (!m_transferQueue.createGraphicsQueue(m_renderer.m_vulkanQueues))
+    if (!m_transferQueue.createGraphicsQueue(GRenderer.m_vulkanQueues))
     {
         // Could not get transfer queue handle
         return false;

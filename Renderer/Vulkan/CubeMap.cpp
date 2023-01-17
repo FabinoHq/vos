@@ -85,7 +85,7 @@ CubeMap::~CubeMap()
 //  Create cubemap                                                            //
 //  return : True if cubemap is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
+bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, bool smooth)
 {
     // Check cubemap size
@@ -216,9 +216,9 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = renderer.m_texturesDescPool;
+    descriptorInfo.descriptorPool = GRenderer.m_texturesDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
@@ -266,7 +266,7 @@ bool CubeMap::createCubeMap(Renderer& renderer, VulkanMemoryPool memoryPool,
 //  Update cubemap                                                            //
 //  return : True if cubemap is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
+bool CubeMap::updateCubeMap(TextureLoader& loader,
     VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
     const unsigned char* data, bool smooth)
 {
@@ -291,7 +291,7 @@ bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
     {
         // Recreate cubemap
         destroyCubeMap();
-        createCubeMap(renderer, memoryPool, width, height, smooth);
+        createCubeMap(memoryPool, width, height, smooth);
     }
 
     // Upload cubemap to graphics memory
@@ -308,13 +308,13 @@ bool CubeMap::updateCubeMap(Renderer& renderer, TextureLoader& loader,
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind cubemap                                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void CubeMap::bind(Renderer& renderer)
+void CubeMap::bind()
 {
     // Bind cubemap descriptor set
     vkCmdBindDescriptorSets(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
+        DESC_TEXTURE, 1, &m_descriptorSets[GRenderer.m_swapchain.current], 0, 0
     );
 }
 

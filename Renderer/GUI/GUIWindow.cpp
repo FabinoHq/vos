@@ -754,23 +754,23 @@ GUICursorType GUIWindow::updateCursor(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind window texture                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::bindTexture(Renderer& renderer)
+void GUIWindow::bindTexture()
 {
-    m_texture->bind(renderer);
+    m_texture->bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render window                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::render(Renderer& renderer)
+void GUIWindow::render()
 {
     // Compute window transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -787,14 +787,14 @@ void GUIWindow::render(Renderer& renderer)
     pushConstants.time = m_uvFactor;
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
     // Draw window triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         6, 1, 0, 0, 0
     );
 }

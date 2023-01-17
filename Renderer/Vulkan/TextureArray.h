@@ -85,8 +85,7 @@
             //  Create texture array                                          //
             //  return : True if texture array is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createTextureArray(Renderer& renderer,
-                VulkanMemoryPool memoryPool,
+            bool createTextureArray(VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height, uint32_t layers,
                 uint32_t mipLevels, bool smooth = true,
                 TextureRepeatMode repeat = TEXTUREMODE_CLAMP);
@@ -95,8 +94,8 @@
             //  Update texture array                                          //
             //  return : True if texture array is successfully updated        //
             ////////////////////////////////////////////////////////////////////
-            bool updateTextureArray(Renderer& renderer, TextureLoader& loader,
-                VulkanMemoryPool memoryPool,
+            bool updateTextureArray(
+                TextureLoader& loader, VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height, uint32_t layers,
                 const unsigned char* data,
                 bool mipmaps = false, bool smooth = true,
@@ -105,7 +104,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind texture array                                            //
             ////////////////////////////////////////////////////////////////////
-            void bind(Renderer& renderer);
+            void bind();
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy texture array                                         //

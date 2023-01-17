@@ -120,17 +120,17 @@ bool HeightMapChunk::setTextureArray(TextureArray& textureArray)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind heightmap chunk vertex buffer                                        //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::bindVertexBuffer(Renderer& renderer)
+void HeightMapChunk::bindVertexBuffer()
 {
     // Bind vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         0, 1, &(m_vertexBuffer->vertexBuffer.handle), &offset
     );
 
     vkCmdBindIndexBuffer(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         (m_vertexBuffer->indexBuffer.handle), 0, VK_INDEX_TYPE_UINT16
     );
 }
@@ -138,29 +138,29 @@ void HeightMapChunk::bindVertexBuffer(Renderer& renderer)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind heightmap chunk texture array                                        //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::bindTextureArray(Renderer& renderer)
+void HeightMapChunk::bindTextureArray()
 {
-    m_textureArray->bind(renderer);
+    m_textureArray->bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render heightmap chunk                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::render(Renderer& renderer)
+void HeightMapChunk::render()
 {
     // Compute heightmap chunk transformations
     computeTransforms();
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
     // Draw heightmap chunk triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         (m_vertexBuffer->indexCount), 1, 0, 0, 0
     );
 }

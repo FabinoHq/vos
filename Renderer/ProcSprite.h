@@ -81,7 +81,7 @@
             //  Init procedural sprite                                        //
             //  return : True if the proc sprite is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool init(Renderer& renderer, const uint32_t* fragmentSource,
+            bool init(const uint32_t* fragmentSource,
                 const size_t fragmentSize, float width, float height);
 
             ////////////////////////////////////////////////////////////////////
@@ -123,12 +123,12 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind procedural sprite pipeline                               //
             ////////////////////////////////////////////////////////////////////
-            void bindPipeline(Renderer& renderer);
+            void bindPipeline();
 
             ////////////////////////////////////////////////////////////////////
             //  Render procedural sprite                                      //
             ////////////////////////////////////////////////////////////////////
-            void render(Renderer& renderer);
+            void render();
 
 
         private:

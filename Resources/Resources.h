@@ -70,7 +70,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Resources default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            Resources(Renderer& renderer);
+            Resources();
 
             ////////////////////////////////////////////////////////////////////
             //  Resources destructor                                          //
@@ -125,6 +125,12 @@
             MeshLoader          meshes;         // Mesh loader
             HeightMapLoader     heightmaps;     // HeightMap loader
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Resources global instance                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    extern Resources GResources;
 
 
 #endif // VOS_RESOURCES_RESOURCES_HEADER

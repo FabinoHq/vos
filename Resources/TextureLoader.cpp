@@ -46,8 +46,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  TextureLoader default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-TextureLoader::TextureLoader(Renderer& renderer) :
-m_renderer(renderer),
+TextureLoader::TextureLoader() :
 m_state(TEXTURELOADER_STATE_NONE),
 m_stateMutex(),
 m_graphicsQueue(),
@@ -182,7 +181,7 @@ void TextureLoader::process()
 bool TextureLoader::init()
 {
     // Request graphics queue handle
-    if (!m_graphicsQueue.createGraphicsQueue(m_renderer.m_vulkanQueues))
+    if (!m_graphicsQueue.createGraphicsQueue(GRenderer.m_vulkanQueues))
     {
         // Could not get graphics queue handle
         return false;
@@ -1335,8 +1334,8 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
 bool TextureLoader::loadEmbeddedTextures()
 {
     // Load cursor texture
-    if (!m_texturesGUI[TEXTURE_CURSOR].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesGUI[TEXTURE_CURSOR].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         CursorImageWidth, CursorImageHeight, CursorImage,
         false, false, TEXTUREMODE_CLAMP))
     {
@@ -1345,8 +1344,8 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NS cursor texture
-    if (!m_texturesGUI[TEXTURE_NSCURSOR].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesGUI[TEXTURE_NSCURSOR].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         NSCursorImageWidth, NSCursorImageHeight, NSCursorImage,
         false, false, TEXTUREMODE_CLAMP))
     {
@@ -1355,8 +1354,8 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load EW cursor texture
-    if (!m_texturesGUI[TEXTURE_EWCURSOR].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesGUI[TEXTURE_EWCURSOR].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         EWCursorImageWidth, EWCursorImageHeight, EWCursorImage,
         false, false, TEXTUREMODE_CLAMP))
     {
@@ -1365,8 +1364,8 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NE-SW cursor texture
-    if (!m_texturesGUI[TEXTURE_NESWCURSOR].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesGUI[TEXTURE_NESWCURSOR].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         NESWCursorImageWidth, NESWCursorImageHeight, NESWCursorImage,
         false, false, TEXTUREMODE_CLAMP))
     {
@@ -1375,8 +1374,8 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load NW-SE cursor texture
-    if (!m_texturesGUI[TEXTURE_NWSECURSOR].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesGUI[TEXTURE_NWSECURSOR].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         NWSECursorImageWidth, NWSECursorImageHeight, NWSECursorImage,
         false, false, TEXTUREMODE_CLAMP))
     {
@@ -1385,8 +1384,8 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load window texture
-    if (!m_texturesGUI[TEXTURE_WINDOW].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesGUI[TEXTURE_WINDOW].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         WindowImageWidth, WindowImageHeight, WindowImage,
         false, true, TEXTUREMODE_CLAMP))
     {
@@ -1395,8 +1394,8 @@ bool TextureLoader::loadEmbeddedTextures()
     }
 
     // Load pixel font texture
-    if (!m_texturesGUI[TEXTURE_PIXELFONT].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesGUI[TEXTURE_PIXELFONT].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         PxFontImageWidth, PxFontImageHeight, PxFontImage,
         false, true, TEXTUREMODE_CLAMP))
     {
@@ -1420,8 +1419,8 @@ bool TextureLoader::preloadTextures()
     {
         return false;
     }
-    if (!m_texturesHigh[TEXTURE_TEST].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesHigh[TEXTURE_TEST].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
         false, false, TEXTUREMODE_CLAMP))
     {
@@ -1435,8 +1434,8 @@ bool TextureLoader::preloadTextures()
     {
         return false;
     }
-    if (!m_texturesHigh[TEXTURE_TILE].updateTexture(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesHigh[TEXTURE_TILE].updateTexture(
+        *this, VULKAN_MEMORY_TEXTURES,
         pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
         true, true, TEXTUREMODE_REPEAT))
     {
@@ -1489,8 +1488,8 @@ bool TextureLoader::preloadTextures()
     texArray4.destroyImage();
 
     // Create texture array
-    if (!m_texturesArrays[TEXTURE_ARRAY1].updateTextureArray(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_texturesArrays[TEXTURE_ARRAY1].updateTextureArray(
+        *this, VULKAN_MEMORY_TEXTURES,
         texArrayWidth, texArrayHeight, texArrayLayers, texArrayData,
         true, true, TEXTUREMODE_REPEAT))
     {
@@ -1555,8 +1554,8 @@ bool TextureLoader::preloadTextures()
     cubeMapBack.destroyImage();
 
     // Create cubemap texture
-    if (!m_cubemaps[TEXTURE_CUBEMAPTEST].updateCubeMap(m_renderer, *this,
-        VULKAN_MEMORY_TEXTURES,
+    if (!m_cubemaps[TEXTURE_CUBEMAPTEST].updateCubeMap(
+        *this, VULKAN_MEMORY_TEXTURES,
         cubemapWidth, cubemapHeight, cubemapData, true))
     {
         // Could not load cubemap texture

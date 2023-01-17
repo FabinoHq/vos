@@ -87,8 +87,7 @@ TextureArray::~TextureArray()
 //  Create texture array                                                      //
 //  return : True if texture array is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool TextureArray::createTextureArray(Renderer& renderer,
-    VulkanMemoryPool memoryPool,
+bool TextureArray::createTextureArray(VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, uint32_t layers,
     uint32_t mipLevels, bool smooth, TextureRepeatMode repeat)
 {
@@ -247,9 +246,9 @@ bool TextureArray::createTextureArray(Renderer& renderer,
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = renderer.m_texturesDescPool;
+    descriptorInfo.descriptorPool = GRenderer.m_texturesDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
@@ -298,8 +297,8 @@ bool TextureArray::createTextureArray(Renderer& renderer,
 //  Update texture array                                                      //
 //  return : True if texture array is successfully updated                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool TextureArray::updateTextureArray(Renderer& renderer, TextureLoader& loader,
-    VulkanMemoryPool memoryPool,
+bool TextureArray::updateTextureArray(
+    TextureLoader& loader, VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, uint32_t layers, const unsigned char* data,
     bool mipmaps, bool smooth, TextureRepeatMode repeat)
 {
@@ -333,7 +332,7 @@ bool TextureArray::updateTextureArray(Renderer& renderer, TextureLoader& loader,
         // Recreate texture array
         destroyTextureArray();
         createTextureArray(
-            renderer, memoryPool, width, height, layers,
+            memoryPool, width, height, layers,
             mipLevels, smooth, repeat
         );
     }
@@ -353,13 +352,13 @@ bool TextureArray::updateTextureArray(Renderer& renderer, TextureLoader& loader,
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind texture array                                                        //
 ////////////////////////////////////////////////////////////////////////////////
-void TextureArray::bind(Renderer& renderer)
+void TextureArray::bind()
 {
     // Bind texture array descriptor set
     vkCmdBindDescriptorSets(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
+        DESC_TEXTURE, 1, &m_descriptorSets[GRenderer.m_swapchain.current], 0, 0
     );
 }
 

@@ -46,8 +46,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  MeshLoader default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
-MeshLoader::MeshLoader(Renderer& renderer) :
-m_renderer(renderer),
+MeshLoader::MeshLoader() :
 m_state(MESHLOADER_STATE_NONE),
 m_stateMutex(),
 m_transferQueue(),
@@ -179,7 +178,7 @@ void MeshLoader::process()
 bool MeshLoader::init()
 {
     // Request transfer queue handle
-    if (!m_transferQueue.createGraphicsQueue(m_renderer.m_vulkanQueues))
+    if (!m_transferQueue.createGraphicsQueue(GRenderer.m_vulkanQueues))
     {
         // Could not get transfer queue handle
         return false;

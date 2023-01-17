@@ -116,7 +116,7 @@
             ////////////////////////////////////////////////////////////////////
             //  HeightMapLoader default constructor                           //
             ////////////////////////////////////////////////////////////////////
-            HeightMapLoader(Renderer& renderer);
+            HeightMapLoader();
 
             ////////////////////////////////////////////////////////////////////
             //  HeightMapLoader virtual destructor                            //
@@ -255,7 +255,6 @@
 
 
         private:
-            Renderer&               m_renderer;         // Renderer
             HeightMapLoaderState    m_state;            // HeightMapLoader state
             SysMutex                m_stateMutex;       // State mutex
 

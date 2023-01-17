@@ -169,7 +169,7 @@
             ////////////////////////////////////////////////////////////////////
             //  TextureLoader default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            TextureLoader(Renderer& renderer);
+            TextureLoader();
 
             ////////////////////////////////////////////////////////////////////
             //  TextureLoader virtual destructor                              //
@@ -321,7 +321,6 @@
 
 
         private:
-            Renderer&               m_renderer;         // Renderer
             TextureLoaderState      m_state;            // TextureLoader state
             SysMutex                m_stateMutex;       // State mutex
 

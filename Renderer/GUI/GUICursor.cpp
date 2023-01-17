@@ -103,32 +103,32 @@ bool GUICursor::init(Texture& texture, float scale)
 ////////////////////////////////////////////////////////////////////////////////
 //  Set cursor                                                                //
 ////////////////////////////////////////////////////////////////////////////////
-void GUICursor::setCursor(Resources& resources, GUICursorType cursorType)
+void GUICursor::setCursor(GUICursorType cursorType)
 {
     switch (cursorType)
     {
         case GUICURSOR_NS:
-            m_texture = &resources.textures.gui(TEXTURE_NSCURSOR);
+            m_texture = &GResources.textures.gui(TEXTURE_NSCURSOR);
             m_offset = GUICusorNSCursorOffset;
             break;
 
         case GUICURSOR_EW:
-            m_texture = &resources.textures.gui(TEXTURE_EWCURSOR);
+            m_texture = &GResources.textures.gui(TEXTURE_EWCURSOR);
             m_offset = GUICusorEWCursorOffset;
             break;
 
         case GUICURSOR_NESW:
-            m_texture = &resources.textures.gui(TEXTURE_NESWCURSOR);
+            m_texture = &GResources.textures.gui(TEXTURE_NESWCURSOR);
             m_offset = GUICusorNESWCursorOffset;
             break;
 
         case GUICURSOR_NWSE:
-            m_texture = &resources.textures.gui(TEXTURE_NWSECURSOR);
+            m_texture = &GResources.textures.gui(TEXTURE_NWSECURSOR);
             m_offset = GUICusorNWSECursorOffset;
             break;
 
         default:
-            m_texture = &resources.textures.gui(TEXTURE_CURSOR);
+            m_texture = &GResources.textures.gui(TEXTURE_CURSOR);
             m_offset = GUICusorDefaultOffset;
             break;
     }
@@ -210,18 +210,18 @@ void GUICursor::setAlpha(float alpha)
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind cursor texture                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-void GUICursor::bindTexture(Renderer& renderer)
+void GUICursor::bindTexture()
 {
-    m_texture->bind(renderer);
+    m_texture->bind();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render cursor                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void GUICursor::render(Renderer& renderer)
+void GUICursor::render()
 {
     // Compute cursor transformations
-    float scale = renderer.getScale();
+    float scale = GRenderer.getScale();
     float cursorSize = (scale*m_scale);
     setSize(cursorSize, cursorSize);
     setOrigin((m_offset.vec[0]*scale), (cursorSize - (m_offset.vec[1]*scale)));
@@ -229,8 +229,8 @@ void GUICursor::render(Renderer& renderer)
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
@@ -246,14 +246,14 @@ void GUICursor::render(Renderer& renderer)
     pushConstants.size[1] = 1.0f;
 
     vkCmdPushConstants(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        renderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        GRenderer.m_layout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
     );
 
     // Draw cursor triangles
     vkCmdDrawIndexed(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
         6, 1, 0, 0, 0
     );
 }

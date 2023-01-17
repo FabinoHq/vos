@@ -137,14 +137,14 @@
             //  Create compositing pipeline                                   //
             //  return : True if compositing pipeline is successfully created //
             ////////////////////////////////////////////////////////////////////
-            bool createCompositingPipeline(Renderer& renderer,
+            bool createCompositingPipeline(
                 AlphaBlendingMode blendingMode = ALPHA_BLENDING_NONE);
 
             ////////////////////////////////////////////////////////////////////
             //  Create pipeline                                               //
             //  return : True if pipeline is successfully created             //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(Renderer& renderer,
+            bool createPipeline(
                 VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
                 bool depthTest = false, bool backFaceCulling = false,
                 AlphaBlendingMode blendingMode = ALPHA_BLENDING_NONE);
@@ -152,7 +152,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer pipeline                                        //
             ////////////////////////////////////////////////////////////////////
-            void bind(Renderer& renderer);
+            void bind();
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy pipeline                                              //

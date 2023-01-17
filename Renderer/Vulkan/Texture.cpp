@@ -85,7 +85,7 @@ Texture::~Texture()
 //  Create texture                                                            //
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
+bool Texture::createTexture(VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, uint32_t mipLevels,
     bool smooth, TextureRepeatMode repeat)
 {
@@ -243,9 +243,9 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = renderer.m_texturesDescPool;
+    descriptorInfo.descriptorPool = GRenderer.m_texturesDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
         DESC_TEXTURE*RendererMaxSwapchainFrames
     ];
 
@@ -293,7 +293,7 @@ bool Texture::createTexture(Renderer& renderer, VulkanMemoryPool memoryPool,
 //  Update texture                                                            //
 //  return : True if texture is successfully updated                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
+bool Texture::updateTexture(TextureLoader& loader,
     VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
     const unsigned char* data,
     bool mipmaps, bool smooth, TextureRepeatMode repeat)
@@ -327,7 +327,7 @@ bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
         // Recreate texture
         destroyTexture();
         createTexture(
-            renderer, memoryPool, width, height, mipLevels, smooth, repeat
+            memoryPool, width, height, mipLevels, smooth, repeat
         );
     }
 
@@ -345,13 +345,13 @@ bool Texture::updateTexture(Renderer& renderer, TextureLoader& loader,
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind texture                                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void Texture::bind(Renderer& renderer)
+void Texture::bind()
 {
     // Bind texture descriptor set
     vkCmdBindDescriptorSets(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
+        DESC_TEXTURE, 1, &m_descriptorSets[GRenderer.m_swapchain.current], 0, 0
     );
 }
 

@@ -87,7 +87,7 @@ Camera::~Camera()
 //  Init camera                                                               //
 //  return : True if the camera is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool Camera::init(Renderer& renderer)
+bool Camera::init()
 {
     // Reset camera transforms
     resetTransforms();
@@ -107,7 +107,7 @@ bool Camera::init(Renderer& renderer)
 
     // Reset projection matrix
     m_projMatrix.setPerspective(
-        m_fovy, renderer.m_swapchain.ratio, m_nearPlane, m_farPlane
+        m_fovy, GRenderer.m_swapchain.ratio, m_nearPlane, m_farPlane
     );
 
     // Reset projview matrix
@@ -124,7 +124,7 @@ bool Camera::init(Renderer& renderer)
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         if (!m_uniformBuffers[i].updateBuffer(
-            renderer.m_swapchain.commandPools[i], renderer.m_graphicsQueue,
+            GRenderer.m_swapchain.commandPools[i], GRenderer.m_graphicsQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
@@ -136,9 +136,9 @@ bool Camera::init(Renderer& renderer)
     VkDescriptorSetAllocateInfo descriptorInfo;
     descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descriptorInfo.pNext = 0;
-    descriptorInfo.descriptorPool = renderer.m_uniformsDescPool;
+    descriptorInfo.descriptorPool = GRenderer.m_uniformsDescPool;
     descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
-    descriptorInfo.pSetLayouts = &renderer.m_layout.swapSetLayouts[
+    descriptorInfo.pSetLayouts = &GRenderer.m_layout.swapSetLayouts[
         DESC_MATRICES*RendererMaxSwapchainFrames
     ];
 
@@ -233,7 +233,7 @@ void Camera::compute(float ratio)
 //  Bind camera                                                               //
 //  return : True if the camera is successfully binded                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool Camera::bind(Renderer& renderer)
+bool Camera::bind()
 {
     // Copy matrices data into uniform data
     UniformData uniformData;
@@ -242,9 +242,9 @@ bool Camera::bind(Renderer& renderer)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[renderer.m_swapchain.current].updateBuffer(
-        renderer.m_swapchain.commandPools[renderer.m_swapchain.current],
-        renderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
+    if (!m_uniformBuffers[GRenderer.m_swapchain.current].updateBuffer(
+        GRenderer.m_swapchain.commandPools[GRenderer.m_swapchain.current],
+        GRenderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
         return false;
@@ -252,9 +252,9 @@ bool Camera::bind(Renderer& renderer)
 
     // Bind matrices descriptor set
     vkCmdBindDescriptorSets(
-        renderer.m_swapchain.commandBuffers[renderer.m_swapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, renderer.m_layout.handle,
-        DESC_MATRICES, 1, &m_descriptorSets[renderer.m_swapchain.current], 0, 0
+        GRenderer.m_swapchain.commandBuffers[GRenderer.m_swapchain.current],
+        VK_PIPELINE_BIND_POINT_GRAPHICS, GRenderer.m_layout.handle,
+        DESC_MATRICES, 1, &m_descriptorSets[GRenderer.m_swapchain.current], 0, 0
     );
 
     // Camera successfully binded

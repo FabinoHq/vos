@@ -116,7 +116,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Renderer default constructor                                  //
             ////////////////////////////////////////////////////////////////////
-            Renderer(Resources& resources);
+            Renderer();
 
             ////////////////////////////////////////////////////////////////////
             //  Renderer destructor                                           //
@@ -290,8 +290,13 @@
             Pipeline*           m_pipelines;            // Pipelines
 
             View                m_view;                 // Default view
-            Resources&          m_resources;            // Resources
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer global instance                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    extern Renderer GRenderer;
 
 
 #endif // VOS_RENDERER_RENDERER_HEADER
