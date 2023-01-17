@@ -228,18 +228,6 @@
             ////////////////////////////////////////////////////////////////////
             uint32_t getHeight();
 
-            ////////////////////////////////////////////////////////////////////
-            //  Get renderer scale                                            //
-            //  return : Renderer scale (1/height)                            //
-            ////////////////////////////////////////////////////////////////////
-            float getScale();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get renderer aspect ratio                                     //
-            //  return : Renderer aspect ratio                                //
-            ////////////////////////////////////////////////////////////////////
-            float getRatio();
-
 
         private:
             ////////////////////////////////////////////////////////////////////
@@ -275,7 +263,6 @@
         public:
             bool                m_rendererReady;        // Renderer ready state
             uint32_t            m_frameIndex;           // Current frame index
-            VulkanDeviceQueues  m_vulkanQueues;         // Vulkan queues
             VulkanQueue         m_graphicsQueue;        // Graphics queue
             VulkanQueue         m_surfaceQueue;         // Surface queue
             VkDescriptorPool    m_uniformsDescPool;     // Uniforms desc pool

@@ -97,27 +97,26 @@
             //  Create graphics queue                                         //
             //  return : True if the graphics queue is successfully created   //
             ////////////////////////////////////////////////////////////////////
-            bool createGraphicsQueue(VulkanDeviceQueues& vulkanQueues);
+            bool createGraphicsQueue();
 
             ////////////////////////////////////////////////////////////////////
             //  Create surface queue                                          //
             //  return : True if the surface queue is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool createSurfaceQueue(VulkanDeviceQueues& vulkanQueues);
+            bool createSurfaceQueue();
 
             ////////////////////////////////////////////////////////////////////
             //  Create transfer queue                                         //
             //  return : True if the transfer queue is successfully created   //
             ////////////////////////////////////////////////////////////////////
-            bool createTransferQueue(VulkanDeviceQueues& vulkanQueues);
+            bool createTransferQueue();
 
 
             ////////////////////////////////////////////////////////////////////
             //  Get Vulkan queue families availables for the device           //
             //  return : True if the device supports all queue families       //
             ////////////////////////////////////////////////////////////////////
-            static bool getDeviceQueues(VkPhysicalDevice& physicalDevice,
-                VulkanDeviceQueues& vulkanQueues);
+            static bool getDeviceQueues(VkPhysicalDevice& physicalDevice);
 
 
         private:
@@ -137,6 +136,12 @@
             uint32_t    family;     // Queue family
             uint32_t    index;      // Queue index
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  VulkanQueues global instance                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    extern VulkanDeviceQueues GVulkanQueues;
 
 
 #endif // VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER

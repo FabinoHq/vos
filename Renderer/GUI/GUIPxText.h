@@ -43,6 +43,9 @@
 #define VOS_RENDERER_GUI_GUIPXTEXT_HEADER
 
     #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
     #include "../Vulkan/Texture.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
@@ -62,12 +65,6 @@
     const float PixelTextDefaultXOffset = 0.44f;
     const float PixelTextDefaultYOffset = 0.92f;
     const float PixelTextDefaultSmoothFactor = 0.4f;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

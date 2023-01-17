@@ -40,8 +40,6 @@
 //     Renderer/Shapes/CuboidShape.cpp : Cuboid shape management              //
 ////////////////////////////////////////////////////////////////////////////////
 #include "CuboidShape.h"
-#include "../Renderer.h"
-#include "../../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,10 +67,10 @@ CuboidShape::~CuboidShape()
 //  Init cuboid                                                               //
 //  return : True if the cuboid is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool CuboidShape::init()
+bool CuboidShape::init(VertexBuffer& vertexBuffer)
 {
     // Set cuboid vertex buffer
-    m_vertexBuffer = &(GResources.meshes.mesh(MESHES_CUBOID));
+    m_vertexBuffer = &vertexBuffer;
 
     // Reset cuboid transformations
     resetTransforms();

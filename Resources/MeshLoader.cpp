@@ -40,7 +40,6 @@
 //     Resources/MeshLoader.cpp : Mesh loading management                     //
 ////////////////////////////////////////////////////////////////////////////////
 #include "MeshLoader.h"
-#include "../Renderer/Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -178,7 +177,7 @@ void MeshLoader::process()
 bool MeshLoader::init()
 {
     // Request transfer queue handle
-    if (!m_transferQueue.createGraphicsQueue(GRenderer.m_vulkanQueues))
+    if (!m_transferQueue.createGraphicsQueue())
     {
         // Could not get transfer queue handle
         return false;

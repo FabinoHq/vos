@@ -40,7 +40,6 @@
 //     Renderer/Vulkan/VertexBuffer.cpp : Vertex buffer management            //
 ////////////////////////////////////////////////////////////////////////////////
 #include "VertexBuffer.h"
-#include "../Renderer.h"
 #include "../../Resources/MeshLoader.h"
 #include "../../Resources/HeightMapLoader.h"
 

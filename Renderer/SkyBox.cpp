@@ -40,8 +40,6 @@
 //     Renderer/SkyBox.cpp : SkyBox management                                //
 ////////////////////////////////////////////////////////////////////////////////
 #include "SkyBox.h"
-#include "Renderer.h"
-#include "../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +69,7 @@ SkyBox::~SkyBox()
 //  Init skybox                                                               //
 //  return : True if the skybox is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool SkyBox::init(CubeMap& cubemap)
+bool SkyBox::init(VertexBuffer& vertexBuffer, CubeMap& cubemap)
 {
     // Check cubemap handle
     if (!cubemap.isValid())
@@ -81,7 +79,7 @@ bool SkyBox::init(CubeMap& cubemap)
     }
 
     // Set cuboid vertex buffer
-    m_vertexBuffer = &(GResources.meshes.mesh(MESHES_SKYBOX));
+    m_vertexBuffer = &vertexBuffer;
 
     // Set skybox cubemap pointer
     m_cubemap = &cubemap;

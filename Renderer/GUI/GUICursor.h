@@ -43,6 +43,9 @@
 #define VOS_RENDERER_GUI_GUICURSOR_HEADER
 
     #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
     #include "../Vulkan/Texture.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
@@ -73,12 +76,6 @@
         GUICURSOR_NESW = 3,
         GUICURSOR_NWSE = 4
     };
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

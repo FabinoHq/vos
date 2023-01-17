@@ -40,7 +40,6 @@
 //     Resources/HeightMapLoader.cpp : HeightMap loading management           //
 ////////////////////////////////////////////////////////////////////////////////
 #include "HeightMapLoader.h"
-#include "../Renderer/Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -253,7 +252,7 @@ void HeightMapLoader::process()
 bool HeightMapLoader::init()
 {
     // Request transfer queue handle
-    if (!m_transferQueue.createGraphicsQueue(GRenderer.m_vulkanQueues))
+    if (!m_transferQueue.createGraphicsQueue())
     {
         // Could not get transfer queue handle
         return false;
@@ -572,7 +571,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
     // Wait for transfer to finish
     if (vkWaitForFences(GVulkanDevice, 1,
-        &m_fence, VK_FALSE, MeshFenceTimeout) != VK_SUCCESS)
+        &m_fence, VK_FALSE, HeightMapFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
         return false;
@@ -663,7 +662,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
 
     // Wait for transfer to finish
     if (vkWaitForFences(GVulkanDevice, 1,
-        &m_fence, VK_FALSE, MeshFenceTimeout) != VK_SUCCESS)
+        &m_fence, VK_FALSE, HeightMapFenceTimeout) != VK_SUCCESS)
     {
         // Transfer timed out
         return false;

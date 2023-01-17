@@ -43,6 +43,9 @@
 #define VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
 
     #include "../System/System.h"
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/TextureArray.h"
     #include "../Math/Math.h"
@@ -64,12 +67,6 @@
     const float HeightMapChunkZStride = 256.0f;
     const float HeightMapChunkTexcoordsWidth = 32.0f;
     const float HeightMapChunkTexcoordsHeight = 32.0f;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -133,7 +133,9 @@ bool Game::init()
 
 
     // Init skybox
-    if (!m_skybox.init(GResources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
+    if (!m_skybox.init(
+        GResources.meshes.mesh(MESHES_SKYBOX),
+        GResources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
     {
         // Could not init skybox
         return false;
@@ -169,7 +171,7 @@ bool Game::init()
     }
 
     // Init cuboid shape
-    if (!m_cuboid.init())
+    if (!m_cuboid.init(GResources.meshes.mesh(MESHES_CUBOID)))
     {
         // Could not init cuboid shape
         return false;
@@ -283,8 +285,8 @@ void Game::destroy()
 void Game::events(Event& event)
 {
     // Get renderer scale and ratio
-    float scale = GRenderer.getScale();
-    float ratio = GRenderer.getRatio();
+    float scale = GSwapchain.getScale();
+    float ratio = GSwapchain.getRatio();
 
     // Process event
     switch (event.type)
@@ -476,8 +478,8 @@ void Game::render()
     }
 
     // Get renderer scale and ratio
-    //float scale = GRenderer.getScale();
-    float ratio = GRenderer.getRatio();
+    //float scale = GSwapchain.getScale();
+    float ratio = GSwapchain.getRatio();
 
     // Back rendering
     if (m_backRenderer.startRenderPass())

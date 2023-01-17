@@ -93,6 +93,25 @@
             void destroySwapchain();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get swapchain scale                                           //
+            //  return : Swapchain scale (1/height)                           //
+            ////////////////////////////////////////////////////////////////////
+            inline float getScale()
+            {
+                return ((extent.height > 0)?(1.0f/(extent.height*1.0f)):1.0f);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get swapchain aspect ratio                                    //
+            //  return : Swapchain aspect ratio                               //
+            ////////////////////////////////////////////////////////////////////
+            inline float getRatio()
+            {
+                return ratio;
+            }
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  Swapchain private copy constructor : Not copyable             //

@@ -43,6 +43,9 @@
 #define VOS_RENDERER_SKYBOX_HEADER
 
     #include "../System/System.h"
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/CubeMap.h"
     #include "../Math/Math.h"
@@ -113,17 +116,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Resources class declaration                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    class Resources;
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  SkyBox class definition                                               //
     ////////////////////////////////////////////////////////////////////////////
     class SkyBox : public Transform3
@@ -144,7 +136,7 @@
             //  Init skybox                                                   //
             //  return : True if the skybox is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(CubeMap& cubemap);
+            bool init(VertexBuffer& vertexBuffer, CubeMap& cubemap);
 
             ////////////////////////////////////////////////////////////////////
             //  Set skybox color                                              //

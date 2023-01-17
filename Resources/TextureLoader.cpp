@@ -40,7 +40,6 @@
 //     Resources/TextureLoader.cpp : Texture loading management               //
 ////////////////////////////////////////////////////////////////////////////////
 #include "TextureLoader.h"
-#include "../Renderer/Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +180,7 @@ void TextureLoader::process()
 bool TextureLoader::init()
 {
     // Request graphics queue handle
-    if (!m_graphicsQueue.createGraphicsQueue(GRenderer.m_vulkanQueues))
+    if (!m_graphicsQueue.createGraphicsQueue())
     {
         // Could not get graphics queue handle
         return false;

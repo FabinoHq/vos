@@ -43,6 +43,9 @@
 #define VOS_RENDERER_GUI_GUIWINDOW_HEADER
 
     #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
     #include "../Vulkan/Texture.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
@@ -59,12 +62,6 @@
     const Vector2 GUIWindowDefaultMaxSize = Vector2(3.5f, 1.9f);
     const float GUIWindowDefaultTopBarSize = 0.06f;
     const float GUIWindowDefaultResizeBarSize = 0.01f;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

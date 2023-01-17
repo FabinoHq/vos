@@ -54,7 +54,6 @@ Renderer GRenderer = Renderer();
 Renderer::Renderer() :
 m_rendererReady(false),
 m_frameIndex(0),
-m_vulkanQueues(),
 m_graphicsQueue(),
 m_surfaceQueue(),
 m_uniformsDescPool(0),
@@ -191,14 +190,14 @@ bool Renderer::init()
     }
 
     // Request graphics queue handle
-    if (!m_graphicsQueue.createGraphicsQueue(m_vulkanQueues))
+    if (!m_graphicsQueue.createGraphicsQueue())
     {
         // Could not get graphics queue handle
         return false;
     }
 
     // Request surface queue handle
-    if (!m_surfaceQueue.createSurfaceQueue(m_vulkanQueues))
+    if (!m_surfaceQueue.createSurfaceQueue())
     {
         // Could not get surface queue handle
         return false;
@@ -1063,28 +1062,6 @@ uint32_t Renderer::getHeight()
     return GSwapchain.extent.height;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Get renderer scale                                                        //
-//  return : Renderer scale (1/height)                                        //
-////////////////////////////////////////////////////////////////////////////////
-float Renderer::getScale()
-{
-    if (GSwapchain.extent.height > 0)
-    {
-        return (1.0f/(GSwapchain.extent.height*1.0f));
-    }
-    return 1.0f;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get renderer aspect ratio                                                 //
-//  return : Renderer aspect ratio                                            //
-////////////////////////////////////////////////////////////////////////////////
-float Renderer::getRatio()
-{
-    return GSwapchain.ratio;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Create Vulkan instance                                                    //
@@ -1336,7 +1313,7 @@ bool Renderer::selectVulkanDevice()
         }
 
         // Get device queue families
-        if (VulkanQueue::getDeviceQueues(physicalDevices[i], m_vulkanQueues))
+        if (VulkanQueue::getDeviceQueues(physicalDevices[i]))
         {
             // Current device supports graphics, surface, and transfer queues
             VkFormatProperties formatProperties;
@@ -1419,22 +1396,22 @@ bool Renderer::selectVulkanDevice()
     uint32_t graphicsQueues = RendererMaxGraphicsQueues;
     uint32_t surfaceQueues = RendererMaxSurfaceQueues;
     uint32_t transferQueues = RendererMaxTransferQueues;
-    if (m_vulkanQueues.surfaceQueueFamily ==
-        m_vulkanQueues.graphicsQueueFamily)
+    if (GVulkanQueues.surfaceQueueFamily ==
+        GVulkanQueues.graphicsQueueFamily)
     {
         graphicsQueues += RendererMaxSurfaceQueues;
         surfaceQueues = 0;
     }
-    if (m_vulkanQueues.transferQueueFamily ==
-        m_vulkanQueues.graphicsQueueFamily)
+    if (GVulkanQueues.transferQueueFamily ==
+        GVulkanQueues.graphicsQueueFamily)
     {
         graphicsQueues += RendererMaxTransferQueues;
         transferQueues = 0;
     }
     else
     {
-        if (m_vulkanQueues.transferQueueFamily ==
-            m_vulkanQueues.surfaceQueueFamily)
+        if (GVulkanQueues.transferQueueFamily ==
+            GVulkanQueues.surfaceQueueFamily)
         {
             surfaceQueues += RendererMaxTransferQueues;
             transferQueues = 0;
@@ -1442,9 +1419,9 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Check queue count
-    if ((graphicsQueues > m_vulkanQueues.graphicsQueueMax) ||
-        (surfaceQueues > m_vulkanQueues.surfaceQueueMax) ||
-        (transferQueues > m_vulkanQueues.transferQueueMax))
+    if ((graphicsQueues > GVulkanQueues.graphicsQueueMax) ||
+        (surfaceQueues > GVulkanQueues.surfaceQueueMax) ||
+        (transferQueues > GVulkanQueues.transferQueueMax))
     {
         // Could not find a device with enough queues
         SysMessage::box() << "[0x301B] Device does not provide enough queues\n";
@@ -1477,7 +1454,7 @@ bool Renderer::selectVulkanDevice()
     queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueInfos.back().pNext = 0;
     queueInfos.back().flags = 0;
-    queueInfos.back().queueFamilyIndex = m_vulkanQueues.graphicsQueueFamily;
+    queueInfos.back().queueFamilyIndex = GVulkanQueues.graphicsQueueFamily;
     queueInfos.back().queueCount = graphicsQueues;
     queueInfos.back().pQueuePriorities = graphicsPriorities.data();
 
@@ -1488,7 +1465,7 @@ bool Renderer::selectVulkanDevice()
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = m_vulkanQueues.surfaceQueueFamily;
+        queueInfos.back().queueFamilyIndex = GVulkanQueues.surfaceQueueFamily;
         queueInfos.back().queueCount = surfaceQueues;
         queueInfos.back().pQueuePriorities = surfacePriorities.data();
     }
@@ -1500,7 +1477,7 @@ bool Renderer::selectVulkanDevice()
         queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueInfos.back().pNext = 0;
         queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = m_vulkanQueues.transferQueueFamily;
+        queueInfos.back().queueFamilyIndex = GVulkanQueues.transferQueueFamily;
         queueInfos.back().queueCount = transferQueues;
         queueInfos.back().pQueuePriorities = transferPriorities.data();
     }

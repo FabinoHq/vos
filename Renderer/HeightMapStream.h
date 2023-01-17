@@ -43,6 +43,7 @@
 #define VOS_RENDERER_HEIGHTMAPSTREAM_HEADER
 
     #include "../System/System.h"
+    #include "Vulkan/Vulkan.h"
     #include "Vulkan/VertexBuffer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
@@ -55,12 +56,6 @@
     #include "HeightMapChunk.h"
 
     #include <cstdint>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

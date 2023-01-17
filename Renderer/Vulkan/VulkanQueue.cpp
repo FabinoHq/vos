@@ -43,6 +43,12 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  VulkanQueues global instance                                              //
+////////////////////////////////////////////////////////////////////////////////
+VulkanDeviceQueues GVulkanQueues = VulkanDeviceQueues();
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  VulkanQueue default constructor                                           //
 ////////////////////////////////////////////////////////////////////////////////
 VulkanQueue::VulkanQueue() :
@@ -68,7 +74,7 @@ VulkanQueue::~VulkanQueue()
 //  Create graphics queue                                                     //
 //  return : True if the graphics queue is successfully created               //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createGraphicsQueue(VulkanDeviceQueues& vulkanQueues)
+bool VulkanQueue::createGraphicsQueue()
 {
     // Check Vulkan device
     if (!GVulkanDevice)
@@ -80,9 +86,9 @@ bool VulkanQueue::createGraphicsQueue(VulkanDeviceQueues& vulkanQueues)
     }
 
     // Get graphics queue family
-    family = vulkanQueues.graphicsQueueFamily;
-    index = vulkanQueues.graphicsQueueIndex;
-    if (index >= (vulkanQueues.graphicsQueueMax-1))
+    family = GVulkanQueues.graphicsQueueFamily;
+    index = GVulkanQueues.graphicsQueueIndex;
+    if (index >= (GVulkanQueues.graphicsQueueMax-1))
     {
         // Invalid queue count
         SysMessage::box() << "[0x3020] Invalid graphics queue count\n";
@@ -101,14 +107,14 @@ bool VulkanQueue::createGraphicsQueue(VulkanDeviceQueues& vulkanQueues)
     }
 
     // Increment queue family usage
-    ++vulkanQueues.graphicsQueueIndex;
-    if (vulkanQueues.surfaceQueueFamily == family)
+    ++GVulkanQueues.graphicsQueueIndex;
+    if (GVulkanQueues.surfaceQueueFamily == family)
     {
-        ++vulkanQueues.surfaceQueueIndex;
+        ++GVulkanQueues.surfaceQueueIndex;
     }
-    if (vulkanQueues.transferQueueFamily == family)
+    if (GVulkanQueues.transferQueueFamily == family)
     {
-        ++vulkanQueues.transferQueueIndex;
+        ++GVulkanQueues.transferQueueIndex;
     }
 
     // Graphics queue successfully created
@@ -119,7 +125,7 @@ bool VulkanQueue::createGraphicsQueue(VulkanDeviceQueues& vulkanQueues)
 //  Create surface queue                                                      //
 //  return : True if the surface queue is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createSurfaceQueue(VulkanDeviceQueues& vulkanQueues)
+bool VulkanQueue::createSurfaceQueue()
 {
     // Check Vulkan device
     if (!GVulkanDevice)
@@ -131,9 +137,9 @@ bool VulkanQueue::createSurfaceQueue(VulkanDeviceQueues& vulkanQueues)
     }
 
     // Get surface queue family
-    family = vulkanQueues.surfaceQueueFamily;
-    index = vulkanQueues.surfaceQueueIndex;
-    if (index >= (vulkanQueues.surfaceQueueMax-1))
+    family = GVulkanQueues.surfaceQueueFamily;
+    index = GVulkanQueues.surfaceQueueIndex;
+    if (index >= (GVulkanQueues.surfaceQueueMax-1))
     {
         // Invalid queue count
         SysMessage::box() << "[0x3023] Invalid surface queue count\n";
@@ -152,14 +158,14 @@ bool VulkanQueue::createSurfaceQueue(VulkanDeviceQueues& vulkanQueues)
     }
 
     // Increment queue family usage
-    ++vulkanQueues.surfaceQueueIndex;
-    if (vulkanQueues.graphicsQueueFamily == family)
+    ++GVulkanQueues.surfaceQueueIndex;
+    if (GVulkanQueues.graphicsQueueFamily == family)
     {
-        ++vulkanQueues.graphicsQueueIndex;
+        ++GVulkanQueues.graphicsQueueIndex;
     }
-    if (vulkanQueues.transferQueueFamily == family)
+    if (GVulkanQueues.transferQueueFamily == family)
     {
-        ++vulkanQueues.transferQueueIndex;
+        ++GVulkanQueues.transferQueueIndex;
     }
 
     // Surface queue successfully created
@@ -170,7 +176,7 @@ bool VulkanQueue::createSurfaceQueue(VulkanDeviceQueues& vulkanQueues)
 //  Create transfer queue                                                     //
 //  return : True if the transfer queue is successfully created               //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createTransferQueue(VulkanDeviceQueues& vulkanQueues)
+bool VulkanQueue::createTransferQueue()
 {
     // Check Vulkan device
     if (!GVulkanDevice)
@@ -182,9 +188,9 @@ bool VulkanQueue::createTransferQueue(VulkanDeviceQueues& vulkanQueues)
     }
 
     // Get transfer queue family
-    family = vulkanQueues.transferQueueFamily;
-    index = vulkanQueues.transferQueueIndex;
-    if (index >= (vulkanQueues.transferQueueMax-1))
+    family = GVulkanQueues.transferQueueFamily;
+    index = GVulkanQueues.transferQueueIndex;
+    if (index >= (GVulkanQueues.transferQueueMax-1))
     {
         // Invalid queue count
         SysMessage::box() << "[0x3026] Invalid transfer queue count\n";
@@ -203,14 +209,14 @@ bool VulkanQueue::createTransferQueue(VulkanDeviceQueues& vulkanQueues)
     }
 
     // Increment queue family usage
-    ++vulkanQueues.transferQueueIndex;
-    if (vulkanQueues.graphicsQueueFamily == family)
+    ++GVulkanQueues.transferQueueIndex;
+    if (GVulkanQueues.graphicsQueueFamily == family)
     {
-        ++vulkanQueues.graphicsQueueIndex;
+        ++GVulkanQueues.graphicsQueueIndex;
     }
-    if (vulkanQueues.surfaceQueueFamily == family)
+    if (GVulkanQueues.surfaceQueueFamily == family)
     {
-        ++vulkanQueues.surfaceQueueIndex;
+        ++GVulkanQueues.surfaceQueueIndex;
     }
 
     // Transfer queue successfully created
@@ -222,8 +228,7 @@ bool VulkanQueue::createTransferQueue(VulkanDeviceQueues& vulkanQueues)
 //  Get Vulkan queue families availables for the device                       //
 //  return : True if the device supports all queue families                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice,
-    VulkanDeviceQueues& vulkanQueues)
+bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice)
 {
     // Check Vulkan surface
     if (!GVulkanSurface)
@@ -368,14 +373,14 @@ bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice,
     }
 
     // Current device supports graphics, surface, and transfer queues
-    vulkanQueues.graphicsQueueFamily = graphicsQueueFamily;
-    vulkanQueues.graphicsQueueIndex = 0;
-    vulkanQueues.graphicsQueueMax = graphicsQueueMax;
-    vulkanQueues.surfaceQueueFamily = surfaceQueueFamily;
-    vulkanQueues.surfaceQueueIndex = 0;
-    vulkanQueues.surfaceQueueMax = surfaceQueueMax;
-    vulkanQueues.transferQueueFamily = transferQueueFamily;
-    vulkanQueues.transferQueueIndex = 0;
-    vulkanQueues.transferQueueMax = transferQueueMax;
+    GVulkanQueues.graphicsQueueFamily = graphicsQueueFamily;
+    GVulkanQueues.graphicsQueueIndex = 0;
+    GVulkanQueues.graphicsQueueMax = graphicsQueueMax;
+    GVulkanQueues.surfaceQueueFamily = surfaceQueueFamily;
+    GVulkanQueues.surfaceQueueIndex = 0;
+    GVulkanQueues.surfaceQueueMax = surfaceQueueMax;
+    GVulkanQueues.transferQueueFamily = transferQueueFamily;
+    GVulkanQueues.transferQueueIndex = 0;
+    GVulkanQueues.transferQueueMax = transferQueueMax;
     return true;
 }

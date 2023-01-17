@@ -43,21 +43,19 @@
 #define VOS_RENDERER_PROCSPRITE_HEADER
 
     #include "../System/System.h"
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/Pipeline.h"
     #include "../Math/Math.h"
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform2.h"
+    #include "Shaders/Default.h"
     #include "Shaders/DefaultProc.h"
 
     #include <cstddef>
     #include <cstdint>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

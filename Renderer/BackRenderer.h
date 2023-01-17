@@ -44,7 +44,9 @@
 
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
+    #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/VulkanMemory.h"
+    #include "Vulkan/Swapchain.h"
     #include "Vulkan/Backchain.h"
     #include "View.h"
 

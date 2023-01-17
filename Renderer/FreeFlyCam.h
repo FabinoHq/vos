@@ -44,7 +44,6 @@
 
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
-    #include "Vulkan/Swapchain.h"
     #include "Vulkan/UniformBuffer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
@@ -61,12 +60,6 @@
     const float FreeflyCameraMouseFactor = 0.004f;
     const float FreeflyCameraMinAngle = -(Math::PiTwo-0.001f);
     const float FreeflyCameraMaxAngle = (Math::PiTwo-0.001f);
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -43,6 +43,9 @@
 #define VOS_RENDERER_SHAPES_CUBOIDSHAPE_HEADER
 
     #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
     #include "../Vulkan/VertexBuffer.h"
     #include "../../Math/Math.h"
     #include "../../Math/Vector4.h"
@@ -113,17 +116,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Resources class declaration                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    class Resources;
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  CuboidShape class definition                                          //
     ////////////////////////////////////////////////////////////////////////////
     class CuboidShape : public Transform3
@@ -144,7 +136,7 @@
             //  Init cuboid                                                   //
             //  return : True if the cuboid is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init();
+            bool init(VertexBuffer& vertexBuffer);
 
             ////////////////////////////////////////////////////////////////////
             //  Set cuboid color                                              //

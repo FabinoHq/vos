@@ -51,6 +51,7 @@
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
 
+    #include <fstream>
     #include <cstdint>
     #include <new>
 
@@ -99,12 +100,6 @@
 
         MESHLOADER_STATE_ERROR = 6
     };
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

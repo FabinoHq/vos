@@ -43,7 +43,6 @@
 #define VOS_RENDERER_ORBITALCAM_HEADER
 
     #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/UniformBuffer.h"
     #include "../Math/Math.h"
@@ -63,12 +62,6 @@
     const float OrbitalCameraMaxAngle = (Math::PiTwo-0.001f);
     const float OrbitalCameraMinDistance = 0.0f;
     const float OrbitalCameraMaxDistance = 10.0f;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////

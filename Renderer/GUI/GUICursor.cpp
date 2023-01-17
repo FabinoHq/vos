@@ -40,7 +40,6 @@
 //     Renderer/GUI/GUICursor.h : GUI Cursor management                       //
 ////////////////////////////////////////////////////////////////////////////////
 #include "GUICursor.h"
-#include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +220,7 @@ void GUICursor::bindTexture()
 void GUICursor::render()
 {
     // Compute cursor transformations
-    float scale = GRenderer.getScale();
+    float scale = GSwapchain.getScale();
     float cursorSize = (scale*m_scale);
     setSize(cursorSize, cursorSize);
     setOrigin((m_offset.vec[0]*scale), (cursorSize - (m_offset.vec[1]*scale)));
