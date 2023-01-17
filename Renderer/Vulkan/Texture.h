@@ -47,6 +47,7 @@
     #include "Vulkan.h"
     #include "VulkanMemory.h"
     #include "Swapchain.h"
+    #include "GraphicsLayout.h"
     #include "VulkanBuffer.h"
 
     #include <cstdint>
@@ -62,11 +63,6 @@
         TEXTUREMODE_MIRROR = 2
     };
 
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
     ////////////////////////////////////////////////////////////////////////////
     //  TextureLoader class declaration                                       //

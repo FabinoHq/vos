@@ -40,7 +40,6 @@
 //     Renderer/Vulkan/Pipeline.cpp : Graphics pipeline management            //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Pipeline.h"
-#include "../Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -338,8 +337,9 @@ bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
 //  Create pipeline                                                           //
 //  return : True if pipeline is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool Pipeline::createPipeline(VertexInputsType vertexInputsType,
-    bool depthTest, bool backFaceCulling, AlphaBlendingMode blendingMode)
+bool Pipeline::createPipeline(VkRenderPass& renderPass,
+    VertexInputsType vertexInputsType, bool depthTest, bool backFaceCulling,
+    AlphaBlendingMode blendingMode)
 {
     // Check current pipeline
     if (m_pipeline)
@@ -545,7 +545,7 @@ bool Pipeline::createPipeline(VertexInputsType vertexInputsType,
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicInfo;
     pipelineInfo.layout = GGraphicsLayout.handle;
-    pipelineInfo.renderPass = GRenderer.m_mainRenderer.m_backchain.renderPass;
+    pipelineInfo.renderPass = renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;

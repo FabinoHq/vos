@@ -79,7 +79,7 @@
             //  Init procedural sprite                                        //
             //  return : True if the proc sprite is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool init(const uint32_t* fragmentSource,
+            bool init(VkRenderPass& renderPass, const uint32_t* fragmentSource,
                 const size_t fragmentSize, float width, float height);
 
             ////////////////////////////////////////////////////////////////////

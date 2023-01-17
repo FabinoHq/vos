@@ -40,7 +40,6 @@
 //     Renderer/Vulkan/TextureArray.cpp : Texture array management            //
 ////////////////////////////////////////////////////////////////////////////////
 #include "TextureArray.h"
-#include "../Renderer.h"
 #include "../../Resources/TextureLoader.h"
 
 

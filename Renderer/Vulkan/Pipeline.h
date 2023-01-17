@@ -44,17 +44,13 @@
 
     #include "../../System/System.h"
     #include "Vulkan.h"
+    #include "Swapchain.h"
+    #include "GraphicsLayout.h"
     #include "Shader.h"
 
     #include <cstddef>
     #include <cstdint>
     #include <vector>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -144,7 +140,7 @@
             //  Create pipeline                                               //
             //  return : True if pipeline is successfully created             //
             ////////////////////////////////////////////////////////////////////
-            bool createPipeline(
+            bool createPipeline(VkRenderPass& renderPass,
                 VertexInputsType vertexInputsType = VERTEX_INPUTS_DEFAULT,
                 bool depthTest = false, bool backFaceCulling = false,
                 AlphaBlendingMode blendingMode = ALPHA_BLENDING_NONE);

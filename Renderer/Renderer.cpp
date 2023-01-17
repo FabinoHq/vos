@@ -54,7 +54,6 @@ Renderer GRenderer = Renderer();
 Renderer::Renderer() :
 m_rendererReady(false),
 m_frameIndex(0),
-m_graphicsQueue(),
 m_surfaceQueue(),
 m_mainRenderer(),
 m_mainSprite(),
@@ -187,13 +186,6 @@ bool Renderer::init()
         return false;
     }
 
-    // Request graphics queue handle
-    if (!m_graphicsQueue.createGraphicsQueue())
-    {
-        // Could not get graphics queue handle
-        return false;
-    }
-
     // Request surface queue handle
     if (!m_surfaceQueue.createSurfaceQueue())
     {
@@ -298,6 +290,7 @@ bool Renderer::initPipelines()
         DefaultFragmentShader, DefaultFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_DEFAULT].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -315,6 +308,7 @@ bool Renderer::initPipelines()
         NinePatchFragmentShader, NinePatchFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_NINEPATCH].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -332,6 +326,7 @@ bool Renderer::initPipelines()
         RectangleFragmentShader, RectangleFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_RECTANGLE].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -349,6 +344,7 @@ bool Renderer::initPipelines()
         EllipseFragmentShader, EllipseFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -366,6 +362,7 @@ bool Renderer::initPipelines()
         PxTextFragmentShader, PxTextFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_PXTEXT].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -384,6 +381,7 @@ bool Renderer::initPipelines()
         SkyBoxFragmentShader, SkyBoxFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SKYBOX].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_CUBEMAP, false, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -401,6 +399,7 @@ bool Renderer::initPipelines()
         StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -418,6 +417,7 @@ bool Renderer::initPipelines()
         StaticMeshFragmentShader, StaticMeshFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_STATICMESH].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -435,6 +435,7 @@ bool Renderer::initPipelines()
         HeightMapFragmentShader, HeightMapFragmentShaderSize
     );
     if (!m_pipelines[RENDERER_PIPELINE_HEIGHTMAP].createPipeline(
+        m_mainRenderer.m_backchain.renderPass,
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {

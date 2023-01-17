@@ -66,7 +66,7 @@ ProcSprite::~ProcSprite()
 //  Init procedural sprite                                                    //
 //  return : True if the proc sprite is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool ProcSprite::init(const uint32_t* fragmentSource,
+bool ProcSprite::init(VkRenderPass& renderPass, const uint32_t* fragmentSource,
     const size_t fragmentSize, float width, float height)
 {
     bool shaderCreated = false;
@@ -79,7 +79,7 @@ bool ProcSprite::init(const uint32_t* fragmentSource,
         m_pipeline.createFragmentShader(
             fragmentSource, fragmentSize
         );
-        if (m_pipeline.createPipeline())
+        if (m_pipeline.createPipeline(renderPass))
         {
             shaderCreated = true;
         }
@@ -94,7 +94,7 @@ bool ProcSprite::init(const uint32_t* fragmentSource,
         m_pipeline.createFragmentShader(
             DefaultProcFragmentShader, DefaultProcFragmentShaderSize
         );
-        if (!m_pipeline.createPipeline())
+        if (!m_pipeline.createPipeline(renderPass))
         {
             // Could not create default procedural sprite pipeline
             return false;

@@ -150,7 +150,8 @@ bool Game::init()
     }
 
     // Init procedural sprite
-    if (!m_procSprite.init(0, 0, 1.0f, 1.0f))
+    if (!m_procSprite.init(GRenderer.m_mainRenderer.m_backchain.renderPass,
+        0, 0, 1.0f, 1.0f))
     {
         // Could not init procedural sprite
         return false;

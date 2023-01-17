@@ -40,7 +40,6 @@
 //     Renderer/Vulkan/CubeMap.cpp : CubeMap management                       //
 ////////////////////////////////////////////////////////////////////////////////
 #include "CubeMap.h"
-#include "../Renderer.h"
 #include "../../Resources/TextureLoader.h"
 
 

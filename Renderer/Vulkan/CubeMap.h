@@ -46,15 +46,11 @@
     #include "Vulkan.h"
     #include "VulkanMemory.h"
     #include "Swapchain.h"
+    #include "GraphicsLayout.h"
     #include "VulkanBuffer.h"
 
     #include <cstdint>
 
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class declaration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer;
 
     ////////////////////////////////////////////////////////////////////////////
     //  TextureLoader class declaration                                       //

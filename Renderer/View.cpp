@@ -40,7 +40,6 @@
 //     Renderer/View.cpp : View management                                    //
 ////////////////////////////////////////////////////////////////////////////////
 #include "View.h"
-#include "Renderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +102,7 @@ bool View::init()
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         if (!m_uniformBuffers[i].updateBuffer(
-            GSwapchain.commandPools[i], GRenderer.m_graphicsQueue,
+            GSwapchain.commandPools[i], GGraphicsLayout.uniformsQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
@@ -212,7 +211,7 @@ bool View::bind()
     // Update uniform buffer
     if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
         GSwapchain.commandPools[GSwapchain.current],
-        GRenderer.m_graphicsQueue, &uniformData, sizeof(uniformData)))
+        GGraphicsLayout.uniformsQueue, &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
         return false;

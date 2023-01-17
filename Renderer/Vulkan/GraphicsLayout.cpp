@@ -52,7 +52,10 @@ GraphicsLayout GGraphicsLayout = GraphicsLayout();
 //  GraphicsLayout default constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
 GraphicsLayout::GraphicsLayout() :
-handle(0)
+handle(0),
+uniformsDescPool(0),
+texturesDescPool(0),
+uniformsQueue()
 {
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
@@ -69,6 +72,8 @@ handle(0)
 ////////////////////////////////////////////////////////////////////////////////
 GraphicsLayout::~GraphicsLayout()
 {
+    texturesDescPool = 0;
+    uniformsDescPool = 0;
     for (uint32_t i = 0; i < (RendererMaxSwapchainFrames*DESC_SETS_COUNT); ++i)
     {
         swapSetLayouts[i] = 0;
@@ -164,6 +169,13 @@ bool GraphicsLayout::createLayout()
         // Could not create pipeline layouts
         SysMessage::box() << "[0x3051] Could not create pipeline layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Request uniforms queue handle
+    if (!uniformsQueue.createGraphicsQueue())
+    {
+        // Could not get uniforms queue handle
         return false;
     }
 

@@ -40,7 +40,6 @@
 //     Renderer/Vulkan/Texture.cpp : Texture management                       //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Texture.h"
-#include "../Renderer.h"
 #include "../../Resources/TextureLoader.h"
 
 
