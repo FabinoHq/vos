@@ -175,7 +175,7 @@
             //  Get PNG file loaded state                                     //
             //  return : True if PNG file is loaded                           //
             ////////////////////////////////////////////////////////////////////
-            inline bool isLoaded()
+            inline bool isLoaded() const
             {
                 return m_loaded;
             }
@@ -193,7 +193,7 @@
             //  Get PNG file image width                                      //
             //  return : PNG file image width in pixels                       //
             ////////////////////////////////////////////////////////////////////
-            inline uint32_t getWidth()
+            inline uint32_t getWidth() const
             {
                 return m_width;
             }
@@ -202,7 +202,7 @@
             //  Get PNG file image height                                     //
             //  return : PNG file image height in pixels                      //
             ////////////////////////////////////////////////////////////////////
-            inline uint32_t getHeight()
+            inline uint32_t getHeight() const
             {
                 return m_height;
             }

@@ -169,7 +169,7 @@ bool IPAddress6::resolveHostName(const std::string& hostName)
 ////////////////////////////////////////////////////////////////////////////////
 //  Get IP address v6 string                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-std::string IPAddress6::getString()
+std::string IPAddress6::getString() const
 {
     char cstraddress[INET6_ADDRSTRLEN] = {0};
     std::string ipaddress;

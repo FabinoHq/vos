@@ -161,7 +161,7 @@
             //  Get heightmap chunk X                                         //
             //  return : heightmap chunk X                                    //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getChunkX()
+            inline int32_t getChunkX() const
             {
                 return m_chunkX;
             }
@@ -170,7 +170,7 @@
             //  Get heightmap chunk Y                                         //
             //  return : heightmap chunk Y                                    //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getChunkY()
+            inline int32_t getChunkY() const
             {
                 return m_chunkY;
             }

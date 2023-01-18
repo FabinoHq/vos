@@ -132,7 +132,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get camera fovy angle                                         //
             ////////////////////////////////////////////////////////////////////
-            inline float getFovy()
+            inline float getFovy() const
             {
                 return m_fovy;
             }
@@ -140,7 +140,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get camera near plane                                         //
             ////////////////////////////////////////////////////////////////////
-            inline float getNearPlane()
+            inline float getNearPlane() const
             {
                 return m_nearPlane;
             }
@@ -148,7 +148,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get camera far plane                                          //
             ////////////////////////////////////////////////////////////////////
-            inline float getFarPlane()
+            inline float getFarPlane() const
             {
                 return m_farPlane;
             }

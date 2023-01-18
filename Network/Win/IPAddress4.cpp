@@ -124,7 +124,7 @@ bool IPAddress4::resolveHostName(const std::string& hostName)
 ////////////////////////////////////////////////////////////////////////////////
 //  Get IP address v4 string                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-std::string IPAddress4::getString()
+std::string IPAddress4::getString() const
 {
     char cstraddress[INET_ADDRSTRLEN] = {0};
     std::string ipaddress;

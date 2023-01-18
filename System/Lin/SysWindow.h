@@ -135,7 +135,7 @@
             //  Check if the window has a valid handle                        //
             //  return : True if the window is valid                          //
             ////////////////////////////////////////////////////////////////////
-            inline bool isValid()
+            inline bool isValid() const
             {
                 return m_handle;
             }

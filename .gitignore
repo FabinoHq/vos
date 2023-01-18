@@ -34,7 +34,6 @@
 !System/SysCPU.cpp
 !System/SysCRC.h
 !System/SysSleep.h
-!System/SysSleep.cpp
 !System/SysThread.h
 !System/SysThread.cpp
 !System/SysMutex.h

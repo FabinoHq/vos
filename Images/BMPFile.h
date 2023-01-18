@@ -161,7 +161,7 @@
             //  Get BMP file loaded state                                     //
             //  return : True if BMP file is loaded                           //
             ////////////////////////////////////////////////////////////////////
-            inline bool isLoaded()
+            inline bool isLoaded() const
             {
                 return m_loaded;
             }
@@ -179,7 +179,7 @@
             //  Get BMP file image width                                      //
             //  return : BMP file image width in pixels                       //
             ////////////////////////////////////////////////////////////////////
-            inline uint32_t getWidth()
+            inline uint32_t getWidth() const
             {
                 return m_width;
             }
@@ -188,7 +188,7 @@
             //  Get BMP file image height                                     //
             //  return : BMP file image height in pixels                      //
             ////////////////////////////////////////////////////////////////////
-            inline uint32_t getHeight()
+            inline uint32_t getHeight() const
             {
                 return m_height;
             }

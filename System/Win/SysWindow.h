@@ -95,13 +95,19 @@
             //  Get window width                                              //
             //  return : Window width                                         //
             ////////////////////////////////////////////////////////////////////
-            int getWidth();
+            inline int getWidth() const
+            {
+                return m_width;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get window height                                             //
             //  return : Window height                                        //
             ////////////////////////////////////////////////////////////////////
-            int getHeight();
+            inline int getHeight() const
+            {
+                return m_height;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get window event                                              //
@@ -132,7 +138,7 @@
             //  Check if the window has a valid handle                        //
             //  return : True if the window is valid                          //
             ////////////////////////////////////////////////////////////////////
-            inline bool isValid()
+            inline bool isValid() const
             {
                 return m_handle;
             }

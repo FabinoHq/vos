@@ -160,7 +160,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get pixel text length                                         //
             ////////////////////////////////////////////////////////////////////
-            inline size_t getLength()
+            inline size_t getLength() const
             {
                 return m_text.length();
             }

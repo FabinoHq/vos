@@ -97,7 +97,7 @@
             //  Get swapchain width                                           //
             //  return : Swapchain width                                      //
             ////////////////////////////////////////////////////////////////////
-            inline uint32_t getWidth()
+            inline uint32_t getWidth() const
             {
                 return extent.width;
             }
@@ -106,7 +106,7 @@
             //  Get swapchain height                                          //
             //  return : Swapchain height                                     //
             ////////////////////////////////////////////////////////////////////
-            inline uint32_t getHeight()
+            inline uint32_t getHeight() const
             {
                 return extent.height;
             }
@@ -115,7 +115,7 @@
             //  Get swapchain scale                                           //
             //  return : Swapchain scale (1/height)                           //
             ////////////////////////////////////////////////////////////////////
-            inline float getScale()
+            inline float getScale() const
             {
                 return ((extent.height > 0)?(1.0f/(extent.height*1.0f)):1.0f);
             }

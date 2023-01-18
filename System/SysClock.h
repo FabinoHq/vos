@@ -75,7 +75,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get elapsed time since last reset in seconds                  //
             ////////////////////////////////////////////////////////////////////
-            inline double getElapsedTime()
+            inline double getElapsedTime() const
             {
                 return (std::chrono::duration_cast<std::chrono::nanoseconds>(
                         std::chrono::steady_clock::now()-m_start
@@ -86,7 +86,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get elapsed time since last reset in seconds                  //
             ////////////////////////////////////////////////////////////////////
-            inline float getElapsedTimeF()
+            inline float getElapsedTimeF() const
             {
                 return (std::chrono::duration_cast<std::chrono::nanoseconds>(
                         std::chrono::steady_clock::now()-m_start
