@@ -40,7 +40,7 @@
 //     Renderer/Vulkan/CubeMap.cpp : CubeMap management                       //
 ////////////////////////////////////////////////////////////////////////////////
 #include "CubeMap.h"
-#include "../../Resources/TextureLoader.h"
+#include "../../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,9 +84,8 @@ CubeMap::~CubeMap()
 //  Create cubemap                                                            //
 //  return : True if cubemap is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::createCubeMap(TextureLoader& loader,
-    VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
-    const unsigned char* data, bool smooth)
+bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
+    uint32_t width, uint32_t height, const unsigned char* data, bool smooth)
 {
     // Check cubemap handle
     if (m_handle)
@@ -262,7 +261,7 @@ bool CubeMap::createCubeMap(TextureLoader& loader,
     }
 
     // Upload cubemap to graphics memory
-    if (!loader.uploadCubeMap(m_handle, width, height, data))
+    if (!GResources.textures.uploadCubeMap(m_handle, width, height, data))
     {
         // Could not upload cubemap to graphics memory
         return false;

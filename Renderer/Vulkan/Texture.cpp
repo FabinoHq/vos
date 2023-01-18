@@ -40,7 +40,7 @@
 //     Renderer/Vulkan/Texture.cpp : Texture management                       //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Texture.h"
-#include "../../Resources/TextureLoader.h"
+#include "../../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ Texture::~Texture()
 //  Create texture                                                            //
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool Texture::createTexture(TextureLoader& loader, VulkanMemoryPool memoryPool,
+bool Texture::createTexture(VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, const unsigned char* data,
     bool mipmaps, bool smooth, TextureRepeatMode repeat)
 {
@@ -296,7 +296,8 @@ bool Texture::createTexture(TextureLoader& loader, VulkanMemoryPool memoryPool,
     }
 
     // Upload texture to graphics memory
-    if (!loader.uploadTexture(m_handle, width, height, mipLevels, data))
+    if (!GResources.textures.uploadTexture(
+        m_handle, width, height, mipLevels, data))
     {
         // Could not upload texture to graphics memory
         return false;

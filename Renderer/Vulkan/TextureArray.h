@@ -55,12 +55,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TextureLoader class declaration                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    class TextureLoader;
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  TextureArray class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
     class TextureArray
@@ -81,8 +75,7 @@
             //  Create texture array                                          //
             //  return : True if texture array is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createTextureArray(TextureLoader& loader,
-                VulkanMemoryPool memoryPool,
+            bool createTextureArray(VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height, uint32_t layers,
                 const unsigned char* data,
                 bool mipmaps = false, bool smooth = true,

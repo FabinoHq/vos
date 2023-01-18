@@ -65,12 +65,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TextureLoader class declaration                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    class TextureLoader;
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  Texture class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
     class Texture
@@ -91,8 +85,7 @@
             //  Create texture                                                //
             //  return : True if texture is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createTexture(TextureLoader& loader,
-                VulkanMemoryPool memoryPool,
+            bool createTexture(VulkanMemoryPool memoryPool,
                 uint32_t width, uint32_t height, const unsigned char* data,
                 bool mipmaps = false, bool smooth = true,
                 TextureRepeatMode repeat = TEXTUREMODE_CLAMP);

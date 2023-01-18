@@ -40,7 +40,7 @@
 //     Renderer/Vulkan/TextureArray.cpp : Texture array management            //
 ////////////////////////////////////////////////////////////////////////////////
 #include "TextureArray.h"
-#include "../../Resources/TextureLoader.h"
+#include "../../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,8 +86,7 @@ TextureArray::~TextureArray()
 //  Create texture array                                                      //
 //  return : True if texture array is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool TextureArray::createTextureArray(TextureLoader& loader,
-    VulkanMemoryPool memoryPool,
+bool TextureArray::createTextureArray(VulkanMemoryPool memoryPool,
     uint32_t width, uint32_t height, uint32_t layers, const unsigned char* data,
     bool mipmaps, bool smooth, TextureRepeatMode repeat)
 {
@@ -300,7 +299,7 @@ bool TextureArray::createTextureArray(TextureLoader& loader,
     }
 
     // Upload texture array to graphics memory
-    if (!loader.uploadTextureArray(
+    if (!GResources.textures.uploadTextureArray(
         m_handle, width, height, layers, mipLevels, data))
     {
         // Could not upload texture array to graphics memory

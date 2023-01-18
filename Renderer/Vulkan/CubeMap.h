@@ -53,12 +53,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TextureLoader class declaration                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    class TextureLoader;
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  CubeMap class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
     class CubeMap
@@ -79,9 +73,9 @@
             //  Create cubemap                                                //
             //  return : True if cubemap is successfully created              //
             ////////////////////////////////////////////////////////////////////
-            bool createCubeMap(TextureLoader& loader,
-                VulkanMemoryPool memoryPool, uint32_t width, uint32_t height,
-                const unsigned char* data, bool smooth = true);
+            bool createCubeMap(VulkanMemoryPool memoryPool,
+                uint32_t width, uint32_t height, const unsigned char* data,
+                bool smooth = true);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind cubemap                                                  //
