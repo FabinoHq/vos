@@ -786,7 +786,7 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
     }
 
     // Create vertex buffer
-    if (!vertexBuffer.createBuffer(*this, VULKAN_MEMORY_HEIGHTMAPS,
+    if (!vertexBuffer.createHeightMapBuffer(VULKAN_MEMORY_HEIGHTMAPS,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer
@@ -937,7 +937,7 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
     }
 
     // Update vertex buffer
-    if (!vertexBuffer.updateBuffer(*this,
+    if (!vertexBuffer.updateHeightMapBuffer(
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not create vertex buffer

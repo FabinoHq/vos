@@ -40,8 +40,7 @@
 //     Renderer/Vulkan/VertexBuffer.cpp : Vertex buffer management            //
 ////////////////////////////////////////////////////////////////////////////////
 #include "VertexBuffer.h"
-#include "../../Resources/MeshLoader.h"
-#include "../../Resources/HeightMapLoader.h"
+#include "../../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,11 +64,10 @@ VertexBuffer::~VertexBuffer()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Vertex buffer                                                      //
+//  Create Mesh Vertex buffer                                                 //
 //  return : True if Vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::createBuffer(MeshLoader& loader,
-    VulkanMemoryPool memoryPool,
+bool VertexBuffer::createMeshBuffer(VulkanMemoryPool memoryPool,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
@@ -110,7 +108,7 @@ bool VertexBuffer::createBuffer(MeshLoader& loader,
     }
 
     // Upload vertex buffer to graphics memory
-    if (!loader.uploadVertexBuffer(*this,
+    if (!GResources.meshes.uploadVertexBuffer(*this,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not upload vertex buffer to graphics memory
@@ -122,11 +120,10 @@ bool VertexBuffer::createBuffer(MeshLoader& loader,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Vertex buffer                                                      //
+//  Create HeightMap Vertex buffer                                            //
 //  return : True if Vertex buffer is successfully created                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::createBuffer(HeightMapLoader& loader,
-    VulkanMemoryPool memoryPool,
+bool VertexBuffer::createHeightMapBuffer(VulkanMemoryPool memoryPool,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
@@ -167,7 +164,7 @@ bool VertexBuffer::createBuffer(HeightMapLoader& loader,
     }
 
     // Upload vertex buffer to graphics memory
-    if (!loader.uploadVertexBuffer(*this,
+    if (!GResources.heightmaps.uploadVertexBuffer(*this,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not upload vertex buffer to graphics memory
@@ -179,10 +176,10 @@ bool VertexBuffer::createBuffer(HeightMapLoader& loader,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update Vertex buffer                                                      //
-//  return : True if Vertex buffer is successfully updated                    //
+//  Update Mesh Vertex buffer                                                 //
+//  return : True if Mesh Vertex buffer is successfully updated               //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::updateBuffer(MeshLoader& loader,
+bool VertexBuffer::updateMeshBuffer(
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
@@ -205,7 +202,7 @@ bool VertexBuffer::updateBuffer(MeshLoader& loader,
     indicesCount *= sizeof(uint16_t);
 
     // Upload vertex buffer to graphics memory
-    if (!loader.uploadVertexBuffer(*this,
+    if (!GResources.meshes.uploadVertexBuffer(*this,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not upload vertex buffer to graphics memory
@@ -217,10 +214,10 @@ bool VertexBuffer::updateBuffer(MeshLoader& loader,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update Vertex buffer                                                      //
+//  Update HeightMap Vertex buffer                                            //
 //  return : True if Vertex buffer is successfully updated                    //
 ////////////////////////////////////////////////////////////////////////////////
-bool VertexBuffer::updateBuffer(HeightMapLoader& loader,
+bool VertexBuffer::updateHeightMapBuffer(
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
@@ -243,7 +240,7 @@ bool VertexBuffer::updateBuffer(HeightMapLoader& loader,
     indicesCount *= sizeof(uint16_t);
 
     // Upload vertex buffer to graphics memory
-    if (!loader.uploadVertexBuffer(*this,
+    if (!GResources.heightmaps.uploadVertexBuffer(*this,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not upload vertex buffer to graphics memory

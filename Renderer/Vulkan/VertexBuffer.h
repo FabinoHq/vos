@@ -75,17 +75,6 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  MeshLoader class declaration                                          //
-    ////////////////////////////////////////////////////////////////////////////
-    class MeshLoader;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapLoader class declaration                                     //
-    ////////////////////////////////////////////////////////////////////////////
-    class HeightMapLoader;
-
-
-    ////////////////////////////////////////////////////////////////////////////
     //  VertexBuffer class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
     class VertexBuffer
@@ -103,36 +92,34 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vertex buffer                                          //
+            //  Create Mesh Vertex buffer                                     //
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(MeshLoader& loader,
-                VulkanMemoryPool memoryPool,
+            bool createMeshBuffer(VulkanMemoryPool memoryPool,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Vertex buffer                                          //
+            //  Create HeightMap Vertex buffer                                //
             //  return : True if Vertex buffer is successfully created        //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(HeightMapLoader& loader,
-                VulkanMemoryPool memoryPool,
+            bool createHeightMapBuffer(VulkanMemoryPool memoryPool,
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update Vertex buffer                                          //
+            //  Update Mesh Vertex buffer                                     //
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(MeshLoader& loader,
+            bool updateMeshBuffer(
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update Vertex buffer                                          //
+            //  Update HeightMap Vertex buffer                                //
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(HeightMapLoader& loader,
+            bool updateHeightMapBuffer(
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 
