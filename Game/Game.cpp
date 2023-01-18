@@ -464,6 +464,15 @@ void Game::compute(float frametime)
         m_boundingCircle2.position.vec[1] = m_collideCircle.position.vec[1];
         m_spaceReleased = false;
     }*/
+
+    /*// Memory dump
+    static int memDump = 0;
+    ++memDump;
+    if (memDump >= 2000)
+    {
+        GVulkanMemory.dumpMemory();
+        memDump = 0;
+    }*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -48,6 +48,9 @@
     #include <cstdint>
     #include <cstring>
 
+    //#include <iostream>
+    //#include <iomanip>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  VulkanBuffer class declaration                                        //
@@ -215,6 +218,24 @@
                 VulkanMemoryPool memoryPool);
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Dump Vulkan memory usage                                      //
+            ////////////////////////////////////////////////////////////////////
+            /*void dumpMemory()
+            {
+                std::cout << "Memory dump\n";
+                for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
+                {
+                    std::cout << std::hex << m_usage[i] << " ( ";
+                    std::cout << std::dec << (
+                        (m_usage[i]*1.0)/(VulkanMemoryArray[i].size*1.0)
+                    )*100.0;
+                    std::cout << " % )\n";
+                }
+                std::cout << '\n';
+            }*/
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  VulkanMemory private copy constructor : Not copyable          //
@@ -236,6 +257,7 @@
             VkDeviceMemory  m_memory[VULKAN_MEMORY_POOLSCOUNT];     // Memory
             VkDeviceSize    m_offset[VULKAN_MEMORY_POOLSCOUNT];     // Offset
             uint32_t        m_index[VULKAN_MEMORY_POOLSCOUNT];      // Index
+            VkDeviceSize    m_usage[VULKAN_MEMORY_POOLSCOUNT];      // Usage
     };
 
 

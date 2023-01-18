@@ -80,7 +80,7 @@ void TextureLoader::process()
     state = m_state;
     m_stateMutex.unlock();
 
-    switch (m_state)
+    switch (state)
     {
         case TEXTURELOADER_STATE_NONE:
             // Boot to init state

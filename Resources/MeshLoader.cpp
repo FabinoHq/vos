@@ -77,7 +77,7 @@ void MeshLoader::process()
     state = m_state;
     m_stateMutex.unlock();
 
-    switch (m_state)
+    switch (state)
     {
         case MESHLOADER_STATE_NONE:
             // Boot to init state

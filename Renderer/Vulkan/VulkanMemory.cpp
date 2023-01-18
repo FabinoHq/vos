@@ -95,6 +95,7 @@ bool VulkanMemory::init()
         m_memory[i] = 0;
         m_offset[i] = 0;
         m_index[i] = 0;
+        m_usage[i] = 0;
     }
 
     // Get physical device properties
@@ -346,6 +347,12 @@ bool VulkanMemory::allocateSwapchainImage(VkImage& image,
     // Update current memory offset
     m_offset[memoryPool] += size;
 
+    // Update current memory usage
+    if (m_offset[memoryPool] >= m_usage[memoryPool])
+    {
+        m_usage[memoryPool] = m_offset[memoryPool];
+    }
+
     // Swapchain image successfully allocated
     return true;
 }
@@ -434,6 +441,12 @@ bool VulkanMemory::allocateBufferMemory(VulkanBuffer& buffer,
 
     // Update current memory offset
     m_offset[memoryPool] += size;
+
+    // Update current memory usage
+    if (m_offset[memoryPool] >= m_usage[memoryPool])
+    {
+        m_usage[memoryPool] = m_offset[memoryPool];
+    }
 
     // Buffer memory successfully allocated
     return true;
@@ -590,6 +603,12 @@ bool VulkanMemory::allocateTextureMemory(Texture& texture,
     // Update current memory offset
     m_offset[memoryPool] += size;
 
+    // Update current memory usage
+    if (m_offset[memoryPool] >= m_usage[memoryPool])
+    {
+        m_usage[memoryPool] = m_offset[memoryPool];
+    }
+
     // Texture memory successfully allocated
     return true;
 }
@@ -679,6 +698,12 @@ bool VulkanMemory::allocateTextureArrayMemory(TextureArray& textureArray,
     // Update current memory offset
     m_offset[memoryPool] += size;
 
+    // Update current memory usage
+    if (m_offset[memoryPool] >= m_usage[memoryPool])
+    {
+        m_usage[memoryPool] = m_offset[memoryPool];
+    }
+
     // Texture array memory successfully allocated
     return true;
 }
@@ -767,6 +792,12 @@ bool VulkanMemory::allocateCubeMapMemory(CubeMap& cubemap,
 
     // Update current memory offset
     m_offset[memoryPool] += size;
+
+    // Update current memory usage
+    if (m_offset[memoryPool] >= m_usage[memoryPool])
+    {
+        m_usage[memoryPool] = m_offset[memoryPool];
+    }
 
     // CubeMap memory successfully allocated
     return true;

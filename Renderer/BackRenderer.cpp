@@ -53,8 +53,8 @@ BackRenderer GMainRenderer = BackRenderer();
 ////////////////////////////////////////////////////////////////////////////////
 BackRenderer::BackRenderer() :
 backchain(),
-view(),
-current(0)
+current(0),
+view()
 {
 
 }
