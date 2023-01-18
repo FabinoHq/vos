@@ -273,29 +273,6 @@ bool BackRenderer::startRenderPass()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  End back renderer pass                                                    //
-////////////////////////////////////////////////////////////////////////////////
-void BackRenderer::endRenderPass()
-{
-    // End render pass
-    vkCmdEndRenderPass(GSwapchain.commandBuffers[GSwapchain.current]);
-    current = GSwapchain.current;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind back renderer texture                                                //
-////////////////////////////////////////////////////////////////////////////////
-void BackRenderer::bind()
-{
-    // Bind texture descriptor set
-    vkCmdBindDescriptorSets(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
-        DESC_TEXTURE, 1, &descriptorSets[current], 0, 0
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Destroy back renderer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void BackRenderer::destroyBackRenderer()

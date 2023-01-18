@@ -254,7 +254,6 @@
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysCPU.cpp" />
     <ClCompile Include="System\SysSettings.cpp" />
-    <ClCompile Include="System\SysSleep.cpp" />
     <ClCompile Include="System\SysThread.cpp" />
     <ClCompile Include="System\Win\SysDisplayMode.cpp" />
     <ClCompile Include="System\Win\SysMessage.cpp" />

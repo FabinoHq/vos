@@ -88,27 +88,47 @@
             ////////////////////////////////////////////////////////////////////
             //  Set rectangle red channel                                     //
             ////////////////////////////////////////////////////////////////////
-            void setRed(float red);
+            inline void setRed(float red)
+            {
+                m_color.vec[0] = red;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set rectangle green channel                                   //
             ////////////////////////////////////////////////////////////////////
-            void setGreen(float green);
+            inline void setGreen(float green)
+            {
+                m_color.vec[1] = green;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set rectangle blue channel                                    //
             ////////////////////////////////////////////////////////////////////
-            void setBlue(float blue);
+            inline void setBlue(float blue)
+            {
+                m_color.vec[2] = blue;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set rectangle alpha channel                                   //
             ////////////////////////////////////////////////////////////////////
-            void setAlpha(float alpha);
+            inline void setAlpha(float alpha)
+            {
+                m_color.vec[3] = alpha;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set rectangle smooth amount                                   //
             ////////////////////////////////////////////////////////////////////
-            void setSmooth(float smooth);
+            inline void setSmooth(float smooth)
+            {
+                // Clamp smooth amount
+                if (smooth <= 0.0f) { smooth = 0.0f; }
+                if (smooth >= 1.0f) { smooth = 1.0f; }
+
+                // Set smooth amount
+                m_smooth = smooth;
+            }
 
 
             ////////////////////////////////////////////////////////////////////

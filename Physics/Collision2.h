@@ -79,42 +79,83 @@
             ////////////////////////////////////////////////////////////////////
             //  Set collision collide state                                   //
             ////////////////////////////////////////////////////////////////////
-            void setCollide(bool collisionCollide);
+            inline void setCollide(bool collisionCollide)
+            {
+                collide = collisionCollide;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set collision position                                        //
             ////////////////////////////////////////////////////////////////////
-            void setPosition(const Vector2i& collisionPosition);
+            inline void setPosition(const Vector2i& collisionPosition)
+            {
+                position.vec[0] = collisionPosition.vec[0];
+                position.vec[1] = collisionPosition.vec[1];
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set collision position                                        //
             ////////////////////////////////////////////////////////////////////
-            void setPosition(int64_t positionX, int64_t positionY);
+            inline void setPosition(int64_t positionX, int64_t positionY)
+            {
+                position.vec[0] = positionX;
+                position.vec[1] = positionY;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set collision offset                                          //
             ////////////////////////////////////////////////////////////////////
-            void setOffset(const Vector2i& collisionOffset);
+            inline void setOffset(const Vector2i& collisionOffset)
+            {
+                offset.vec[0] = collisionOffset.vec[0];
+                offset.vec[1] = collisionOffset.vec[1];
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set collision offset                                          //
             ////////////////////////////////////////////////////////////////////
-            void setOffset(int64_t offsetX, int64_t offsetY);
+            inline void setOffset(int64_t offsetX, int64_t offsetY)
+            {
+                offset.vec[0] = offsetX;
+                offset.vec[1] = offsetY;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set collision normal                                          //
             ////////////////////////////////////////////////////////////////////
-            void setNormal(const Vector2i& collisionNormal);
+            inline void setNormal(const Vector2i& collisionNormal)
+            {
+                normal.vec[0] = collisionNormal.vec[0];
+                normal.vec[1] = collisionNormal.vec[1];
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set collision normal                                          //
             ////////////////////////////////////////////////////////////////////
-            void setNormal(int64_t normalX, int64_t normalY);
+            inline void setNormal(int64_t normalX, int64_t normalY)
+            {
+                normal.vec[0] = normalX;
+                normal.vec[1] = normalY;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set collision factor                                          //
             ////////////////////////////////////////////////////////////////////
-            void setFactor(int64_t collisionFactor);
+            inline void setFactor(int64_t collisionFactor)
+            {
+                // Clamp collision factor
+                if (collisionFactor <= 0)
+                {
+                    collisionFactor = 0;
+                }
+                if (collisionFactor >= Math::OneInt)
+                {
+                    collisionFactor = Math::OneInt;
+                }
+
+                // Set collision factor
+                factor = collisionFactor;
+            }
 
 
             ////////////////////////////////////////////////////////////////////

@@ -77,17 +77,26 @@
             ////////////////////////////////////////////////////////////////////
             //  Set IP address v4 representation                              //
             ////////////////////////////////////////////////////////////////////
-            void setAddress(in_addr ipaddress);
+            inline void setAddress(in_addr ipaddress)
+            {
+                m_ipaddress.s_addr = ipaddress.s_addr;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set IP address v4 integer                                     //
             ////////////////////////////////////////////////////////////////////
-            void setInteger(uint32_t ipaddress);
+            inline void setInteger(uint32_t ipaddress)
+            {
+                m_ipaddress.s_addr = htonl(ipaddress);
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set IP address v4 string                                      //
             ////////////////////////////////////////////////////////////////////
-            bool setString(const std::string& ipaddress);
+            inline bool setString(const std::string& ipaddress)
+            {
+                return (inet_pton(AF_INET,ipaddress.c_str(),&m_ipaddress)==1);
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -99,12 +108,18 @@
             ////////////////////////////////////////////////////////////////////
             //  Get IP address v4 representation                              //
             ////////////////////////////////////////////////////////////////////
-            in_addr getAddress();
+            inline in_addr getAddress()
+            {
+                return m_ipaddress;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get IP address v4 integer                                     //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getInteger();
+            inline uint32_t getInteger()
+            {
+                return ntohl(m_ipaddress.s_addr);
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get IP address v4 string                                      //
@@ -115,12 +130,19 @@
             ////////////////////////////////////////////////////////////////////
             //  IPAddress4 copy operator                                      //
             ////////////////////////////////////////////////////////////////////
-            IPAddress4& operator=(const IPAddress4& ipaddress);
+            inline IPAddress4& operator=(const IPAddress4& ipaddress)
+            {
+                m_ipaddress.s_addr = ipaddress.m_ipaddress.s_addr;
+                return *this;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  IPAddress4 equal to operator                                  //
             ////////////////////////////////////////////////////////////////////
-            bool operator==(const IPAddress4& ipaddress);
+            inline bool operator==(const IPAddress4& ipaddress)
+            {
+                return (m_ipaddress.s_addr == ipaddress.m_ipaddress.s_addr);
+            }
 
 
         private:

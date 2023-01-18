@@ -51,12 +51,22 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Put current thread to sleep for given time in seconds                 //
     ////////////////////////////////////////////////////////////////////////////
-    void SysSleep(double seconds);
+    inline void SysSleep(double seconds)
+    {
+        std::this_thread::sleep_for(std::chrono::microseconds(
+            static_cast<long long int>(seconds*1000000)
+        ));
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     //  Put current thread to sleep for given time in seconds                 //
     ////////////////////////////////////////////////////////////////////////////
-    void SysSleep(float seconds);
+    inline void SysSleep(float seconds)
+    {
+        std::this_thread::sleep_for(std::chrono::microseconds(
+            static_cast<long long int>(seconds*1000000)
+        ));
+    }
 
 
 #endif // VOS_SYSTEM_SYSSLEEP_HEADER

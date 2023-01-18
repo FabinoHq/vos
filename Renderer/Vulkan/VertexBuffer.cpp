@@ -59,7 +59,7 @@ indexBuffer()
 ////////////////////////////////////////////////////////////////////////////////
 VertexBuffer::~VertexBuffer()
 {
-
+    indexCount = 0;
 }
 
 
@@ -258,4 +258,5 @@ void VertexBuffer::destroyBuffer()
 {
     indexBuffer.destroyBuffer();
     vertexBuffer.destroyBuffer();
+    indexCount = 0;
 }

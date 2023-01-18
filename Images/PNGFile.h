@@ -175,25 +175,37 @@
             //  Get PNG file loaded state                                     //
             //  return : True if PNG file is loaded                           //
             ////////////////////////////////////////////////////////////////////
-            bool isLoaded();
+            inline bool isLoaded()
+            {
+                return m_loaded;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get PNG file image data                                       //
             //  return : PNG file image data                                  //
             ////////////////////////////////////////////////////////////////////
-            unsigned char* getImage();
+            inline unsigned char* getImage()
+            {
+                return m_image;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get PNG file image width                                      //
             //  return : PNG file image width in pixels                       //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getWidth();
+            inline uint32_t getWidth()
+            {
+                return m_width;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get PNG file image height                                     //
             //  return : PNG file image height in pixels                      //
             ////////////////////////////////////////////////////////////////////
-            uint32_t getHeight();
+            inline uint32_t getHeight()
+            {
+                return m_height;
+            }
 
 
             ////////////////////////////////////////////////////////////////////

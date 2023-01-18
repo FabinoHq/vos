@@ -151,22 +151,34 @@
             ////////////////////////////////////////////////////////////////////
             //  Set cuboid red channel                                        //
             ////////////////////////////////////////////////////////////////////
-            void setRed(float red);
+            inline void setRed(float red)
+            {
+                m_color.vec[0] = red;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set cuboid green channel                                      //
             ////////////////////////////////////////////////////////////////////
-            void setGreen(float green);
+            inline void setGreen(float green)
+            {
+                m_color.vec[1] = green;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set cuboid blue channel                                       //
             ////////////////////////////////////////////////////////////////////
-            void setBlue(float blue);
+            inline void setBlue(float blue)
+            {
+                m_color.vec[2] = blue;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set cuboid alpha channel                                      //
             ////////////////////////////////////////////////////////////////////
-            void setAlpha(float alpha);
+            inline void setAlpha(float alpha)
+            {
+                m_color.vec[3] = alpha;
+            }
 
 
             ////////////////////////////////////////////////////////////////////

@@ -146,7 +146,10 @@
             ////////////////////////////////////////////////////////////////////
             //  End render pass                                               //
             ////////////////////////////////////////////////////////////////////
-            void endRenderPass();
+            inline void endRenderPass()
+            {
+                GMainRenderer.endRenderPass();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Start final render pass                                       //
@@ -156,7 +159,12 @@
             ////////////////////////////////////////////////////////////////////
             //  End final render pass                                         //
             ////////////////////////////////////////////////////////////////////
-            void endFinalPass();
+            inline void endFinalPass()
+            {
+                vkCmdEndRenderPass(
+                    GSwapchain.commandBuffers[GSwapchain.current]
+                );
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Wait renderer device for idle state                           //
@@ -173,7 +181,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer pipeline                                        //
             ////////////////////////////////////////////////////////////////////
-            void bindPipeline(RendererPipeline rendererPipeline);
+            inline void bindPipeline(RendererPipeline rendererPipeline)
+            {
+                pipelines[rendererPipeline].bind();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer default vertex buffer                           //

@@ -123,13 +123,3 @@ void Shader::destroyShader()
     }
     m_shader = 0;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Check if the shader is valid                                              //
-//  return : True if the shader is valid                                      //
-////////////////////////////////////////////////////////////////////////////////
-bool Shader::isValid()
-{
-    return m_shader;
-}

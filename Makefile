@@ -49,8 +49,7 @@ all: VOS
 
 VOS: main.o \
 	Vos.o \
-	System/SysSleep.o System/SysThread.o \
-	System/SysClock.o System/SysCPU.o \
+	System/SysThread.o System/SysClock.o System/SysCPU.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysSettings.o \
@@ -84,8 +83,7 @@ VOS: main.o \
 
 	$(CC) -o VOS \
 	Vos.o \
-	System/SysSleep.o System/SysThread.o \
-	System/SysClock.o System/SysCPU.o \
+	System/SysThread.o System/SysClock.o System/SysCPU.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysSettings.o \
@@ -125,9 +123,6 @@ main.o: main.cpp
 Vos.o: Vos.cpp
 	$(CC) -o Vos.o -c Vos.cpp $(CFLAGS)
 
-
-System/SysSleep.o: System/SysSleep.cpp
-	$(CC) -o System/SysSleep.o -c System/SysSleep.cpp $(CFLAGS)
 
 System/SysThread.o: System/SysThread.cpp
 	$(CC) -o System/SysThread.o -c System/SysThread.cpp $(CFLAGS)

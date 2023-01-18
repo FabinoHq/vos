@@ -191,138 +191,18 @@ void GUIWindow::setColor(float red, float green, float blue, float alpha)
     m_color.vec[3] = alpha;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Set window red channel                                                    //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setRed(float red)
-{
-    m_color.vec[0] = red;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window green channel                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setGreen(float green)
-{
-    m_color.vec[1] = green;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window blue channel                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setBlue(float blue)
-{
-    m_color.vec[2] = blue;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window alpha channel                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setAlpha(float alpha)
-{
-    m_color.vec[3] = alpha;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window UV factor                                                      //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setUVFactor(float uvFactor)
-{
-    m_uvFactor = uvFactor;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window movable state                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setMovable(bool movable)
-{
-    m_movable = movable;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window resizable state                                                //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setResizable(bool resizable)
-{
-    m_resizable = resizable;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window minimum size                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setMinSize(const Vector2& minSize)
-{
-    m_minSize.vec[0] = minSize.vec[0];
-    m_minSize.vec[1] = minSize.vec[1];
-    clampWindowSize();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window minimum size                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setMinSize(float minWidth, float minHeight)
-{
-    m_minSize.vec[0] = minWidth;
-    m_minSize.vec[1] = minHeight;
-    clampWindowSize();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window maximum size                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setMaxSize(const Vector2& maxSize)
-{
-    m_maxSize.vec[0] = maxSize.vec[0];
-    m_maxSize.vec[1] = maxSize.vec[1];
-    clampWindowSize();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window maximum size                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setMaxSize(float maxWidth, float maxHeight)
-{
-    m_maxSize.vec[0] = maxWidth;
-    m_maxSize.vec[1] = maxHeight;
-    clampWindowSize();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window top bar size                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setTopBarSize(float topBarSize)
-{
-    if (topBarSize <= 0.0f) { topBarSize = 0.0f; }
-    m_topBarSize = topBarSize;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set window resize bar size                                                //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::setResizeBarSize(float resizeBarSize)
-{
-    if (resizeBarSize <= 0.0f) { resizeBarSize = 0.0f; }
-    m_resizeBarSize = resizeBarSize;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get window picking state                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::isPicking(float mouseX, float mouseY)
 {
-    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+    return (
+        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
         (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
         (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
-    {
-        // Window is picking
-        return true;
-    }
-
-    // Window is not picking
-    return false;
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -330,18 +210,13 @@ bool GUIWindow::isPicking(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::isTopBarPicking(float mouseX, float mouseY)
 {
-    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+    return (
+        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
         (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
         (mouseY >= (m_position.vec[1] - m_origin.vec[1] +
             m_size.vec[1] - m_topBarSize)) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
-    {
-        // Window top bar is picking
-        return true;
-    }
-
-    // Window top bar is not picking
-    return false;
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -349,18 +224,13 @@ bool GUIWindow::isTopBarPicking(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::isTopResizePicking(float mouseX, float mouseY)
 {
-    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+    return (
+        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
         (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
         (mouseY >= (m_position.vec[1] - m_origin.vec[1] +
             m_size.vec[1] - m_resizeBarSize)) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
-    {
-        // Window top resize bar is picking
-        return true;
-    }
-
-    // Window top resize bar is not picking
-    return false;
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -368,17 +238,12 @@ bool GUIWindow::isTopResizePicking(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::isBottomResizePicking(float mouseX, float mouseY)
 {
-    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+    return (
+        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
         (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
         (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_resizeBarSize)))
-    {
-        // Window bottom resize bar is picking
-        return true;
-    }
-
-    // Window bottom resize bar is not picking
-    return false;
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_resizeBarSize))
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -386,17 +251,12 @@ bool GUIWindow::isBottomResizePicking(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::isLeftResizePicking(float mouseX, float mouseY)
 {
-    if ((mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
+    return (
+        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
         (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_resizeBarSize)) &&
         (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
-    {
-        // Window left resize bar is picking
-        return true;
-    }
-
-    // Window left resize bar is not picking
-    return false;
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -404,18 +264,13 @@ bool GUIWindow::isLeftResizePicking(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::isRightResizePicking(float mouseX, float mouseY)
 {
-    if ((mouseX >= m_position.vec[0] - m_origin.vec[0] +
+    return (
+        (mouseX >= m_position.vec[0] - m_origin.vec[0] +
             m_size.vec[0] - m_resizeBarSize) &&
         (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
         (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1])))
-    {
-        // Window right resize bar is picking
-        return true;
-    }
-
-    // Window right resize bar is not picking
-    return false;
+        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+    );
 }
 
 
@@ -749,14 +604,6 @@ GUICursorType GUIWindow::updateCursor(float mouseX, float mouseY)
     return GUICURSOR_DEFAULT;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind window texture                                                       //
-////////////////////////////////////////////////////////////////////////////////
-void GUIWindow::bindTexture()
-{
-    m_texture->bind();
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render window                                                             //

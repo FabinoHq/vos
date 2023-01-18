@@ -105,14 +105,6 @@ void IPAddress6::setAddress(in6_addr ipaddress)
     m_ipaddress.s6_addr16[7] = ipaddress.s6_addr16[7];
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Set IP address v6 string                                                  //
-////////////////////////////////////////////////////////////////////////////////
-bool IPAddress6::setString(const std::string& ipaddress)
-{
-    return (inet_pton(AF_INET6, ipaddress.c_str(), &m_ipaddress) == 1);
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Resolve host name into IP address                                         //
@@ -173,14 +165,6 @@ bool IPAddress6::resolveHostName(const std::string& hostName)
     return true;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get IP address v6 representation                                          //
-////////////////////////////////////////////////////////////////////////////////
-in6_addr IPAddress6::getAddress()
-{
-    return m_ipaddress;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get IP address v6 string                                                  //

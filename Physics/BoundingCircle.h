@@ -88,27 +88,48 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
-            void setPosition(const Vector2i& circlePosition);
+            inline void setPosition(const Vector2i& circlePosition)
+            {
+                position.vec[0] = circlePosition.vec[0];
+                position.vec[1] = circlePosition.vec[1];
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
-            void setPosition(int64_t positionX, int64_t positionY);
+            inline void setPosition(int64_t positionX, int64_t positionY)
+            {
+                position.vec[0] = positionX;
+                position.vec[1] = positionY;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle position X position                       //
             ////////////////////////////////////////////////////////////////////
-            void setPositionX(int64_t positionX);
+            inline void setPositionX(int64_t positionX)
+            {
+                position.vec[0] = positionX;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle position Y position                       //
             ////////////////////////////////////////////////////////////////////
-            void setPositionY(int64_t positionY);
+            inline void setPositionY(int64_t positionY)
+            {
+                position.vec[1] = positionY;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle radius                                    //
             ////////////////////////////////////////////////////////////////////
-            void setRadius(int64_t circleRadius);
+            inline void setRadius(int64_t circleRadius)
+            {
+                if (circleRadius <= PhysicsMinEntityHalfSize)
+                {
+                    circleRadius = PhysicsMinEntityHalfSize;
+                }
+                radius = circleRadius;
+            }
 
 
             ////////////////////////////////////////////////////////////////////

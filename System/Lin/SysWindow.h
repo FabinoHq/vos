@@ -92,13 +92,19 @@
             //  Get window width                                              //
             //  return : Window width                                         //
             ////////////////////////////////////////////////////////////////////
-            int getWidth();
+            inline int getWidth() const
+            {
+                return m_width;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get window height                                             //
             //  return : Window height                                        //
             ////////////////////////////////////////////////////////////////////
-            int getHeight();
+            inline int getHeight() const
+            {
+                return m_height;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get window event                                              //

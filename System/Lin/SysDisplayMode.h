@@ -73,19 +73,28 @@
             //  Get DisplayMode width in pixels                               //
             //  return : Display mode width                                   //
             ////////////////////////////////////////////////////////////////////
-            int getWidth() const;
+            inline int getWidth() const
+            {
+                return m_width;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get DisplayMode height in pixels                              //
             //  return : Display mode height                                  //
             ////////////////////////////////////////////////////////////////////
-            int getHeight() const;
+            inline int getHeight() const
+            {
+                return m_height;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get DisplayMode pixel depth in bits per pixel                 //
             //  return : Display mode pixel depth                             //
             ////////////////////////////////////////////////////////////////////
-            int getDepth() const;
+            inline int getDepth() const
+            {
+                return m_depth;
+            }
 
 
         private:

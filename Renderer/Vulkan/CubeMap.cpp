@@ -276,19 +276,6 @@ bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind cubemap                                                              //
-////////////////////////////////////////////////////////////////////////////////
-void CubeMap::bind()
-{
-    // Bind cubemap descriptor set
-    vkCmdBindDescriptorSets(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[GSwapchain.current], 0, 0
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Destroy cubemap                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 void CubeMap::destroyCubeMap()
@@ -333,23 +320,6 @@ void CubeMap::destroyCubeMap()
     m_memorySize = 0;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Check if the cubemap has a valid handle                                   //
-//  return : True if the cubemap is valid                                     //
-////////////////////////////////////////////////////////////////////////////////
-bool CubeMap::isValid()
-{
-    return m_handle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get cubemap memory requirements                                           //
-////////////////////////////////////////////////////////////////////////////////
-void CubeMap::getMemoryRequirements(VkMemoryRequirements* memoryRequirements)
-{
-    vkGetImageMemoryRequirements(GVulkanDevice, m_handle, memoryRequirements);
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind cubemap memory                                                       //

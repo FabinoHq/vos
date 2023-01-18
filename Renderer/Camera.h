@@ -107,33 +107,51 @@
             ////////////////////////////////////////////////////////////////////
             //  Set camera fovy angle                                         //
             ////////////////////////////////////////////////////////////////////
-            void setFovy(float fovy);
+            inline void setFovy(float fovy)
+            {
+                m_fovy = fovy;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set camera near plane                                         //
             ////////////////////////////////////////////////////////////////////
-            void setNearPlane(float nearPlane);
+            inline void setNearPlane(float nearPlane)
+            {
+                m_nearPlane = nearPlane;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set camera far plane                                          //
             ////////////////////////////////////////////////////////////////////
-            void setFarPlane(float farPlane);
+            inline void setFarPlane(float farPlane)
+            {
+                m_farPlane = farPlane;
+            }
 
 
             ////////////////////////////////////////////////////////////////////
             //  Get camera fovy angle                                         //
             ////////////////////////////////////////////////////////////////////
-            float getFovy();
+            inline float getFovy()
+            {
+                return m_fovy;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get camera near plane                                         //
             ////////////////////////////////////////////////////////////////////
-            float getNearPlane();
+            inline float getNearPlane()
+            {
+                return m_nearPlane;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get camera far plane                                          //
             ////////////////////////////////////////////////////////////////////
-            float getFarPlane();
+            inline float getFarPlane()
+            {
+                return m_farPlane;
+            }
 
 
         private:

@@ -88,31 +88,3 @@ bool SysDisplayMode::getSystemMode()
     }
     return false;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get DisplayMode width in pixels                                           //
-//  return : Display mode width                                               //
-////////////////////////////////////////////////////////////////////////////////
-int SysDisplayMode::getWidth() const
-{
-    return m_width;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get DisplayMode height in pixels                                          //
-//  return : Display mode height                                              //
-////////////////////////////////////////////////////////////////////////////////
-int SysDisplayMode::getHeight() const
-{
-    return m_height;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get DisplayMode pixel depth in bits per pixel                             //
-//  return : Display mode pixel depth                                         //
-////////////////////////////////////////////////////////////////////////////////
-int SysDisplayMode::getDepth() const
-{
-    return m_depth;
-}

@@ -93,7 +93,14 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind texture                                                  //
             ////////////////////////////////////////////////////////////////////
-            void bind();
+            inline void bind()
+            {
+                vkCmdBindDescriptorSets(
+                    GSwapchain.commandBuffers[GSwapchain.current],
+                    VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
+                    DESC_TEXTURE, 1, &m_descriptorSets[GSwapchain.current], 0, 0
+                );
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy texture                                               //
@@ -113,8 +120,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Get texture memory requirements                               //
             ////////////////////////////////////////////////////////////////////
-            void getMemoryRequirements(
-                VkMemoryRequirements* memoryRequirements);
+            inline void getMemoryRequirements(
+                VkMemoryRequirements* memoryRequirements)
+            {
+                vkGetImageMemoryRequirements(
+                    GVulkanDevice, m_handle, memoryRequirements
+                );
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture memory                                           //

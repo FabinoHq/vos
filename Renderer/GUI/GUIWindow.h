@@ -107,22 +107,34 @@
             ////////////////////////////////////////////////////////////////////
             //  Set window red channel                                        //
             ////////////////////////////////////////////////////////////////////
-            void setRed(float red);
+            inline void setRed(float red)
+            {
+                m_color.vec[0] = red;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window green channel                                      //
             ////////////////////////////////////////////////////////////////////
-            void setGreen(float green);
+            inline void setGreen(float green)
+            {
+                m_color.vec[1] = green;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window blue channel                                       //
             ////////////////////////////////////////////////////////////////////
-            void setBlue(float blue);
+            inline void setBlue(float blue)
+            {
+                m_color.vec[2] = blue;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window alpha channel                                      //
             ////////////////////////////////////////////////////////////////////
-            void setAlpha(float alpha);
+            inline void setAlpha(float alpha)
+            {
+                m_color.vec[3] = alpha;
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -167,47 +179,84 @@
             ////////////////////////////////////////////////////////////////////
             //  Set window UV factor                                          //
             ////////////////////////////////////////////////////////////////////
-            void setUVFactor(float uvFactor);
+            inline void setUVFactor(float uvFactor)
+            {
+                m_uvFactor = uvFactor;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window movable state                                      //
             ////////////////////////////////////////////////////////////////////
-            void setMovable(bool movable);
+            inline void setMovable(bool movable)
+            {
+                m_movable = movable;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window resizable state                                    //
             ////////////////////////////////////////////////////////////////////
-            void setResizable(bool resizable);
+            inline void setResizable(bool resizable)
+            {
+                m_resizable = resizable;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window minimum size                                       //
             ////////////////////////////////////////////////////////////////////
-            void setMinSize(const Vector2& minSize);
+            inline void setMinSize(const Vector2& minSize)
+            {
+                m_minSize.vec[0] = minSize.vec[0];
+                m_minSize.vec[1] = minSize.vec[1];
+                clampWindowSize();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window minimum size                                       //
             ////////////////////////////////////////////////////////////////////
-            void setMinSize(float minWidth, float minHeight);
+            inline void setMinSize(float minWidth, float minHeight)
+            {
+                m_minSize.vec[0] = minWidth;
+                m_minSize.vec[1] = minHeight;
+                clampWindowSize();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window maximum size                                       //
             ////////////////////////////////////////////////////////////////////
-            void setMaxSize(const Vector2& maxSize);
+            inline void setMaxSize(const Vector2& maxSize)
+            {
+                m_maxSize.vec[0] = maxSize.vec[0];
+                m_maxSize.vec[1] = maxSize.vec[1];
+                clampWindowSize();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window maximum size                                       //
             ////////////////////////////////////////////////////////////////////
-            void setMaxSize(float maxWidth, float maxHeight);
+            inline void setMaxSize(float maxWidth, float maxHeight)
+            {
+                m_maxSize.vec[0] = maxWidth;
+                m_maxSize.vec[1] = maxHeight;
+                clampWindowSize();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window top bar size                                       //
             ////////////////////////////////////////////////////////////////////
-            void setTopBarSize(float topBarSize);
+            inline void setTopBarSize(float topBarSize)
+            {
+                if (topBarSize <= 0.0f) { topBarSize = 0.0f; }
+                m_topBarSize = topBarSize;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set window resize bar size                                    //
             ////////////////////////////////////////////////////////////////////
-            void setResizeBarSize(float resizeBarSize);
+            inline void setResizeBarSize(float resizeBarSize)
+            {
+                if (resizeBarSize <= 0.0f) { resizeBarSize = 0.0f; }
+                m_resizeBarSize = resizeBarSize;
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -265,7 +314,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind window texture                                           //
             ////////////////////////////////////////////////////////////////////
-            void bindTexture();
+            inline void bindTexture()
+            {
+                m_texture->bind();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Render window                                                 //

@@ -97,12 +97,25 @@
             ////////////////////////////////////////////////////////////////////
             //  End back renderer pass                                        //
             ////////////////////////////////////////////////////////////////////
-            void endRenderPass();
+            inline void endRenderPass()
+            {
+                vkCmdEndRenderPass(
+                    GSwapchain.commandBuffers[GSwapchain.current]
+                );
+                current = GSwapchain.current;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Bind back renderer texture                                    //
             ////////////////////////////////////////////////////////////////////
-            void bind();
+            inline void bind()
+            {
+                vkCmdBindDescriptorSets(
+                    GSwapchain.commandBuffers[GSwapchain.current],
+                    VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
+                    DESC_TEXTURE, 1, &descriptorSets[current], 0, 0
+                );
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy back renderer                                         //

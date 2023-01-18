@@ -82,7 +82,10 @@
             //  Check if the shader is valid                                  //
             //  return : True if the shader is valid                          //
             ////////////////////////////////////////////////////////////////////
-            bool isValid();
+            inline bool isValid()
+            {
+                return m_shader;
+            }
 
 
         private:

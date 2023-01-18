@@ -67,18 +67,41 @@
             ////////////////////////////////////////////////////////////////////
             //  Reset the clock                                               //
             ////////////////////////////////////////////////////////////////////
-            void reset();
+            inline void reset()
+            {
+                m_start = std::chrono::steady_clock::now();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get elapsed time since last reset in seconds                  //
             ////////////////////////////////////////////////////////////////////
-            double getElapsedTime();
-            float getElapsedTimeF();
+            inline double getElapsedTime()
+            {
+                return (std::chrono::duration_cast<std::chrono::nanoseconds>(
+                        std::chrono::steady_clock::now()-m_start
+                    ).count()*0.000000001
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get elapsed time since last reset in seconds                  //
+            ////////////////////////////////////////////////////////////////////
+            inline float getElapsedTimeF()
+            {
+                return (std::chrono::duration_cast<std::chrono::nanoseconds>(
+                        std::chrono::steady_clock::now()-m_start
+                    ).count()*0.000000001f
+                );
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get elapsed time in seconds and reset the clock               //
             ////////////////////////////////////////////////////////////////////
             double getAndReset();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get elapsed time in seconds and reset the clock               //
+            ////////////////////////////////////////////////////////////////////
             float getAndResetF();
 
 

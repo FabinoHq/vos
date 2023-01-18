@@ -82,7 +82,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Set IP address v6 string                                      //
             ////////////////////////////////////////////////////////////////////
-            bool setString(const std::string& ipaddress);
+            inline bool setString(const std::string& ipaddress)
+            {
+                return (inet_pton(AF_INET6,ipaddress.c_str(),&m_ipaddress)==1);
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -94,7 +97,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Get IP address v6 representation                              //
             ////////////////////////////////////////////////////////////////////
-            in6_addr getAddress();
+            inline in6_addr getAddress()
+            {
+                return m_ipaddress;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get IP address v6 string                                      //

@@ -88,27 +88,42 @@
             ////////////////////////////////////////////////////////////////////
             //  Set freefly camera speed                                      //
             ////////////////////////////////////////////////////////////////////
-            void setSpeed(float speed);
+            inline void setSpeed(float speed)
+            {
+                m_speed = speed;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set freefly camera forward key state                          //
             ////////////////////////////////////////////////////////////////////
-            void setForward(bool forward);
+            inline void setForward(bool forward)
+            {
+                m_forward = forward;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set freefly camera backward key state                         //
             ////////////////////////////////////////////////////////////////////
-            void setBackward(bool backward);
+            inline void setBackward(bool backward)
+            {
+                m_backward = backward;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set freefly camera leftward key state                         //
             ////////////////////////////////////////////////////////////////////
-            void setLeftward(bool leftward);
+            inline void setLeftward(bool leftward)
+            {
+                m_leftward = leftward;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set freefly camera rightward key state                        //
             ////////////////////////////////////////////////////////////////////
-            void setRightward(bool rightward);
+            inline void setRightward(bool rightward)
+            {
+                m_rightward = rightward;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Handle mouse move event                                       //

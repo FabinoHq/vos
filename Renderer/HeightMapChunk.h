@@ -95,7 +95,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Set heightmap chunk vertex buffer                             //
             ////////////////////////////////////////////////////////////////////
-            void setVertexBuffer(VertexBuffer& vertexBuffer);
+            inline void setVertexBuffer(VertexBuffer& vertexBuffer)
+            {
+                m_vertexBuffer = &vertexBuffer;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set heightmap chunk texture array                             //
@@ -111,7 +114,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind heightmap chunk texture array                            //
             ////////////////////////////////////////////////////////////////////
-            void bindTextureArray();
+            inline void bindTextureArray()
+            {
+                m_textureArray->bind();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Render heightmap chunk                                        //

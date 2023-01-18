@@ -84,7 +84,14 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind texture array                                            //
             ////////////////////////////////////////////////////////////////////
-            void bind();
+            inline void bind()
+            {
+                vkCmdBindDescriptorSets(
+                    GSwapchain.commandBuffers[GSwapchain.current],
+                    VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
+                    DESC_TEXTURE, 1, &m_descriptorSets[GSwapchain.current], 0, 0
+                );
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy texture array                                         //
@@ -96,13 +103,21 @@
             //  Check if the texture array has a valid handle                 //
             //  return : True if the texture array is valid                   //
             ////////////////////////////////////////////////////////////////////
-            bool isValid();
+            inline bool isValid()
+            {
+                return m_handle;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get texture array memory requirements                         //
             ////////////////////////////////////////////////////////////////////
-            void getMemoryRequirements(
-                VkMemoryRequirements* memoryRequirements);
+            inline void getMemoryRequirements(
+                VkMemoryRequirements* memoryRequirements)
+            {
+                vkGetImageMemoryRequirements(
+                    GVulkanDevice, m_handle, memoryRequirements
+                );
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Bind texture array memory                                     //

@@ -149,7 +149,13 @@
             ////////////////////////////////////////////////////////////////////
             //  Bind renderer pipeline                                        //
             ////////////////////////////////////////////////////////////////////
-            void bind();
+            inline void bind()
+            {
+                vkCmdBindPipeline(
+                    GSwapchain.commandBuffers[GSwapchain.current],
+                    VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline
+                );
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy pipeline                                              //

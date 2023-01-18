@@ -71,9 +71,6 @@
     <ClCompile Include="System\SysThread.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="System\SysSleep.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="System\Win\SysMessage.cpp">
       <Filter>System\Win</Filter>
     </ClCompile>

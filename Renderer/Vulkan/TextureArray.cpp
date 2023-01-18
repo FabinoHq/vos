@@ -316,19 +316,6 @@ bool TextureArray::createTextureArray(VulkanMemoryPool memoryPool,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind texture array                                                        //
-////////////////////////////////////////////////////////////////////////////////
-void TextureArray::bind()
-{
-    // Bind texture array descriptor set
-    vkCmdBindDescriptorSets(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[GSwapchain.current], 0, 0
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Destroy texture array                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void TextureArray::destroyTextureArray()
@@ -374,24 +361,6 @@ void TextureArray::destroyTextureArray()
     m_memorySize = 0;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Check if the texture array has a valid handle                             //
-//  return : True if the texture array is valid                               //
-////////////////////////////////////////////////////////////////////////////////
-bool TextureArray::isValid()
-{
-    return m_handle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get texture array memory requirements                                     //
-////////////////////////////////////////////////////////////////////////////////
-void TextureArray::getMemoryRequirements(
-    VkMemoryRequirements* memoryRequirements)
-{
-    vkGetImageMemoryRequirements(GVulkanDevice, m_handle, memoryRequirements);
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind texture array memory                                                 //

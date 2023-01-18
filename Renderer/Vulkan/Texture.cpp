@@ -312,19 +312,6 @@ bool Texture::createTexture(VulkanMemoryPool memoryPool,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind texture                                                              //
-////////////////////////////////////////////////////////////////////////////////
-void Texture::bind()
-{
-    // Bind texture descriptor set
-    vkCmdBindDescriptorSets(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
-        DESC_TEXTURE, 1, &m_descriptorSets[GSwapchain.current], 0, 0
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Destroy texture                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 void Texture::destroyTexture()
@@ -369,14 +356,6 @@ void Texture::destroyTexture()
     m_memorySize = 0;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Get texture memory requirements                                           //
-////////////////////////////////////////////////////////////////////////////////
-void Texture::getMemoryRequirements(VkMemoryRequirements* memoryRequirements)
-{
-    vkGetImageMemoryRequirements(GVulkanDevice, m_handle, memoryRequirements);
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Bind texture memory                                                       //

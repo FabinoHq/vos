@@ -96,22 +96,34 @@
             ////////////////////////////////////////////////////////////////////
             //  Set sprite red channel                                        //
             ////////////////////////////////////////////////////////////////////
-            void setRed(float red);
+            inline void setRed(float red)
+            {
+                m_color.vec[0] = red;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite green channel                                      //
             ////////////////////////////////////////////////////////////////////
-            void setGreen(float green);
+            inline void setGreen(float green)
+            {
+                m_color.vec[1] = green;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite blue channel                                       //
             ////////////////////////////////////////////////////////////////////
-            void setBlue(float blue);
+            inline void setBlue(float blue)
+            {
+                m_color.vec[2] = blue;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite alpha channel                                      //
             ////////////////////////////////////////////////////////////////////
-            void setAlpha(float alpha);
+            inline void setAlpha(float alpha)
+            {
+                m_color.vec[3] = alpha;
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -128,48 +140,79 @@
             ////////////////////////////////////////////////////////////////////
             //  Set sprite UV offset                                          //
             ////////////////////////////////////////////////////////////////////
-            void setUVOffset(const Vector2& offset);
+            inline void setUVOffset(const Vector2& offset)
+            {
+                m_uvOffset.vec[0] = offset.vec[0];
+                m_uvOffset.vec[1] = offset.vec[1];
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite UV offset                                          //
             ////////////////////////////////////////////////////////////////////
-            void setUVOffset(float uOffset, float vOffset);
+            inline void setUVOffset(float uOffset, float vOffset)
+            {
+                m_uvOffset.vec[0] = uOffset;
+                m_uvOffset.vec[1] = vOffset;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite U offset                                           //
             ////////////////////////////////////////////////////////////////////
-            void setUOffset(float uOffset);
+            inline void setUOffset(float uOffset)
+            {
+                m_uvOffset.vec[0] = uOffset;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite V offset                                           //
             ////////////////////////////////////////////////////////////////////
-            void setVOffset(float vOffset);
+            inline void setVOffset(float vOffset)
+            {
+                m_uvOffset.vec[1] = vOffset;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite UV size                                            //
             ////////////////////////////////////////////////////////////////////
-            void setUVSize(const Vector2& size);
+            inline void setUVSize(const Vector2& size)
+            {
+                m_uvSize.vec[0] = size.vec[0];
+                m_uvSize.vec[1] = size.vec[1];
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite UV size                                            //
             ////////////////////////////////////////////////////////////////////
-            void setUVSize(float uSize, float vSize);
+            inline void setUVSize(float uSize, float vSize)
+            {
+                m_uvSize.vec[0] = uSize;
+                m_uvSize.vec[1] = vSize;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite U size                                             //
             ////////////////////////////////////////////////////////////////////
-            void setUSize(float uSize);
+            inline void setUSize(float uSize)
+            {
+                m_uvSize.vec[0] = uSize;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set sprite V size                                             //
             ////////////////////////////////////////////////////////////////////
-            void setVSize(float vSize);
+            inline void setVSize(float vSize)
+            {
+                m_uvSize.vec[1] = vSize;
+            }
 
 
             ////////////////////////////////////////////////////////////////////
             //  Bind sprite texture                                           //
             ////////////////////////////////////////////////////////////////////
-            void bindTexture();
+            inline void bindTexture()
+            {
+                m_texture->bind();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Render sprite                                                 //
