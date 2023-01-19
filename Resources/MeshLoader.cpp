@@ -403,6 +403,25 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
         vertexBuffer.vertexBuffer.handle, 1, &bufferCopy
     );
 
+    // Barrier from transfer to vertex input
+    VkBufferMemoryBarrier transferToVertexInput;
+    transferToVertexInput.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    transferToVertexInput.pNext = 0;
+    transferToVertexInput.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToVertexInput.dstAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
+    transferToVertexInput.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToVertexInput.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToVertexInput.buffer = vertexBuffer.vertexBuffer.handle;
+    transferToVertexInput.offset = 0;
+    transferToVertexInput.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
+        0, 0, 0, 1, &transferToVertexInput, 0, 0
+    );
+
     if (vkEndCommandBuffer(m_commandBuffer) != VK_SUCCESS)
     {
         // Could not end command buffer
@@ -509,6 +528,25 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     vkCmdCopyBuffer(
         m_commandBuffer, m_stagingBuffer.handle,
         vertexBuffer.indexBuffer.handle, 1, &bufferCopy
+    );
+
+    // Barrier from transfer to index input
+    VkBufferMemoryBarrier transferToIndexInput;
+    transferToIndexInput.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    transferToIndexInput.pNext = 0;
+    transferToIndexInput.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToIndexInput.dstAccessMask = VK_ACCESS_INDEX_READ_BIT;
+    transferToIndexInput.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToIndexInput.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToIndexInput.buffer = vertexBuffer.indexBuffer.handle;
+    transferToIndexInput.offset = 0;
+    transferToIndexInput.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
+        0, 0, 0, 1, &transferToIndexInput, 0, 0
     );
 
     if (vkEndCommandBuffer(m_commandBuffer) != VK_SUCCESS)
