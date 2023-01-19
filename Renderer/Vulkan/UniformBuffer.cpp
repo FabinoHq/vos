@@ -126,6 +126,25 @@ bool UniformBuffer::updateBuffer(void* data, uint32_t size)
         return false;
     }
 
+    // Barrier from shader to transfer
+    VkBufferMemoryBarrier shaderToTransfer;
+    shaderToTransfer.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    shaderToTransfer.pNext = 0;
+    shaderToTransfer.srcAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
+    shaderToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    shaderToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    shaderToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    shaderToTransfer.buffer = uniformBuffer.handle;
+    shaderToTransfer.offset = 0;
+    shaderToTransfer.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        0, 0, 0, 1, &shaderToTransfer, 0, 0
+    );
+
     // Transfer staging buffer data to uniform buffer
     VkBufferCopy bufferCopy;
     bufferCopy.srcOffset = 0;
@@ -135,6 +154,25 @@ bool UniformBuffer::updateBuffer(void* data, uint32_t size)
     vkCmdCopyBuffer(
         GSwapchain.commandBuffers[GSwapchain.current],
         stagingBuffer.handle, uniformBuffer.handle, 1, &bufferCopy
+    );
+
+    // Barrier from transfer to shader
+    VkBufferMemoryBarrier transferToShader;
+    transferToShader.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    transferToShader.pNext = 0;
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
+    transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.buffer = uniformBuffer.handle;
+    transferToShader.offset = 0;
+    transferToShader.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
+        0, 0, 0, 1, &transferToShader, 0, 0
     );
 
     // Uniform buffer successfully updated
