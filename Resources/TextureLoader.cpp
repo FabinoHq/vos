@@ -180,7 +180,7 @@ void TextureLoader::process()
 bool TextureLoader::init()
 {
     // Request graphics queue handle
-    if (!m_graphicsQueue.createGraphicsQueue())
+    if (!m_graphicsQueue.getVulkanQueue(VULKAN_QUEUE_TEXTURES))
     {
         // Could not get graphics queue handle
         return false;
@@ -542,11 +542,27 @@ bool TextureLoader::uploadTexture(VkImage& handle,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueue.handle,
-        1, &submitInfo, m_fence) != VK_SUCCESS)
+    if (m_graphicsQueue.shared > 0)
     {
-        // Could not submit queue
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].lock();
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
     }
 
     // Wait for transfer to finish
@@ -754,11 +770,27 @@ bool TextureLoader::generateTextureMipmaps(VkImage& handle,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueue.handle,
-        1, &submitInfo, m_fence) != VK_SUCCESS)
+    if (m_graphicsQueue.shared > 0)
     {
-        // Could not submit queue
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].lock();
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
     }
 
     // Wait for transfer to finish
@@ -922,11 +954,27 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueue.handle,
-        1, &submitInfo, m_fence) != VK_SUCCESS)
+    if (m_graphicsQueue.shared > 0)
     {
-        // Could not submit queue
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].lock();
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
     }
 
     // Wait for transfer to finish
@@ -1139,11 +1187,27 @@ bool TextureLoader::generateTextureArrayMipmaps(VkImage& handle,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueue.handle,
-        1, &submitInfo, m_fence) != VK_SUCCESS)
+    if (m_graphicsQueue.shared > 0)
     {
-        // Could not submit queue
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].lock();
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
     }
 
     // Wait for transfer to finish
@@ -1303,11 +1367,27 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(m_graphicsQueue.handle,
-        1, &submitInfo, m_fence) != VK_SUCCESS)
+    if (m_graphicsQueue.shared > 0)
     {
-        // Could not submit queue
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].lock();
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
+        GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(m_graphicsQueue.handle,
+            1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
     }
 
     // Wait for transfer to finish

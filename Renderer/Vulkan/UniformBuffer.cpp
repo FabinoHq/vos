@@ -203,11 +203,27 @@ bool UniformBuffer::updateBuffer(VkCommandPool& transferCommandPool,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(
-        transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
+    if (transferQueue.shared > 0)
     {
-        // Could not submit queue
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[transferQueue.shared].lock();
+        if (vkQueueSubmit(
+            transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
+        GVulkanQueues.queueMutex[transferQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(
+            transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
     }
 
     // Wait for transfer to finish

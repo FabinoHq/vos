@@ -173,7 +173,7 @@ bool GraphicsLayout::createLayout()
     }
 
     // Request uniforms queue handle
-    if (!uniformsQueue.createGraphicsQueue())
+    if (!uniformsQueue.getVulkanQueue(VULKAN_QUEUE_UNIFORMS))
     {
         // Could not get uniforms queue handle
         return false;

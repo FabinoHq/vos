@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysMutex.h"
     #include "Vulkan.h"
 
     #include <cstdint>
@@ -50,11 +51,19 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanQueues settings                                                 //
+    //  Vulkan queue pool enumeration                                         //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxGraphicsQueues = 4;
-    const uint32_t RendererMaxSurfaceQueues = 1;
-    const uint32_t RendererMaxTransferQueues = 1;
+    enum VulkanQueuePool
+    {
+        VULKAN_QUEUE_RENDERER = 0,
+        VULKAN_QUEUE_UNIFORMS = 1,
+
+        VULKAN_QUEUE_TEXTURES = 2,
+        VULKAN_QUEUE_MESHES = 3,
+        VULKAN_QUEUE_HEIGHTMAPS = 4,
+
+        VULKAN_QUEUE_QUEUESCOUNT = 5
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -62,17 +71,7 @@
     ////////////////////////////////////////////////////////////////////////////
     struct VulkanDeviceQueues
     {
-        uint32_t graphicsQueueFamily;
-        uint32_t graphicsQueueIndex;
-        uint32_t graphicsQueueMax;
-
-        uint32_t surfaceQueueFamily;
-        uint32_t surfaceQueueIndex;
-        uint32_t surfaceQueueMax;
-
-        uint32_t transferQueueFamily;
-        uint32_t transferQueueIndex;
-        uint32_t transferQueueMax;
+        SysMutex queueMutex[VULKAN_QUEUE_QUEUESCOUNT];
     };
 
 
@@ -94,22 +93,10 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create graphics queue                                         //
-            //  return : True if the graphics queue is successfully created   //
+            //  Get Vulkan queue                                              //
+            //  return : True if the Vulkan queue is successfully retrieved   //
             ////////////////////////////////////////////////////////////////////
-            bool createGraphicsQueue();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create surface queue                                          //
-            //  return : True if the surface queue is successfully created    //
-            ////////////////////////////////////////////////////////////////////
-            bool createSurfaceQueue();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create transfer queue                                         //
-            //  return : True if the transfer queue is successfully created   //
-            ////////////////////////////////////////////////////////////////////
-            bool createTransferQueue();
+            bool getVulkanQueue(VulkanQueuePool queuePool);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -135,6 +122,7 @@
             VkQueue     handle;     // Queue handle
             uint32_t    family;     // Queue family
             uint32_t    index;      // Queue index
+            int         shared;     // Queue shared index
     };
 
 

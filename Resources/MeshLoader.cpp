@@ -177,7 +177,7 @@ void MeshLoader::process()
 bool MeshLoader::init()
 {
     // Request transfer queue handle
-    if (!m_transferQueue.createGraphicsQueue())
+    if (!m_transferQueue.getVulkanQueue(VULKAN_QUEUE_MESHES))
     {
         // Could not get transfer queue handle
         return false;
@@ -428,11 +428,27 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(
-        m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
+    if (m_transferQueue.shared > 0)
     {
-        // Could not submit queue
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[m_transferQueue.shared].lock();
+        if (vkQueueSubmit(
+            m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
+        GVulkanQueues.queueMutex[m_transferQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(
+            m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
     }
 
     // Wait for transfer to finish
@@ -519,11 +535,27 @@ bool MeshLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (vkQueueSubmit(
-        m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
+    if (m_transferQueue.shared > 0)
     {
-        // Could not submit queue
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[m_transferQueue.shared].lock();
+        if (vkQueueSubmit(
+            m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
+        GVulkanQueues.queueMutex[m_transferQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(
+            m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
+        {
+            // Could not submit queue
+            return false;
+        }
     }
 
     // Wait for transfer to finish

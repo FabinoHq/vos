@@ -174,7 +174,7 @@ bool Renderer::init()
     if (!LoadVulkanDeviceFunctions())
     {
         // Could not load Vulkan device functions
-        SysMessage::box() << "[0x301E] Could not load device functions\n";
+        SysMessage::box() << "[0x301B] Could not load device functions\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -186,7 +186,7 @@ bool Renderer::init()
     }
 
     // Request surface queue handle
-    if (!surfaceQueue.createSurfaceQueue())
+    if (!surfaceQueue.getVulkanQueue(VULKAN_QUEUE_RENDERER))
     {
         // Could not get surface queue handle
         return false;
@@ -568,11 +568,27 @@ bool Renderer::endFrame()
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = &GSwapchain.renderDone[GSwapchain.current];
 
-    if (vkQueueSubmit(surfaceQueue.handle, 1, &submitInfo,
-        GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
+    if (surfaceQueue.shared > 0)
     {
-        ready = false;
-        return false;
+        // Shared queue
+        GVulkanQueues.queueMutex[surfaceQueue.shared].lock();
+        if (vkQueueSubmit(surfaceQueue.handle, 1, &submitInfo,
+            GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
+        {
+            ready = false;
+            return false;
+        }
+        GVulkanQueues.queueMutex[surfaceQueue.shared].unlock();
+    }
+    else
+    {
+        // Dedicated queue
+        if (vkQueueSubmit(surfaceQueue.handle, 1, &submitInfo,
+            GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
+        {
+            ready = false;
+            return false;
+        }
     }
 
     // Update surface when queue has finished rendering
@@ -1135,183 +1151,106 @@ bool Renderer::selectVulkanDevice()
             }
         }
 
+        // Check for internal RGBA32 format support
+        VkFormatProperties formatProperties;
+        formatProperties.linearTilingFeatures = 0;
+        formatProperties.optimalTilingFeatures = 0;
+        formatProperties.bufferFeatures = 0;
+        vkGetPhysicalDeviceFormatProperties(
+            physicalDevices[i], VK_FORMAT_R8G8B8A8_UNORM, &formatProperties
+        );
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT))
+        {
+            // Read-only sampled RGBA32 is not supported by the device
+            continue;
+        }
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT))
+        {
+            // Read-write RGBA32 is not supported by the device
+            continue;
+        }
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
+        {
+            // Color attachment RGBA32 is not supported by the device
+            continue;
+        }
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT))
+        {
+            // Color attachment blend RGBA32 is not supported by the device
+            continue;
+        }
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
+        {
+            // Linear filtered RGBA32 is not supported by the device
+            continue;
+        }
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_TRANSFER_SRC_BIT))
+        {
+            // Transfer source RGBA32 is not supported by the device
+            continue;
+        }
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_TRANSFER_DST_BIT))
+        {
+            // Transfer destination RGBA32 is not supported by the device
+            continue;
+        }
+
         // Get device queue families
         if (VulkanQueue::getDeviceQueues(physicalDevices[i]))
         {
-            // Current device supports graphics, surface, and transfer queues
-            VkFormatProperties formatProperties;
-            formatProperties.linearTilingFeatures = 0;
-            formatProperties.optimalTilingFeatures = 0;
-            formatProperties.bufferFeatures = 0;
-
-            // Check for internal RGBA32 format support
-            vkGetPhysicalDeviceFormatProperties(
-                physicalDevices[i], VK_FORMAT_R8G8B8A8_UNORM, &formatProperties
-            );
-            if (!(formatProperties.optimalTilingFeatures &
-                VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT))
-            {
-                // Read-only sampled RGBA32 is not supported by the device
-                continue;
-            }
-            if (!(formatProperties.optimalTilingFeatures &
-                VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT))
-            {
-                // Read-write RGBA32 is not supported by the device
-                continue;
-            }
-            if (!(formatProperties.optimalTilingFeatures &
-                VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
-            {
-                // Color attachment RGBA32 is not supported by the device
-                continue;
-            }
-            if (!(formatProperties.optimalTilingFeatures &
-                VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT))
-            {
-                // Colod attachment blend RGBA32 is not supported by the device
-                continue;
-            }
-            if (!(formatProperties.optimalTilingFeatures &
-                VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
-            {
-                // Linear filtered RGBA32 is not supported by the device
-                continue;
-            }
-            if (!(formatProperties.optimalTilingFeatures &
-                VK_FORMAT_FEATURE_TRANSFER_SRC_BIT))
-            {
-                // Transfer source RGBA32 is not supported by the device
-                continue;
-            }
-            if (!(formatProperties.optimalTilingFeatures &
-                VK_FORMAT_FEATURE_TRANSFER_DST_BIT))
-            {
-                // Transfer destination RGBA32 is not supported by the device
-                continue;
-            }
-
-            // Current device supports RGBA32 format
+            // Current device supports graphics, compute, transfer, and surface
             deviceIndex = i;
             deviceFound = true;
             break;
         }
     }
 
+    // Check if a suitable device has been found
     if (!deviceFound)
     {
         // Could not find a device with graphics, surface, and transfer queues
-        SysMessage::box() << "[0x3019] Could not find a suitable device\n";
+        SysMessage::box() << "[0x3017] Could not find a suitable device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
+    // Set physical device global instance
     GPhysicalDevice = physicalDevices[deviceIndex];
     if (!GPhysicalDevice)
     {
         // Invalid physical device
-        SysMessage::box() << "[0x301A] Invalid physical device\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Set Vulkan queues
-    uint32_t graphicsQueues = RendererMaxGraphicsQueues;
-    uint32_t surfaceQueues = RendererMaxSurfaceQueues;
-    uint32_t transferQueues = RendererMaxTransferQueues;
-    if (GVulkanQueues.surfaceQueueFamily ==
-        GVulkanQueues.graphicsQueueFamily)
-    {
-        graphicsQueues += RendererMaxSurfaceQueues;
-        surfaceQueues = 0;
-    }
-    if (GVulkanQueues.transferQueueFamily ==
-        GVulkanQueues.graphicsQueueFamily)
-    {
-        graphicsQueues += RendererMaxTransferQueues;
-        transferQueues = 0;
-    }
-    else
-    {
-        if (GVulkanQueues.transferQueueFamily ==
-            GVulkanQueues.surfaceQueueFamily)
-        {
-            surfaceQueues += RendererMaxTransferQueues;
-            transferQueues = 0;
-        }
-    }
-
-    // Check queue count
-    if ((graphicsQueues > GVulkanQueues.graphicsQueueMax) ||
-        (surfaceQueues > GVulkanQueues.surfaceQueueMax) ||
-        (transferQueues > GVulkanQueues.transferQueueMax))
-    {
-        // Could not find a device with enough queues
-        SysMessage::box() << "[0x301B] Device does not provide enough queues\n";
+        SysMessage::box() << "[0x3018] Invalid physical device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
     // Set queue priorities
-    std::vector<float> graphicsPriorities;
-    for (uint32_t i = 0; i < graphicsQueues; ++i)
-    {
-        graphicsPriorities.push_back(1.0f);
-    }
-
-    std::vector<float> surfacePriorities;
-    for (uint32_t i = 0; i < surfaceQueues; ++i)
-    {
-        surfacePriorities.push_back(1.0f);
-    }
-
-    std::vector<float> transferPriorities;
-    for (uint32_t i = 0; i < transferQueues; ++i)
-    {
-        transferPriorities.push_back(1.0f);
-    }
+    float queuePriorities[1];
+    queuePriorities[0] = 1.0f;
 
     // Set graphics queues create infos
-    std::vector<VkDeviceQueueCreateInfo> queueInfos;
-    queueInfos.push_back(VkDeviceQueueCreateInfo());
-    queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    queueInfos.back().pNext = 0;
-    queueInfos.back().flags = 0;
-    queueInfos.back().queueFamilyIndex = GVulkanQueues.graphicsQueueFamily;
-    queueInfos.back().queueCount = graphicsQueues;
-    queueInfos.back().pQueuePriorities = graphicsPriorities.data();
-
-    // Set surface queues create infos
-    if (surfaceQueues > 0)
-    {
-        queueInfos.push_back(VkDeviceQueueCreateInfo());
-        queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        queueInfos.back().pNext = 0;
-        queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = GVulkanQueues.surfaceQueueFamily;
-        queueInfos.back().queueCount = surfaceQueues;
-        queueInfos.back().pQueuePriorities = surfacePriorities.data();
-    }
-
-    // Set transfer queues create infos
-    if (transferQueues > 0)
-    {
-        queueInfos.push_back(VkDeviceQueueCreateInfo());
-        queueInfos.back().sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        queueInfos.back().pNext = 0;
-        queueInfos.back().flags = 0;
-        queueInfos.back().queueFamilyIndex = GVulkanQueues.transferQueueFamily;
-        queueInfos.back().queueCount = transferQueues;
-        queueInfos.back().pQueuePriorities = transferPriorities.data();
-    }
+    VkDeviceQueueCreateInfo queueInfos[1];
+    queueInfos[0].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queueInfos[0].pNext = 0;
+    queueInfos[0].flags = 0;
+    queueInfos[0].queueFamilyIndex = 0/*GVulkanQueues.graphicsQueueFamily*/;
+    queueInfos[0].queueCount = 1;
+    queueInfos[0].pQueuePriorities = queuePriorities;
 
     // Create Vulkan device
     VkDeviceCreateInfo deviceInfos;
     deviceInfos.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     deviceInfos.pNext = 0;
     deviceInfos.flags = 0;
-    deviceInfos.queueCreateInfoCount = static_cast<uint32_t>(queueInfos.size());
-    deviceInfos.pQueueCreateInfos = queueInfos.data();
+    deviceInfos.queueCreateInfoCount = 1;
+    deviceInfos.pQueueCreateInfos = queueInfos;
     deviceInfos.enabledLayerCount = 0;
     deviceInfos.ppEnabledLayerNames = 0;
     deviceInfos.enabledExtensionCount = VulkanDeviceExtensionsSize;
@@ -1322,14 +1261,14 @@ bool Renderer::selectVulkanDevice()
         GPhysicalDevice, &deviceInfos, 0, &GVulkanDevice) != VK_SUCCESS)
     {
         // Could not create Vulkan device
-        SysMessage::box() << "[0x301C] Could not create Vulkan device\n";
+        SysMessage::box() << "[0x3019] Could not create Vulkan device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!GVulkanDevice)
     {
         // Invalid Vulkan device
-        SysMessage::box() << "[0x301D] Invalid Vulkan device\n";
+        SysMessage::box() << "[0x301A] Invalid Vulkan device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }

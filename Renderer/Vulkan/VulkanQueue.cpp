@@ -54,7 +54,8 @@ VulkanDeviceQueues GVulkanQueues = VulkanDeviceQueues();
 VulkanQueue::VulkanQueue() :
 handle(0),
 family(0),
-index(0)
+index(0),
+shared(0)
 {
 
 }
@@ -64,6 +65,7 @@ index(0)
 ////////////////////////////////////////////////////////////////////////////////
 VulkanQueue::~VulkanQueue()
 {
+    shared = 0;
     index = 0;
     family = 0;
     handle = 0;
@@ -71,155 +73,34 @@ VulkanQueue::~VulkanQueue()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create graphics queue                                                     //
-//  return : True if the graphics queue is successfully created               //
+//  Get Vulkan queue                                                          //
+//  return : True if the Vulkan queue is successfully retrieved               //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createGraphicsQueue()
+bool VulkanQueue::getVulkanQueue(VulkanQueuePool queuePool)
 {
     // Check Vulkan device
     if (!GVulkanDevice)
     {
         // Invalid Vulkan device
-        SysMessage::box() << "[0x301F] Invalid Vulkan device\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Get graphics queue family
-    family = GVulkanQueues.graphicsQueueFamily;
-    index = GVulkanQueues.graphicsQueueIndex;
-    if (index >= (GVulkanQueues.graphicsQueueMax-1))
-    {
-        // Invalid queue count
-        SysMessage::box() << "[0x3020] Invalid graphics queue count\n";
+        SysMessage::box() << "[0x301C] Invalid Vulkan device\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
     // Get queue handle
-    vkGetDeviceQueue(GVulkanDevice, family, index, &handle);
+    vkGetDeviceQueue(GVulkanDevice, 0, 0, &handle);
     if (!handle)
     {
         // Invalid queue handle
-        SysMessage::box() << "[0x3021] Invalid graphics queue handle\n";
+        SysMessage::box() << "[0x301D] Invalid graphics queue handle\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
-    // Increment queue family usage
-    ++GVulkanQueues.graphicsQueueIndex;
-    if (GVulkanQueues.surfaceQueueFamily == family)
-    {
-        ++GVulkanQueues.surfaceQueueIndex;
-    }
-    if (GVulkanQueues.transferQueueFamily == family)
-    {
-        ++GVulkanQueues.transferQueueIndex;
-    }
+    // Set shared mutex
+    shared = 1;
 
     // Graphics queue successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create surface queue                                                      //
-//  return : True if the surface queue is successfully created                //
-////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createSurfaceQueue()
-{
-    // Check Vulkan device
-    if (!GVulkanDevice)
-    {
-        // Invalid Vulkan device
-        SysMessage::box() << "[0x3022] Invalid Vulkan device\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Get surface queue family
-    family = GVulkanQueues.surfaceQueueFamily;
-    index = GVulkanQueues.surfaceQueueIndex;
-    if (index >= (GVulkanQueues.surfaceQueueMax-1))
-    {
-        // Invalid queue count
-        SysMessage::box() << "[0x3023] Invalid surface queue count\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Get queue handle
-    vkGetDeviceQueue(GVulkanDevice, family, index, &handle);
-    if (!handle)
-    {
-        // Invalid queue handle
-        SysMessage::box() << "[0x3024] Invalid surface queue handle\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Increment queue family usage
-    ++GVulkanQueues.surfaceQueueIndex;
-    if (GVulkanQueues.graphicsQueueFamily == family)
-    {
-        ++GVulkanQueues.graphicsQueueIndex;
-    }
-    if (GVulkanQueues.transferQueueFamily == family)
-    {
-        ++GVulkanQueues.transferQueueIndex;
-    }
-
-    // Surface queue successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Create transfer queue                                                     //
-//  return : True if the transfer queue is successfully created               //
-////////////////////////////////////////////////////////////////////////////////
-bool VulkanQueue::createTransferQueue()
-{
-    // Check Vulkan device
-    if (!GVulkanDevice)
-    {
-        // Invalid Vulkan device
-        SysMessage::box() << "[0x3025] Invalid Vulkan device\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Get transfer queue family
-    family = GVulkanQueues.transferQueueFamily;
-    index = GVulkanQueues.transferQueueIndex;
-    if (index >= (GVulkanQueues.transferQueueMax-1))
-    {
-        // Invalid queue count
-        SysMessage::box() << "[0x3026] Invalid transfer queue count\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Get queue handle
-    vkGetDeviceQueue(GVulkanDevice, family, index, &handle);
-    if (!handle)
-    {
-        // Invalid queue handle
-        SysMessage::box() << "[0x3027] Invalid transfer queue handle\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Increment queue family usage
-    ++GVulkanQueues.transferQueueIndex;
-    if (GVulkanQueues.graphicsQueueFamily == family)
-    {
-        ++GVulkanQueues.graphicsQueueIndex;
-    }
-    if (GVulkanQueues.surfaceQueueFamily == family)
-    {
-        ++GVulkanQueues.surfaceQueueIndex;
-    }
-
-    // Transfer queue successfully created
     return true;
 }
 
@@ -256,24 +137,10 @@ bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice)
     if (queueFamilyCount <= 0)
     {
         // No device queue families found
-        SysMessage::box() << "[0x3017] No device queue families found\n";
-        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 
     // Get device queue families list
-    bool graphicsQueueFound = false;
-    uint32_t graphicsQueueFamily = 0;
-    uint32_t graphicsQueueMax = 0;
-    bool surfaceQueueFound = false;
-    uint32_t surfaceQueueFamily = 0;
-    uint32_t surfaceQueueMax = 0;
-    bool fallbackTransferQueueFound = false;
-    uint32_t fallbackTransferQueueFamily = 0;
-    uint32_t fallbackTransferQueueMax = 0;
-    bool transferQueueFound = false;
-    uint32_t transferQueueFamily = 0;
-    uint32_t transferQueueMax = 0;
     std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
     std::vector<VkBool32> queueSurfaceSupport(queueFamilyCount);
 
@@ -289,98 +156,15 @@ bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice)
             continue;
         }
 
-        if (queueFamilies[i].queueCount > 0)
+        if ((queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) &&
+            (queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
+            (queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
+            (queueSurfaceSupport[i]))
         {
-            // Check if current queue supports transfer
-            if (queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT)
-            {
-                // Fallback transfer queue found
-                if (!fallbackTransferQueueFound)
-                {
-                    fallbackTransferQueueFamily = i;
-                    fallbackTransferQueueFound = true;
-                    fallbackTransferQueueMax = queueFamilies[i].queueCount;
-                }
-            }
-
-            // Check if current queue supports graphics
-            if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
-            {
-                // Check if current queue supports present surface
-                if (queueSurfaceSupport[i])
-                {
-                    // Current queue supports both graphics and surface
-                    graphicsQueueFamily = i;
-                    graphicsQueueFound = true;
-                    graphicsQueueMax = queueFamilies[i].queueCount;
-                    surfaceQueueFamily = i;
-                    surfaceQueueFound = true;
-                    surfaceQueueMax = queueFamilies[i].queueCount;
-                }
-                else
-                {
-                    // Current queue supports only graphics
-                    if (!graphicsQueueFound)
-                    {
-                        graphicsQueueFamily = i;
-                        graphicsQueueFound = true;
-                        graphicsQueueMax = queueFamilies[i].queueCount;
-                    }
-                }
-            }
-            else
-            {
-                // Check if current queue supports transfer
-                if (queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT)
-                {
-                    // Transfer queue found
-                    if (!transferQueueFound)
-                    {
-                        transferQueueFamily = i;
-                        transferQueueFound = true;
-                        transferQueueMax = queueFamilies[i].queueCount;
-                    }
-                }
-
-                if (queueSurfaceSupport[i])
-                {
-                    // Current queue supports only surface
-                    if (!surfaceQueueFound)
-                    {
-                        surfaceQueueFamily = i;
-                        surfaceQueueFound = true;
-                        surfaceQueueMax = queueFamilies[i].queueCount;
-                    }
-                }
-            }
+            // Queue family supports graphics, compute, transfer, and surface
+            break;
         }
     }
 
-    // Set fallback transfer queue
-    if (!transferQueueFound && fallbackTransferQueueFound)
-    {
-        transferQueueFamily = fallbackTransferQueueFamily;
-        transferQueueFound = true;
-        transferQueueMax = fallbackTransferQueueMax;
-    }
-
-    // Check if current device supports graphics, surface, and transfer queues
-    if (!graphicsQueueFound || !surfaceQueueFound || !transferQueueFound)
-    {
-        SysMessage::box() << "[0x3018] Could not find a suitable device\n";
-        SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Current device supports graphics, surface, and transfer queues
-    GVulkanQueues.graphicsQueueFamily = graphicsQueueFamily;
-    GVulkanQueues.graphicsQueueIndex = 0;
-    GVulkanQueues.graphicsQueueMax = graphicsQueueMax;
-    GVulkanQueues.surfaceQueueFamily = surfaceQueueFamily;
-    GVulkanQueues.surfaceQueueIndex = 0;
-    GVulkanQueues.surfaceQueueMax = surfaceQueueMax;
-    GVulkanQueues.transferQueueFamily = transferQueueFamily;
-    GVulkanQueues.transferQueueIndex = 0;
-    GVulkanQueues.transferQueueMax = transferQueueMax;
     return true;
 }
