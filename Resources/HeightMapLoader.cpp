@@ -527,6 +527,25 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
         return false;
     }
 
+    // Barrier from vertex input to transfer
+    VkBufferMemoryBarrier vertexInputToTransfer;
+    vertexInputToTransfer.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    vertexInputToTransfer.pNext = 0;
+    vertexInputToTransfer.srcAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
+    vertexInputToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    vertexInputToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    vertexInputToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    vertexInputToTransfer.buffer = vertexBuffer.vertexBuffer.handle;
+    vertexInputToTransfer.offset = 0;
+    vertexInputToTransfer.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        0, 0, 0, 1, &vertexInputToTransfer, 0, 0
+    );
+
     VkBufferCopy bufferCopy;
     bufferCopy.srcOffset = 0;
     bufferCopy.dstOffset = 0;
@@ -654,6 +673,25 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
         // Could not record command buffer
         return false;
     }
+
+    // Barrier from index input to transfer
+    VkBufferMemoryBarrier indexInputToTransfer;
+    indexInputToTransfer.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    indexInputToTransfer.pNext = 0;
+    indexInputToTransfer.srcAccessMask = VK_ACCESS_INDEX_READ_BIT;
+    indexInputToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    indexInputToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    indexInputToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    indexInputToTransfer.buffer = vertexBuffer.indexBuffer.handle;
+    indexInputToTransfer.offset = 0;
+    indexInputToTransfer.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(
+        m_commandBuffer,
+        VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        0, 0, 0, 1, &indexInputToTransfer, 0, 0
+    );
 
     bufferCopy.srcOffset = 0;
     bufferCopy.dstOffset = 0;
