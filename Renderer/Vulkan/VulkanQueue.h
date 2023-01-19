@@ -55,14 +55,13 @@
     ////////////////////////////////////////////////////////////////////////////
     enum VulkanQueuePool
     {
-        VULKAN_QUEUE_RENDERER = 0,
-        VULKAN_QUEUE_UNIFORMS = 1,
+        VULKAN_QUEUE_SWAPCHAIN = 0,
 
-        VULKAN_QUEUE_TEXTURES = 2,
-        VULKAN_QUEUE_MESHES = 3,
-        VULKAN_QUEUE_HEIGHTMAPS = 4,
+        VULKAN_QUEUE_TEXTURES = 1,
+        VULKAN_QUEUE_MESHES = 2,
+        VULKAN_QUEUE_HEIGHTMAPS = 3,
 
-        VULKAN_QUEUE_QUEUESCOUNT = 5
+        VULKAN_QUEUE_QUEUESCOUNT = 4
     };
 
 

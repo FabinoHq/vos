@@ -123,7 +123,6 @@ bool Camera::init()
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         if (!m_uniformBuffers[i].updateBuffer(
-            GSwapchain.commandPools[i], GGraphicsLayout.uniformsQueue,
             &uniformData, sizeof(uniformData)))
         {
             // Could not create uniform buffer
@@ -242,8 +241,7 @@ bool Camera::bind()
 
     // Update uniform buffer
     if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
-        GSwapchain.commandPools[GSwapchain.current],
-        GGraphicsLayout.uniformsQueue, &uniformData, sizeof(uniformData)))
+        &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
         return false;

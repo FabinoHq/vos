@@ -44,6 +44,7 @@
 
     #include "../../System/System.h"
     #include "Vulkan.h"
+    #include "VulkanQueue.h"
     #include "VulkanMemory.h"
 
     #include <cstddef>
@@ -79,7 +80,7 @@
             //  Create swapchain                                              //
             //  return : True if swapchain is successfully created            //
             ////////////////////////////////////////////////////////////////////
-            bool createSwapchain(uint32_t surfaceQueueFamily);
+            bool createSwapchain();
 
             ////////////////////////////////////////////////////////////////////
             //  Resize swapchain                                              //
@@ -146,6 +147,7 @@
             VkSwapchainKHR      handle;         // Swapchain handle
             VkFormat            format;         // Swapchain format
             VkExtent2D          extent;         // Swapchain extent
+            VulkanQueue         swapchainQueue; // Swapchain queue
             VkRenderPass        renderPass;     // Swapchain render pass
             uint32_t            frames;         // Swapchain frames count
             uint32_t            current;        // Swapchain current frame

@@ -182,9 +182,6 @@
             VkDescriptorSetLayout   descSetLayouts[DESC_SETS_COUNT];
             VkDescriptorSetLayout
                 swapSetLayouts[RendererMaxSwapchainFrames*DESC_SETS_COUNT];
-
-            // Uniforms update queue
-            VulkanQueue             uniformsQueue;      // Uniforms queue
     };
 
 

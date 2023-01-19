@@ -47,6 +47,7 @@
     #include "VulkanMemory.h"
     #include "VulkanQueue.h"
     #include "VulkanBuffer.h"
+    #include "Swapchain.h"
 
     #include <cstddef>
     #include <cstdint>
@@ -93,8 +94,7 @@
             //  Update Uniform buffer                                         //
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(VkCommandPool& transferCommandPool,
-                VulkanQueue& transferQueue, void* data, uint32_t size);
+            bool updateBuffer(void* data, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Uniform buffer                                        //

@@ -106,7 +106,7 @@ Swapchain::~Swapchain()
 //  Create swapchain                                                          //
 //  return : True if swapchain is successfully created                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool Swapchain::createSwapchain(uint32_t surfaceQueueFamily)
+bool Swapchain::createSwapchain()
 {
     // Check physical device
     if (!GPhysicalDevice)
@@ -148,6 +148,13 @@ bool Swapchain::createSwapchain(uint32_t surfaceQueueFamily)
         // Could not get the device ready
         SysMessage::box() << "[0x302B] Could not get the device ready\n";
         SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Request swapchain queue handle
+    if (!swapchainQueue.getVulkanQueue(VULKAN_QUEUE_SWAPCHAIN))
+    {
+        // Could not get swapchain queue handle
         return false;
     }
 
@@ -695,7 +702,7 @@ bool Swapchain::createSwapchain(uint32_t surfaceQueueFamily)
     commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     commandPoolInfo.pNext = 0;
     commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-    commandPoolInfo.queueFamilyIndex = surfaceQueueFamily;
+    commandPoolInfo.queueFamilyIndex = swapchainQueue.family;
 
     for (uint32_t i = 0; i < frames; ++i)
     {

@@ -54,8 +54,7 @@ GraphicsLayout GGraphicsLayout = GraphicsLayout();
 GraphicsLayout::GraphicsLayout() :
 handle(0),
 uniformsDescPool(0),
-texturesDescPool(0),
-uniformsQueue()
+texturesDescPool(0)
 {
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
@@ -169,13 +168,6 @@ bool GraphicsLayout::createLayout()
         // Could not create pipeline layouts
         SysMessage::box() << "[0x3051] Could not create pipeline layouts\n";
         SysMessage::box() << "Please update your graphics drivers";
-        return false;
-    }
-
-    // Request uniforms queue handle
-    if (!uniformsQueue.getVulkanQueue(VULKAN_QUEUE_UNIFORMS))
-    {
-        // Could not get uniforms queue handle
         return false;
     }
 

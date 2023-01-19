@@ -107,8 +107,7 @@ bool UniformBuffer::createBuffer(uint32_t size)
 //  Update Uniform buffer                                                     //
 //  return : True if Uniform buffer is successfully updated                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool UniformBuffer::updateBuffer(VkCommandPool& transferCommandPool,
-    VulkanQueue& transferQueue, void* data, uint32_t size)
+bool UniformBuffer::updateBuffer(void* data, uint32_t size)
 {
     // Check current buffer
     if (!uniformBuffer.handle || (uniformBuffer.size != size) ||
@@ -132,7 +131,7 @@ bool UniformBuffer::updateBuffer(VkCommandPool& transferCommandPool,
     VkCommandBufferAllocateInfo bufferAllocate;
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = transferCommandPool;
+    bufferAllocate.commandPool = GSwapchain.commandPools[GSwapchain.current];
     bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     bufferAllocate.commandBufferCount = 1;
 
@@ -203,23 +202,23 @@ bool UniformBuffer::updateBuffer(VkCommandPool& transferCommandPool,
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = 0;
 
-    if (transferQueue.shared > 0)
+    if (GSwapchain.swapchainQueue.shared > 0)
     {
         // Shared queue
-        GVulkanQueues.queueMutex[transferQueue.shared].lock();
-        if (vkQueueSubmit(
-            transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
+        GVulkanQueues.queueMutex[GSwapchain.swapchainQueue.shared].lock();
+        if (vkQueueSubmit(GSwapchain.swapchainQueue.handle,
+            1, &submitInfo, fence) != VK_SUCCESS)
         {
             // Could not submit queue
             return false;
         }
-        GVulkanQueues.queueMutex[transferQueue.shared].unlock();
+        GVulkanQueues.queueMutex[GSwapchain.swapchainQueue.shared].unlock();
     }
     else
     {
         // Dedicated queue
-        if (vkQueueSubmit(
-            transferQueue.handle, 1, &submitInfo, fence) != VK_SUCCESS)
+        if (vkQueueSubmit(GSwapchain.swapchainQueue.handle,
+            1, &submitInfo, fence) != VK_SUCCESS)
         {
             // Could not submit queue
             return false;
@@ -244,7 +243,7 @@ bool UniformBuffer::updateBuffer(VkCommandPool& transferCommandPool,
     if (commandBuffer)
     {
         vkFreeCommandBuffers(GVulkanDevice,
-            transferCommandPool, 1, &commandBuffer
+            GSwapchain.commandPools[GSwapchain.current], 1, &commandBuffer
         );
     }
 

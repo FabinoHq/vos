@@ -54,7 +54,6 @@ Renderer GRenderer = Renderer();
 Renderer::Renderer() :
 ready(false),
 frameIndex(0),
-surfaceQueue(),
 pipelines(0),
 view(),
 plane()
@@ -185,15 +184,8 @@ bool Renderer::init()
         return false;
     }
 
-    // Request surface queue handle
-    if (!surfaceQueue.getVulkanQueue(VULKAN_QUEUE_RENDERER))
-    {
-        // Could not get surface queue handle
-        return false;
-    }
-
     // Create swapchain
-    if (!GSwapchain.createSwapchain(surfaceQueue.family))
+    if (!GSwapchain.createSwapchain())
     {
         // Could not create swapchain
         return false;
@@ -568,22 +560,22 @@ bool Renderer::endFrame()
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = &GSwapchain.renderDone[GSwapchain.current];
 
-    if (surfaceQueue.shared > 0)
+    if (GSwapchain.swapchainQueue.shared > 0)
     {
         // Shared queue
-        GVulkanQueues.queueMutex[surfaceQueue.shared].lock();
-        if (vkQueueSubmit(surfaceQueue.handle, 1, &submitInfo,
+        GVulkanQueues.queueMutex[GSwapchain.swapchainQueue.shared].lock();
+        if (vkQueueSubmit(GSwapchain.swapchainQueue.handle, 1, &submitInfo,
             GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
         {
             ready = false;
             return false;
         }
-        GVulkanQueues.queueMutex[surfaceQueue.shared].unlock();
+        GVulkanQueues.queueMutex[GSwapchain.swapchainQueue.shared].unlock();
     }
     else
     {
         // Dedicated queue
-        if (vkQueueSubmit(surfaceQueue.handle, 1, &submitInfo,
+        if (vkQueueSubmit(GSwapchain.swapchainQueue.handle, 1, &submitInfo,
             GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
         {
             ready = false;
@@ -602,7 +594,8 @@ bool Renderer::endFrame()
     present.pImageIndices = &frameIndex;
     present.pResults = 0;
 
-    if (vkQueuePresentKHR(surfaceQueue.handle, &present) != VK_SUCCESS)
+    if (vkQueuePresentKHR(
+        GSwapchain.swapchainQueue.handle, &present) != VK_SUCCESS)
     {
         ready = false;
         return false;

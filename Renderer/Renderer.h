@@ -243,7 +243,6 @@
         public:
             bool                ready;                  // Renderer ready state
             uint32_t            frameIndex;             // Current frame index
-            VulkanQueue         surfaceQueue;           // Surface queue
 
             Pipeline*           pipelines;              // Pipelines
             View                view;                   // Default view
