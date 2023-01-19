@@ -74,8 +74,8 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init renderer view                                            //
-            //  return : True if the renderer view is successfully created    //
+            //  Init view                                                     //
+            //  return : True if the view is successfully created             //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
@@ -85,15 +85,28 @@
             void destroyView();
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute renderer view                                         //
+            //  Compute view                                                  //
             ////////////////////////////////////////////////////////////////////
             void compute(float ratio);
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer view                                            //
-            //  return : True if the renderer view is successfully binded     //
+            //  Upload view                                                   //
+            //  return : True if the view is successfully uploaded            //
             ////////////////////////////////////////////////////////////////////
-            bool bind();
+            bool upload();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind view                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void bind()
+            {
+                vkCmdBindDescriptorSets(
+                    GSwapchain.commandBuffers[GSwapchain.current],
+                    VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
+                    DESC_MATRICES, 1,
+                    &m_descriptorSets[GSwapchain.current], 0, 0
+                );
+            }
 
 
         private:

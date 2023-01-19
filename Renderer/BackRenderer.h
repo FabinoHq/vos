@@ -124,10 +124,20 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set back renderer default view                                //
-            //  return : True if the default view is successfully set         //
+            //  Compute back renderer default view                            //
             ////////////////////////////////////////////////////////////////////
-            bool setDefaultView();
+            inline void computeDefaultView()
+            {
+                view.compute(backchain.ratio);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind back renderer default view                               //
+            ////////////////////////////////////////////////////////////////////
+            inline void bindDefaultView()
+            {
+                view.bind();
+            }
 
 
             ////////////////////////////////////////////////////////////////////

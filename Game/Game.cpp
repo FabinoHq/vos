@@ -432,6 +432,9 @@ void Game::compute(float frametime)
     m_pxText.setText(framestr.str());
 
     // Compute frame
+    GRenderer.computeDefaultView();
+    GMainRenderer.computeDefaultView();
+    m_backRenderer.computeDefaultView();
     m_view.compute(GSwapchain.ratio);
     m_camera.compute(GSwapchain.ratio);
     m_freeflycam.compute(GSwapchain.ratio, frametime);
@@ -486,6 +489,14 @@ void Game::render()
         return;
     }
 
+    // Upload cameras and views
+    GRenderer.view.upload();
+    GMainRenderer.view.upload();
+    m_backRenderer.view.upload();
+    m_view.upload();
+    m_freeflycam.upload();
+    //m_orbitalcam.upload();
+
     // Get renderer scale and ratio
     //float scale = GSwapchain.getScale();
     float ratio = GSwapchain.getRatio();
@@ -494,7 +505,7 @@ void Game::render()
     if (m_backRenderer.startRenderPass())
     {
         // Set back renderer view
-        m_backRenderer.setDefaultView();
+        m_backRenderer.bindDefaultView();
 
         // Render sprite
         GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
@@ -546,14 +557,14 @@ void Game::render()
 
 
     // Set 2D view
-    /*m_view.bind();
+    m_view.bind();
 
     // Bind default vertex buffer
     GRenderer.bindDefaultVertexBuffer();
 
 
     // Render bounding circle
-    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     float positionX =
         m_boundingCircle.position.vec[0]*PhysicsToRenderer;
     float positionY =
@@ -594,7 +605,7 @@ void Game::render()
 
 
     // Set default screen view
-    GMainRenderer.setDefaultView();
+    GMainRenderer.bindDefaultView();
 
     // Bind default vertex buffer
     GRenderer.bindDefaultVertexBuffer();
@@ -655,7 +666,7 @@ void Game::render()
     GRenderer.startFinalPass();
 
     // Render main compositing quad
-    GRenderer.setDefaultView();
+    GRenderer.bindDefaultView();
     GRenderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
     GRenderer.bindDefaultVertexBuffer();
     GMainRenderer.bind();

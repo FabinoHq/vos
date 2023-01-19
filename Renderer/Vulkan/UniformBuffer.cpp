@@ -126,126 +126,16 @@ bool UniformBuffer::updateBuffer(void* data, uint32_t size)
         return false;
     }
 
-    // Allocate command buffers
-    VkCommandBuffer commandBuffer = 0;
-    VkCommandBufferAllocateInfo bufferAllocate;
-    bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    bufferAllocate.pNext = 0;
-    bufferAllocate.commandPool = GSwapchain.commandPools[GSwapchain.current];
-    bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    bufferAllocate.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(
-        GVulkanDevice, &bufferAllocate, &commandBuffer) != VK_SUCCESS)
-    {
-        // Could not allocate command buffers
-        return false;
-    }
-
-
     // Transfer staging buffer data to uniform buffer
-    VkCommandBufferBeginInfo bufferBeginInfo;
-    bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext = 0;
-    bufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = 0;
-
-    if (vkBeginCommandBuffer(commandBuffer, &bufferBeginInfo) != VK_SUCCESS)
-    {
-        // Could not record command buffer
-        return false;
-    }
-
     VkBufferCopy bufferCopy;
     bufferCopy.srcOffset = 0;
     bufferCopy.dstOffset = 0;
     bufferCopy.size = stagingBuffer.size;
 
     vkCmdCopyBuffer(
-        commandBuffer, stagingBuffer.handle,
-        uniformBuffer.handle, 1, &bufferCopy
+        GSwapchain.commandBuffers[GSwapchain.current],
+        stagingBuffer.handle, uniformBuffer.handle, 1, &bufferCopy
     );
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-    {
-        // Could not end command buffer
-        return false;
-    }
-
-    VkFence fence = 0;
-    VkFenceCreateInfo fenceInfo;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = 0;
-    fenceInfo.flags = 0;
-
-    if (vkCreateFence(GVulkanDevice,
-        &fenceInfo, 0, &fence) != VK_SUCCESS)
-    {
-        // Could not create fence
-        return false;
-    }
-    if (!fence)
-    {
-        // Invalid fence
-        return false;
-    }
-
-    // Submit queue
-    VkSubmitInfo submitInfo;
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = 0;
-    submitInfo.pWaitDstStageMask = 0;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = 0;
-
-    if (GSwapchain.swapchainQueue.shared > 0)
-    {
-        // Shared queue
-        GVulkanQueues.queueMutex[GSwapchain.swapchainQueue.shared].lock();
-        if (vkQueueSubmit(GSwapchain.swapchainQueue.handle,
-            1, &submitInfo, fence) != VK_SUCCESS)
-        {
-            // Could not submit queue
-            return false;
-        }
-        GVulkanQueues.queueMutex[GSwapchain.swapchainQueue.shared].unlock();
-    }
-    else
-    {
-        // Dedicated queue
-        if (vkQueueSubmit(GSwapchain.swapchainQueue.handle,
-            1, &submitInfo, fence) != VK_SUCCESS)
-        {
-            // Could not submit queue
-            return false;
-        }
-    }
-
-    // Wait for transfer to finish
-    if (vkWaitForFences(GVulkanDevice, 1,
-        &fence, VK_FALSE, UniformBufferFenceTimeout) != VK_SUCCESS)
-    {
-        // Transfer timed out
-        return false;
-    }
-
-    // Destroy fence
-    if (fence)
-    {
-        vkDestroyFence(GVulkanDevice, fence, 0);
-    }
-
-    // Destroy command buffer
-    if (commandBuffer)
-    {
-        vkFreeCommandBuffers(GVulkanDevice,
-            GSwapchain.commandPools[GSwapchain.current], 1, &commandBuffer
-        );
-    }
 
     // Uniform buffer successfully updated
     return true;

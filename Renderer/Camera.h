@@ -98,10 +98,23 @@
             virtual void compute(float ratio);
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind camera                                                   //
-            //  return : True if the camera is successfully binded            //
+            //  Upload camera                                                 //
+            //  return : True if the camera is successfully uploaded          //
             ////////////////////////////////////////////////////////////////////
-            bool bind();
+            bool upload();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind camera                                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline void bind()
+            {
+                vkCmdBindDescriptorSets(
+                    GSwapchain.commandBuffers[GSwapchain.current],
+                    VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
+                    DESC_MATRICES, 1,
+                    &m_descriptorSets[GSwapchain.current], 0, 0
+                );
+            }
 
 
             ////////////////////////////////////////////////////////////////////

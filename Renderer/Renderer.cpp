@@ -325,13 +325,13 @@ bool Renderer::initPipelines()
     }
 
     // Create ellipse pipeline
-    pipelines[RENDERER_PIPELINE_ELLISPE].createVertexShader(
+    pipelines[RENDERER_PIPELINE_ELLIPSE].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
     );
-    pipelines[RENDERER_PIPELINE_ELLISPE].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_ELLIPSE].createFragmentShader(
         EllipseFragmentShader, EllipseFragmentShaderSize
     );
-    if (!pipelines[RENDERER_PIPELINE_ELLISPE].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_ELLIPSE].createPipeline(
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
@@ -870,28 +870,6 @@ void Renderer::bindDefaultVertexBuffer()
         GResources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle,
         0, VK_INDEX_TYPE_UINT16
     );
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set renderer default view                                                 //
-//  return : True if the default view is successfully set                     //
-////////////////////////////////////////////////////////////////////////////////
-bool Renderer::setDefaultView()
-{
-    // Compute default view
-    view.compute(GSwapchain.ratio);
-
-    // Bind default view
-    if (!view.bind())
-    {
-        // Could not bind default view
-        ready = false;
-        return false;
-    }
-
-    // Default view successfully set
-    return true;
 }
 
 

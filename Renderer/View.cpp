@@ -73,8 +73,8 @@ View::~View()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init renderer view                                                        //
-//  return : True if the renderer view is successfully created                //
+//  Init view                                                                 //
+//  return : True if the view is successfully created                         //
 ////////////////////////////////////////////////////////////////////////////////
 bool View::init()
 {
@@ -101,8 +101,7 @@ bool View::init()
     // Create uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        if (!m_uniformBuffers[i].updateBuffer(
-            &uniformData, sizeof(uniformData)))
+        if (!m_uniformBuffers[i].createBuffer(sizeof(uniformData)))
         {
             // Could not create uniform buffer
             return false;
@@ -175,7 +174,7 @@ void View::destroyView()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Compute renderer view                                                     //
+//  Compute view                                                              //
 ////////////////////////////////////////////////////////////////////////////////
 void View::compute(float ratio)
 {
@@ -196,10 +195,10 @@ void View::compute(float ratio)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer view                                                        //
-//  return : True if the renderer view is successfully binded                 //
+//  Upload view                                                               //
+//  return : True if the view is successfully uploaded                        //
 ////////////////////////////////////////////////////////////////////////////////
-bool View::bind()
+bool View::upload()
 {
     // Copy matrices data into uniform data
     UniformData uniformData;
@@ -215,13 +214,6 @@ bool View::bind()
         return false;
     }
 
-    // Bind matrices descriptor set
-    vkCmdBindDescriptorSets(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
-        DESC_MATRICES, 1, &m_descriptorSets[GSwapchain.current], 0, 0
-    );
-
-    // View successfully binded
+    // View successfully uploaded
     return true;
 }

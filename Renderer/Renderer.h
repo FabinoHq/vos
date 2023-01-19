@@ -193,10 +193,20 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set renderer default view                                     //
-            //  return : True if the default view is successfully set         //
+            //  Compute renderer default view                                 //
             ////////////////////////////////////////////////////////////////////
-            bool setDefaultView();
+            inline void computeDefaultView()
+            {
+                view.compute(GSwapchain.ratio);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind renderer default view                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void bindDefaultView()
+            {
+                view.bind();
+            }
 
 
             ////////////////////////////////////////////////////////////////////

@@ -306,27 +306,6 @@ void BackRenderer::destroyBackRenderer()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set back renderer default view                                            //
-//  return : True if the default view is successfully set                     //
-////////////////////////////////////////////////////////////////////////////////
-bool BackRenderer::setDefaultView()
-{
-    // Compute default view
-    view.compute(backchain.ratio);
-
-    // Bind default view
-    if (!view.bind())
-    {
-        // Could not bind default view
-        return false;
-    }
-
-    // Default view successfully set
-    return true;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 //  Resize back renderer frame                                                //
 //  return : True if the back renderer is successfully resized                //
 ////////////////////////////////////////////////////////////////////////////////
