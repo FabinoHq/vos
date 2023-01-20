@@ -550,6 +550,7 @@ bool TextureLoader::uploadTexture(VkImage& handle,
             1, &submitInfo, m_fence) != VK_SUCCESS)
         {
             // Could not submit queue
+            GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
             return false;
         }
         GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
@@ -778,6 +779,7 @@ bool TextureLoader::generateTextureMipmaps(VkImage& handle,
             1, &submitInfo, m_fence) != VK_SUCCESS)
         {
             // Could not submit queue
+            GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
             return false;
         }
         GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
@@ -962,6 +964,7 @@ bool TextureLoader::uploadTextureArray(VkImage& handle,
             1, &submitInfo, m_fence) != VK_SUCCESS)
         {
             // Could not submit queue
+            GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
             return false;
         }
         GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
@@ -1195,6 +1198,7 @@ bool TextureLoader::generateTextureArrayMipmaps(VkImage& handle,
             1, &submitInfo, m_fence) != VK_SUCCESS)
         {
             // Could not submit queue
+            GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
             return false;
         }
         GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();
@@ -1375,6 +1379,7 @@ bool TextureLoader::uploadCubeMap(VkImage& handle,
             1, &submitInfo, m_fence) != VK_SUCCESS)
         {
             // Could not submit queue
+            GVulkanQueues.queueMutex[m_graphicsQueue.shared].lock();
             return false;
         }
         GVulkanQueues.queueMutex[m_graphicsQueue.shared].unlock();

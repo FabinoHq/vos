@@ -560,6 +560,16 @@ bool Renderer::endFrame()
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = &GSwapchain.renderDone[GSwapchain.current];
 
+    VkPresentInfoKHR present;
+    present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    present.pNext = 0;
+    present.waitSemaphoreCount = 1;
+    present.pWaitSemaphores = &GSwapchain.renderDone[GSwapchain.current];
+    present.swapchainCount = 1;
+    present.pSwapchains = &GSwapchain.handle;
+    present.pImageIndices = &frameIndex;
+    present.pResults = 0;
+
     if (GSwapchain.swapchainQueue.shared > 0)
     {
         // Shared queue
@@ -567,6 +577,16 @@ bool Renderer::endFrame()
         if (vkQueueSubmit(GSwapchain.swapchainQueue.handle, 1, &submitInfo,
             GSwapchain.fences[GSwapchain.current]) != VK_SUCCESS)
         {
+            GVulkanQueues.queueMutex[GSwapchain.swapchainQueue.shared].unlock();
+            ready = false;
+            return false;
+        }
+
+        // Update surface when queue has finished rendering
+        if (vkQueuePresentKHR(
+            GSwapchain.swapchainQueue.handle, &present) != VK_SUCCESS)
+        {
+            GVulkanQueues.queueMutex[GSwapchain.swapchainQueue.shared].unlock();
             ready = false;
             return false;
         }
@@ -581,24 +601,14 @@ bool Renderer::endFrame()
             ready = false;
             return false;
         }
-    }
 
-    // Update surface when queue has finished rendering
-    VkPresentInfoKHR present;
-    present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    present.pNext = 0;
-    present.waitSemaphoreCount = 1;
-    present.pWaitSemaphores = &GSwapchain.renderDone[GSwapchain.current];
-    present.swapchainCount = 1;
-    present.pSwapchains = &GSwapchain.handle;
-    present.pImageIndices = &frameIndex;
-    present.pResults = 0;
-
-    if (vkQueuePresentKHR(
-        GSwapchain.swapchainQueue.handle, &present) != VK_SUCCESS)
-    {
-        ready = false;
-        return false;
+        // Update surface when queue has finished rendering
+        if (vkQueuePresentKHR(
+            GSwapchain.swapchainQueue.handle, &present) != VK_SUCCESS)
+        {
+            ready = false;
+            return false;
+        }
     }
 
     // Next swapchain frame index

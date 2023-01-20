@@ -686,6 +686,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
             m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
         {
             // Could not submit queue
+            GVulkanQueues.queueMutex[m_transferQueue.shared].unlock();
             return false;
         }
         GVulkanQueues.queueMutex[m_transferQueue.shared].unlock();
@@ -831,6 +832,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
             m_transferQueue.handle, 1, &submitInfo, m_fence) != VK_SUCCESS)
         {
             // Could not submit queue
+            GVulkanQueues.queueMutex[m_transferQueue.shared].unlock();
             return false;
         }
         GVulkanQueues.queueMutex[m_transferQueue.shared].unlock();

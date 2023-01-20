@@ -62,8 +62,7 @@
     //  HeightMapLoader settings                                              //
     ////////////////////////////////////////////////////////////////////////////
     const uint64_t HeightMapFenceTimeout = 100000000000;
-    const uint32_t HeightMapLoaderSyncFrames =
-        ((RendererMaxSwapchainFrames * 2) + 3);
+    const uint32_t HeightMapLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
     const double HeightMapLoaderIdleSleepTime = 0.01;
     const double HeightMapLoaderErrorSleepTime = 0.1;
 
