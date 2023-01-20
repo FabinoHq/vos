@@ -43,8 +43,6 @@
 #define VOS_RENDERER_FREEFLYCAM_HEADER
 
     #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/UniformBuffer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"

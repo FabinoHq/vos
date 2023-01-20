@@ -158,11 +158,18 @@ m_commandPool(0),
 m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
+m_sync(0),
 m_heightmaps(0),
 m_chunkX(0),
 m_chunkY(0)
 {
-
+    for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
+    {
+        m_heightptrs[i] = 0;
+        m_chunks[i].loading = false;
+        m_chunks[i].chunkX = 0;
+        m_chunks[i].chunkY = 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -170,7 +177,21 @@ m_chunkY(0)
 ////////////////////////////////////////////////////////////////////////////////
 HeightMapLoader::~HeightMapLoader()
 {
-
+    m_chunkY = 0;
+    m_chunkX = 0;
+    for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
+    {
+        m_heightptrs[i] = 0;
+        m_chunks[i].loading = false;
+        m_chunks[i].chunkX = 0;
+        m_chunks[i].chunkY = 0;
+    }
+    m_heightmaps = 0;
+    m_sync = 0;
+    m_fence = 0;
+    m_commandBuffer = 0;
+    m_commandPool = 0;
+    m_state = HEIGHTMAPLOADER_STATE_NONE;
 }
 
 
@@ -212,6 +233,10 @@ void HeightMapLoader::process()
         case HEIGHTMAPLOADER_STATE_IDLE:
             // HeightMap loader in idle state
             SysSleep(HeightMapLoaderIdleSleepTime);
+            break;
+
+        case HEIGHTMAPLOADER_STATE_SYNC:
+            // HeightMap loader in sync state
             break;
 
         case HEIGHTMAPLOADER_STATE_LOAD:
@@ -350,6 +375,9 @@ bool HeightMapLoader::init()
         }
     }
 
+    // Reset renderer sync
+    m_sync = 0;
+
     // Heightmap loader ready
     return true;
 }
@@ -401,6 +429,9 @@ bool HeightMapLoader::reload(int32_t chunkX, int32_t chunkY)
         }
     }
 
+    // Reset renderer sync
+    m_sync = 0;
+
     // Load new chunks
     m_stateMutex.lock();
     m_state = HEIGHTMAPLOADER_STATE_LOAD;
@@ -414,6 +445,13 @@ bool HeightMapLoader::reload(int32_t chunkX, int32_t chunkY)
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::update(int32_t chunkX, int32_t chunkY)
 {
+    // Synchronize swap with renderer
+    if (m_sync > 0)
+    {
+        // Heightmap loader is still in sync state
+        return false;
+    }
+
     // Check Y chunk position
     if (chunkY < m_chunkY)
     {
@@ -439,10 +477,44 @@ bool HeightMapLoader::update(int32_t chunkX, int32_t chunkY)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Synchronize heightmaps pointers with renderer                             //
+////////////////////////////////////////////////////////////////////////////////
+void HeightMapLoader::sync()
+{
+    // Synchronize swap with renderer
+    if (m_sync > 0)
+    {
+        // Wait for current swapchain frames to be rendered
+        ++m_sync;
+        if (m_sync > HeightMapLoaderSyncFrames)
+        {
+            // Load new chunks
+            m_sync = 0;
+            m_stateMutex.lock();
+            m_state = HEIGHTMAPLOADER_STATE_LOAD;
+            m_stateMutex.unlock();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy heightmap loader                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 void HeightMapLoader::destroyHeightMapLoader()
 {
+    // Reset chunk position
+    m_chunkY = 0;
+    m_chunkX = 0;
+
+    // Reset heightmaps pointers
+    for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
+    {
+        m_heightptrs[i] = 0;
+        m_chunks[i].loading = false;
+        m_chunks[i].chunkX = 0;
+        m_chunks[i].chunkY = 0;
+    }
+
     // Destroy heightmaps vertex buffers
     for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
     {
@@ -450,6 +522,9 @@ void HeightMapLoader::destroyHeightMapLoader()
     }
     if (m_heightmaps) { delete[] m_heightmaps; }
     m_heightmaps = 0;
+
+    // Reset renderer sync
+    m_sync = 0;
 
     // Destroy staging fence
     if (m_fence)
@@ -476,6 +551,9 @@ void HeightMapLoader::destroyHeightMapLoader()
         vkDestroyCommandPool(GVulkanDevice, m_commandPool, 0);
     }
     m_commandPool = 0;
+
+    // Reset state
+    m_state = HEIGHTMAPLOADER_STATE_NONE;
 }
 
 
@@ -1115,9 +1193,10 @@ bool HeightMapLoader::swapTop()
     // Move chunkY
     --m_chunkY;
 
-    // Load new chunks
+    // Synchronize swap with renderer
+    m_sync = 1;
     m_stateMutex.lock();
-    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_state = HEIGHTMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
     return true;
 }
@@ -1180,9 +1259,10 @@ bool HeightMapLoader::swapBottom()
     // Move chunkY
     ++m_chunkY;
 
-    // Load new chunks
+    // Synchronize swap with renderer
+    m_sync = 1;
     m_stateMutex.lock();
-    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_state = HEIGHTMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
     return true;
 }
@@ -1242,9 +1322,10 @@ bool HeightMapLoader::swapLeft()
     // Move chunkX
     --m_chunkX;
 
-    // Load new chunks
+    // Synchronize swap with renderer
+    m_sync = 1;
     m_stateMutex.lock();
-    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_state = HEIGHTMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
     return true;
 }
@@ -1307,9 +1388,10 @@ bool HeightMapLoader::swapRight()
     // Move chunkX
     ++m_chunkX;
 
-    // Load new chunks
+    // Synchronize swap with renderer
+    m_sync = 1;
     m_stateMutex.lock();
-    m_state = HEIGHTMAPLOADER_STATE_LOAD;
+    m_state = HEIGHTMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
     return true;
 }

@@ -86,6 +86,9 @@ bool HeightMapStream::init()
 ////////////////////////////////////////////////////////////////////////////////
 void HeightMapStream::render()
 {
+    // Synchronize heightmap stream with renderer
+    GResources.heightmaps.sync();
+
     // Render heightmap chunks
     m_heightMapChunk.bindTextureArray();
     for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)

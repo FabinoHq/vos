@@ -46,6 +46,7 @@
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
     #include "../Renderer/Vulkan/Vulkan.h"
+    #include "../Renderer/Vulkan/Swapchain.h"
     #include "../Renderer/Vulkan/VulkanMemory.h"
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
@@ -61,6 +62,8 @@
     //  HeightMapLoader settings                                              //
     ////////////////////////////////////////////////////////////////////////////
     const uint64_t HeightMapFenceTimeout = 100000000000;
+    const uint32_t HeightMapLoaderSyncFrames =
+        ((RendererMaxSwapchainFrames * 2) + 3);
     const double HeightMapLoaderIdleSleepTime = 0.01;
     const double HeightMapLoaderErrorSleepTime = 0.1;
 
@@ -84,9 +87,10 @@
         HEIGHTMAPLOADER_STATE_INIT = 1,
 
         HEIGHTMAPLOADER_STATE_IDLE = 2,
-        HEIGHTMAPLOADER_STATE_LOAD = 3,
+        HEIGHTMAPLOADER_STATE_SYNC = 3,
+        HEIGHTMAPLOADER_STATE_LOAD = 4,
 
-        HEIGHTMAPLOADER_STATE_ERROR = 4
+        HEIGHTMAPLOADER_STATE_ERROR = 5
     };
 
 
@@ -147,6 +151,11 @@
             //  return : True if heightmaps pointers are updated              //
             ////////////////////////////////////////////////////////////////////
             bool update(int32_t chunkX, int32_t chunkY);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Synchronize heightmaps pointers with renderer                 //
+            ////////////////////////////////////////////////////////////////////
+            void sync();
 
             ////////////////////////////////////////////////////////////////////
             //  Get heightmap vertex buffer                                   //
@@ -257,6 +266,7 @@
             VkCommandBuffer         m_commandBuffer;    // Command buffer
             VulkanBuffer            m_stagingBuffer;    // Staging buffer
             VkFence                 m_fence;            // Staging fence
+            uint32_t                m_sync;             // Renderer sync
 
             VertexBuffer*           m_heightmaps;       // Heightmaps meshes
             VertexBuffer*           m_heightptrs[HEIGHTMAP_ASSETSCOUNT];
