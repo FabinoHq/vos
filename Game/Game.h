@@ -47,7 +47,6 @@
 
     #include "../Renderer/Renderer.h"
     #include "../Renderer/BackRenderer.h"
-    #include "../Renderer/Vulkan/CubeMap.h"
     #include "../Renderer/View.h"
     #include "../Renderer/Camera.h"
     #include "../Renderer/FreeFlyCam.h"
@@ -139,7 +138,6 @@
             FreeFlyCam      m_freeflycam;       // Freefly camera
             OrbitalCam      m_orbitalcam;       // Orbital camera
 
-            CubeMap         m_cubemap;          // CubeMap
             SkyBox          m_skybox;           // SkyBox
 
             Sprite          m_sprite;           // Sprite

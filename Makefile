@@ -61,6 +61,7 @@ VOS: main.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
 	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
+	Renderer/Vulkan/Uniformchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Vulkan/Pipeline.o Renderer/Vulkan/Shader.o \
@@ -95,6 +96,7 @@ VOS: main.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
 	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
+	Renderer/Vulkan/Uniformchain.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o Renderer/Vulkan/GraphicsLayout.o \
 	Renderer/Vulkan/Pipeline.o Renderer/Vulkan/Shader.o \
@@ -202,6 +204,10 @@ Renderer/Vulkan/Swapchain.o: Renderer/Vulkan/Swapchain.cpp
 Renderer/Vulkan/Backchain.o: Renderer/Vulkan/Backchain.cpp
 	$(CC) -o Renderer/Vulkan/Backchain.o -c \
 	Renderer/Vulkan/Backchain.cpp $(CFLAGS)
+
+Renderer/Vulkan/Uniformchain.o: Renderer/Vulkan/Uniformchain.cpp
+	$(CC) -o Renderer/Vulkan/Uniformchain.o -c \
+	Renderer/Vulkan/Uniformchain.cpp $(CFLAGS)
 
 Renderer/Vulkan/VulkanBuffer.o: Renderer/Vulkan/VulkanBuffer.cpp
 	$(CC) -o Renderer/Vulkan/VulkanBuffer.o -c \

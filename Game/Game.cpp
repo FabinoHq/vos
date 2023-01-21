@@ -51,7 +51,6 @@ m_view(),
 m_camera(),
 m_freeflycam(),
 m_orbitalcam(),
-m_cubemap(),
 m_skybox(),
 m_sprite(),
 m_procSprite(),
@@ -258,9 +257,6 @@ void Game::destroy()
     // Destroy procedural sprite
     m_procSprite.destroyProcSprite();
 
-    // Destroy cubemap
-    m_cubemap.destroyCubeMap();
-
 
     // Destroy orbital camera
     m_orbitalcam.destroyCamera();
@@ -440,6 +436,19 @@ void Game::compute(float frametime)
     m_freeflycam.compute(GSwapchain.ratio, frametime);
     m_orbitalcam.compute(GSwapchain.ratio, frametime);
 
+    // Upload cameras and views
+    if (GUniformchain.startUpload())
+    {
+        GRenderer.view.upload();
+        GMainRenderer.view.upload();
+        m_backRenderer.view.upload();
+        m_view.upload();
+        m_freeflycam.upload();
+        //m_orbitalcam.upload();
+
+        GUniformchain.endUpload();
+    }
+
     // Update heightmap
     int32_t chunkX = static_cast<int32_t>(
         m_freeflycam.getX()/HeightMapChunkXStride
@@ -488,14 +497,6 @@ void Game::render()
     {
         return;
     }
-
-    // Upload cameras and views
-    GRenderer.view.upload();
-    GMainRenderer.view.upload();
-    m_backRenderer.view.upload();
-    m_view.upload();
-    m_freeflycam.upload();
-    //m_orbitalcam.upload();
 
     // Get renderer scale and ratio
     //float scale = GSwapchain.getScale();

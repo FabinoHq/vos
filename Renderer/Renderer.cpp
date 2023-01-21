@@ -191,6 +191,13 @@ bool Renderer::init()
         return false;
     }
 
+    // Create uniformchain
+    if (!GUniformchain.createUniformchain())
+    {
+        // Could not create uniformchain
+        return false;
+    }
+
     // Create default graphics layout
     if (!GGraphicsLayout.createLayout())
     {
@@ -230,6 +237,14 @@ bool Renderer::init()
     plane.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     plane.setUVSize(1.0f, 1.0f);
     plane.setUVOffset(0.0f, 0.0f);
+
+
+    // Wait for device idle
+    if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
+    {
+        // Could not get the device ready
+        return false;
+    }
 
     // Renderer successfully loaded
     ready = true;
@@ -448,16 +463,6 @@ bool Renderer::startFrame()
         }
     }
 
-    // Clamp swapchain current frame index
-    if (GSwapchain.current <= 0)
-    {
-        GSwapchain.current = 0;
-    }
-    if (GSwapchain.current >= (GSwapchain.frames-1))
-    {
-        GSwapchain.current = (GSwapchain.frames-1);
-    }
-
     // Wait for current frame rendering fence
     if (vkWaitForFences(GVulkanDevice, 1,
         &GSwapchain.fences[GSwapchain.current],
@@ -548,13 +553,20 @@ bool Renderer::endFrame()
     }
 
     // Submit current frame
-    VkPipelineStageFlags waitDstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+    VkSemaphore waitSemaphores[2];
+    waitSemaphores[0] = GSwapchain.renderReady[GSwapchain.current];
+    waitSemaphores[1] = GUniformchain.uniformsReady[GSwapchain.current];
+
+    VkPipelineStageFlags waitDstStage[2];
+    waitDstStage[0] = VK_PIPELINE_STAGE_TRANSFER_BIT;
+    waitDstStage[1] = VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
+
     VkSubmitInfo submitInfo;
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo.pNext = 0;
-    submitInfo.waitSemaphoreCount = 1;
-    submitInfo.pWaitSemaphores = &GSwapchain.renderReady[GSwapchain.current];
-    submitInfo.pWaitDstStageMask = &waitDstStage;
+    submitInfo.waitSemaphoreCount = 2;
+    submitInfo.pWaitSemaphores = waitSemaphores;
+    submitInfo.pWaitDstStageMask = waitDstStage;
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &GSwapchain.commandBuffers[GSwapchain.current];
     submitInfo.signalSemaphoreCount = 1;
@@ -839,6 +851,9 @@ void Renderer::destroyRenderer()
 
     // Destroy default graphics layout
     GGraphicsLayout.destroyLayout();
+
+    // Destroy uniformchain
+    GUniformchain.destroyUniformchain();
 
     // Destroy swapchain
     GSwapchain.destroySwapchain();

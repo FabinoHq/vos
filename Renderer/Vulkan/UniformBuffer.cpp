@@ -139,7 +139,7 @@ bool UniformBuffer::updateBuffer(void* data, uint32_t size)
     shaderToTransfer.size = VK_WHOLE_SIZE;
 
     vkCmdPipelineBarrier(
-        GSwapchain.commandBuffers[GSwapchain.current],
+        GUniformchain.commandBuffers[GSwapchain.current],
         VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
         0, 0, 0, 1, &shaderToTransfer, 0, 0
@@ -152,7 +152,7 @@ bool UniformBuffer::updateBuffer(void* data, uint32_t size)
     bufferCopy.size = stagingBuffer.size;
 
     vkCmdCopyBuffer(
-        GSwapchain.commandBuffers[GSwapchain.current],
+        GUniformchain.commandBuffers[GSwapchain.current],
         stagingBuffer.handle, uniformBuffer.handle, 1, &bufferCopy
     );
 
@@ -169,7 +169,7 @@ bool UniformBuffer::updateBuffer(void* data, uint32_t size)
     transferToShader.size = VK_WHOLE_SIZE;
 
     vkCmdPipelineBarrier(
-        GSwapchain.commandBuffers[GSwapchain.current],
+        GUniformchain.commandBuffers[GSwapchain.current],
         VK_PIPELINE_STAGE_TRANSFER_BIT,
         VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
         0, 0, 0, 1, &transferToShader, 0, 0

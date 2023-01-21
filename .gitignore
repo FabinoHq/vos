@@ -146,6 +146,8 @@
 !Renderer/Vulkan/Swapchain.cpp
 !Renderer/Vulkan/Backchain.h
 !Renderer/Vulkan/Backchain.cpp
+!Renderer/Vulkan/Uniformchain.h
+!Renderer/Vulkan/Uniformchain.cpp
 !Renderer/Vulkan/VulkanBuffer.h
 !Renderer/Vulkan/VulkanBuffer.cpp
 !Renderer/Vulkan/VertexBuffer.h

@@ -55,6 +55,7 @@ Swapchain::Swapchain() :
 handle(0),
 format(VK_FORMAT_UNDEFINED),
 extent(),
+swapchainQueue(),
 renderPass(0),
 frames(0),
 current(0),

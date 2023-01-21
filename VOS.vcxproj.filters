@@ -221,6 +221,9 @@
     <ClCompile Include="System\SysSettings.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\Uniformchain.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -508,6 +511,9 @@
     </ClInclude>
     <ClInclude Include="System\SysSettings.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\Uniformchain.h">
+      <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

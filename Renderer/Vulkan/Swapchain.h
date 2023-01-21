@@ -153,6 +153,7 @@
             uint32_t            current;        // Swapchain current frame
             float               ratio;          // Swapchain aspect ratio
 
+            // Swapchain resources
             VkImage             images[RendererMaxSwapchainFrames];
             VkImageView         views[RendererMaxSwapchainFrames];
             VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];

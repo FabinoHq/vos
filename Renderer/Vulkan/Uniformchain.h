@@ -37,88 +37,95 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/UniformBuffer.h : Uniform buffer management            //
+//     Renderer/Vulkan/Uniformchain.h : Uniform chain management              //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKAN_UNIFORMBUFFER_HEADER
-#define VOS_RENDERER_VULKAN_UNIFORMBUFFER_HEADER
+#ifndef VOS_RENDERER_VULKAN_UNIFORMCHAIN_HEADER
+#define VOS_RENDERER_VULKAN_UNIFORMCHAIN_HEADER
 
     #include "../../System/System.h"
     #include "Vulkan.h"
-    #include "VulkanMemory.h"
     #include "VulkanQueue.h"
-    #include "VulkanBuffer.h"
     #include "Swapchain.h"
-    #include "Uniformchain.h"
 
     #include <cstddef>
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  UniformBuffer settings                                                //
+    //  Renderer unniformchain settings                                       //
     ////////////////////////////////////////////////////////////////////////////
-    const uint64_t UniformBufferFenceTimeout = 100000000000;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  UniformData data structure                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    struct UniformData
-    {
-        float   projView[16];   // Projection view combined matrix
-    };
+    const uint64_t RendererUniformchainFenceTimeout = 5000000000;
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  UniformBuffer class definition                                        //
+    //  Uniformchain class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
-    class UniformBuffer
+    class Uniformchain
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  UniformBuffer default constructor                             //
+            //  Uniformchain default constructor                              //
             ////////////////////////////////////////////////////////////////////
-            UniformBuffer();
+            Uniformchain();
 
             ////////////////////////////////////////////////////////////////////
-            //  UniformBuffer destructor                                      //
+            //  Uniformchain destructor                                       //
             ////////////////////////////////////////////////////////////////////
-            ~UniformBuffer();
+            ~Uniformchain();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create Uniform buffer                                         //
-            //  return : True if Vertex buffer is successfully created        //
+            //  Create uniformchain                                           //
+            //  return : True if uniformchain is successfully created         //
             ////////////////////////////////////////////////////////////////////
-            bool createBuffer(uint32_t size);
+            bool createUniformchain();
 
             ////////////////////////////////////////////////////////////////////
-            //  Update Uniform buffer                                         //
-            //  return : True if Vertex buffer is successfully updated        //
+            //  Destroy uniformchain                                          //
             ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(void* data, uint32_t size);
+            void destroyUniformchain();
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy Uniform buffer                                        //
+            //  Start uniforms upload                                         //
+            //  return : True if uniforms are ready to be uploaded            //
             ////////////////////////////////////////////////////////////////////
-            void destroyBuffer();
+            bool startUpload();
+
+            ////////////////////////////////////////////////////////////////////
+            //  End uniforms upload                                           //
+            //  return : True if uniforms are submitted for upload            //
+            ////////////////////////////////////////////////////////////////////
+            bool endUpload();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  UniformBuffer private copy constructor : Not copyable         //
+            //  Uniformchain private copy constructor : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            UniformBuffer(const UniformBuffer&) = delete;
+            Uniformchain(const Uniformchain&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  UniformBuffer private copy operator : Not copyable            //
+            //  Uniformchain private copy operator : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            UniformBuffer& operator=(const UniformBuffer&) = delete;
+            Uniformchain& operator=(const Uniformchain&) = delete;
 
 
         public:
-            VulkanBuffer    uniformBuffer;      // Uniform buffer
-            VulkanBuffer    stagingBuffer;      // Staging buffer
+            VulkanQueue         uniformQueue;       // Uniform queue
+
+            // Uniformchain resources
+            VkSemaphore         uniformsReady[RendererMaxSwapchainFrames];
+            VkFence             fences[RendererMaxSwapchainFrames];
+            VkCommandPool       commandPools[RendererMaxSwapchainFrames];
+            VkCommandBuffer     commandBuffers[RendererMaxSwapchainFrames];
     };
 
 
-#endif // VOS_RENDERER_VULKAN_UNIFORMBUFFER_HEADER
+    ////////////////////////////////////////////////////////////////////////////
+    //  Uniformchain global instance                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    extern Uniformchain GUniformchain;
+
+
+#endif // VOS_RENDERER_VULKAN_UNIFORMCHAIN_HEADER

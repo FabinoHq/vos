@@ -50,6 +50,8 @@
     #include "Vulkan/VulkanMemory.h"
     #include "Vulkan/VulkanQueue.h"
     #include "Vulkan/Swapchain.h"
+    #include "Vulkan/Backchain.h"
+    #include "Vulkan/Uniformchain.h"
     #include "Vulkan/VulkanBuffer.h"
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/UniformBuffer.h"
