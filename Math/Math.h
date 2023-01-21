@@ -87,22 +87,22 @@
         ////////////////////////////////////////////////////////////////////////
         inline int32_t sign(int32_t x)
         {
-            return (x >= 0) ? 1 : -1;
+            return ((x >= 0) ? 1 : -1);
         }
 
         inline int64_t sign(int64_t x)
         {
-            return (x >= 0) ? 1 : -1;
+            return ((x >= 0) ? 1 : -1);
         }
 
         inline float sign(float x)
         {
-            return (x >= 0.0f) ? 1.0f : -1.0f;
+            return ((x >= 0.0f) ? 1.0f : -1.0f);
         }
 
         inline double sign(double x)
         {
-            return (x >= 0.0) ? 1.0 : -1.0;
+            return ((x >= 0.0) ? 1.0 : -1.0);
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -111,22 +111,22 @@
         ////////////////////////////////////////////////////////////////////////
         inline int32_t abs(int32_t x)
         {
-            return (x >= 0) ? x : -x;
+            return ((x >= 0) ? x : -x);
         }
 
         inline int64_t abs(int64_t x)
         {
-            return (x >= 0) ? x : -x;
+            return ((x >= 0) ? x : -x);
         }
 
         inline float abs(float x)
         {
-            return (x >= 0.0f) ? x : -x;
+            return ((x >= 0.0f) ? x : -x);
         }
 
         inline double abs(double x)
         {
-            return (x >= 0.0) ? x : -x;
+            return ((x >= 0.0) ? x : -x);
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -177,15 +177,35 @@
         inline int32_t divide(int32_t x, int32_t n)
         {
             if (n == 0) return 0;
-            if (x < 0) x -= (n-1);
+            if (x < 0) { x -= (n-1); }
             return (x/n);
         }
 
         inline int64_t divide(int64_t x, int64_t n)
         {
             if (n == 0) return 0;
-            if (x < 0) x -= (n-1);
+            if (x < 0) { x -= (n-1); }
             return (x/n);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Floating point to integer division                                //
+        //  param x : Left operand                                            //
+        //  param n : Right operand                                           //
+        //  return : Integer division (x / n)                                 //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t divide(float x, float n)
+        {
+            if (n == 0.0f) return 0;
+            if (x < 0.0f) { x -= (n-1.0f); }
+            return (static_cast<int32_t>(x/n));
+        }
+
+        inline int32_t divide(double x, double n)
+        {
+            if (n == 0.0) return 0;
+            if (x < 0.0) { x -= (n-1.0); }
+            return (static_cast<int32_t>(x/n));
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -260,12 +280,12 @@
         ////////////////////////////////////////////////////////////////////////
         inline float linearInterp(float x, float y, float t)
         {
-            return x + t*(y-x);
+            return (x + t*(y-x));
         }
 
         inline double linearInterp(double x, double y, double t)
         {
-            return x + t*(y-x);
+            return (x + t*(y-x));
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -274,12 +294,12 @@
         ////////////////////////////////////////////////////////////////////////
         inline float cubicInterp(float x, float y, float t)
         {
-            return x + (t*t*(3.0f-2.0f*t))*(y-x);
+            return (x + (t*t*(3.0f-2.0f*t))*(y-x));
         }
 
         inline double cubicInterp(double x, double y, double t)
         {
-            return x + (t*t*(3.0-2.0*t))*(y-x);
+            return (x + (t*t*(3.0-2.0*t))*(y-x));
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -307,22 +327,22 @@
         ////////////////////////////////////////////////////////////////////////
         inline int32_t distance(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
         {
-            return Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
+            return (Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))));
         }
 
         inline int64_t distance(int64_t x1, int64_t y1, int64_t x2, int64_t y2)
         {
-            return Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
+            return (Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))));
         }
 
         inline float distance(float x1, float y1, float x2, float y2)
         {
-            return std::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
+            return (std::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))));
         }
 
         inline double distance(double x1, double y1, double x2, double y2)
         {
-            return std::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
+            return (std::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))));
         }
     };
 

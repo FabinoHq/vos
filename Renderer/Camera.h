@@ -61,7 +61,7 @@
     ////////////////////////////////////////////////////////////////////////////
     const float CameraDefaultFovy = Math::PiTwo;
     const float CameraDefaultNearPlane = 0.01f;
-    const float CameraDefaultFarPlane = 1000.0f;
+    const float CameraDefaultFarPlane = 800.0f;
 
 
     ////////////////////////////////////////////////////////////////////////////

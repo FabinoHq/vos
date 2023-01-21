@@ -461,12 +461,8 @@ void Game::compute(float frametime)
     }
 
     // Update heightmap
-    int32_t chunkX = static_cast<int32_t>(
-        m_freeflycam.getX()/HeightMapChunkXStride
-    );
-    int32_t chunkY = static_cast<int32_t>(
-        m_freeflycam.getZ()/HeightMapChunkZStride
-    );
+    int32_t chunkX = Math::divide(m_freeflycam.getX(), HeightMapChunkXStride);
+    int32_t chunkY = Math::divide(m_freeflycam.getZ(), HeightMapChunkZStride);
     m_heightMapStream.update(chunkX, chunkY);
 
     /*// Memory dump

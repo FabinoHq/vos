@@ -59,14 +59,14 @@
     ////////////////////////////////////////////////////////////////////////////
     //  HeightMapChunk settings                                               //
     ////////////////////////////////////////////////////////////////////////////
-    const uint16_t HeightMapChunkWidth = 64;
-    const uint16_t HeightMapChunkHeight = 64;
+    const uint16_t HeightMapChunkWidth = 128;
+    const uint16_t HeightMapChunkHeight = 128;
     const float HeightMapChunkPlaneWidth = 4.0f;
     const float HeightMapChunkPlaneHeight = 4.0f;
-    const float HeightMapChunkXStride = 256.0f;
-    const float HeightMapChunkZStride = 256.0f;
-    const float HeightMapChunkTexcoordsWidth = 32.0f;
-    const float HeightMapChunkTexcoordsHeight = 32.0f;
+    const float HeightMapChunkXStride = 512.0f;
+    const float HeightMapChunkZStride = 512.0f;
+    const float HeightMapChunkTexcoordsWidth = 64.0f;
+    const float HeightMapChunkTexcoordsHeight = 64.0f;
 
 
     ////////////////////////////////////////////////////////////////////////////
