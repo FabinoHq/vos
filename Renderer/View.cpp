@@ -175,8 +175,9 @@ void View::destroyView()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute view                                                              //
+//  return : True if the view is successfully computed                        //
 ////////////////////////////////////////////////////////////////////////////////
-void View::compute(float ratio)
+bool View::compute(float ratio)
 {
     // Compute projection matrix
     m_projMatrix.setOrthographic(-ratio, ratio, 1.0f, -1.0f, -2.0f, 2.0f);
@@ -192,14 +193,7 @@ void View::compute(float ratio)
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
-}
 
-////////////////////////////////////////////////////////////////////////////////
-//  Upload view                                                               //
-//  return : True if the view is successfully uploaded                        //
-////////////////////////////////////////////////////////////////////////////////
-bool View::upload()
-{
     // Copy matrices data into uniform data
     UniformData uniformData;
     memcpy(
@@ -214,6 +208,6 @@ bool View::upload()
         return false;
     }
 
-    // View successfully uploaded
+    // View successfully computed
     return true;
 }

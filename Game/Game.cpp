@@ -427,37 +427,6 @@ void Game::compute(float frametime)
     }
     m_pxText.setText(framestr.str());
 
-    // Compute frame
-    GRenderer.computeDefaultView();
-    GMainRenderer.computeDefaultView();
-    m_backRenderer.computeDefaultView();
-    m_view.compute(GSwapchain.ratio);
-    m_camera.compute(GSwapchain.ratio);
-    m_freeflycam.compute(GSwapchain.ratio, frametime);
-    m_orbitalcam.compute(GSwapchain.ratio, frametime);
-
-    // Upload cameras and views
-    if (GUniformchain.startUpload())
-    {
-        GRenderer.view.upload();
-        GMainRenderer.view.upload();
-        m_backRenderer.view.upload();
-        m_view.upload();
-        m_freeflycam.upload();
-        //m_orbitalcam.upload();
-
-        GUniformchain.endUpload();
-    }
-
-    // Update heightmap
-    int32_t chunkX = static_cast<int32_t>(
-        m_freeflycam.getX()/HeightMapChunkXStride
-    );
-    int32_t chunkY = static_cast<int32_t>(
-        m_freeflycam.getZ()/HeightMapChunkZStride
-    );
-    m_heightMapStream.update(chunkX, chunkY);
-
     // Compute physics
     /*Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int64_t>(m_mouseX*100000000);
@@ -476,6 +445,29 @@ void Game::compute(float frametime)
         m_boundingCircle2.position.vec[1] = m_collideCircle.position.vec[1];
         m_spaceReleased = false;
     }*/
+
+    // Compute and upload cameras and views
+    if (GUniformchain.startUpload())
+    {
+        GRenderer.computeDefaultView();
+        GMainRenderer.computeDefaultView();
+        m_backRenderer.computeDefaultView();
+        m_view.compute(GSwapchain.ratio);
+        m_camera.compute(GSwapchain.ratio);
+        m_freeflycam.compute(GSwapchain.ratio, frametime);
+        m_orbitalcam.compute(GSwapchain.ratio, frametime);
+
+        GUniformchain.endUpload();
+    }
+
+    // Update heightmap
+    int32_t chunkX = static_cast<int32_t>(
+        m_freeflycam.getX()/HeightMapChunkXStride
+    );
+    int32_t chunkY = static_cast<int32_t>(
+        m_freeflycam.getZ()/HeightMapChunkZStride
+    );
+    m_heightMapStream.update(chunkX, chunkY);
 
     /*// Memory dump
     static int memDump = 0;

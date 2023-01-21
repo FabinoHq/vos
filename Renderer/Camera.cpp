@@ -202,8 +202,9 @@ void Camera::destroyCamera()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute camera                                                            //
+//  return : True if the camera is successfully computed                      //
 ////////////////////////////////////////////////////////////////////////////////
-void Camera::compute(float ratio)
+bool Camera::compute(float ratio)
 {
     // Compute camera target
     m_target.vec[0] = std::cos(m_angles.vec[0]);
@@ -224,14 +225,7 @@ void Camera::compute(float ratio)
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
-}
 
-////////////////////////////////////////////////////////////////////////////////
-//  Upload camera                                                             //
-//  return : True if the camera is successfully uploaded                      //
-////////////////////////////////////////////////////////////////////////////////
-bool Camera::upload()
-{
     // Copy matrices data into uniform data
     UniformData uniformData;
     memcpy(
@@ -246,6 +240,6 @@ bool Camera::upload()
         return false;
     }
 
-    // Camera successfully binded
+    // Camera successfully computed
     return true;
 }

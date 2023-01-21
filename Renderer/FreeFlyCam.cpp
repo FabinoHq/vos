@@ -73,8 +73,9 @@ FreeFlyCam::~FreeFlyCam()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute freefly camera                                                    //
+//  return : True if the freefly camera is successfully computed              //
 ////////////////////////////////////////////////////////////////////////////////
-void FreeFlyCam::compute(float ratio, float frametime)
+bool FreeFlyCam::compute(float ratio, float frametime)
 {
     // Compute freefly camera speed
     float speed = m_speed*frametime;
@@ -197,6 +198,23 @@ void FreeFlyCam::compute(float ratio, float frametime)
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix.rotate(-m_angles);
     m_projViewMatrix.translate(-m_position);
+
+    // Copy matrices data into uniform data
+    UniformData uniformData;
+    memcpy(
+        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
+
+    // Update uniform buffer
+    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+        &uniformData, sizeof(uniformData)))
+    {
+        // Could not update uniform buffer
+        return false;
+    }
+
+    // Freefly camera successfully computed
+    return true;
 }
 
 

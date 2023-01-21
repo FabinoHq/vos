@@ -79,8 +79,9 @@
 
             ////////////////////////////////////////////////////////////////////
             //  Compute freefly camera                                        //
+            //  return : True if the freefly camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            virtual void compute(float ratio, float frametime);
+            virtual bool compute(float ratio, float frametime);
 
 
             ////////////////////////////////////////////////////////////////////

@@ -73,8 +73,9 @@ OrbitalCam::~OrbitalCam()
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute orbital camera                                                    //
+//  return : True if the orbital camera is successfully computed              //
 ////////////////////////////////////////////////////////////////////////////////
-void OrbitalCam::compute(float ratio, float frametime)
+bool OrbitalCam::compute(float ratio, float frametime)
 {
     // Compute orbital camera speed
     float speed = m_speed*frametime;
@@ -117,6 +118,23 @@ void OrbitalCam::compute(float ratio, float frametime)
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix.rotate(-m_angles);
     m_projViewMatrix.translate(-m_position);
+
+    // Copy matrices data into uniform data
+    UniformData uniformData;
+    memcpy(
+        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
+
+    // Update uniform buffer
+    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+        &uniformData, sizeof(uniformData)))
+    {
+        // Could not update uniform buffer
+        return false;
+    }
+
+    // Orbital camera successfully computed
+    return true;
 }
 
 

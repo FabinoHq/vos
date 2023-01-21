@@ -85,7 +85,7 @@ bool UniformBuffer::createBuffer(uint32_t size)
     // Create uniform buffer
     if (!uniformBuffer.createBuffer(
         (VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT),
-        VULKAN_MEMORY_RENDERDEVICE, size))
+        VULKAN_MEMORY_UNIFORMS, size))
     {
         // Could not create uniform buffer
         return false;
@@ -93,7 +93,7 @@ bool UniformBuffer::createBuffer(uint32_t size)
 
     // Create staging buffer
     if (!stagingBuffer.createBuffer(
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_RENDERHOST, size))
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VULKAN_MEMORY_UNIFORMUPLOAD, size))
     {
         // Could not create staging buffer
         return false;
@@ -120,7 +120,7 @@ bool UniformBuffer::updateBuffer(void* data, uint32_t size)
 
     // Write data into staging buffer memory
     if (!GVulkanMemory.writeBufferMemory(
-        stagingBuffer, data, VULKAN_MEMORY_RENDERHOST))
+        stagingBuffer, data, VULKAN_MEMORY_UNIFORMUPLOAD))
     {
         // Could not write data into staging buffer memory
         return false;

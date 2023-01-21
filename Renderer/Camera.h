@@ -94,14 +94,9 @@
 
             ////////////////////////////////////////////////////////////////////
             //  Compute camera                                                //
+            //  return : True if the camera is successfully computed          //
             ////////////////////////////////////////////////////////////////////
-            virtual void compute(float ratio);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Upload camera                                                 //
-            //  return : True if the camera is successfully uploaded          //
-            ////////////////////////////////////////////////////////////////////
-            bool upload();
+            virtual bool compute(float ratio);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind camera                                                   //
