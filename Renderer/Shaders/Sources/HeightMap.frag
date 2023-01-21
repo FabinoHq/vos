@@ -58,17 +58,17 @@ layout(push_constant) uniform Constants
 
 // Distance fades
 const float mixFadeDistance = 50.0;
-const float alphaFadeDistance = 500.0;
+const float alphaFadeDistance = 1200.0;
 
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
 layout(location = 1) in vec3 i_normals;
-layout(location = 2) in float i_height;
+layout(location = 2) in vec2 i_distHeight;
 layout(location = 0) out vec4 o_color;
 void main()
 {
     // Heightmap texture layers
-    float yHeight = ((i_height-100.0)*0.004);
+    float yHeight = ((i_distHeight.x-100.0)*0.004);
     float yLayer = clamp(floor(yHeight), 0.0, 3.0);
     float yLayer2 = clamp(ceil(yHeight-0.8), 0.0, 3.0);
     float mixLayers = clamp(((yHeight-0.8)-yLayer)*5.0, 0.0, 1.0);
@@ -82,16 +82,15 @@ void main()
     vec4 finalFar = mix(farColor, farColor2, mixLayers);
 
     // Compute distance fades
-    float zDistance = (gl_FragCoord.z / gl_FragCoord.w);
     float distanceMix = clamp(
-        (zDistance-mixFadeDistance)*0.005, 0.0, 1.0
+        (i_distHeight.y-mixFadeDistance)*0.005, 0.0, 1.0
     );
     float alphaFade = clamp(
-        1.0-((zDistance-alphaFadeDistance)*0.01), 0.0, 1.0
+        1.0-((i_distHeight.y-alphaFadeDistance)*0.01), 0.0, 1.0
     );
 
     // Compute output color
     vec4 fragOutput = mix(finalNear, finalFar, distanceMix);
     fragOutput.a *= alphaFade;
-    o_color = fragOutput*constants.color;
+    o_color = (fragOutput*constants.color);
 }

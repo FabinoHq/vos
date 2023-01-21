@@ -114,15 +114,22 @@ bool OrbitalCam::compute(float ratio, float frametime)
     // Compute projection matrix
     m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
 
+    // Compute view matrix
+    m_matrix.setIdentity();
+    m_matrix.rotate(-m_angles);
+    m_matrix.translate(-m_position);
+
     // Compute projview matrix
     m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix.rotate(-m_angles);
-    m_projViewMatrix.translate(-m_position);
+    m_projViewMatrix *= m_matrix;
 
     // Copy matrices data into uniform data
     UniformData uniformData;
     memcpy(
         uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
+    memcpy(
+        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
     );
 
     // Update uniform buffer

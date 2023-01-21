@@ -47,6 +47,7 @@ precision highp int;
 layout(set = 0, binding = 0) uniform MatricesBuffer
 {
     mat4 projview;
+    mat4 view;
 } mats;
 
 // Model matrix (push constant)
@@ -61,7 +62,7 @@ layout(location = 1) in vec2 i_texCoords;
 layout(location = 2) in vec3 i_normals;
 layout(location = 0) out vec2 o_texCoords;
 layout(location = 1) out vec3 o_normals;
-layout(location = 2) out float o_height;
+layout(location = 2) out vec2 o_distHeight;
 out gl_PerVertex
 {
     vec4 gl_Position;
@@ -69,8 +70,10 @@ out gl_PerVertex
 void main()
 {
     // Compute vertex position
+    vec4 vertexPos = (matrix.model*vec4(i_position, 1.0));
     o_texCoords = i_texCoords;
     o_normals = i_normals;
-    o_height = i_position.y;
-    gl_Position = mats.projview*matrix.model*vec4(i_position, 1.0);
+    o_distHeight.x = i_position.y;
+    o_distHeight.y = length((mats.view*vertexPos).xyz);
+    gl_Position = (mats.projview*vertexPos);
 }

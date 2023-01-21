@@ -65,6 +65,7 @@
     struct UniformData
     {
         float   projView[16];   // Projection view combined matrix
+        float   view[16];       // View matrix (optional)
     };
 
 

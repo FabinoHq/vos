@@ -76,7 +76,7 @@ bool UniformBuffer::createBuffer(uint32_t size)
 
     // Check UniformData size
     size_t uniformDataSize = sizeof(UniformData);
-    if (uniformDataSize != (sizeof(float)*16))
+    if (uniformDataSize != (sizeof(float)*32))
     {
         // Invalid UniformData size
         return false;

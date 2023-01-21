@@ -231,6 +231,9 @@ bool Camera::compute(float ratio)
     memcpy(
         uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
     );
+    memcpy(
+        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
+    );
 
     // Update uniform buffer
     if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
