@@ -92,7 +92,7 @@ bool SysSettings::loadSettings()
 void SysSettings::adjustSettings(VkPhysicalDeviceProperties& deviceProperties,
     VkPhysicalDeviceFeatures& deviceFeatures)
 {
-    // Set max anistrotropy filtering
+    // Set max anistrotropic filtering
     m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_NONE;
     if (deviceProperties.limits.maxSamplerAnisotropy >= 2.0f)
     {
@@ -141,7 +141,7 @@ void SysSettings::adjustSettings(VkPhysicalDeviceProperties& deviceProperties,
     }
 
 
-    // Adjust anistrotropy filtering
+    // Adjust anistrotropic filtering
     if (m_anisotropicFiltering >= m_maxAnisotropicFiltering)
     {
         m_anisotropicFiltering = m_maxAnisotropicFiltering;
