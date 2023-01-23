@@ -195,6 +195,10 @@ bool BackRenderer::init(VulkanMemoryPool memoryPool,
         // Update descriptor set
         descImageInfo.sampler = samplers[i];
         descImageInfo.imageView = backchain.views[i];
+        if (GSysSettings.getMultiSamplingMode() > MULTI_SAMPLING_NONE)
+        {
+            descImageInfo.imageView = backchain.msaaViews[i];
+        }
         descriptorWrites.dstSet = descriptorSets[i];
         descriptorWrites.pImageInfo = &descImageInfo;
 
@@ -372,6 +376,10 @@ bool BackRenderer::resize(VulkanMemoryPool memoryPool,
         // Update descriptor set
         descImageInfo.sampler = samplers[i];
         descImageInfo.imageView = backchain.views[i];
+        if (GSysSettings.getMultiSamplingMode() > MULTI_SAMPLING_NONE)
+        {
+            descImageInfo.imageView = backchain.msaaViews[i];
+        }
         descriptorWrites.dstSet = descriptorSets[i];
         descriptorWrites.pImageInfo = &descImageInfo;
 

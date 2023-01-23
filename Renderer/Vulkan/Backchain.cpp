@@ -54,8 +54,10 @@ ratio(0.0f)
     extent.height = 0;
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
+        msaaImages[i] = 0;
         images[i] = 0;
         depthImages[i] = 0;
+        msaaViews[i] = 0;
         views[i] = 0;
         depthViews[i] = 0;
         framebuffers[i] = 0;
@@ -72,8 +74,10 @@ Backchain::~Backchain()
         framebuffers[i] = 0;
         depthViews[i] = 0;
         views[i] = 0;
+        msaaViews[i] = 0;
         depthImages[i] = 0;
         images[i] = 0;
+        msaaImages[i] = 0;
     }
     ratio = 0.0f;
     renderPass = 0;
@@ -96,6 +100,56 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         return false;
     }
 
+    // Get multisample configuration
+    MultiSamplingMode multiSamplingMode = GSysSettings.getMultiSamplingMode();
+
+    // Create backchain msaa images
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+        {
+            VkImageCreateInfo imageInfo;
+            imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+            imageInfo.pNext = 0;
+            imageInfo.flags = 0;
+            imageInfo.imageType = VK_IMAGE_TYPE_2D;
+            imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+            imageInfo.extent.width = width;
+            imageInfo.extent.height = height;
+            imageInfo.extent.depth = 1;
+            imageInfo.mipLevels = 1;
+            imageInfo.arrayLayers = 1;
+            imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+            imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+            imageInfo.usage = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+                VK_IMAGE_USAGE_SAMPLED_BIT);
+            imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+            imageInfo.queueFamilyIndexCount = 0;
+            imageInfo.pQueueFamilyIndices = 0;
+            imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+            if (vkCreateImage(
+                GVulkanDevice, &imageInfo, 0, &msaaImages[i]) != VK_SUCCESS)
+            {
+                // Could not create image
+                return false;
+            }
+            if (!msaaImages[i])
+            {
+                // Invalid image
+                return false;
+            }
+
+            // Allocate image memory
+            if (!GVulkanMemory.allocateSwapchainImage(
+                msaaImages[i], memoryPool))
+            {
+                // Could not allocate image memory
+                return false;
+            }
+        }
+    }
+
     // Create backchain images
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -111,6 +165,21 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        switch (multiSamplingMode)
+        {
+            case MULTI_SAMPLING_2X:
+                imageInfo.samples = VK_SAMPLE_COUNT_2_BIT;
+                break;
+            case MULTI_SAMPLING_4X:
+                imageInfo.samples = VK_SAMPLE_COUNT_4_BIT;
+                break;
+            case MULTI_SAMPLING_8X:
+                imageInfo.samples = VK_SAMPLE_COUNT_8_BIT;
+                break;
+            default:
+                imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+                break;
+        }
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
         imageInfo.usage =
             (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
@@ -155,6 +224,21 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        switch (multiSamplingMode)
+        {
+            case MULTI_SAMPLING_2X:
+                imageInfo.samples = VK_SAMPLE_COUNT_2_BIT;
+                break;
+            case MULTI_SAMPLING_4X:
+                imageInfo.samples = VK_SAMPLE_COUNT_4_BIT;
+                break;
+            case MULTI_SAMPLING_8X:
+                imageInfo.samples = VK_SAMPLE_COUNT_8_BIT;
+                break;
+            default:
+                imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+                break;
+        }
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
         imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -179,6 +263,46 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         {
             // Could not allocate depth image memory
             return false;
+        }
+    }
+
+    // Create backchain msaa images views
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        VkImageSubresourceRange msaaSubresource;
+        msaaSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        msaaSubresource.baseMipLevel = 0;
+        msaaSubresource.levelCount = 1;
+        msaaSubresource.baseArrayLayer = 0;
+        msaaSubresource.layerCount = 1;
+
+        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+        {
+            // Create image view
+            VkImageViewCreateInfo imageView;
+            imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            imageView.pNext = 0;
+            imageView.flags = 0;
+            imageView.image = msaaImages[i];
+            imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            imageView.format = VK_FORMAT_R8G8B8A8_UNORM;
+            imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageView.subresourceRange = msaaSubresource;
+
+            if (vkCreateImageView(GVulkanDevice,
+                &imageView, 0, &msaaViews[i]) != VK_SUCCESS)
+            {
+                // Could not create msaa image view
+                return false;
+            }
+            if (!msaaViews[i])
+            {
+                // Invalid msaa image view
+                return false;
+            }
         }
     }
 
@@ -209,6 +333,12 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         if (vkCreateImageView(GVulkanDevice,
             &imageView, 0, &views[i]) != VK_SUCCESS)
         {
+            // Could not create image view
+            return false;
+        }
+        if (!views[i])
+        {
+            // Invalid image view
             return false;
         }
     }
@@ -240,22 +370,52 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         if (vkCreateImageView(GVulkanDevice,
             &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
         {
+            // Could not create depth image view
+            return false;
+        }
+        if (!depthViews[i])
+        {
+            // Invalid depth image view
             return false;
         }
     }
 
     // Set color attachment
-    VkAttachmentDescription attachmentDescription[2];
+    VkAttachmentDescription attachmentDescription[3];
     attachmentDescription[0].flags = 0;
     attachmentDescription[0].format = VK_FORMAT_R8G8B8A8_UNORM;
     attachmentDescription[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    switch (multiSamplingMode)
+    {
+        case MULTI_SAMPLING_2X:
+            attachmentDescription[0].samples = VK_SAMPLE_COUNT_2_BIT;
+            break;
+        case MULTI_SAMPLING_4X:
+            attachmentDescription[0].samples = VK_SAMPLE_COUNT_4_BIT;
+            break;
+        case MULTI_SAMPLING_8X:
+            attachmentDescription[0].samples = VK_SAMPLE_COUNT_8_BIT;
+            break;
+        default:
+            attachmentDescription[0].samples = VK_SAMPLE_COUNT_1_BIT;
+            break;
+    }
     attachmentDescription[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachmentDescription[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        attachmentDescription[0].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    }
     attachmentDescription[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     attachmentDescription[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     attachmentDescription[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     attachmentDescription[0].finalLayout =
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        attachmentDescription[0].finalLayout =
+            VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    }
 
     VkAttachmentReference colorAttachmentReference;
     colorAttachmentReference.attachment = 0;
@@ -265,8 +425,27 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
     attachmentDescription[1].flags = 0;
     attachmentDescription[1].format = VK_FORMAT_D32_SFLOAT;
     attachmentDescription[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    switch (multiSamplingMode)
+    {
+        case MULTI_SAMPLING_2X:
+            attachmentDescription[1].samples = VK_SAMPLE_COUNT_2_BIT;
+            break;
+        case MULTI_SAMPLING_4X:
+            attachmentDescription[1].samples = VK_SAMPLE_COUNT_4_BIT;
+            break;
+        case MULTI_SAMPLING_8X:
+            attachmentDescription[1].samples = VK_SAMPLE_COUNT_8_BIT;
+            break;
+        default:
+            attachmentDescription[1].samples = VK_SAMPLE_COUNT_1_BIT;
+            break;
+    }
     attachmentDescription[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachmentDescription[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        attachmentDescription[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    }
     attachmentDescription[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     attachmentDescription[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     attachmentDescription[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -278,6 +457,23 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
     depthAttachmentReference.layout =
         VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
+    // Set resolve attachment (msaa)
+    attachmentDescription[2].flags = 0;
+    attachmentDescription[2].format = VK_FORMAT_R8G8B8A8_UNORM;
+    attachmentDescription[2].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachmentDescription[2].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription[2].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachmentDescription[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachmentDescription[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachmentDescription[2].finalLayout =
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    VkAttachmentReference resolveAttachmentReference;
+    resolveAttachmentReference.attachment = 2;
+    resolveAttachmentReference.layout =
+        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
     // Render subpass
     VkSubpassDescription subpassDescription;
     subpassDescription.flags = 0;
@@ -287,6 +483,10 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
     subpassDescription.colorAttachmentCount = 1;
     subpassDescription.pColorAttachments = &colorAttachmentReference;
     subpassDescription.pResolveAttachments = 0;
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        subpassDescription.pResolveAttachments = &resolveAttachmentReference;
+    }
     subpassDescription.pDepthStencilAttachment = &depthAttachmentReference;
     subpassDescription.preserveAttachmentCount = 0;
     subpassDescription.pPreserveAttachments = 0;
@@ -336,6 +536,10 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
     renderPassInfo.pNext = 0;
     renderPassInfo.flags = 0;
     renderPassInfo.attachmentCount = 2;
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        renderPassInfo.attachmentCount = 3;
+    }
     renderPassInfo.pAttachments = attachmentDescription;
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpassDescription;
@@ -357,9 +561,10 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
     // Create framebuffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        VkImageView imageViews[2];
+        VkImageView imageViews[3];
         imageViews[0] = views[i];
         imageViews[1] = depthViews[i];
+        imageViews[2] = msaaViews[i];
 
         VkFramebufferCreateInfo framebufferInfo;
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -367,6 +572,10 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         framebufferInfo.flags = 0;
         framebufferInfo.renderPass = renderPass;
         framebufferInfo.attachmentCount = 2;
+        if (multiSamplingMode > MULTI_SAMPLING_NONE)
+        {
+            framebufferInfo.attachmentCount = 3;
+        }
         framebufferInfo.pAttachments = imageViews;
         framebufferInfo.width = width;
         framebufferInfo.height = height;
@@ -421,6 +630,9 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         return false;
     }
 
+    // Get multisample configuration
+    MultiSamplingMode multiSamplingMode = GSysSettings.getMultiSamplingMode();
+
     // Destroy current backchain
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -445,6 +657,13 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         }
         views[i]= 0;
 
+        // Destroy backchain msaa images views
+        if (msaaViews[i])
+        {
+            vkDestroyImageView(GVulkanDevice, msaaViews[i], 0);
+        }
+        msaaViews[i]= 0;
+
         // Destroy backchain depth images
         if (depthImages[i])
         {
@@ -458,6 +677,60 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
             vkDestroyImage(GVulkanDevice, images[i], 0);
         }
         images[i] = 0;
+
+        // Destroy backchain msaa images
+        if (msaaImages[i])
+        {
+            vkDestroyImage(GVulkanDevice, msaaImages[i], 0);
+        }
+        msaaImages[i] = 0;
+    }
+
+    // Recreate backchain msaa images
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+        {
+            VkImageCreateInfo imageInfo;
+            imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+            imageInfo.pNext = 0;
+            imageInfo.flags = 0;
+            imageInfo.imageType = VK_IMAGE_TYPE_2D;
+            imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+            imageInfo.extent.width = width;
+            imageInfo.extent.height = height;
+            imageInfo.extent.depth = 1;
+            imageInfo.mipLevels = 1;
+            imageInfo.arrayLayers = 1;
+            imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+            imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+            imageInfo.usage = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+                VK_IMAGE_USAGE_SAMPLED_BIT);
+            imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+            imageInfo.queueFamilyIndexCount = 0;
+            imageInfo.pQueueFamilyIndices = 0;
+            imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+            if (vkCreateImage(
+                GVulkanDevice, &imageInfo, 0, &msaaImages[i]) != VK_SUCCESS)
+            {
+                // Could not recreate image
+                return false;
+            }
+            if (!msaaImages[i])
+            {
+                // Invalid image
+                return false;
+            }
+
+            // Reallocate image memory
+            if (!GVulkanMemory.allocateSwapchainImage(
+                msaaImages[i], memoryPool))
+            {
+                // Could not reallocate image memory
+                return false;
+            }
+        }
     }
 
     // Recreate backchain images
@@ -475,6 +748,21 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        switch (multiSamplingMode)
+        {
+            case MULTI_SAMPLING_2X:
+                imageInfo.samples = VK_SAMPLE_COUNT_2_BIT;
+                break;
+            case MULTI_SAMPLING_4X:
+                imageInfo.samples = VK_SAMPLE_COUNT_4_BIT;
+                break;
+            case MULTI_SAMPLING_8X:
+                imageInfo.samples = VK_SAMPLE_COUNT_8_BIT;
+                break;
+            default:
+                imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+                break;
+        }
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
         imageInfo.usage =
             (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
@@ -519,6 +807,21 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        switch (multiSamplingMode)
+        {
+            case MULTI_SAMPLING_2X:
+                imageInfo.samples = VK_SAMPLE_COUNT_2_BIT;
+                break;
+            case MULTI_SAMPLING_4X:
+                imageInfo.samples = VK_SAMPLE_COUNT_4_BIT;
+                break;
+            case MULTI_SAMPLING_8X:
+                imageInfo.samples = VK_SAMPLE_COUNT_8_BIT;
+                break;
+            default:
+                imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+                break;
+        }
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
         imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -543,6 +846,46 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         {
             // Could not reallocate depth image memory
             return false;
+        }
+    }
+
+    // Recreate backchain msaa images views
+    if (multiSamplingMode > MULTI_SAMPLING_NONE)
+    {
+        VkImageSubresourceRange msaaSubresource;
+        msaaSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        msaaSubresource.baseMipLevel = 0;
+        msaaSubresource.levelCount = 1;
+        msaaSubresource.baseArrayLayer = 0;
+        msaaSubresource.layerCount = 1;
+
+        for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+        {
+            // Recreate image view
+            VkImageViewCreateInfo imageView;
+            imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            imageView.pNext = 0;
+            imageView.flags = 0;
+            imageView.image = msaaImages[i];
+            imageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            imageView.format = VK_FORMAT_R8G8B8A8_UNORM;
+            imageView.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageView.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageView.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+            imageView.subresourceRange = msaaSubresource;
+
+            if (vkCreateImageView(GVulkanDevice,
+                &imageView, 0, &msaaViews[i]) != VK_SUCCESS)
+            {
+                // Could not recreate image view
+                return false;
+            }
+            if (!msaaViews[i])
+            {
+                // Invalid msaa image view
+                return false;
+            }
         }
     }
 
@@ -623,9 +966,10 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
     // Recreate framebuffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        VkImageView imageViews[2];
+        VkImageView imageViews[3];
         imageViews[0] = views[i];
         imageViews[1] = depthViews[i];
+        imageViews[2] = msaaViews[i];
 
         VkFramebufferCreateInfo framebufferInfo;
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -633,6 +977,10 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         framebufferInfo.flags = 0;
         framebufferInfo.renderPass = renderPass;
         framebufferInfo.attachmentCount = 2;
+        if (multiSamplingMode > MULTI_SAMPLING_NONE)
+        {
+            framebufferInfo.attachmentCount = 3;
+        }
         framebufferInfo.pAttachments = imageViews;
         framebufferInfo.width = width;
         framebufferInfo.height = height;
@@ -708,6 +1056,13 @@ void Backchain::destroyBackchain()
         }
         views[i]= 0;
 
+        // Destroy backchain msaa images views
+        if (msaaViews[i])
+        {
+            vkDestroyImageView(GVulkanDevice, msaaViews[i], 0);
+        }
+        msaaViews[i]= 0;
+
         // Destroy backchain depth images
         if (depthImages[i])
         {
@@ -721,6 +1076,13 @@ void Backchain::destroyBackchain()
             vkDestroyImage(GVulkanDevice, images[i], 0);
         }
         images[i] = 0;
+
+        // Destroy backchain msaa images
+        if (msaaImages[i])
+        {
+            vkDestroyImage(GVulkanDevice, msaaImages[i], 0);
+        }
+        msaaImages[i] = 0;
     }
 
     ratio = 0.0f;

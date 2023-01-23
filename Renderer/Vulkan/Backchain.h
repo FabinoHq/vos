@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_BACKCHAIN_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysSettings.h"
     #include "Vulkan.h"
     #include "VulkanMemory.h"
     #include "Swapchain.h"
@@ -105,8 +106,10 @@
             VkRenderPass        renderPass;     // Backchain render pass
             float               ratio;          // Backchain aspect ratio
 
+            VkImage             msaaImages[RendererMaxSwapchainFrames];
             VkImage             images[RendererMaxSwapchainFrames];
             VkImage             depthImages[RendererMaxSwapchainFrames];
+            VkImageView         msaaViews[RendererMaxSwapchainFrames];
             VkImageView         views[RendererMaxSwapchainFrames];
             VkImageView         depthViews[RendererMaxSwapchainFrames];
             VkFramebuffer       framebuffers[RendererMaxSwapchainFrames];

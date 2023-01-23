@@ -433,6 +433,21 @@ bool Pipeline::createPipeline(
     multisampleInfo.pNext = 0;
     multisampleInfo.flags = 0;
     multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+    switch (GSysSettings.getMultiSamplingMode())
+    {
+        case MULTI_SAMPLING_2X:
+            multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_2_BIT;
+            break;
+        case MULTI_SAMPLING_4X:
+            multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_4_BIT;
+            break;
+        case MULTI_SAMPLING_8X:
+            multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_8_BIT;
+            break;
+        default:
+            multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+            break;
+    }
     multisampleInfo.sampleShadingEnable = VK_FALSE;
     multisampleInfo.minSampleShading = 1.0f;
     multisampleInfo.pSampleMask = 0;
