@@ -1077,6 +1077,8 @@ bool Renderer::selectVulkanDevice()
     // Select a physical device with matching extensions properties
     bool deviceFound = false;
     uint32_t deviceIndex = 0;
+    VkPhysicalDeviceProperties deviceProperties;
+    VkPhysicalDeviceFeatures deviceFeatures;
     for (uint32_t i = 0; i < devicesCounts; ++i)
     {
         // Get device extensions count
@@ -1124,8 +1126,6 @@ bool Renderer::selectVulkanDevice()
         }
 
         // Get physical device properties and features
-        VkPhysicalDeviceProperties deviceProperties;
-        VkPhysicalDeviceFeatures deviceFeatures;
         vkGetPhysicalDeviceProperties(physicalDevices[i], &deviceProperties);
         vkGetPhysicalDeviceFeatures(physicalDevices[i], &deviceFeatures);
 
@@ -1227,6 +1227,9 @@ bool Renderer::selectVulkanDevice()
         return false;
     }
 
+    // Adjust system settings
+    GSysSettings.adjustSettings(deviceProperties, deviceFeatures);
+
     // Set queue priorities
     float queuePriorities[1];
     queuePriorities[0] = 1.0f;
@@ -1240,6 +1243,73 @@ bool Renderer::selectVulkanDevice()
     queueInfos[0].queueCount = 1;
     queueInfos[0].pQueuePriorities = queuePriorities;
 
+    // Set device features to enable
+    VkPhysicalDeviceFeatures enableDeviceFeatures;
+    enableDeviceFeatures.robustBufferAccess = VK_FALSE;
+    enableDeviceFeatures.fullDrawIndexUint32 = VK_FALSE;
+    enableDeviceFeatures.imageCubeArray = VK_FALSE;
+    enableDeviceFeatures.independentBlend = VK_FALSE;
+    enableDeviceFeatures.geometryShader = VK_FALSE;
+    enableDeviceFeatures.tessellationShader = VK_FALSE;
+    enableDeviceFeatures.sampleRateShading = VK_FALSE;
+    enableDeviceFeatures.dualSrcBlend = VK_FALSE;
+    enableDeviceFeatures.logicOp = VK_FALSE;
+    enableDeviceFeatures.multiDrawIndirect = VK_FALSE;
+    enableDeviceFeatures.drawIndirectFirstInstance = VK_FALSE;
+    enableDeviceFeatures.depthClamp = VK_FALSE;
+    enableDeviceFeatures.depthBiasClamp = VK_FALSE;
+    enableDeviceFeatures.fillModeNonSolid = VK_FALSE;
+    enableDeviceFeatures.depthBounds = VK_FALSE;
+    enableDeviceFeatures.wideLines = VK_FALSE;
+    enableDeviceFeatures.largePoints = VK_FALSE;
+    enableDeviceFeatures.alphaToOne = VK_FALSE;
+    enableDeviceFeatures.multiViewport = VK_FALSE;
+    enableDeviceFeatures.samplerAnisotropy = VK_FALSE;
+    if (GSysSettings.getAnisotropicFilteringMode() >
+        ANISOTROPIC_FILTERING_NONE)
+    {
+        enableDeviceFeatures.samplerAnisotropy = VK_TRUE;
+    }
+    enableDeviceFeatures.textureCompressionETC2 = VK_FALSE;
+    enableDeviceFeatures.textureCompressionASTC_LDR = VK_FALSE;
+    enableDeviceFeatures.textureCompressionBC = VK_FALSE;
+    enableDeviceFeatures.occlusionQueryPrecise = VK_FALSE;
+    enableDeviceFeatures.pipelineStatisticsQuery = VK_FALSE;
+    enableDeviceFeatures.vertexPipelineStoresAndAtomics = VK_FALSE;
+    enableDeviceFeatures.fragmentStoresAndAtomics = VK_FALSE;
+    enableDeviceFeatures.shaderTessellationAndGeometryPointSize = VK_FALSE;
+    enableDeviceFeatures.shaderImageGatherExtended = VK_FALSE;
+    enableDeviceFeatures.shaderStorageImageExtendedFormats = VK_FALSE;
+    enableDeviceFeatures.shaderStorageImageMultisample = VK_FALSE;
+    if (GSysSettings.getMultiSamplingMode() > MULTI_SAMPLING_NONE)
+    {
+        enableDeviceFeatures.shaderStorageImageMultisample = VK_TRUE;
+    }
+    enableDeviceFeatures.shaderStorageImageReadWithoutFormat = VK_FALSE;
+    enableDeviceFeatures.shaderStorageImageWriteWithoutFormat = VK_FALSE;
+    enableDeviceFeatures.shaderUniformBufferArrayDynamicIndexing = VK_FALSE;
+    enableDeviceFeatures.shaderSampledImageArrayDynamicIndexing = VK_FALSE;
+    enableDeviceFeatures.shaderStorageBufferArrayDynamicIndexing = VK_FALSE;
+    enableDeviceFeatures.shaderStorageImageArrayDynamicIndexing = VK_FALSE;
+    enableDeviceFeatures.shaderClipDistance = VK_FALSE;
+    enableDeviceFeatures.shaderCullDistance = VK_FALSE;
+    enableDeviceFeatures.shaderFloat64 = VK_FALSE;
+    enableDeviceFeatures.shaderInt64 = VK_FALSE;
+    enableDeviceFeatures.shaderInt16 = VK_FALSE;
+    enableDeviceFeatures.shaderResourceResidency = VK_FALSE;
+    enableDeviceFeatures.shaderResourceMinLod = VK_FALSE;
+    enableDeviceFeatures.sparseBinding = VK_FALSE;
+    enableDeviceFeatures.sparseResidencyBuffer = VK_FALSE;
+    enableDeviceFeatures.sparseResidencyImage2D = VK_FALSE;
+    enableDeviceFeatures.sparseResidencyImage3D = VK_FALSE;
+    enableDeviceFeatures.sparseResidency2Samples = VK_FALSE;
+    enableDeviceFeatures.sparseResidency4Samples = VK_FALSE;
+    enableDeviceFeatures.sparseResidency8Samples = VK_FALSE;
+    enableDeviceFeatures.sparseResidency16Samples = VK_FALSE;
+    enableDeviceFeatures.sparseResidencyAliased = VK_FALSE;
+    enableDeviceFeatures.variableMultisampleRate = VK_FALSE;
+    enableDeviceFeatures.inheritedQueries = VK_FALSE;
+
     // Create Vulkan device
     VkDeviceCreateInfo deviceInfos;
     deviceInfos.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -1251,7 +1321,7 @@ bool Renderer::selectVulkanDevice()
     deviceInfos.ppEnabledLayerNames = 0;
     deviceInfos.enabledExtensionCount = VulkanDeviceExtensionsSize;
     deviceInfos.ppEnabledExtensionNames = VulkanDeviceExtensions;
-    deviceInfos.pEnabledFeatures = 0;
+    deviceInfos.pEnabledFeatures = &enableDeviceFeatures;
 
     if (vkCreateDevice(
         GPhysicalDevice, &deviceInfos, 0, &GVulkanDevice) != VK_SUCCESS)

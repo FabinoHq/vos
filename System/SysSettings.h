@@ -43,6 +43,7 @@
 #define VOS_SYSTEM_SYSSETTINGS_HEADER
 
     #include "System.h"
+    #include "../Renderer/Vulkan/Vulkan.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -87,6 +88,71 @@
             ~SysSettings();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Load system settings                                          //
+            //  return : True if system settings are successfully loaded      //
+            ////////////////////////////////////////////////////////////////////
+            bool loadSettings();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Adjust system settings according to device properties         //
+            ////////////////////////////////////////////////////////////////////
+            void adjustSettings(VkPhysicalDeviceProperties& deviceProperties,
+                VkPhysicalDeviceFeatures& deviceFeatures);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set Anisotropic filtering mode                                //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAnisotropicFilteringMode(
+                AnisotropicFilteringMode anisotropicFiltering)
+            {
+                m_anisotropicFiltering = anisotropicFiltering;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set Multi sampling mode                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline void setMultiSamplingMode(MultiSamplingMode multiSampling)
+            {
+                m_multiSampling = multiSampling;
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get max anisotropic filtering mode                            //
+            ////////////////////////////////////////////////////////////////////
+            inline AnisotropicFilteringMode getMaxAnisotropicFilteringMode()
+            {
+                return m_maxAnisotropicFiltering;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get max multi sampling mode                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline MultiSamplingMode getMaxMultiSamplingMode()
+            {
+                return m_maxMultiSampling;
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Anisotropic filtering mode                                //
+            ////////////////////////////////////////////////////////////////////
+            inline AnisotropicFilteringMode getAnisotropicFilteringMode()
+            {
+                return m_anisotropicFiltering;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Multi sampling mode                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline MultiSamplingMode getMultiSamplingMode()
+            {
+                return m_multiSampling;
+            }
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  SysSettings private copy constructor : Not copyable           //
@@ -100,9 +166,18 @@
 
 
         private:
+            AnisotropicFilteringMode    m_maxAnisotropicFiltering;
+            MultiSamplingMode           m_maxMultiSampling;
+
             AnisotropicFilteringMode    m_anisotropicFiltering;
             MultiSamplingMode           m_multiSampling;
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysSettings global instance                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    extern SysSettings GSysSettings;
 
 
 #endif // VOS_SYSTEM_SYSSETTINGS_HEADER

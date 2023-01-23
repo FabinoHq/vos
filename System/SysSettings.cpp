@@ -43,9 +43,17 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  SysSettings global instance                                               //
+////////////////////////////////////////////////////////////////////////////////
+SysSettings GSysSettings = SysSettings();
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  SysSettings default constructor                                           //
 ////////////////////////////////////////////////////////////////////////////////
 SysSettings::SysSettings() :
+m_maxAnisotropicFiltering(ANISOTROPIC_FILTERING_NONE),
+m_maxMultiSampling(MULTI_SAMPLING_NONE),
 m_anisotropicFiltering(ANISOTROPIC_FILTERING_NONE),
 m_multiSampling(MULTI_SAMPLING_NONE)
 {
@@ -57,5 +65,91 @@ m_multiSampling(MULTI_SAMPLING_NONE)
 ////////////////////////////////////////////////////////////////////////////////
 SysSettings::~SysSettings()
 {
+    m_multiSampling = MULTI_SAMPLING_NONE;
+    m_anisotropicFiltering = ANISOTROPIC_FILTERING_NONE;
+    m_maxMultiSampling = MULTI_SAMPLING_NONE;
+    m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_NONE;
+}
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load system settings                                                      //
+//  return : True if system settings are successfully loaded                  //
+////////////////////////////////////////////////////////////////////////////////
+bool SysSettings::loadSettings()
+{
+    // Temp set settings
+    m_anisotropicFiltering = ANISOTROPIC_FILTERING_8X;
+    m_multiSampling = MULTI_SAMPLING_8X;
+
+    // System settings successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Adjust system settings according to device properties                     //
+////////////////////////////////////////////////////////////////////////////////
+void SysSettings::adjustSettings(VkPhysicalDeviceProperties& deviceProperties,
+    VkPhysicalDeviceFeatures& deviceFeatures)
+{
+    // Set max anistrotropy filtering
+    m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_NONE;
+    if (deviceProperties.limits.maxSamplerAnisotropy >= 2.0f)
+    {
+        m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_2X;
+    }
+    if (deviceProperties.limits.maxSamplerAnisotropy >= 4.0f)
+    {
+        m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_4X;
+    }
+    if (deviceProperties.limits.maxSamplerAnisotropy >= 8.0f)
+    {
+        m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_8X;
+    }
+    if (deviceProperties.limits.maxSamplerAnisotropy >= 16.0f)
+    {
+        m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_16X;
+    }
+
+    if (deviceFeatures.samplerAnisotropy != VK_TRUE)
+    {
+        m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_NONE;
+    }
+
+    // Set max multisampling
+    VkSampleCountFlags multiSampleCount =
+        (deviceProperties.limits.framebufferColorSampleCounts &
+        deviceProperties.limits.framebufferDepthSampleCounts);
+
+    m_maxMultiSampling = MULTI_SAMPLING_NONE;
+    if (multiSampleCount & VK_SAMPLE_COUNT_2_BIT)
+    {
+        m_maxMultiSampling = MULTI_SAMPLING_2X;
+    }
+    if (multiSampleCount & VK_SAMPLE_COUNT_4_BIT)
+    {
+        m_maxMultiSampling = MULTI_SAMPLING_4X;
+    }
+    if (multiSampleCount & VK_SAMPLE_COUNT_8_BIT)
+    {
+        m_maxMultiSampling = MULTI_SAMPLING_8X;
+    }
+
+    if (deviceFeatures.shaderStorageImageMultisample != VK_TRUE)
+    {
+        m_maxMultiSampling = MULTI_SAMPLING_NONE;
+    }
+
+
+    // Adjust anistrotropy filtering
+    if (m_anisotropicFiltering >= m_maxAnisotropicFiltering)
+    {
+        m_anisotropicFiltering = m_maxAnisotropicFiltering;
+    }
+
+    // Adjust multisampling
+    if (m_multiSampling >= m_maxMultiSampling)
+    {
+        m_multiSampling = m_maxMultiSampling;
+    }
 }

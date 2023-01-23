@@ -82,6 +82,13 @@ bool Vos::launch()
         return false;
     }
 
+    // Init system settings
+    if (!GSysSettings.loadSettings())
+    {
+        // Unable to load system settings
+        return false;
+    }
+
     // Init VOS renderer
     if (!GRenderer.init())
     {

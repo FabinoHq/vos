@@ -46,6 +46,7 @@
     #include "../System/SysMessage.h"
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"
+    #include "../System/SysSettings.h"
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/VulkanMemory.h"
     #include "Vulkan/VulkanQueue.h"

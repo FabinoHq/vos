@@ -109,6 +109,9 @@ bool Camera::init()
         m_fovy, GSwapchain.ratio, m_nearPlane, m_farPlane
     );
 
+    // Reset view matrix
+    m_matrix.setIdentity();
+
     // Reset projview matrix
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
@@ -117,6 +120,9 @@ bool Camera::init()
     UniformData uniformData;
     memcpy(
         uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
+    memcpy(
+        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
     );
 
     // Create uniform buffers

@@ -92,10 +92,16 @@ bool View::init()
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
 
+    // Reset view matrix
+    m_matrix.setIdentity();
+
     // Copy matrices data into uniform data
     UniformData uniformData;
     memcpy(
         uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
+    memcpy(
+        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
     );
 
     // Create uniform buffers
@@ -198,6 +204,9 @@ bool View::compute(float ratio)
     UniformData uniformData;
     memcpy(
         uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
+    memcpy(
+        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
     );
 
     // Update uniform buffer

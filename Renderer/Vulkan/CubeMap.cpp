@@ -169,6 +169,29 @@ bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
     samplerInfo.mipLodBias = 0.0f;
     samplerInfo.anisotropyEnable = VK_FALSE;
     samplerInfo.maxAnisotropy = 1.0f;
+    switch (GSysSettings.getAnisotropicFilteringMode())
+    {
+        case ANISOTROPIC_FILTERING_2X:
+            samplerInfo.anisotropyEnable = VK_TRUE;
+            samplerInfo.maxAnisotropy = 2.0f;
+            break;
+        case ANISOTROPIC_FILTERING_4X:
+            samplerInfo.anisotropyEnable = VK_TRUE;
+            samplerInfo.maxAnisotropy = 4.0f;
+            break;
+        case ANISOTROPIC_FILTERING_8X:
+            samplerInfo.anisotropyEnable = VK_TRUE;
+            samplerInfo.maxAnisotropy = 8.0f;
+            break;
+        case ANISOTROPIC_FILTERING_16X:
+            samplerInfo.anisotropyEnable = VK_TRUE;
+            samplerInfo.maxAnisotropy = 16.0f;
+            break;
+        default:
+            samplerInfo.anisotropyEnable = VK_FALSE;
+            samplerInfo.maxAnisotropy = 1.0f;
+            break;
+    }
     samplerInfo.compareEnable = VK_FALSE;
     samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
     samplerInfo.minLod = 0.0f;

@@ -47,6 +47,7 @@ precision highp int;
 layout(set = 0, binding = 0) uniform MatricesBuffer
 {
     mat4 projview;
+    mat4 view;
 } mats;
 
 // Model matrix (push constant)

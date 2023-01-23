@@ -43,6 +43,7 @@
 #define VOS_RENDERER_BACKRENDERER_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysSettings.h"
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/VulkanMemory.h"

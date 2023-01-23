@@ -465,6 +465,8 @@ void Game::compute(float frametime)
     int32_t chunkY = Math::divide(m_freeflycam.getZ(), HeightMapChunkZStride);
     m_heightMapStream.update(chunkX, chunkY);
 
+    m_sprite.rotate(0.1f*frametime);
+
     /*// Memory dump
     static int memDump = 0;
     ++memDump;
@@ -600,14 +602,14 @@ void Game::render()
     GRenderer.bindDefaultVertexBuffer();
 
     // Render back rendered frame
-    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_backRenderer.bind();
-    m_sprite.render();
+    m_sprite.render();*/
 
     // Render sprite
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_sprite.bindTexture();
-    m_sprite.render();*/
+    m_sprite.render();
 
     // Render procedural sprite
     /*m_procSprite.bindPipeline();

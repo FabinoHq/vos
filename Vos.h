@@ -49,6 +49,7 @@
     #include "System/SysWindow.h"
     #include "System/SysClock.h"
     #include "System/SysSleep.h"
+    #include "System/SysSettings.h"
 
     #include "Renderer/Renderer.h"
     #include "Resources/Resources.h"

@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_CUBEMAP_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysSettings.h"
     #include "Vulkan.h"
     #include "VulkanMemory.h"
     #include "Swapchain.h"
