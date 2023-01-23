@@ -54,8 +54,10 @@ SysSettings GSysSettings = SysSettings();
 SysSettings::SysSettings() :
 m_maxAnisotropicFiltering(ANISOTROPIC_FILTERING_NONE),
 m_maxMultiSampling(MULTI_SAMPLING_NONE),
+m_maxSampleShading(SAMPLE_SHADING_NONE),
 m_anisotropicFiltering(ANISOTROPIC_FILTERING_NONE),
-m_multiSampling(MULTI_SAMPLING_NONE)
+m_multiSampling(MULTI_SAMPLING_NONE),
+m_sampleShading(SAMPLE_SHADING_NONE)
 {
 
 }
@@ -65,8 +67,10 @@ m_multiSampling(MULTI_SAMPLING_NONE)
 ////////////////////////////////////////////////////////////////////////////////
 SysSettings::~SysSettings()
 {
+    m_sampleShading = SAMPLE_SHADING_NONE;
     m_multiSampling = MULTI_SAMPLING_NONE;
     m_anisotropicFiltering = ANISOTROPIC_FILTERING_NONE;
+    m_maxSampleShading = SAMPLE_SHADING_NONE;
     m_maxMultiSampling = MULTI_SAMPLING_NONE;
     m_maxAnisotropicFiltering = ANISOTROPIC_FILTERING_NONE;
 }
@@ -81,6 +85,7 @@ bool SysSettings::loadSettings()
     // Temp set settings
     m_anisotropicFiltering = ANISOTROPIC_FILTERING_8X;
     m_multiSampling = MULTI_SAMPLING_8X;
+    m_sampleShading = SAMPLE_SHADING_ONE;
 
     // System settings successfully loaded
     return true;
@@ -140,6 +145,14 @@ void SysSettings::adjustSettings(VkPhysicalDeviceProperties& deviceProperties,
         m_maxMultiSampling = MULTI_SAMPLING_NONE;
     }
 
+    // Set max sample shading
+    m_maxSampleShading = SAMPLE_SHADING_NONE;
+    if ((deviceFeatures.sampleRateShading == VK_TRUE) &&
+        (m_maxMultiSampling > MULTI_SAMPLING_NONE))
+    {
+        m_maxSampleShading = SAMPLE_SHADING_ONE;
+    }
+
 
     // Adjust anistrotropic filtering
     if (m_anisotropicFiltering >= m_maxAnisotropicFiltering)
@@ -151,5 +164,15 @@ void SysSettings::adjustSettings(VkPhysicalDeviceProperties& deviceProperties,
     if (m_multiSampling >= m_maxMultiSampling)
     {
         m_multiSampling = m_maxMultiSampling;
+    }
+
+    // Adjust sample shading
+    if (m_sampleShading >= m_maxSampleShading)
+    {
+        m_sampleShading = m_maxSampleShading;
+    }
+    if (m_multiSampling <= MULTI_SAMPLING_NONE)
+    {
+        m_sampleShading = SAMPLE_SHADING_NONE;
     }
 }

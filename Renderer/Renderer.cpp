@@ -1308,6 +1308,10 @@ bool Renderer::selectVulkanDevice()
     enableDeviceFeatures.geometryShader = VK_FALSE;
     enableDeviceFeatures.tessellationShader = VK_FALSE;
     enableDeviceFeatures.sampleRateShading = VK_FALSE;
+    if (GSysSettings.getSampleShadingMode() > SAMPLE_SHADING_NONE)
+    {
+        enableDeviceFeatures.sampleRateShading = VK_TRUE;
+    }
     enableDeviceFeatures.dualSrcBlend = VK_FALSE;
     enableDeviceFeatures.logicOp = VK_FALSE;
     enableDeviceFeatures.multiDrawIndirect = VK_FALSE;

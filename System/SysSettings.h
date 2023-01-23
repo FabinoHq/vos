@@ -72,6 +72,18 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Sample shading mode enumeration                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    enum SampleShadingMode
+    {
+        SAMPLE_SHADING_NONE = 0,
+        SAMPLE_SHADING_QUARTER = 1,
+        SAMPLE_SHADING_HALF = 2,
+        SAMPLE_SHADING_ONE = 3
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  SysSettings class definition                                          //
     ////////////////////////////////////////////////////////////////////////////
     class SysSettings
@@ -118,6 +130,14 @@
                 m_multiSampling = multiSampling;
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set Sample shading mode                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline void setSampleShadingMode(SampleShadingMode sampleShading)
+            {
+                m_sampleShading = sampleShading;
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Get max anisotropic filtering mode                            //
@@ -133,6 +153,14 @@
             inline MultiSamplingMode getMaxMultiSamplingMode()
             {
                 return m_maxMultiSampling;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get max sample shading mode                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline SampleShadingMode getMaxSampleShadingMode()
+            {
+                return m_maxSampleShading;
             }
 
 
@@ -152,6 +180,14 @@
                 return m_multiSampling;
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get Sample shading mode                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline SampleShadingMode getSampleShadingMode()
+            {
+                return m_sampleShading;
+            }
+
 
         private:
             ////////////////////////////////////////////////////////////////////
@@ -168,9 +204,11 @@
         private:
             AnisotropicFilteringMode    m_maxAnisotropicFiltering;
             MultiSamplingMode           m_maxMultiSampling;
+            SampleShadingMode           m_maxSampleShading;
 
             AnisotropicFilteringMode    m_anisotropicFiltering;
             MultiSamplingMode           m_multiSampling;
+            SampleShadingMode           m_sampleShading;
     };
 
 
