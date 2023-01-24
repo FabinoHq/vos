@@ -271,6 +271,9 @@
             VertexBuffer*           m_heightptrs[HEIGHTMAP_ASSETSCOUNT];
             HeightMapChunkState     m_chunks[HEIGHTMAP_ASSETSCOUNT];
 
+            float*                  m_vertices;         // Chunk vertices
+            uint16_t*               m_indices;          // Chunk indices
+
             int32_t                 m_chunkX;           // Heightmap chunk X
             int32_t                 m_chunkY;           // Heightmap chunk Y
     };

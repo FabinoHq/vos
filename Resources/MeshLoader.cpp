@@ -53,7 +53,9 @@ m_commandPool(0),
 m_commandBuffer(0),
 m_stagingBuffer(),
 m_fence(0),
-m_meshes(0)
+m_meshes(0),
+m_vertices(0),
+m_indices(0)
 {
 
 }
@@ -63,7 +65,16 @@ m_meshes(0)
 ////////////////////////////////////////////////////////////////////////////////
 MeshLoader::~MeshLoader()
 {
-
+    if (m_indices) { delete[] m_indices; }
+    m_indices = 0;
+    if (m_vertices) { delete[] m_vertices; }
+    m_vertices = 0;
+    if (m_meshes) { delete[] m_meshes; }
+    m_meshes = 0;
+    m_fence = 0;
+    m_commandBuffer = 0;
+    m_commandPool = 0;
+    m_state = MESHLOADER_STATE_NONE;
 }
 
 
@@ -247,6 +258,22 @@ bool MeshLoader::init()
         return false;
     }
 
+    // Allocate mesh vertices
+    m_vertices = new (std::nothrow) float[MeshLoaderMaxVerticesCount];
+    if (!m_vertices)
+    {
+        // Could not allocate mesh vertices
+        return false;
+    }
+
+    // Allocate mesh indices
+    m_indices = new (std::nothrow) uint16_t[MeshLoaderMaxIndicesCount];
+    if (!m_indices)
+    {
+        // Could not allocate mesh indices
+        return false;
+    }
+
     // Mesh loader ready
     return true;
 }
@@ -311,6 +338,12 @@ MeshLoaderState MeshLoader::getState()
 ////////////////////////////////////////////////////////////////////////////////
 void MeshLoader::destroyMeshLoader()
 {
+    // Delete indices and vertices
+    if (m_indices) { delete[] m_indices; }
+    m_indices = 0;
+    if (m_vertices) { delete[] m_vertices; }
+    m_vertices = 0;
+
     // Destroy meshes vertex buffers
     for (int i = 0; i < MESHES_ASSETSCOUNT; ++i)
     {
@@ -690,86 +723,90 @@ bool MeshLoader::loadMeshes()
 bool MeshLoader::loadVMSH(VertexBuffer& vertexBuffer,
     const std::string& filepath)
 {
-    // Init mesh data
-    float* vertices = 0;
-    uint16_t* indices = 0;
+    // Init vertices and indices count
     uint32_t verticesCount = 0;
     uint32_t indicesCount = 0;
 
     // Load mesh data from file
     std::ifstream file;
     file.open(filepath.c_str(), std::ios::in | std::ios::binary);
-    if (file.is_open())
+    if (!file.is_open())
     {
-        // Read VMSH header
-        char header[4] = {0};
-        char majorVersion = 0;
-        char minorVersion = 0;
-        file.read(header, sizeof(char)*4);
-        file.read(&majorVersion, sizeof(char));
-        file.read(&minorVersion, sizeof(char));
-
-        // Check VMSH header
-        if ((header[0] != 'V') || (header[1] != 'M') ||
-            (header[2] != 'S') || (header[3] != 'H'))
-        {
-            // Invalid VMSH header
-            return false;
-        }
-
-        // Check VMSH version
-        if ((majorVersion != 1) || (minorVersion != 0))
-        {
-            // Invalid VMSH header
-            return false;
-        }
-
-        // Read VMSH file type
-        char type = 0;
-        file.read(&type, sizeof(char));
-        if (type != 0)
-        {
-            // Invalid VMSH type
-            return false;
-        }
-
-        // Read vertices and indices count
-        file.read((char*)&verticesCount, sizeof(uint32_t));
-        file.read((char*)&indicesCount, sizeof(uint32_t));
-        if ((verticesCount <= 0) || (indicesCount <= 0))
-        {
-            // Invalid vertices or indices count
-            return false;
-        }
-
-        // Allocate vertices and indices
-        vertices = new (std::nothrow) float[verticesCount];
-        indices = new (std::nothrow) uint16_t[indicesCount];
-        if (!vertices || !indices) return false;
-
-        // Read vertices
-        file.read((char*)vertices, sizeof(float)*verticesCount);
-
-        // Read indices
-        file.read((char*)indices, sizeof(uint16_t)*indicesCount);
-
-        // Close file
-        file.close();
-    }
-
-    // Create vertex buffer
-    if (!vertexBuffer.createMeshBuffer(VULKAN_MEMORY_MESHES,
-        vertices, indices, verticesCount, indicesCount))
-    {
-        // Could not create vertex buffer
-        if (vertices) { delete[] vertices; }
-        if (indices) { delete[] indices; }
+        // Could not load mesh data file
         return false;
     }
 
-    // Destroy mesh data
-    if (vertices) { delete[] vertices; }
-    if (indices) { delete[] indices; }
+    // Read VMSH header
+    char header[4] = {0};
+    char majorVersion = 0;
+    char minorVersion = 0;
+    file.read(header, sizeof(char)*4);
+    file.read(&majorVersion, sizeof(char));
+    file.read(&minorVersion, sizeof(char));
+
+    // Check VMSH header
+    if ((header[0] != 'V') || (header[1] != 'M') ||
+        (header[2] != 'S') || (header[3] != 'H'))
+    {
+        // Invalid VMSH header
+        return false;
+    }
+
+    // Check VMSH version
+    if ((majorVersion != 1) || (minorVersion != 0))
+    {
+        // Invalid VMSH header
+        return false;
+    }
+
+    // Read VMSH file type
+    char type = 0;
+    file.read(&type, sizeof(char));
+    if (type != 0)
+    {
+        // Invalid VMSH type
+        return false;
+    }
+
+    // Read vertices and indices count
+    file.read((char*)&verticesCount, sizeof(uint32_t));
+    file.read((char*)&indicesCount, sizeof(uint32_t));
+    if ((verticesCount <= 0) || (indicesCount <= 0))
+    {
+        // Invalid vertices or indices count
+        return false;
+    }
+
+    // Check vertices count
+    if (verticesCount >= MeshLoaderMaxVerticesCount)
+    {
+        // Invalid vertices count
+        return false;
+    }
+
+    // Check indices count
+    if (indicesCount >= MeshLoaderMaxIndicesCount)
+    {
+        // Invalid indices count
+        return false;
+    }
+
+    // Read vertices
+    file.read((char*)m_vertices, sizeof(float)*verticesCount);
+
+    // Read indices
+    file.read((char*)m_indices, sizeof(uint16_t)*indicesCount);
+
+    // Close file
+    file.close();
+
+    // Create vertex buffer
+    if (!vertexBuffer.createMeshBuffer(VULKAN_MEMORY_MESHES,
+        m_vertices, m_indices, verticesCount, indicesCount))
+    {
+        // Could not create vertex buffer
+        return false;
+    }
 
     // Mesh successfully loaded
     return true;

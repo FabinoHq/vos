@@ -160,6 +160,8 @@ m_stagingBuffer(),
 m_fence(0),
 m_sync(0),
 m_heightmaps(0),
+m_vertices(0),
+m_indices(0),
 m_chunkX(0),
 m_chunkY(0)
 {
@@ -179,6 +181,10 @@ HeightMapLoader::~HeightMapLoader()
 {
     m_chunkY = 0;
     m_chunkX = 0;
+    if (m_indices) { delete[] m_indices; }
+    m_indices = 0;
+    if (m_vertices) { delete[] m_vertices; }
+    m_vertices = 0;
     for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
     {
         m_heightptrs[i] = 0;
@@ -354,6 +360,22 @@ bool HeightMapLoader::init()
         m_heightptrs[i] = &m_heightmaps[i];
     }
 
+    // Allocate chunk vertices
+    m_vertices = new (std::nothrow) float[HeightMapChunkVerticesCount];
+    if (!m_vertices)
+    {
+        // Could not allocate chunk vertices
+        return false;
+    }
+
+    // Allocate chunk indices
+    m_indices = new (std::nothrow) uint16_t[HeightMapChunkIndicesCount];
+    if (!m_indices)
+    {
+        // Could not allocate chunk indices
+        return false;
+    }
+
     // Create default heightmap
     int32_t cnt = 0;
     for (int32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
@@ -505,6 +527,12 @@ void HeightMapLoader::destroyHeightMapLoader()
     // Reset chunk position
     m_chunkY = 0;
     m_chunkX = 0;
+
+    // Delete indices and vertices
+    if (m_indices) { delete[] m_indices; }
+    m_indices = 0;
+    if (m_vertices) { delete[] m_vertices; }
+    m_vertices = 0;
 
     // Reset heightmaps pointers
     for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
@@ -900,20 +928,6 @@ bool HeightMapLoader::loadHeightMaps()
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
 {
-    // Init heightmap chunk data
-    float* vertices = 0;
-    uint16_t* indices = 0;
-
-    uint16_t hmWidthP1 = (HeightMapChunkWidth+1);
-    uint16_t hmHeightP1 = (HeightMapChunkHeight+1);
-    uint32_t verticesCount = ((HeightMapChunkWidth+1)*hmHeightP1*8);
-    uint32_t indicesCount = (6*HeightMapChunkWidth*HeightMapChunkHeight);
-
-    // Allocate vertices and indices
-    vertices = new (std::nothrow) float[verticesCount];
-    indices = new (std::nothrow) uint16_t[indicesCount];
-    if (!vertices || !indices) return false;
-
     // Generate vertices data
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
         (HeightMapChunkWidth * 1.0f);
@@ -927,6 +941,7 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
     uint32_t iIndex = 0;
     uint16_t iOffset = 0;
 
+    // Flat heightmap chunk
     for (uint32_t j = 0; j <= HeightMapChunkHeight; ++j)
     {
         vertX = 0.0f;
@@ -935,16 +950,16 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
         for (uint32_t i = 0; i <= HeightMapChunkWidth; ++i)
         {
             // Set flat heightmap
-            vertices[vIndex+0] = vertX;
-            vertices[vIndex+1] = 0.0f;
-            vertices[vIndex+2] = vertZ;
+            m_vertices[vIndex+0] = vertX;
+            m_vertices[vIndex+1] = 0.0f;
+            m_vertices[vIndex+2] = vertZ;
 
-            vertices[vIndex+3] = texCoordX;
-            vertices[vIndex+4] = texCoordY;
+            m_vertices[vIndex+3] = texCoordX;
+            m_vertices[vIndex+4] = texCoordY;
 
-            vertices[vIndex+5] = 0.0f;
-            vertices[vIndex+6] = 1.0f;
-            vertices[vIndex+7] = 0.0f;
+            m_vertices[vIndex+5] = 0.0f;
+            m_vertices[vIndex+6] = 1.0f;
+            m_vertices[vIndex+7] = 0.0f;
 
             vIndex += 8;
             vertX += HeightMapChunkPlaneWidth;
@@ -960,12 +975,12 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
     {
         for (uint32_t i = 0; i < HeightMapChunkWidth; ++i)
         {
-            indices[iIndex+0] = iOffset+hmWidthP1;
-            indices[iIndex+1] = iOffset+hmWidthP1+1;
-            indices[iIndex+2] = iOffset+1;
-            indices[iIndex+3] = iOffset+1;
-            indices[iIndex+4] = iOffset;
-            indices[iIndex+5] = iOffset+hmWidthP1;
+            m_indices[iIndex+0] = iOffset+(HeightMapChunkWidth+1);
+            m_indices[iIndex+1] = iOffset+(HeightMapChunkWidth+2);
+            m_indices[iIndex+2] = iOffset+1;
+            m_indices[iIndex+3] = iOffset+1;
+            m_indices[iIndex+4] = iOffset;
+            m_indices[iIndex+5] = iOffset+(HeightMapChunkWidth+1);
 
             iIndex += 6;
             ++iOffset;
@@ -975,17 +990,12 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
 
     // Create vertex buffer
     if (!vertexBuffer.createHeightMapBuffer(VULKAN_MEMORY_HEIGHTMAPS,
-        vertices, indices, verticesCount, indicesCount))
+        m_vertices, m_indices,
+        HeightMapChunkVerticesCount, HeightMapChunkIndicesCount))
     {
         // Could not create vertex buffer
-        if (vertices) { delete[] vertices; }
-        if (indices) { delete[] indices; }
         return false;
     }
-
-    // Destroy mesh data
-    if (vertices) { delete[] vertices; }
-    if (indices) { delete[] indices; }
 
     // Heightmap chunk successfully generated
     return true;
@@ -998,20 +1008,6 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
 bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
     int32_t chunkX, int32_t chunkY)
 {
-    // Init heightmap chunk data
-    float* vertices = 0;
-    uint16_t* indices = 0;
-
-    uint16_t hmWidthP1 = (HeightMapChunkWidth+1);
-    uint16_t hmHeightP1 = (HeightMapChunkHeight+1);
-    uint32_t verticesCount = ((HeightMapChunkWidth+1)*hmHeightP1*8);
-    uint32_t indicesCount = (6*HeightMapChunkWidth*HeightMapChunkHeight);
-
-    // Allocate vertices and indices
-    vertices = new (std::nothrow) float[verticesCount];
-    indices = new (std::nothrow) uint16_t[indicesCount];
-    if (!vertices || !indices) return false;
-
     // Generate vertices data
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
         (HeightMapChunkWidth * 1.0f);
@@ -1025,6 +1021,7 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
     uint32_t iIndex = 0;
     uint16_t iOffset = 0;
 
+    // Procedural heightmap chunk
     for (uint32_t j = 0; j <= HeightMapChunkHeight; ++j)
     {
         vertX = 0.0f;
@@ -1085,17 +1082,17 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
                 }
             }
 
-            // Set test heightmap
-            vertices[vIndex+0] = vertX;
-            vertices[vIndex+1] = median[4];
-            vertices[vIndex+2] = vertZ;
+            // Set procedural heightmap
+            m_vertices[vIndex+0] = vertX;
+            m_vertices[vIndex+1] = median[4];
+            m_vertices[vIndex+2] = vertZ;
 
-            vertices[vIndex+3] = texCoordX;
-            vertices[vIndex+4] = texCoordY;
+            m_vertices[vIndex+3] = texCoordX;
+            m_vertices[vIndex+4] = texCoordY;
 
-            vertices[vIndex+5] = 0.0f;
-            vertices[vIndex+6] = 1.0f;
-            vertices[vIndex+7] = 0.0f;
+            m_vertices[vIndex+5] = 0.0f;
+            m_vertices[vIndex+6] = 1.0f;
+            m_vertices[vIndex+7] = 0.0f;
 
             vIndex += 8;
             vertX += HeightMapChunkPlaneWidth;
@@ -1111,12 +1108,12 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
     {
         for (uint32_t i = 0; i < HeightMapChunkWidth; ++i)
         {
-            indices[iIndex+0] = iOffset+hmWidthP1;
-            indices[iIndex+1] = iOffset+hmWidthP1+1;
-            indices[iIndex+2] = iOffset+1;
-            indices[iIndex+3] = iOffset+1;
-            indices[iIndex+4] = iOffset;
-            indices[iIndex+5] = iOffset+hmWidthP1;
+            m_indices[iIndex+0] = iOffset+(HeightMapChunkWidth+1);
+            m_indices[iIndex+1] = iOffset+(HeightMapChunkWidth+2);
+            m_indices[iIndex+2] = iOffset+1;
+            m_indices[iIndex+3] = iOffset+1;
+            m_indices[iIndex+4] = iOffset;
+            m_indices[iIndex+5] = iOffset+(HeightMapChunkWidth+1);
 
             iIndex += 6;
             ++iOffset;
@@ -1125,18 +1122,12 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
     }
 
     // Update vertex buffer
-    if (!vertexBuffer.updateHeightMapBuffer(
-        vertices, indices, verticesCount, indicesCount))
+    if (!vertexBuffer.updateHeightMapBuffer(m_vertices, m_indices,
+        HeightMapChunkVerticesCount, HeightMapChunkIndicesCount))
     {
         // Could not create vertex buffer
-        if (vertices) { delete[] vertices; }
-        if (indices) { delete[] indices; }
         return false;
     }
-
-    // Destroy mesh data
-    if (vertices) { delete[] vertices; }
-    if (indices) { delete[] indices; }
 
     // Heightmap chunk successfully updated
     return true;

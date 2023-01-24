@@ -69,6 +69,8 @@
     const uint64_t MeshFenceTimeout = 100000000000;
     const double MeshLoaderIdleSleepTime = 0.01;
     const double MeshLoaderErrorSleepTime = 0.1;
+    const uint32_t MeshLoaderMaxVerticesCount = 1048576;
+    const uint32_t MeshLoaderMaxIndicesCount = 262144;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -224,6 +226,9 @@
             VkFence                 m_fence;            // Staging fence
 
             VertexBuffer*           m_meshes;           // Meshes
+
+            float*                  m_vertices;         // Mesh vertices
+            uint16_t*               m_indices;          // Mesh indices
     };
 
 
