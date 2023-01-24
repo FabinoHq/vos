@@ -1211,6 +1211,8 @@ bool Renderer::selectVulkanDevice()
         vkGetPhysicalDeviceFormatProperties(
             physicalDevices[i], VK_FORMAT_R8G8B8A8_UNORM, &formatProperties
         );
+
+        // Check optimal tiling features
         if (!(formatProperties.optimalTilingFeatures &
             VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT))
         {
@@ -1251,6 +1253,18 @@ bool Renderer::selectVulkanDevice()
             VK_FORMAT_FEATURE_TRANSFER_DST_BIT))
         {
             // Transfer destination RGBA32 is not supported by the device
+            continue;
+        }
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_BLIT_SRC_BIT))
+        {
+            // Blit source RGBA32 is not supported by the device
+            continue;
+        }
+        if (!(formatProperties.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_BLIT_DST_BIT))
+        {
+            // Blit destination RGBA32 is not supported by the device
             continue;
         }
 
