@@ -83,9 +83,12 @@ SysSettings::~SysSettings()
 bool SysSettings::loadSettings()
 {
     // Temp set settings
-    m_anisotropicFiltering = ANISOTROPIC_FILTERING_8X;
+    /*m_anisotropicFiltering = ANISOTROPIC_FILTERING_8X;
     m_multiSampling = MULTI_SAMPLING_8X;
-    m_sampleShading = SAMPLE_SHADING_ONE;
+    m_sampleShading = SAMPLE_SHADING_ONE;*/
+    m_anisotropicFiltering = ANISOTROPIC_FILTERING_NONE;
+    m_multiSampling = MULTI_SAMPLING_NONE;
+    m_sampleShading = SAMPLE_SHADING_NONE;
 
     // System settings successfully loaded
     return true;

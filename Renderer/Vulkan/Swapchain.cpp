@@ -774,6 +774,27 @@ bool Swapchain::createSwapchain()
 ////////////////////////////////////////////////////////////////////////////////
 bool Swapchain::resizeSwapchain()
 {
+    // Check physical device
+    if (!GPhysicalDevice)
+    {
+        // Invalid physical device
+        return false;
+    }
+
+    // Check device
+    if (!GVulkanDevice)
+    {
+        // Invalid device
+        return false;
+    }
+
+    // Check surface
+    if (!GVulkanSurface)
+    {
+        // Invalid surface
+        return false;
+    }
+
     // Destroy current swapchain
     for (uint32_t i = 0; i < frames; ++i)
     {

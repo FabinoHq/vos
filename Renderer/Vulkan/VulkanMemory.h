@@ -174,10 +174,10 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Allocate swapchain image memory                               //
-            //  return : True if swapchain image is successfully allocated    //
+            //  Allocate backchain image memory                               //
+            //  return : True if backchain image is successfully allocated    //
             ////////////////////////////////////////////////////////////////////
-            bool allocateSwapchainImage(VkImage& image,
+            bool allocateBackchainImage(VkImage& image,
                 VulkanMemoryPool memoryPool);
 
 

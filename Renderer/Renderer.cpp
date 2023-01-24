@@ -240,7 +240,7 @@ bool Renderer::init()
 
 
     // Wait for device idle
-    if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
+    if (!waitDeviceIdle())
     {
         // Could not get the device ready
         return false;
@@ -1411,7 +1411,7 @@ bool Renderer::resize()
 {
     // Wait for device idle
     ready = false;
-    if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
+    if (!waitDeviceIdle())
     {
         // Could not wait for device idle
         return false;
@@ -1434,7 +1434,7 @@ bool Renderer::resize()
     }
 
     // Wait for device idle
-    if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
+    if (!waitDeviceIdle())
     {
         // Could not wait for device idle
         return false;

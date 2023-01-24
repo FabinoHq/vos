@@ -141,7 +141,7 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
             }
 
             // Allocate image memory
-            if (!GVulkanMemory.allocateSwapchainImage(
+            if (!GVulkanMemory.allocateBackchainImage(
                 msaaImages[i], memoryPool))
             {
                 // Could not allocate image memory
@@ -201,7 +201,7 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         }
 
         // Allocate image memory
-        if (!GVulkanMemory.allocateSwapchainImage(images[i], memoryPool))
+        if (!GVulkanMemory.allocateBackchainImage(images[i], memoryPool))
         {
             // Could not allocate image memory
             return false;
@@ -259,7 +259,7 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         }
 
         // Allocate depth image memory
-        if (!GVulkanMemory.allocateSwapchainImage(depthImages[i], memoryPool))
+        if (!GVulkanMemory.allocateBackchainImage(depthImages[i], memoryPool))
         {
             // Could not allocate depth image memory
             return false;
@@ -724,7 +724,7 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
             }
 
             // Reallocate image memory
-            if (!GVulkanMemory.allocateSwapchainImage(
+            if (!GVulkanMemory.allocateBackchainImage(
                 msaaImages[i], memoryPool))
             {
                 // Could not reallocate image memory
@@ -784,7 +784,7 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         }
 
         // Reallocate image memory
-        if (!GVulkanMemory.allocateSwapchainImage(images[i], memoryPool))
+        if (!GVulkanMemory.allocateBackchainImage(images[i], memoryPool))
         {
             // Could not reallocate image memory
             return false;
@@ -842,7 +842,7 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         }
 
         // Reallocate depth image memory
-        if (!GVulkanMemory.allocateSwapchainImage(depthImages[i], memoryPool))
+        if (!GVulkanMemory.allocateBackchainImage(depthImages[i], memoryPool))
         {
             // Could not reallocate depth image memory
             return false;

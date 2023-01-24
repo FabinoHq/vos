@@ -270,10 +270,10 @@ void VulkanMemory::destroyVulkanMemory()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Allocate swapchain image memory                                           //
-//  return : True if swapchain image is successfully allocated                //
+//  Allocate backchain image memory                                           //
+//  return : True if backchain image is successfully allocated                //
 ////////////////////////////////////////////////////////////////////////////////
-bool VulkanMemory::allocateSwapchainImage(VkImage& image,
+bool VulkanMemory::allocateBackchainImage(VkImage& image,
     VulkanMemoryPool memoryPool)
 {
     // Check image handle
