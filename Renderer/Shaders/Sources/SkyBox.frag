@@ -46,21 +46,11 @@ precision highp int;
 // Texture sampler
 layout(set = 1, binding = 0) uniform samplerCube cubeSampler;
 
-// Color, position, offset, and time (push constant)
-layout(push_constant) uniform Constants
-{
-	layout(offset = 64)
-    vec4 color;
-    vec2 offset;
-    vec2 size;
-    float time;
-} constants;
-
 // Input texture coordinates and output color
 layout(location = 0) in vec3 i_texCoords;
 layout(location = 0) out vec4 o_color;
 void main()
 {
     // Compute output color
-    o_color = texture(cubeSampler, i_texCoords)*constants.color;
+    o_color = texture(cubeSampler, i_texCoords);
 }

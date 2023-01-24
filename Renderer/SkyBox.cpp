@@ -48,8 +48,7 @@
 SkyBox::SkyBox() :
 Transform3(),
 m_vertexBuffer(0),
-m_cubemap(0),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_cubemap(0)
 {
 
 }
@@ -59,7 +58,6 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 SkyBox::~SkyBox()
 {
-    m_color.reset();
     m_cubemap = 0;
     m_vertexBuffer = 0;
 }
@@ -87,33 +85,8 @@ bool SkyBox::init(VertexBuffer& vertexBuffer, CubeMap& cubemap)
     // Reset skybox transformations
     resetTransforms();
 
-    // Reset skybox color
-    m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
-
     // SkyBox successfully created
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set skybox color                                                          //
-////////////////////////////////////////////////////////////////////////////////
-void SkyBox::setColor(const Vector4& color)
-{
-    m_color.vec[0] = color.vec[0];
-    m_color.vec[1] = color.vec[1];
-    m_color.vec[2] = color.vec[2];
-    m_color.vec[3] = color.vec[3];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set skybox color                                                          //
-////////////////////////////////////////////////////////////////////////////////
-void SkyBox::setColor(float red, float green, float blue, float alpha)
-{
-    m_color.vec[0] = red;
-    m_color.vec[1] = green;
-    m_color.vec[2] = blue;
-    m_color.vec[3] = alpha;
 }
 
 
@@ -148,19 +121,6 @@ void SkyBox::render()
         GSwapchain.commandBuffers[GSwapchain.current],
         GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
-    );
-
-    // Push constants into command buffer
-    PushConstantData pushConstants;
-    pushConstants.color[0] = m_color.vec[0];
-    pushConstants.color[1] = m_color.vec[1];
-    pushConstants.color[2] = m_color.vec[2];
-    pushConstants.color[3] = m_color.vec[3];
-
-    vkCmdPushConstants(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
     // Draw skybox triangles

@@ -48,8 +48,7 @@
 StaticMesh::StaticMesh() :
 Transform3(),
 m_vertexBuffer(0),
-m_texture(0),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_texture(0)
 {
 
 }
@@ -59,7 +58,6 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 StaticMesh::~StaticMesh()
 {
-    m_color.reset();
     m_texture = 0;
     m_vertexBuffer = 0;
 }
@@ -87,9 +85,6 @@ bool StaticMesh::init(VertexBuffer& vertexBuffer, Texture& texture)
     // Reset static mesh transformations
     resetTransforms();
 
-    // Reset static mesh color
-    m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
-
     // Static mesh successfully created
     return true;
 }
@@ -110,28 +105,6 @@ bool StaticMesh::setTexture(Texture& texture)
     // Set static mesh texture pointer
     m_texture = &texture;
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh color                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setColor(const Vector4& color)
-{
-    m_color.vec[0] = color.vec[0];
-    m_color.vec[1] = color.vec[1];
-    m_color.vec[2] = color.vec[2];
-    m_color.vec[3] = color.vec[3];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set static mesh color                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void StaticMesh::setColor(float red, float green, float blue, float alpha)
-{
-    m_color.vec[0] = red;
-    m_color.vec[1] = green;
-    m_color.vec[2] = blue;
-    m_color.vec[3] = alpha;
 }
 
 
@@ -166,19 +139,6 @@ void StaticMesh::render()
         GSwapchain.commandBuffers[GSwapchain.current],
         GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
-    );
-
-    // Push constants into command buffer
-    PushConstantData pushConstants;
-    pushConstants.color[0] = m_color.vec[0];
-    pushConstants.color[1] = m_color.vec[1];
-    pushConstants.color[2] = m_color.vec[2];
-    pushConstants.color[3] = m_color.vec[3];
-
-    vkCmdPushConstants(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantColorOffset, PushConstantColorSize, &pushConstants.color
     );
 
     // Draw static mesh triangles

@@ -46,16 +46,6 @@ precision highp int;
 // Texture sampler
 layout(set = 1, binding = 0) uniform sampler2DArray texSampler;
 
-// Color, position, offset, and time (push constant)
-layout(push_constant) uniform Constants
-{
-	layout(offset = 64)
-    vec4 color;
-    vec2 offset;
-    vec2 size;
-    float time;
-} constants;
-
 // Distance fades
 const float mixFadeDistance = 50.0;
 const float alphaFadeDistance = 1200.0;
@@ -92,5 +82,5 @@ void main()
     // Compute output color
     vec4 fragOutput = mix(finalNear, finalFar, distanceMix);
     fragOutput.a *= alphaFade;
-    o_color = (fragOutput*constants.color);
+    o_color = fragOutput;
 }

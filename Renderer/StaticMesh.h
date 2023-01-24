@@ -93,48 +93,6 @@
             ////////////////////////////////////////////////////////////////////
             bool setTexture(Texture& texture);
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh color                                         //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(const Vector4& color);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh color                                         //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(float red, float green, float blue, float alpha);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh red channel                                   //
-            ////////////////////////////////////////////////////////////////////
-            inline void setRed(float red)
-            {
-                m_color.vec[0] = red;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh green channel                                 //
-            ////////////////////////////////////////////////////////////////////
-            inline void setGreen(float green)
-            {
-                m_color.vec[1] = green;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh blue channel                                  //
-            ////////////////////////////////////////////////////////////////////
-            inline void setBlue(float blue)
-            {
-                m_color.vec[2] = blue;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set static mesh alpha channel                                 //
-            ////////////////////////////////////////////////////////////////////
-            inline void setAlpha(float alpha)
-            {
-                m_color.vec[3] = alpha;
-            }
-
 
             ////////////////////////////////////////////////////////////////////
             //  Bind static mesh vertex buffer                                //
@@ -170,7 +128,6 @@
         private:
             VertexBuffer*   m_vertexBuffer;     // Static mesh vertex buffer
             Texture*        m_texture;          // Static mesh texture pointer
-            Vector4         m_color;            // Static mesh color
     };
 
 

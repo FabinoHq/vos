@@ -138,48 +138,6 @@
             ////////////////////////////////////////////////////////////////////
             bool init(VertexBuffer& vertexBuffer, CubeMap& cubemap);
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set skybox color                                              //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(const Vector4& color);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set skybox color                                              //
-            ////////////////////////////////////////////////////////////////////
-            void setColor(float red, float green, float blue, float alpha);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set skybox red channel                                        //
-            ////////////////////////////////////////////////////////////////////
-            inline void setRed(float red)
-            {
-                m_color.vec[0] = red;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set skybox green channel                                      //
-            ////////////////////////////////////////////////////////////////////
-            inline void setGreen(float green)
-            {
-                m_color.vec[1] = green;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set skybox blue channel                                       //
-            ////////////////////////////////////////////////////////////////////
-            inline void setBlue(float blue)
-            {
-                m_color.vec[2] = blue;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set skybox alpha channel                                      //
-            ////////////////////////////////////////////////////////////////////
-            inline void setAlpha(float alpha)
-            {
-                m_color.vec[3] = alpha;
-            }
-
 
             ////////////////////////////////////////////////////////////////////
             //  Bind skybox vertex buffer                                     //
@@ -215,7 +173,6 @@
         private:
             VertexBuffer*       m_vertexBuffer;     // SkyBox vertex buffer
             CubeMap*            m_cubemap;          // SkyBox cubemap pointer
-            Vector4             m_color;            // SkyBox color
     };
 
 
