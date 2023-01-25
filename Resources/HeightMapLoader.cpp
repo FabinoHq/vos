@@ -43,111 +43,6 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  pseudoRand : 2D based pseudo-random value                                 //
-//  param seed : Normalized seed of the pseudo-random generation              //
-//  param x : X offset                                                        //
-//  param y : Y offset                                                        //
-//  return : Generated pseudo-random value                                    //
-////////////////////////////////////////////////////////////////////////////////
-float pseudoRand(float seed, float x, float y)
-{
-    seed = (std::fmod(seed,1.0f))*158.0f+31.45f;
-    float xrnd =
-        std::fmod((std::sin(x+713.148f*seed)*14.5787f*seed),0.5f)+0.5f;
-    float yrnd =
-        std::fmod((std::sin(y+358.735f*seed)*768.3458f*seed),0.5f)+0.5f;
-    return (std::fmod((std::sin((xrnd*yrnd*18.45f*seed)+59.76f*seed)*
-        28.845f*seed),0.5f)+0.5f);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  fractalHeigthmap : 2D Fractal pseudo random heightmap                     //
-//  param seed : Normalized seed of the pseudo-random generation              //
-//  param i : Integer I index (X) offset                                      //
-//  param j : Integer J index (Y) offset                                      //
-//  return : Generated fractal heightmap value at (i,j) coordinates           //
-////////////////////////////////////////////////////////////////////////////////
-float fractalHeigthmap(float seed, int i, int j)
-{
-    /*i += 25000;
-    j += 25000;
-    float ix = i*1.0f;
-    float jy = j*1.0f;
-
-    // Fractal frequencies
-    const int freqsCnt = 8;
-    float freqs[8] = {0.0f};
-    freqs[0] = 434.2f;
-    freqs[1] = 278.37f;
-    freqs[2] = 387.18f;
-    freqs[3] = 186.75f;
-    freqs[4] = 52.23f;
-    freqs[5] = 34.78f;
-    freqs[6] = 18.32f;
-    freqs[7] = 7.12f;
-
-    // Fractal amplitudes
-    float amplitudes[8] = {0.0f};
-    amplitudes[0] = 0.8f;
-    amplitudes[1] = 0.3f;
-    amplitudes[2] = 0.8f;
-    amplitudes[3] = 0.4f;
-    amplitudes[4] = 0.2f;
-    amplitudes[5] = 0.12f;
-    amplitudes[6] = 0.05f;
-    amplitudes[7] = 0.02f;
-
-    // Compute fractal heightmap
-    float fondamentalValue = 0.0f;
-    float fractalValue = 0.0f;
-    for (int k = 0; k < freqsCnt; ++k)
-    {
-        float ixf = ((std::fmod(ix, freqs[k]))/freqs[k])*1.0f;
-        float jyf = ((std::fmod(jy, freqs[k]))/freqs[k])*1.0f;
-        ixf = (ixf*ixf*(3.0f-2.0f*ixf));
-        jyf = (jyf*jyf*(3.0f-2.0f*jyf));
-
-        float rnd = pseudoRand(
-            seed, std::floor(ix/freqs[k]),
-            std::floor(jy/freqs[k])
-        );
-        float rnd2 = pseudoRand(
-            seed, std::floor(ix/freqs[k]),
-            std::floor((jy+freqs[k])/freqs[k])
-        );
-        float rnd3 = pseudoRand(
-            seed, std::floor((ix+freqs[k])/freqs[k]),
-            std::floor(jy/freqs[k])
-        );
-        float rnd4 = pseudoRand(
-            seed, std::floor((ix+freqs[k])/freqs[k]),
-            std::floor((jy+freqs[k])/freqs[k])
-        );
-
-        if (k < 2)
-        {
-            fondamentalValue += (
-                (rnd + (rnd3-rnd)*ixf + (rnd2-rnd)*jyf +
-                ((rnd4+rnd)-(rnd3+rnd2))*ixf*jyf
-            )*amplitudes[k]);
-        }
-        else
-        {
-            fractalValue += (
-                (rnd + (rnd3-rnd)*ixf + (rnd2-rnd)*jyf +
-                ((rnd4+rnd)-(rnd3+rnd2))*ixf*jyf
-            )*amplitudes[k]);
-        }
-    }
-    fractalValue *= fondamentalValue;
-
-    // Final fractal heightmap
-    return ((fractalValue*1000.0f)-100.0f);*/
-    return 0.0f;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 //  HeightMapLoader default constructor                                       //
 ////////////////////////////////////////////////////////////////////////////////
 HeightMapLoader::HeightMapLoader() :
@@ -382,7 +277,7 @@ bool HeightMapLoader::init()
     {
         for (int32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
         {
-            if (generateChunk(m_heightmaps[cnt]))
+            if (generateFlatChunk(m_heightmaps[cnt]))
             {
                 m_chunks[cnt].loading = false;
                 m_chunks[cnt].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
@@ -904,6 +799,7 @@ bool HeightMapLoader::loadHeightMaps()
         // Heightmap needs update
         if (m_chunks[i].loading)
         {
+            // Update chunk from file
             if (updateChunk(
                 (*m_heightptrs[i]), m_chunks[i].chunkX, m_chunks[i].chunkY))
             {
@@ -911,8 +807,16 @@ bool HeightMapLoader::loadHeightMaps()
             }
             else
             {
-                // Could not update heightmap
-                return false;
+                // Update flat chunk
+                if (updateFlatChunk((*m_heightptrs[i])))
+                {
+                    m_chunks[i].loading = false;
+                }
+                else
+                {
+                    // Could not update heightmap
+                    return false;
+                }
             }
         }
     }
@@ -926,7 +830,7 @@ bool HeightMapLoader::loadHeightMaps()
 //  Generate flat heightmap chunk                                             //
 //  return : True if the heightmap chunk is generated                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
+bool HeightMapLoader::generateFlatChunk(VertexBuffer& vertexBuffer)
 {
     // Generate vertices data
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
@@ -1002,11 +906,10 @@ bool HeightMapLoader::generateChunk(VertexBuffer& vertexBuffer)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update heightmap chunk                                                    //
+//  Update flat heightmap chunk                                               //
 //  return : True if the heightmap chunk is updated                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
-    int32_t chunkX, int32_t chunkY)
+bool HeightMapLoader::updateFlatChunk(VertexBuffer& vertexBuffer)
 {
     // Generate vertices data
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
@@ -1021,7 +924,7 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
     uint32_t iIndex = 0;
     uint16_t iOffset = 0;
 
-    // Procedural heightmap chunk
+    // Flat heightmap chunk
     for (uint32_t j = 0; j <= HeightMapChunkHeight; ++j)
     {
         vertX = 0.0f;
@@ -1029,62 +932,9 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
 
         for (uint32_t i = 0; i <= HeightMapChunkWidth; ++i)
         {
-            // Median filtering
-            float median[9] = {0.0f};
-            median[0] = fractalHeigthmap(0.7154,
-                i-1+(chunkX*HeightMapChunkWidth),
-                j-1+(chunkY*HeightMapChunkHeight)
-            );
-            median[1] = fractalHeigthmap(0.7154,
-                i+(chunkX*HeightMapChunkWidth),
-                j-1+(chunkY*HeightMapChunkHeight)
-            );
-            median[2] = fractalHeigthmap(0.7154,
-                i+1+(chunkX*HeightMapChunkWidth),
-                j-1+(chunkY*HeightMapChunkHeight)
-            );
-            median[3] = fractalHeigthmap(0.7154,
-                i-1+(chunkX*HeightMapChunkWidth),
-                j+(chunkY*HeightMapChunkHeight)
-            );
-            median[4] = fractalHeigthmap(0.7154,
-                i+(chunkX*HeightMapChunkWidth),
-                j+(chunkY*HeightMapChunkHeight)
-            );
-            median[5] = fractalHeigthmap(0.7154,
-                i+1+(chunkX*HeightMapChunkWidth),
-                j+(chunkY*HeightMapChunkHeight)
-            );
-            median[6] = fractalHeigthmap(0.7154,
-                i-1+(chunkX*HeightMapChunkWidth),
-                j+1+(chunkY*HeightMapChunkHeight)
-            );
-            median[7] = fractalHeigthmap(0.7154,
-                i+(chunkX*HeightMapChunkWidth),
-                j+1+(chunkY*HeightMapChunkHeight)
-            );
-            median[8] = fractalHeigthmap(0.7154,
-                i+1+(chunkX*HeightMapChunkWidth),
-                j+1+(chunkY*HeightMapChunkHeight)
-            );
-
-            // Sort median data
-            for (int o = 0; o < (9-1); ++o)
-            {
-                for (int m = 0; m < ((9-1)-o); ++m)
-                {
-                    if (median[m] > median[m+1])
-                    {
-                        float tmp = median[m];
-                        median[m] = median[m+1];
-                        median[m+1] = tmp;
-                    }
-                }
-            }
-
-            // Set procedural heightmap
+            // Set flat heightmap
             m_vertices[vIndex+0] = vertX;
-            m_vertices[vIndex+1] = median[4];
+            m_vertices[vIndex+1] = 0.0f;
             m_vertices[vIndex+2] = vertZ;
 
             m_vertices[vIndex+3] = texCoordX;
@@ -1125,7 +975,96 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
     if (!vertexBuffer.updateHeightMapBuffer(m_vertices, m_indices,
         HeightMapChunkVerticesCount, HeightMapChunkIndicesCount))
     {
-        // Could not create vertex buffer
+        // Could not update vertex buffer
+        return false;
+    }
+
+    // Heightmap chunk successfully updated
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Update heightmap chunk                                                    //
+//  return : True if the heightmap chunk is updated                           //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
+    int32_t chunkX, int32_t chunkY)
+{
+    // Init vertices and indices count
+    uint32_t verticesCount = 0;
+    uint32_t indicesCount = 0;
+
+    // Set VHMP file path
+    std::ostringstream filepath;
+    filepath << HeightMapLoaderVHMPFilePath;
+    filepath << chunkX << '_' << chunkY << ".vhmp";
+
+    // Load heightmap data from file
+    std::ifstream file;
+    file.open(filepath.str().c_str(), std::ios::in | std::ios::binary);
+    if (!file.is_open())
+    {
+        // Could not load heightmap data file
+        return false;
+    }
+
+    // Read VHMP header
+    char header[4] = {0};
+    char majorVersion = 0;
+    char minorVersion = 0;
+    file.read(header, sizeof(char)*4);
+    file.read(&majorVersion, sizeof(char));
+    file.read(&minorVersion, sizeof(char));
+
+    // Check VHMP header
+    if ((header[0] != 'V') || (header[1] != 'H') ||
+        (header[2] != 'M') || (header[3] != 'P'))
+    {
+        // Invalid VHMP header
+        return false;
+    }
+
+    // Check VHMP version
+    if ((majorVersion != 1) || (minorVersion != 0))
+    {
+        // Invalid VHMP header
+        return false;
+    }
+
+    // Read VHMP file type
+    char type = 0;
+    file.read(&type, sizeof(char));
+    if (type != 0)
+    {
+        // Invalid VHMP type
+        return false;
+    }
+
+    // Read vertices and indices count
+    file.read((char*)&verticesCount, sizeof(uint32_t));
+    file.read((char*)&indicesCount, sizeof(uint32_t));
+    if ((verticesCount <= 0) || (indicesCount <= 0) ||
+        (verticesCount != HeightMapChunkVerticesCount) ||
+        (indicesCount != HeightMapChunkIndicesCount))
+    {
+        // Invalid vertices or indices count
+        return false;
+    }
+
+    // Read vertices
+    file.read((char*)m_vertices, sizeof(float)*HeightMapChunkVerticesCount);
+
+    // Read indices
+    file.read((char*)m_indices, sizeof(uint16_t)*HeightMapChunkIndicesCount);
+
+    // Close VHMP file
+    file.close();
+
+    // Update vertex buffer
+    if (!vertexBuffer.updateHeightMapBuffer(m_vertices, m_indices,
+        HeightMapChunkVerticesCount, HeightMapChunkIndicesCount))
+    {
+        // Could not update vertex buffer
         return false;
     }
 

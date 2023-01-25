@@ -52,6 +52,9 @@
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
 
+    #include <string>
+    #include <sstream>
+    #include <fstream>
     #include <cstdint>
     #include <new>
 
@@ -65,6 +68,7 @@
     const uint32_t HeightMapLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
     const double HeightMapLoaderIdleSleepTime = 0.01;
     const double HeightMapLoaderErrorSleepTime = 0.1;
+    const char HeightMapLoaderVHMPFilePath[] = "World/vhmp/";
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -210,7 +214,13 @@
             //  Generate flat heightmap chunk                                 //
             //  return : True if the heightmap chunk is generated             //
             ////////////////////////////////////////////////////////////////////
-            bool generateChunk(VertexBuffer& vertexBuffer);
+            bool generateFlatChunk(VertexBuffer& vertexBuffer);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update flat heightmap chunk                                   //
+            //  return : True if the heightmap chunk is updated               //
+            ////////////////////////////////////////////////////////////////////
+            bool updateFlatChunk(VertexBuffer& vertexBuffer);
 
             ////////////////////////////////////////////////////////////////////
             //  Update heightmap chunk                                        //
