@@ -62,6 +62,8 @@
     const float CameraDefaultFovy = Math::PiTwo;
     const float CameraDefaultNearPlane = 0.01f;
     const float CameraDefaultFarPlane = 1500.0f;
+    const float CameraDistanceNearPlane = 1000.0f;
+    const float CameraDistanceFarPlane = 15000.0f;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -99,6 +101,12 @@
             virtual bool compute(float ratio);
 
             ////////////////////////////////////////////////////////////////////
+            //  Compute camera from another camera                            //
+            //  return : True if the camera is successfully computed          //
+            ////////////////////////////////////////////////////////////////////
+            virtual bool compute(float ratio, Camera& camera);
+
+            ////////////////////////////////////////////////////////////////////
             //  Bind camera                                                   //
             ////////////////////////////////////////////////////////////////////
             inline void bind()
@@ -111,6 +119,16 @@
                 );
             }
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set camera target vector                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void setTarget(Vector3& target)
+            {
+                m_target.vec[0] = target.vec[0];
+                m_target.vec[1] = target.vec[1];
+                m_target.vec[2] = target.vec[2];
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set camera fovy angle                                         //
@@ -136,6 +154,14 @@
                 m_farPlane = farPlane;
             }
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get camera target                                             //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector3 getTarget() const
+            {
+                return m_target;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Get camera fovy angle                                         //

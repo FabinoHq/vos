@@ -224,6 +224,43 @@ bool FreeFlyCam::compute(float ratio, float frametime)
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Compute freefly camera from another freefly camera                        //
+//  return : True if the freefly camera is successfully computed              //
+////////////////////////////////////////////////////////////////////////////////
+bool FreeFlyCam::compute(float ratio, FreeFlyCam& freeFlyCam)
+{
+    // Compute projection matrix
+    m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
+
+    // Compute view matrix
+    m_matrix.set(freeFlyCam.m_matrix);
+
+    // Compute projview matrix
+    m_projViewMatrix.set(m_projMatrix);
+    m_projViewMatrix *= m_matrix;
+
+    // Copy matrices data into uniform data
+    UniformData uniformData;
+    memcpy(
+        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
+    memcpy(
+        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
+    );
+
+    // Update uniform buffer
+    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+        &uniformData, sizeof(uniformData)))
+    {
+        // Could not update uniform buffer
+        return false;
+    }
+
+    // Freefly camera successfully computed
+    return true;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Handle mouse move event                                                   //

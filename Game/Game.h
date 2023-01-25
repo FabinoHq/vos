@@ -137,6 +137,7 @@
             View            m_view;             // View
             Camera          m_camera;           // Camera
             FreeFlyCam      m_freeflycam;       // Freefly camera
+            FreeFlyCam      m_farflycam;        // Freefly camera far
             OrbitalCam      m_orbitalcam;       // Orbital camera
 
             SkyBox          m_skybox;           // SkyBox

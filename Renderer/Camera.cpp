@@ -252,3 +252,40 @@ bool Camera::compute(float ratio)
     // Camera successfully computed
     return true;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute camera from another camera                                        //
+//  return : True if the camera is successfully computed                      //
+////////////////////////////////////////////////////////////////////////////////
+bool Camera::compute(float ratio, Camera& camera)
+{
+    // Compute projection matrix
+    m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
+
+    // Compute view matrix
+    m_matrix.set(camera.m_matrix);
+
+    // Compute projview matrix
+    m_projViewMatrix.set(m_projMatrix);
+    m_projViewMatrix *= m_matrix;
+
+    // Copy matrices data into uniform data
+    UniformData uniformData;
+    memcpy(
+        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+    );
+    memcpy(
+        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
+    );
+
+    // Update uniform buffer
+    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+        &uniformData, sizeof(uniformData)))
+    {
+        // Could not update uniform buffer
+        return false;
+    }
+
+    // Camera successfully computed
+    return true;
+}

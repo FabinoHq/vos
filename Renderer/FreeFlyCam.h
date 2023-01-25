@@ -83,6 +83,12 @@
             ////////////////////////////////////////////////////////////////////
             virtual bool compute(float ratio, float frametime);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Compute freefly camera from another freefly camera            //
+            //  return : True if the freefly camera is successfully computed  //
+            ////////////////////////////////////////////////////////////////////
+            virtual bool compute(float ratio, FreeFlyCam& freeFlyCam);
+
 
             ////////////////////////////////////////////////////////////////////
             //  Set freefly camera speed                                      //

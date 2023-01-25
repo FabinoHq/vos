@@ -50,6 +50,7 @@ m_backRenderer(),
 m_view(),
 m_camera(),
 m_freeflycam(),
+m_farflycam(),
 m_orbitalcam(),
 m_skybox(),
 m_sprite(),
@@ -119,6 +120,21 @@ bool Game::init()
     m_freeflycam.setZ(1.0f);
     m_freeflycam.setSpeed(10.0f);
     m_freeflycam.setY(300.0f);
+    m_freeflycam.setNearPlane(CameraDefaultNearPlane);
+    m_freeflycam.setFarPlane(CameraDefaultFarPlane);
+
+    // Init freefly camera far
+    if (!m_farflycam.init())
+    {
+        // Could not init freefly camera
+        return false;
+    }
+    m_farflycam.setZ(1.0f);
+    m_farflycam.setSpeed(10.0f);
+    m_farflycam.setY(300.0f);
+    m_farflycam.setNearPlane(CameraDistanceNearPlane);
+    m_farflycam.setFarPlane(CameraDistanceFarPlane);
+
 
     // Init orbital camera
     if (!m_orbitalcam.init())
@@ -269,6 +285,9 @@ void Game::destroy()
 
     // Destroy orbital camera
     m_orbitalcam.destroyCamera();
+
+    // Destroy freefly camera far
+    m_farflycam.destroyCamera();
 
     // Destroy freefly camera
     m_freeflycam.destroyCamera();
@@ -464,6 +483,7 @@ void Game::compute(float frametime)
         m_view.compute(GSwapchain.ratio);
         m_camera.compute(GSwapchain.ratio);
         m_freeflycam.compute(GSwapchain.ratio, frametime);
+        m_farflycam.compute(GSwapchain.ratio, m_freeflycam);
         m_orbitalcam.compute(GSwapchain.ratio, frametime);
 
         GUniformchain.endUpload();
@@ -557,11 +577,13 @@ void Game::render()
     m_staticMesh.render();*/
 
     // Render heightfar stream
+    m_farflycam.bind();
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTFAR);
     m_heightFarStream.render();
 
     // Render heightmap stream
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
+    /*m_freeflycam.bind();
+    GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
     m_heightMapStream.render();*/
 
 
