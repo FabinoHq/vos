@@ -557,7 +557,7 @@ void Game::render()
     m_staticMesh.render();*/
 
     // Render heightfar stream
-    GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTFAR);
     m_heightFarStream.render();
 
     // Render heightmap stream

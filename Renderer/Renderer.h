@@ -81,6 +81,7 @@
     #include "Shaders/StaticMesh.h"
     #include "Shaders/StaticProc.h"
     #include "Shaders/HeightMap.h"
+    #include "Shaders/HeightFar.h"
 
     #include "../Resources/Resources.h"
 

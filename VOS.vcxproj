@@ -314,6 +314,7 @@
     <ClInclude Include="Renderer\Shaders\Default.h" />
     <ClInclude Include="Renderer\Shaders\DefaultProc.h" />
     <ClInclude Include="Renderer\Shaders\Ellipse.h" />
+    <ClInclude Include="Renderer\Shaders\HeightFar.h" />
     <ClInclude Include="Renderer\Shaders\NinePatch.h" />
     <ClInclude Include="Renderer\Shaders\PxText.h" />
     <ClInclude Include="Renderer\Shaders\Rectangle.h" />

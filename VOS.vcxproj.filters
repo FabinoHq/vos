@@ -533,5 +533,8 @@
     <ClInclude Include="Renderer\HeightFarStream.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Shaders\HeightFar.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

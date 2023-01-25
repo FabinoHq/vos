@@ -1034,7 +1034,7 @@ bool HeightFarLoader::updateChunk(VertexBuffer& vertexBuffer,
     // Read VHMP file type
     char type = 0;
     file.read(&type, sizeof(char));
-    if (type != 0)
+    if (type != 1)
     {
         // Invalid VHMP type
         return false;

@@ -442,6 +442,23 @@ bool Renderer::initPipelines()
         return false;
     }
 
+    // Create heightfar pipeline
+    pipelines[RENDERER_PIPELINE_HEIGHTFAR].createVertexShader(
+        HeightFarVertexShader, HeightFarVertexShaderSize
+    );
+    pipelines[RENDERER_PIPELINE_HEIGHTFAR].createFragmentShader(
+        HeightFarFragmentShader, HeightFarFragmentShaderSize
+    );
+    if (!pipelines[RENDERER_PIPELINE_HEIGHTFAR].createPipeline(
+        VERTEX_INPUTS_STATICMESH, true, true,
+        ALPHA_BLENDING_PREMULTIPLIED))
+    {
+        // Could not create heightmap pipeline
+        SysMessage::box() << "[0x305C] Could not create heightfar pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Renderer pipelines are ready
     return true;
 }
