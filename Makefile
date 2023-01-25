@@ -77,7 +77,7 @@ VOS: main.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
-	Renderer/HeightMapStream.o \
+	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
@@ -113,7 +113,7 @@ VOS: main.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
-	Renderer/HeightMapStream.o \
+	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
@@ -301,6 +301,10 @@ Renderer/HeightFarChunk.o: Renderer/HeightFarChunk.cpp
 Renderer/HeightMapStream.o: Renderer/HeightMapStream.cpp
 	$(CC) -o Renderer/HeightMapStream.o -c \
 	Renderer/HeightMapStream.cpp $(CFLAGS)
+
+Renderer/HeightFarStream.o: Renderer/HeightFarStream.cpp
+	$(CC) -o Renderer/HeightFarStream.o -c \
+	Renderer/HeightFarStream.cpp $(CFLAGS)
 
 
 Renderer/BackRenderer.o: Renderer/BackRenderer.cpp

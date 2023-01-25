@@ -37,132 +37,113 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Game/Game.h : Main game class management                               //
+//     Renderer/HeightFarStream.h : HeightFar stream management               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_GAME_GAME_HEADER
-#define VOS_GAME_GAME_HEADER
+#ifndef VOS_RENDERER_HEIGHTFARSTREAM_HEADER
+#define VOS_RENDERER_HEIGHTFARSTREAM_HEADER
 
     #include "../System/System.h"
-    #include "../System/SysEvent.h"
-
-    #include "../Renderer/Renderer.h"
-    #include "../Renderer/BackRenderer.h"
-    #include "../Renderer/View.h"
-    #include "../Renderer/Camera.h"
-    #include "../Renderer/FreeFlyCam.h"
-    #include "../Renderer/OrbitalCam.h"
-    #include "../Renderer/Sprite.h"
-    #include "../Renderer/ProcSprite.h"
-    #include "../Renderer/SkyBox.h"
-
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/VertexBuffer.h"
+    #include "../Math/Math.h"
+    #include "../Math/Vector3.h"
+    #include "../Math/Matrix4x4.h"
+    #include "../Math/Transform3.h"
     #include "../Resources/Resources.h"
-    #include "../Renderer/GUI/GUICursor.h"
-    #include "../Renderer/GUI/GUIWindow.h"
-    #include "../Renderer/GUI/GUIPxText.h"
+    #include "../Resources/HeightFarLoader.h"
+    #include "../Resources/TextureLoader.h"
 
-    #include "../Renderer/Shapes/RectangleShape.h"
-    #include "../Renderer/Shapes/EllipseShape.h"
-    #include "../Renderer/Shapes/CuboidShape.h"
+    #include "HeightFarChunk.h"
 
-    #include "../Renderer/StaticMesh.h"
-    #include "../Renderer/HeightMapChunk.h"
-    #include "../Renderer/HeightMapStream.h"
-    #include "../Renderer/HeightFarStream.h"
-
-    #include "../Physics/Physics.h"
-    #include "../Physics/Collision2.h"
-    #include "../Physics/BoundingCircle.h"
+    #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Game main class definition                                            //
+    //  HeightFarStream class definition                                      //
     ////////////////////////////////////////////////////////////////////////////
-    class Game
+    class HeightFarStream
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Game default constructor                                      //
+            //  HeightFarStream default constructor                           //
             ////////////////////////////////////////////////////////////////////
-            Game();
+            HeightFarStream();
 
             ////////////////////////////////////////////////////////////////////
-            //  Game destructor                                               //
+            //  HeightFarStream destructor                                    //
             ////////////////////////////////////////////////////////////////////
-            ~Game();
+            ~HeightFarStream();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init game                                                     //
-            //  return : True if game is ready, false otherwise               //
+            //  Init heightfar stream                                         //
+            //  return : True if the heightfar stream is successfully created //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy game                                                  //
+            //  Reload heightfar stream                                       //
+            //  return : True if the heightfar stream is reloading            //
             ////////////////////////////////////////////////////////////////////
-            void destroy();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute game events                                           //
-            ////////////////////////////////////////////////////////////////////
-            void events(Event& event);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute game logic                                            //
-            ////////////////////////////////////////////////////////////////////
-            void compute(float frametime);
+            inline bool isReady()
+            {
+                return (GResources.heightfars.getState() ==
+                    HEIGHTFARLOADER_STATE_IDLE);
+            }
 
             ////////////////////////////////////////////////////////////////////
-            //  Render game                                                   //
+            //  Reload heightfar stream                                       //
+            //  return : True if the heightfar stream is reloading            //
+            ////////////////////////////////////////////////////////////////////
+            inline bool reload(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.heightfars.reload(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.heightfars.getChunkX();
+                    m_chunkY = GResources.heightfars.getChunkY();
+                    return true;
+                }
+                return false;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update heightfar stream                                       //
+            //  return : True if the heightfar stream is updated              //
+            ////////////////////////////////////////////////////////////////////
+            inline bool update(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.heightfars.update(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.heightfars.getChunkX();
+                    m_chunkY = GResources.heightfars.getChunkY();
+                    return true;
+                }
+                return false;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render heightfar stream                                       //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Game private copy constructor : Not copyable                  //
+            //  HeightFarStream private copy constructor : Not copyable       //
             ////////////////////////////////////////////////////////////////////
-            Game(const Game&) = delete;
+            HeightFarStream(const HeightFarStream&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Game private copy operator : Not copyable                     //
+            //  HeightFarStream private copy operator : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            Game& operator=(const Game&) = delete;
+            HeightFarStream& operator=(const HeightFarStream&) = delete;
 
 
         private:
-            BackRenderer    m_backRenderer;     // Back renderer
-
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-            OrbitalCam      m_orbitalcam;       // Orbital camera
-
-            SkyBox          m_skybox;           // SkyBox
-
-            Sprite          m_sprite;           // Sprite
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectanle;         // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
-            CuboidShape     m_cuboid;           // Cuboid shape
-
-            GUICursor       m_cursor;           // GUI Cursor
-            GUIWindow       m_guiWindow;        // GUI Window
-            GUIPxText       m_pxText;           // GUI pixel text
-
-            StaticMesh      m_staticMesh;       // Static mesh
-            HeightMapStream m_heightMapStream;  // HeightMap stream
-            HeightFarStream m_heightFarStream;  // HeightFar stream
-
-            BoundingCircle  m_boundingCircle;   // Bounding circle
-            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
-            Collision2      m_collideCircle;    // Circles collision
-
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
-            bool            m_spaceReleased;    // Space released event
+            HeightFarChunk      m_heightFarChunk;   // HeightFar chunk
+            int32_t             m_chunkX;           // Chunk X
+            int32_t             m_chunkY;           // Chunk Y
     };
 
 
-#endif // VOS_GAME_GAME_HEADER
+#endif // VOS_RENDERER_HEIGHTFARSTREAM_HEADER

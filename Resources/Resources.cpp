@@ -54,7 +54,8 @@ Resources GResources = Resources();
 Resources::Resources() :
 textures(),
 meshes(),
-heightmaps()
+heightmaps(),
+heightfars()
 {
 
 }
@@ -83,6 +84,9 @@ bool Resources::init()
     // Start heightmap loader thread
     heightmaps.start();
 
+    // Start heightfar loader thread
+    heightfars.start();
+
     // Wait for resources init
     bool resourcesReady = false;
     while (!resourcesReady)
@@ -91,6 +95,7 @@ bool Resources::init()
         TextureLoaderState textureState = textures.getState();
         MeshLoaderState meshState = meshes.getState();
         HeightMapLoaderState heightmapState = heightmaps.getState();
+        HeightFarLoaderState heightfarState = heightfars.getState();
 
         // Check texture loader state
         if (textureState == TEXTURELOADER_STATE_ERROR)
@@ -119,10 +124,20 @@ bool Resources::init()
             return false;
         }
 
+        // Check heightfars loader state
+        if (heightfarState == HEIGHTFARLOADER_STATE_ERROR)
+        {
+            // Mesh loader error
+            SysMessage::box() << "[0x4003] Could not init heightfars loader\n";
+            SysMessage::box() << "Please check your resources files";
+            return false;
+        }
+
         // Check resources init state
         if ((textureState == TEXTURELOADER_STATE_IDLE) &&
             (meshState == MESHLOADER_STATE_IDLE) &&
-            (heightmapState == HEIGHTMAPLOADER_STATE_IDLE))
+            (heightmapState == HEIGHTMAPLOADER_STATE_IDLE) &&
+            (heightfarState == HEIGHTFARLOADER_STATE_IDLE))
         {
             // Resources are ready
             resourcesReady = true;
@@ -162,7 +177,7 @@ bool Resources::preload()
         if (textureState == TEXTURELOADER_STATE_ERROR)
         {
             // Texture loader error
-            SysMessage::box() << "[0x4003] Could not preload textures\n";
+            SysMessage::box() << "[0x4004] Could not preload textures\n";
             SysMessage::box() << "Please check your resources files";
             return false;
         }
@@ -171,7 +186,7 @@ bool Resources::preload()
         if (meshState == MESHLOADER_STATE_ERROR)
         {
             // Texture loader error
-            SysMessage::box() << "[0x4004] Could not preload meshes\n";
+            SysMessage::box() << "[0x4005] Could not preload meshes\n";
             SysMessage::box() << "Please check your resources files";
             return false;
         }
@@ -204,7 +219,7 @@ bool Resources::startLoading()
     if (!textures.startLoading())
     {
         // Could not start textures loading
-        SysMessage::box() << "[0x4005] Could not start textures loader\n";
+        SysMessage::box() << "[0x4006] Could not start textures loader\n";
         SysMessage::box() << "Please check your resources files";
         return false;
     }
@@ -213,7 +228,7 @@ bool Resources::startLoading()
     if (!meshes.startLoading())
     {
         // Could not start meshes loading
-        SysMessage::box() << "[0x4006] Could not start meshes loader\n";
+        SysMessage::box() << "[0x4007] Could not start meshes loader\n";
         SysMessage::box() << "Please check your resources files";
         return false;
     }
@@ -249,6 +264,9 @@ bool Resources::isLoadingDone()
 ////////////////////////////////////////////////////////////////////////////////
 void Resources::destroyResources()
 {
+    // Stop heightfar loader thread
+    heightfars.stop();
+
     // Stop heightmap loader thread
     heightmaps.stop();
 
@@ -257,6 +275,9 @@ void Resources::destroyResources()
 
     // Stop texture loader thread
     textures.stop();
+
+    // Destroy heightfar loader
+    heightfars.destroyHeightFarLoader();
 
     // Destroy heightmap loader
     heightmaps.destroyHeightMapLoader();

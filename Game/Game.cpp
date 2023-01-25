@@ -62,6 +62,7 @@ m_guiWindow(),
 m_pxText(),
 m_staticMesh(),
 m_heightMapStream(),
+m_heightFarStream(),
 m_boundingCircle(),
 m_boundingCircle2(),
 m_collideCircle(),
@@ -218,16 +219,24 @@ bool Game::init()
         return false;
     }
 
+    // Init heightfar stream
+    if (!m_heightFarStream.init())
+    {
+        // Could not init heightfar stream
+        return false;
+    }
+
     // Load spawn heightmap chunks
     m_heightMapStream.reload(0, 0);
+    m_heightFarStream.reload(0, 0);
 
-    // Wait for heightmap spawn chunks
-    bool heightmapLoaded = false;
-    while (!heightmapLoaded)
+    // Wait for spawn chunks to be loaded
+    bool spawnLoaded = false;
+    while (!spawnLoaded)
     {
-        if (m_heightMapStream.isReady())
+        if (m_heightMapStream.isReady() && m_heightFarStream.isReady())
         {
-            heightmapLoaded = true;
+            spawnLoaded = true;
         }
         else
         {
@@ -461,9 +470,16 @@ void Game::compute(float frametime)
     }
 
     // Update heightmap
-    int32_t chunkX = Math::divide(m_freeflycam.getX(), HeightMapChunkXStride);
-    int32_t chunkY = Math::divide(m_freeflycam.getZ(), HeightMapChunkZStride);
-    m_heightMapStream.update(chunkX, chunkY);
+    m_heightMapStream.update(
+        Math::divide(m_freeflycam.getX(), HeightMapChunkXStride),
+        Math::divide(m_freeflycam.getZ(), HeightMapChunkZStride)
+    );
+
+    // Update heightfar
+    m_heightFarStream.update(
+        Math::divide(m_freeflycam.getX(), HeightFarChunkXStride),
+        Math::divide(m_freeflycam.getZ(), HeightFarChunkZStride)
+    );
 
     /*// Memory dump
     static int memDump = 0;
@@ -540,9 +556,13 @@ void Game::render()
     );
     m_staticMesh.render();*/
 
-    // Render heightmap stream
+    // Render heightfar stream
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
-    m_heightMapStream.render();
+    m_heightFarStream.render();
+
+    // Render heightmap stream
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
+    m_heightMapStream.render();*/
 
 
     // Set 2D view

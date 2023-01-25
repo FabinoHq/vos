@@ -188,6 +188,8 @@
 !Renderer/HeightFarChunk.cpp
 !Renderer/HeightMapStream.h
 !Renderer/HeightMapStream.cpp
+!Renderer/HeightFarStream.h
+!Renderer/HeightFarStream.cpp
 !Renderer/BackRenderer.h
 !Renderer/BackRenderer.cpp
 !Renderer/Renderer.h

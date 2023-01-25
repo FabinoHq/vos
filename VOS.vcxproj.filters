@@ -230,6 +230,9 @@
     <ClCompile Include="Renderer\HeightFarChunk.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\HeightFarStream.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -525,6 +528,9 @@
       <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\HeightFarChunk.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightFarStream.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
