@@ -184,6 +184,8 @@
 !Renderer/StaticMesh.cpp
 !Renderer/HeightMapChunk.h
 !Renderer/HeightMapChunk.cpp
+!Renderer/HeightFarChunk.h
+!Renderer/HeightFarChunk.cpp
 !Renderer/HeightMapStream.h
 !Renderer/HeightMapStream.cpp
 !Renderer/BackRenderer.h
@@ -247,6 +249,8 @@
 !Resources/MeshLoader.cpp
 !Resources/HeightMapLoader.h
 !Resources/HeightMapLoader.cpp
+!Resources/HeightFarLoader.h
+!Resources/HeightFarLoader.cpp
 
 # Textures files
 !Textures/

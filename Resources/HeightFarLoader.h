@@ -37,10 +37,10 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Resources/HeightMapLoader.h : HeightMap loading management             //
+//     Resources/HeightFarLoader.h : HeightFar loading management             //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RESOURCES_HEIGHTMAPLOADER_HEADER
-#define VOS_RESOURCES_HEIGHTMAPLOADER_HEADER
+#ifndef VOS_RESOURCES_HEIGHTFARLOADER_HEADER
+#define VOS_RESOURCES_HEIGHTFARLOADER_HEADER
 
     #include "../System/System.h"
     #include "../System/SysThread.h"
@@ -58,49 +58,49 @@
     #include <cstdint>
     #include <new>
 
-    #include "../Renderer/HeightMapChunk.h"
+    #include "../Renderer/HeightFarChunk.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapLoader settings                                              //
+    //  HeightFarLoader settings                                              //
     ////////////////////////////////////////////////////////////////////////////
-    const uint64_t HeightMapFenceTimeout = 100000000000;
-    const uint32_t HeightMapLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
-    const double HeightMapLoaderIdleSleepTime = 0.01;
-    const double HeightMapLoaderErrorSleepTime = 0.1;
-    const char HeightMapLoaderVHMPFilePath[] = "World/vhmp/";
+    const uint64_t HeightFarFenceTimeout = 100000000000;
+    const uint32_t HeightFarLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
+    const double HeightFarLoaderIdleSleepTime = 0.01;
+    const double HeightFarLoaderErrorSleepTime = 0.1;
+    const char HeightFarLoaderVHMPFilePath[] = "World/vhmf/";
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMap stream assets definitions                                   //
+    //  HeightFar stream assets definitions                                   //
     ////////////////////////////////////////////////////////////////////////////
-    #define HEIGHTMAP_STREAMWIDTH 9
-    #define HEIGHTMAP_STREAMHEIGHT 9
-    #define HEIGHTMAP_STREAMHALFWIDTH 4
-    #define HEIGHTMAP_STREAMHALFHEIGHT 4
-    #define HEIGHTMAP_ASSETSCOUNT (HEIGHTMAP_STREAMWIDTH*HEIGHTMAP_STREAMHEIGHT)
+    #define HEIGHTFAR_STREAMWIDTH 9
+    #define HEIGHTFAR_STREAMHEIGHT 9
+    #define HEIGHTFAR_STREAMHALFWIDTH 4
+    #define HEIGHTFAR_STREAMHALFHEIGHT 4
+    #define HEIGHTFAR_ASSETSCOUNT (HEIGHTFAR_STREAMWIDTH*HEIGHTFAR_STREAMHEIGHT)
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapLoaderState enumeration                                      //
+    //  HeightFarLoaderState enumeration                                      //
     ////////////////////////////////////////////////////////////////////////////
-    enum HeightMapLoaderState
+    enum HeightFarLoaderState
     {
-        HEIGHTMAPLOADER_STATE_NONE = 0,
-        HEIGHTMAPLOADER_STATE_INIT = 1,
+        HEIGHTFARLOADER_STATE_NONE = 0,
+        HEIGHTFARLOADER_STATE_INIT = 1,
 
-        HEIGHTMAPLOADER_STATE_IDLE = 2,
-        HEIGHTMAPLOADER_STATE_SYNC = 3,
-        HEIGHTMAPLOADER_STATE_LOAD = 4,
+        HEIGHTFARLOADER_STATE_IDLE = 2,
+        HEIGHTFARLOADER_STATE_SYNC = 3,
+        HEIGHTFARLOADER_STATE_LOAD = 4,
 
-        HEIGHTMAPLOADER_STATE_ERROR = 5
+        HEIGHTFARLOADER_STATE_ERROR = 5
     };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapChunkState structure                                         //
+    //  HeightFarpChunkState structure                                        //
     ////////////////////////////////////////////////////////////////////////////
-    struct HeightMapChunkState
+    struct HeightFarChunkState
     {
         bool loading;
         int32_t chunkX;
@@ -109,69 +109,69 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapLoader class definition                                      //
+    //  HeightFarLoader class definition                                      //
     ////////////////////////////////////////////////////////////////////////////
-    class HeightMapLoader : public SysThread
+    class HeightFarLoader : public SysThread
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapLoader default constructor                           //
+            //  HeightFarLoader default constructor                           //
             ////////////////////////////////////////////////////////////////////
-            HeightMapLoader();
+            HeightFarLoader();
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapLoader virtual destructor                            //
+            //  HeightFarLoader virtual destructor                            //
             ////////////////////////////////////////////////////////////////////
-            virtual ~HeightMapLoader();
+            virtual ~HeightFarLoader();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapLoader thread process                                //
+            //  HeightFarLoader thread process                                //
             ////////////////////////////////////////////////////////////////////
             virtual void process();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init HeightMapLoader                                          //
-            //  return : True if heightmap loader is ready                    //
+            //  Init HeightFarLoader                                          //
+            //  return : True if heightfar loader is ready                    //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightmap loader state                                    //
-            //  return : Current heightmap loader state                       //
+            //  Get heightfar loader state                                    //
+            //  return : Current heightfar loader state                       //
             ////////////////////////////////////////////////////////////////////
-            HeightMapLoaderState getState();
+            HeightFarLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
-            //  Reload heightmaps pointers based on current chunk position    //
-            //  return : True if heightmaps pointers are reloaded             //
+            //  Reload heightfars pointers based on current chunk position    //
+            //  return : True if heightfars pointers are reloaded             //
             ////////////////////////////////////////////////////////////////////
             bool reload(int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update heightmaps pointers based on current chunk position    //
-            //  return : True if heightmaps pointers are updated              //
+            //  Update heightfars pointers based on current chunk position    //
+            //  return : True if heightfars pointers are updated              //
             ////////////////////////////////////////////////////////////////////
             bool update(int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Synchronize heightmaps pointers with renderer                 //
+            //  Synchronize heightfars pointers with renderer                 //
             ////////////////////////////////////////////////////////////////////
             void sync();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightmap vertex buffer                                   //
-            //  return : heightmap vertex buffer                              //
+            //  Get heightfar vertex buffer                                   //
+            //  return : heightfar vertex buffer                              //
             ////////////////////////////////////////////////////////////////////
-            inline VertexBuffer& heightmap(uint32_t heightmap)
+            inline VertexBuffer& heightfar(uint32_t heightfar)
             {
-                return (*m_heightptrs[heightmap]);
+                return (*m_heightptrs[heightfar]);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightmap chunk X                                         //
-            //  return : heightmap chunk X                                    //
+            //  Get heightfar chunk X                                         //
+            //  return : heightfar chunk X                                    //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getChunkX() const
             {
@@ -179,8 +179,8 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightmap chunk Y                                         //
-            //  return : heightmap chunk Y                                    //
+            //  Get heightfar chunk Y                                         //
+            //  return : heightfar chunk Y                                    //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getChunkY() const
             {
@@ -188,9 +188,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy heightmap loader                                      //
+            //  Destroy heightfar loader                                      //
             ////////////////////////////////////////////////////////////////////
-            void destroyHeightMapLoader();
+            void destroyHeightFarLoader();
 
 
             ////////////////////////////////////////////////////////////////////
@@ -204,70 +204,70 @@
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Load heightmaps assets                                        //
-            //  return : True if heightmaps assets are loaded                 //
+            //  Load heightfars assets                                        //
+            //  return : True if heightfars assets are loaded                 //
             ////////////////////////////////////////////////////////////////////
-            bool loadHeightMaps();
+            bool loadHeightFars();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Generate flat heightmap chunk                                 //
-            //  return : True if the heightmap chunk is generated             //
+            //  Generate flat heightfar chunk                                 //
+            //  return : True if the heightfar chunk is generated             //
             ////////////////////////////////////////////////////////////////////
             bool generateFlatChunk(VertexBuffer& vertexBuffer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update flat heightmap chunk                                   //
-            //  return : True if the heightmap chunk is updated               //
+            //  Update flat heightfar chunk                                   //
+            //  return : True if the heightfar chunk is updated               //
             ////////////////////////////////////////////////////////////////////
             bool updateFlatChunk(VertexBuffer& vertexBuffer);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update heightmap chunk                                        //
-            //  return : True if the heightmap chunk is updated               //
+            //  Update heightfar chunk                                        //
+            //  return : True if the heightfar chunk is updated               //
             ////////////////////////////////////////////////////////////////////
             bool updateChunk(VertexBuffer& vertexBuffer,
                 int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Swap heightmaps pointers towards top                          //
-            //  return : True if heightmaps pointers are swapped              //
+            //  Swap heightfars pointers towards top                          //
+            //  return : True if heightfars pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
             bool swapTop();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swap heightmaps pointers towards bottom                       //
-            //  return : True if heightmaps pointers are swapped              //
+            //  Swap heightfars pointers towards bottom                       //
+            //  return : True if heightfars pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
             bool swapBottom();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swap heightmaps pointers towards left                         //
-            //  return : True if heightmaps pointers are swapped              //
+            //  Swap heightfars pointers towards left                         //
+            //  return : True if heightfars pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
             bool swapLeft();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swap heightmaps pointers towards right                        //
-            //  return : True if heightmaps pointers are swapped              //
+            //  Swap heightfars pointers towards right                        //
+            //  return : True if heightfars pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
             bool swapRight();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapLoader private copy constructor : Not copyable       //
+            //  HeightFarLoader private copy constructor : Not copyable       //
             ////////////////////////////////////////////////////////////////////
-            HeightMapLoader(const HeightMapLoader&) = delete;
+            HeightFarLoader(const HeightFarLoader&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapLoader private copy operator : Not copyable          //
+            //  HeightFarLoader private copy operator : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            HeightMapLoader& operator=(const HeightMapLoader&) = delete;
+            HeightFarLoader& operator=(const HeightFarLoader&) = delete;
 
 
         private:
-            HeightMapLoaderState    m_state;            // HeightMapLoader state
+            HeightFarLoaderState    m_state;            // HeightFarLoader state
             SysMutex                m_stateMutex;       // State mutex
 
             VulkanQueue             m_transferQueue;    // Transfer queue
@@ -277,16 +277,16 @@
             VkFence                 m_fence;            // Staging fence
             uint32_t                m_sync;             // Renderer sync
 
-            VertexBuffer*           m_heightmaps;       // Heightmaps meshes
-            VertexBuffer*           m_heightptrs[HEIGHTMAP_ASSETSCOUNT];
-            HeightMapChunkState     m_chunks[HEIGHTMAP_ASSETSCOUNT];
+            VertexBuffer*           m_heightfars;       // Heightfars meshes
+            VertexBuffer*           m_heightptrs[HEIGHTFAR_ASSETSCOUNT];
+            HeightFarChunkState     m_chunks[HEIGHTFAR_ASSETSCOUNT];
 
             float*                  m_vertices;         // Chunk vertices
             uint16_t*               m_indices;          // Chunk indices
 
-            int32_t                 m_chunkX;           // Heightmap chunk X
-            int32_t                 m_chunkY;           // Heightmap chunk Y
+            int32_t                 m_chunkX;           // Heightfar chunk X
+            int32_t                 m_chunkY;           // Heightfar chunk Y
     };
 
 
-#endif // VOS_RESOURCES_HEIGHTMAPLOADER_HEADER
+#endif // VOS_RESOURCES_HEIGHTFARLOADER_HEADER

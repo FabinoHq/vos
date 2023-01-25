@@ -47,6 +47,7 @@
     #include "TextureLoader.h"
     #include "MeshLoader.h"
     #include "HeightMapLoader.h"
+    #include "HeightFarLoader.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -118,6 +119,7 @@
             TextureLoader       textures;       // Texture loader
             MeshLoader          meshes;         // Mesh loader
             HeightMapLoader     heightmaps;     // HeightMap loader
+            HeightFarLoader     heightfars;     // HeightFar loader
     };
 
 

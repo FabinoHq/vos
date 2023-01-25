@@ -76,10 +76,11 @@ VOS: main.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o \
-	Renderer/HeightMapChunk.o Renderer/HeightMapStream.o \
+	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
+	Renderer/HeightMapStream.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
-	Resources/Resources.o Resources/TextureLoader.o \
-	Resources/MeshLoader.o Resources/HeightMapLoader.o \
+	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
+	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Game/Game.o
 
 	$(CC) -o VOS \
@@ -111,10 +112,11 @@ VOS: main.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/SkyBox.o \
 	Renderer/StaticMesh.o \
-	Renderer/HeightMapChunk.o Renderer/HeightMapStream.o \
+	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
+	Renderer/HeightMapStream.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
-	Resources/Resources.o Resources/TextureLoader.o \
-	Resources/MeshLoader.o Resources/HeightMapLoader.o \
+	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
+	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Game/Game.o \
 	main.o $(LDFLAGS)
 
@@ -292,6 +294,9 @@ Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 
 Renderer/HeightMapChunk.o: Renderer/HeightMapChunk.cpp
 	$(CC) -o Renderer/HeightMapChunk.o -c Renderer/HeightMapChunk.cpp $(CFLAGS)
+
+Renderer/HeightFarChunk.o: Renderer/HeightFarChunk.cpp
+	$(CC) -o Renderer/HeightFarChunk.o -c Renderer/HeightFarChunk.cpp $(CFLAGS)
 
 Renderer/HeightMapStream.o: Renderer/HeightMapStream.cpp
 	$(CC) -o Renderer/HeightMapStream.o -c \

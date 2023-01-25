@@ -221,6 +221,7 @@
     <ClCompile Include="Renderer\GUI\GUICursor.cpp" />
     <ClCompile Include="Renderer\GUI\GUIPxText.cpp" />
     <ClCompile Include="Renderer\GUI\GUIWindow.cpp" />
+    <ClCompile Include="Renderer\HeightFarChunk.cpp" />
     <ClCompile Include="Renderer\HeightMapChunk.cpp" />
     <ClCompile Include="Renderer\HeightMapStream.cpp" />
     <ClCompile Include="Renderer\OrbitalCam.cpp" />
@@ -248,6 +249,7 @@
     <ClCompile Include="Renderer\Vulkan\VulkanBuffer.cpp" />
     <ClCompile Include="Renderer\Vulkan\VulkanMemory.cpp" />
     <ClCompile Include="Renderer\Vulkan\VulkanQueue.cpp" />
+    <ClCompile Include="Resources\HeightFarLoader.cpp" />
     <ClCompile Include="Resources\HeightMapLoader.cpp" />
     <ClCompile Include="Resources\MeshLoader.cpp" />
     <ClCompile Include="Resources\Resources.cpp" />
@@ -301,6 +303,7 @@
     <ClInclude Include="Renderer\GUI\GUICursor.h" />
     <ClInclude Include="Renderer\GUI\GUIPxText.h" />
     <ClInclude Include="Renderer\GUI\GUIWindow.h" />
+    <ClInclude Include="Renderer\HeightFarChunk.h" />
     <ClInclude Include="Renderer\HeightMapChunk.h" />
     <ClInclude Include="Renderer\HeightMapStream.h" />
     <ClInclude Include="Renderer\OrbitalCam.h" />
@@ -336,6 +339,7 @@
     <ClInclude Include="Renderer\Vulkan\VulkanBuffer.h" />
     <ClInclude Include="Renderer\Vulkan\VulkanMemory.h" />
     <ClInclude Include="Renderer\Vulkan\VulkanQueue.h" />
+    <ClInclude Include="Resources\HeightFarLoader.h" />
     <ClInclude Include="Resources\HeightMapLoader.h" />
     <ClInclude Include="Resources\MeshLoader.h" />
     <ClInclude Include="Resources\Resources.h" />

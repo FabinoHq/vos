@@ -37,100 +37,114 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/VulkanQueue.h : Vulkan Queue management                //
+//     Renderer/HeightFarChunk.h : HeightFar chunk management                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER
-#define VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER
+#ifndef VOS_RENDERER_HEIGHTFARCHUNK_HEADER
+#define VOS_RENDERER_HEIGHTFARCHUNK_HEADER
 
-    #include "../../System/System.h"
-    #include "../../System/SysMutex.h"
-    #include "Vulkan.h"
+    #include "../System/System.h"
+    #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/GraphicsLayout.h"
+    #include "Vulkan/VertexBuffer.h"
+    #include "Vulkan/TextureArray.h"
+    #include "../Math/Math.h"
+    #include "../Math/Vector3.h"
+    #include "../Math/Matrix4x4.h"
+    #include "../Math/Transform3.h"
 
     #include <cstdint>
-    #include <vector>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Vulkan queue pool enumeration                                         //
+    //  HeightFarChunk settings                                               //
     ////////////////////////////////////////////////////////////////////////////
-    enum VulkanQueuePool
-    {
-        VULKAN_QUEUE_SWAPCHAIN = 0,
-        VULKAN_QUEUE_UNIFORMS = 1,
-
-        VULKAN_QUEUE_TEXTURES = 2,
-        VULKAN_QUEUE_MESHES = 3,
-        VULKAN_QUEUE_HEIGHTMAPS = 4,
-        VULKAN_QUEUE_HEIGHTFARS = 5,
-
-        VULKAN_QUEUE_QUEUESCOUNT = 6
-    };
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  VulkanDeviceQueues structure definition                               //
-    ////////////////////////////////////////////////////////////////////////////
-    struct VulkanDeviceQueues
-    {
-        SysMutex queueMutex[VULKAN_QUEUE_QUEUESCOUNT];
-    };
+    const uint16_t HeightFarChunkWidth = 128;
+    const uint16_t HeightFarChunkHeight = 128;
+    const float HeightFarChunkPlaneWidth = 64.0f;
+    const float HeightFarChunkPlaneHeight = 64.0f;
+    const float HeightFarChunkXStride = 8192.0f;
+    const float HeightFarChunkZStride = 8192.0f;
+    const float HeightFarChunkTexcoordsWidth = 128.0f;
+    const float HeightFarChunkTexcoordsHeight = 128.0f;
+    const uint32_t HeightFarChunkVerticesCount =
+        ((HeightFarChunkWidth+1)*(HeightFarChunkHeight+1)*8);
+    const uint32_t HeightFarChunkIndicesCount =
+        (6*HeightFarChunkWidth*HeightFarChunkHeight);
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanQueue class definition                                          //
+    //  HeightFarChunk class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class VulkanQueue
+    class HeightFarChunk : public Transform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanQueue default constructor                               //
+            //  HeightFarChunk default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            VulkanQueue();
+            HeightFarChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanQueue destructor                                        //
+            //  HeightFarChunk virtual destructor                             //
             ////////////////////////////////////////////////////////////////////
-            ~VulkanQueue();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vulkan queue                                              //
-            //  return : True if the Vulkan queue is successfully retrieved   //
-            ////////////////////////////////////////////////////////////////////
-            bool getVulkanQueue(VulkanQueuePool queuePool);
+            virtual ~HeightFarChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get Vulkan queue families availables for the device           //
-            //  return : True if the device supports all queue families       //
+            //  Init heightfar chunk                                          //
+            //  return : True if the heightfar chunk is successfully created  //
             ////////////////////////////////////////////////////////////////////
-            static bool getDeviceQueues(VkPhysicalDevice& physicalDevice);
+            bool init(VertexBuffer& vertexBuffer, TextureArray& textureArray);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set heightfar chunk vertex buffer                             //
+            ////////////////////////////////////////////////////////////////////
+            inline void setVertexBuffer(VertexBuffer& vertexBuffer)
+            {
+                m_vertexBuffer = &vertexBuffer;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set heightfar chunk texture array                             //
+            //  return : True if heightfar chunk texture array is set         //
+            ////////////////////////////////////////////////////////////////////
+            bool setTextureArray(TextureArray& textureArray);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind heightfar chunk vertex buffer                            //
+            ////////////////////////////////////////////////////////////////////
+            void bindVertexBuffer();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind heightfar chunk texture array                            //
+            ////////////////////////////////////////////////////////////////////
+            inline void bindTextureArray()
+            {
+                m_textureArray->bind();
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render heightfar chunk                                        //
+            ////////////////////////////////////////////////////////////////////
+            void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  VulkanQueue private copy constructor : Not copyable           //
+            //  HeightFarChunk private copy constructor : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            VulkanQueue(const VulkanQueue&) = delete;
+            HeightFarChunk(const HeightFarChunk&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  VulkanQueue private copy operator : Not copyable              //
+            //  HeightFarChunk private copy operator : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            VulkanQueue& operator=(const VulkanQueue&) = delete;
+            HeightFarChunk& operator=(const HeightFarChunk&) = delete;
 
 
-        public:
-            VkQueue     handle;     // Queue handle
-            uint32_t    family;     // Queue family
-            uint32_t    index;      // Queue index
-            int         shared;     // Queue shared index
+        private:
+            VertexBuffer*   m_vertexBuffer;     // Heightfar chunk vertex buffer
+            TextureArray*   m_textureArray;     // Heightfar chunk texture ptr
     };
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  VulkanQueues global instance                                          //
-    ////////////////////////////////////////////////////////////////////////////
-    extern VulkanDeviceQueues GVulkanQueues;
-
-
-#endif // VOS_RENDERER_VULKAN_VULKANQUEUE_HEADER
+#endif // VOS_RENDERER_HEIGHTFARCHUNK_HEADER

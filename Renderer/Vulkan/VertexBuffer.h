@@ -108,6 +108,14 @@
                 uint32_t verticesCount, uint32_t indicesCount);
 
             ////////////////////////////////////////////////////////////////////
+            //  Create HeightFar Vertex buffer                                //
+            //  return : True if Vertex buffer is successfully created        //
+            ////////////////////////////////////////////////////////////////////
+            bool createHeightFarBuffer(VulkanMemoryPool memoryPool,
+                const float* vertices, const uint16_t* indices,
+                uint32_t verticesCount, uint32_t indicesCount);
+
+            ////////////////////////////////////////////////////////////////////
             //  Update Mesh Vertex buffer                                     //
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
@@ -120,6 +128,14 @@
             //  return : True if Vertex buffer is successfully updated        //
             ////////////////////////////////////////////////////////////////////
             bool updateHeightMapBuffer(
+                const float* vertices, const uint16_t* indices,
+                uint32_t verticesCount, uint32_t indicesCount);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update HeightFar Vertex buffer                                //
+            //  return : True if Vertex buffer is successfully updated        //
+            ////////////////////////////////////////////////////////////////////
+            bool updateHeightFarBuffer(
                 const float* vertices, const uint16_t* indices,
                 uint32_t verticesCount, uint32_t indicesCount);
 

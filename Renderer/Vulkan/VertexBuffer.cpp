@@ -176,6 +176,62 @@ bool VertexBuffer::createHeightMapBuffer(VulkanMemoryPool memoryPool,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Create HeightFar Vertex buffer                                            //
+//  return : True if Vertex buffer is successfully created                    //
+////////////////////////////////////////////////////////////////////////////////
+bool VertexBuffer::createHeightFarBuffer(VulkanMemoryPool memoryPool,
+    const float* vertices, const uint16_t* indices,
+    uint32_t verticesCount, uint32_t indicesCount)
+{
+    // Check current buffers
+    if (vertexBuffer.handle || indexBuffer.handle)
+    {
+        // Destroy current buffers
+        destroyBuffer();
+    }
+
+    // Check input vertices and indices
+    if (!vertices || !indices || (verticesCount <= 0) || (indicesCount <= 0))
+    {
+        return false;
+    }
+
+    // Compute vertices and indices sizes
+    indexCount = indicesCount;
+    verticesCount *= sizeof(float);
+    indicesCount *= sizeof(uint16_t);
+
+    // Create vertex buffer
+    if (!vertexBuffer.createBuffer(
+        (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT),
+        memoryPool, verticesCount))
+    {
+        // Could not create vertex buffer
+        return false;
+    }
+
+    // Create index buffer
+    if (!indexBuffer.createBuffer(
+        (VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT),
+        memoryPool, indicesCount))
+    {
+        // Could not create index buffer
+        return false;
+    }
+
+    // Upload vertex buffer to graphics memory
+    if (!GResources.heightfars.uploadVertexBuffer(*this,
+        vertices, indices, verticesCount, indicesCount))
+    {
+        // Could not upload vertex buffer to graphics memory
+        return false;
+    }
+
+    // Vertex buffer successfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Update Mesh Vertex buffer                                                 //
 //  return : True if Mesh Vertex buffer is successfully updated               //
 ////////////////////////////////////////////////////////////////////////////////
@@ -241,6 +297,44 @@ bool VertexBuffer::updateHeightMapBuffer(
 
     // Upload vertex buffer to graphics memory
     if (!GResources.heightmaps.uploadVertexBuffer(*this,
+        vertices, indices, verticesCount, indicesCount))
+    {
+        // Could not upload vertex buffer to graphics memory
+        return false;
+    }
+
+    // Vertex buffer successfully updated
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Update HeightFar Vertex buffer                                            //
+//  return : True if Vertex buffer is successfully updated                    //
+////////////////////////////////////////////////////////////////////////////////
+bool VertexBuffer::updateHeightFarBuffer(
+    const float* vertices, const uint16_t* indices,
+    uint32_t verticesCount, uint32_t indicesCount)
+{
+    // Check current buffers
+    if (!vertexBuffer.handle || !indexBuffer.handle)
+    {
+        // Invalid current buffers
+        return false;
+    }
+
+    // Check input vertices and indices
+    if (!vertices || !indices || (verticesCount <= 0) || (indicesCount <= 0))
+    {
+        return false;
+    }
+
+    // Compute vertices and indices sizes
+    indexCount = indicesCount;
+    verticesCount *= sizeof(float);
+    indicesCount *= sizeof(uint16_t);
+
+    // Upload vertex buffer to graphics memory
+    if (!GResources.heightfars.uploadVertexBuffer(*this,
         vertices, indices, verticesCount, indicesCount))
     {
         // Could not upload vertex buffer to graphics memory
