@@ -65,8 +65,8 @@
     const float HeightFarChunkPlaneHeight = 64.0f;
     const float HeightFarChunkXStride = 8192.0f;
     const float HeightFarChunkZStride = 8192.0f;
-    const float HeightFarChunkTexcoordsWidth = 8.0f;
-    const float HeightFarChunkTexcoordsHeight = 8.0f;
+    const float HeightFarChunkTexcoordsWidth = 64.0f;
+    const float HeightFarChunkTexcoordsHeight = 64.0f;
     const uint32_t HeightFarChunkVerticesCount =
         ((HeightFarChunkWidth+1)*(HeightFarChunkHeight+1)*8);
     const uint32_t HeightFarChunkIndicesCount =

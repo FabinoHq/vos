@@ -300,6 +300,31 @@ bool BackRenderer::startRenderPass()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Clear depth buffer                                                        //
+////////////////////////////////////////////////////////////////////////////////
+void BackRenderer::clearDepth()
+{
+    // Clear depth buffer attachment
+    VkClearAttachment clearDepth;
+    clearDepth.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    clearDepth.colorAttachment = 0;
+    clearDepth.clearValue.depthStencil = BackRendererClearDepth;
+
+    VkClearRect clearRect;
+    clearRect.rect.offset.x = 0;
+    clearRect.rect.offset.y = 0;
+    clearRect.rect.extent.width = backchain.extent.width;
+    clearRect.rect.extent.height = backchain.extent.height;
+    clearRect.baseArrayLayer = 0;
+    clearRect.layerCount = 1;
+
+    vkCmdClearAttachments(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        1, &clearDepth, 1, &clearRect
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Destroy back renderer                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void BackRenderer::destroyBackRenderer()

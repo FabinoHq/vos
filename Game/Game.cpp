@@ -581,10 +581,13 @@ void Game::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTFAR);
     m_heightFarStream.render();
 
+    // Clear depth buffer
+    GMainRenderer.clearDepth();
+
     // Render heightmap stream
-    /*m_freeflycam.bind();
+    m_freeflycam.bind();
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
-    m_heightMapStream.render();*/
+    m_heightMapStream.render();
 
 
     // Set 2D view

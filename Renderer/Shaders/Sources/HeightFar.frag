@@ -69,7 +69,7 @@ void main()
 
     // Compute distance fades
     float alphaFade = clamp(
-        1.0-((i_distHeight.y-alphaFadeDistance)*0.01), 0.0, 1.0
+        1.0-((i_distHeight.y-alphaFadeDistance)*0.005), 0.0, 1.0
     );
 
     // Compute output color
