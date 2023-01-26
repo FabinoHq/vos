@@ -236,6 +236,9 @@
     <ClCompile Include="Renderer\Vulkan\ComputeLayout.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\ComputePipeline.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -540,6 +543,9 @@
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\Vulkan\ComputeLayout.h">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\ComputePipeline.h">
       <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

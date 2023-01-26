@@ -615,7 +615,6 @@ void Pipeline::destroyPipeline()
     // Destroy pipeline
     if (m_pipeline)
     {
-        // Destroy pipeline
         vkDestroyPipeline(GVulkanDevice, m_pipeline, 0);
     }
     m_pipeline = 0;

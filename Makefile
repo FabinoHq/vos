@@ -65,7 +65,8 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o \
 	Renderer/Vulkan/GraphicsLayout.o Renderer/Vulkan/ComputeLayout.o \
-	Renderer/Vulkan/Pipeline.o Renderer/Vulkan/Shader.o \
+	Renderer/Vulkan/Pipeline.o Renderer/Vulkan/ComputePipeline.o \
+	Renderer/Vulkan/Shader.o \
 	Renderer/Vulkan/Texture.o Renderer/Vulkan/TextureArray.o \
 	Renderer/Vulkan/CubeMap.o \
 	Renderer/View.o Renderer/Camera.o \
@@ -102,7 +103,8 @@ VOS: main.o \
 	Renderer/Vulkan/VulkanBuffer.o Renderer/Vulkan/VertexBuffer.o \
 	Renderer/Vulkan/UniformBuffer.o \
 	Renderer/Vulkan/GraphicsLayout.o Renderer/Vulkan/ComputeLayout.o \
-	Renderer/Vulkan/Pipeline.o Renderer/Vulkan/Shader.o \
+	Renderer/Vulkan/Pipeline.o Renderer/Vulkan/ComputePipeline.o \
+	Renderer/Vulkan/Shader.o \
 	Renderer/Vulkan/Texture.o Renderer/Vulkan/TextureArray.o \
 	Renderer/Vulkan/CubeMap.o \
 	Renderer/View.o Renderer/Camera.o \
@@ -236,6 +238,10 @@ Renderer/Vulkan/ComputeLayout.o: Renderer/Vulkan/ComputeLayout.cpp
 Renderer/Vulkan/Pipeline.o: Renderer/Vulkan/Pipeline.cpp
 	$(CC) -o Renderer/Vulkan/Pipeline.o -c \
 	Renderer/Vulkan/Pipeline.cpp $(CFLAGS)
+
+Renderer/Vulkan/ComputePipeline.o: Renderer/Vulkan/ComputePipeline.cpp
+	$(CC) -o Renderer/Vulkan/ComputePipeline.o -c \
+	Renderer/Vulkan/ComputePipeline.cpp $(CFLAGS)
 
 Renderer/Vulkan/Shader.o: Renderer/Vulkan/Shader.cpp
 	$(CC) -o Renderer/Vulkan/Shader.o -c Renderer/Vulkan/Shader.cpp $(CFLAGS)
