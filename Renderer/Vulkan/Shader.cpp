@@ -46,7 +46,7 @@
 //  Shader default constructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
 Shader::Shader() :
-m_shader(0)
+handle(0)
 {
 
 }
@@ -56,7 +56,7 @@ m_shader(0)
 ////////////////////////////////////////////////////////////////////////////////
 Shader::~Shader()
 {
-    m_shader = 0;
+    handle = 0;
 }
 
 
@@ -67,7 +67,7 @@ Shader::~Shader()
 bool Shader::createShader(const uint32_t* source, const size_t size)
 {
     // Check current shader
-    if (m_shader)
+    if (handle)
     {
         // Destroy current shader
         destroyShader();
@@ -89,12 +89,12 @@ bool Shader::createShader(const uint32_t* source, const size_t size)
     shaderInfo.pCode = source;
 
     if (vkCreateShaderModule(GVulkanDevice,
-        &shaderInfo, 0, &m_shader) != VK_SUCCESS)
+        &shaderInfo, 0, &handle) != VK_SUCCESS)
     {
         // Could not create shader
         return false;
     }
-    if (!m_shader)
+    if (!handle)
     {
         // Invalid shader
         return false;
@@ -117,9 +117,9 @@ void Shader::destroyShader()
     }
 
     // Destroy shader
-    if (m_shader)
+    if (handle)
     {
-        vkDestroyShaderModule(GVulkanDevice, m_shader, 0);
+        vkDestroyShaderModule(GVulkanDevice, handle, 0);
     }
-    m_shader = 0;
+    handle = 0;
 }

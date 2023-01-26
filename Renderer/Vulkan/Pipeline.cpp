@@ -639,7 +639,7 @@ void Pipeline::setShaderStages(
     shaderStages[0].pNext = 0;
     shaderStages[0].flags = 0;
     shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
-    shaderStages[0].module = m_vertexShader.m_shader;
+    shaderStages[0].module = m_vertexShader.handle;
     shaderStages[0].pName = "main";
     shaderStages[0].pSpecializationInfo = 0;
 
@@ -649,7 +649,7 @@ void Pipeline::setShaderStages(
     shaderStages[1].pNext = 0;
     shaderStages[1].flags = 0;
     shaderStages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-    shaderStages[1].module = m_fragmentShader.m_shader;
+    shaderStages[1].module = m_fragmentShader.handle;
     shaderStages[1].pName = "main";
     shaderStages[1].pSpecializationInfo = 0;
 }

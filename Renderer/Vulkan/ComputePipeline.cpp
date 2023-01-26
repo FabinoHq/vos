@@ -46,7 +46,8 @@
 //  ComputePipeline default constructor                                       //
 ////////////////////////////////////////////////////////////////////////////////
 ComputePipeline::ComputePipeline() :
-m_pipeline(0)
+m_pipeline(0),
+m_computeShader()
 {
 
 }
@@ -57,6 +58,31 @@ m_pipeline(0)
 ComputePipeline::~ComputePipeline()
 {
     m_pipeline = 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Create compute shader                                                     //
+//  return : True if the compute shader is successfully created               //
+////////////////////////////////////////////////////////////////////////////////
+bool ComputePipeline::createComputeShader(
+    const uint32_t* computeSource, const size_t computeSize)
+{
+    // Destroy previous compute shader
+    if (m_computeShader.isValid())
+    {
+        m_computeShader.destroyShader();
+    }
+
+    // Create compute shader
+    if (!m_computeShader.createShader(computeSource, computeSize))
+    {
+        // Invalid compute shader
+        return false;
+    }
+
+    // Compute shader successfully created
+    return true;
 }
 
 
@@ -79,7 +105,7 @@ bool ComputePipeline::createComputePipeline()
     shaderStage.pNext = 0;
     shaderStage.flags = 0;
     shaderStage.stage = VK_SHADER_STAGE_COMPUTE_BIT;
-    shaderStage.module = 0;
+    shaderStage.module = m_computeShader.handle;
     shaderStage.pName = "main";
     shaderStage.pSpecializationInfo = 0;
 
@@ -127,4 +153,7 @@ void ComputePipeline::destroyComputePipeline()
         vkDestroyPipeline(GVulkanDevice, m_pipeline, 0);
     }
     m_pipeline = 0;
+
+    // Destroy compute shader
+    m_computeShader.destroyShader();
 }

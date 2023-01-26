@@ -84,7 +84,7 @@
             ////////////////////////////////////////////////////////////////////
             inline bool isValid()
             {
-                return m_shader;
+                return handle;
             }
 
 
@@ -100,10 +100,8 @@
             Shader& operator=(const Shader&) = delete;
 
 
-        private:
-            VkShaderModule      m_shader;       // Shader handle
-
-            friend class        Pipeline;       // Pipeline has access
+        public:
+            VkShaderModule      handle;         // Shader handle
     };
 
 

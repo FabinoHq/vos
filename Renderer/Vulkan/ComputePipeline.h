@@ -45,6 +45,7 @@
     #include "../../System/System.h"
     #include "Vulkan.h"
     #include "ComputeLayout.h"
+    #include "Shader.h"
 
     #include <cstddef>
     #include <cstdint>
@@ -66,6 +67,14 @@
             //  ComputePipeline destructor                                    //
             ////////////////////////////////////////////////////////////////////
             ~ComputePipeline();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Create compute shader                                         //
+            //  return : True if the compute shader is successfully created   //
+            ////////////////////////////////////////////////////////////////////
+            bool createComputeShader(
+                const uint32_t* computeSource, const size_t computeSize);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -104,6 +113,7 @@
 
         private:
             VkPipeline      m_pipeline;         // Compute pipeline handle
+            Shader          m_computeShader;    // Compute shader
     };
 
 

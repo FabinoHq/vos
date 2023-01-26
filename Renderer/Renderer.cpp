@@ -198,11 +198,20 @@ bool Renderer::init()
         return false;
     }
 
-    // Create default graphics layout
+    // Create graphics layout
     if (!GGraphicsLayout.createLayout())
     {
-        // Could not create default graphics layout
-        SysMessage::box() << "[0x3052] Could not create default layout\n";
+        // Could not create graphics layout
+        SysMessage::box() << "[0x3052] Could not create graphics layout\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create compute layout
+    if (!GComputeLayout.createLayout())
+    {
+        // Could not create compute layout
+        SysMessage::box() << "[0x3052] Could not create compute layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -866,7 +875,10 @@ void Renderer::destroyRenderer()
     // Destroy main renderer
     GMainRenderer.destroyBackRenderer();
 
-    // Destroy default graphics layout
+    // Destroy compute layout
+    GComputeLayout.destroyLayout();
+
+    // Destroy graphics layout
     GGraphicsLayout.destroyLayout();
 
     // Destroy uniformchain

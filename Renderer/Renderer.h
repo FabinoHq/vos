@@ -57,6 +57,7 @@
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/UniformBuffer.h"
     #include "Vulkan/GraphicsLayout.h"
+    #include "Vulkan/ComputeLayout.h"
     #include "Vulkan/Pipeline.h"
     #include "Vulkan/Shader.h"
     #include "Vulkan/Texture.h"
