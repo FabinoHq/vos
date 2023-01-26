@@ -47,7 +47,8 @@ precision highp int;
 layout(set = 1, binding = 0) uniform sampler2DArray texSampler;
 
 // Distance fades
-const float alphaFadeDistance = 12000.0;
+const float alphaFadeNear = 800.0;
+const float alphaFadeDistance = 18000.0;
 
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
@@ -69,7 +70,9 @@ void main()
 
     // Compute distance fade
     float alphaFade = clamp(
-        1.0-((i_distHeight.y-alphaFadeDistance)*0.005), 0.0, 1.0
+        clamp(((i_distHeight.y-alphaFadeNear)*0.02), 0.0, 1.0)*
+        clamp(1.0-((i_distHeight.y-alphaFadeDistance)*0.002), 0.0, 1.0),
+        0.0, 1.0
     );
 
     // Compute output color

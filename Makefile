@@ -327,6 +327,10 @@ Resources/HeightMapLoader.o: Resources/HeightMapLoader.cpp
 	$(CC) -o Resources/HeightMapLoader.o -c \
 	Resources/HeightMapLoader.cpp $(CFLAGS)
 
+Resources/HeightFarLoader.o: Resources/HeightFarLoader.cpp
+	$(CC) -o Resources/HeightFarLoader.o -c \
+	Resources/HeightFarLoader.cpp $(CFLAGS)
+
 
 Game/Game.o: Game/Game.cpp
 	$(CC) -o Game/Game.o -c Game/Game.cpp $(CFLAGS)
