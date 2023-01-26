@@ -56,6 +56,9 @@ layout(push_constant) uniform ModelMatrix
     mat4 model;
 } matrix;
 
+// Distance fades
+const float nearFadeDistance = 100.0;
+
 // Input and output position and texture coordinates
 layout(location = 0) in vec3 i_position;
 layout(location = 1) in vec2 i_texCoords;
@@ -75,5 +78,13 @@ void main()
     o_normals = i_normals;
     o_distHeight.x = i_position.y;
     o_distHeight.y = length((mats.view*vertexPos).xyz);
+
+    // Compute distance fade
+    float nearFade = clamp(
+        1.0-((o_distHeight.y-nearFadeDistance)*0.0012), 0.0, 1.0
+    );
+
+    // Compute output vertex
+    vertexPos.y -= (nearFade*500.0);
     gl_Position = (mats.projview*vertexPos);
 }
