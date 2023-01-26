@@ -233,6 +233,9 @@
     <ClCompile Include="Renderer\HeightFarStream.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Vulkan\ComputeLayout.cpp">
+      <Filter>Renderer\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -535,6 +538,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\HeightFar.h">
       <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Vulkan\ComputeLayout.h">
+      <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

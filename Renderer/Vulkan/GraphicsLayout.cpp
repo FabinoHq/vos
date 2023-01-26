@@ -162,11 +162,11 @@ bool GraphicsLayout::createLayout()
         return false;
     }
 
-    // Create pipeline layouts
-    if (!createPipelineLayouts())
+    // Create pipeline layout
+    if (!createPipelineLayout())
     {
-        // Could not create pipeline layouts
-        SysMessage::box() << "[0x3051] Could not create pipeline layouts\n";
+        // Could not create pipeline layout
+        SysMessage::box() << "[0x3051] Could not create pipeline layout\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
@@ -248,10 +248,10 @@ bool GraphicsLayout::createDescriptorSetLayouts()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create pipeline layouts                                                   //
+//  Create pipeline layout                                                    //
 //  return : True if pipeline layout is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool GraphicsLayout::createPipelineLayouts()
+bool GraphicsLayout::createPipelineLayout()
 {
     // Check descriptor set layouts
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
@@ -263,9 +263,17 @@ bool GraphicsLayout::createPipelineLayouts()
         }
     }
 
+    // Check PushConstantMatrix size
+    size_t pushConstantMatrixSize = sizeof(Matrix4x4::mat);
+    if (pushConstantMatrixSize != PushConstantMatrixSize)
+    {
+        // Invalid PushConstantMatrix size
+        return false;
+    }
+
     // Check PushConstantData size
     size_t pushConstantDataSize = sizeof(PushConstantData);
-    if (pushConstantDataSize != (sizeof(float)*9))
+    if (pushConstantDataSize != pushConstantDataSize)
     {
         // Invalid PushConstantData size
         return false;
@@ -313,7 +321,7 @@ bool GraphicsLayout::createPipelineLayouts()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy pipeline layout                                                   //
+//  Destroy graphics pipeline layout                                          //
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicsLayout::destroyLayout()
 {

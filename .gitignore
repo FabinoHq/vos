@@ -156,6 +156,8 @@
 !Renderer/Vulkan/UniformBuffer.cpp
 !Renderer/Vulkan/GraphicsLayout.h
 !Renderer/Vulkan/GraphicsLayout.cpp
+!Renderer/Vulkan/ComputeLayout.h
+!Renderer/Vulkan/ComputeLayout.cpp
 !Renderer/Vulkan/Pipeline.h
 !Renderer/Vulkan/Pipeline.cpp
 !Renderer/Vulkan/Shader.h

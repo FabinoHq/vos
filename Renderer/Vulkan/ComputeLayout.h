@@ -37,115 +37,42 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/GraphicsLayout.h : Graphics layout management          //
+//     Renderer/Vulkan/ComputeLayout.h : Compute layout management            //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
-#define VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
+#ifndef VOS_RENDERER_VULKAN_COMPUTELAYOUT_HEADER
+#define VOS_RENDERER_VULKAN_COMPUTELAYOUT_HEADER
 
     #include "../../System/System.h"
     #include "../../System/SysMessage.h"
     #include "Vulkan.h"
-    #include "Swapchain.h"
-    #include "VulkanBuffer.h"
-    #include "VertexBuffer.h"
-    #include "Shader.h"
     #include "../../Math/Math.h"
-    #include "../../Math/Matrix4x4.h"
 
     #include <cstddef>
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer max uniforms descriptor sets                                 //
+    //  ComputeLayout class definition                                        //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxUniformsDesc = 256;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer max textures descriptor sets                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t RendererMaxTexturesDesc = 2048;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Descriptor sets types                                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    enum DescriptorSetsType
-    {
-        DESC_MATRICES = 0,
-        DESC_TEXTURE = 1,
-        DESC_SETS_COUNT = 2
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Push constant types                                                   //
-    ////////////////////////////////////////////////////////////////////////////
-    enum PushConstantType
-    {
-        PUSH_CONSTANT_VERTEX = 0,
-        PUSH_CONSTANT_FRAGMENT = 1,
-        PUSH_CONSTANT_COUNT = 2
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  PushConstant data structure                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    struct PushConstantData
-    {
-        float   color[4];
-        float   offset[2];
-        float   size[2];
-        float   time;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Push constants offsets and sizes                                      //
-    ////////////////////////////////////////////////////////////////////////////
-    const uint32_t PushConstantMatrixOffset = 0;
-    const uint32_t PushConstantMatrixSize = (sizeof(float)*16);
-    const uint32_t PushConstantDataOffset = (sizeof(float)*16);
-    const uint32_t PushConstantDataSize = (sizeof(float)*9);
-    const uint32_t PushConstantDataNoTimeSize = (sizeof(float)*8);
-    const uint32_t PushConstantColorOffset = (sizeof(float)*16);
-    const uint32_t PushConstantColorSize = (sizeof(float)*4);
-    const uint32_t PushConstantOffsetOffset = (sizeof(float)*20);
-    const uint32_t PushConstantOffsetSize = (sizeof(float)*2);
-    const uint32_t PushConstantSizeOffset = (sizeof(float)*22);
-    const uint32_t PushConstantSizeSize = (sizeof(float)*2);
-    const uint32_t PushConstantOffsetSizeOffset = (sizeof(float)*20);
-    const uint32_t PushConstantOffsetSizeSize = (sizeof(float)*4);
-    const uint32_t PushConstantTimeOffset = (sizeof(float)*24);
-    const uint32_t PushConstantTimeSize = (sizeof(float)*1);
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  GraphicsLayout class definition                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    class GraphicsLayout
+    class ComputeLayout
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  GraphicsLayout default constructor                            //
+            //  ComputeLayout default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            GraphicsLayout();
+            ComputeLayout();
 
             ////////////////////////////////////////////////////////////////////
-            //  GraphicsLayout destructor                                     //
+            //  ComputeLayout destructor                                      //
             ////////////////////////////////////////////////////////////////////
-            ~GraphicsLayout();
+            ~ComputeLayout();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Create graphics pipeline layout                               //
-            //  return : True if graphics layout is successfully created      //
+            //  Create compute pipeline layout                                //
+            //  return : True if compute layout is successfully created       //
             ////////////////////////////////////////////////////////////////////
             bool createLayout();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create descriptor set layouts                                 //
-            //  return : True if descriptor layout is successfully created    //
-            ////////////////////////////////////////////////////////////////////
-            bool createDescriptorSetLayouts();
 
             ////////////////////////////////////////////////////////////////////
             //  Create pipeline layout                                        //
@@ -154,41 +81,32 @@
             bool createPipelineLayout();
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy graphics pipeline layout                              //
+            //  Destroy compute pipeline layout                               //
             ////////////////////////////////////////////////////////////////////
             void destroyLayout();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  GraphicsLayout private copy constructor : Not copyable        //
+            //  ComputeLayout private copy constructor : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            GraphicsLayout(const GraphicsLayout&) = delete;
+            ComputeLayout(const ComputeLayout&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  GraphicsLayout private copy operator : Not copyable           //
+            //  ComputeLayout private copy operator : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            GraphicsLayout& operator=(const GraphicsLayout&) = delete;
+            ComputeLayout& operator=(const ComputeLayout&) = delete;
 
 
         public:
             VkPipelineLayout        handle;         // Pipeline layout handle
-
-            // Descriptor pools
-            VkDescriptorPool        uniformsDescPool;   // Uniforms desc pool
-            VkDescriptorPool        texturesDescPool;   // Textures desc pool
-
-            // Descriptor set layouts
-            VkDescriptorSetLayout   descSetLayouts[DESC_SETS_COUNT];
-            VkDescriptorSetLayout
-                swapSetLayouts[RendererMaxSwapchainFrames*DESC_SETS_COUNT];
     };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  GraphicsLayout global instance                                        //
+    //  ComputeLayout global instance                                         //
     ////////////////////////////////////////////////////////////////////////////
-    extern GraphicsLayout GGraphicsLayout;
+    extern ComputeLayout GComputeLayout;
 
 
-#endif // VOS_RENDERER_VULKAN_GRAPHICSLAYOUT_HEADER
+#endif // VOS_RENDERER_VULKAN_COMPUTELAYOUT_HEADER
