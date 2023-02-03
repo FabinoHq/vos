@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_VULKANMEMORY_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysMessage.h"
     #include "Vulkan.h"
 
     #include <cstdint>

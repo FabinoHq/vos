@@ -297,7 +297,7 @@ bool Renderer::initPipelines()
     }
 
 
-    // Create sprite pipeline
+    // Create default pipeline
     pipelines[RENDERER_PIPELINE_DEFAULT].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
     );
@@ -308,8 +308,8 @@ bool Renderer::initPipelines()
         VERTEX_INPUTS_DEFAULT, false, false,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
-        // Could not create sprite pipeline
-        SysMessage::box() << "[0x3053] Could not create sprite pipeline\n";
+        // Could not create default pipeline
+        SysMessage::box() << "[0x3053] Could not create default pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }

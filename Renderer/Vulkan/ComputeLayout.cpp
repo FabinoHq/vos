@@ -76,6 +76,8 @@ bool ComputeLayout::createLayout()
     if (!createPipelineLayout())
     {
         // Could not create pipeline layout
+        SysMessage::box() << "[0x3051] Could not create pipeline layout\n";
+        SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
 

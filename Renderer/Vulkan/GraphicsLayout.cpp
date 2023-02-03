@@ -273,7 +273,7 @@ bool GraphicsLayout::createPipelineLayout()
 
     // Check PushConstantData size
     size_t pushConstantDataSize = sizeof(PushConstantData);
-    if (pushConstantDataSize != pushConstantDataSize)
+    if (pushConstantDataSize != PushConstantDataSize)
     {
         // Invalid PushConstantData size
         return false;

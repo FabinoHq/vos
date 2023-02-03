@@ -44,6 +44,7 @@
 
     #include "../../System/System.h"
     #include "../../System/SysMutex.h"
+    #include "../../System/SysMessage.h"
     #include "Vulkan.h"
 
     #include <cstdint>
