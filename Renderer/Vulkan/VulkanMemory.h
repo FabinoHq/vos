@@ -255,7 +255,9 @@
 
         private:
             uint32_t        m_deviceMemoryIndex;    // Device memory type index
+            uint32_t        m_deviceMemoryHeap;     // Device memory heap index
             uint32_t        m_hostMemoryIndex;      // Host memory type index
+            uint32_t        m_hostMemoryHeap;       // Host memory heap index
             uint32_t        m_maxAllocationCount;   // Maximum allocation count
             VkDeviceSize    m_memoryAlignment;      // Memory alignment
 

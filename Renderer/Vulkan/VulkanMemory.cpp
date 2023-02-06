@@ -57,7 +57,9 @@ VulkanMemory GVulkanMemory = VulkanMemory();
 ////////////////////////////////////////////////////////////////////////////////
 VulkanMemory::VulkanMemory() :
 m_deviceMemoryIndex(0),
+m_deviceMemoryHeap(0),
 m_hostMemoryIndex(0),
+m_hostMemoryHeap(0),
 m_maxAllocationCount(0),
 m_memoryAlignment(0)
 {
@@ -140,6 +142,18 @@ bool VulkanMemory::init()
 
     // Get physical device memory properties
     VkPhysicalDeviceMemoryProperties physicalMemoryProperties;
+    physicalMemoryProperties.memoryTypeCount = 0;
+    physicalMemoryProperties.memoryHeapCount = 0;
+    for (int i = 0; i < VK_MAX_MEMORY_TYPES; ++i)
+    {
+        physicalMemoryProperties.memoryTypes[i].propertyFlags = 0;
+        physicalMemoryProperties.memoryTypes[i].heapIndex = 0;
+    }
+    for (int i = 0; i < VK_MAX_MEMORY_HEAPS; ++i)
+    {
+        physicalMemoryProperties.memoryHeaps[i].size = 0;
+        physicalMemoryProperties.memoryHeaps[i].flags = 0;
+    }
     vkGetPhysicalDeviceMemoryProperties(
         GPhysicalDevice, &physicalMemoryProperties
     );
@@ -164,6 +178,8 @@ bool VulkanMemory::init()
             if (!deviceMemoryFound)
             {
                 m_deviceMemoryIndex = i;
+                m_deviceMemoryHeap =
+                    (physicalMemoryProperties.memoryTypes[i].heapIndex);
                 deviceMemoryFound = true;
             }
         }
@@ -175,6 +191,8 @@ bool VulkanMemory::init()
             if (!hostMemoryFound)
             {
                 m_hostMemoryIndex = i;
+                m_hostMemoryHeap =
+                    (physicalMemoryProperties.memoryTypes[i].heapIndex);
                 hostMemoryFound = true;
             }
         }
@@ -195,7 +213,9 @@ bool VulkanMemory::init()
         return false;
     }
 
-    // Allocate memory pools
+    // Check required memory
+    VkDeviceSize deviceTotalMemory = 0;
+    VkDeviceSize hostTotalMemory = 0;
     for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
     {
         // Check memory pool index
@@ -207,6 +227,38 @@ bool VulkanMemory::init()
             return false;
         }
 
+        // Compute total required memory
+        if (VulkanMemoryArray[i].type == VULKAN_MEMORY_DEVICE)
+        {
+            deviceTotalMemory += VulkanMemoryArray[i].size;
+        }
+        else if (VulkanMemoryArray[i].type == VULKAN_MEMORY_HOST)
+        {
+            hostTotalMemory += VulkanMemoryArray[i].size;
+        }
+    }
+
+    // Check available device memory
+    if (physicalMemoryProperties.memoryHeaps[m_deviceMemoryHeap].size <
+        deviceTotalMemory)
+    {
+        SysMessage::box() << "[0x3108] Not enough graphics memory available\n";
+        SysMessage::box() << "You need at least 4GB of graphics memory";
+        return false;
+    }
+
+    // Check available host memory
+    if (physicalMemoryProperties.memoryHeaps[m_hostMemoryHeap].size <
+        hostTotalMemory)
+    {
+        SysMessage::box() << "[0x3109] Not enough graphics memory available\n";
+        SysMessage::box() << "You need at least 4GB of graphics memory";
+        return false;
+    }
+
+    // Allocate memory pools
+    for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
+    {
         // Check memory pool size
         if (VulkanMemoryArray[i].size <= 0) { continue; }
 
@@ -222,7 +274,7 @@ bool VulkanMemory::init()
         else
         {
             // Invalid memory pool type
-            SysMessage::box() << "[0x3108] Invalid memory pool type\n";
+            SysMessage::box() << "[0x310A] Invalid memory pool type\n";
             SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
@@ -238,7 +290,7 @@ bool VulkanMemory::init()
             &allocateInfo, 0, &m_memory[i]) != VK_SUCCESS)
         {
             // Could not allocate device memory pool
-            SysMessage::box() << "[0x3109] Could not allocate memory pool\n";
+            SysMessage::box() << "[0x310B] Could not allocate memory pool\n";
             SysMessage::box() << "Please update your graphics drivers";
             return false;
         }
