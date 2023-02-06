@@ -98,10 +98,16 @@
             bool createBuffer(uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update Uniform buffer                                         //
-            //  return : True if Vertex buffer is successfully updated        //
+            //  Update uniform buffer for vertex shader                       //
+            //  return : True if uniform buffer is successfully updated       //
             ////////////////////////////////////////////////////////////////////
-            bool updateBuffer(void* data, uint32_t size);
+            bool updateBufferVertex(void* data, uint32_t size);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update uniform buffer for fragment shader                     //
+            //  return : True if uniform buffer is successfully updated       //
+            ////////////////////////////////////////////////////////////////////
+            bool updateBufferFragment(void* data, uint32_t size);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy Uniform buffer                                        //

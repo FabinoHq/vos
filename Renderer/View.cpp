@@ -209,7 +209,7 @@ bool View::compute(float ratio)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+    if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
         &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer

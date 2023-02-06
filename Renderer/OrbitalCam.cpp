@@ -133,7 +133,7 @@ bool OrbitalCam::compute(float ratio, float frametime)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+    if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
         &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
@@ -170,7 +170,7 @@ bool OrbitalCam::compute(float ratio, OrbitalCam& orbitalCam)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+    if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
         &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer

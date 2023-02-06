@@ -241,7 +241,7 @@ bool Camera::compute(float ratio)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+    if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
         &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
@@ -278,7 +278,7 @@ bool Camera::compute(float ratio, Camera& camera)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+    if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
         &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer

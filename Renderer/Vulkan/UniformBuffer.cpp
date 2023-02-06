@@ -104,10 +104,10 @@ bool UniformBuffer::createBuffer(uint32_t size)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update Uniform buffer                                                     //
-//  return : True if Uniform buffer is successfully updated                   //
+//  Update uniform buffer for vertex shader                                   //
+//  return : True if uniform buffer is successfully updated                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool UniformBuffer::updateBuffer(void* data, uint32_t size)
+bool UniformBuffer::updateBufferVertex(void* data, uint32_t size)
 {
     // Check current buffer
     if (!uniformBuffer.handle || (uniformBuffer.size != size) ||
@@ -172,6 +172,82 @@ bool UniformBuffer::updateBuffer(void* data, uint32_t size)
         GUniformchain.commandBuffers[GSwapchain.current],
         VK_PIPELINE_STAGE_TRANSFER_BIT,
         VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
+        0, 0, 0, 1, &transferToShader, 0, 0
+    );
+
+    // Uniform buffer successfully updated
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Update uniform buffer for fragment shader                                 //
+//  return : True if uniform buffer is successfully updated                   //
+////////////////////////////////////////////////////////////////////////////////
+bool UniformBuffer::updateBufferFragment(void* data, uint32_t size)
+{
+    // Check current buffer
+    if (!uniformBuffer.handle || (uniformBuffer.size != size) ||
+        !stagingBuffer.handle || (stagingBuffer.size != size))
+    {
+        // Recreate uniform buffer
+        destroyBuffer();
+        createBuffer(size);
+    }
+
+    // Write data into staging buffer memory
+    if (!GVulkanMemory.writeBufferMemory(
+        stagingBuffer, data, VULKAN_MEMORY_UNIFORMUPLOAD))
+    {
+        // Could not write data into staging buffer memory
+        return false;
+    }
+
+    // Barrier from shader to transfer
+    VkBufferMemoryBarrier shaderToTransfer;
+    shaderToTransfer.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    shaderToTransfer.pNext = 0;
+    shaderToTransfer.srcAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
+    shaderToTransfer.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    shaderToTransfer.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    shaderToTransfer.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    shaderToTransfer.buffer = uniformBuffer.handle;
+    shaderToTransfer.offset = 0;
+    shaderToTransfer.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(
+        GUniformchain.commandBuffers[GSwapchain.current],
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        0, 0, 0, 1, &shaderToTransfer, 0, 0
+    );
+
+    // Transfer staging buffer data to uniform buffer
+    VkBufferCopy bufferCopy;
+    bufferCopy.srcOffset = 0;
+    bufferCopy.dstOffset = 0;
+    bufferCopy.size = stagingBuffer.size;
+
+    vkCmdCopyBuffer(
+        GUniformchain.commandBuffers[GSwapchain.current],
+        stagingBuffer.handle, uniformBuffer.handle, 1, &bufferCopy
+    );
+
+    // Barrier from transfer to shader
+    VkBufferMemoryBarrier transferToShader;
+    transferToShader.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    transferToShader.pNext = 0;
+    transferToShader.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    transferToShader.dstAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
+    transferToShader.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    transferToShader.buffer = uniformBuffer.handle;
+    transferToShader.offset = 0;
+    transferToShader.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(
+        GUniformchain.commandBuffers[GSwapchain.current],
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
         0, 0, 0, 1, &transferToShader, 0, 0
     );
 

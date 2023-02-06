@@ -213,7 +213,7 @@ bool FreeFlyCam::compute(float ratio, float frametime)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+    if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
         &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer
@@ -250,7 +250,7 @@ bool FreeFlyCam::compute(float ratio, FreeFlyCam& freeFlyCam)
     );
 
     // Update uniform buffer
-    if (!m_uniformBuffers[GSwapchain.current].updateBuffer(
+    if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
         &uniformData, sizeof(uniformData)))
     {
         // Could not update uniform buffer

@@ -85,6 +85,14 @@ WorldLight::~WorldLight()
 ////////////////////////////////////////////////////////////////////////////////
 bool WorldLight::init()
 {
+    // Check WorldLightData size
+    size_t worldLightDataSize = sizeof(WorldLightData);
+    if (worldLightDataSize != WorldLightDataSize)
+    {
+        // Invalid WorldLightData size
+        return false;
+    }
+
     // Copy world light data into uniform data
     WorldLightData worldLightData;
     memcpy(worldLightData.color, color.vec, sizeof(color.vec));
@@ -190,7 +198,7 @@ bool WorldLight::compute()
     worldLightData.align2 = 0.0f;
 
     // Update world light uniform buffer
-    if (!uniformBuffers[GSwapchain.current].updateBuffer(
+    if (!uniformBuffers[GSwapchain.current].updateBufferFragment(
         &worldLightData, sizeof(worldLightData)))
     {
         // Could not update world light uniform buffer
