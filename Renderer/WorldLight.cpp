@@ -53,7 +53,7 @@ WorldLight GWorldLight = WorldLight();
 ////////////////////////////////////////////////////////////////////////////////
 WorldLight::WorldLight() :
 color(1.0f, 1.0f, 1.0f, 0.8f),
-ambient(0.2f, 0.2f, 0.2f, 0.2f),
+ambient(0.4f, 0.4f, 0.4f, 0.4f),
 position(0.0f, 0.0f, 0.0f),
 direction(0.0f, 0.0f, 0.0f)
 {
@@ -90,7 +90,9 @@ bool WorldLight::init()
     memcpy(worldLightData.color, color.vec, sizeof(color.vec));
     memcpy(worldLightData.ambient, ambient.vec, sizeof(ambient.vec));
     memcpy(worldLightData.position, position.vec, sizeof(position.vec));
+    worldLightData.align1 = 0.0f;
     memcpy(worldLightData.direction, direction.vec, sizeof(direction.vec));
+    worldLightData.align2 = 0.0f;
 
     // Create world light uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
@@ -163,4 +165,38 @@ void WorldLight::destroyWorldLight()
         uniformBuffers[i].destroyBuffer();
         descriptorSets[i] = 0;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute world light                                                       //
+//  return : True if world lights are successfully computed                   //
+////////////////////////////////////////////////////////////////////////////////
+bool WorldLight::compute()
+{
+    // Compute world light direction
+    direction.vec[0] = 0.0f;
+    direction.vec[1] = -1.0f;
+    direction.vec[2] = 0.0f;
+    direction = -direction;
+    direction.normalize();
+
+    // Copy world light data into uniform data
+    WorldLightData worldLightData;
+    memcpy(worldLightData.color, color.vec, sizeof(color.vec));
+    memcpy(worldLightData.ambient, ambient.vec, sizeof(ambient.vec));
+    memcpy(worldLightData.position, position.vec, sizeof(position.vec));
+    worldLightData.align1 = 0.0f;
+    memcpy(worldLightData.direction, direction.vec, sizeof(direction.vec));
+    worldLightData.align2 = 0.0f;
+
+    // Update world light uniform buffer
+    if (!uniformBuffers[GSwapchain.current].updateBuffer(
+        &worldLightData, sizeof(worldLightData)))
+    {
+        // Could not update world light uniform buffer
+        return false;
+    }
+
+    // View successfully computed
+    return true;
 }

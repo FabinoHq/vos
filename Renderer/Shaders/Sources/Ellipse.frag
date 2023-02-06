@@ -66,5 +66,5 @@ void main()
     );
 
     // Compute output color
-    o_color = constants.color*ellipseShape;
+    o_color = (constants.color*ellipseShape);
 }

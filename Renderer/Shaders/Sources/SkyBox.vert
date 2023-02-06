@@ -69,5 +69,5 @@ void main()
 {
     // Compute vertex position
     o_texCoords = vec3(-i_position.x, i_position.y, i_position.z);
-    gl_Position = mats.projview*matrix.model*vec4(i_position, 1.0);
+    gl_Position = (mats.projview*matrix.model*vec4(i_position, 1.0));
 }

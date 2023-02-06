@@ -60,7 +60,9 @@
         float   color[4];       // Light color
         float   ambient[4];     // Ambient color
         float   position[3];    // Sun position
+        float   align1;
         float   direction[3];   // Light direction
+        float   align2;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -96,6 +98,25 @@
             //  Destroy world light                                           //
             ////////////////////////////////////////////////////////////////////
             void destroyWorldLight();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Compute world light                                           //
+            //  return : True if world lights are successfully computed       //
+            ////////////////////////////////////////////////////////////////////
+            bool compute();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind world light                                              //
+            ////////////////////////////////////////////////////////////////////
+            inline void bind()
+            {
+                vkCmdBindDescriptorSets(
+                    GSwapchain.commandBuffers[GSwapchain.current],
+                    VK_PIPELINE_BIND_POINT_GRAPHICS, GGraphicsLayout.handle,
+                    DESC_WORLDLIGHT, 1,
+                    &descriptorSets[GSwapchain.current], 0, 0
+                );
+            }
 
 
         private:

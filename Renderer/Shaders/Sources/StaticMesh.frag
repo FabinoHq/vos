@@ -44,12 +44,14 @@ precision highp float;
 precision highp int;
 
 // WorldLight buffer
-layout(set = 0, binding = 0) uniform MatricesBuffer
+layout(set = 0, binding = 0) uniform WorldLightBuffer
 {
     vec4 color;
     vec4 ambient;
     vec3 position;
+    float align1;
     vec3 direction;
+    float align2;
 } worldlight;
 
 // Texture sampler
@@ -63,6 +65,15 @@ layout(location = 0) out vec4 o_color;
 // Main shader entry point
 void main()
 {
+    // Texture sampling
+    vec4 fragOutput = texture(texSampler, i_texCoords);
+
+    // Compute world light
+    float dirLight = clamp(dot(i_normals, worldlight.direction), 0.0, 1.0);
+    vec3 worldLight = (worldlight.color.rgb*worldlight.color.a*dirLight);
+    vec3 ambientLight = (worldlight.ambient.rgb*worldlight.ambient.a);
+
     // Compute output color
-    o_color = texture(texSampler, i_texCoords);
+    fragOutput.rgb *= (ambientLight+worldLight);
+    o_color = fragOutput;
 }

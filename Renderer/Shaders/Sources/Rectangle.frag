@@ -72,5 +72,5 @@ void main()
     );
 
     // Compute output color
-    o_color = constants.color*rectangleShape;
+    o_color = (constants.color*rectangleShape);
 }

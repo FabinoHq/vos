@@ -77,7 +77,7 @@ void main()
     // Compute vertex position
     vec4 vertexPos = (matrix.model*vec4(i_position, 1.0));
     o_texCoords = i_texCoords;
-    o_normals = i_normals;
+    o_normals = normalize(mat3(matrix.model)*i_normals);
     o_distHeight.x = i_position.y;
     o_distHeight.y = length((mats.view*vertexPos).xyz);
 

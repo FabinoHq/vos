@@ -44,12 +44,14 @@ precision highp float;
 precision highp int;
 
 // WorldLight buffer
-layout(set = 0, binding = 0) uniform MatricesBuffer
+layout(set = 0, binding = 0) uniform WorldLightBuffer
 {
     vec4 color;
     vec4 ambient;
     vec3 position;
+    float align1;
     vec3 direction;
+    float align2;
 } worldlight;
 
 // Color, position, offset, and time (push constant)

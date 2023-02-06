@@ -119,7 +119,7 @@ bool Game::init()
     }
     m_freeflycam.setZ(1.0f);
     m_freeflycam.setSpeed(10.0f);
-    m_freeflycam.setY(300.0f);
+    m_freeflycam.setY(450.0f);
     m_freeflycam.setNearPlane(CameraDefaultNearPlane);
     m_freeflycam.setFarPlane(CameraDefaultFarPlane);
 
@@ -129,9 +129,7 @@ bool Game::init()
         // Could not init freefly camera
         return false;
     }
-    m_farflycam.setZ(1.0f);
-    m_farflycam.setSpeed(10.0f);
-    m_farflycam.setY(300.0f);
+    m_farflycam.setPosition(m_freeflycam.getPosition());
     m_farflycam.setNearPlane(CameraDistanceNearPlane);
     m_farflycam.setFarPlane(CameraDistanceFarPlane);
 
@@ -474,18 +472,33 @@ void Game::compute(float frametime)
         m_spaceReleased = false;
     }*/
 
-    // Compute and upload cameras and views
+    // Rotate test static mesh
+    m_staticMesh.rotateX(0.035f*frametime);
+    m_staticMesh.rotateY(0.1f*frametime);
+    m_staticMesh.rotateZ(0.075f*frametime);
+
+    // Start uniforms upload
     if (GUniformchain.startUpload())
     {
+        // Compute world lights
+        GWorldLight.position.vec[0] = (m_freeflycam.getX() + 400.0f);
+        GWorldLight.position.vec[1] = (m_freeflycam.getY() + 700.0f);
+        GWorldLight.position.vec[2] = (m_freeflycam.getZ() + 400.0f);
+        GWorldLight.compute();
+
+        // Compute views
         GRenderer.computeDefaultView();
         GMainRenderer.computeDefaultView();
         m_backRenderer.computeDefaultView();
         m_view.compute(GSwapchain.ratio);
+
+        // Compute cameras
         m_camera.compute(GSwapchain.ratio);
         m_freeflycam.compute(GSwapchain.ratio, frametime);
         m_farflycam.compute(GSwapchain.ratio, m_freeflycam);
         m_orbitalcam.compute(GSwapchain.ratio, frametime);
 
+        // End uniforms upload
         GUniformchain.endUpload();
     }
 
@@ -545,6 +558,9 @@ void Game::render()
     // Start rendering
     GRenderer.startRenderPass();
 
+    // Bind world lights
+    GWorldLight.bind();
+
     // Set freefly camera
     m_freeflycam.bind();
 
@@ -559,27 +575,18 @@ void Game::render()
     m_skybox.bindCubeMap();
     m_skybox.render();
 
-    // Render cuboid shape
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
+    // Render sun (test cuboid shape)
+    GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
     m_cuboid.bindVertexBuffer();
-    m_cuboid.render();*/
-
-    // Render static mesh
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
-    m_staticMesh.bindVertexBuffer();
-    m_staticMesh.bindTexture();
-    m_staticMesh.setPosition(0.0f, 0.9f, 0.0f);
-    m_staticMesh.setPosition(
-        m_freeflycam.getX()+2.0f,
-        m_freeflycam.getY(),
-        m_freeflycam.getZ()+2.0f
-    );
-    m_staticMesh.render();*/
+    m_cuboid.setScale(100.0f);
+    m_cuboid.setPosition(GWorldLight.position);
+    m_cuboid.render();
 
     // Render heightfar stream
     m_farflycam.bind();
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTFAR);
     m_heightFarStream.render();
+
 
     // Clear depth buffer
     GMainRenderer.clearDepth();
@@ -588,6 +595,14 @@ void Game::render()
     m_freeflycam.bind();
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
     m_heightMapStream.render();
+
+    // Render static mesh
+    GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    m_staticMesh.bindVertexBuffer();
+    m_staticMesh.bindTexture();
+    m_staticMesh.setPosition(0.0f, 430.0f, 0.0f);
+    m_staticMesh.setScale(10.0f);
+    m_staticMesh.render();
 
 
     // Set 2D view

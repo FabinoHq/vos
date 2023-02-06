@@ -44,12 +44,14 @@ precision highp float;
 precision highp int;
 
 // WorldLight buffer
-layout(set = 0, binding = 0) uniform MatricesBuffer
+layout(set = 0, binding = 0) uniform WorldLightBuffer
 {
     vec4 color;
     vec4 ambient;
     vec3 position;
+    float align1;
     vec3 direction;
+    float align2;
 } worldlight;
 
 // Texture sampler
@@ -74,7 +76,7 @@ void main()
     float yLayer2 = clamp(ceil(yHeight-0.8), 0.0, 3.0);
     float mixLayers = clamp(((yHeight-0.8)-yLayer)*5.0, 0.0, 1.0);
 
-    // Sample textures
+    // Textures sampling
     vec4 texColor = texture(texSampler, vec3(i_texCoords, yLayer));
     vec4 farColor = texture(texSampler, vec3((i_texCoords*0.125), yLayer));
     vec4 texColor2 = texture(texSampler, vec3(i_texCoords, yLayer2));
@@ -90,8 +92,14 @@ void main()
         1.0-((i_distHeight.y-alphaFadeDistance)*0.01), 0.0, 1.0
     );
 
+    // Compute world light
+    float dirLight = clamp(dot(i_normals, worldlight.direction), 0.0, 1.0);
+    vec3 worldLight = (worldlight.color.rgb*worldlight.color.a*dirLight);
+    vec3 ambientLight = (worldlight.ambient.rgb*worldlight.ambient.a);
+
     // Compute output color
     vec4 fragOutput = mix(finalNear, finalFar, distanceMix);
     fragOutput.a *= alphaFade;
+    fragOutput.rgb *= (ambientLight+worldLight);
     o_color = fragOutput;
 }

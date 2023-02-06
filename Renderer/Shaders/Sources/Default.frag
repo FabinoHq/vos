@@ -64,7 +64,7 @@ layout(location = 0) out vec4 o_color;
 void main()
 {
     // Compute output color
-    o_color = texture(
+    o_color = (texture(
         texSampler, (i_texCoords*constants.size)+constants.offset
-    )*constants.color;
+    )*constants.color);
 }
