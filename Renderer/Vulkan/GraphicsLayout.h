@@ -72,9 +72,10 @@
     ////////////////////////////////////////////////////////////////////////////
     enum DescriptorSetsType
     {
-        DESC_MATRICES = 0,
-        DESC_TEXTURE = 1,
-        DESC_SETS_COUNT = 2
+        DESC_WORLDLIGHT = 0,
+        DESC_MATRICES = 1,
+        DESC_TEXTURE = 2,
+        DESC_SETS_COUNT = 3
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -175,6 +176,7 @@
             VkPipelineLayout        handle;         // Pipeline layout handle
 
             // Descriptor pools
+            VkDescriptorPool        worldlightDescPool; // World light desc pool
             VkDescriptorPool        uniformsDescPool;   // Uniforms desc pool
             VkDescriptorPool        texturesDescPool;   // Textures desc pool
 

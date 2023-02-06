@@ -53,6 +53,7 @@ GraphicsLayout GGraphicsLayout = GraphicsLayout();
 ////////////////////////////////////////////////////////////////////////////////
 GraphicsLayout::GraphicsLayout() :
 handle(0),
+worldlightDescPool(0),
 uniformsDescPool(0),
 texturesDescPool(0)
 {
@@ -73,6 +74,7 @@ GraphicsLayout::~GraphicsLayout()
 {
     texturesDescPool = 0;
     uniformsDescPool = 0;
+    worldlightDescPool = 0;
     for (uint32_t i = 0; i < (RendererMaxSwapchainFrames*DESC_SETS_COUNT); ++i)
     {
         swapSetLayouts[i] = 0;
@@ -91,7 +93,36 @@ GraphicsLayout::~GraphicsLayout()
 ////////////////////////////////////////////////////////////////////////////////
 bool GraphicsLayout::createLayout()
 {
-    // Create uniforms descriptor pool
+    // Create world light uniforms descriptor pool
+    VkDescriptorPoolSize worldlightPoolSize;
+    worldlightPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    worldlightPoolSize.descriptorCount = RendererMaxSwapchainFrames;
+
+    VkDescriptorPoolCreateInfo worldlightPoolInfo;
+    worldlightPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    worldlightPoolInfo.pNext = 0;
+    worldlightPoolInfo.flags = 0;
+    worldlightPoolInfo.maxSets = RendererMaxSwapchainFrames;
+    worldlightPoolInfo.poolSizeCount = 1;
+    worldlightPoolInfo.pPoolSizes = &worldlightPoolSize;
+
+    if (vkCreateDescriptorPool(GVulkanDevice,
+        &worldlightPoolInfo, 0, &worldlightDescPool) != VK_SUCCESS)
+    {
+        // Could not create world light uniforms descriptor pool
+        SysMessage::box() << "[0x304C] Could not create worldlight desc pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+    if (!worldlightDescPool)
+    {
+        // Invalid world light uniforms descriptor pool
+        SysMessage::box() << "[0x304D] Invalid worldlight descriptor pool\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create matrices uniforms descriptor pool
     VkDescriptorPoolSize uniformsPoolSize;
     uniformsPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     uniformsPoolSize.descriptorCount =
@@ -109,14 +140,14 @@ bool GraphicsLayout::createLayout()
     if (vkCreateDescriptorPool(GVulkanDevice,
         &uniformsPoolInfo, 0, &uniformsDescPool) != VK_SUCCESS)
     {
-        // Could not create uniforms descriptor pool
+        // Could not create matrices uniforms descriptor pool
         SysMessage::box() << "[0x304C] Could not create uniforms desc pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
     if (!uniformsDescPool)
     {
-        // Invalid uniforms descriptor pool
+        // Invalid matrices uniforms descriptor pool
         SysMessage::box() << "[0x304D] Invalid uniforms descriptor pool\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
@@ -184,6 +215,14 @@ bool GraphicsLayout::createDescriptorSetLayouts()
     // Descriptor sets bindings
     VkDescriptorSetLayoutBinding descriptorSetBindings[DESC_SETS_COUNT];
 
+    descriptorSetBindings[DESC_WORLDLIGHT].binding = 0;
+    descriptorSetBindings[DESC_WORLDLIGHT].descriptorType =
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    descriptorSetBindings[DESC_WORLDLIGHT].descriptorCount = 1;
+    descriptorSetBindings[DESC_WORLDLIGHT].stageFlags =
+        VK_SHADER_STAGE_FRAGMENT_BIT;
+    descriptorSetBindings[DESC_WORLDLIGHT].pImmutableSamplers = 0;
+
     descriptorSetBindings[DESC_MATRICES].binding = 0;
     descriptorSetBindings[DESC_MATRICES].descriptorType =
         VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -202,6 +241,14 @@ bool GraphicsLayout::createDescriptorSetLayouts()
 
     // Descriptor sets infos
     VkDescriptorSetLayoutCreateInfo descriptorSetInfo[DESC_SETS_COUNT];
+
+    descriptorSetInfo[DESC_WORLDLIGHT].sType =
+        VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    descriptorSetInfo[DESC_WORLDLIGHT].pNext = 0;
+    descriptorSetInfo[DESC_WORLDLIGHT].flags = 0;
+    descriptorSetInfo[DESC_WORLDLIGHT].bindingCount = 1;
+    descriptorSetInfo[DESC_WORLDLIGHT].pBindings =
+        &descriptorSetBindings[DESC_WORLDLIGHT];
 
     descriptorSetInfo[DESC_MATRICES].sType =
         VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -222,7 +269,7 @@ bool GraphicsLayout::createDescriptorSetLayouts()
     // Create descriptor sets layouts
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
-        // Create current descriptor set layout
+        // Create descriptor set layout
         if (vkCreateDescriptorSetLayout(GVulkanDevice,
             &descriptorSetInfo[i], 0, &descSetLayouts[i]) != VK_SUCCESS)
         {
@@ -368,4 +415,11 @@ void GraphicsLayout::destroyLayout()
         vkDestroyDescriptorPool(GVulkanDevice, uniformsDescPool, 0);
     }
     uniformsDescPool = 0;
+
+    // Destroy worldlight descriptor pool
+    if (worldlightDescPool)
+    {
+        vkDestroyDescriptorPool(GVulkanDevice, worldlightDescPool, 0);
+    }
+    worldlightDescPool = 0;
 }

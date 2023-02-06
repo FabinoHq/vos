@@ -44,9 +44,29 @@
 
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
+    #include "Vulkan/GraphicsLayout.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/UniformBuffer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Vector4.h"
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  WorldLightData data structure                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    struct WorldLightData
+    {
+        float   color[4];       // Light color
+        float   ambient[4];     // Ambient color
+        float   position[3];    // Sun position
+        float   direction[3];   // Light direction
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  WorldLightData data structure fixed size                              //
+    ////////////////////////////////////////////////////////////////////////////
+    const size_t WorldLightDataSize = (sizeof(float)*14);
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -66,6 +86,18 @@
             ~WorldLight();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Init world light                                              //
+            //  return : True if world light is successfully created          //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy world light                                           //
+            ////////////////////////////////////////////////////////////////////
+            void destroyWorldLight();
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  WorldLight private copy constructor : Not copyable            //
@@ -78,11 +110,13 @@
             WorldLight& operator=(const WorldLight&) = delete;
 
 
-        private:
-            Vector4             m_color;                // Light color
-            Vector4             m_ambient;              // Ambient color
-            Vector3             m_position;             // Sun position
-            Vector3             m_direction;            // Light direction
+        public:
+            VkDescriptorSet     descriptorSets[RendererMaxSwapchainFrames];
+            UniformBuffer       uniformBuffers[RendererMaxSwapchainFrames];
+            Vector4             color;              // Light color
+            Vector4             ambient;            // Ambient color
+            Vector3             position;           // Sun position
+            Vector3             direction;          // Light direction
     };
 
 

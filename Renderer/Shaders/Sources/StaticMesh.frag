@@ -43,13 +43,24 @@
 precision highp float;
 precision highp int;
 
+// WorldLight buffer
+layout(set = 0, binding = 0) uniform MatricesBuffer
+{
+    vec4 color;
+    vec4 ambient;
+    vec3 position;
+    vec3 direction;
+} worldlight;
+
 // Texture sampler
-layout(set = 1, binding = 0) uniform sampler2D texSampler;
+layout(set = 2, binding = 0) uniform sampler2D texSampler;
 
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
 layout(location = 1) in vec3 i_normals;
 layout(location = 0) out vec4 o_color;
+
+// Main shader entry point
 void main()
 {
     // Compute output color

@@ -44,7 +44,7 @@ precision highp float;
 precision highp int;
 
 // Matrices buffer (projection and view)
-layout(set = 0, binding = 0) uniform MatricesBuffer
+layout(set = 1, binding = 0) uniform MatricesBuffer
 {
     mat4 projview;
     mat4 view;
@@ -64,6 +64,8 @@ out gl_PerVertex
 {
     vec4 gl_Position;
 };
+
+// Main shader entry point
 void main()
 {
     // Compute vertex position

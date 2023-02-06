@@ -52,12 +52,15 @@ WorldLight GWorldLight = WorldLight();
 //  WorldLight default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
 WorldLight::WorldLight() :
-m_color(1.0f, 1.0f, 1.0f, 0.8f),
-m_ambient(0.2f, 0.2f, 0.2f, 0.2f),
-m_position(0.0f, 0.0f, 0.0f),
-m_direction(0.0f, 0.0f, 0.0f)
+color(1.0f, 1.0f, 1.0f, 0.8f),
+ambient(0.2f, 0.2f, 0.2f, 0.2f),
+position(0.0f, 0.0f, 0.0f),
+direction(0.0f, 0.0f, 0.0f)
 {
-
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descriptorSets[i] = 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,8 +68,99 @@ m_direction(0.0f, 0.0f, 0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 WorldLight::~WorldLight()
 {
-    m_direction.reset();
-    m_position.reset();
-    m_ambient.reset();
-    m_color.reset();
+    direction.reset();
+    position.reset();
+    ambient.reset();
+    color.reset();
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        descriptorSets[i] = 0;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init world light                                                          //
+//  return : True if world light is successfully created                      //
+////////////////////////////////////////////////////////////////////////////////
+bool WorldLight::init()
+{
+    // Copy world light data into uniform data
+    WorldLightData worldLightData;
+    memcpy(worldLightData.color, color.vec, sizeof(color.vec));
+    memcpy(worldLightData.ambient, ambient.vec, sizeof(ambient.vec));
+    memcpy(worldLightData.position, position.vec, sizeof(position.vec));
+    memcpy(worldLightData.direction, direction.vec, sizeof(direction.vec));
+
+    // Create world light uniform buffers
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        if (!uniformBuffers[i].createBuffer(sizeof(worldLightData)))
+        {
+            // Could not create world light uniform buffer
+            return false;
+        }
+    }
+
+    // Create world light descriptor set
+    VkDescriptorSetAllocateInfo descriptorInfo;
+    descriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorInfo.pNext = 0;
+    descriptorInfo.descriptorPool = GGraphicsLayout.worldlightDescPool;
+    descriptorInfo.descriptorSetCount = RendererMaxSwapchainFrames;
+    descriptorInfo.pSetLayouts = &GGraphicsLayout.swapSetLayouts[
+        DESC_WORLDLIGHT*RendererMaxSwapchainFrames
+    ];
+
+    if (vkAllocateDescriptorSets(GVulkanDevice,
+        &descriptorInfo, descriptorSets) != VK_SUCCESS)
+    {
+        // Could not allocate matrices descriptor sets
+        return false;
+    }
+
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        // Update descriptor sets
+        VkDescriptorBufferInfo descBufferInfo;
+        descBufferInfo.buffer = uniformBuffers[i].uniformBuffer.handle;
+        descBufferInfo.offset = 0;
+        descBufferInfo.range = uniformBuffers[i].uniformBuffer.size;
+
+        // Update matrices descriptor sets
+        VkWriteDescriptorSet descriptorWrites;
+
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.pNext = 0;
+        descriptorWrites.dstSet = descriptorSets[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrites.pImageInfo = 0;
+        descriptorWrites.pBufferInfo = &descBufferInfo;
+        descriptorWrites.pTexelBufferView = 0;
+
+        vkUpdateDescriptorSets(GVulkanDevice, 1, &descriptorWrites, 0, 0);
+    }
+
+    // World light sucessfully created
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy world light                                                       //
+////////////////////////////////////////////////////////////////////////////////
+void WorldLight::destroyWorldLight()
+{
+    // Destroy uniform buffers and descriptor sets
+    direction.reset();
+    position.reset();
+    ambient.reset();
+    color.reset();
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        uniformBuffers[i].destroyBuffer();
+        descriptorSets[i] = 0;
+    }
 }

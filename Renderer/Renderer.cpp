@@ -231,6 +231,15 @@ bool Renderer::init()
         return false;
     }
 
+    // Init world light
+    if (!GWorldLight.init())
+    {
+        // Could not init world light
+        SysMessage::box() << "[0x3053] Could not init world light\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Init default view
     if (!view.init())
     {
@@ -860,6 +869,9 @@ void Renderer::destroyRenderer()
 
     // Destroy default view
     view.destroyView();
+
+    // Destroy world light
+    GWorldLight.destroyWorldLight();
 
     // Destroy pipeplines
     if (pipelines)

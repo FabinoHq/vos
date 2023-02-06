@@ -44,11 +44,13 @@ precision highp float;
 precision highp int;
 
 // Texture sampler
-layout(set = 1, binding = 0) uniform samplerCube cubeSampler;
+layout(set = 2, binding = 0) uniform samplerCube cubeSampler;
 
 // Input texture coordinates and output color
 layout(location = 0) in vec3 i_texCoords;
 layout(location = 0) out vec4 o_color;
+
+// Main shader entry point
 void main()
 {
     // Compute output color

@@ -44,7 +44,7 @@ precision highp float;
 precision highp int;
 
 // Texture sampler
-layout(set = 1, binding = 0) uniform sampler2D texSampler;
+layout(set = 2, binding = 0) uniform sampler2D texSampler;
 
 // Color, position, offset, and time (push constant)
 layout(push_constant) uniform Constants
@@ -59,6 +59,8 @@ layout(push_constant) uniform Constants
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
 layout(location = 0) out vec4 o_color;
+
+// Main shader entry point
 void main()
 {
     // Compute output color

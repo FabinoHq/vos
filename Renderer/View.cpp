@@ -148,8 +148,7 @@ bool View::init()
         descriptorWrites.dstBinding = 0;
         descriptorWrites.dstArrayElement = 0;
         descriptorWrites.descriptorCount = 1;
-        descriptorWrites.descriptorType =
-            VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         descriptorWrites.pImageInfo = 0;
         descriptorWrites.pBufferInfo = &descBufferInfo;
         descriptorWrites.pTexelBufferView = 0;
@@ -169,7 +168,7 @@ void View::destroyView()
     m_projViewMatrix.reset();
     m_projMatrix.reset();
 
-    // Destroy uniform buffers
+    // Destroy uniform buffers and descriptor sets
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         m_uniformBuffers[i].destroyBuffer();
