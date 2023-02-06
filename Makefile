@@ -80,6 +80,7 @@ VOS: main.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
 	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
+	Renderer/WorldLight.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
@@ -118,6 +119,7 @@ VOS: main.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
 	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
+	Renderer/WorldLight.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
@@ -317,6 +319,10 @@ Renderer/HeightMapStream.o: Renderer/HeightMapStream.cpp
 Renderer/HeightFarStream.o: Renderer/HeightFarStream.cpp
 	$(CC) -o Renderer/HeightFarStream.o -c \
 	Renderer/HeightFarStream.cpp $(CFLAGS)
+
+
+Renderer/WorldLight.o: Renderer/WorldLight.cpp
+	$(CC) -o Renderer/WorldLight.o -c Renderer/WorldLight.cpp $(CFLAGS)
 
 
 Renderer/BackRenderer.o: Renderer/BackRenderer.cpp

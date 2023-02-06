@@ -239,6 +239,9 @@
     <ClCompile Include="Renderer\Vulkan\ComputePipeline.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\WorldLight.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -547,6 +550,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Vulkan\ComputePipeline.h">
       <Filter>Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\WorldLight.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

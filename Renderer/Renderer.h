@@ -68,6 +68,7 @@
     #include "FreeFlyCam.h"
     #include "OrbitalCam.h"
     #include "Sprite.h"
+    #include "WorldLight.h"
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"

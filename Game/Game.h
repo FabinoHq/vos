@@ -54,6 +54,7 @@
     #include "../Renderer/Sprite.h"
     #include "../Renderer/ProcSprite.h"
     #include "../Renderer/SkyBox.h"
+    #include "../Renderer/WorldLight.h"
 
     #include "../Resources/Resources.h"
     #include "../Renderer/GUI/GUICursor.h"

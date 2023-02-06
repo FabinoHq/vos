@@ -194,6 +194,8 @@
 !Renderer/HeightMapStream.cpp
 !Renderer/HeightFarStream.h
 !Renderer/HeightFarStream.cpp
+!Renderer/WorldLight.h
+!Renderer/WorldLight.cpp
 !Renderer/BackRenderer.h
 !Renderer/BackRenderer.cpp
 !Renderer/Renderer.h
