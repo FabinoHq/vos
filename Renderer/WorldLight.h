@@ -59,16 +59,21 @@
     {
         float   color[4];       // Light color
         float   ambient[4];     // Ambient color
-        float   position[3];    // Sun position
-        float   align1;
+        float   position[3];    // Light position
+        float   angleX;         // Light angle X
         float   direction[3];   // Light direction
-        float   align2;
+        float   angleY;         // Light angle Y
     };
 
     ////////////////////////////////////////////////////////////////////////////
     //  WorldLightData data structure fixed size                              //
     ////////////////////////////////////////////////////////////////////////////
     const size_t WorldLightDataSize = (sizeof(float)*16);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  WorldLight distance from camera                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    const float WorldLightDistanceFromCamera = 1000.0f;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -103,7 +108,7 @@
             //  Compute world light                                           //
             //  return : True if world lights are successfully computed       //
             ////////////////////////////////////////////////////////////////////
-            bool compute();
+            bool compute(const Vector3& cameraPosition);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind world light                                              //
@@ -136,8 +141,9 @@
             UniformBuffer       uniformBuffers[RendererMaxSwapchainFrames];
             Vector4             color;              // Light color
             Vector4             ambient;            // Ambient color
-            Vector3             position;           // Sun position
+            Vector3             position;           // Light position
             Vector3             direction;          // Light direction
+            Vector3             angles;             // Light angles
     };
 
 

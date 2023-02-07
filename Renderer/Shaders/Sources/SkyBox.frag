@@ -43,6 +43,17 @@
 precision highp float;
 precision highp int;
 
+// WorldLight buffer
+layout(set = 0, binding = 0) uniform WorldLightBuffer
+{
+    vec4 color;
+    vec4 ambient;
+    vec3 position;
+    float angleX;
+    vec3 direction;
+    float angleY;
+} worldlight;
+
 // Texture sampler
 layout(set = 2, binding = 0) uniform samplerCube cubeSampler;
 

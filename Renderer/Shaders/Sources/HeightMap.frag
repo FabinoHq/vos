@@ -49,9 +49,9 @@ layout(set = 0, binding = 0) uniform WorldLightBuffer
     vec4 color;
     vec4 ambient;
     vec3 position;
-    float align1;
+    float angleX;
     vec3 direction;
-    float align2;
+    float angleY;
 } worldlight;
 
 // Texture sampler

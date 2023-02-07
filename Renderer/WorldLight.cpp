@@ -55,7 +55,8 @@ WorldLight::WorldLight() :
 color(1.0f, 1.0f, 1.0f, 0.8f),
 ambient(0.4f, 0.4f, 0.4f, 0.4f),
 position(0.0f, 0.0f, 0.0f),
-direction(0.0f, 0.0f, 0.0f)
+direction(0.0f, 0.0f, 0.0f),
+angles(-1.0f, 1.5708f, 0.0f)
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -68,6 +69,7 @@ direction(0.0f, 0.0f, 0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 WorldLight::~WorldLight()
 {
+    angles.reset();
     direction.reset();
     position.reset();
     ambient.reset();
@@ -98,9 +100,9 @@ bool WorldLight::init()
     memcpy(worldLightData.color, color.vec, sizeof(color.vec));
     memcpy(worldLightData.ambient, ambient.vec, sizeof(ambient.vec));
     memcpy(worldLightData.position, position.vec, sizeof(position.vec));
-    worldLightData.align1 = 0.0f;
+    worldLightData.angleX = angles.vec[0];
     memcpy(worldLightData.direction, direction.vec, sizeof(direction.vec));
-    worldLightData.align2 = 0.0f;
+    worldLightData.angleY = angles.vec[1];
 
     // Create world light uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
@@ -164,6 +166,7 @@ bool WorldLight::init()
 void WorldLight::destroyWorldLight()
 {
     // Destroy uniform buffers and descriptor sets
+    angles.reset();
     direction.reset();
     position.reset();
     ambient.reset();
@@ -179,13 +182,19 @@ void WorldLight::destroyWorldLight()
 //  Compute world light                                                       //
 //  return : True if world lights are successfully computed                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool WorldLight::compute()
+bool WorldLight::compute(const Vector3& cameraPosition)
 {
+    // Compute world light position
+    position.vec[0] = std::cos(angles.vec[0]);
+    position.vec[0] *= std::sin(angles.vec[1]);
+    position.vec[1] = std::sin(-angles.vec[0]);
+    position.vec[2] = std::cos(angles.vec[0]);
+    position.vec[2] *= std::cos(angles.vec[1]);
+    position *= WorldLightDistanceFromCamera;
+    position += cameraPosition;
+
     // Compute world light direction
-    direction.vec[0] = 0.0f;
-    direction.vec[1] = -1.0f;
-    direction.vec[2] = 0.0f;
-    direction = -direction;
+    direction = (position-cameraPosition);
     direction.normalize();
 
     // Copy world light data into uniform data
@@ -193,9 +202,9 @@ bool WorldLight::compute()
     memcpy(worldLightData.color, color.vec, sizeof(color.vec));
     memcpy(worldLightData.ambient, ambient.vec, sizeof(ambient.vec));
     memcpy(worldLightData.position, position.vec, sizeof(position.vec));
-    worldLightData.align1 = 0.0f;
+    worldLightData.angleX = angles.vec[0];
     memcpy(worldLightData.direction, direction.vec, sizeof(direction.vec));
-    worldLightData.align2 = 0.0f;
+    worldLightData.angleY = angles.vec[1];
 
     // Update world light uniform buffer
     if (!uniformBuffers[GSwapchain.current].updateBufferFragment(
