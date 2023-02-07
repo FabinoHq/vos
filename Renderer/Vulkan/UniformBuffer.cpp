@@ -74,11 +74,11 @@ bool UniformBuffer::createBuffer(uint32_t size)
         uniformBuffer.destroyBuffer();
     }
 
-    // Check UniformData size
-    size_t uniformDataSize = sizeof(UniformData);
-    if (uniformDataSize != UniformDataSize)
+    // Check CameraUniformData size
+    size_t cameraUniformDataSize = sizeof(CameraUniformData);
+    if (cameraUniformDataSize != CameraUniformDataSize)
     {
-        // Invalid UniformData size
+        // Invalid CameraUniformData size
         return false;
     }
 

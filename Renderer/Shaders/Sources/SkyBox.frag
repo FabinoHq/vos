@@ -43,8 +43,8 @@
 precision highp float;
 precision highp int;
 
-// WorldLight buffer
-layout(set = 0, binding = 0) uniform WorldLightBuffer
+// WorldLight uniforms
+layout(set = 0, binding = 0) uniform WorldLightUniforms
 {
     vec4 color;
     vec4 ambient;

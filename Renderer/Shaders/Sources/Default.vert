@@ -43,12 +43,14 @@
 precision highp float;
 precision highp int;
 
-// Matrices buffer (projection and view)
-layout(set = 1, binding = 0) uniform MatricesBuffer
+// Camera uniforms
+layout(set = 1, binding = 0) uniform CameraUniforms
 {
     mat4 projview;
     mat4 view;
-} mats;
+    vec3 position;
+    float align;
+} camera;
 
 // Model matrix (push constant)
 layout(push_constant) uniform ModelMatrix
@@ -70,5 +72,5 @@ void main()
 {
     // Compute vertex position
     o_texCoords = i_texCoords;
-    gl_Position = (mats.projview*matrix.model*vec4(i_position, 1.0));
+    gl_Position = (camera.projview*matrix.model*vec4(i_position, 1.0));
 }

@@ -53,9 +53,9 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  WorldLightData data structure                                         //
+    //  WorldLightUniformData data structure                                  //
     ////////////////////////////////////////////////////////////////////////////
-    struct WorldLightData
+    struct WorldLightUniformData
     {
         float   color[4];       // Light color
         float   ambient[4];     // Ambient color
@@ -66,9 +66,9 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  WorldLightData data structure fixed size                              //
+    //  WorldLightUniformData data structure fixed size                       //
     ////////////////////////////////////////////////////////////////////////////
-    const size_t WorldLightDataSize = (sizeof(float)*16);
+    const size_t WorldLightUniformDataSize = (sizeof(float)*16);
 
     ////////////////////////////////////////////////////////////////////////////
     //  WorldLight distance from camera                                       //

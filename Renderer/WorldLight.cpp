@@ -88,26 +88,34 @@ WorldLight::~WorldLight()
 bool WorldLight::init()
 {
     // Check WorldLightData size
-    size_t worldLightDataSize = sizeof(WorldLightData);
-    if (worldLightDataSize != WorldLightDataSize)
+    size_t worldLightUniformDataSize = sizeof(WorldLightUniformData);
+    if (worldLightUniformDataSize != WorldLightUniformDataSize)
     {
-        // Invalid WorldLightData size
+        // Invalid WorldLightUniformData size
         return false;
     }
 
-    // Copy world light data into uniform data
-    WorldLightData worldLightData;
-    memcpy(worldLightData.color, color.vec, sizeof(color.vec));
-    memcpy(worldLightData.ambient, ambient.vec, sizeof(ambient.vec));
-    memcpy(worldLightData.position, position.vec, sizeof(position.vec));
-    worldLightData.angleX = angles.vec[0];
-    memcpy(worldLightData.direction, direction.vec, sizeof(direction.vec));
-    worldLightData.angleY = angles.vec[1];
+    // Copy world light data into world light uniform data
+    WorldLightUniformData worldLightUniformData;
+    memcpy(
+        worldLightUniformData.color, color.vec, sizeof(color.vec)
+    );
+    memcpy(
+        worldLightUniformData.ambient, ambient.vec, sizeof(ambient.vec)
+    );
+    memcpy(
+        worldLightUniformData.position, position.vec, sizeof(position.vec)
+    );
+    worldLightUniformData.angleX = angles.vec[0];
+    memcpy(
+        worldLightUniformData.direction, direction.vec, sizeof(direction.vec)
+    );
+    worldLightUniformData.angleY = angles.vec[1];
 
     // Create world light uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        if (!uniformBuffers[i].createBuffer(sizeof(worldLightData)))
+        if (!uniformBuffers[i].createBuffer(sizeof(worldLightUniformData)))
         {
             // Could not create world light uniform buffer
             return false;
@@ -197,18 +205,26 @@ bool WorldLight::compute(const Vector3& cameraPosition)
     direction = (position-cameraPosition);
     direction.normalize();
 
-    // Copy world light data into uniform data
-    WorldLightData worldLightData;
-    memcpy(worldLightData.color, color.vec, sizeof(color.vec));
-    memcpy(worldLightData.ambient, ambient.vec, sizeof(ambient.vec));
-    memcpy(worldLightData.position, position.vec, sizeof(position.vec));
-    worldLightData.angleX = angles.vec[0];
-    memcpy(worldLightData.direction, direction.vec, sizeof(direction.vec));
-    worldLightData.angleY = angles.vec[1];
+    // Copy world light data into world light uniform data
+    WorldLightUniformData worldLightUniformData;
+    memcpy(
+        worldLightUniformData.color, color.vec, sizeof(color.vec)
+    );
+    memcpy(
+        worldLightUniformData.ambient, ambient.vec, sizeof(ambient.vec)
+    );
+    memcpy(
+        worldLightUniformData.position, position.vec, sizeof(position.vec)
+    );
+    worldLightUniformData.angleX = angles.vec[0];
+    memcpy(
+        worldLightUniformData.direction, direction.vec, sizeof(direction.vec)
+    );
+    worldLightUniformData.angleY = angles.vec[1];
 
     // Update world light uniform buffer
     if (!uniformBuffers[GSwapchain.current].updateBufferFragment(
-        &worldLightData, sizeof(worldLightData)))
+        &worldLightUniformData, sizeof(worldLightUniformData)))
     {
         // Could not update world light uniform buffer
         return false;

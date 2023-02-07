@@ -43,8 +43,8 @@
 precision highp float;
 precision highp int;
 
-// WorldLight buffer
-layout(set = 0, binding = 0) uniform WorldLightBuffer
+// WorldLight uniforms
+layout(set = 0, binding = 0) uniform WorldLightUniforms
 {
     vec4 color;
     vec4 ambient;
@@ -60,6 +60,7 @@ layout(set = 2, binding = 0) uniform sampler2D texSampler;
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
 layout(location = 1) in vec3 i_normals;
+layout(location = 2) in vec3 i_surface;
 layout(location = 0) out vec4 o_color;
 
 // Main shader entry point

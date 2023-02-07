@@ -203,18 +203,28 @@ bool FreeFlyCam::compute(float ratio, float frametime)
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
 
-    // Copy matrices data into uniform data
-    UniformData uniformData;
+    // Copy matrices data into camera uniform data
+    CameraUniformData cameraUniformData;
     memcpy(
-        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projView,
+        m_projViewMatrix.mat,
+        sizeof(m_projViewMatrix.mat)
     );
     memcpy(
-        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
+        cameraUniformData.view,
+        m_matrix.mat,
+        sizeof(m_matrix.mat)
     );
+    memcpy(
+        cameraUniformData.position,
+        m_position.vec,
+        sizeof(m_position.vec)
+    );
+    cameraUniformData.align = 0.0f;
 
     // Update uniform buffer
     if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
-        &uniformData, sizeof(uniformData)))
+        &cameraUniformData, sizeof(cameraUniformData)))
     {
         // Could not update uniform buffer
         return false;
@@ -240,18 +250,28 @@ bool FreeFlyCam::compute(float ratio, FreeFlyCam& freeFlyCam)
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
 
-    // Copy matrices data into uniform data
-    UniformData uniformData;
+    // Copy matrices data into camera uniform data
+    CameraUniformData cameraUniformData;
     memcpy(
-        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projView,
+        m_projViewMatrix.mat,
+        sizeof(m_projViewMatrix.mat)
     );
     memcpy(
-        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
+        cameraUniformData.view,
+        m_matrix.mat,
+        sizeof(m_matrix.mat)
     );
+    memcpy(
+        cameraUniformData.position,
+        m_position.vec,
+        sizeof(m_position.vec)
+    );
+    cameraUniformData.align = 0.0f;
 
     // Update uniform buffer
     if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
-        &uniformData, sizeof(uniformData)))
+        &cameraUniformData, sizeof(cameraUniformData)))
     {
         // Could not update uniform buffer
         return false;

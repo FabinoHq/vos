@@ -60,18 +60,20 @@
     const uint64_t UniformBufferFenceTimeout = 100000000000;
 
     ////////////////////////////////////////////////////////////////////////////
-    //  UniformData data structure                                            //
+    //  CameraUniformData data structure                                      //
     ////////////////////////////////////////////////////////////////////////////
-    struct UniformData
+    struct CameraUniformData
     {
         float   projView[16];   // Projection view combined matrix
         float   view[16];       // View matrix (optional)
+        float   position[3];    // Camera position
+        float   align;
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  UniformData data structure fixed size                                 //
+    //  CameraUniformData data structure fixed size                           //
     ////////////////////////////////////////////////////////////////////////////
-    const size_t UniformDataSize = (sizeof(float)*32);
+    const size_t CameraUniformDataSize = (sizeof(float)*36);
 
 
     ////////////////////////////////////////////////////////////////////////////

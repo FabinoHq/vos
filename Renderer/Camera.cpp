@@ -116,21 +116,31 @@ bool Camera::init()
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
 
-    // Copy matrices data into uniform data
-    UniformData uniformData;
+    // Copy matrices data into camera uniform data
+    CameraUniformData cameraUniformData;
     memcpy(
-        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projView,
+        m_projViewMatrix.mat,
+        sizeof(m_projViewMatrix.mat)
     );
     memcpy(
-        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
+        cameraUniformData.view,
+        m_matrix.mat,
+        sizeof(m_matrix.mat)
     );
+    memcpy(
+        cameraUniformData.position,
+        m_position.vec,
+        sizeof(m_position.vec)
+    );
+    cameraUniformData.align = 0.0f;
 
-    // Create uniform buffers
+    // Create camera uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-        if (!m_uniformBuffers[i].createBuffer(sizeof(uniformData)))
+        if (!m_uniformBuffers[i].createBuffer(sizeof(cameraUniformData)))
         {
-            // Could not create uniform buffer
+            // Could not create camera uniform buffer
             return false;
         }
     }
@@ -231,18 +241,28 @@ bool Camera::compute(float ratio)
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
 
-    // Copy matrices data into uniform data
-    UniformData uniformData;
+    // Copy matrices data into camera uniform data
+    CameraUniformData cameraUniformData;
     memcpy(
-        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projView,
+        m_projViewMatrix.mat,
+        sizeof(m_projViewMatrix.mat)
     );
     memcpy(
-        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
+        cameraUniformData.view,
+        m_matrix.mat,
+        sizeof(m_matrix.mat)
     );
+    memcpy(
+        cameraUniformData.position,
+        m_position.vec,
+        sizeof(m_position.vec)
+    );
+    cameraUniformData.align = 0.0f;
 
     // Update uniform buffer
     if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
-        &uniformData, sizeof(uniformData)))
+        &cameraUniformData, sizeof(cameraUniformData)))
     {
         // Could not update uniform buffer
         return false;
@@ -268,20 +288,30 @@ bool Camera::compute(float ratio, Camera& camera)
     m_projViewMatrix.set(m_projMatrix);
     m_projViewMatrix *= m_matrix;
 
-    // Copy matrices data into uniform data
-    UniformData uniformData;
+    // Copy matrices data into camera uniform data
+    CameraUniformData cameraUniformData;
     memcpy(
-        uniformData.projView, m_projViewMatrix.mat, sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projView,
+        m_projViewMatrix.mat,
+        sizeof(m_projViewMatrix.mat)
     );
     memcpy(
-        uniformData.view, m_matrix.mat, sizeof(m_matrix.mat)
+        cameraUniformData.view,
+        m_matrix.mat,
+        sizeof(m_matrix.mat)
     );
+    memcpy(
+        cameraUniformData.position,
+        m_position.vec,
+        sizeof(m_position.vec)
+    );
+    cameraUniformData.align = 0.0f;
 
-    // Update uniform buffer
+    // Update camera uniform buffer
     if (!m_uniformBuffers[GSwapchain.current].updateBufferVertex(
-        &uniformData, sizeof(uniformData)))
+        &cameraUniformData, sizeof(cameraUniformData)))
     {
-        // Could not update uniform buffer
+        // Could not update camera uniform buffer
         return false;
     }
 
