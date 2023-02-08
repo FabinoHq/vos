@@ -278,6 +278,12 @@ bool Camera::compute(float ratio)
 ////////////////////////////////////////////////////////////////////////////////
 bool Camera::compute(float ratio, Camera& camera)
 {
+    // Copy camera parameters
+    m_origin = camera.m_origin;
+    m_position = camera.m_position;
+    m_scale = camera.m_scale;
+    m_angles = camera.m_angles;
+
     // Compute projection matrix
     m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
 

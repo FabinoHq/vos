@@ -99,7 +99,7 @@ void main()
     vec3 surfaceLight = normalize(i_surfaceLight);
     vec3 halfSurface = normalize(surfaceLight+surfaceView);
     float dotLight = clamp(dot(i_normals, surfaceLight), 0.0, 1.0);
-    float specular = pow(clamp(dot(i_normals, halfSurface), 0.0001, 1.0), 32.0);
+    float specular = pow(clamp(dot(i_normals, halfSurface), 0.0001, 1.0), 16.0);
     vec3 pointLight = (worldlight.color.rgb*worldlight.color.a*dotLight);
     vec3 specLight = (worldlight.color.rgb*worldlight.color.a*specular);
 
@@ -107,8 +107,8 @@ void main()
     o_color = vec4(
         (fragOutput.xyz*ambientLight) +
         (fragOutput.xyz*worldLight) +
-        (fragOutput.xyz*pointLight)*vec3(0.8) +
-        (fragOutput.xyz*specLight)*vec3(0.25),
+        (fragOutput.xyz*pointLight)*vec3(0.4) +
+        (fragOutput.xyz*specLight)*vec3(0.35),
         fragOutput.a
     );
 }

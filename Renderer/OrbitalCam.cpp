@@ -160,6 +160,12 @@ bool OrbitalCam::compute(float ratio, float frametime)
 ////////////////////////////////////////////////////////////////////////////////
 bool OrbitalCam::compute(float ratio, OrbitalCam& orbitalCam)
 {
+    // Copy orbital camera parameters
+    m_origin = orbitalCam.m_origin;
+    m_position = orbitalCam.m_position;
+    m_scale = orbitalCam.m_scale;
+    m_angles = orbitalCam.m_angles;
+
     // Compute projection matrix
     m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
 

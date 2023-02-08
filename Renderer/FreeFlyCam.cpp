@@ -240,6 +240,12 @@ bool FreeFlyCam::compute(float ratio, float frametime)
 ////////////////////////////////////////////////////////////////////////////////
 bool FreeFlyCam::compute(float ratio, FreeFlyCam& freeFlyCam)
 {
+    // Copy freefly camera parameters
+    m_origin = freeFlyCam.m_origin;
+    m_position = freeFlyCam.m_position;
+    m_scale = freeFlyCam.m_scale;
+    m_angles = freeFlyCam.m_angles;
+
     // Compute projection matrix
     m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
 

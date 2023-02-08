@@ -53,7 +53,7 @@ WorldLight GWorldLight = WorldLight();
 ////////////////////////////////////////////////////////////////////////////////
 WorldLight::WorldLight() :
 color(1.0f, 0.9f, 0.8f, 0.8f),
-ambient(0.4f, 0.4f, 0.4f, 0.4f),
+ambient(0.1f, 0.2f, 0.4f, 0.4f),
 position(0.0f, 0.0f, 0.0f),
 direction(0.0f, 0.0f, 0.0f),
 angles(-1.0f, 1.5708f, 0.0f)
