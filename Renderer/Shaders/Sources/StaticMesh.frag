@@ -60,7 +60,8 @@ layout(set = 2, binding = 0) uniform sampler2D texSampler;
 // Input texture coordinates and output color
 layout(location = 0) in vec2 i_texCoords;
 layout(location = 1) in vec3 i_normals;
-layout(location = 2) in vec3 i_surface;
+layout(location = 2) in vec3 i_surfaceView;
+layout(location = 3) in vec3 i_surfaceLight;
 layout(location = 0) out vec4 o_color;
 
 // Main shader entry point
@@ -73,8 +74,20 @@ void main()
     float dirLight = clamp(dot(i_normals, worldlight.direction), 0.0, 1.0);
     vec3 worldLight = (worldlight.color.rgb*worldlight.color.a*dirLight);
     vec3 ambientLight = (worldlight.ambient.rgb*worldlight.ambient.a);
+    vec3 surfaceView = normalize(i_surfaceView);
+    vec3 surfaceLight = normalize(i_surfaceLight);
+    vec3 halfSurface = normalize(surfaceLight+surfaceView);
+    float dotLight = clamp(dot(i_normals, surfaceLight), 0.0, 1.0);
+    float specular = pow(clamp(dot(i_normals, halfSurface), 0.0001, 1.0), 32.0);
+    vec3 pointLight = (worldlight.color.rgb*worldlight.color.a*dotLight);
+    vec3 specLight = (worldlight.color.rgb*worldlight.color.a*specular);
 
     // Compute output color
-    fragOutput.rgb *= (ambientLight+worldLight);
-    o_color = fragOutput;
+    o_color = vec4(
+        (fragOutput.xyz*ambientLight) +
+        (fragOutput.xyz*worldLight) +
+        (fragOutput.xyz*pointLight)*vec3(0.8) +
+        (fragOutput.xyz*specLight)*vec3(0.25),
+        fragOutput.a
+    );
 }

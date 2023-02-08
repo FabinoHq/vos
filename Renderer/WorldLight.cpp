@@ -52,7 +52,7 @@ WorldLight GWorldLight = WorldLight();
 //  WorldLight default constructor                                            //
 ////////////////////////////////////////////////////////////////////////////////
 WorldLight::WorldLight() :
-color(1.0f, 1.0f, 1.0f, 0.8f),
+color(1.0f, 0.9f, 0.8f, 0.8f),
 ambient(0.4f, 0.4f, 0.4f, 0.4f),
 position(0.0f, 0.0f, 0.0f),
 direction(0.0f, 0.0f, 0.0f),
@@ -223,7 +223,7 @@ bool WorldLight::compute(const Vector3& cameraPosition)
     worldLightUniformData.angleY = angles.vec[1];
 
     // Update world light uniform buffer
-    if (!uniformBuffers[GSwapchain.current].updateBufferFragment(
+    if (!uniformBuffers[GSwapchain.current].updateBufferVertex(
         &worldLightUniformData, sizeof(worldLightUniformData)))
     {
         // Could not update world light uniform buffer

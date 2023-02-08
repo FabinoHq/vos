@@ -220,7 +220,7 @@ bool GraphicsLayout::createDescriptorSetLayouts()
         VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     descriptorSetBindings[DESC_WORLDLIGHT].descriptorCount = 1;
     descriptorSetBindings[DESC_WORLDLIGHT].stageFlags =
-        VK_SHADER_STAGE_FRAGMENT_BIT;
+        (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
     descriptorSetBindings[DESC_WORLDLIGHT].pImmutableSamplers = 0;
 
     descriptorSetBindings[DESC_MATRICES].binding = 0;

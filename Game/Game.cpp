@@ -580,11 +580,21 @@ void Game::render()
     m_skybox.bindCubeMap();
     m_skybox.render();
 
-    // Render sun (test cuboid shape)
+    // Compute test sun position
+    Vector3 sunPosition;
+    sunPosition.vec[0] = std::cos(GWorldLight.angles.vec[0]);
+    sunPosition.vec[0] *= std::sin(GWorldLight.angles.vec[1]);
+    sunPosition.vec[1] = std::sin(-GWorldLight.angles.vec[0]);
+    sunPosition.vec[2] = std::cos(GWorldLight.angles.vec[0]);
+    sunPosition.vec[2] *= std::cos(GWorldLight.angles.vec[1]);
+    sunPosition *= 1000.0f;
+    sunPosition += m_freeflycam.getPosition();
+
+    // Render test sun (cuboid shape)
     GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
     m_cuboid.bindVertexBuffer();
     m_cuboid.setScale(100.0f);
-    m_cuboid.setPosition(GWorldLight.position);
+    m_cuboid.setPosition(sunPosition);
     m_cuboid.render();
 
     // Render heightfar stream
