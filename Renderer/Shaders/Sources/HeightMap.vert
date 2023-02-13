@@ -49,9 +49,9 @@ layout(set = 0, binding = 0) uniform WorldLightUniforms
     vec4 color;
     vec4 ambient;
     vec3 position;
-    float angleX;
+    float angle;
     vec3 direction;
-    float angleY;
+    float time;
 } worldlight;
 
 // Camera uniforms

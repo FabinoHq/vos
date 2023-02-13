@@ -60,9 +60,9 @@
         float   color[4];       // Light color
         float   ambient[4];     // Ambient color
         float   position[3];    // Light position
-        float   angleX;         // Light angle X
+        float   angle;          // Light angle
         float   direction[3];   // Light direction
-        float   angleY;         // Light angle Y
+        float   time;           // Day time
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -144,6 +144,7 @@
             Vector3             position;           // Light position
             Vector3             direction;          // Light direction
             Vector3             angles;             // Light angles
+            float               time;               // Day time (-1.0 to 1.0)
     };
 
 

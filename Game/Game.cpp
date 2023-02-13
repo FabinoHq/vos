@@ -340,14 +340,6 @@ void Game::events(Event& event)
                     m_freeflycam.setSpeed(300.0f);
                     break;
 
-                case EVENT_KEY_P:
-                    GWorldLight.angles.vec[0] -= 0.05f;
-                    break;
-
-                case EVENT_KEY_M:
-                    GWorldLight.angles.vec[0] += 0.05f;
-                    break;
-
                 default:
                     break;
             }
@@ -489,6 +481,11 @@ void Game::compute(float frametime)
     if (GUniformchain.startUpload())
     {
         // Compute world lights
+        GWorldLight.time += frametime*0.01f;
+        if (GWorldLight.time >= 1.0f)
+        {
+            GWorldLight.time -= 2.0f;
+        }
         GWorldLight.compute(m_freeflycam.getPosition());
 
         // Compute views

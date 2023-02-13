@@ -56,7 +56,8 @@ color(1.0f, 0.9f, 0.8f, 0.8f),
 ambient(0.1f, 0.2f, 0.4f, 0.4f),
 position(0.0f, 0.0f, 0.0f),
 direction(0.0f, 0.0f, 0.0f),
-angles(-1.0f, 1.5708f, 0.0f)
+angles(-1.0f, Math::PiTwo, 0.0f),
+time(0.0f)
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -69,6 +70,7 @@ angles(-1.0f, 1.5708f, 0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 WorldLight::~WorldLight()
 {
+    time = 0.0f;
     angles.reset();
     direction.reset();
     position.reset();
@@ -106,11 +108,11 @@ bool WorldLight::init()
     memcpy(
         worldLightUniformData.position, position.vec, sizeof(position.vec)
     );
-    worldLightUniformData.angleX = angles.vec[0];
+    worldLightUniformData.angle = angles.vec[1];
     memcpy(
         worldLightUniformData.direction, direction.vec, sizeof(direction.vec)
     );
-    worldLightUniformData.angleY = angles.vec[1];
+    worldLightUniformData.time = time;
 
     // Create world light uniform buffers
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
@@ -174,6 +176,7 @@ bool WorldLight::init()
 void WorldLight::destroyWorldLight()
 {
     // Destroy uniform buffers and descriptor sets
+    time = 0.0f;
     angles.reset();
     direction.reset();
     position.reset();
@@ -192,6 +195,14 @@ void WorldLight::destroyWorldLight()
 ////////////////////////////////////////////////////////////////////////////////
 bool WorldLight::compute(const Vector3& cameraPosition)
 {
+    // Compute world light angle
+    angles.vec[0] = (
+        (((Math::positive(time))*(std::sin(-time*Math::Pi)))-0.1f)+
+        (((Math::negative(time))*(std::sin(time*Math::Pi)*0.2f))-0.1f)
+    );
+    angles.vec[1] = -(time*Math::Pi)+Math::PiTwo;
+    angles.vec[2] = 0.0f;
+
     // Compute world light position
     position.vec[0] = std::cos(angles.vec[0]);
     position.vec[0] *= std::sin(angles.vec[1]);
@@ -216,11 +227,11 @@ bool WorldLight::compute(const Vector3& cameraPosition)
     memcpy(
         worldLightUniformData.position, position.vec, sizeof(position.vec)
     );
-    worldLightUniformData.angleX = angles.vec[0];
+    worldLightUniformData.angle = angles.vec[1];
     memcpy(
         worldLightUniformData.direction, direction.vec, sizeof(direction.vec)
     );
-    worldLightUniformData.angleY = angles.vec[1];
+    worldLightUniformData.time = time;
 
     // Update world light uniform buffer
     if (!uniformBuffers[GSwapchain.current].updateBufferVertex(

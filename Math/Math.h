@@ -106,6 +106,54 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //  Get number positive boolean (0 or +1)                             //
+        //  return : Positive boolean of the number (0 or +1)                 //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t positive(int32_t x)
+        {
+            return ((x >= 0) ? 1 : 0);
+        }
+
+        inline int64_t positive(int64_t x)
+        {
+            return ((x >= 0) ? 1 : 0);
+        }
+
+        inline float positive(float x)
+        {
+            return ((x >= 0.0f) ? 1.0f : 0.0f);
+        }
+
+        inline double positive(double x)
+        {
+            return ((x >= 0.0) ? 1.0 : 0.0);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Get number negative boolean (0 or +1)                             //
+        //  return : Positive negative of the number (0 or +1)                //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t negative(int32_t x)
+        {
+            return ((x >= 0) ? 0 : 1);
+        }
+
+        inline int64_t negative(int64_t x)
+        {
+            return ((x >= 0) ? 0 : 1);
+        }
+
+        inline float negative(float x)
+        {
+            return ((x >= 0.0f) ? 0.0f : 1.0f);
+        }
+
+        inline double negative(double x)
+        {
+            return ((x >= 0.0) ? 0.0 : 1.0);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Get the absolute value of x                                       //
         //  return : Absolute value of x                                      //
         ////////////////////////////////////////////////////////////////////////
