@@ -80,6 +80,7 @@
     #include "Shaders/Ellipse.h"
     #include "Shaders/PxText.h"
     #include "Shaders/SkyBox.h"
+    #include "Shaders/SkyProc.h"
     #include "Shaders/StaticMesh.h"
     #include "Shaders/StaticProc.h"
     #include "Shaders/HeightMap.h"

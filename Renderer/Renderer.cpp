@@ -409,6 +409,23 @@ bool Renderer::initPipelines()
         return false;
     }
 
+    // Create skyproc pipeline
+    pipelines[RENDERER_PIPELINE_SKYPROC].createVertexShader(
+        SkyBoxVertexShader, SkyBoxVertexShaderSize
+    );
+    pipelines[RENDERER_PIPELINE_SKYPROC].createFragmentShader(
+        SkyProcFragmentShader, SkyProcFragmentShaderSize
+    );
+    if (!pipelines[RENDERER_PIPELINE_SKYPROC].createPipeline(
+        VERTEX_INPUTS_CUBEMAP, false, true,
+        ALPHA_BLENDING_PREMULTIPLIED))
+    {
+        // Could not create skyproc pipeline
+        SysMessage::box() << "[0x3059] Could not create skyproc pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create shape pipeline
     pipelines[RENDERER_PIPELINE_SHAPE].createVertexShader(
         StaticMeshVertexShader, StaticMeshVertexShaderSize

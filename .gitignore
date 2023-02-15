@@ -184,6 +184,8 @@
 !Renderer/ProcSprite.cpp
 !Renderer/SkyBox.h
 !Renderer/SkyBox.cpp
+!Renderer/SkyProc.h
+!Renderer/SkyProc.cpp
 !Renderer/StaticMesh.h
 !Renderer/StaticMesh.cpp
 !Renderer/HeightMapChunk.h
@@ -213,6 +215,7 @@
 !Renderer/Shaders/Sources/PxText.frag
 !Renderer/Shaders/Sources/SkyBox.vert
 !Renderer/Shaders/Sources/SkyBox.frag
+!Renderer/Shaders/Sources/SkyProc.frag
 !Renderer/Shaders/Sources/StaticMesh.vert
 !Renderer/Shaders/Sources/StaticMesh.frag
 !Renderer/Shaders/Sources/StaticProc.frag
@@ -227,6 +230,7 @@
 !Renderer/Shaders/Ellipse.h
 !Renderer/Shaders/PxText.h
 !Renderer/Shaders/SkyBox.h
+!Renderer/Shaders/SkyProc.h
 !Renderer/Shaders/StaticMesh.h
 !Renderer/Shaders/StaticProc.h
 !Renderer/Shaders/HeightMap.h

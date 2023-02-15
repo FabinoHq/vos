@@ -76,7 +76,7 @@ VOS: main.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
-	Renderer/SkyBox.o \
+	Renderer/SkyBox.o Renderer/SkyProc.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
 	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
@@ -115,7 +115,7 @@ VOS: main.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
-	Renderer/SkyBox.o \
+	Renderer/SkyBox.o Renderer/SkyProc.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
 	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
@@ -302,6 +302,9 @@ Renderer/GUI/GUIWindow.o: Renderer/GUI/GUIWindow.cpp
 
 Renderer/SkyBox.o: Renderer/SkyBox.cpp
 	$(CC) -o Renderer/SkyBox.o -c Renderer/SkyBox.cpp $(CFLAGS)
+
+Renderer/SkyProc.o: Renderer/SkyProc.cpp
+	$(CC) -o Renderer/SkyProc.o -c Renderer/SkyProc.cpp $(CFLAGS)
 
 Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 	$(CC) -o Renderer/StaticMesh.o -c Renderer/StaticMesh.cpp $(CFLAGS)
