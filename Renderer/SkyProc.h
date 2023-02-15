@@ -47,11 +47,13 @@
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/VertexBuffer.h"
+    #include "Vulkan/Pipeline.h"
     #include "../Math/Math.h"
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
-
+    #include "Shaders/SkyBox.h"
+    #include "Shaders/SkyProc.h"
     #include "SkyBox.h"
 
     #include <cstdint>
@@ -78,13 +80,27 @@
             //  Init procedural skybox                                        //
             //  return : True if procedural skybox is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool init(VertexBuffer& vertexBuffer);
+            bool init(VertexBuffer& vertexBuffer,
+                const uint32_t* fragmentSource, const size_t fragmentSize);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Destroy procedural skybox                                     //
+            ////////////////////////////////////////////////////////////////////
+            void destroySkyProc();
 
 
             ////////////////////////////////////////////////////////////////////
             //  Bind procedural skybox vertex buffer                          //
             ////////////////////////////////////////////////////////////////////
             void bindVertexBuffer();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind procedural skybox pipeline                               //
+            ////////////////////////////////////////////////////////////////////
+            inline void bindPipeline()
+            {
+                m_pipeline.bind();
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Render procedural skybox                                      //
@@ -105,6 +121,7 @@
 
 
         private:
+            Pipeline            m_pipeline;         // SkyProc pipeline
             VertexBuffer*       m_vertexBuffer;     // SkyProc vertex buffer
     };
 

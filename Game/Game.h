@@ -54,6 +54,7 @@
     #include "../Renderer/Sprite.h"
     #include "../Renderer/ProcSprite.h"
     #include "../Renderer/SkyBox.h"
+    #include "../Renderer/SkyProc.h"
     #include "../Renderer/WorldLight.h"
 
     #include "../Resources/Resources.h"
@@ -142,6 +143,7 @@
             OrbitalCam      m_orbitalcam;       // Orbital camera
 
             SkyBox          m_skybox;           // SkyBox
+            SkyProc         m_skyproc;          // Procedural skybox
 
             Sprite          m_sprite;           // Sprite
             ProcSprite      m_procSprite;       // Procedural sprite

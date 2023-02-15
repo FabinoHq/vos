@@ -53,6 +53,7 @@ m_freeflycam(),
 m_farflycam(),
 m_orbitalcam(),
 m_skybox(),
+m_skyproc(),
 m_sprite(),
 m_procSprite(),
 m_rectanle(),
@@ -152,6 +153,13 @@ bool Game::init()
         GResources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
     {
         // Could not init skybox
+        return false;
+    }
+
+    // Init procedural skybox
+    if (!m_skyproc.init(GResources.meshes.mesh(MESHES_SKYBOX), 0, 0))
+    {
+        // Could not init procedural skybox
         return false;
     }
 
@@ -279,6 +287,9 @@ void Game::destroy()
 {
     // Destroy procedural sprite
     m_procSprite.destroyProcSprite();
+
+    // Destroy procedural skybox
+    m_skyproc.destroySkyProc();
 
 
     // Destroy orbital camera
@@ -570,12 +581,19 @@ void Game::render()
     //m_orbitalcam.bind();
 
     // Render skybox
-    GRenderer.bindPipeline(RENDERER_PIPELINE_SKYBOX);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_SKYBOX);
     m_skybox.setPosition(m_freeflycam.getPosition());
     //m_skybox.setPosition(m_orbitalcam.getPosition());
     m_skybox.bindVertexBuffer();
     m_skybox.bindCubeMap();
-    m_skybox.render();
+    m_skybox.render();*/
+
+    // Render procedural skybox
+    m_skyproc.bindPipeline();
+    m_skyproc.setPosition(m_freeflycam.getPosition());
+    //m_skyproc.setPosition(m_orbitalcam.getPosition());
+    m_skyproc.bindVertexBuffer();
+    m_skyproc.render();
 
     // Compute test sun position
     Vector3 sunPosition;

@@ -47,6 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 SkyProc::SkyProc() :
 Transform3(),
+m_pipeline(),
 m_vertexBuffer(0)
 {
 
@@ -65,8 +66,41 @@ SkyProc::~SkyProc()
 //  Init procedural skybox                                                    //
 //  return : True if the procedural skybox is successfully created            //
 ////////////////////////////////////////////////////////////////////////////////
-bool SkyProc::init(VertexBuffer& vertexBuffer)
+bool SkyProc::init(VertexBuffer& vertexBuffer,
+    const uint32_t* fragmentSource, const size_t fragmentSize)
 {
+    bool shaderCreated = false;
+    if (fragmentSource && (fragmentSize > 0))
+    {
+        // Create procedural sprite pipeline
+        m_pipeline.createVertexShader(
+            SkyBoxVertexShader, SkyBoxVertexShaderSize
+        );
+        m_pipeline.createFragmentShader(
+            fragmentSource, fragmentSize
+        );
+        if (m_pipeline.createPipeline(VERTEX_INPUTS_CUBEMAP))
+        {
+            shaderCreated = true;
+        }
+    }
+
+    if (!shaderCreated)
+    {
+        // Create default procedural skybox pipeline
+        m_pipeline.createVertexShader(
+            SkyBoxVertexShader, SkyBoxVertexShaderSize
+        );
+        m_pipeline.createFragmentShader(
+            SkyProcFragmentShader, SkyProcFragmentShaderSize
+        );
+        if (!m_pipeline.createPipeline(VERTEX_INPUTS_CUBEMAP))
+        {
+            // Could not create default procedural skybox pipeline
+            return false;
+        }
+    }
+
     // Set cuboid vertex buffer
     m_vertexBuffer = &vertexBuffer;
 
@@ -75,6 +109,16 @@ bool SkyProc::init(VertexBuffer& vertexBuffer)
 
     // Procedural skybox successfully created
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy procedural skybox                                                 //
+////////////////////////////////////////////////////////////////////////////////
+void SkyProc::destroySkyProc()
+{
+    m_vertexBuffer = 0;
+    m_pipeline.destroyPipeline();
+    resetTransforms();
 }
 
 
