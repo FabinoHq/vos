@@ -56,8 +56,8 @@
     //  Freefly camera default settings                                       //
     ////////////////////////////////////////////////////////////////////////////
     const float FreeflyCameraMouseFactor = 0.004f;
-    const float FreeflyCameraMinAngle = -(Math::PiTwo-0.001f);
-    const float FreeflyCameraMaxAngle = (Math::PiTwo-0.001f);
+    const float FreeflyCameraMinAngle = -(Math::PiHalf-0.001f);
+    const float FreeflyCameraMaxAngle = (Math::PiHalf-0.001f);
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -58,14 +58,17 @@
 
         // Pi constants
         const float Pi = 3.1415926535897932384626433832795f;
-        const float TwoPi = Pi*2.0f;
-        const float TwoPiThree = (Pi*2.0f)/3.0f;
-        const float PiTwo = Pi*0.5f;
-        const float PiThree = Pi/3.0f;
-        const float PiFour = Pi*0.25f;
-        const float PiEight = Pi*0.125f;
-        const float DegToRad = Pi/180.0f;
-        const float RadToDeg = 180.0f/Pi;
+        const float InvPi = 0.31830988618379067153776752674503f;
+        const float TwoPi = (Pi*2.0f);
+        const float InvTwoPi = (1.0f/TwoPi);
+        const float TwoPiThird = ((Pi*2.0f)/3.0f);
+        const float PiHalf = (Pi*0.5f);
+        const float InvPiHalf = (1.0f/PiHalf);
+        const float PiThird = (Pi/3.0f);
+        const float PiFourth = (Pi*0.25f);
+        const float PiEighth = (Pi*0.125f);
+        const float DegToRad = (Pi/180.0f);
+        const float RadToDeg = (180.0f/Pi);
 
         // Square roots constants
         const float SqrtTwo = 1.4142135623730950488016887242097f;
@@ -76,9 +79,9 @@
         const int64_t OneInt = (1 << OneIntShift);
         const int64_t PiInt = 3294198;
         const int64_t TwoPiInt = 6588396;
-        const int64_t TwoPiThreeInt = 2196132;
-        const int64_t PiTwoInt = 1647099;
-        const int64_t PiThreeInt = 1098066;
+        const int64_t TwoPiThirdInt = 2196132;
+        const int64_t PiHalfInt = 1647099;
+        const int64_t PiThirdInt = 1098066;
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -193,34 +196,34 @@
 
 
         ////////////////////////////////////////////////////////////////////////
-        //  Integer modulo                                                    //
-        //  return : Integer modulo (x % n)                                   //
+        //  Modulo                                                            //
+        //  return : Modulo (x % n)                                           //
         ////////////////////////////////////////////////////////////////////////
-        inline int32_t modulus(int32_t x, int32_t n)
+        inline int32_t modulo(int32_t x, int32_t n)
         {
             return ((x%n)+n)%n;
         }
 
-        inline int64_t modulus(int64_t x, int64_t n)
+        inline int64_t modulo(int64_t x, int64_t n)
         {
             return ((x%n)+n)%n;
         }
 
-        inline float modulus(float x, float n)
+        inline float modulo(float x, float n)
         {
             return (std::fmod((std::fmod(x,n)+n),n));
         }
 
-        inline double modulus(double x, double n)
+        inline double modulo(double x, double n)
         {
             return (std::fmod((std::fmod(x,n)+n),n));
         }
 
         ////////////////////////////////////////////////////////////////////////
-        //  Integer division                                                  //
+        //  Divide                                                            //
         //  param x : Left operand                                            //
         //  param n : Right operand                                           //
-        //  return : Integer division (x / n)                                 //
+        //  return : Division (x / n)                                         //
         ////////////////////////////////////////////////////////////////////////
         inline int32_t divide(int32_t x, int32_t n)
         {
@@ -236,12 +239,6 @@
             return (x/n);
         }
 
-        ////////////////////////////////////////////////////////////////////////
-        //  Floating point to integer division                                //
-        //  param x : Left operand                                            //
-        //  param n : Right operand                                           //
-        //  return : Integer division (x / n)                                 //
-        ////////////////////////////////////////////////////////////////////////
         inline int32_t divide(float x, float n)
         {
             if (n == 0.0f) return 0;

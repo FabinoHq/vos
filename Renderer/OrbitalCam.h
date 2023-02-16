@@ -56,8 +56,8 @@
     //  Orbital camera default settings                                       //
     ////////////////////////////////////////////////////////////////////////////
     const float OrbitalCameraMouseFactor = 0.004f;
-    const float OrbitalCameraMinAngle = -(Math::PiTwo-0.001f);
-    const float OrbitalCameraMaxAngle = (Math::PiTwo-0.001f);
+    const float OrbitalCameraMinAngle = -(Math::PiHalf-0.001f);
+    const float OrbitalCameraMaxAngle = (Math::PiHalf-0.001f);
     const float OrbitalCameraMinDistance = 0.0f;
     const float OrbitalCameraMaxDistance = 10.0f;
 

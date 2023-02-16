@@ -56,7 +56,7 @@ color(1.0f, 0.9f, 0.8f, 0.8f),
 ambient(0.1f, 0.2f, 0.4f, 0.4f),
 position(0.0f, 0.0f, 0.0f),
 direction(0.0f, 0.0f, 0.0f),
-angles(-1.0f, Math::PiTwo, 0.0f),
+angles(-1.0f, Math::PiHalf, 0.0f),
 time(0.0f)
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
@@ -200,7 +200,7 @@ bool WorldLight::compute(const Vector3& cameraPosition)
         (((Math::positive(time))*(std::sin(-time*Math::Pi)))-0.1f)+
         (((Math::negative(time))*(std::sin(time*Math::Pi)*0.2f))-0.1f)
     );
-    angles.vec[1] = -(time*Math::Pi)+Math::PiTwo;
+    angles.vec[1] = -(time*Math::Pi)+Math::PiHalf;
     angles.vec[2] = 0.0f;
 
     // Compute world light position

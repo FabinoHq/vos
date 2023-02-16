@@ -61,6 +61,12 @@ layout(location = 0) out vec4 o_color;
 // Main shader entry point
 void main()
 {
+    // Normalize texture coords
+    vec3 skycoords = normalize(i_texCoords);
+
     // Compute output color
-    o_color = vec4(0.1, 0.2, 0.7, 1.0);
+    o_color = mix(
+        vec4(0.55, 0.75, 0.98, 1.0), vec4(0.2, 0.3, 0.8, 1.0),
+        smoothstep(0.0, 1.0, (skycoords.y*0.5)+0.2)
+    );
 }
