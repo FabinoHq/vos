@@ -492,7 +492,7 @@ void Game::compute(float frametime)
     if (GUniformchain.startUpload())
     {
         // Compute world lights
-        GWorldLight.time += frametime*0.01f;
+        GWorldLight.time += frametime*0.1f;
         if (GWorldLight.time >= 1.0f)
         {
             GWorldLight.time -= 2.0f;
@@ -595,23 +595,6 @@ void Game::render()
     m_skyproc.bindVertexBuffer();
     m_skyproc.render();
 
-    // Compute test sun position
-    Vector3 sunPosition;
-    sunPosition.vec[0] = std::cos(GWorldLight.angles.vec[0]);
-    sunPosition.vec[0] *= std::sin(GWorldLight.angles.vec[1]);
-    sunPosition.vec[1] = std::sin(-GWorldLight.angles.vec[0]);
-    sunPosition.vec[2] = std::cos(GWorldLight.angles.vec[0]);
-    sunPosition.vec[2] *= std::cos(GWorldLight.angles.vec[1]);
-    sunPosition *= 1000.0f;
-    sunPosition += m_freeflycam.getPosition();
-
-    // Render test sun (cuboid shape)
-    GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
-    m_cuboid.bindVertexBuffer();
-    m_cuboid.setScale(100.0f);
-    m_cuboid.setPosition(sunPosition);
-    m_cuboid.render();
-
     // Render heightfar stream
     m_farflycam.bind();
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTFAR);
@@ -633,6 +616,13 @@ void Game::render()
     m_staticMesh.setPosition(0.0f, 430.0f, 0.0f);
     m_staticMesh.setScale(10.0f);
     m_staticMesh.render();
+
+    // Render cuboid shape
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
+    m_cuboid.bindVertexBuffer();
+    m_cuboid.setScale(10.0f);
+    m_cuboid.setPosition(0.0f, 0.0f, 0.0f);
+    m_cuboid.render();*/
 
 
     // Set 2D view

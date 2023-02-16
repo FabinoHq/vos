@@ -43,6 +43,9 @@
 precision highp float;
 precision highp int;
 
+// Pi constant
+#define MATH_PI 3.1415926535897932384626433832795
+
 // WorldLight uniforms
 layout(set = 0, binding = 0) uniform WorldLightUniforms
 {
@@ -64,9 +67,21 @@ void main()
     // Normalize texture coords
     vec3 skycoords = normalize(i_texCoords);
 
-    // Compute output color
-    o_color = mix(
+    // Compute sun position
+    float timeangle = (worldlight.time*MATH_PI);
+    vec3 sunpos = normalize(vec3(
+        -cos(timeangle)*0.4,
+        sin(timeangle)*0.8,
+        sin(timeangle)*0.2
+    ));
+
+    // Compute skybox color
+    vec4 fragOutput = mix(
         vec4(0.55, 0.75, 0.98, 1.0), vec4(0.2, 0.3, 0.8, 1.0),
         smoothstep(0.0, 1.0, (skycoords.y*0.5)+0.2)
     );
+    fragOutput += clamp(pow(1.0-(distance(skycoords, sunpos)), 8.0), 0.0, 1.0);
+
+    // Compute output color
+    o_color = fragOutput;
 }
