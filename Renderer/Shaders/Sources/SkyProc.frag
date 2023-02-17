@@ -72,16 +72,39 @@ void main()
     vec3 sunpos = normalize(vec3(
         -cos(timeangle)*0.4,
         sin(timeangle)*0.8,
-        sin(timeangle)*0.2
+        sin(timeangle)*0.3
     ));
 
+    // Compute time weights
+    float sunrise = exp(-(worldlight.time*worldlight.time)*256);
+    float day = (sin(worldlight.time*MATH_PI)*0.5)+0.5;
+    float sunset = (
+        exp(-((worldlight.time-1.0)*(worldlight.time-1.0))*256)+
+        exp(-((worldlight.time+1.0)*(worldlight.time+1.0))*256)
+    );
+    float night = (1.0-day);
+
+    // Compute gradient colors
+    vec3 bottomcolor = (
+        vec3(0.02, 0.01, 0.08)*night + vec3(0.95, 0.7, 0.01)*sunrise +
+        vec3(0.4, 0.75, 0.95)*day + vec3(0.78, 0.35, 0.3)*sunset
+    );
+    vec3 topcolor = (
+        vec3(0.0, 0.0, 0.0)*night + vec3(0.3, 0.55, 0.62)*sunrise +
+        vec3(0.04, 0.3, 0.75)*day + vec3(0.27, 0.15, 0.35)*sunset
+    );
+
     // Compute skybox color
-    vec4 fragOutput = mix(
-        vec4(0.55, 0.75, 0.98, 1.0), vec4(0.2, 0.3, 0.8, 1.0),
+    vec3 fragOutput = mix(
+        bottomcolor, topcolor,
         smoothstep(0.0, 1.0, (skycoords.y*0.5)+0.2)
     );
-    fragOutput += clamp(pow(1.0-(distance(skycoords, sunpos)), 8.0), 0.0, 1.0);
+
+    // Compute sun color
+    fragOutput += clamp(
+        pow(1.0-(distance(skycoords, sunpos))*0.7, 8.0), 0.0, 1.0
+    );
 
     // Compute output color
-    o_color = fragOutput;
+    o_color = vec4(fragOutput, 1.0);
 }
