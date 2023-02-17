@@ -195,6 +195,29 @@ void WorldLight::destroyWorldLight()
 ////////////////////////////////////////////////////////////////////////////////
 bool WorldLight::compute(const Vector3& cameraPosition)
 {
+    // Compute time weights
+    float sunrise = std::exp(-(time*time)*64.0f);
+    float day = (std::sin(time*Math::Pi)*0.5f)+0.5f;
+    float sunset = (
+        std::exp(-((time-1.0f)*(time-1.0f))*64.0f)+
+        std::exp(-((time+1.0f)*(time+1.0f))*64.0f)
+    );
+    float night = (1.0f-day);
+
+    // Compute world light colors
+    color = (
+        Vector4(0.95f, 0.7f, 0.01f, 0.5f)*sunrise +
+        Vector4(0.85f, 0.85f, 0.95f, 0.9f)*day +
+        Vector4(0.72f, 0.45f, 0.2f, 0.5f)*sunset +
+        Vector4(0.1f, 0.1f, 0.5f, 0.7f)*night
+    );
+    ambient = (
+        Vector4(0.3f, 0.5f, 0.5f, 0.2f)*sunrise +
+        Vector4(0.1f, 0.2f, 0.4f, 0.4f)*day +
+        Vector4(0.2f, 0.15f, 0.3f, 0.2f)*sunset +
+        Vector4(0.2f, 0.3f, 0.5f, 0.55f)*night
+    );
+
     // Compute world light angle
     angles.vec[0] = (
         (((Math::positive(time))*(std::sin(-time*Math::Pi)))-0.1f)+

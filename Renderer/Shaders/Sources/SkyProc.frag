@@ -76,22 +76,22 @@ void main()
     ));
 
     // Compute time weights
-    float sunrise = exp(-(worldlight.time*worldlight.time)*256);
-    float day = (sin(worldlight.time*MATH_PI)*0.5)+0.5;
+    float sunrise = exp(-(worldlight.time*worldlight.time)*256.0);
+    float day = (sin(timeangle)*0.5)+0.5;
     float sunset = (
-        exp(-((worldlight.time-1.0)*(worldlight.time-1.0))*256)+
-        exp(-((worldlight.time+1.0)*(worldlight.time+1.0))*256)
+        exp(-((worldlight.time-1.0)*(worldlight.time-1.0))*256.0)+
+        exp(-((worldlight.time+1.0)*(worldlight.time+1.0))*256.0)
     );
     float night = (1.0-day);
 
     // Compute gradient colors
     vec3 bottomcolor = (
-        vec3(0.02, 0.01, 0.08)*night + vec3(0.95, 0.7, 0.01)*sunrise +
-        vec3(0.4, 0.75, 0.95)*day + vec3(0.78, 0.35, 0.3)*sunset
+        vec3(0.95, 0.7, 0.01)*sunrise + vec3(0.4, 0.75, 0.95)*day +
+        vec3(0.78, 0.35, 0.3)*sunset + vec3(0.02, 0.01, 0.08)*night
     );
     vec3 topcolor = (
-        vec3(0.0, 0.0, 0.0)*night + vec3(0.3, 0.55, 0.62)*sunrise +
-        vec3(0.04, 0.3, 0.75)*day + vec3(0.27, 0.15, 0.35)*sunset
+        vec3(0.3, 0.55, 0.62)*sunrise + vec3(0.04, 0.3, 0.75)*day +
+        vec3(0.27, 0.15, 0.35)*sunset + vec3(0.0, 0.0, 0.0)*night
     );
 
     // Compute skybox color
