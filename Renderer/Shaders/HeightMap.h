@@ -49,7 +49,7 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Heightmap vertex shader                                               //
+    //  HeightMap vertex shader                                               //
     ////////////////////////////////////////////////////////////////////////////
     const size_t HeightMapVertexShaderSize = 3204;
     const uint32_t HeightMapVertexShader[] =
@@ -258,7 +258,7 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Heightmap fragment shader                                             //
+    //  HeightMap fragment shader                                             //
     ////////////////////////////////////////////////////////////////////////////
     const size_t HeightMapFragmentShaderSize = 6056;
     const uint32_t HeightMapFragmentShader[] =

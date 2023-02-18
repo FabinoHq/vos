@@ -477,6 +477,23 @@ bool Renderer::initPipelines()
         return false;
     }
 
+    // Create sea near pipeline
+    pipelines[RENDERER_PIPELINE_SEANEAR].createVertexShader(
+        SeaNearVertexShader, SeaNearVertexShaderSize
+    );
+    pipelines[RENDERER_PIPELINE_SEANEAR].createFragmentShader(
+        SeaNearFragmentShader, SeaNearFragmentShaderSize
+    );
+    if (!pipelines[RENDERER_PIPELINE_SEANEAR].createPipeline(
+        VERTEX_INPUTS_STATICMESH, true, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
+    {
+        // Could not create sea near pipeline
+        SysMessage::box() << "[0x305D] Could not create seanear pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Renderer pipelines are ready
     return true;
 }

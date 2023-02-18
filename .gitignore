@@ -198,6 +198,8 @@
 !Renderer/HeightFarStream.cpp
 !Renderer/SeaNearChunk.h
 !Renderer/SeaNearChunk.cpp
+!Renderer/SeaNearStream.h
+!Renderer/SeaNearStream.cpp
 !Renderer/WorldLight.h
 !Renderer/WorldLight.cpp
 !Renderer/BackRenderer.h
@@ -225,6 +227,8 @@
 !Renderer/Shaders/Sources/HeightMap.frag
 !Renderer/Shaders/Sources/HeightFar.vert
 !Renderer/Shaders/Sources/HeightFar.frag
+!Renderer/Shaders/Sources/SeaNear.vert
+!Renderer/Shaders/Sources/SeaNear.frag
 !Renderer/Shaders/Default.h
 !Renderer/Shaders/DefaultProc.h
 !Renderer/Shaders/NinePatch.h
@@ -237,6 +241,7 @@
 !Renderer/Shaders/StaticProc.h
 !Renderer/Shaders/HeightMap.h
 !Renderer/Shaders/HeightFar.h
+!Renderer/Shaders/SeaNear.h
 
 # Shapes
 !Renderer/Shapes/

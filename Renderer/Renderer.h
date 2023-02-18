@@ -85,6 +85,7 @@
     #include "Shaders/StaticProc.h"
     #include "Shaders/HeightMap.h"
     #include "Shaders/HeightFar.h"
+    #include "Shaders/SeaNear.h"
 
     #include "../Resources/Resources.h"
 

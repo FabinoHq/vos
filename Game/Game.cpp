@@ -65,6 +65,7 @@ m_pxText(),
 m_staticMesh(),
 m_heightMapStream(),
 m_heightFarStream(),
+m_seaNearStream(),
 m_boundingCircle(),
 m_boundingCircle2(),
 m_collideCircle(),
@@ -249,6 +250,13 @@ bool Game::init()
     // Load spawn heightmap chunks
     m_heightMapStream.reload(0, 0);
     m_heightFarStream.reload(0, 0);
+
+    // Init sea near stream
+    if (!m_seaNearStream.init())
+    {
+        // Could not load sea near stream
+        return false;
+    }
 
     // Wait for spawn chunks to be loaded
     bool spawnLoaded = false;
@@ -490,7 +498,7 @@ void Game::compute(float frametime)
     if (GUniformchain.startUpload())
     {
         // Compute world lights
-        GWorldLight.time += frametime*0.1f;
+        GWorldLight.time += frametime*0.01f;
         if (GWorldLight.time >= 1.0f)
         {
             GWorldLight.time -= 2.0f;
@@ -607,13 +615,20 @@ void Game::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
     m_heightMapStream.render();
 
+    // Render sea near
+    GRenderer.bindPipeline(RENDERER_PIPELINE_SEANEAR);
+    GRenderer.bindVertexBuffer(MESHES_SEANEAR);
+    m_seaNearStream.render(
+        m_heightMapStream.getChunkX(), m_heightMapStream.getChunkY()
+    );
+
     // Render static mesh
-    GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
     m_staticMesh.bindVertexBuffer();
     m_staticMesh.bindTexture();
     m_staticMesh.setPosition(0.0f, 430.0f, 0.0f);
     m_staticMesh.setScale(10.0f);
-    m_staticMesh.render();
+    m_staticMesh.render();*/
 
     // Render cuboid shape
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);

@@ -248,6 +248,9 @@
     <ClCompile Include="Renderer\SeaNearChunk.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\SeaNearStream.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -567,6 +570,18 @@
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\SeaNearChunk.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\SeaNear.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\HeightMap.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\SkyBox.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\SeaNearStream.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>

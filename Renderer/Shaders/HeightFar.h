@@ -49,7 +49,7 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Heightfar vertex shader                                               //
+    //  HeightFar vertex shader                                               //
     ////////////////////////////////////////////////////////////////////////////
     const size_t HeightFarVertexShaderSize = 3584;
     const uint32_t HeightFarVertexShader[] =
@@ -281,7 +281,7 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Heightfar fragment shader                                             //
+    //  HeightFar fragment shader                                             //
     ////////////////////////////////////////////////////////////////////////////
     const size_t HeightFarFragmentShaderSize = 5332;
     const uint32_t HeightFarFragmentShader[] =

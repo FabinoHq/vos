@@ -37,92 +37,70 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/SeaNearChunk.h : Sea near chunk management                    //
+//     Renderer/SeaNearStream.h : SeaNear stream management                   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SEANEARCHUNK_HEADER
-#define VOS_RENDERER_SEANEARCHUNK_HEADER
+#ifndef VOS_RENDERER_SEANEARSTREAM_HEADER
+#define VOS_RENDERER_SEANEARSTREAM_HEADER
 
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/VertexBuffer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
+    #include "../Resources/Resources.h"
+
+    #include "SeaNearChunk.h"
+    #include "HeightMapStream.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SeaNearChunk settings                                                 //
+    //  SeaNearStream class definition                                        //
     ////////////////////////////////////////////////////////////////////////////
-    const uint16_t SeaNearChunkWidth = 128;
-    const uint16_t SeaNearChunkHeight = 128;
-    const float SeaNearChunkPlaneWidth = 4.0f;
-    const float SeaNearChunkPlaneHeight = 4.0f;
-    const float SeaNearChunkXStride = 512.0f;
-    const float SeaNearChunkZStride = 512.0f;
-    const float SeaNearChunkTexcoordsWidth = 128.0f;
-    const float SeaNearChunkTexcoordsHeight = 128.0f;
-    const uint32_t SeaNearChunkVerticesCount =
-        ((SeaNearChunkWidth+1)*(SeaNearChunkHeight+1)*8);
-    const uint32_t SeaNearChunkIndicesCount =
-        (6*SeaNearChunkWidth*SeaNearChunkHeight);
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  SeaNearChunk class definition                                         //
-    ////////////////////////////////////////////////////////////////////////////
-    class SeaNearChunk : public Transform3
+    class SeaNearStream
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearChunk default constructor                              //
+            //  SeaNearStream default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            SeaNearChunk();
+            SeaNearStream();
 
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearChunk virtual destructor                               //
+            //  SeaNearStream destructor                                      //
             ////////////////////////////////////////////////////////////////////
-            virtual ~SeaNearChunk();
+            ~SeaNearStream();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init sea near chunk                                           //
-            //  return : True if the sea near chunk is successfully created   //
+            //  Init sea near stream                                          //
+            //  return : True if the sea near stream is successfully created  //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Render sea near chunk                                         //
+            //  Render sea near stream                                        //
             ////////////////////////////////////////////////////////////////////
-            void render();
-
-
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Generate sea near chunk                                       //
-            //  return : True if the sea near chunk is generated              //
-            ////////////////////////////////////////////////////////////////////
-            static bool generateSeaNearChunk(VertexBuffer& vertexBuffer);
+            void render(int32_t chunkX, int32_t chunkY);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearChunk private copy constructor : Not copyable          //
+            //  SeaNearStream private copy constructor : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            SeaNearChunk(const SeaNearChunk&) = delete;
+            SeaNearStream(const SeaNearStream&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearChunk private copy operator : Not copyable             //
+            //  SeaNearStream private copy operator : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            SeaNearChunk& operator=(const SeaNearChunk&) = delete;
+            SeaNearStream& operator=(const SeaNearStream&) = delete;
 
 
         private:
+            SeaNearChunk        m_seaNearChunk;     // SeaNear chunk
     };
 
 
-#endif // VOS_RENDERER_SEANEARCHUNK_HEADER
+#endif // VOS_RENDERER_SEANEARSTREAM_HEADER

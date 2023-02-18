@@ -70,6 +70,8 @@
     #include "../Renderer/HeightMapChunk.h"
     #include "../Renderer/HeightMapStream.h"
     #include "../Renderer/HeightFarStream.h"
+    #include "../Renderer/SeaNearChunk.h"
+    #include "../Renderer/SeaNearStream.h"
 
     #include "../Physics/Physics.h"
     #include "../Physics/Collision2.h"
@@ -158,6 +160,7 @@
             StaticMesh      m_staticMesh;       // Static mesh
             HeightMapStream m_heightMapStream;  // HeightMap stream
             HeightFarStream m_heightFarStream;  // HeightFar stream
+            SeaNearStream   m_seaNearStream;    // SeaNear stream
 
             BoundingCircle  m_boundingCircle;   // Bounding circle
             BoundingCircle  m_boundingCircle2;  // Bounding circle 2

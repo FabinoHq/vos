@@ -127,6 +127,25 @@
             void render();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get heightmap chunk X                                         //
+            //  return : Heightmap chunk X                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkX() const
+            {
+                return m_chunkX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get heightmap chunk Y                                         //
+            //  return : Heightmap chunk Y                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkY() const
+            {
+                return m_chunkY;
+            }
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  HeightMapStream private copy constructor : Not copyable       //

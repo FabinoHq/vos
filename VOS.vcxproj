@@ -229,6 +229,7 @@
     <ClCompile Include="Renderer\ProcSprite.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\SeaNearChunk.cpp" />
+    <ClCompile Include="Renderer\SeaNearStream.cpp" />
     <ClCompile Include="Renderer\Shapes\CuboidShape.cpp" />
     <ClCompile Include="Renderer\Shapes\EllipseShape.cpp" />
     <ClCompile Include="Renderer\Shapes\RectangleShape.cpp" />
@@ -317,13 +318,17 @@
     <ClInclude Include="Renderer\ProcSprite.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\SeaNearChunk.h" />
+    <ClInclude Include="Renderer\SeaNearStream.h" />
     <ClInclude Include="Renderer\Shaders\Default.h" />
     <ClInclude Include="Renderer\Shaders\DefaultProc.h" />
     <ClInclude Include="Renderer\Shaders\Ellipse.h" />
     <ClInclude Include="Renderer\Shaders\HeightFar.h" />
+    <ClInclude Include="Renderer\Shaders\HeightMap.h" />
     <ClInclude Include="Renderer\Shaders\NinePatch.h" />
     <ClInclude Include="Renderer\Shaders\PxText.h" />
     <ClInclude Include="Renderer\Shaders\Rectangle.h" />
+    <ClInclude Include="Renderer\Shaders\SeaNear.h" />
+    <ClInclude Include="Renderer\Shaders\SkyBox.h" />
     <ClInclude Include="Renderer\Shaders\SkyProc.h" />
     <ClInclude Include="Renderer\Shaders\StaticMesh.h" />
     <ClInclude Include="Renderer\Shaders\StaticProc.h" />
