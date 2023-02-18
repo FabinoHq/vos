@@ -73,7 +73,7 @@ void main()
         1.0-((i_distHeight.y-alphaFadeDistance)*0.01), 0.0, 1.0
     );
     vec4 fragOutput = vec4(0.1, 0.3, 0.5, 1.0);
-    fragOutput.a *= alphaFade;
+    fragOutput.a *= (alphaFade*0.5);
 
     // Compute output color
     o_color = fragOutput;
