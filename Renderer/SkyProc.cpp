@@ -47,8 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 SkyProc::SkyProc() :
 Transform3(),
-m_pipeline(),
-m_vertexBuffer(0)
+m_pipeline()
 {
 
 }
@@ -58,7 +57,7 @@ m_vertexBuffer(0)
 ////////////////////////////////////////////////////////////////////////////////
 SkyProc::~SkyProc()
 {
-    m_vertexBuffer = 0;
+
 }
 
 
@@ -66,8 +65,7 @@ SkyProc::~SkyProc()
 //  Init procedural skybox                                                    //
 //  return : True if the procedural skybox is successfully created            //
 ////////////////////////////////////////////////////////////////////////////////
-bool SkyProc::init(VertexBuffer& vertexBuffer,
-    const uint32_t* fragmentSource, const size_t fragmentSize)
+bool SkyProc::init(const uint32_t* fragmentSource, const size_t fragmentSize)
 {
     bool shaderCreated = false;
     if (fragmentSource && (fragmentSize > 0))
@@ -101,9 +99,6 @@ bool SkyProc::init(VertexBuffer& vertexBuffer,
         }
     }
 
-    // Set cuboid vertex buffer
-    m_vertexBuffer = &vertexBuffer;
-
     // Reset procedural skybox transformations
     resetTransforms();
 
@@ -116,29 +111,10 @@ bool SkyProc::init(VertexBuffer& vertexBuffer,
 ////////////////////////////////////////////////////////////////////////////////
 void SkyProc::destroySkyProc()
 {
-    m_vertexBuffer = 0;
     m_pipeline.destroyPipeline();
     resetTransforms();
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind procedural skybox vertex buffer                                      //
-////////////////////////////////////////////////////////////////////////////////
-void SkyProc::bindVertexBuffer()
-{
-    // Bind vertex buffer
-    VkDeviceSize offset = 0;
-    vkCmdBindVertexBuffers(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
-    );
-
-    vkCmdBindIndexBuffer(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
-    );
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render procedural skybox                                                  //

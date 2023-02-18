@@ -919,21 +919,21 @@ void Renderer::destroyRenderer()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Bind renderer default vertex buffer                                       //
+//  Bind renderer vertex buffer                                               //
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::bindDefaultVertexBuffer()
+void Renderer::bindVertexBuffer(MeshesAssets meshAsset)
 {
     // Bind default vertex buffer
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(
         GSwapchain.commandBuffers[GSwapchain.current],
-        0, 1, &GResources.meshes.mesh(MESHES_DEFAULT).vertexBuffer.handle,
+        0, 1, &GResources.meshes.mesh(meshAsset).vertexBuffer.handle,
         &offset
     );
 
     vkCmdBindIndexBuffer(
         GSwapchain.commandBuffers[GSwapchain.current],
-        GResources.meshes.mesh(MESHES_DEFAULT).indexBuffer.handle,
+        GResources.meshes.mesh(meshAsset).indexBuffer.handle,
         0, VK_INDEX_TYPE_UINT16
     );
 }

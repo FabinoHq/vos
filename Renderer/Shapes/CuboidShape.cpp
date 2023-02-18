@@ -47,7 +47,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 CuboidShape::CuboidShape() :
 Transform3(),
-m_vertexBuffer(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
 
@@ -59,7 +58,6 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 CuboidShape::~CuboidShape()
 {
     m_color.reset();
-    m_vertexBuffer = 0;
 }
 
 
@@ -67,11 +65,8 @@ CuboidShape::~CuboidShape()
 //  Init cuboid                                                               //
 //  return : True if the cuboid is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool CuboidShape::init(VertexBuffer& vertexBuffer)
+bool CuboidShape::init()
 {
-    // Set cuboid vertex buffer
-    m_vertexBuffer = &vertexBuffer;
-
     // Reset cuboid transformations
     resetTransforms();
 
@@ -104,24 +99,6 @@ void CuboidShape::setColor(float red, float green, float blue, float alpha)
     m_color.vec[3] = alpha;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind cuboid vertex buffer                                                 //
-////////////////////////////////////////////////////////////////////////////////
-void CuboidShape::bindVertexBuffer()
-{
-    // Bind vertex buffer
-    VkDeviceSize offset = 0;
-    vkCmdBindVertexBuffers(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
-    );
-
-    vkCmdBindIndexBuffer(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
-    );
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render cuboid                                                             //

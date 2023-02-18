@@ -80,19 +80,14 @@
             //  Init procedural skybox                                        //
             //  return : True if procedural skybox is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool init(VertexBuffer& vertexBuffer,
-                const uint32_t* fragmentSource, const size_t fragmentSize);
+            bool init(const uint32_t* fragmentSource = 0,
+                const size_t fragmentSize = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy procedural skybox                                     //
             ////////////////////////////////////////////////////////////////////
             void destroySkyProc();
 
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind procedural skybox vertex buffer                          //
-            ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer();
 
             ////////////////////////////////////////////////////////////////////
             //  Bind procedural skybox pipeline                               //
@@ -122,7 +117,6 @@
 
         private:
             Pipeline            m_pipeline;         // SkyProc pipeline
-            VertexBuffer*       m_vertexBuffer;     // SkyProc vertex buffer
     };
 
 

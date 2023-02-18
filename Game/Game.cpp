@@ -148,16 +148,14 @@ bool Game::init()
 
 
     // Init skybox
-    if (!m_skybox.init(
-        GResources.meshes.mesh(MESHES_SKYBOX),
-        GResources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
+    if (!m_skybox.init(GResources.textures.cubemap(TEXTURE_CUBEMAPTEST)))
     {
         // Could not init skybox
         return false;
     }
 
     // Init procedural skybox
-    if (!m_skyproc.init(GResources.meshes.mesh(MESHES_SKYBOX), 0, 0))
+    if (!m_skyproc.init())
     {
         // Could not init procedural skybox
         return false;
@@ -172,7 +170,7 @@ bool Game::init()
     }
 
     // Init procedural sprite
-    if (!m_procSprite.init(0, 0, 1.0f, 1.0f))
+    if (!m_procSprite.init(1.0f, 1.0f))
     {
         // Could not init procedural sprite
         return false;
@@ -193,7 +191,7 @@ bool Game::init()
     }
 
     // Init cuboid shape
-    if (!m_cuboid.init(GResources.meshes.mesh(MESHES_CUBOID)))
+    if (!m_cuboid.init())
     {
         // Could not init cuboid shape
         return false;
@@ -560,7 +558,7 @@ void Game::render()
 
         // Render sprite
         GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-        GRenderer.bindDefaultVertexBuffer();
+        GRenderer.bindVertexBuffer(MESHES_DEFAULT);
         m_sprite.bindTexture();
         m_sprite.render();
 
@@ -582,17 +580,17 @@ void Game::render()
 
     // Render skybox
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_SKYBOX);
+    GRenderer.bindVertexBuffer(MESHES_SKYBOX);
     m_skybox.setPosition(m_freeflycam.getPosition());
     //m_skybox.setPosition(m_orbitalcam.getPosition());
-    m_skybox.bindVertexBuffer();
     m_skybox.bindCubeMap();
     m_skybox.render();*/
 
     // Render procedural skybox
     m_skyproc.bindPipeline();
+    GRenderer.bindVertexBuffer(MESHES_SKYBOX);
     m_skyproc.setPosition(m_freeflycam.getPosition());
     //m_skyproc.setPosition(m_orbitalcam.getPosition());
-    m_skyproc.bindVertexBuffer();
     m_skyproc.render();
 
     // Render heightfar stream
@@ -619,7 +617,7 @@ void Game::render()
 
     // Render cuboid shape
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
-    m_cuboid.bindVertexBuffer();
+    GRenderer.bindVertexBuffer(MESHES_CUBOID);
     m_cuboid.setScale(10.0f);
     m_cuboid.setPosition(0.0f, 0.0f, 0.0f);
     m_cuboid.render();*/
@@ -629,7 +627,7 @@ void Game::render()
     m_view.bind();
 
     // Bind default vertex buffer
-    GRenderer.bindDefaultVertexBuffer();
+    GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
 
     // Render bounding circle
@@ -677,7 +675,7 @@ void Game::render()
     GMainRenderer.bindDefaultView();
 
     // Bind default vertex buffer
-    GRenderer.bindDefaultVertexBuffer();
+    GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
     // Render back rendered frame
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
@@ -737,7 +735,7 @@ void Game::render()
     // Render main compositing quad
     GRenderer.bindDefaultView();
     GRenderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
-    GRenderer.bindDefaultVertexBuffer();
+    GRenderer.bindVertexBuffer(MESHES_DEFAULT);
     GMainRenderer.bind();
     GRenderer.plane.setSize(
         (GSwapchain.ratio*2.0f)+RendererCompositingPlaneOffset,

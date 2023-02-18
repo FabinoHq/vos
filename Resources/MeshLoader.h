@@ -81,6 +81,7 @@
         MESHES_DEFAULT = 0,
         MESHES_SKYBOX = 1,
         MESHES_CUBOID = 2,
+
         MESHES_TEST = 3,
 
         MESHES_ASSETSCOUNT = 4

@@ -66,8 +66,8 @@ ProcSprite::~ProcSprite()
 //  Init procedural sprite                                                    //
 //  return : True if the proc sprite is successfully created                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool ProcSprite::init(const uint32_t* fragmentSource,
-    const size_t fragmentSize, float width, float height)
+bool ProcSprite::init(float width, float height,
+    const uint32_t* fragmentSource, const size_t fragmentSize)
 {
     bool shaderCreated = false;
     if (fragmentSource && (fragmentSize > 0))

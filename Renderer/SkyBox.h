@@ -136,13 +136,8 @@
             //  Init skybox                                                   //
             //  return : True if the skybox is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(VertexBuffer& vertexBuffer, CubeMap& cubemap);
+            bool init(CubeMap& cubemap);
 
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind skybox vertex buffer                                     //
-            ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer();
 
             ////////////////////////////////////////////////////////////////////
             //  Bind skybox cubemap                                           //
@@ -171,7 +166,6 @@
 
 
         private:
-            VertexBuffer*       m_vertexBuffer;     // SkyBox vertex buffer
             CubeMap*            m_cubemap;          // SkyBox cubemap pointer
     };
 

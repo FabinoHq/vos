@@ -194,9 +194,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind renderer default vertex buffer                           //
+            //  Bind renderer vertex buffer                                   //
             ////////////////////////////////////////////////////////////////////
-            void bindDefaultVertexBuffer();
+            void bindVertexBuffer(MeshesAssets meshAsset);
 
 
             ////////////////////////////////////////////////////////////////////

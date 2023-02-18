@@ -136,7 +136,7 @@
             //  Init cuboid                                                   //
             //  return : True if the cuboid is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(VertexBuffer& vertexBuffer);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
             //  Set cuboid color                                              //
@@ -182,11 +182,6 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Bind cuboid vertex buffer                                     //
-            ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer();
-
-            ////////////////////////////////////////////////////////////////////
             //  Render cuboid                                                 //
             ////////////////////////////////////////////////////////////////////
             void render();
@@ -205,7 +200,6 @@
 
 
         private:
-            VertexBuffer*       m_vertexBuffer;     // Cuboid vertex buffer
             Vector4             m_color;            // Cuboid color
     };
 

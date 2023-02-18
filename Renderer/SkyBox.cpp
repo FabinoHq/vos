@@ -47,7 +47,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 SkyBox::SkyBox() :
 Transform3(),
-m_vertexBuffer(0),
 m_cubemap(0)
 {
 
@@ -59,7 +58,6 @@ m_cubemap(0)
 SkyBox::~SkyBox()
 {
     m_cubemap = 0;
-    m_vertexBuffer = 0;
 }
 
 
@@ -67,7 +65,7 @@ SkyBox::~SkyBox()
 //  Init skybox                                                               //
 //  return : True if the skybox is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool SkyBox::init(VertexBuffer& vertexBuffer, CubeMap& cubemap)
+bool SkyBox::init(CubeMap& cubemap)
 {
     // Check cubemap handle
     if (!cubemap.isValid())
@@ -75,9 +73,6 @@ bool SkyBox::init(VertexBuffer& vertexBuffer, CubeMap& cubemap)
         // Invalid cubemap handle
         return false;
     }
-
-    // Set cuboid vertex buffer
-    m_vertexBuffer = &vertexBuffer;
 
     // Set skybox cubemap pointer
     m_cubemap = &cubemap;
@@ -89,24 +84,6 @@ bool SkyBox::init(VertexBuffer& vertexBuffer, CubeMap& cubemap)
     return true;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind skybox vertex buffer                                                 //
-////////////////////////////////////////////////////////////////////////////////
-void SkyBox::bindVertexBuffer()
-{
-    // Bind vertex buffer
-    VkDeviceSize offset = 0;
-    vkCmdBindVertexBuffers(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
-    );
-
-    vkCmdBindIndexBuffer(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
-    );
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Render skybox                                                             //

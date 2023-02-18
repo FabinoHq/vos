@@ -79,8 +79,9 @@
             //  Init procedural sprite                                        //
             //  return : True if the proc sprite is successfully created      //
             ////////////////////////////////////////////////////////////////////
-            bool init(const uint32_t* fragmentSource,
-                const size_t fragmentSize, float width, float height);
+            bool init(float width, float height,
+                const uint32_t* fragmentSource = 0,
+                const size_t fragmentSize = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  Destroy procedural sprite                                     //
