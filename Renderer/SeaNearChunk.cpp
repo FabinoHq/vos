@@ -94,3 +94,106 @@ void SeaNearChunk::render()
         SeaNearChunkIndicesCount, 1, 0, 0, 0
     );
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Generate sea near chunk                                                   //
+//  return : True if the sea near chunk is generated                          //
+////////////////////////////////////////////////////////////////////////////////
+bool SeaNearChunk::generateSeaNearChunk(VertexBuffer& vertexBuffer)
+{
+    // Allocate sea near vertices
+    float* vertices = new (std::nothrow) float[SeaNearChunkVerticesCount];
+    if (!vertices)
+    {
+        // Could not allocate sea near vertices
+        return false;
+    }
+
+    // Allocate sea near indices
+    uint16_t* indices = new (std::nothrow) uint16_t[SeaNearChunkIndicesCount];
+    if (!indices)
+    {
+        // Could not allocate sea near indices
+        if (vertices) { delete[] vertices; }
+        return false;
+    }
+
+    // Generate vertices data
+    float texCoordIncX = SeaNearChunkTexcoordsWidth /
+        (SeaNearChunkWidth * 1.0f);
+    float texCoordIncY = SeaNearChunkTexcoordsHeight /
+        (SeaNearChunkHeight * 1.0f);
+    float vertX = 0.0f;
+    float vertZ = 0.0f;
+    float texCoordX = 0.0f;
+    float texCoordY = 0.0f;
+    uint32_t vIndex = 0;
+    uint32_t iIndex = 0;
+    uint16_t iOffset = 0;
+
+    // Flat sea near chunk
+    for (uint32_t j = 0; j <= SeaNearChunkHeight; ++j)
+    {
+        vertX = 0.0f;
+        texCoordX = 0.0f;
+
+        for (uint32_t i = 0; i <= SeaNearChunkWidth; ++i)
+        {
+            // Set flat sea chunk
+            vertices[vIndex+0] = vertX;
+            vertices[vIndex+1] = 0.0f;
+            vertices[vIndex+2] = vertZ;
+
+            vertices[vIndex+3] = texCoordX;
+            vertices[vIndex+4] = texCoordY;
+
+            vertices[vIndex+5] = 0.0f;
+            vertices[vIndex+6] = 1.0f;
+            vertices[vIndex+7] = 0.0f;
+
+            vIndex += 8;
+            vertX += SeaNearChunkPlaneWidth;
+            texCoordX += texCoordIncX;
+        }
+
+        vertZ += SeaNearChunkPlaneHeight;
+        texCoordY += texCoordIncY;
+    }
+
+    // Generate indices data
+    for (uint32_t j = 0; j < SeaNearChunkHeight; ++j)
+    {
+        for (uint32_t i = 0; i < SeaNearChunkWidth; ++i)
+        {
+            indices[iIndex+0] = iOffset+(SeaNearChunkWidth+1);
+            indices[iIndex+1] = iOffset+(SeaNearChunkWidth+2);
+            indices[iIndex+2] = iOffset+1;
+            indices[iIndex+3] = iOffset+1;
+            indices[iIndex+4] = iOffset;
+            indices[iIndex+5] = iOffset+(SeaNearChunkWidth+1);
+
+            iIndex += 6;
+            ++iOffset;
+        }
+        ++iOffset;
+    }
+
+    // Create vertex buffer
+    if (!vertexBuffer.createMeshBuffer(VULKAN_MEMORY_MESHES,
+        vertices, indices,
+        SeaNearChunkVerticesCount, SeaNearChunkIndicesCount))
+    {
+        // Could not create vertex buffer
+        if (indices) { delete[] indices; }
+        if (vertices) { delete[] vertices; }
+        return false;
+    }
+
+    // Delete indices and vertices data
+    if (indices) { delete[] indices; }
+    if (vertices) { delete[] vertices; }
+
+    // Sea near chunk successfully generated
+    return true;
+}

@@ -50,6 +50,7 @@
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
+    #include "../Renderer/SeaNearChunk.h"
 
     #include <fstream>
     #include <cstdint>
@@ -81,10 +82,11 @@
         MESHES_DEFAULT = 0,
         MESHES_SKYBOX = 1,
         MESHES_CUBOID = 2,
+        MESHES_SEANEAR = 3,
 
-        MESHES_TEST = 3,
+        MESHES_TEST = 4,
 
-        MESHES_ASSETSCOUNT = 4
+        MESHES_ASSETSCOUNT = 5
     };
 
 

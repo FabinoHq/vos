@@ -101,6 +101,14 @@
             void render();
 
 
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  Generate sea near chunk                                       //
+            //  return : True if the sea near chunk is generated              //
+            ////////////////////////////////////////////////////////////////////
+            static bool generateSeaNearChunk(VertexBuffer& vertexBuffer);
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  SeaNearChunk private copy constructor : Not copyable          //
