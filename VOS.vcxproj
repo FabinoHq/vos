@@ -228,6 +228,7 @@
     <ClCompile Include="Renderer\OrbitalCam.cpp" />
     <ClCompile Include="Renderer\ProcSprite.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="Renderer\SeaNearChunk.cpp" />
     <ClCompile Include="Renderer\Shapes\CuboidShape.cpp" />
     <ClCompile Include="Renderer\Shapes\EllipseShape.cpp" />
     <ClCompile Include="Renderer\Shapes\RectangleShape.cpp" />
@@ -315,6 +316,7 @@
     <ClInclude Include="Renderer\OrbitalCam.h" />
     <ClInclude Include="Renderer\ProcSprite.h" />
     <ClInclude Include="Renderer\Renderer.h" />
+    <ClInclude Include="Renderer\SeaNearChunk.h" />
     <ClInclude Include="Renderer\Shaders\Default.h" />
     <ClInclude Include="Renderer\Shaders\DefaultProc.h" />
     <ClInclude Include="Renderer\Shaders\Ellipse.h" />

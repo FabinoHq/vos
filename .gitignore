@@ -196,6 +196,8 @@
 !Renderer/HeightMapStream.cpp
 !Renderer/HeightFarStream.h
 !Renderer/HeightFarStream.cpp
+!Renderer/SeaNearChunk.h
+!Renderer/SeaNearChunk.cpp
 !Renderer/WorldLight.h
 !Renderer/WorldLight.cpp
 !Renderer/BackRenderer.h

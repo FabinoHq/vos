@@ -245,6 +245,9 @@
     <ClCompile Include="Renderer\SkyProc.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\SeaNearChunk.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -562,6 +565,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\SkyProc.h">
       <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\SeaNearChunk.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
