@@ -62,11 +62,11 @@ m_chunkY(0)
 {
     for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
     {
-        m_heightptrs[i] = 0;
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
         m_chunks[i].flags = HEIGHTFAR_FLAGS_NONE;
+        m_chunks[i].heightfar = 0;
         m_chunksptrs[i] = 0;
     }
 }
@@ -84,11 +84,11 @@ HeightFarLoader::~HeightFarLoader()
     m_vertices = 0;
     for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
     {
-        m_heightptrs[i] = 0;
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
         m_chunks[i].flags = HEIGHTFAR_FLAGS_NONE;
+        m_chunks[i].heightfar = 0;
         m_chunksptrs[i] = 0;
     }
     m_heightfars = 0;
@@ -256,7 +256,7 @@ bool HeightFarLoader::init()
     // Set default heightfars pointers
     for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
     {
-        m_heightptrs[i] = &m_heightfars[i];
+        m_chunks[i].heightfar = &m_heightfars[i];
         m_chunksptrs[i] = &m_chunks[i];
     }
 
@@ -282,7 +282,7 @@ bool HeightFarLoader::init()
     {
         for (int32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
         {
-            if (generateFlatChunk(m_heightfars[cnt]))
+            if (generateFlatChunk(m_chunks[cnt]))
             {
                 m_chunks[cnt].loading = false;
                 m_chunks[cnt].chunkX = (m_chunkX-HEIGHTFAR_STREAMHALFWIDTH)+i;
@@ -438,11 +438,11 @@ void HeightFarLoader::destroyHeightFarLoader()
     // Reset heightfars pointers
     for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
     {
-        m_heightptrs[i] = 0;
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
         m_chunks[i].flags = HEIGHTFAR_FLAGS_NONE;
+        m_chunks[i].heightfar = 0;
         m_chunksptrs[i] = 0;
     }
 
@@ -808,18 +808,17 @@ bool HeightFarLoader::loadHeightFars()
         if (m_chunks[i].loading)
         {
             // Update chunk from file
-            if (updateChunk((*m_heightptrs[i]), (*m_chunksptrs[i]),
-                m_chunks[i].chunkX, m_chunks[i].chunkY))
+            if (updateChunk(
+                (*m_chunksptrs[i]), m_chunks[i].chunkX, m_chunks[i].chunkY))
             {
                 m_chunks[i].loading = false;
             }
             else
             {
                 // Update flat chunk
-                if (updateFlatChunk(*m_heightptrs[i]))
+                if (updateFlatChunk(*m_chunksptrs[i]))
                 {
                     m_chunks[i].loading = false;
-                    m_chunksptrs[i]->flags = HEIGHTFAR_FLAGS_NONE;
                 }
                 else
                 {
@@ -839,7 +838,7 @@ bool HeightFarLoader::loadHeightFars()
 //  Generate flat heightfar chunk                                             //
 //  return : True if the heightfar chunk is generated                         //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightFarLoader::generateFlatChunk(VertexBuffer& vertexBuffer)
+bool HeightFarLoader::generateFlatChunk(HeightFarChunkData& chunkData)
 {
     // Generate vertices data
     float texCoordIncX = HeightFarChunkTexcoordsWidth /
@@ -902,7 +901,7 @@ bool HeightFarLoader::generateFlatChunk(VertexBuffer& vertexBuffer)
     }
 
     // Create vertex buffer
-    if (!vertexBuffer.createHeightFarBuffer(VULKAN_MEMORY_HEIGHTFARS,
+    if (!chunkData.heightfar->createHeightFarBuffer(VULKAN_MEMORY_HEIGHTFARS,
         m_vertices, m_indices,
         HeightFarChunkVerticesCount, HeightFarChunkIndicesCount))
     {
@@ -918,7 +917,7 @@ bool HeightFarLoader::generateFlatChunk(VertexBuffer& vertexBuffer)
 //  Update flat heightfar chunk                                               //
 //  return : True if the heightfar chunk is updated                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightFarLoader::updateFlatChunk(VertexBuffer& vertexBuffer)
+bool HeightFarLoader::updateFlatChunk(HeightFarChunkData& chunkData)
 {
     // Generate vertices data
     float texCoordIncX = HeightFarChunkTexcoordsWidth /
@@ -980,8 +979,11 @@ bool HeightFarLoader::updateFlatChunk(VertexBuffer& vertexBuffer)
         ++iOffset;
     }
 
+    // Set heightfar chunk flags
+    chunkData.flags = HEIGHTFAR_FLAGS_NONE;
+
     // Update vertex buffer
-    if (!vertexBuffer.updateHeightFarBuffer(m_vertices, m_indices,
+    if (!chunkData.heightfar->updateHeightFarBuffer(m_vertices, m_indices,
         HeightFarChunkVerticesCount, HeightFarChunkIndicesCount))
     {
         // Could not update vertex buffer
@@ -996,8 +998,8 @@ bool HeightFarLoader::updateFlatChunk(VertexBuffer& vertexBuffer)
 //  Update heightfar chunk                                                    //
 //  return : True if the heightfar chunk is updated                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightFarLoader::updateChunk(VertexBuffer& vertexBuffer,
-    HeightFarChunkState& chunk, int32_t chunkX, int32_t chunkY)
+bool HeightFarLoader::updateChunk(HeightFarChunkData& chunkData,
+    int32_t chunkX, int32_t chunkY)
 {
     // Init vertices and indices count
     uint32_t verticesCount = 0;
@@ -1050,7 +1052,7 @@ bool HeightFarLoader::updateChunk(VertexBuffer& vertexBuffer,
     }
 
     // Read VHMP flags
-    file.read((char*)&chunk.flags, sizeof(int32_t));
+    file.read((char*)&chunkData.flags, sizeof(int32_t));
 
     // Read vertices and indices count
     file.read((char*)&verticesCount, sizeof(uint32_t));
@@ -1073,7 +1075,7 @@ bool HeightFarLoader::updateChunk(VertexBuffer& vertexBuffer,
     file.close();
 
     // Update vertex buffer
-    if (!vertexBuffer.updateHeightFarBuffer(m_vertices, m_indices,
+    if (!chunkData.heightfar->updateHeightFarBuffer(m_vertices, m_indices,
         HeightFarChunkVerticesCount, HeightFarChunkIndicesCount))
     {
         // Could not update vertex buffer
@@ -1102,14 +1104,10 @@ bool HeightFarLoader::swapTop()
     }
 
     // Copy bottom row into tmp
-    VertexBuffer* tmp[HEIGHTFAR_STREAMWIDTH];
-    HeightFarChunkState* tmpchunk[HEIGHTFAR_STREAMWIDTH];
+    HeightFarChunkData* tmp[HEIGHTFAR_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
     {
-        tmp[i] = m_heightptrs[
-            ((HEIGHTFAR_STREAMHEIGHT-1)*HEIGHTFAR_STREAMWIDTH)+i
-        ];
-        tmpchunk[i] = m_chunksptrs[
+        tmp[i] = m_chunksptrs[
             ((HEIGHTFAR_STREAMHEIGHT-1)*HEIGHTFAR_STREAMWIDTH)+i
         ];
     }
@@ -1119,8 +1117,6 @@ bool HeightFarLoader::swapTop()
     {
         for (uint32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
         {
-            m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)+i] =
-                m_heightptrs[((j-1)*HEIGHTFAR_STREAMWIDTH)+i];
             m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)+i] =
                 m_chunksptrs[((j-1)*HEIGHTFAR_STREAMWIDTH)+i];
         }
@@ -1129,8 +1125,7 @@ bool HeightFarLoader::swapTop()
     // Copy tmp into top row
     for (uint32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
     {
-        m_heightptrs[i] = tmp[i];
-        m_chunksptrs[i] = tmpchunk[i];
+        m_chunksptrs[i] = tmp[i];
     }
 
     // Set new chunks loading states
@@ -1170,12 +1165,10 @@ bool HeightFarLoader::swapBottom()
     }
 
     // Copy top row into tmp
-    VertexBuffer* tmp[HEIGHTFAR_STREAMWIDTH];
-    HeightFarChunkState* tmpchunk[HEIGHTFAR_STREAMWIDTH];
+    HeightFarChunkData* tmp[HEIGHTFAR_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
     {
-        tmp[i] = m_heightptrs[i];
-        tmpchunk[i] = m_chunksptrs[i];
+        tmp[i] = m_chunksptrs[i];
     }
 
     // Swap pointers towards bottom
@@ -1183,8 +1176,6 @@ bool HeightFarLoader::swapBottom()
     {
         for (uint32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
         {
-            m_heightptrs[((j-1)*HEIGHTFAR_STREAMWIDTH)+i] =
-                m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)+i];
             m_chunksptrs[((j-1)*HEIGHTFAR_STREAMWIDTH)+i] =
                 m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)+i];
         }
@@ -1193,10 +1184,8 @@ bool HeightFarLoader::swapBottom()
     // Copy tmp into bottom row
     for (uint32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
     {
-        m_heightptrs[((HEIGHTFAR_STREAMHEIGHT-1)*HEIGHTFAR_STREAMWIDTH)+i] =
-            tmp[i];
         m_chunksptrs[((HEIGHTFAR_STREAMHEIGHT-1)*HEIGHTFAR_STREAMWIDTH)+i] =
-            tmpchunk[i];
+            tmp[i];
     }
 
     // Set new chunks loading states
@@ -1242,14 +1231,10 @@ bool HeightFarLoader::swapLeft()
     }
 
     // Copy right row into tmp
-    VertexBuffer* tmp[HEIGHTFAR_STREAMHEIGHT];
-    HeightFarChunkState* tmpchunk[HEIGHTFAR_STREAMHEIGHT];
+    HeightFarChunkData* tmp[HEIGHTFAR_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTFAR_STREAMHEIGHT; ++j)
     {
-        tmp[j] = m_heightptrs[
-            (j*HEIGHTFAR_STREAMWIDTH)+(HEIGHTFAR_STREAMWIDTH-1)
-        ];
-        tmpchunk[j] = m_chunksptrs[
+        tmp[j] = m_chunksptrs[
             (j*HEIGHTFAR_STREAMWIDTH)+(HEIGHTFAR_STREAMWIDTH-1)
         ];
     }
@@ -1259,8 +1244,6 @@ bool HeightFarLoader::swapLeft()
     {
         for (uint32_t j = 0; j < HEIGHTFAR_STREAMHEIGHT; ++j)
         {
-            m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)+i] =
-                m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)+(i-1)];
             m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)+i] =
                 m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)+(i-1)];
         }
@@ -1269,8 +1252,7 @@ bool HeightFarLoader::swapLeft()
     // Copy tmp into left row
     for (uint32_t j = 0; j < HEIGHTFAR_STREAMHEIGHT; ++j)
     {
-        m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)] = tmp[j];
-        m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)] = tmpchunk[j];
+        m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)] = tmp[j];
     }
 
     // Set new chunks loading states
@@ -1312,12 +1294,10 @@ bool HeightFarLoader::swapRight()
     }
 
     // Copy left row into tmp
-    VertexBuffer* tmp[HEIGHTFAR_STREAMHEIGHT];
-    HeightFarChunkState* tmpchunk[HEIGHTFAR_STREAMHEIGHT];
+    HeightFarChunkData* tmp[HEIGHTFAR_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTFAR_STREAMHEIGHT; ++j)
     {
-        tmp[j] = m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)];
-        tmpchunk[j] = m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)];
+        tmp[j] = m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)];
     }
 
     // Swap pointers towards right
@@ -1325,8 +1305,6 @@ bool HeightFarLoader::swapRight()
     {
         for (uint32_t j = 0; j < HEIGHTFAR_STREAMHEIGHT; ++j)
         {
-            m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)+(i-1)] =
-                m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)+i];
             m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)+(i-1)] =
                 m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)+i];
         }
@@ -1335,10 +1313,8 @@ bool HeightFarLoader::swapRight()
     // Copy tmp into right row
     for (uint32_t j = 0; j < HEIGHTFAR_STREAMHEIGHT; ++j)
     {
-        m_heightptrs[(j*HEIGHTFAR_STREAMWIDTH)+(HEIGHTFAR_STREAMWIDTH-1)] =
-            tmp[j];
         m_chunksptrs[(j*HEIGHTFAR_STREAMWIDTH)+(HEIGHTFAR_STREAMWIDTH-1)] =
-            tmpchunk[j];
+            tmp[j];
     }
 
     // Set new chunks loading states

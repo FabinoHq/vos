@@ -109,14 +109,15 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapChunkState structure                                         //
+    //  HeightMapChunkData structure                                          //
     ////////////////////////////////////////////////////////////////////////////
-    struct HeightMapChunkState
+    struct HeightMapChunkData
     {
         bool loading;
         int32_t chunkX;
         int32_t chunkY;
         int32_t flags;
+        VertexBuffer* heightmap;
     };
 
 
@@ -178,7 +179,7 @@
             ////////////////////////////////////////////////////////////////////
             inline VertexBuffer& heightmap(uint32_t heightmap)
             {
-                return (*m_heightptrs[heightmap]);
+                return (*m_chunksptrs[heightmap]->heightmap);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -235,20 +236,20 @@
             //  Generate flat heightmap chunk                                 //
             //  return : True if the heightmap chunk is generated             //
             ////////////////////////////////////////////////////////////////////
-            bool generateFlatChunk(VertexBuffer& vertexBuffer);
+            bool generateFlatChunk(HeightMapChunkData& chunkData);
 
             ////////////////////////////////////////////////////////////////////
             //  Update flat heightmap chunk                                   //
             //  return : True if the heightmap chunk is updated               //
             ////////////////////////////////////////////////////////////////////
-            bool updateFlatChunk(VertexBuffer& vertexBuffer);
+            bool updateFlatChunk(HeightMapChunkData& chunkData);
 
             ////////////////////////////////////////////////////////////////////
             //  Update heightmap chunk                                        //
             //  return : True if the heightmap chunk is updated               //
             ////////////////////////////////////////////////////////////////////
-            bool updateChunk(VertexBuffer& vertexBuffer,
-                HeightMapChunkState& chunk, int32_t chunkX, int32_t chunkY);
+            bool updateChunk(HeightMapChunkData& chunkData,
+                int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards top                          //
@@ -299,9 +300,8 @@
             uint32_t                m_sync;             // Renderer sync
 
             VertexBuffer*           m_heightmaps;       // Heightmaps meshes
-            VertexBuffer*           m_heightptrs[HEIGHTMAP_ASSETSCOUNT];
-            HeightMapChunkState     m_chunks[HEIGHTMAP_ASSETSCOUNT];
-            HeightMapChunkState*    m_chunksptrs[HEIGHTMAP_ASSETSCOUNT];
+            HeightMapChunkData      m_chunks[HEIGHTMAP_ASSETSCOUNT];
+            HeightMapChunkData*     m_chunksptrs[HEIGHTMAP_ASSETSCOUNT];
 
             float*                  m_vertices;         // Chunk vertices
             uint16_t*               m_indices;          // Chunk indices

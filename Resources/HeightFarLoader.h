@@ -109,14 +109,15 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightFarpChunkState structure                                        //
+    //  HeightFarpChunkData structure                                         //
     ////////////////////////////////////////////////////////////////////////////
-    struct HeightFarChunkState
+    struct HeightFarChunkData
     {
         bool loading;
         int32_t chunkX;
         int32_t chunkY;
         int32_t flags;
+        VertexBuffer* heightfar;
     };
 
 
@@ -178,7 +179,7 @@
             ////////////////////////////////////////////////////////////////////
             inline VertexBuffer& heightfar(uint32_t heightfar)
             {
-                return (*m_heightptrs[heightfar]);
+                return (*m_chunksptrs[heightfar]->heightfar);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -235,20 +236,20 @@
             //  Generate flat heightfar chunk                                 //
             //  return : True if the heightfar chunk is generated             //
             ////////////////////////////////////////////////////////////////////
-            bool generateFlatChunk(VertexBuffer& vertexBuffer);
+            bool generateFlatChunk(HeightFarChunkData& chunkData);
 
             ////////////////////////////////////////////////////////////////////
             //  Update flat heightfar chunk                                   //
             //  return : True if the heightfar chunk is updated               //
             ////////////////////////////////////////////////////////////////////
-            bool updateFlatChunk(VertexBuffer& vertexBuffer);
+            bool updateFlatChunk(HeightFarChunkData& chunkData);
 
             ////////////////////////////////////////////////////////////////////
             //  Update heightfar chunk                                        //
             //  return : True if the heightfar chunk is updated               //
             ////////////////////////////////////////////////////////////////////
-            bool updateChunk(VertexBuffer& vertexBuffer,
-                HeightFarChunkState& chunk, int32_t chunkX, int32_t chunkY);
+            bool updateChunk(HeightFarChunkData& chunkData,
+                int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightfars pointers towards top                          //
@@ -299,9 +300,8 @@
             uint32_t                m_sync;             // Renderer sync
 
             VertexBuffer*           m_heightfars;       // Heightfars meshes
-            VertexBuffer*           m_heightptrs[HEIGHTFAR_ASSETSCOUNT];
-            HeightFarChunkState     m_chunks[HEIGHTFAR_ASSETSCOUNT];
-            HeightFarChunkState*    m_chunksptrs[HEIGHTFAR_ASSETSCOUNT];
+            HeightFarChunkData      m_chunks[HEIGHTFAR_ASSETSCOUNT];
+            HeightFarChunkData*     m_chunksptrs[HEIGHTFAR_ASSETSCOUNT];
 
             float*                  m_vertices;         // Chunk vertices
             uint16_t*               m_indices;          // Chunk indices
