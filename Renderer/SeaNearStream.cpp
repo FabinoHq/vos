@@ -86,14 +86,18 @@ void SeaNearStream::render(int32_t chunkX, int32_t chunkY)
     {
         for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
         {
-            m_seaNearChunk.setPosition(
-                -(HEIGHTMAP_STREAMHALFWIDTH*SeaNearChunkXStride)+
-                (chunkX*SeaNearChunkXStride)+(i*SeaNearChunkXStride),
-                200.0f,
-                -(HEIGHTMAP_STREAMHALFHEIGHT*SeaNearChunkZStride)+
-                (chunkY*SeaNearChunkXStride)+(j*SeaNearChunkZStride)
-            );
-            m_seaNearChunk.render();
+            if (GResources.heightmaps.getFlags(
+                (j*HEIGHTMAP_STREAMWIDTH)+i) & HEIGHTMAP_FLAGS_RENDERSEA)
+            {
+                m_seaNearChunk.setPosition(
+                    -(HEIGHTMAP_STREAMHALFWIDTH*SeaNearChunkXStride)+
+                    (chunkX*SeaNearChunkXStride)+(i*SeaNearChunkXStride),
+                    0.0f,
+                    -(HEIGHTMAP_STREAMHALFHEIGHT*SeaNearChunkZStride)+
+                    (chunkY*SeaNearChunkXStride)+(j*SeaNearChunkZStride)
+                );
+                m_seaNearChunk.render();
+            }
         }
     }
 }

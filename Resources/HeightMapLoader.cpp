@@ -66,6 +66,8 @@ m_chunkY(0)
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
+        m_chunks[i].flags = HEIGHTMAP_FLAGS_NONE;
+        m_chunksptrs[i] = 0;
     }
 }
 
@@ -86,6 +88,8 @@ HeightMapLoader::~HeightMapLoader()
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
+        m_chunks[i].flags = HEIGHTMAP_FLAGS_NONE;
+        m_chunksptrs[i] = 0;
     }
     m_heightmaps = 0;
     m_sync = 0;
@@ -253,6 +257,7 @@ bool HeightMapLoader::init()
     for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
     {
         m_heightptrs[i] = &m_heightmaps[i];
+        m_chunksptrs[i] = &m_chunks[i];
     }
 
     // Allocate chunk vertices
@@ -282,6 +287,7 @@ bool HeightMapLoader::init()
                 m_chunks[cnt].loading = false;
                 m_chunks[cnt].chunkX = (m_chunkX-HEIGHTMAP_STREAMHALFWIDTH)+i;
                 m_chunks[cnt].chunkY = (m_chunkY-HEIGHTMAP_STREAMHALFHEIGHT)+j;
+                m_chunks[cnt].flags = HEIGHTMAP_FLAGS_NONE;
             }
             else
             {
@@ -436,6 +442,8 @@ void HeightMapLoader::destroyHeightMapLoader()
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
+        m_chunks[i].flags = HEIGHTMAP_FLAGS_NONE;
+        m_chunksptrs[i] = 0;
     }
 
     // Destroy heightmaps vertex buffers
@@ -800,17 +808,18 @@ bool HeightMapLoader::loadHeightMaps()
         if (m_chunks[i].loading)
         {
             // Update chunk from file
-            if (updateChunk(
-                (*m_heightptrs[i]), m_chunks[i].chunkX, m_chunks[i].chunkY))
+            if (updateChunk((*m_heightptrs[i]), (*m_chunksptrs[i]),
+                m_chunks[i].chunkX, m_chunks[i].chunkY))
             {
                 m_chunks[i].loading = false;
             }
             else
             {
                 // Update flat chunk
-                if (updateFlatChunk((*m_heightptrs[i])))
+                if (updateFlatChunk(*m_heightptrs[i]))
                 {
                     m_chunks[i].loading = false;
+                    m_chunksptrs[i]->flags = HEIGHTMAP_FLAGS_NONE;
                 }
                 else
                 {
@@ -855,7 +864,7 @@ bool HeightMapLoader::generateFlatChunk(VertexBuffer& vertexBuffer)
         {
             // Set flat heightmap
             m_vertices[vIndex+0] = vertX;
-            m_vertices[vIndex+1] = 0.0f;
+            m_vertices[vIndex+1] = HeightMapLoaderDefaultFlatY;
             m_vertices[vIndex+2] = vertZ;
 
             m_vertices[vIndex+3] = texCoordX;
@@ -934,7 +943,7 @@ bool HeightMapLoader::updateFlatChunk(VertexBuffer& vertexBuffer)
         {
             // Set flat heightmap
             m_vertices[vIndex+0] = vertX;
-            m_vertices[vIndex+1] = 0.0f;
+            m_vertices[vIndex+1] = HeightMapLoaderDefaultFlatY;
             m_vertices[vIndex+2] = vertZ;
 
             m_vertices[vIndex+3] = texCoordX;
@@ -988,7 +997,7 @@ bool HeightMapLoader::updateFlatChunk(VertexBuffer& vertexBuffer)
 //  return : True if the heightmap chunk is updated                           //
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
-    int32_t chunkX, int32_t chunkY)
+    HeightMapChunkState& chunk, int32_t chunkX, int32_t chunkY)
 {
     // Init vertices and indices count
     uint32_t verticesCount = 0;
@@ -1039,6 +1048,9 @@ bool HeightMapLoader::updateChunk(VertexBuffer& vertexBuffer,
         // Invalid VHMP type
         return false;
     }
+
+    // Read VHMP flags
+    file.read((char*)&chunk.flags, sizeof(int32_t));
 
     // Read vertices and indices count
     file.read((char*)&verticesCount, sizeof(uint32_t));
@@ -1091,9 +1103,13 @@ bool HeightMapLoader::swapTop()
 
     // Copy bottom row into tmp
     VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
+    HeightMapChunkState* tmpchunk[HEIGHTMAP_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
     {
         tmp[i] = m_heightptrs[
+            ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
+        ];
+        tmpchunk[i] = m_chunksptrs[
             ((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i
         ];
     }
@@ -1105,6 +1121,8 @@ bool HeightMapLoader::swapTop()
         {
             m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
                 m_heightptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i];
+            m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_chunksptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i];
         }
     }
 
@@ -1112,6 +1130,7 @@ bool HeightMapLoader::swapTop()
     for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
     {
         m_heightptrs[i] = tmp[i];
+        m_chunksptrs[i] = tmpchunk[i];
     }
 
     // Set new chunks loading states
@@ -1152,9 +1171,11 @@ bool HeightMapLoader::swapBottom()
 
     // Copy top row into tmp
     VertexBuffer* tmp[HEIGHTMAP_STREAMWIDTH];
+    HeightMapChunkState* tmpchunk[HEIGHTMAP_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
     {
         tmp[i] = m_heightptrs[i];
+        tmpchunk[i] = m_chunksptrs[i];
     }
 
     // Swap pointers towards bottom
@@ -1164,6 +1185,8 @@ bool HeightMapLoader::swapBottom()
         {
             m_heightptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i] =
                 m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
+            m_chunksptrs[((j-1)*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
         }
     }
 
@@ -1172,6 +1195,8 @@ bool HeightMapLoader::swapBottom()
     {
         m_heightptrs[((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i] =
             tmp[i];
+        m_chunksptrs[((HEIGHTMAP_STREAMHEIGHT-1)*HEIGHTMAP_STREAMWIDTH)+i] =
+            tmpchunk[i];
     }
 
     // Set new chunks loading states
@@ -1218,9 +1243,13 @@ bool HeightMapLoader::swapLeft()
 
     // Copy right row into tmp
     VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
+    HeightMapChunkState* tmpchunk[HEIGHTMAP_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
     {
         tmp[j] = m_heightptrs[
+            (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
+        ];
+        tmpchunk[j] = m_chunksptrs[
             (j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)
         ];
     }
@@ -1232,6 +1261,8 @@ bool HeightMapLoader::swapLeft()
         {
             m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
                 m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)];
+            m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)+i] =
+                m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)];
         }
     }
 
@@ -1239,6 +1270,7 @@ bool HeightMapLoader::swapLeft()
     for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
     {
         m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)] = tmp[j];
+        m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)] = tmpchunk[j];
     }
 
     // Set new chunks loading states
@@ -1281,9 +1313,11 @@ bool HeightMapLoader::swapRight()
 
     // Copy left row into tmp
     VertexBuffer* tmp[HEIGHTMAP_STREAMHEIGHT];
+    HeightMapChunkState* tmpchunk[HEIGHTMAP_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
     {
         tmp[j] = m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)];
+        tmpchunk[j] = m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)];
     }
 
     // Swap pointers towards right
@@ -1293,6 +1327,8 @@ bool HeightMapLoader::swapRight()
         {
             m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)] =
                 m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
+            m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)+(i-1)] =
+                m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)+i];
         }
     }
 
@@ -1301,6 +1337,8 @@ bool HeightMapLoader::swapRight()
     {
         m_heightptrs[(j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)] =
             tmp[j];
+        m_chunksptrs[(j*HEIGHTMAP_STREAMWIDTH)+(HEIGHTMAP_STREAMWIDTH-1)] =
+            tmpchunk[j];
     }
 
     // Set new chunks loading states

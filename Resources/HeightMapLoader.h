@@ -68,7 +68,18 @@
     const uint32_t HeightMapLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
     const double HeightMapLoaderIdleSleepTime = 0.01;
     const double HeightMapLoaderErrorSleepTime = 0.1;
+    const float HeightMapLoaderDefaultFlatY = 10.0f;
     const char HeightMapLoaderVHMPFilePath[] = "World/vhmp/";
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  HeightMap flags enumeration                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    enum HeightMapFlags
+    {
+        HEIGHTMAP_FLAGS_NONE = 0x00,
+        HEIGHTMAP_FLAGS_RENDERSEA = 0x01
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -105,6 +116,7 @@
         bool loading;
         int32_t chunkX;
         int32_t chunkY;
+        int32_t flags;
     };
 
 
@@ -170,6 +182,15 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get heightmap flags                                           //
+            //  return : heightmap flags                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getFlags(uint32_t heightmap)
+            {
+                return (m_chunksptrs[heightmap]->flags);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Get heightmap chunk X                                         //
             //  return : heightmap chunk X                                    //
             ////////////////////////////////////////////////////////////////////
@@ -227,7 +248,7 @@
             //  return : True if the heightmap chunk is updated               //
             ////////////////////////////////////////////////////////////////////
             bool updateChunk(VertexBuffer& vertexBuffer,
-                int32_t chunkX, int32_t chunkY);
+                HeightMapChunkState& chunk, int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards top                          //
@@ -280,6 +301,7 @@
             VertexBuffer*           m_heightmaps;       // Heightmaps meshes
             VertexBuffer*           m_heightptrs[HEIGHTMAP_ASSETSCOUNT];
             HeightMapChunkState     m_chunks[HEIGHTMAP_ASSETSCOUNT];
+            HeightMapChunkState*    m_chunksptrs[HEIGHTMAP_ASSETSCOUNT];
 
             float*                  m_vertices;         // Chunk vertices
             uint16_t*               m_indices;          // Chunk indices

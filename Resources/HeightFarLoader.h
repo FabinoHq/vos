@@ -68,7 +68,18 @@
     const uint32_t HeightFarLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
     const double HeightFarLoaderIdleSleepTime = 0.01;
     const double HeightFarLoaderErrorSleepTime = 0.1;
+    const float HeightFarLoaderDefaultFlatY = 10.0f;
     const char HeightFarLoaderVHMPFilePath[] = "World/vhmf/";
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  HeightFar flags enumeration                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    enum HeightFarFlags
+    {
+        HEIGHTFAR_FLAGS_NONE = 0x00,
+        HEIGHTFAR_FLAGS_RENDERSEA = 0x01
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -105,6 +116,7 @@
         bool loading;
         int32_t chunkX;
         int32_t chunkY;
+        int32_t flags;
     };
 
 
@@ -170,6 +182,15 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get heightfar flags                                           //
+            //  return : heightfar flags                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getFlags(uint32_t heightfar)
+            {
+                return (m_chunksptrs[heightfar]->flags);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Get heightfar chunk X                                         //
             //  return : heightfar chunk X                                    //
             ////////////////////////////////////////////////////////////////////
@@ -227,7 +248,7 @@
             //  return : True if the heightfar chunk is updated               //
             ////////////////////////////////////////////////////////////////////
             bool updateChunk(VertexBuffer& vertexBuffer,
-                int32_t chunkX, int32_t chunkY);
+                HeightFarChunkState& chunk, int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightfars pointers towards top                          //
@@ -280,6 +301,7 @@
             VertexBuffer*           m_heightfars;       // Heightfars meshes
             VertexBuffer*           m_heightptrs[HEIGHTFAR_ASSETSCOUNT];
             HeightFarChunkState     m_chunks[HEIGHTFAR_ASSETSCOUNT];
+            HeightFarChunkState*    m_chunksptrs[HEIGHTFAR_ASSETSCOUNT];
 
             float*                  m_vertices;         // Chunk vertices
             uint16_t*               m_indices;          // Chunk indices
