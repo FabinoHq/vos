@@ -253,7 +253,7 @@ bool HeightFarLoader::init()
         return false;
     }
 
-    // Set default heightfars pointers
+    // Set default chunks pointers
     for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
     {
         m_chunks[i].heightfar = &m_heightfars[i];
@@ -287,7 +287,6 @@ bool HeightFarLoader::init()
                 m_chunks[cnt].loading = false;
                 m_chunks[cnt].chunkX = (m_chunkX-HEIGHTFAR_STREAMHALFWIDTH)+i;
                 m_chunks[cnt].chunkY = (m_chunkY-HEIGHTFAR_STREAMHALFHEIGHT)+j;
-                m_chunks[cnt].flags = HEIGHTFAR_FLAGS_NONE;
             }
             else
             {
@@ -899,6 +898,9 @@ bool HeightFarLoader::generateFlatChunk(HeightFarChunkData& chunkData)
         }
         ++iOffset;
     }
+
+    // Set heightfar chunk flags
+    chunkData.flags = HEIGHTFAR_FLAGS_NONE;
 
     // Create vertex buffer
     if (!chunkData.heightfar->createHeightFarBuffer(VULKAN_MEMORY_HEIGHTFARS,
