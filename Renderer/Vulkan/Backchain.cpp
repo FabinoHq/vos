@@ -441,11 +441,7 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
             break;
     }
     attachmentDescription[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    attachmentDescription[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    if (multiSamplingMode > MULTI_SAMPLING_NONE)
-    {
-        attachmentDescription[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    }
+    attachmentDescription[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     attachmentDescription[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     attachmentDescription[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     attachmentDescription[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;

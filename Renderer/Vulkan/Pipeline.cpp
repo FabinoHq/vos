@@ -450,7 +450,7 @@ bool Pipeline::createPipeline(
     }
     multisampleInfo.sampleShadingEnable = VK_FALSE;
     multisampleInfo.minSampleShading = 1.0f;
-    switch (GSysSettings.getMultiSamplingMode())
+    switch (GSysSettings.getSampleShadingMode())
     {
         case SAMPLE_SHADING_QUARTER:
             multisampleInfo.sampleShadingEnable = VK_TRUE;
