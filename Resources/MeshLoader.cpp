@@ -691,6 +691,13 @@ bool MeshLoader::loadEmbeddedMeshes()
         return false;
     }
 
+    // Load sea far vertex buffer
+    if (!SeaFarChunk::generateSeaFarChunk(m_meshes[MESHES_SEAFAR]))
+    {
+        // Could not load sea near vertex buffer
+        return false;
+    }
+
     // Embedded meshes successfully loaded
     return true;
 }

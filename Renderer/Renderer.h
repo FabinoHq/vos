@@ -86,6 +86,7 @@
     #include "Shaders/HeightMap.h"
     #include "Shaders/HeightFar.h"
     #include "Shaders/SeaNear.h"
+    #include "Shaders/SeaFar.h"
 
     #include "../Resources/Resources.h"
 

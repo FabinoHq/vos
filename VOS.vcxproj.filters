@@ -251,6 +251,12 @@
     <ClCompile Include="Renderer\SeaNearStream.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\SeaFarChunk.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\SeaFarStream.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -583,6 +589,15 @@
     </ClInclude>
     <ClInclude Include="Renderer\SeaNearStream.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\SeaFarChunk.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\SeaFarStream.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\SeaFar.h">
+      <Filter>Renderer\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

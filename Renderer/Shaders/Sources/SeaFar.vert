@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/HeightFar.frag : Heightfar fragment shader    //
+//     Renderer/Shaders/Sources/SeaFar.vert : SeaFar vertex shader            //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision highp float;
@@ -54,61 +54,47 @@ layout(set = 0, binding = 0) uniform WorldLightUniforms
     float time;
 } worldlight;
 
-// Texture sampler
-layout(set = 2, binding = 0) uniform sampler2DArray texSampler;
+// Camera uniforms
+layout(set = 1, binding = 0) uniform CameraUniforms
+{
+    mat4 projview;
+    mat4 view;
+    vec3 position;
+    float align;
+} camera;
 
-// Distance fades
-const float alphaFadeNear = 800.0;
-const float alphaFadeDistance = 18000.0;
+// Model matrix (push constant)
+layout(push_constant) uniform ModelMatrix
+{
+    mat4 model;
+} matrix;
 
-// Input texture coordinates and output color
-layout(location = 0) in vec2 i_texCoords;
-layout(location = 1) in vec3 i_normals;
-layout(location = 2) in vec3 i_surfaceView;
-layout(location = 3) in vec3 i_surfaceLight;
-layout(location = 4) in vec2 i_distHeight;
-layout(location = 0) out vec4 o_color;
+// Input and output position and texture coordinates
+layout(location = 0) in vec3 i_position;
+layout(location = 1) in vec2 i_texCoords;
+layout(location = 2) in vec3 i_normals;
+layout(location = 0) out vec2 o_texCoords;
+layout(location = 1) out vec3 o_normals;
+layout(location = 2) out vec3 o_surfaceView;
+layout(location = 3) out vec3 o_surfaceLight;
+layout(location = 4) out vec2 o_distHeight;
+out gl_PerVertex
+{
+    vec4 gl_Position;
+};
 
 // Main shader entry point
 void main()
 {
-    // Heightfar texture layers
-    float yHeight = ((i_distHeight.x-100.0)*0.004);
-    float yLayer = clamp(floor(yHeight), 0.0, 3.0);
-    float yLayer2 = clamp(ceil(yHeight-0.8), 0.0, 3.0);
-    float mixLayers = clamp(((yHeight-0.8)-yLayer)*5.0, 0.0, 1.0);
+    // Compute vertex position
+    vec4 vertexPos = (matrix.model*vec4(i_position, 1.0));
+    o_texCoords = i_texCoords;
+    o_normals = normalize(mat3(matrix.model)*i_normals);
+    o_surfaceView = (camera.position - vertexPos.xyz);
+    o_surfaceLight = (worldlight.position - vertexPos.xyz);
+    o_distHeight.x = i_position.y;
+    o_distHeight.y = length((camera.view*vertexPos).xyz);
 
-    // Sample textures
-    vec4 texColor = texture(texSampler, vec3(i_texCoords, yLayer));
-    vec4 texColor2 = texture(texSampler, vec3(i_texCoords, yLayer2));
-    vec4 fragOutput = mix(texColor, texColor2, mixLayers);
-
-    // Compute distance fades
-    float alphaFade = clamp(
-        clamp(((i_distHeight.y-alphaFadeNear)*0.02), 0.0, 1.0)*
-        clamp(1.0-((i_distHeight.y-alphaFadeDistance)*0.002), 0.0, 1.0),
-        0.0, 1.0
-    );
-    fragOutput.a *= alphaFade;
-
-    // Compute world light
-    float dirLight = clamp(dot(i_normals, worldlight.direction), 0.0, 1.0);
-    vec3 worldLight = (worldlight.color.rgb*worldlight.color.a*dirLight);
-    vec3 ambientLight = (worldlight.ambient.rgb*worldlight.ambient.a);
-    vec3 surfaceView = normalize(i_surfaceView);
-    vec3 surfaceLight = normalize(i_surfaceLight);
-    vec3 halfSurface = normalize(surfaceLight+surfaceView);
-    float dotLight = clamp(dot(i_normals, surfaceLight), 0.0, 1.0);
-    float specular = pow(clamp(dot(i_normals, halfSurface), 0.0001, 1.0), 16.0);
-    vec3 pointLight = (worldlight.color.rgb*worldlight.color.a*dotLight);
-    vec3 specLight = (worldlight.color.rgb*worldlight.color.a*specular);
-
-    // Compute output color
-    o_color = vec4(
-        (fragOutput.xyz*ambientLight) +
-        (fragOutput.xyz*worldLight) +
-        (fragOutput.xyz*pointLight)*vec3(0.4) +
-        (fragOutput.xyz*specLight)*vec3(0.35),
-        fragOutput.a
-    );
+    // Compute output vertex
+    gl_Position = (camera.projview*vertexPos);
 }

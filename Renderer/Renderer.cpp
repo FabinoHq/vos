@@ -494,6 +494,23 @@ bool Renderer::initPipelines()
         return false;
     }
 
+    // Create sea far pipeline
+    pipelines[RENDERER_PIPELINE_SEAFAR].createVertexShader(
+        SeaFarVertexShader, SeaFarVertexShaderSize
+    );
+    pipelines[RENDERER_PIPELINE_SEAFAR].createFragmentShader(
+        SeaFarFragmentShader, SeaFarFragmentShaderSize
+    );
+    if (!pipelines[RENDERER_PIPELINE_SEAFAR].createPipeline(
+        VERTEX_INPUTS_STATICMESH, true, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
+    {
+        // Could not create sea far pipeline
+        SysMessage::box() << "[0x305E] Could not create seafar pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
     // Renderer pipelines are ready
     return true;
 }

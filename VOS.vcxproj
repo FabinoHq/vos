@@ -228,6 +228,8 @@
     <ClCompile Include="Renderer\OrbitalCam.cpp" />
     <ClCompile Include="Renderer\ProcSprite.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="Renderer\SeaFarChunk.cpp" />
+    <ClCompile Include="Renderer\SeaFarStream.cpp" />
     <ClCompile Include="Renderer\SeaNearChunk.cpp" />
     <ClCompile Include="Renderer\SeaNearStream.cpp" />
     <ClCompile Include="Renderer\Shapes\CuboidShape.cpp" />
@@ -317,6 +319,8 @@
     <ClInclude Include="Renderer\OrbitalCam.h" />
     <ClInclude Include="Renderer\ProcSprite.h" />
     <ClInclude Include="Renderer\Renderer.h" />
+    <ClInclude Include="Renderer\SeaFarChunk.h" />
+    <ClInclude Include="Renderer\SeaFarStream.h" />
     <ClInclude Include="Renderer\SeaNearChunk.h" />
     <ClInclude Include="Renderer\SeaNearStream.h" />
     <ClInclude Include="Renderer\Shaders\Default.h" />
@@ -327,6 +331,7 @@
     <ClInclude Include="Renderer\Shaders\NinePatch.h" />
     <ClInclude Include="Renderer\Shaders\PxText.h" />
     <ClInclude Include="Renderer\Shaders\Rectangle.h" />
+    <ClInclude Include="Renderer\Shaders\SeaFar.h" />
     <ClInclude Include="Renderer\Shaders\SeaNear.h" />
     <ClInclude Include="Renderer\Shaders\SkyBox.h" />
     <ClInclude Include="Renderer\Shaders\SkyProc.h" />

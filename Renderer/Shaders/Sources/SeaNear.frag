@@ -68,7 +68,7 @@ layout(location = 0) out vec4 o_color;
 // Main shader entry point
 void main()
 {
-    // Compute distance fades
+    // Compute distance fade
     float alphaFade = clamp(
         1.0-((i_distHeight.y-alphaFadeDistance)*0.01), 0.0, 1.0
     );

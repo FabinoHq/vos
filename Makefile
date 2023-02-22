@@ -80,8 +80,8 @@ VOS: main.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
 	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
-	Renderer/SeaNearChunk.o \
-	Renderer/SeaNearStream.o \
+	Renderer/SeaNearChunk.o Renderer/SeaFarChunk.o \
+	Renderer/SeaNearStream.o Renderer/SeaFarStream.o \
 	Renderer/WorldLight.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
@@ -121,8 +121,8 @@ VOS: main.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
 	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
-	Renderer/SeaNearChunk.o \
-	Renderer/SeaNearStream.o \
+	Renderer/SeaNearChunk.o Renderer/SeaFarChunk.o \
+	Renderer/SeaNearStream.o Renderer/SeaFarStream.o \
 	Renderer/WorldLight.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
@@ -330,8 +330,14 @@ Renderer/HeightFarStream.o: Renderer/HeightFarStream.cpp
 Renderer/SeaNearChunk.o: Renderer/SeaNearChunk.cpp
 	$(CC) -o Renderer/SeaNearChunk.o -c Renderer/SeaNearChunk.cpp $(CFLAGS)
 
+Renderer/SeaFarChunk.o: Renderer/SeaFarChunk.cpp
+	$(CC) -o Renderer/SeaFarChunk.o -c Renderer/SeaFarChunk.cpp $(CFLAGS)
+
 Renderer/SeaNearStream.o: Renderer/SeaNearStream.cpp
 	$(CC) -o Renderer/SeaNearStream.o -c Renderer/SeaNearStream.cpp $(CFLAGS)
+
+Renderer/SeaFarStream.o: Renderer/SeaFarStream.cpp
+	$(CC) -o Renderer/SeaFarStream.o -c Renderer/SeaFarStream.cpp $(CFLAGS)
 
 
 Renderer/WorldLight.o: Renderer/WorldLight.cpp

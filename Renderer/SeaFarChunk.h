@@ -37,132 +37,92 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightFarStream.h : HeightFar stream management               //
+//     Renderer/SeaFarChunk.h : Sea far chunk management                      //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_HEIGHTFARSTREAM_HEADER
-#define VOS_RENDERER_HEIGHTFARSTREAM_HEADER
+#ifndef VOS_RENDERER_SEAFARCHUNK_HEADER
+#define VOS_RENDERER_SEAFARCHUNK_HEADER
 
     #include "../System/System.h"
     #include "Vulkan/Vulkan.h"
+    #include "Vulkan/Swapchain.h"
+    #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/VertexBuffer.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
-    #include "../Resources/Resources.h"
-    #include "../Resources/HeightFarLoader.h"
-    #include "../Resources/TextureLoader.h"
-
-    #include "HeightFarChunk.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightFarStream class definition                                      //
+    //  SeaFarChunk settings                                                  //
     ////////////////////////////////////////////////////////////////////////////
-    class HeightFarStream
+    const uint16_t SeaFarChunkWidth = 128;
+    const uint16_t SeaFarChunkHeight = 128;
+    const float SeaFarChunkPlaneWidth = 64.0f;
+    const float SeaFarChunkPlaneHeight = 64.0f;
+    const float SeaFarChunkXStride = 8192.0f;
+    const float SeaFarChunkZStride = 8192.0f;
+    const float SeaFarChunkTexcoordsWidth = 128.0f;
+    const float SeaFarChunkTexcoordsHeight = 128.0f;
+    const uint32_t SeaFarChunkVerticesCount =
+        ((SeaFarChunkWidth+1)*(SeaFarChunkHeight+1)*8);
+    const uint32_t SeaFarChunkIndicesCount =
+        (6*SeaFarChunkWidth*SeaFarChunkHeight);
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SeaFarChunk class definition                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    class SeaFarChunk : public Transform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarStream default constructor                           //
+            //  SeaFarChunk default constructor                               //
             ////////////////////////////////////////////////////////////////////
-            HeightFarStream();
+            SeaFarChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarStream destructor                                    //
+            //  SeaFarChunk virtual destructor                                //
             ////////////////////////////////////////////////////////////////////
-            ~HeightFarStream();
+            virtual ~SeaFarChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init heightfar stream                                         //
-            //  return : True if the heightfar stream is successfully created //
+            //  Init sea far chunk                                            //
+            //  return : True if the sea far chunk is successfully created    //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Reload heightfar stream                                       //
-            //  return : True if the heightfar stream is reloading            //
-            ////////////////////////////////////////////////////////////////////
-            inline bool isReady()
-            {
-                return (GResources.heightfars.getState() ==
-                    HEIGHTFARLOADER_STATE_IDLE);
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Reload heightfar stream                                       //
-            //  return : True if the heightfar stream is reloading            //
-            ////////////////////////////////////////////////////////////////////
-            inline bool reload(int32_t chunkX, int32_t chunkY)
-            {
-                if (GResources.heightfars.reload(chunkX, chunkY))
-                {
-                    m_chunkX = GResources.heightfars.getChunkX();
-                    m_chunkY = GResources.heightfars.getChunkY();
-                    return true;
-                }
-                return false;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Update heightfar stream                                       //
-            //  return : True if the heightfar stream is updated              //
-            ////////////////////////////////////////////////////////////////////
-            inline bool update(int32_t chunkX, int32_t chunkY)
-            {
-                if (GResources.heightfars.update(chunkX, chunkY))
-                {
-                    m_chunkX = GResources.heightfars.getChunkX();
-                    m_chunkY = GResources.heightfars.getChunkY();
-                    return true;
-                }
-                return false;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Render heightfar stream                                       //
+            //  Render sea far chunk                                          //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
+        public:
             ////////////////////////////////////////////////////////////////////
-            //  Get heightfar chunk X                                         //
-            //  return : Heightfar chunk X                                    //
+            //  Generate sea far chunk                                        //
+            //  return : True if the sea far chunk is generated               //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getChunkX() const
-            {
-                return m_chunkX;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get heightfar chunk Y                                         //
-            //  return : Heightfar chunk Y                                    //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t getChunkY() const
-            {
-                return m_chunkY;
-            }
+            static bool generateSeaFarChunk(VertexBuffer& vertexBuffer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarStream private copy constructor : Not copyable       //
+            //  SeaFarChunk private copy constructor : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            HeightFarStream(const HeightFarStream&) = delete;
+            SeaFarChunk(const SeaFarChunk&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarStream private copy operator : Not copyable          //
+            //  SeaFarChunk private copy operator : Not copyable              //
             ////////////////////////////////////////////////////////////////////
-            HeightFarStream& operator=(const HeightFarStream&) = delete;
+            SeaFarChunk& operator=(const SeaFarChunk&) = delete;
 
 
         private:
-            HeightFarChunk      m_heightFarChunk;   // HeightFar chunk
-            int32_t             m_chunkX;           // Chunk X
-            int32_t             m_chunkY;           // Chunk Y
     };
 
 
-#endif // VOS_RENDERER_HEIGHTFARSTREAM_HEADER
+#endif // VOS_RENDERER_SEAFARCHUNK_HEADER

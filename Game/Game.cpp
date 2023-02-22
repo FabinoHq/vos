@@ -66,6 +66,7 @@ m_staticMesh(),
 m_heightMapStream(),
 m_heightFarStream(),
 m_seaNearStream(),
+m_seaFarStream(),
 m_boundingCircle(),
 m_boundingCircle2(),
 m_collideCircle(),
@@ -247,16 +248,23 @@ bool Game::init()
         return false;
     }
 
-    // Load spawn heightmap chunks
-    m_heightMapStream.reload(0, 0);
-    m_heightFarStream.reload(0, 0);
-
     // Init sea near stream
     if (!m_seaNearStream.init())
     {
         // Could not load sea near stream
         return false;
     }
+
+    // Init sea far stream
+    if (!m_seaFarStream.init())
+    {
+        // Could not load sea far stream
+        return false;
+    }
+
+    // Load spawn heightmap chunks
+    m_heightMapStream.reload(0, 0);
+    m_heightFarStream.reload(0, 0);
 
     // Wait for spawn chunks to be loaded
     bool spawnLoaded = false;
@@ -606,6 +614,13 @@ void Game::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTFAR);
     m_heightFarStream.render();
 
+    // Render seafar stream
+    GRenderer.bindPipeline(RENDERER_PIPELINE_SEAFAR);
+    GRenderer.bindVertexBuffer(MESHES_SEAFAR);
+    m_seaFarStream.render(
+        m_heightFarStream.getChunkX(), m_heightFarStream.getChunkY()
+    );
+
 
     // Clear depth buffer
     GMainRenderer.clearDepth();
@@ -615,7 +630,7 @@ void Game::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTMAP);
     m_heightMapStream.render();
 
-    // Render sea near
+    // Render seanear stream
     GRenderer.bindPipeline(RENDERER_PIPELINE_SEANEAR);
     GRenderer.bindVertexBuffer(MESHES_SEANEAR);
     m_seaNearStream.render(

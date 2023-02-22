@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Shaders/Sources/HeightFar.frag : Heightfar fragment shader    //
+//     Renderer/Shaders/Sources/SeaFar.frag : SeaFar fragment shader          //
 ////////////////////////////////////////////////////////////////////////////////
 #version 450
 precision highp float;
@@ -54,9 +54,6 @@ layout(set = 0, binding = 0) uniform WorldLightUniforms
     float time;
 } worldlight;
 
-// Texture sampler
-layout(set = 2, binding = 0) uniform sampler2DArray texSampler;
-
 // Distance fades
 const float alphaFadeNear = 800.0;
 const float alphaFadeDistance = 18000.0;
@@ -72,43 +69,15 @@ layout(location = 0) out vec4 o_color;
 // Main shader entry point
 void main()
 {
-    // Heightfar texture layers
-    float yHeight = ((i_distHeight.x-100.0)*0.004);
-    float yLayer = clamp(floor(yHeight), 0.0, 3.0);
-    float yLayer2 = clamp(ceil(yHeight-0.8), 0.0, 3.0);
-    float mixLayers = clamp(((yHeight-0.8)-yLayer)*5.0, 0.0, 1.0);
-
-    // Sample textures
-    vec4 texColor = texture(texSampler, vec3(i_texCoords, yLayer));
-    vec4 texColor2 = texture(texSampler, vec3(i_texCoords, yLayer2));
-    vec4 fragOutput = mix(texColor, texColor2, mixLayers);
-
     // Compute distance fades
     float alphaFade = clamp(
         clamp(((i_distHeight.y-alphaFadeNear)*0.02), 0.0, 1.0)*
         clamp(1.0-((i_distHeight.y-alphaFadeDistance)*0.002), 0.0, 1.0),
         0.0, 1.0
     );
-    fragOutput.a *= alphaFade;
-
-    // Compute world light
-    float dirLight = clamp(dot(i_normals, worldlight.direction), 0.0, 1.0);
-    vec3 worldLight = (worldlight.color.rgb*worldlight.color.a*dirLight);
-    vec3 ambientLight = (worldlight.ambient.rgb*worldlight.ambient.a);
-    vec3 surfaceView = normalize(i_surfaceView);
-    vec3 surfaceLight = normalize(i_surfaceLight);
-    vec3 halfSurface = normalize(surfaceLight+surfaceView);
-    float dotLight = clamp(dot(i_normals, surfaceLight), 0.0, 1.0);
-    float specular = pow(clamp(dot(i_normals, halfSurface), 0.0001, 1.0), 16.0);
-    vec3 pointLight = (worldlight.color.rgb*worldlight.color.a*dotLight);
-    vec3 specLight = (worldlight.color.rgb*worldlight.color.a*specular);
+    vec4 fragOutput = vec4(0.1, 0.3, 0.5, 1.0);
+    fragOutput.a *= (alphaFade*0.5);
 
     // Compute output color
-    o_color = vec4(
-        (fragOutput.xyz*ambientLight) +
-        (fragOutput.xyz*worldLight) +
-        (fragOutput.xyz*pointLight)*vec3(0.4) +
-        (fragOutput.xyz*specLight)*vec3(0.35),
-        fragOutput.a
-    );
+    o_color = fragOutput;
 }
