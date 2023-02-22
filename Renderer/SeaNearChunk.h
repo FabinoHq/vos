@@ -58,10 +58,10 @@
     ////////////////////////////////////////////////////////////////////////////
     //  SeaNearChunk settings                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    const uint16_t SeaNearChunkWidth = 128;
-    const uint16_t SeaNearChunkHeight = 128;
-    const float SeaNearChunkPlaneWidth = 4.0f;
-    const float SeaNearChunkPlaneHeight = 4.0f;
+    const uint16_t SeaNearChunkWidth = 4;
+    const uint16_t SeaNearChunkHeight = 4;
+    const float SeaNearChunkPlaneWidth = 128.0f;
+    const float SeaNearChunkPlaneHeight = 128.0f;
     const float SeaNearChunkXStride = 512.0f;
     const float SeaNearChunkZStride = 512.0f;
     const float SeaNearChunkTexcoordsWidth = 128.0f;

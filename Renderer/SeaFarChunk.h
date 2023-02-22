@@ -58,10 +58,10 @@
     ////////////////////////////////////////////////////////////////////////////
     //  SeaFarChunk settings                                                  //
     ////////////////////////////////////////////////////////////////////////////
-    const uint16_t SeaFarChunkWidth = 128;
-    const uint16_t SeaFarChunkHeight = 128;
-    const float SeaFarChunkPlaneWidth = 64.0f;
-    const float SeaFarChunkPlaneHeight = 64.0f;
+    const uint16_t SeaFarChunkWidth = 4;
+    const uint16_t SeaFarChunkHeight = 4;
+    const float SeaFarChunkPlaneWidth = 2048.0f;
+    const float SeaFarChunkPlaneHeight = 2048.0f;
     const float SeaFarChunkXStride = 8192.0f;
     const float SeaFarChunkZStride = 8192.0f;
     const float SeaFarChunkTexcoordsWidth = 128.0f;

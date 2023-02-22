@@ -122,7 +122,7 @@ bool Game::init()
     }
     m_freeflycam.setZ(1.0f);
     m_freeflycam.setSpeed(10.0f);
-    m_freeflycam.setY(450.0f);
+    m_freeflycam.setY(550.0f);
     m_freeflycam.setNearPlane(CameraDefaultNearPlane);
     m_freeflycam.setFarPlane(CameraDefaultFarPlane);
 
