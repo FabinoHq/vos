@@ -63,19 +63,21 @@ layout(location = 0) in vec2 i_texCoords;
 layout(location = 1) in vec3 i_normals;
 layout(location = 2) in vec3 i_surfaceView;
 layout(location = 3) in vec3 i_surfaceLight;
-layout(location = 4) in vec2 i_distHeight;
+layout(location = 4) in float i_distance;
 layout(location = 0) out vec4 o_color;
 
 // Main shader entry point
 void main()
 {
+    // Water color
+    vec4 fragOutput = vec4(0.1, 0.3, 0.5, 1.0);
+
     // Compute distance fades
     float alphaFade = clamp(
-        clamp(((i_distHeight.y-alphaFadeNear)*0.02), 0.0, 1.0)*
-        clamp(1.0-((i_distHeight.y-alphaFadeDistance)*0.002), 0.0, 1.0),
+        clamp(((i_distance-alphaFadeNear)*0.02), 0.0, 1.0)*
+        clamp(1.0-((i_distance-alphaFadeDistance)*0.002), 0.0, 1.0),
         0.0, 1.0
     );
-    vec4 fragOutput = vec4(0.1, 0.3, 0.5, 1.0);
     fragOutput.a *= alphaFade;
 
     // Compute output color

@@ -77,7 +77,7 @@ layout(location = 0) out vec2 o_texCoords;
 layout(location = 1) out vec3 o_normals;
 layout(location = 2) out vec3 o_surfaceView;
 layout(location = 3) out vec3 o_surfaceLight;
-layout(location = 4) out vec2 o_distHeight;
+layout(location = 4) out float o_distance;
 out gl_PerVertex
 {
     vec4 gl_Position;
@@ -92,8 +92,7 @@ void main()
     o_normals = normalize(mat3(matrix.model)*i_normals);
     o_surfaceView = (camera.position - vertexPos.xyz);
     o_surfaceLight = (worldlight.position - vertexPos.xyz);
-    o_distHeight.x = i_position.y;
-    o_distHeight.y = length((camera.view*vertexPos).xyz);
+    o_distance = length((camera.view*vertexPos).xyz);
 
     // Compute output vertex
     gl_Position = (camera.projview*vertexPos);

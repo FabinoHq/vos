@@ -55,6 +55,7 @@ layout(set = 0, binding = 0) uniform WorldLightUniforms
 } worldlight;
 
 // Distance fades
+const float alphaFadeNear = 1200.0;
 const float alphaFadeDistance = 1200.0;
 
 // Input texture coordinates and output color
@@ -62,18 +63,22 @@ layout(location = 0) in vec2 i_texCoords;
 layout(location = 1) in vec3 i_normals;
 layout(location = 2) in vec3 i_surfaceView;
 layout(location = 3) in vec3 i_surfaceLight;
-layout(location = 4) in vec2 i_distHeight;
+layout(location = 4) in float i_distance;
 layout(location = 0) out vec4 o_color;
 
 // Main shader entry point
 void main()
 {
-    // Compute distance fade
-    float alphaFade = clamp(
-        1.0-((i_distHeight.y-alphaFadeDistance)*0.01), 0.0, 1.0
-    );
+    // Water color
     vec4 fragOutput = vec4(0.1, 0.3, 0.5, 1.0);
-    fragOutput.a *= (alphaFade*0.5);
+
+    // Compute distance fades
+    float alphaFade = clamp(
+        clamp(((i_distance+alphaFadeNear)*0.0005), 0.7, 1.0)*
+        clamp(1.0-((i_distance-alphaFadeDistance)*0.002), 0.0, 1.0),
+        0.0, 1.0
+    );
+    fragOutput.a *= alphaFade;
 
     // Compute output color
     o_color = fragOutput;
