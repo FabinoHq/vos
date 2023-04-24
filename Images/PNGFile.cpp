@@ -47,6 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 PNGFile::PNGFile() :
 m_loaded(false),
+m_buffer(0),
 m_image(0),
 m_width(0),
 m_height(0)
@@ -66,6 +67,7 @@ PNGFile::~PNGFile()
     m_image = 0;
     m_height = 0;
     m_width = 0;
+    m_buffer = 0;
     m_loaded = false;
 }
 
@@ -279,6 +281,170 @@ bool PNGFile::loadImage(const std::string& filepath)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Load PNG buffer                                                           //
+//  return : True if PNG buffer is successfully loaded                        //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::loadImage(unsigned char* buffer, size_t size)
+{
+    // Check image loaded state
+    if (m_loaded)
+    {
+        // Destroy current image
+        destroyImage();
+    }
+
+    // Check image data
+    if (!buffer || (size <= 0))
+    {
+        // Invalid image data
+        return false;
+    }
+
+    // Reset image cursor
+    m_buffer = buffer;
+    unsigned char* bufferEnd = (m_buffer+size);
+
+    // Read PNG file signature
+    unsigned char pngSignature[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    if ((m_buffer+8) >= bufferEnd)
+    {
+        // Could not read PNG file signature
+        return false;
+    }
+    memcpy((char*)&pngSignature, m_buffer, 8);
+    m_buffer += 8;
+
+    // Check PNG file signature
+    if ((pngSignature[0] != PNGFileSignature[0]) ||
+        (pngSignature[1] != PNGFileSignature[1]) ||
+        (pngSignature[2] != PNGFileSignature[2]) ||
+        (pngSignature[3] != PNGFileSignature[3]) ||
+        (pngSignature[4] != PNGFileSignature[4]) ||
+        (pngSignature[5] != PNGFileSignature[5]) ||
+        (pngSignature[6] != PNGFileSignature[6]) ||
+        (pngSignature[7] != PNGFileSignature[7]))
+    {
+        // Invalid PNG file signature
+        return false;
+    }
+
+    // Read PNG file IHDR chunk header
+    PNGFileChunkHeader pngIHDRChunkHeader = {0, {0, 0, 0, 0}};
+    if ((m_buffer+PNGFileChunkHeaderSize) >= bufferEnd)
+    {
+        // Could not read PNG file IHDR chunk header
+        return false;
+    }
+    memcpy((char*)&pngIHDRChunkHeader, m_buffer, PNGFileChunkHeaderSize);
+    m_buffer += PNGFileChunkHeaderSize;
+    pngIHDRChunkHeader.length = SysByteSwap32(pngIHDRChunkHeader.length);
+
+    // Check PNG file IHDR chunk type
+    if ((pngIHDRChunkHeader.type[0] != PNGFileIHDRChunkType[0]) ||
+        (pngIHDRChunkHeader.type[1] != PNGFileIHDRChunkType[1]) ||
+        (pngIHDRChunkHeader.type[2] != PNGFileIHDRChunkType[2]) ||
+        (pngIHDRChunkHeader.type[3] != PNGFileIHDRChunkType[3]))
+    {
+        // Invalid PNG file IHDR chunk type
+        return false;
+    }
+
+    // Check PNG file IHDR chunk length
+    if (pngIHDRChunkHeader.length != PNGFileIHDRChunkSize)
+    {
+        // Invalid PNG file IHDR chunk length
+        return false;
+    }
+
+    // Read PNG file IHDR chunk
+    PNGFileIHDRChunk pngIHDRChunk = {0, 0, 0, 0, 0, 0, 0};
+    if ((m_buffer+PNGFileIHDRChunkSize) >= bufferEnd)
+    {
+        // Could not read PNG file IHDR chunk
+        return false;
+    }
+    memcpy((char*)&pngIHDRChunk, m_buffer, PNGFileIHDRChunkSize);
+    m_buffer += PNGFileIHDRChunkSize;
+
+    // Read PNG file IHDR chunk CRC
+    uint32_t pngIHDRChunkCRC = 0;
+    if ((m_buffer+PNGFileChunkCRCSize) >= bufferEnd)
+    {
+        // Could not read PNG file IHDR chunk CRC
+        return false;
+    }
+    memcpy((char*)&pngIHDRChunkCRC, m_buffer, PNGFileChunkCRCSize);
+    m_buffer += PNGFileChunkCRCSize;
+    pngIHDRChunkCRC = SysByteSwap32(pngIHDRChunkCRC);
+
+    // Check PNG file IHDR chunk CRC
+    uint32_t checkIHDRChunkCRC = SysCRC32Default;
+    checkIHDRChunkCRC = SysUpdateCRC32(
+        checkIHDRChunkCRC, pngIHDRChunkHeader.type, PNGFileChunkHeaderTypeSize
+    );
+    checkIHDRChunkCRC = SysUpdateCRC32(
+        checkIHDRChunkCRC, (unsigned char*)&pngIHDRChunk, PNGFileIHDRChunkSize
+    );
+    if ((checkIHDRChunkCRC^SysCRC32Final) != pngIHDRChunkCRC)
+    {
+        // Invalid PNG file IHDR chunk CRC
+        return false;
+    }
+
+    // Swap PNG file IHDR chunk byte endianness
+    pngIHDRChunk.width = SysByteSwap32(pngIHDRChunk.width);
+    pngIHDRChunk.height = SysByteSwap32(pngIHDRChunk.height);
+
+    // Check PNG file image size
+    if ((pngIHDRChunk.width <= 0) || (pngIHDRChunk.height <= 0) ||
+        (pngIHDRChunk.width > PNGFileMaxImageWidth) ||
+        (pngIHDRChunk.height > PNGFileMaxImageHeight))
+    {
+        // Invalid PNG file image size
+        return false;
+    }
+
+    // Check PNG file bit depth
+    if (pngIHDRChunk.bitDepth != 8)
+    {
+        // Unsupported PNG file bit depth
+        return false;
+    }
+
+    // Check PNG file compression
+    if (pngIHDRChunk.compression != 0)
+    {
+        // Unsupported PNG file compression
+        return false;
+    }
+
+    // Check PNG file filter
+    if (pngIHDRChunk.filter != 0)
+    {
+        // Unsupported PNG file filter
+        return false;
+    }
+
+    // Check PNG file interlace
+    if (pngIHDRChunk.interlace != 0)
+    {
+        // Unsupported PNG file interlace
+        return false;
+    }
+
+    // Load PNG buffer image data
+    if (!loadPNGData(bufferEnd, pngIHDRChunk))
+    {
+        // Could not load PNG image data
+        return false;
+    }
+
+    // PNG buffer is successfully loaded
+    m_loaded = true;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Save PNG file                                                             //
 //  return : True if PNG file is successfully saved                           //
 ////////////////////////////////////////////////////////////////////////////////
@@ -314,6 +480,7 @@ void PNGFile::destroyImage()
     m_image = 0;
     m_height = 0;
     m_width = 0;
+    m_buffer = 0;
     m_loaded = false;
 }
 
@@ -502,9 +669,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             // Could not read PNG file chunk header
             break;
         }
-        pngIDATChunkHeader.length = SysByteSwap32(
-            pngIDATChunkHeader.length
-        );
+        pngIDATChunkHeader.length = SysByteSwap32(pngIDATChunkHeader.length);
         if ((pngIDATChunkHeader.type[0] == PNGFileIDATChunkType[0]) &&
             (pngIDATChunkHeader.type[1] == PNGFileIDATChunkType[1]) &&
             (pngIDATChunkHeader.type[2] == PNGFileIDATChunkType[2]) &&
@@ -549,9 +714,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             if (rawData) { delete[] rawData; }
             return false;
         }
-        pngIDATChunkHeader.length = SysByteSwap32(
-            pngIDATChunkHeader.length
-        );
+        pngIDATChunkHeader.length = SysByteSwap32(pngIDATChunkHeader.length);
         if ((pngIDATChunkHeader.type[0] != PNGFileIDATChunkType[0]) ||
             (pngIDATChunkHeader.type[1] != PNGFileIDATChunkType[1]) ||
             (pngIDATChunkHeader.type[2] != PNGFileIDATChunkType[2]) ||
@@ -718,6 +881,276 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     m_height = pngIHDRChunk.height;
 
     // PNG file image data is successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Load PNG buffer image data                                                //
+//  return : True if PNG buffer image data is successfully loaded             //
+////////////////////////////////////////////////////////////////////////////////
+bool PNGFile::loadPNGData(unsigned char* bufferEnd,
+    PNGFileIHDRChunk& pngIHDRChunk)
+{
+    // Set pixel depth
+    uint32_t pixelDepth = 0;
+    switch (pngIHDRChunk.colorType)
+    {
+        case PNGFILE_COLOR_GREYSCALE:
+            pixelDepth = 1;
+            break;
+        case PNGFILE_COLOR_RGB:
+            pixelDepth = 3;
+            break;
+        case PNGFILE_COLOR_PALETTE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_GREYSCALE_ALPHA:
+            pixelDepth = 2;
+            break;
+        case PNGFILE_COLOR_RGBA:
+            pixelDepth = 4;
+            break;
+        default:
+            // Unsupported PNG file color type
+            return false;
+    }
+
+    // Read PNG file IDAT chunks headers
+    unsigned char* pngIDATstart = m_buffer;
+    size_t pngIDATChunksLength = 0;
+    unsigned int pngIDATChunksCount = 0;
+    PNGFileChunkHeader pngIDATChunkHeader;
+    while (m_buffer < bufferEnd)
+    {
+        pngIDATChunkHeader = {0, {0, 0, 0, 0}};
+        if ((m_buffer+PNGFileChunkHeaderSize) >= bufferEnd)
+        {
+            // Could not read PNG file chunk header
+            break;
+        }
+        memcpy((char*)&pngIDATChunkHeader, m_buffer, PNGFileChunkHeaderSize);
+        m_buffer += PNGFileChunkHeaderSize;
+
+        pngIDATChunkHeader.length = SysByteSwap32(
+            pngIDATChunkHeader.length
+        );
+        if ((pngIDATChunkHeader.type[0] == PNGFileIDATChunkType[0]) &&
+            (pngIDATChunkHeader.type[1] == PNGFileIDATChunkType[1]) &&
+            (pngIDATChunkHeader.type[2] == PNGFileIDATChunkType[2]) &&
+            (pngIDATChunkHeader.type[3] == PNGFileIDATChunkType[3]))
+        {
+            // PNG file IDAT chunk header found
+            pngIDATChunksLength += pngIDATChunkHeader.length;
+            ++pngIDATChunksCount;
+        }
+
+        // Skip current chunk
+        m_buffer += (pngIDATChunkHeader.length + PNGFileChunkCRCSize);
+    }
+    if (pngIDATChunksCount <= 0)
+    {
+        // Could not find any PNG file IDAT chunk header
+        return false;
+    }
+
+    // Allocate raw image data
+    unsigned char* rawData = new (std::nothrow)
+        unsigned char[pngIDATChunksLength];
+    if (!rawData)
+    {
+        // Could not allocate raw image data
+        return false;
+    }
+
+    // Reset input file stream
+    m_buffer = pngIDATstart;
+
+    // Read all IDAT chunks
+    size_t rawDataOffset = 0;
+    for (unsigned int i = 0; i < pngIDATChunksCount;)
+    {
+        pngIDATChunkHeader = {0, {0, 0, 0, 0}};
+        if ((m_buffer+PNGFileChunkHeaderSize) >= bufferEnd)
+        {
+            // Could not read PNG file chunk header
+            if (rawData) { delete[] rawData; }
+            return false;
+        }
+        memcpy((char*)&pngIDATChunkHeader, m_buffer, PNGFileChunkHeaderSize);
+        m_buffer += PNGFileChunkHeaderSize;
+        
+        pngIDATChunkHeader.length = SysByteSwap32(
+            pngIDATChunkHeader.length
+        );
+        if ((pngIDATChunkHeader.type[0] != PNGFileIDATChunkType[0]) ||
+            (pngIDATChunkHeader.type[1] != PNGFileIDATChunkType[1]) ||
+            (pngIDATChunkHeader.type[2] != PNGFileIDATChunkType[2]) ||
+            (pngIDATChunkHeader.type[3] != PNGFileIDATChunkType[3]))
+        {
+            // Skip current chunk
+            m_buffer += (pngIDATChunkHeader.length + PNGFileChunkCRCSize);
+        }
+        else
+        {
+            // Read PNG file raw image data
+            if ((m_buffer+pngIDATChunkHeader.length) >= bufferEnd)
+            {
+                // Could not read PNG raw image data
+                if (rawData) { delete[] rawData; }
+                return false;
+            }
+            memcpy(
+                (char*)&rawData[rawDataOffset],
+                m_buffer, pngIDATChunkHeader.length
+            );
+            m_buffer += pngIDATChunkHeader.length;
+
+            // Read PNG file IDAT chunk CRC
+            uint32_t pngIDATChunkCRC = 0;
+            if ((m_buffer+PNGFileChunkCRCSize) >= bufferEnd)
+            {
+                // Could not read PNG file IDAT chunk CRC
+                if (rawData) { delete[] rawData; }
+                return false;
+            }
+            memcpy((char*)&pngIDATChunkCRC, m_buffer, PNGFileChunkCRCSize);
+            m_buffer += PNGFileChunkCRCSize;
+            pngIDATChunkCRC = SysByteSwap32(pngIDATChunkCRC);
+
+            // Check PNG file IDAT chunk CRC
+            uint32_t checkIDATChunkCRC = SysCRC32Default;
+            checkIDATChunkCRC = SysUpdateCRC32(
+                checkIDATChunkCRC, pngIDATChunkHeader.type,
+                PNGFileChunkHeaderTypeSize
+            );
+            checkIDATChunkCRC = SysUpdateCRC32(
+                checkIDATChunkCRC, &rawData[rawDataOffset],
+                pngIDATChunkHeader.length
+            );
+            if ((checkIDATChunkCRC^SysCRC32Final) != pngIDATChunkCRC)
+            {
+                // Invalid PNG file IDAT chunk CRC
+                if (rawData) { delete[] rawData; }
+                return false;
+            }
+
+            // Increment raw data offset
+            rawDataOffset += pngIDATChunkHeader.length;
+            ++i;
+        }
+    }
+
+    // Allocate decompressed data
+    size_t pngDataSize =
+        (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
+    unsigned char* pngData = new (std::nothrow) unsigned char[pngDataSize];
+    if (!pngData)
+    {
+        // Could not allocate decompressed data
+        if (rawData) { delete[] rawData; }
+        return false;
+    }
+
+    // Decompress deflate data
+    if (!ZLibDeflateDecompress(
+        rawData, pngIDATChunksLength, pngData, &pngDataSize))
+    {
+        // Could not decompress deflate data
+        if (pngData) { delete[] pngData; }
+        if (rawData) { delete[] rawData; }
+        return false;
+    }
+
+    // Allocate 32bits RGBA internal image data
+    size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
+    m_image = new (std::nothrow) unsigned char[imageSize];
+    if (!m_image)
+    {
+        // Could not allocate internal image data
+        if (pngData) { delete[] pngData; }
+        if (rawData) { delete[] rawData; }
+        return false;
+    }
+
+    // Decode PNG image data
+    switch (pngIHDRChunk.colorType)
+    {
+        case PNGFILE_COLOR_GREYSCALE:
+            // Decode 8 bits greyscale PNG
+            if (!decodePNG8bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height))
+            {
+                // Could not decode 8 bits greyscale PNG
+                if (pngData) { delete[] pngData; }
+                if (rawData) { delete[] rawData; }
+                if (m_image) { delete[] m_image; m_image = 0; }
+                return false;
+            }
+            break;
+        case PNGFILE_COLOR_RGB:
+            // Decode 24 bits RGB PNG
+            if (!decodePNG24bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height))
+            {
+                // Could not decode 24 bits RGB PNG
+                if (pngData) { delete[] pngData; }
+                if (rawData) { delete[] rawData; }
+                if (m_image) { delete[] m_image; m_image = 0; }
+                return false;
+            }
+            break;
+        case PNGFILE_COLOR_PALETTE:
+            // Unsupported PNG file color type
+            return false;
+        case PNGFILE_COLOR_GREYSCALE_ALPHA:
+            // Decode 16 bits greyscale-alpha PNG
+            if (!decodePNG16bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height))
+            {
+                // Could not decode 16 bits greyscale-alpha PNG
+                if (pngData) { delete[] pngData; }
+                if (rawData) { delete[] rawData; }
+                if (m_image) { delete[] m_image; m_image = 0; }
+                return false;
+            }
+            break;
+        case PNGFILE_COLOR_RGBA:
+            // Decode 32 bits RGBA PNG
+            if (!decodePNG32bits(
+                pngData, pngIHDRChunk.width, pngIHDRChunk.height))
+            {
+                // Could not decode 32 bits RGBA PNG
+                if (pngData) { delete[] pngData; }
+                if (rawData) { delete[] rawData; }
+                if (m_image) { delete[] m_image; m_image = 0; }
+                return false;
+            }
+            break;
+        default:
+            // Unsupported PNG file color type
+            if (pngData) { delete[] pngData; }
+            if (rawData) { delete[] rawData; }
+            if (m_image) { delete[] m_image; m_image = 0; }
+            return false;
+    }
+
+    // Destroy decompressed data
+    if (pngData)
+    {
+        delete[] pngData;
+    }
+
+    // Destroy raw image data
+    if (rawData)
+    {
+        delete[] rawData;
+    }
+
+    // Set image size
+    m_width = pngIHDRChunk.width;
+    m_height = pngIHDRChunk.height;
+
+    // PNG buffer image data is successfully loaded
     return true;
 }
 

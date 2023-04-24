@@ -638,12 +638,12 @@ void Game::render()
     );
 
     // Render static mesh
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
     m_staticMesh.bindVertexBuffer();
     m_staticMesh.bindTexture();
-    m_staticMesh.setPosition(0.0f, 430.0f, 0.0f);
+    m_staticMesh.setPosition(0.0f, 700.0f, 0.0f);
     m_staticMesh.setScale(10.0f);
-    m_staticMesh.render();*/
+    m_staticMesh.render();
 
     // Render cuboid shape
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);

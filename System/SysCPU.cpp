@@ -667,6 +667,7 @@ bool SysCPUCheckMaths()
     size_t vector2size = sizeof(Vector2::vec);
     if (vector2size != (sizeof(float)*2))
     {
+        // Invalid Vector2 size
         SysMessage::box() << "[0x1038] Invalid Vector2 size\n";
         SysMessage::box() << "Vector2 size should be 64bits (8 bytes)";
         return false;
@@ -676,6 +677,7 @@ bool SysCPUCheckMaths()
     size_t vector3size = sizeof(Vector3::vec);
     if (vector3size != (sizeof(float)*3))
     {
+        // Invalid Vector3 size
         SysMessage::box() << "[0x1039] Invalid Vector3 size\n";
         SysMessage::box() << "Vector3 size should be 96bits (12 bytes)";
         return false;
@@ -685,6 +687,7 @@ bool SysCPUCheckMaths()
     size_t vector4size = sizeof(Vector4::vec);
     if (vector4size != (sizeof(float)*4))
     {
+        // Invalid Vector4 size
         SysMessage::box() << "[0x103A] Invalid Vector4 size\n";
         SysMessage::box() << "Vector4 size should be 128bits (16 bytes)";
         return false;
@@ -694,6 +697,7 @@ bool SysCPUCheckMaths()
     size_t matrix4size = sizeof(Matrix4x4::mat);
     if (matrix4size != (sizeof(float)*16))
     {
+        // Invalid Matrix4x4 size
         SysMessage::box() << "[0x103B] Invalid Matrix4 size\n";
         SysMessage::box() << "Matrix4 size should be 512bits (64 bytes)";
         return false;

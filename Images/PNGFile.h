@@ -159,6 +159,12 @@
             bool loadImage(const std::string& filepath);
 
             ////////////////////////////////////////////////////////////////////
+            //  Load PNG buffer                                               //
+            //  return : True if PNG buffer is successfully loaded            //
+            ////////////////////////////////////////////////////////////////////
+            bool loadImage(unsigned char* buffer, size_t size);
+
+            ////////////////////////////////////////////////////////////////////
             //  Save PNG file                                                 //
             //  return : True if PNG file is successfully saved               //
             ////////////////////////////////////////////////////////////////////
@@ -237,6 +243,13 @@
                 PNGFileIHDRChunk& pngIHDRChunk);
 
             ////////////////////////////////////////////////////////////////////
+            //  Load PNG buffer image data                                    //
+            //  return : True if PNG buffer image data is successfully loaded //
+            ////////////////////////////////////////////////////////////////////
+            bool loadPNGData(unsigned char* bufferEnd,
+                PNGFileIHDRChunk& pngIHDRChunk);
+
+            ////////////////////////////////////////////////////////////////////
             //  Save PNG file image data                                      //
             //  return : True if PNG file image data is successfully saved    //
             ////////////////////////////////////////////////////////////////////
@@ -302,6 +315,7 @@
 
         private:
             bool                m_loaded;       // Image loaded state
+            unsigned char*      m_buffer;       // Image buffer
             unsigned char*      m_image;        // Image data
             uint32_t            m_width;        // Image width
             uint32_t            m_height;       // Image height
