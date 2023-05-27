@@ -69,7 +69,7 @@ bool SysCPUCheck()
     // Check math representation
     if (!SysCPUCheckMaths()) return false;
 
-    // Check images representation return false;
+    // Check images representation
     if (!SysCPUCheckImages()) return false;
 
     // System CPU is ready

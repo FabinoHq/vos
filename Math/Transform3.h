@@ -61,8 +61,8 @@
             m_matrix(),
             m_origin(0.0f, 0.0f, 0.0f),
             m_position(0.0f, 0.0f, 0.0f),
-            m_scale(1.0f),
-            m_angles(0.0f, 0.0f, 0.0f)
+            m_angles(0.0f, 0.0f, 0.0f),
+            m_scale(1.0f)
             {
                 m_matrix.reset();
             }
@@ -72,13 +72,12 @@
             ////////////////////////////////////////////////////////////////////
             virtual ~Transform3()
             {
-                m_angles.reset();
                 m_scale = 0.0f;
+                m_angles.reset();
                 m_position.reset();
                 m_origin.reset();
                 m_matrix.reset();
             }
-
 
             ////////////////////////////////////////////////////////////////////
             //  Reset transformations                                         //
@@ -88,9 +87,10 @@
                 m_matrix.setIdentity();
                 m_origin.reset();
                 m_position.reset();
-                m_scale = 1.0f;
                 m_angles.reset();
+                m_scale = 1.0f;
             }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Set origin                                                    //
@@ -102,9 +102,6 @@
                 m_origin.vec[2] = z;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set origin                                                    //
-            ////////////////////////////////////////////////////////////////////
             inline void setOrigin(const Vector3& origin)
             {
                 m_origin.vec[0] = origin.vec[0];
@@ -146,9 +143,6 @@
                 m_origin.vec[2] += z;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Translate origin                                              //
-            ////////////////////////////////////////////////////////////////////
             inline void moveOrigin(const Vector3& vector)
             {
                 m_origin.vec[0] += vector.vec[0];
@@ -190,9 +184,6 @@
                 m_position.vec[2] = z;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set position                                                  //
-            ////////////////////////////////////////////////////////////////////
             inline void setPosition(const Vector3& position)
             {
                 m_position.vec[0] = position.vec[0];
@@ -234,9 +225,6 @@
                 m_position.vec[2] += z;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Translate                                                     //
-            ////////////////////////////////////////////////////////////////////
             inline void move(const Vector3& vector)
             {
                 m_position.vec[0] += vector.vec[0];
@@ -268,21 +256,6 @@
                 m_position.vec[2] += z;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set scale                                                     //
-            ////////////////////////////////////////////////////////////////////
-            inline void setScale(float scale)
-            {
-                m_scale = scale;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Scale                                                         //
-            ////////////////////////////////////////////////////////////////////
-            inline void scale(float scale)
-            {
-                m_scale *= scale;
-            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set angles                                                    //
@@ -294,9 +267,6 @@
                 m_angles.vec[2] = angleZ;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set angles                                                    //
-            ////////////////////////////////////////////////////////////////////
             inline void setAngles(const Vector3& angles)
             {
                 m_angles.vec[0] = angles.vec[0];
@@ -338,9 +308,6 @@
                 m_angles.vec[2] += angleZ;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Rotate                                                        //
-            ////////////////////////////////////////////////////////////////////
             inline void rotate(const Vector3& angles)
             {
                 m_angles.vec[0] += angles.vec[0];
@@ -370,6 +337,23 @@
             inline void rotateZ(float angleZ)
             {
                 m_angles.vec[2] += angleZ;
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set scale                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void setScale(float scale)
+            {
+                m_scale = scale;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Scale                                                         //
+            ////////////////////////////////////////////////////////////////////
+            inline void scale(float scale)
+            {
+                m_scale *= scale;
             }
 
 
@@ -438,14 +422,6 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get scale                                                     //
-            ////////////////////////////////////////////////////////////////////
-            inline float getScale() const
-            {
-                return m_scale;
-            }
-
-            ////////////////////////////////////////////////////////////////////
             //  Get angles                                                    //
             ////////////////////////////////////////////////////////////////////
             inline Vector3 getAngles() const
@@ -475,6 +451,14 @@
             inline float getAngleZ() const
             {
                 return m_angles.vec[2];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get scale                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline float getScale() const
+            {
+                return m_scale;
             }
 
 
@@ -507,8 +491,8 @@
             Matrix4x4           m_matrix;           // Matrix
             Vector3             m_origin;           // Origin (anchor)
             Vector3             m_position;         // Position
-            float               m_scale;            // Scale
             Vector3             m_angles;           // Angles
+            float               m_scale;            // Scale
     };
 
 

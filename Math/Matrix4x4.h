@@ -296,6 +296,7 @@
                 }
             }
 
+
             ////////////////////////////////////////////////////////////////////
             //  Translate Matrix4x4                                           //
             ////////////////////////////////////////////////////////////////////
@@ -344,10 +345,10 @@
             ////////////////////////////////////////////////////////////////////
             void translateX(float x)
             {
-                mat[12] += mat[0]*x;
-                mat[13] += mat[1]*x;
-                mat[14] += mat[2]*x;
-                mat[15] += mat[3]*x;
+                mat[12] += (mat[0]*x);
+                mat[13] += (mat[1]*x);
+                mat[14] += (mat[2]*x);
+                mat[15] += (mat[3]*x);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -355,10 +356,10 @@
             ////////////////////////////////////////////////////////////////////
             void translateY(float y)
             {
-                mat[12] += mat[4]*y;
-                mat[13] += mat[5]*y;
-                mat[14] += mat[6]*y;
-                mat[15] += mat[7]*y;
+                mat[12] += (mat[4]*y);
+                mat[13] += (mat[5]*y);
+                mat[14] += (mat[6]*y);
+                mat[15] += (mat[7]*y);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -366,11 +367,12 @@
             ////////////////////////////////////////////////////////////////////
             void translateZ(float z)
             {
-                mat[12] += mat[8]*z;
-                mat[13] += mat[9]*z;
-                mat[14] += mat[10]*z;
-                mat[15] += mat[11]*z;
+                mat[12] += (mat[8]*z);
+                mat[13] += (mat[9]*z);
+                mat[14] += (mat[10]*z);
+                mat[15] += (mat[11]*z);
             }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Rotate Matrix4x4 arround an arbritrary axis                   //
@@ -526,6 +528,7 @@
                 mat[7] = rotMat7;
             }
 
+
             ////////////////////////////////////////////////////////////////////
             //  Scale Matrix4x4                                               //
             ////////////////////////////////////////////////////////////////////
@@ -636,6 +639,56 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Shear Matrix4x4                                               //
+            ////////////////////////////////////////////////////////////////////
+            void shear(float x, float y)
+            {
+                mat[0] += (mat[4]*y);
+                mat[1] += (mat[5]*y);
+                mat[2] += (mat[6]*y);
+                mat[3] += (mat[7]*y);
+                mat[4] += (mat[0]*x);
+                mat[5] += (mat[1]*x);
+                mat[6] += (mat[2]*x);
+                mat[7] += (mat[3]*x);
+            }
+
+            void shear(const Vector2& vector)
+            {
+                mat[0] += (mat[4]*vector.vec[1]);
+                mat[1] += (mat[5]*vector.vec[1]);
+                mat[2] += (mat[6]*vector.vec[1]);
+                mat[3] += (mat[7]*vector.vec[1]);
+                mat[4] += (mat[0]*vector.vec[0]);
+                mat[5] += (mat[1]*vector.vec[0]);
+                mat[6] += (mat[2]*vector.vec[0]);
+                mat[7] += (mat[3]*vector.vec[0]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Shear Matrix4x4 along the X axis                              //
+            ////////////////////////////////////////////////////////////////////
+            void shearX(float x)
+            {
+                mat[4] += (mat[0]*x);
+                mat[5] += (mat[1]*x);
+                mat[6] += (mat[2]*x);
+                mat[7] += (mat[3]*x);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Shear Matrix4x4 along the Y axis                              //
+            ////////////////////////////////////////////////////////////////////
+            void shearY(float y)
+            {
+                mat[0] += (mat[4]*y);
+                mat[1] += (mat[5]*y);
+                mat[2] += (mat[6]*y);
+                mat[3] += (mat[7]*y);
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Matrix4x4 affectation operator                                //
             ////////////////////////////////////////////////////////////////////
             Matrix4x4& operator=(const Matrix4x4& matrix)
@@ -686,22 +739,22 @@
             Matrix4x4 operator+(const Matrix4x4& matrix)
             {
                 Matrix4x4 result;
-                result.mat[0] = mat[0] + matrix.mat[0];
-                result.mat[1] = mat[1] + matrix.mat[1];
-                result.mat[2] = mat[2] + matrix.mat[2];
-                result.mat[3] = mat[3] + matrix.mat[3];
-                result.mat[4] = mat[4] + matrix.mat[4];
-                result.mat[5] = mat[5] + matrix.mat[5];
-                result.mat[6] = mat[6] + matrix.mat[6];
-                result.mat[7] = mat[7] + matrix.mat[7];
-                result.mat[8] = mat[8] + matrix.mat[8];
-                result.mat[9] = mat[9] + matrix.mat[9];
-                result.mat[10] = mat[10] + matrix.mat[10];
-                result.mat[11] = mat[11] + matrix.mat[11];
-                result.mat[12] = mat[12] + matrix.mat[12];
-                result.mat[13] = mat[13] + matrix.mat[13];
-                result.mat[14] = mat[14] + matrix.mat[14];
-                result.mat[15] = mat[15] + matrix.mat[15];
+                result.mat[0] = (mat[0] + matrix.mat[0]);
+                result.mat[1] = (mat[1] + matrix.mat[1]);
+                result.mat[2] = (mat[2] + matrix.mat[2]);
+                result.mat[3] = (mat[3] + matrix.mat[3]);
+                result.mat[4] = (mat[4] + matrix.mat[4]);
+                result.mat[5] = (mat[5] + matrix.mat[5]);
+                result.mat[6] = (mat[6] + matrix.mat[6]);
+                result.mat[7] = (mat[7] + matrix.mat[7]);
+                result.mat[8] = (mat[8] + matrix.mat[8]);
+                result.mat[9] = (mat[9] + matrix.mat[9]);
+                result.mat[10] = (mat[10] + matrix.mat[10]);
+                result.mat[11] = (mat[11] + matrix.mat[11]);
+                result.mat[12] = (mat[12] + matrix.mat[12]);
+                result.mat[13] = (mat[13] + matrix.mat[13]);
+                result.mat[14] = (mat[14] + matrix.mat[14]);
+                result.mat[15] = (mat[15] + matrix.mat[15]);
                 return result;
             }
 
@@ -711,22 +764,22 @@
             Matrix4x4 operator-(const Matrix4x4& matrix)
             {
                 Matrix4x4 result;
-                result.mat[0] = mat[0] - matrix.mat[0];
-                result.mat[1] = mat[1] - matrix.mat[1];
-                result.mat[2] = mat[2] - matrix.mat[2];
-                result.mat[3] = mat[3] - matrix.mat[3];
-                result.mat[4] = mat[4] - matrix.mat[4];
-                result.mat[5] = mat[5] - matrix.mat[5];
-                result.mat[6] = mat[6] - matrix.mat[6];
-                result.mat[7] = mat[7] - matrix.mat[7];
-                result.mat[8] = mat[8] - matrix.mat[8];
-                result.mat[9] = mat[9] - matrix.mat[9];
-                result.mat[10] = mat[10] - matrix.mat[10];
-                result.mat[11] = mat[11] - matrix.mat[11];
-                result.mat[12] = mat[12] - matrix.mat[12];
-                result.mat[13] = mat[13] - matrix.mat[13];
-                result.mat[14] = mat[14] - matrix.mat[14];
-                result.mat[15] = mat[15] - matrix.mat[15];
+                result.mat[0] = (mat[0] - matrix.mat[0]);
+                result.mat[1] = (mat[1] - matrix.mat[1]);
+                result.mat[2] = (mat[2] - matrix.mat[2]);
+                result.mat[3] = (mat[3] - matrix.mat[3]);
+                result.mat[4] = (mat[4] - matrix.mat[4]);
+                result.mat[5] = (mat[5] - matrix.mat[5]);
+                result.mat[6] = (mat[6] - matrix.mat[6]);
+                result.mat[7] = (mat[7] - matrix.mat[7]);
+                result.mat[8] = (mat[8] - matrix.mat[8]);
+                result.mat[9] = (mat[9] - matrix.mat[9]);
+                result.mat[10] = (mat[10] - matrix.mat[10]);
+                result.mat[11] = (mat[11] - matrix.mat[11]);
+                result.mat[12] = (mat[12] - matrix.mat[12]);
+                result.mat[13] = (mat[13] - matrix.mat[13]);
+                result.mat[14] = (mat[14] - matrix.mat[14]);
+                result.mat[15] = (mat[15] - matrix.mat[15]);
                 return result;
             }
 

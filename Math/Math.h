@@ -134,7 +134,7 @@
 
         ////////////////////////////////////////////////////////////////////////
         //  Get number negative boolean (0 or +1)                             //
-        //  return : Positive negative of the number (0 or +1)                //
+        //  return : Negative boolean of the number (0 or +1)                 //
         ////////////////////////////////////////////////////////////////////////
         inline int32_t negative(int32_t x)
         {

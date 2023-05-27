@@ -62,6 +62,7 @@
             m_origin(0.0f, 0.0f),
             m_position(0.0f, 0.0f),
             m_size(1.0f, 1.0f),
+            m_shear(0.0f, 0.0f),
             m_angle(0.0f)
             {
                 m_matrix.reset();
@@ -73,12 +74,12 @@
             virtual ~Transform2()
             {
                 m_angle = 0.0f;
+                m_shear.reset();
                 m_size.reset();
                 m_position.reset();
                 m_origin.reset();
                 m_matrix.reset();
             }
-
 
             ////////////////////////////////////////////////////////////////////
             //  Reset transformations                                         //
@@ -89,8 +90,10 @@
                 m_origin.reset();
                 m_position.reset();
                 m_size.reset();
+                m_shear.reset();
                 m_angle = 0.0f;
             }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Center origin                                                 //
@@ -110,9 +113,6 @@
                 m_origin.vec[1] = y;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set origin                                                    //
-            ////////////////////////////////////////////////////////////////////
             inline void setOrigin(const Vector2& origin)
             {
                 m_origin.vec[0] = origin.vec[0];
@@ -144,9 +144,6 @@
                 m_origin.vec[1] += y;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Translate origin                                              //
-            ////////////////////////////////////////////////////////////////////
             inline void moveOrigin(const Vector2& vector)
             {
                 m_origin.vec[0] += vector.vec[0];
@@ -169,6 +166,7 @@
                 m_origin.vec[1] += y;
             }
 
+
             ////////////////////////////////////////////////////////////////////
             //  Set position                                                  //
             ////////////////////////////////////////////////////////////////////
@@ -178,9 +176,6 @@
                 m_position.vec[1] = y;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set position                                                  //
-            ////////////////////////////////////////////////////////////////////
             inline void setPosition(const Vector2& position)
             {
                 m_position.vec[0] = position.vec[0];
@@ -212,9 +207,6 @@
                 m_position.vec[1] += y;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Translate                                                     //
-            ////////////////////////////////////////////////////////////////////
             inline void move(const Vector2& vector)
             {
                 m_position.vec[0] += vector.vec[0];
@@ -237,6 +229,24 @@
                 m_position.vec[1] += y;
             }
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set angle                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAngle(float angle)
+            {
+                m_angle = angle;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Rotate                                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline void rotate(float angle)
+            {
+                m_angle += angle;
+            }
+
+
             ////////////////////////////////////////////////////////////////////
             //  Set size                                                      //
             ////////////////////////////////////////////////////////////////////
@@ -246,9 +256,6 @@
                 m_size.vec[1] = height;
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set size                                                      //
-            ////////////////////////////////////////////////////////////////////
             inline void setSize(const Vector2& size)
             {
                 m_size.vec[0] = size.vec[0];
@@ -280,20 +287,67 @@
                 m_size.vec[1] *= scale;
             }
 
+
             ////////////////////////////////////////////////////////////////////
-            //  Set angle                                                     //
+            //  Set shear                                                     //
             ////////////////////////////////////////////////////////////////////
-            inline void setAngle(float angle)
+            inline void setShear(float x, float y)
             {
-                m_angle = angle;
+                m_shear.vec[0] = x;
+                m_shear.vec[1] = y;
+            }
+
+            inline void setShear(const Vector2& shear)
+            {
+                m_shear.vec[0] = shear.vec[0];
+                m_shear.vec[1] = shear.vec[1];
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Rotate                                                        //
+            //  Set shear on X axis                                           //
             ////////////////////////////////////////////////////////////////////
-            inline void rotate(float angle)
+            inline void setShearX(float x)
             {
-                m_angle += angle;
+                m_shear.vec[0] = x;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set shear on Y axis                                           //
+            ////////////////////////////////////////////////////////////////////
+            inline void setShearY(float y)
+            {
+                m_shear.vec[1] = y;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Shear                                                         //
+            ////////////////////////////////////////////////////////////////////
+            inline void shear(float x, float y)
+            {
+                m_shear.vec[0] += x;
+                m_shear.vec[1] += y;
+            }
+
+            inline void shear(const Vector2& shear)
+            {
+                m_shear.vec[0] += shear.vec[0];
+                m_shear.vec[1] += shear.vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Shear on X axis                                               //
+            ////////////////////////////////////////////////////////////////////
+            inline void shearX(float x)
+            {
+                m_shear.vec[0] += x;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Shear on Y axis                                               //
+            ////////////////////////////////////////////////////////////////////
+            inline void shearY(float y)
+            {
+                m_shear.vec[1] += y;
             }
 
 
@@ -346,6 +400,14 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get angle                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline float getAngle() const
+            {
+                return m_angle;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Get size                                                      //
             ////////////////////////////////////////////////////////////////////
             inline Vector2 getSize() const
@@ -370,11 +432,19 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get angle                                                     //
+            //  Get shear X                                                   //
             ////////////////////////////////////////////////////////////////////
-            inline float getAngle() const
+            inline float getShearX() const
             {
-                return m_angle;
+                return m_shear.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get shear Y                                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline float getShearY() const
+            {
+                return m_shear.vec[1];
             }
 
 
@@ -388,6 +458,9 @@
                 m_matrix.rotateZ(m_angle);
                 m_matrix.translate(-m_origin);
                 m_matrix.scale(m_size);
+                /*m_matrix.translate(m_origin);
+                m_matrix.shear(m_shear);
+                m_matrix.translate(-m_origin);*/
             }
 
 
@@ -408,6 +481,7 @@
             Vector2             m_origin;           // Origin (anchor)
             Vector2             m_position;         // Position
             Vector2             m_size;             // Size
+            Vector2             m_shear;            // Shear
             float               m_angle;            // Angle
     };
 
