@@ -62,7 +62,7 @@
             m_origin(0.0f, 0.0f),
             m_position(0.0f, 0.0f),
             m_size(1.0f, 1.0f),
-            m_shear(0.0f, 0.0f),
+            //m_shear(0.0f, 0.0f),
             m_angle(0.0f)
             {
                 m_matrix.reset();
@@ -74,7 +74,7 @@
             virtual ~Transform2()
             {
                 m_angle = 0.0f;
-                m_shear.reset();
+                //m_shear.reset();
                 m_size.reset();
                 m_position.reset();
                 m_origin.reset();
@@ -90,7 +90,7 @@
                 m_origin.reset();
                 m_position.reset();
                 m_size.reset();
-                m_shear.reset();
+                //m_shear.reset();
                 m_angle = 0.0f;
             }
 
@@ -291,7 +291,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set shear                                                     //
             ////////////////////////////////////////////////////////////////////
-            inline void setShear(float x, float y)
+            /*inline void setShear(float x, float y)
             {
                 m_shear.vec[0] = x;
                 m_shear.vec[1] = y;
@@ -348,7 +348,7 @@
             inline void shearY(float y)
             {
                 m_shear.vec[1] += y;
-            }
+            }*/
 
 
             ////////////////////////////////////////////////////////////////////
@@ -434,7 +434,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get shear X                                                   //
             ////////////////////////////////////////////////////////////////////
-            inline float getShearX() const
+            /*inline float getShearX() const
             {
                 return m_shear.vec[0];
             }
@@ -445,7 +445,7 @@
             inline float getShearY() const
             {
                 return m_shear.vec[1];
-            }
+            }*/
 
 
             ////////////////////////////////////////////////////////////////////
@@ -481,7 +481,7 @@
             Vector2             m_origin;           // Origin (anchor)
             Vector2             m_position;         // Position
             Vector2             m_size;             // Size
-            Vector2             m_shear;            // Shear
+            //Vector2             m_shear;            // Shear
             float               m_angle;            // Angle
     };
 

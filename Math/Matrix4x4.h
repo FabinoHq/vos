@@ -643,26 +643,26 @@
             ////////////////////////////////////////////////////////////////////
             void shear(float x, float y)
             {
-                mat[0] += (mat[4]*y);
-                mat[1] += (mat[5]*y);
-                mat[2] += (mat[6]*y);
-                mat[3] += (mat[7]*y);
-                mat[4] += (mat[0]*x);
-                mat[5] += (mat[1]*x);
-                mat[6] += (mat[2]*x);
-                mat[7] += (mat[3]*x);
+                mat[0] += (mat[4]*x);
+                mat[1] += (mat[5]*x);
+                mat[2] += (mat[6]*x);
+                mat[3] += (mat[7]*x);
+                mat[4] += (mat[0]*y);
+                mat[5] += (mat[1]*y);
+                mat[6] += (mat[2]*y);
+                mat[7] += (mat[3]*y);
             }
 
             void shear(const Vector2& vector)
             {
-                mat[0] += (mat[4]*vector.vec[1]);
-                mat[1] += (mat[5]*vector.vec[1]);
-                mat[2] += (mat[6]*vector.vec[1]);
-                mat[3] += (mat[7]*vector.vec[1]);
-                mat[4] += (mat[0]*vector.vec[0]);
-                mat[5] += (mat[1]*vector.vec[0]);
-                mat[6] += (mat[2]*vector.vec[0]);
-                mat[7] += (mat[3]*vector.vec[0]);
+                mat[0] += (mat[4]*vector.vec[0]);
+                mat[1] += (mat[5]*vector.vec[0]);
+                mat[2] += (mat[6]*vector.vec[0]);
+                mat[3] += (mat[7]*vector.vec[0]);
+                mat[4] += (mat[0]*vector.vec[1]);
+                mat[5] += (mat[1]*vector.vec[1]);
+                mat[6] += (mat[2]*vector.vec[1]);
+                mat[7] += (mat[3]*vector.vec[1]);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -670,10 +670,10 @@
             ////////////////////////////////////////////////////////////////////
             void shearX(float x)
             {
-                mat[4] += (mat[0]*x);
-                mat[5] += (mat[1]*x);
-                mat[6] += (mat[2]*x);
-                mat[7] += (mat[3]*x);
+                mat[0] += (mat[4]*x);
+                mat[1] += (mat[5]*x);
+                mat[2] += (mat[6]*x);
+                mat[3] += (mat[7]*x);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -681,10 +681,10 @@
             ////////////////////////////////////////////////////////////////////
             void shearY(float y)
             {
-                mat[0] += (mat[4]*y);
-                mat[1] += (mat[5]*y);
-                mat[2] += (mat[6]*y);
-                mat[3] += (mat[7]*y);
+                mat[4] += (mat[0]*y);
+                mat[5] += (mat[1]*y);
+                mat[6] += (mat[2]*y);
+                mat[7] += (mat[3]*y);
             }
 
 
