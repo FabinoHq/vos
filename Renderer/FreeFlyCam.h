@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Camera.h : Free fly camera management                         //
+//     Renderer/FreeFlyCam.h : Free fly camera management                     //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_RENDERER_FREEFLYCAM_HEADER
 #define VOS_RENDERER_FREEFLYCAM_HEADER
@@ -81,13 +81,13 @@
             //  Compute freefly camera                                        //
             //  return : True if the freefly camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            virtual bool compute(float ratio, float frametime);
+            bool compute(float ratio, float frametime);
 
             ////////////////////////////////////////////////////////////////////
             //  Compute freefly camera from another freefly camera            //
             //  return : True if the freefly camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            virtual bool compute(float ratio, FreeFlyCam& freeFlyCam);
+            bool compute(float ratio, FreeFlyCam& freeFlyCam);
 
 
             ////////////////////////////////////////////////////////////////////

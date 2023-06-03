@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/OrbitalCam.cpp : Free fly camera management                   //
+//     Renderer/OrbitalCam.cpp : Orbital camera management                    //
 ////////////////////////////////////////////////////////////////////////////////
 #include "OrbitalCam.h"
 

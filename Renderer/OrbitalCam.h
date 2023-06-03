@@ -83,13 +83,13 @@
             //  Compute orbital camera                                        //
             //  return : True if the orbital camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            virtual bool compute(float ratio, float frametime);
+            bool compute(float ratio, float frametime);
 
             ////////////////////////////////////////////////////////////////////
             //  Compute orbital camera from another orbital camera            //
             //  return : True if the orbital camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            virtual bool compute(float ratio, OrbitalCam& orbitalCam);
+            bool compute(float ratio, OrbitalCam& orbitalCam);
 
 
             ////////////////////////////////////////////////////////////////////
