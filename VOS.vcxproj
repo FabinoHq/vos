@@ -226,6 +226,7 @@
     <ClCompile Include="Renderer\HeightMapChunk.cpp" />
     <ClCompile Include="Renderer\HeightMapStream.cpp" />
     <ClCompile Include="Renderer\OrbitalCam.cpp" />
+    <ClCompile Include="Renderer\Plane.cpp" />
     <ClCompile Include="Renderer\ProcSprite.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\SeaFarChunk.cpp" />
@@ -317,6 +318,7 @@
     <ClInclude Include="Renderer\HeightMapChunk.h" />
     <ClInclude Include="Renderer\HeightMapStream.h" />
     <ClInclude Include="Renderer\OrbitalCam.h" />
+    <ClInclude Include="Renderer\Plane.h" />
     <ClInclude Include="Renderer\ProcSprite.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\SeaFarChunk.h" />

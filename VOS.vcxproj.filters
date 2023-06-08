@@ -257,6 +257,9 @@
     <ClCompile Include="Renderer\SeaFarStream.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\Plane.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -598,6 +601,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\SeaFar.h">
       <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Plane.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

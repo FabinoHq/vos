@@ -72,10 +72,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o \
 	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
-	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
-	Renderer/Shapes/CuboidShape.o \
-	Renderer/GUI/GUICursor.o \
-	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
+	Renderer/Plane.o \
 	Renderer/SkyBox.o Renderer/SkyProc.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
@@ -84,6 +81,10 @@ VOS: main.o \
 	Renderer/SeaNearStream.o Renderer/SeaFarStream.o \
 	Renderer/WorldLight.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
+	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
+	Renderer/Shapes/CuboidShape.o \
+	Renderer/GUI/GUICursor.o \
+	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Game/Game.o
@@ -113,10 +114,6 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o \
 	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
-	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
-	Renderer/Shapes/CuboidShape.o \
-	Renderer/GUI/GUICursor.o \
-	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/SkyBox.o Renderer/SkyProc.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
@@ -125,6 +122,10 @@ VOS: main.o \
 	Renderer/SeaNearStream.o Renderer/SeaFarStream.o \
 	Renderer/WorldLight.o \
 	Renderer/BackRenderer.o Renderer/Renderer.o \
+	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
+	Renderer/Shapes/CuboidShape.o \
+	Renderer/GUI/GUICursor.o \
+	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Game/Game.o \
@@ -280,29 +281,8 @@ Renderer/Sprite.o: Renderer/Sprite.cpp
 Renderer/ProcSprite.o: Renderer/ProcSprite.cpp
 	$(CC) -o Renderer/ProcSprite.o -c Renderer/ProcSprite.cpp $(CFLAGS)
 
-
-Renderer/Shapes/RectangleShape.o: Renderer/Shapes/RectangleShape.cpp
-	$(CC) -o Renderer/Shapes/RectangleShape.o -c \
-	Renderer/Shapes/RectangleShape.cpp $(CFLAGS)
-
-Renderer/Shapes/EllipseShape.o: Renderer/Shapes/EllipseShape.cpp
-	$(CC) -o Renderer/Shapes/EllipseShape.o -c \
-	Renderer/Shapes/EllipseShape.cpp $(CFLAGS)
-
-Renderer/Shapes/CuboidShape.o: Renderer/Shapes/CuboidShape.cpp
-	$(CC) -o Renderer/Shapes/CuboidShape.o -c \
-	Renderer/Shapes/CuboidShape.cpp $(CFLAGS)
-
-
-Renderer/GUI/GUICursor.o: Renderer/GUI/GUICursor.cpp
-	$(CC) -o Renderer/GUI/GUICursor.o -c Renderer/GUI/GUICursor.cpp $(CFLAGS)
-
-Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
-	$(CC) -o Renderer/GUI/GUIPxText.o -c Renderer/GUI/GUIPxText.cpp $(CFLAGS)
-
-Renderer/GUI/GUIWindow.o: Renderer/GUI/GUIWindow.cpp
-	$(CC) -o Renderer/GUI/GUIWindow.o -c Renderer/GUI/GUIWindow.cpp $(CFLAGS)
-
+Renderer/Plane.o: Renderer/Plane.cpp
+	$(CC) -o Renderer/Plane.o -c Renderer/Plane.cpp $(CFLAGS)
 
 Renderer/SkyBox.o: Renderer/SkyBox.cpp
 	$(CC) -o Renderer/SkyBox.o -c Renderer/SkyBox.cpp $(CFLAGS)
@@ -349,6 +329,29 @@ Renderer/BackRenderer.o: Renderer/BackRenderer.cpp
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
+
+
+Renderer/Shapes/RectangleShape.o: Renderer/Shapes/RectangleShape.cpp
+	$(CC) -o Renderer/Shapes/RectangleShape.o -c \
+	Renderer/Shapes/RectangleShape.cpp $(CFLAGS)
+
+Renderer/Shapes/EllipseShape.o: Renderer/Shapes/EllipseShape.cpp
+	$(CC) -o Renderer/Shapes/EllipseShape.o -c \
+	Renderer/Shapes/EllipseShape.cpp $(CFLAGS)
+
+Renderer/Shapes/CuboidShape.o: Renderer/Shapes/CuboidShape.cpp
+	$(CC) -o Renderer/Shapes/CuboidShape.o -c \
+	Renderer/Shapes/CuboidShape.cpp $(CFLAGS)
+
+
+Renderer/GUI/GUICursor.o: Renderer/GUI/GUICursor.cpp
+	$(CC) -o Renderer/GUI/GUICursor.o -c Renderer/GUI/GUICursor.cpp $(CFLAGS)
+
+Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
+	$(CC) -o Renderer/GUI/GUIPxText.o -c Renderer/GUI/GUIPxText.cpp $(CFLAGS)
+
+Renderer/GUI/GUIWindow.o: Renderer/GUI/GUIWindow.cpp
+	$(CC) -o Renderer/GUI/GUIWindow.o -c Renderer/GUI/GUIWindow.cpp $(CFLAGS)
 
 
 Resources/Resources.o: Resources/Resources.cpp

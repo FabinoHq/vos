@@ -59,6 +59,7 @@ m_procSprite(),
 m_rectanle(),
 m_ellipse(),
 m_cuboid(),
+m_plane(),
 m_cursor(),
 m_guiWindow(),
 m_pxText(),
@@ -196,6 +197,13 @@ bool Game::init()
     if (!m_cuboid.init())
     {
         // Could not init cuboid shape
+        return false;
+    }
+
+    // Init plane billboard
+    if (!m_plane.init(GResources.textures.high(TEXTURE_TEST), 1.0f, 1.0f))
+    {
+        // Could not init plane billboard
         return false;
     }
 
@@ -638,12 +646,12 @@ void Game::render()
     );
 
     // Render static mesh
-    GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
     m_staticMesh.bindVertexBuffer();
     m_staticMesh.bindTexture();
     m_staticMesh.setPosition(0.0f, 700.0f, 0.0f);
     m_staticMesh.setScale(10.0f);
-    m_staticMesh.render();
+    m_staticMesh.render();*/
 
     // Render cuboid shape
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
@@ -651,6 +659,12 @@ void Game::render()
     m_cuboid.setScale(10.0f);
     m_cuboid.setPosition(0.0f, 0.0f, 0.0f);
     m_cuboid.render();*/
+
+    // Render plane billboard
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    GRenderer.bindVertexBuffer(MESHES_PLANE);
+    m_plane.setPosition(0.0f, 0.0f, 0.0f);
+    m_plane.render();*/
 
 
     // Set 2D view

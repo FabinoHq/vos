@@ -53,6 +53,7 @@
     #include "../Renderer/OrbitalCam.h"
     #include "../Renderer/Sprite.h"
     #include "../Renderer/ProcSprite.h"
+    #include "../Renderer/Plane.h"
     #include "../Renderer/SkyBox.h"
     #include "../Renderer/SkyProc.h"
     #include "../Renderer/WorldLight.h"
@@ -151,6 +152,7 @@
             RectangleShape  m_rectanle;         // Rectangle shape
             EllipseShape    m_ellipse;          // Ellipse shape
             CuboidShape     m_cuboid;           // Cuboid shape
+            Plane           m_plane;            // Plane billboard
 
             GUICursor       m_cursor;           // GUI Cursor
             GUIWindow       m_guiWindow;        // GUI Window
