@@ -97,9 +97,9 @@
             ////////////////////////////////////////////////////////////////////
             inline void centerOrigin()
             {
-                m_origin.vec[0] = m_size.vec[0]*0.5f;
-                m_origin.vec[1] = m_size.vec[1]*0.5f;
-                m_origin.vec[2] = m_size.vec[2]*0.5f;
+                m_origin.vec[0] = 0.0f;
+                m_origin.vec[1] = 0.0f;
+                m_origin.vec[2] = 0.0f;
             }
 
             ////////////////////////////////////////////////////////////////////

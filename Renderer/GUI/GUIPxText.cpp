@@ -85,9 +85,6 @@ bool GUIPxText::init(Texture& texture, float height)
     // Set pixel text size
     setSize(0.0f, height);
 
-    // Center pixel text origin (anchor)
-    centerOrigin();
-
     // Set pixel text texture pointer
     m_texture = &texture;
 
@@ -195,6 +192,9 @@ void GUIPxText::render()
         GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
         PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
+
+    // Move to the first character
+    m_matrix.translateX(PixelTextDefaultXOffset*0.5f);
 
     // Draw pixel text characters
     for (size_t i = 0; i < m_text.length(); ++i)

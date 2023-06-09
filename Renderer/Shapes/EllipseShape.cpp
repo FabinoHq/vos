@@ -75,9 +75,6 @@ bool EllipseShape::init(float width, float height)
     // Set ellipse size
     setSize(width, height);
 
-    // Center ellipse origin (anchor)
-    centerOrigin();
-
     // Reset ellipse color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 

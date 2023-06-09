@@ -136,9 +136,6 @@ bool GUIWindow::init(Texture& texture,
     setSize(width, height);
     clampWindowSize();
 
-    // Center window origin (anchor)
-    centerOrigin();
-
     // Reset window grabbing states
     m_grabWindow = false;
     m_grabTop = false;
@@ -198,10 +195,10 @@ void GUIWindow::setColor(float red, float green, float blue, float alpha)
 bool GUIWindow::isPicking(float mouseX, float mouseY)
 {
     return (
-        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
-        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
-        (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+        (mouseX >= (m_position.vec[0] - m_size.vec[0]*0.5f)) &&
+        (mouseX <= (m_position.vec[0] + m_size.vec[0]*0.5f)) &&
+        (mouseY >= (m_position.vec[1] - m_size.vec[1]*0.5f)) &&
+        (mouseY <= (m_position.vec[1] + m_size.vec[1]*0.5f))
     );
 }
 
@@ -211,11 +208,10 @@ bool GUIWindow::isPicking(float mouseX, float mouseY)
 bool GUIWindow::isTopBarPicking(float mouseX, float mouseY)
 {
     return (
-        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
-        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
-        (mouseY >= (m_position.vec[1] - m_origin.vec[1] +
-            m_size.vec[1] - m_topBarSize)) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+        (mouseX >= (m_position.vec[0] - m_size.vec[0]*0.5f)) &&
+        (mouseX <= (m_position.vec[0] + m_size.vec[0]*0.5f)) &&
+        (mouseY >= (m_position.vec[1] + m_size.vec[1]*0.5f-m_topBarSize)) &&
+        (mouseY <= (m_position.vec[1] + m_size.vec[1]*0.5f))
     );
 }
 
@@ -225,11 +221,10 @@ bool GUIWindow::isTopBarPicking(float mouseX, float mouseY)
 bool GUIWindow::isTopResizePicking(float mouseX, float mouseY)
 {
     return (
-        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
-        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
-        (mouseY >= (m_position.vec[1] - m_origin.vec[1] +
-            m_size.vec[1] - m_resizeBarSize)) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+        (mouseX >= (m_position.vec[0] - m_size.vec[0]*0.5f)) &&
+        (mouseX <= (m_position.vec[0] + m_size.vec[0]*0.5f)) &&
+        (mouseY >= (m_position.vec[1] + m_size.vec[1]*0.5f-m_resizeBarSize)) &&
+        (mouseY <= (m_position.vec[1] + m_size.vec[1]*0.5f))
     );
 }
 
@@ -239,10 +234,10 @@ bool GUIWindow::isTopResizePicking(float mouseX, float mouseY)
 bool GUIWindow::isBottomResizePicking(float mouseX, float mouseY)
 {
     return (
-        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
-        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
-        (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_resizeBarSize))
+        (mouseX >= (m_position.vec[0] - m_size.vec[0]*0.5f)) &&
+        (mouseX <= (m_position.vec[0] + m_size.vec[0]*0.5f)) &&
+        (mouseY >= (m_position.vec[1] - m_size.vec[1]*0.5f)) &&
+        (mouseY <= (m_position.vec[1] - m_size.vec[1]*0.5f+m_resizeBarSize))
     );
 }
 
@@ -252,10 +247,10 @@ bool GUIWindow::isBottomResizePicking(float mouseX, float mouseY)
 bool GUIWindow::isLeftResizePicking(float mouseX, float mouseY)
 {
     return (
-        (mouseX >= m_position.vec[0] - m_origin.vec[0]) &&
-        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_resizeBarSize)) &&
-        (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+        (mouseX >= (m_position.vec[0] - m_size.vec[0]*0.5f)) &&
+        (mouseX <= (m_position.vec[0] - m_size.vec[0]*0.5f+m_resizeBarSize)) &&
+        (mouseY >= (m_position.vec[1] - m_size.vec[1]*0.5f)) &&
+        (mouseY <= (m_position.vec[1] + m_size.vec[1]*0.5f))
     );
 }
 
@@ -265,11 +260,10 @@ bool GUIWindow::isLeftResizePicking(float mouseX, float mouseY)
 bool GUIWindow::isRightResizePicking(float mouseX, float mouseY)
 {
     return (
-        (mouseX >= m_position.vec[0] - m_origin.vec[0] +
-            m_size.vec[0] - m_resizeBarSize) &&
-        (mouseX <= (m_position.vec[0] - m_origin.vec[0] + m_size.vec[0])) &&
-        (mouseY >= m_position.vec[1] - m_origin.vec[1]) &&
-        (mouseY <= (m_position.vec[1] - m_origin.vec[1] + m_size.vec[1]))
+        (mouseX >= (m_position.vec[0] + m_size.vec[0]*0.5f-m_resizeBarSize)) &&
+        (mouseX <= (m_position.vec[0] + m_size.vec[0]*0.5f)) &&
+        (mouseY >= (m_position.vec[1] - m_size.vec[1]*0.5f)) &&
+        (mouseY <= (m_position.vec[1] + m_size.vec[1]*0.5f))
     );
 }
 
@@ -425,35 +419,44 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
     if (m_grabTop && m_grabLeft)
     {
         // Resize top left window
-        moveOffset.vec[0] = m_size.vec[0];
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
         m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
         m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
         clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0];
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
         m_position.vec[0] += moveOffset.vec[0];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] -= moveOffset.vec[1];
         return true;
     }
 
     if (m_grabTop && m_grabRight)
     {
         // Resize top right window
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
         m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
         m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
         clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] -= moveOffset.vec[0];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] -= moveOffset.vec[1];
         return true;
     }
 
     if (m_grabBottom && m_grabLeft)
     {
         // Resize bottom left window
-        moveOffset.vec[0] = m_size.vec[0];
-        moveOffset.vec[1] = m_size.vec[1];
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
         m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
         m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
         clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0];
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
         m_position.vec[0] += moveOffset.vec[0];
-        moveOffset.vec[1] -= m_size.vec[1];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
         m_position.vec[1] += moveOffset.vec[1];
         return true;
     }
@@ -461,11 +464,14 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
     if (m_grabBottom && m_grabRight)
     {
         // Resize bottom right window
-        moveOffset.vec[1] = m_size.vec[1];
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
         m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
         m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
         clampWindowSize();
-        moveOffset.vec[1] -= m_size.vec[1];
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] -= moveOffset.vec[0];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
         m_position.vec[1] += moveOffset.vec[1];
         return true;
     }
@@ -473,18 +479,21 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
     if (m_grabTop)
     {
         // Resize top window
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
         m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
         clampWindowSize();
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] -= moveOffset.vec[1];
         return true;
     }
 
     if (m_grabBottom)
     {
         // Resize bottom window
-        moveOffset.vec[1] = m_size.vec[1];
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
         m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
         clampWindowSize();
-        moveOffset.vec[1] -= m_size.vec[1];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
         m_position.vec[1] += moveOffset.vec[1];
         return true;
     }
@@ -492,10 +501,10 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
     if (m_grabLeft)
     {
         // Resize left window
-        moveOffset.vec[0] = m_size.vec[0];
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
         m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
         clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0];
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
         m_position.vec[0] += moveOffset.vec[0];
         return true;
     }
@@ -503,8 +512,11 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
     if (m_grabRight)
     {
         // Resize right window
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
         m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
         clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] -= moveOffset.vec[0];
         return true;
     }
 

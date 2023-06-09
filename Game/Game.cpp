@@ -430,9 +430,7 @@ void Game::events(Event& event)
                 event.mouse.x*1.0f, event.mouse.y*1.0f
             );*/
             /*m_guiWindow.mouseMove(m_mouseX, m_mouseY);
-            m_cursor.setCursor(
-                GResources, m_guiWindow.updateCursor(m_mouseX, m_mouseY)
-            );*/
+            m_cursor.setCursor(m_guiWindow.updateCursor(m_mouseX, m_mouseY));*/
             break;
 
         // Mouse button pressed
@@ -751,7 +749,7 @@ void Game::render()
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
     m_pxText.bindTexture();
-    m_pxText.setPosition(-ratio, 1.0f-(m_pxText.getHeight()*0.7f));
+    m_pxText.setPosition(-ratio+0.01f, 1.0f-(m_pxText.getHeight()*0.7f));
     m_pxText.render();
 
     // Render pixel text (camera position)
@@ -760,7 +758,7 @@ void Game::render()
         " | Y : " << m_freeflycam.getY() <<
         " | Z : " << m_freeflycam.getZ();
     m_pxText.setText(camerastr.str());
-    m_pxText.setPosition(-ratio, 0.96f-(m_pxText.getHeight()*0.7f));
+    m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
     m_pxText.render();
 
     // Render cursor
@@ -785,7 +783,6 @@ void Game::render()
         (GSwapchain.ratio*2.0f)+RendererCompositingPlaneOffset,
         2.0f+RendererCompositingPlaneOffset
     );
-    GRenderer.plane.centerOrigin();
     GRenderer.plane.setPosition(0.0f, 0.0f);
     GRenderer.plane.render();
 

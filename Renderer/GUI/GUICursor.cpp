@@ -183,7 +183,8 @@ void GUICursor::render()
     float scale = GSwapchain.getScale();
     float cursorSize = (scale*m_scale);
     setSize(cursorSize, cursorSize);
-    setOrigin((m_offset.vec[0]*scale), (cursorSize - (m_offset.vec[1]*scale)));
+    scale *= 2.0f;
+    setOrigin((m_offset.vec[0]*scale), (m_offset.vec[1]*scale));
     computeTransforms();
 
     // Push model matrix into command buffer

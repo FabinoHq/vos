@@ -107,9 +107,6 @@ bool ProcSprite::init(float width, float height,
     // Set procedural sprite size
     setSize(width, height);
 
-    // Center procedural sprite origin (anchor)
-    centerOrigin();
-
     // Reset procedural sprite color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 

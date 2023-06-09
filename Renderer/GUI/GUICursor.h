@@ -58,11 +58,11 @@
     ////////////////////////////////////////////////////////////////////////////
     //  GUICursor offsets                                                     //
     ////////////////////////////////////////////////////////////////////////////
-    const Vector2 GUICusorDefaultOffset = Vector2(2.0f, 2.0f);
-    const Vector2 GUICusorNSCursorOffset = Vector2(10.0f, 24.0f);
-    const Vector2 GUICusorEWCursorOffset = Vector2(24.0f, 10.0f);
-    const Vector2 GUICusorNESWCursorOffset = Vector2(18.0f, 18.0f);
-    const Vector2 GUICusorNWSECursorOffset = Vector2(18.0f, 18.0f);
+    const Vector2 GUICusorDefaultOffset = Vector2(-15.0f, 15.0f);
+    const Vector2 GUICusorNSCursorOffset = Vector2(-11.0f, 4.0f);
+    const Vector2 GUICusorEWCursorOffset = Vector2(-4.0f, 11.0f);
+    const Vector2 GUICusorNESWCursorOffset = Vector2(-7.0f, 7.0f);
+    const Vector2 GUICusorNWSECursorOffset = Vector2(-7.0f, 7.0f);
 
     ////////////////////////////////////////////////////////////////////////////
     //  GUICursor type enumeration                                            //

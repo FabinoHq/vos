@@ -75,9 +75,6 @@ bool RectangleShape::init(float width, float height)
     // Set rectangle size
     setSize(width, height);
 
-    // Center rectangle origin (anchor)
-    centerOrigin();
-
     // Reset rectangle color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 

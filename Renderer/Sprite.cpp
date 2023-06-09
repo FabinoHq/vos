@@ -86,9 +86,6 @@ bool Sprite::init(Texture& texture, float width, float height)
     // Set sprite size
     setSize(width, height);
 
-    // Center sprite origin (anchor)
-    centerOrigin();
-
     // Set sprite texture pointer
     m_texture = &texture;
 
