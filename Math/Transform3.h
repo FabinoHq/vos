@@ -61,8 +61,8 @@
             m_matrix(),
             m_origin(0.0f, 0.0f, 0.0f),
             m_position(0.0f, 0.0f, 0.0f),
-            m_angles(0.0f, 0.0f, 0.0f),
-            m_scale(1.0f)
+            m_size(1.0f, 1.0f, 1.0f),
+            m_angles(0.0f, 0.0f, 0.0f)
             {
                 m_matrix.reset();
             }
@@ -72,8 +72,8 @@
             ////////////////////////////////////////////////////////////////////
             virtual ~Transform3()
             {
-                m_scale = 0.0f;
                 m_angles.reset();
+                m_size.reset();
                 m_position.reset();
                 m_origin.reset();
                 m_matrix.reset();
@@ -87,10 +87,20 @@
                 m_matrix.setIdentity();
                 m_origin.reset();
                 m_position.reset();
+                m_size.set(1.0f, 1.0f, 1.0f);
                 m_angles.reset();
-                m_scale = 1.0f;
             }
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Center origin                                                 //
+            ////////////////////////////////////////////////////////////////////
+            inline void centerOrigin()
+            {
+                m_origin.vec[0] = m_size.vec[0]*0.5f;
+                m_origin.vec[1] = m_size.vec[1]*0.5f;
+                m_origin.vec[2] = m_size.vec[2]*0.5f;
+            }
 
             ////////////////////////////////////////////////////////////////////
             //  Set origin                                                    //
@@ -341,11 +351,66 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Set size                                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void setSize(float width, float height, float depth)
+            {
+                m_size.vec[0] = width;
+                m_size.vec[1] = height;
+                m_size.vec[2] = depth;
+            }
+
+            inline void setSize(const Vector3& size)
+            {
+                m_size.vec[0] = size.vec[0];
+                m_size.vec[1] = size.vec[1];
+                m_size.vec[2] = size.vec[2];
+            }
+
+            inline void setSize(float width, float height)
+            {
+                m_size.vec[0] = width;
+                m_size.vec[1] = height;
+            }
+
+            inline void setSize(const Vector2& size)
+            {
+                m_size.vec[0] = size.vec[0];
+                m_size.vec[1] = size.vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set width                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void setWidth(float width)
+            {
+                m_size.vec[0] = width;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set height                                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void setHeight(float height)
+            {
+                m_size.vec[1] = height;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set depth                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void setDepth(float depth)
+            {
+                m_size.vec[2] = depth;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Set scale                                                     //
             ////////////////////////////////////////////////////////////////////
             inline void setScale(float scale)
             {
-                m_scale = scale;
+                m_size.vec[0] = scale;
+                m_size.vec[1] = scale;
+                m_size.vec[2] = scale;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -353,7 +418,9 @@
             ////////////////////////////////////////////////////////////////////
             inline void scale(float scale)
             {
-                m_scale *= scale;
+                m_size.vec[0] *= scale;
+                m_size.vec[1] *= scale;
+                m_size.vec[2] *= scale;
             }
 
 
@@ -454,11 +521,35 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get scale                                                     //
+            //  Get size                                                      //
             ////////////////////////////////////////////////////////////////////
-            inline float getScale() const
+            inline Vector3 getSize() const
             {
-                return m_scale;
+                return m_size;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get width                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline float getWidth() const
+            {
+                return m_size.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get height                                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline float getHeight() const
+            {
+                return m_size.vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get depth                                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline float getDepth() const
+            {
+                return m_size.vec[2];
             }
 
 
@@ -471,7 +562,7 @@
                 m_matrix.translate(m_position);
                 m_matrix.rotate(m_angles);
                 m_matrix.translate(-m_origin);
-                m_matrix.scale(m_scale);
+                m_matrix.scale(m_size);
             }
 
 
@@ -491,8 +582,8 @@
             Matrix4x4           m_matrix;           // Matrix
             Vector3             m_origin;           // Origin (anchor)
             Vector3             m_position;         // Position
+            Vector3             m_size;             // Size
             Vector3             m_angles;           // Angles
-            float               m_scale;            // Scale
     };
 
 

@@ -243,7 +243,7 @@ bool FreeFlyCam::compute(float ratio, FreeFlyCam& freeFlyCam)
     // Copy freefly camera parameters
     m_origin = freeFlyCam.m_origin;
     m_position = freeFlyCam.m_position;
-    m_scale = freeFlyCam.m_scale;
+    m_size = freeFlyCam.m_size;
     m_angles = freeFlyCam.m_angles;
 
     // Compute projection matrix

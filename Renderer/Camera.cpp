@@ -281,7 +281,7 @@ bool Camera::compute(float ratio, Camera& camera)
     // Copy camera parameters
     m_origin = camera.m_origin;
     m_position = camera.m_position;
-    m_scale = camera.m_scale;
+    m_size = camera.m_size;
     m_angles = camera.m_angles;
 
     // Compute projection matrix

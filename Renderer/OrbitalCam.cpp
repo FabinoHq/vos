@@ -163,7 +163,7 @@ bool OrbitalCam::compute(float ratio, OrbitalCam& orbitalCam)
     // Copy orbital camera parameters
     m_origin = orbitalCam.m_origin;
     m_position = orbitalCam.m_position;
-    m_scale = orbitalCam.m_scale;
+    m_size = orbitalCam.m_size;
     m_angles = orbitalCam.m_angles;
 
     // Compute projection matrix
