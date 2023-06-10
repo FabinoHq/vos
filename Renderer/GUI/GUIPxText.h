@@ -62,6 +62,7 @@
     ////////////////////////////////////////////////////////////////////////////
     const float PixelTextDefaultUVWidth = 0.0625f;
     const float PixelTextDefaultUVHeight = 0.125f;
+    const float PixelTextDefaultXStart = 0.24f;
     const float PixelTextDefaultXOffset = 0.44f;
     const float PixelTextDefaultYOffset = 0.92f;
     const float PixelTextDefaultSmoothFactor = 0.4f;

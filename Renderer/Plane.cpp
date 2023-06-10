@@ -84,7 +84,7 @@ bool Plane::init(Texture& texture, float width, float height)
     resetTransforms();
 
     // Set plane size
-    setSize(width, height);
+    setSize(width, height, 1.0f);
 
     // Set plane texture pointer
     m_texture = &texture;

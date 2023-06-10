@@ -93,16 +93,6 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Center origin                                                 //
-            ////////////////////////////////////////////////////////////////////
-            inline void centerOrigin()
-            {
-                m_origin.vec[0] = 0.0f;
-                m_origin.vec[1] = 0.0f;
-                m_origin.vec[2] = 0.0f;
-            }
-
-            ////////////////////////////////////////////////////////////////////
             //  Set origin                                                    //
             ////////////////////////////////////////////////////////////////////
             inline void setOrigin(float x, float y, float z)
@@ -365,18 +355,6 @@
                 m_size.vec[0] = size.vec[0];
                 m_size.vec[1] = size.vec[1];
                 m_size.vec[2] = size.vec[2];
-            }
-
-            inline void setSize(float width, float height)
-            {
-                m_size.vec[0] = width;
-                m_size.vec[1] = height;
-            }
-
-            inline void setSize(const Vector2& size)
-            {
-                m_size.vec[0] = size.vec[0];
-                m_size.vec[1] = size.vec[1];
             }
 
             ////////////////////////////////////////////////////////////////////

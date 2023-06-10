@@ -194,7 +194,7 @@ void GUIPxText::render()
     );
 
     // Move to the first character
-    m_matrix.translateX(PixelTextDefaultXOffset*0.5f);
+    m_matrix.translateX(PixelTextDefaultXStart);
 
     // Draw pixel text characters
     for (size_t i = 0; i < m_text.length(); ++i)
