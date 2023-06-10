@@ -664,6 +664,16 @@ bool MeshLoader::loadEmbeddedMeshes()
         return false;
     }
 
+    // Load plane vertex buffer
+    if (!m_meshes[MESHES_PLANE].createMeshBuffer(
+        VULKAN_MEMORY_MESHES,
+        PlaneVertices, PlaneIndices,
+        PlaneVerticesCount, PlaneIndicesCount))
+    {
+        // Could not load plane vertex buffer
+        return false;
+    }
+
     // Load skybox vertex buffer
     if (!m_meshes[MESHES_SKYBOX].createMeshBuffer(
         VULKAN_MEMORY_MESHES,

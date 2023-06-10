@@ -61,6 +61,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Embedded meshes                                                       //
     ////////////////////////////////////////////////////////////////////////////
+    #include "../Renderer/Plane.h"
     #include "../Renderer/SkyBox.h"
     #include "../Renderer/Shapes/CuboidShape.h"
 
@@ -81,14 +82,15 @@
     enum MeshesAssets
     {
         MESHES_DEFAULT = 0,
-        MESHES_SKYBOX = 1,
-        MESHES_CUBOID = 2,
-        MESHES_SEANEAR = 3,
-        MESHES_SEAFAR = 4,
+        MESHES_PLANE = 1,
+        MESHES_SKYBOX = 2,
+        MESHES_CUBOID = 3,
+        MESHES_SEANEAR = 4,
+        MESHES_SEAFAR = 5,
 
-        MESHES_TEST = 5,
+        MESHES_TEST = 6,
 
-        MESHES_ASSETSCOUNT = 6
+        MESHES_ASSETSCOUNT = 7
     };
 
 

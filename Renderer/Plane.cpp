@@ -50,7 +50,8 @@ Transform3(),
 m_texture(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_uvOffset(0.0f, 0.0f),
-m_uvSize(1.0f, 1.0f)
+m_uvSize(1.0f, 1.0f),
+m_billboard(PLANE_BILLBOARD_NONE)
 {
 
 }
@@ -60,6 +61,7 @@ m_uvSize(1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 Plane::~Plane()
 {
+    m_billboard = PLANE_BILLBOARD_NONE;
     m_uvSize.reset();
     m_uvOffset.reset();
     m_color.reset();
@@ -97,6 +99,9 @@ bool Plane::init(Texture& texture, float width, float height)
 
     // Reset plane UV size
     m_uvSize.set(1.0f, 1.0f);
+
+    // Reset billboard mode
+    m_billboard = PLANE_BILLBOARD_NONE;
 
     // Plane successfully created
     return true;

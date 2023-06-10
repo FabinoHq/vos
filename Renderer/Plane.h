@@ -53,6 +53,43 @@
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
 
+    #include <cstdint>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Plane vertex buffer vertices                                          //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t PlaneVerticesCount = 32;
+    const float PlaneVertices[PlaneVerticesCount] =
+    {
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.0f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -0.5f, 0.5f, 0.0f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Plane vertex buffer indices                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t PlaneIndicesCount = 6;
+    const uint16_t PlaneIndices[PlaneIndicesCount] =
+    {
+        0, 1, 2,
+        2, 3, 0,
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Plane class definition                                                //
+    ////////////////////////////////////////////////////////////////////////////
+    enum PlaneBillboardMode
+    {
+        PLANE_BILLBOARD_NONE = 0,
+        PLANE_BILLBOARD_CYLINDRICAL_Y = 1,
+        PLANE_BILLBOARD_CYLINDRICAL_X = 2,
+        PLANE_BILLBOARD_SPHERICAL = 3
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  Plane class definition                                                //
@@ -233,10 +270,12 @@
 
 
         private:
-            Texture*            m_texture;          // Plane texture pointer
-            Vector4             m_color;            // Plane color
-            Vector2             m_uvOffset;         // Plane UV offset
-            Vector2             m_uvSize;           // Plane UV size
+            Texture*                m_texture;          // Plane texture pointer
+            Vector4                 m_color;            // Plane color
+            Vector2                 m_uvOffset;         // Plane UV offset
+            Vector2                 m_uvSize;           // Plane UV size
+
+            PlaneBillboardMode      m_billboard;        // Plane billboard mode
     };
 
 

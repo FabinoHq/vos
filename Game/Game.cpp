@@ -655,14 +655,16 @@ void Game::render()
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
     GRenderer.bindVertexBuffer(MESHES_CUBOID);
     m_cuboid.setScale(10.0f);
-    m_cuboid.setPosition(0.0f, 0.0f, 0.0f);
+    m_cuboid.setPosition(0.0f, 700.0f, 0.0f);
     m_cuboid.render();*/
 
     // Render plane billboard
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
     GRenderer.bindVertexBuffer(MESHES_PLANE);
-    m_plane.setPosition(0.0f, 0.0f, 0.0f);
-    m_plane.render();*/
+    m_plane.bindTexture();
+    m_plane.setPosition(0.0f, 700.0f, 0.0f);
+    m_plane.setScale(10.0f);
+    m_plane.render();
 
 
     // Set 2D view
