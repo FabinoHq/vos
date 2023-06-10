@@ -503,11 +503,6 @@ void Game::compute(float frametime)
         m_spaceReleased = false;
     }*/
 
-    // Rotate test static mesh
-    m_staticMesh.rotateX(0.035f*frametime);
-    m_staticMesh.rotateY(0.1f*frametime);
-    m_staticMesh.rotateZ(0.075f*frametime);
-
     // Start uniforms upload
     if (GUniformchain.startUpload())
     {
@@ -546,6 +541,15 @@ void Game::compute(float frametime)
         Math::divide(m_freeflycam.getX(), HeightFarChunkXStride),
         Math::divide(m_freeflycam.getZ(), HeightFarChunkZStride)
     );
+
+    // Rotate test static mesh
+    m_staticMesh.rotateX(0.035f*frametime);
+    m_staticMesh.rotateY(0.1f*frametime);
+    m_staticMesh.rotateZ(0.075f*frametime);
+
+    // Compute test plane billboard
+    m_plane.setBillboard(PLANE_BILLBOARD_SPHERICAL);
+    m_plane.compute(&m_freeflycam);
 
     /*// Memory dump
     static int memDump = 0;

@@ -109,6 +109,30 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //  Get number sign with zero (-1, 0, or +1)                          //
+        //  return : Sign of the number with zero (-1, 0, or +1)              //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t signZero(int32_t x)
+        {
+            return ((x == 0) ? 0 : ((x > 0) ? 1 : -1));
+        }
+
+        inline int64_t signZero(int64_t x)
+        {
+            return ((x == 0) ? 0 : ((x > 0) ? 1 : -1));
+        }
+
+        inline float signZero(float x)
+        {
+            return ((x == 0.0f) ? 0.0f : ((x > 0.0f) ? 1.0f : -1.0f));
+        }
+
+        inline double signZero(double x)
+        {
+            return ((x == 0.0) ? 0.0 : ((x > 0.0) ? 1.0 : -1.0));
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Get number positive boolean (0 or +1)                             //
         //  return : Positive boolean of the number (0 or +1)                 //
         ////////////////////////////////////////////////////////////////////////

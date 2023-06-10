@@ -52,6 +52,7 @@
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"
     #include "../Math/Transform3.h"
+    #include "Camera.h"
 
     #include <cstdint>
 
@@ -119,6 +120,11 @@
             //  return : True if plane texture is successfully set            //
             ////////////////////////////////////////////////////////////////////
             bool setTexture(Texture& texture);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set plane billboard mode                                      //
+            ////////////////////////////////////////////////////////////////////
+            void setBillboard(PlaneBillboardMode billboard);
 
             ////////////////////////////////////////////////////////////////////
             //  Set plane color                                               //
@@ -242,6 +248,11 @@
                 m_uvSize.vec[1] = vSize;
             }
 
+
+            ////////////////////////////////////////////////////////////////////
+            //  Compute plane                                                 //
+            ////////////////////////////////////////////////////////////////////
+            void compute(Camera* camera);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind plane texture                                            //
