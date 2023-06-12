@@ -206,6 +206,8 @@ bool Game::init()
         // Could not init plane billboard
         return false;
     }
+    m_plane.setBillboard(PLANE_BILLBOARD_SPHERICAL);
+    m_plane.setTarget(m_freeflycam);
 
 
     // Init GUI cursor
@@ -547,10 +549,6 @@ void Game::compute(float frametime)
     m_staticMesh.rotateY(0.1f*frametime);
     m_staticMesh.rotateZ(0.075f*frametime);
 
-    // Compute test plane billboard
-    m_plane.setBillboard(PLANE_BILLBOARD_SPHERICAL);
-    m_plane.compute(&m_freeflycam);
-
     /*// Memory dump
     static int memDump = 0;
     ++memDump;
@@ -667,7 +665,7 @@ void Game::render()
     GRenderer.bindVertexBuffer(MESHES_PLANE);
     m_plane.bindTexture();
     m_plane.setPosition(0.0f, 700.0f, 0.0f);
-    m_plane.setScale(10.0f);
+    m_plane.setSize(10.0f, 10.0f, 1.0f);
     m_plane.render();
 
 

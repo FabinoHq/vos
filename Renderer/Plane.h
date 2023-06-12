@@ -127,6 +127,11 @@
             void setBillboard(PlaneBillboardMode billboard);
 
             ////////////////////////////////////////////////////////////////////
+            //  Set plane billboard target                                    //
+            ////////////////////////////////////////////////////////////////////
+            void setTarget(Camera& target);
+
+            ////////////////////////////////////////////////////////////////////
             //  Set plane color                                               //
             ////////////////////////////////////////////////////////////////////
             void setColor(const Vector4& color);
@@ -250,11 +255,6 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute plane                                                 //
-            ////////////////////////////////////////////////////////////////////
-            void compute(Camera* camera);
-
-            ////////////////////////////////////////////////////////////////////
             //  Bind plane texture                                            //
             ////////////////////////////////////////////////////////////////////
             inline void bindTexture()
@@ -287,6 +287,7 @@
             Vector2                 m_uvSize;           // Plane UV size
 
             PlaneBillboardMode      m_billboard;        // Plane billboard mode
+            Camera*                 m_target;           // Billboard target
     };
 
 

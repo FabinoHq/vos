@@ -112,24 +112,24 @@
         //  Get number sign with zero (-1, 0, or +1)                          //
         //  return : Sign of the number with zero (-1, 0, or +1)              //
         ////////////////////////////////////////////////////////////////////////
-        inline int32_t signZero(int32_t x)
+        inline int32_t signum(int32_t x)
         {
-            return ((x == 0) ? 0 : ((x > 0) ? 1 : -1));
+            return ((x > 0) - (x < 0));
         }
 
-        inline int64_t signZero(int64_t x)
+        inline int64_t signum(int64_t x)
         {
-            return ((x == 0) ? 0 : ((x > 0) ? 1 : -1));
+            return ((x > 0) - (x < 0));
         }
 
-        inline float signZero(float x)
+        inline float signum(float x)
         {
-            return ((x == 0.0f) ? 0.0f : ((x > 0.0f) ? 1.0f : -1.0f));
+            return (((x > 0.0f) - (x < 0.0f))*1.0f);
         }
 
-        inline double signZero(double x)
+        inline double signum(double x)
         {
-            return ((x == 0.0) ? 0.0 : ((x > 0.0) ? 1.0 : -1.0));
+            return (((x > 0.0) - (x < 0.0))*1.0);
         }
 
         ////////////////////////////////////////////////////////////////////////

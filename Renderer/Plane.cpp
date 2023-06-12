@@ -52,7 +52,8 @@ m_texture(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_uvOffset(0.0f, 0.0f),
 m_uvSize(1.0f, 1.0f),
-m_billboard(PLANE_BILLBOARD_NONE)
+m_billboard(PLANE_BILLBOARD_NONE),
+m_target(0)
 {
 
 }
@@ -62,6 +63,7 @@ m_billboard(PLANE_BILLBOARD_NONE)
 ////////////////////////////////////////////////////////////////////////////////
 Plane::~Plane()
 {
+    m_target = 0;
     m_billboard = PLANE_BILLBOARD_NONE;
     m_uvSize.reset();
     m_uvOffset.reset();
@@ -104,6 +106,9 @@ bool Plane::init(Texture& texture, float width, float height)
     // Reset billboard mode
     m_billboard = PLANE_BILLBOARD_NONE;
 
+    // Reset target
+    m_target = 0;
+
     // Plane successfully created
     return true;
 }
@@ -140,6 +145,14 @@ void Plane::setBillboard(PlaneBillboardMode billboard)
         billboard = PLANE_BILLBOARD_SPHERICAL;
     }
     m_billboard = billboard;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set plane billboard target                                                //
+////////////////////////////////////////////////////////////////////////////////
+void Plane::setTarget(Camera& target)
+{
+    m_target = &target;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,10 +202,11 @@ void Plane::setSubrect(float uOffset, float vOffset, float uSize, float vSize)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Compute plane                                                             //
+//  Render plane                                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void Plane::compute(Camera* camera)
+void Plane::render()
 {
+    // Compute plane transformations
     PlaneBillboardMode billboard = m_billboard;
     Vector3 lookAt = Vector3(0.0f, 0.0f, 1.0f);
     Vector3 delta = Vector3(0.0f, 0.0f, 0.0f);
@@ -201,8 +215,8 @@ void Plane::compute(Camera* camera)
     float dotProduct = 0.0f;
     float angle = 0.0f;
 
-    // Check camera
-    if (!camera)
+    // Check target
+    if (!m_target)
     {
         // Force billboard mode off
         billboard = PLANE_BILLBOARD_NONE;
@@ -215,9 +229,9 @@ void Plane::compute(Camera* camera)
     {
         // Cylindrical billboard (Y)
         delta.set(
-            (m_position.vec[0] - camera->getX()),
+            (m_position.vec[0] - m_target->getX()),
             0.0f,
-            (m_position.vec[2] - camera->getZ())
+            (m_position.vec[2] - m_target->getZ())
         );
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
@@ -235,8 +249,8 @@ void Plane::compute(Camera* camera)
         // Cylindrical billboard (X)
         delta.set(
             0.0f,
-            (m_position.vec[1] - camera->getY()),
-            (m_position.vec[2] - camera->getZ())
+            (m_position.vec[1] - m_target->getY()),
+            (m_position.vec[2] - m_target->getZ())
         );
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
@@ -253,9 +267,9 @@ void Plane::compute(Camera* camera)
     {
         // Spherical billboard
         delta.set(
-            (m_position.vec[0] - camera->getX()),
+            (m_position.vec[0] - m_target->getX()),
             0.0f,
-            (m_position.vec[2] - camera->getZ())
+            (m_position.vec[2] - m_target->getZ())
         );
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
@@ -267,15 +281,15 @@ void Plane::compute(Camera* camera)
             angle, rotation.vec[0], rotation.vec[1], rotation.vec[2]
         );
         delta2.set(
-            (m_position.vec[0] - camera->getX()),
-            (m_position.vec[1] - camera->getY()),
-            (m_position.vec[2] - camera->getZ())
+            (m_position.vec[0] - m_target->getX()),
+            (m_position.vec[1] - m_target->getY()),
+            (m_position.vec[2] - m_target->getZ())
         );
         delta2.normalize();
         dotProduct = delta.dotProduct(delta2);
         if (dotProduct <= -1.0) { dotProduct = -1.0; }
         if (dotProduct >= 1.0) { dotProduct = 1.0; }
-        angle = std::acos(dotProduct)*Math::signZero(delta2.vec[1]);
+        angle = std::acos(dotProduct)*Math::signum(delta2.vec[1]);
         m_matrix.rotateX(angle);
         m_matrix.rotateZ(m_angles.vec[2]);
     }
@@ -286,13 +300,7 @@ void Plane::compute(Camera* camera)
     }
     m_matrix.translate(-m_origin);
     m_matrix.scale(m_size);
-}
 
-////////////////////////////////////////////////////////////////////////////////
-//  Render plane                                                              //
-////////////////////////////////////////////////////////////////////////////////
-void Plane::render()
-{
     // Push model matrix into command buffer
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
