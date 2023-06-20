@@ -605,5 +605,8 @@
     <ClInclude Include="Renderer\Plane.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="System\SysCursor.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

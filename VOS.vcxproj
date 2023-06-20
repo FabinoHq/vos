@@ -373,6 +373,7 @@
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysCPU.h" />
     <ClInclude Include="System\SysCRC.h" />
+    <ClInclude Include="System\SysCursor.h" />
     <ClInclude Include="System\SysDisplayMode.h" />
     <ClInclude Include="System\SysEvent.h" />
     <ClInclude Include="System\SysMessage.h" />

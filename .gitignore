@@ -39,6 +39,7 @@
 !System/SysMutex.h
 !System/SysMutexLocker.h
 !System/SysDisplayMode.h
+!System/SysCursor.h
 !System/SysWindow.h
 !System/SysVulkan.h
 !System/SysClock.h

@@ -102,26 +102,26 @@ bool GUICursor::init(Texture& texture, float scale)
 ////////////////////////////////////////////////////////////////////////////////
 //  Set cursor                                                                //
 ////////////////////////////////////////////////////////////////////////////////
-void GUICursor::setCursor(GUICursorType cursorType)
+void GUICursor::setCursor(SysCursorType cursorType)
 {
     switch (cursorType)
     {
-        case GUICURSOR_NS:
+        case SYSCURSOR_NS:
             m_texture = &GResources.textures.gui(TEXTURE_NSCURSOR);
             m_offset = GUICusorNSCursorOffset;
             break;
 
-        case GUICURSOR_EW:
+        case SYSCURSOR_EW:
             m_texture = &GResources.textures.gui(TEXTURE_EWCURSOR);
             m_offset = GUICusorEWCursorOffset;
             break;
 
-        case GUICURSOR_NESW:
+        case SYSCURSOR_NESW:
             m_texture = &GResources.textures.gui(TEXTURE_NESWCURSOR);
             m_offset = GUICusorNESWCursorOffset;
             break;
 
-        case GUICURSOR_NWSE:
+        case SYSCURSOR_NWSE:
             m_texture = &GResources.textures.gui(TEXTURE_NWSECURSOR);
             m_offset = GUICusorNWSECursorOffset;
             break;

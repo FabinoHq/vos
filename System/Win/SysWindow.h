@@ -46,6 +46,7 @@
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"
     #include "../SysEvent.h"
+    #include "../SysCursor.h"
 
     #undef UNICODE
     #define UNICODE
@@ -89,6 +90,15 @@
             //  Close the window                                              //
             ////////////////////////////////////////////////////////////////////
             void close();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set system window cursor                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void setCursor(SysCursorType cursorType)
+            {
+                SetCursor(m_cursors[cursorType]);
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -181,6 +191,8 @@
             SysDisplayMode      m_systemMode;   // System display mode
             int                 m_width;        // Window width
             int                 m_height;       // Window height
+
+            HCURSOR*            m_cursors;      // Window cursors
 
             std::queue<Event>   m_events;       // Events FIFO queue
     };

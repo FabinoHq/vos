@@ -63,7 +63,8 @@ m_lastMouseX(0),
 m_lastMouseY(0),
 m_lastMouseLeft(false),
 m_lastMouseRight(false),
-m_hiddenCursor(0)
+m_cursors(0),
+m_events()
 {
 
 }
@@ -187,23 +188,48 @@ bool SysWindow::create()
     m_lastMouseLeft = (mask & Button1Mask);
     m_lastMouseRight = (mask & Button3Mask);
 
-    // Hide mouse cursor
+    // Allocate system cursors
+    m_cursors = new (std::nothrow) HCURSOR[SYSCURSOR_CURSORSCOUNT];
+    if (!m_cursors)
+    {
+        // Could not allocate system cursors
+        return false;
+    }
+
+    // Load system cursors
     Pixmap cursorPixmap = XCreatePixmap(m_display, m_handle, 1, 1, 1);
     GC graphicsContext = XCreateGC(m_display, cursorPixmap, 0, 0);
     XDrawPoint(m_display, cursorPixmap, graphicsContext, 0, 0);
     XFreeGC(m_display, graphicsContext);
     XColor color;
-    color.flags = DoRed | DoGreen | DoBlue;
+    color.flags = (DoRed | DoGreen | DoBlue);
     color.red = 0;
     color.blue = 0;
     color.green = 0;
-    m_hiddenCursor = XCreatePixmapCursor(
+    m_cursors[SYSCURSOR_NONE] = XCreatePixmapCursor(
         m_display, cursorPixmap, cursorPixmap, &color, &color, 0, 0
     );
-    #if (VOS_POINTERLOCK == 1)
-        XDefineCursor(m_display, m_handle, m_hiddenCursor);
-    #endif // VOS_POINTERLOCK
     XFreePixmap(m_display, cursorPixmap);
+    if (!m_cursors[SYSCURSOR_NONE]) { return false; }
+    m_cursors[SYSCURSOR_DEFAULT] = XCreateFontCursor(m_display, XC_left_ptr);
+    if (!m_cursors[SYSCURSOR_DEFAULT]) { return false; }
+    m_cursors[SYSCURSOR_NS] =
+        XCreateFontCursor(m_display, XC_sb_v_double_arrow);
+    if (!m_cursors[SYSCURSOR_NS]) { return false; }
+    m_cursors[SYSCURSOR_EW] =
+        XCreateFontCursor(m_display, XC_sb_h_double_arrow);
+    if (!m_cursors[SYSCURSOR_EW]) { return false; }
+    m_cursors[SYSCURSOR_NESW] =
+        XCreateFontCursor(m_display, XC_cross_reverse);
+    if (!m_cursors[SYSCURSOR_NESW]) { return false; }
+    m_cursors[SYSCURSOR_NWSE] =
+        XCreateFontCursor(m_display, XC_cross_reverse);
+    if (!m_cursors[SYSCURSOR_NWSE]) { return false; }
+
+    // Hide mouse cursor
+    #if (VOS_POINTERLOCK == 1)
+        XDefineCursor(m_display, m_handle, m_cursors[SYSCURSOR_NONE]);
+    #endif // VOS_POINTERLOCK
 
     // System window successfully created
     return true;
@@ -214,22 +240,26 @@ bool SysWindow::create()
 ////////////////////////////////////////////////////////////////////////////////
 void SysWindow::close()
 {
+    // Destroy the window
     if (m_handle)
     {
-        // Delete the window
         XDestroyWindow(m_display, m_handle);
     }
+    m_handle = 0;
 
     if (m_display)
     {
-        // Destroy hidden cursor
-        XFreeCursor(m_display, m_hiddenCursor);
+        // Destroy system cursors
+        for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i)
+        {
+            if (m_cursors[i]) { XFreeCursor(m_display, m_cursors[i]); }
+        }
+        if (m_cursors) { delete[] m_cursors; }
+        m_cursors = 0;
 
         // Release the display
         XCloseDisplay(m_display);
     }
-
-    m_handle = 0;
     m_display = 0;
 }
 
@@ -409,7 +439,9 @@ void SysWindow::processEvent(XEvent msg)
             {
                 m_hasFocus = true;
                 #if (VOS_POINTERLOCK == 1)
-                    XDefineCursor(m_display, m_handle, m_hiddenCursor);
+                    XDefineCursor(
+                        m_display, m_handle, m_cursors[SYSCURSOR_NONE]
+                    );
                     for (unsigned int i = 0;
                         i < SysWindowGrabPointerAttempts; ++i)
                     {

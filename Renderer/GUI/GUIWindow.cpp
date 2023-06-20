@@ -534,86 +534,86 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 //  Update renderer current cursor                                            //
 ////////////////////////////////////////////////////////////////////////////////
-GUICursorType GUIWindow::updateCursor(float mouseX, float mouseY)
+SysCursorType GUIWindow::updateCursor(float mouseX, float mouseY)
 {
     if (m_resizable)
     {
         if (m_grabTop && m_grabLeft)
         {
-            return GUICURSOR_NWSE;
+            return SYSCURSOR_NWSE;
         }
         if (m_grabTop && m_grabRight)
         {
-            return GUICURSOR_NESW;
+            return SYSCURSOR_NESW;
         }
         if (m_grabBottom && m_grabLeft)
         {
-            return GUICURSOR_NESW;
+            return SYSCURSOR_NESW;
         }
         if (m_grabBottom && m_grabRight)
         {
-            return GUICURSOR_NWSE;
+            return SYSCURSOR_NWSE;
         }
         if (m_grabTop)
         {
-            return GUICURSOR_NS;
+            return SYSCURSOR_NS;
         }
         if (m_grabBottom)
         {
-            return GUICURSOR_NS;
+            return SYSCURSOR_NS;
         }
         if (m_grabLeft)
         {
-            return GUICURSOR_EW;
+            return SYSCURSOR_EW;
         }
         if (m_grabRight)
         {
-            return GUICURSOR_EW;
+            return SYSCURSOR_EW;
         }
         if (m_grabWindow)
         {
-            return GUICURSOR_DEFAULT;
+            return SYSCURSOR_DEFAULT;
         }
 
         if (isTopResizePicking(mouseX, mouseY) &&
             isLeftResizePicking(mouseX, mouseY))
         {
-            return GUICURSOR_NWSE;
+            return SYSCURSOR_NWSE;
         }
         if (isTopResizePicking(mouseX, mouseY) &&
             isRightResizePicking(mouseX, mouseY))
         {
-            return GUICURSOR_NESW;
+            return SYSCURSOR_NESW;
         }
         if (isBottomResizePicking(mouseX, mouseY) &&
             isLeftResizePicking(mouseX, mouseY))
         {
-            return GUICURSOR_NESW;
+            return SYSCURSOR_NESW;
         }
         if (isBottomResizePicking(mouseX, mouseY) &&
             isRightResizePicking(mouseX, mouseY))
         {
-            return GUICURSOR_NWSE;
+            return SYSCURSOR_NWSE;
         }
         if (isTopResizePicking(mouseX, mouseY))
         {
-            return GUICURSOR_NS;
+            return SYSCURSOR_NS;
         }
         if (isBottomResizePicking(mouseX, mouseY))
         {
-            return GUICURSOR_NS;
+            return SYSCURSOR_NS;
         }
         if (isLeftResizePicking(mouseX, mouseY))
         {
-            return GUICURSOR_EW;
+            return SYSCURSOR_EW;
         }
         if (isRightResizePicking(mouseX, mouseY))
         {
-            return GUICURSOR_EW;
+            return SYSCURSOR_EW;
         }
     }
 
-    return GUICURSOR_DEFAULT;
+    return SYSCURSOR_DEFAULT;
 }
 
 

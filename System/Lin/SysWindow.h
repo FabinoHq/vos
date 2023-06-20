@@ -47,9 +47,11 @@
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"
     #include "../SysEvent.h"
+    #include "../SysCursor.h"
 
     #include <X11/Xlib.h>
     #include <X11/Xutil.h>
+    #include <X11/cursorfont.h>
     #include <queue>
 
 
@@ -86,6 +88,15 @@
             //  Close the window                                              //
             ////////////////////////////////////////////////////////////////////
             void close();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set system window cursor                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void setCursor(SysCursorType cursorType)
+            {
+                XDefineCursor(m_display, m_handle, m_cursors[cursorType]);
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -177,7 +188,8 @@
             int                 m_lastMouseY;       // Last mouse Y position
             bool                m_lastMouseLeft;    // Last mouse left state
             bool                m_lastMouseRight;   // Last mouse right state
-            Cursor              m_hiddenCursor;     // Hiden cursor
+
+            Cursor*             m_cursors;          // Window cursors
 
             std::queue<Event>   m_events;           // Events FIFO queue
     };

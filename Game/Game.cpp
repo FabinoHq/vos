@@ -442,12 +442,23 @@ void Game::events(Event& event)
                 if (m_mouseX >= ratio) { m_mouseX = ratio; }
                 if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
                 if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
-            #endif
+            #endif // VOS_POINTERLOCK
 
             m_freeflycam.mouseMove(deltaX, deltaY);
             //m_orbitalcam.mouseMove(deltaX, deltaY);
             m_guiWindow.mouseMove(m_mouseX, m_mouseY);
-            m_cursor.setCursor(m_guiWindow.updateCursor(m_mouseX, m_mouseY));
+
+            #if (VOS_POINTERLOCK == 1)
+                // GUI cursor
+                m_cursor.setCursor(
+                    m_guiWindow.updateCursor(m_mouseX, m_mouseY)
+                );
+            #else
+                // System cursor
+                GSysWindow.setCursor(
+                    m_guiWindow.updateCursor(m_mouseX, m_mouseY)
+                );
+            #endif // VOS_POINTERLOCK
             break;
         }
 

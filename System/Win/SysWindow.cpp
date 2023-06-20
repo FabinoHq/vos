@@ -57,7 +57,9 @@ m_handle(0),
 m_hasFocus(false),
 m_systemMode(),
 m_width(0),
-m_height(0)
+m_height(0),
+m_cursors(0),
+m_events()
 {
 
 }
@@ -90,6 +92,27 @@ bool SysWindow::create()
         return false;
     }
 
+    // Allocate system cursors
+    m_cursors = new (std::nothrow) HCURSOR[SYSCURSOR_CURSORSCOUNT];
+    if (!m_cursors)
+    {
+        // Could not allocate system cursors
+        return false;
+    }
+
+    // Load system cursors
+    m_cursors[SYSCURSOR_NONE] = 0;
+    m_cursors[SYSCURSOR_DEFAULT] = LoadCursor(0, IDC_ARROW);
+    if (!m_cursors[SYSCURSOR_DEFAULT]) { return false; }
+    m_cursors[SYSCURSOR_NS] = LoadCursor(0, IDC_SIZENS);
+    if (!m_cursors[SYSCURSOR_NS]) { return false; }
+    m_cursors[SYSCURSOR_EW] = LoadCursor(0, IDC_SIZEWE);
+    if (!m_cursors[SYSCURSOR_EW]) { return false; }
+    m_cursors[SYSCURSOR_NESW] = LoadCursor(0, IDC_SIZENESW);
+    if (!m_cursors[SYSCURSOR_NESW]) { return false; }
+    m_cursors[SYSCURSOR_NWSE] = LoadCursor(0, IDC_SIZENWSE);
+    if (!m_cursors[SYSCURSOR_NWSE]) { return false; }
+
     // Register the window class
     WNDCLASS windowClass = { 0 };
     windowClass.style = 0;
@@ -98,7 +121,7 @@ bool SysWindow::create()
     windowClass.cbWndExtra = 0;
     windowClass.hInstance = m_instance;
     windowClass.hIcon = LoadIcon(0, IDI_APPLICATION);
-    windowClass.hCursor = LoadCursor(0, IDC_ARROW);
+    windowClass.hCursor = m_cursors[SYSCURSOR_DEFAULT];
     windowClass.hbrBackground = 0;
     windowClass.lpszMenuName = 0;
     windowClass.lpszClassName = VOSWindowClassName;
@@ -190,15 +213,27 @@ bool SysWindow::create()
 ////////////////////////////////////////////////////////////////////////////////
 void SysWindow::close()
 {
+    // Destroy the window
     if (m_handle)
     {
-        // Delete the window
         DestroyWindow(m_handle);
+    }
+    m_handle = 0;
+
+    // Destroy the instance
+    if (m_instance)
+    {
         UnregisterClass(VOSWindowClassName, m_instance);
     }
-
     m_instance = 0;
-    m_handle = 0;
+
+    // Destroy system cursors
+    for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i)
+    {
+        if (m_cursors[i]) { /*DestroyCursor(m_cursors[i]);*/ }
+    }
+    if (m_cursors) { delete[] m_cursors; }
+    m_cursors = 0;
 }
 
 
@@ -237,6 +272,15 @@ LRESULT CALLBACK SysWindow::OnEvent(
 {
     // Process event
     GSysWindow.processEvent(msg, wparam, lparam);
+
+    // System cursor event
+    #if (VOS_POINTERLOCK == 0)
+        if (msg == WM_SETCURSOR)
+        {
+            // Todo : Side window resize ?
+            return 0;
+        }
+    #endif // VOS_POINTERLOCK
 
     // System menu event
     if ((msg == WM_SYSCOMMAND) && (wparam == SC_KEYMENU))
@@ -328,7 +372,7 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                     event.mouse.y = HIWORD(lparam);
                     m_events.push(event);
                     break;
-            #endif
+            #endif // VOS_POINTERLOCK
 
             // Raw inputs
             case WM_INPUT:

@@ -43,6 +43,7 @@
 #define VOS_RENDERER_GUI_GUICURSOR_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysCursor.h"
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/Swapchain.h"
     #include "../Vulkan/GraphicsLayout.h"
@@ -63,19 +64,6 @@
     const Vector2 GUICusorEWCursorOffset = Vector2(-4.0f, 11.0f);
     const Vector2 GUICusorNESWCursorOffset = Vector2(-7.0f, 7.0f);
     const Vector2 GUICusorNWSECursorOffset = Vector2(-7.0f, 7.0f);
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  GUICursor type enumeration                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    enum GUICursorType
-    {
-        GUICURSOR_DEFAULT = 0,
-
-        GUICURSOR_NS = 1,
-        GUICURSOR_EW = 2,
-        GUICURSOR_NESW = 3,
-        GUICURSOR_NWSE = 4
-    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -104,7 +92,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set cursor                                                    //
             ////////////////////////////////////////////////////////////////////
-            void setCursor(GUICursorType cursorType);
+            void setCursor(SysCursorType cursorType);
 
             ////////////////////////////////////////////////////////////////////
             //  Set cursor texture                                            //
