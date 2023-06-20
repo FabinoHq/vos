@@ -419,28 +419,44 @@ void Game::events(Event& event)
 
         // Mouse moved
         case EVENT_MOUSEMOVED:
-            m_mouseX += event.mouse.x*scale*2.0f;
-            m_mouseY -= event.mouse.y*scale*2.0f;
-            if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
-            if (m_mouseX >= ratio) { m_mouseX = ratio; }
-            if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
-            if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
-            m_freeflycam.mouseMove(
-                event.mouse.x*1.0f, event.mouse.y*1.0f
-            );
-            /*m_orbitalcam.mouseMove(
-                event.mouse.x*1.0f, event.mouse.y*1.0f
-            );*/
-            /*m_guiWindow.mouseMove(m_mouseX, m_mouseY);
-            m_cursor.setCursor(m_guiWindow.updateCursor(m_mouseX, m_mouseY));*/
+        {
+            #if (VOS_POINTERLOCK == 1)
+                // High precision mouse delta
+                float deltaX = (event.mouse.x*1.0f);
+                float deltaY = (event.mouse.y*1.0f);
+                m_mouseX += event.mouse.x*scale*2.0f;
+                m_mouseY -= event.mouse.y*scale*2.0f;
+                if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
+                if (m_mouseX >= ratio) { m_mouseX = ratio; }
+                if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
+                if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
+            #else
+                // OS absolute mouse position
+                float prevMouseX = m_mouseX;
+                float prevMouseY = m_mouseY;
+                m_mouseX = (-ratio + (event.mouse.x*scale*2.0f));
+                m_mouseY = (1.0f - (event.mouse.y*scale*2.0f));
+                float deltaX = (m_mouseX - prevMouseX)*500.0f;
+                float deltaY = (prevMouseY - m_mouseY)*500.0f;
+                if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
+                if (m_mouseX >= ratio) { m_mouseX = ratio; }
+                if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
+                if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
+            #endif
+
+            m_freeflycam.mouseMove(deltaX, deltaY);
+            //m_orbitalcam.mouseMove(deltaX, deltaY);
+            m_guiWindow.mouseMove(m_mouseX, m_mouseY);
+            m_cursor.setCursor(m_guiWindow.updateCursor(m_mouseX, m_mouseY));
             break;
+        }
 
         // Mouse button pressed
         case EVENT_MOUSEPRESSED:
             if (event.mouse.button == EVENT_MOUSE_LEFT)
             {
                 //m_orbitalcam.mousePress();
-                //m_guiWindow.mousePress(m_mouseX, m_mouseY);
+                m_guiWindow.mousePress(m_mouseX, m_mouseY);
             }
             break;
 
@@ -449,7 +465,7 @@ void Game::events(Event& event)
             if (event.mouse.button == EVENT_MOUSE_LEFT)
             {
                 //m_orbitalcam.mouseRelease();
-                //m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
+                m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
             }
             break;
 
@@ -746,9 +762,9 @@ void Game::render()
     m_ellipse.render();*/
 
     // Render window
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
     m_guiWindow.bindTexture();
-    m_guiWindow.render();*/
+    m_guiWindow.render();
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);

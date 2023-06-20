@@ -173,6 +173,8 @@
 
             int                 m_width;            // Window width
             int                 m_height;           // Window height
+            int                 m_lastMouseX;       // Last mouse X position
+            int                 m_lastMouseY;       // Last mouse Y position
             bool                m_lastMouseLeft;    // Last mouse left state
             bool                m_lastMouseRight;   // Last mouse right state
             Cursor              m_hiddenCursor;     // Hiden cursor

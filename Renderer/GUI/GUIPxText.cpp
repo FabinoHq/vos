@@ -175,7 +175,7 @@ void GUIPxText::render()
     m_matrix.translate(-m_origin);
     m_matrix.scale(m_size.vec[1], m_size.vec[1]);
 
-    // Push UV constants into command buffer
+    // Push constants into command buffer
     PushConstantData pushConstants;
     pushConstants.color[0] = m_color.vec[0];
     pushConstants.color[1] = m_color.vec[1];

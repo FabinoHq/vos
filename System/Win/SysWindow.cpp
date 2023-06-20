@@ -152,7 +152,11 @@ bool SysWindow::create()
 
     // Enable the window
     UpdateWindow(m_handle);
-    ShowCursor(FALSE);
+    #if (VOS_POINTERLOCK == 1)
+        ShowCursor(FALSE);
+    #else
+        ShowCursor(TRUE);
+    #endif // VOS_POINTERLOCK
     SetActiveWindow(m_handle);
     SetFocus(m_handle);
     ShowWindow(m_handle, SW_SHOW);
@@ -289,12 +293,16 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
             // Focus events
             case WM_SETFOCUS:
                 m_hasFocus = true;
-                ShowCursor(FALSE);
+                #if (VOS_POINTERLOCK == 1)
+                    ShowCursor(FALSE);
+                #endif // VOS_POINTERLOCK
                 break;
 
             case WM_KILLFOCUS:
                 m_hasFocus = false;
-                ShowCursor(TRUE);
+                #if (VOS_POINTERLOCK == 1)
+                    ShowCursor(TRUE);
+                #endif // VOS_POINTERLOCK
                 break;
 
             // Keys events
@@ -311,6 +319,16 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                 event.key = transcriptKey(wparam, lparam);
                 m_events.push(event);
                 break;
+
+            // Mouse events
+            #if (VOS_POINTERLOCK == 0)
+                case WM_MOUSEMOVE:
+                    event.type = EVENT_MOUSEMOVED;
+                    event.mouse.x = LOWORD(lparam);
+                    event.mouse.y = HIWORD(lparam);
+                    m_events.push(event);
+                    break;
+            #endif
 
             // Raw inputs
             case WM_INPUT:
@@ -330,14 +348,16 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                         case RIM_TYPEMOUSE:
                         {
                             // Mouse move event
-                            event.type = EVENT_MOUSEMOVED;
-                            event.mouse.x = raw->data.mouse.lLastX;
-                            event.mouse.y = raw->data.mouse.lLastY;
-                            m_events.push(event);
-                            SetCursorPos(
-                                m_systemMode.getWidth()/2,
-                                m_systemMode.getHeight()/2
-                            );
+                            #if (VOS_POINTERLOCK == 1)
+                                event.type = EVENT_MOUSEMOVED;
+                                event.mouse.x = raw->data.mouse.lLastX;
+                                event.mouse.y = raw->data.mouse.lLastY;
+                                m_events.push(event);
+                                SetCursorPos(
+                                    m_systemMode.getWidth()/2,
+                                    m_systemMode.getHeight()/2
+                                );
+                            #endif // VOS_POINTERLOCK
 
                             // Mouse pressed events
                             if (raw->data.mouse.usButtonFlags &

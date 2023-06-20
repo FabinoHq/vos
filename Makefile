@@ -114,6 +114,7 @@ VOS: main.o \
 	Renderer/View.o Renderer/Camera.o \
 	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
 	Renderer/Sprite.o Renderer/ProcSprite.o \
+	Renderer/Plane.o \
 	Renderer/SkyBox.o Renderer/SkyProc.o \
 	Renderer/StaticMesh.o \
 	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
