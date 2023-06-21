@@ -274,13 +274,10 @@ LRESULT CALLBACK SysWindow::OnEvent(
     GSysWindow.processEvent(msg, wparam, lparam);
 
     // System cursor event
-    #if (VOS_POINTERLOCK == 0)
-        if (msg == WM_SETCURSOR)
-        {
-            // Todo : Side window resize ?
-            return 0;
-        }
-    #endif // VOS_POINTERLOCK
+    if (msg == WM_SETCURSOR)
+    {
+        if (LOWORD(lparam) == HTCLIENT) { return 0; }
+    }
 
     // System menu event
     if ((msg == WM_SYSCOMMAND) && (wparam == SC_KEYMENU))
@@ -368,8 +365,8 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
             #if (VOS_POINTERLOCK == 0)
                 case WM_MOUSEMOVE:
                     event.type = EVENT_MOUSEMOVED;
-                    event.mouse.x = LOWORD(lparam);
-                    event.mouse.y = HIWORD(lparam);
+                    event.mouse.x = GET_X_LPARAM(lparam);
+                    event.mouse.y = GET_Y_LPARAM(lparam);
                     m_events.push(event);
                     break;
             #endif // VOS_POINTERLOCK

@@ -53,6 +53,7 @@
     #undef _WINSOCKAPI_
     #define _WINSOCKAPI_
     #include <windows.h>
+    #include <windowsx.h>
     #include <hidusage.h>
     #include <queue>
 
