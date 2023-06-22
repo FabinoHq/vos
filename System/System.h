@@ -76,7 +76,7 @@
     //  0 : No pointer lock (OS absolute mouse position)                      //
     //  1 : Pointer lock (High precision mouse delta)                         //
     ////////////////////////////////////////////////////////////////////////////
-    #define VOS_POINTERLOCK 0
+    #define VOS_POINTERLOCK 1
 
 
 #endif // VOS_SYSTEM_SYSTEM_HEADER

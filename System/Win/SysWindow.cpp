@@ -104,14 +104,24 @@ bool SysWindow::create()
     m_cursors[SYSCURSOR_NONE] = 0;
     m_cursors[SYSCURSOR_DEFAULT] = LoadCursor(0, IDC_ARROW);
     if (!m_cursors[SYSCURSOR_DEFAULT]) { return false; }
-    m_cursors[SYSCURSOR_NS] = LoadCursor(0, IDC_SIZENS);
-    if (!m_cursors[SYSCURSOR_NS]) { return false; }
-    m_cursors[SYSCURSOR_EW] = LoadCursor(0, IDC_SIZEWE);
-    if (!m_cursors[SYSCURSOR_EW]) { return false; }
-    m_cursors[SYSCURSOR_NESW] = LoadCursor(0, IDC_SIZENESW);
-    if (!m_cursors[SYSCURSOR_NESW]) { return false; }
-    m_cursors[SYSCURSOR_NWSE] = LoadCursor(0, IDC_SIZENWSE);
-    if (!m_cursors[SYSCURSOR_NWSE]) { return false; }
+    #if (VOS_POINTERLOCK == 0)
+        m_cursors[SYSCURSOR_TOPRESIZE] = LoadCursor(0, IDC_SIZENS);
+        if (!m_cursors[SYSCURSOR_TOPRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_BOTTOMRESIZE] = LoadCursor(0, IDC_SIZENS);
+        if (!m_cursors[SYSCURSOR_BOTTOMRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_LEFTRESIZE] = LoadCursor(0, IDC_SIZEWE);
+        if (!m_cursors[SYSCURSOR_LEFTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_RIGHTRESIZE] = LoadCursor(0, IDC_SIZEWE);
+        if (!m_cursors[SYSCURSOR_RIGHTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_TOPLEFTRESIZE] = LoadCursor(0, IDC_SIZENWSE);
+        if (!m_cursors[SYSCURSOR_TOPLEFTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_TOPRIGHTRESIZE] = LoadCursor(0, IDC_SIZENESW);
+        if (!m_cursors[SYSCURSOR_TOPRIGHTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_BOTTOMLEFTRESIZE] = LoadCursor(0, IDC_SIZENESW);
+        if (!m_cursors[SYSCURSOR_BOTTOMLEFTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_BOTTOMRIGHTRESIZE] = LoadCursor(0, IDC_SIZENWSE);
+        if (!m_cursors[SYSCURSOR_BOTTOMRIGHTRESIZE]) { return false; }
+    #endif // VOS_POINTERLOCK
 
     // Register the window class
     WNDCLASS windowClass = { 0 };

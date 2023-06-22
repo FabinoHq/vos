@@ -96,10 +96,12 @@
             ////////////////////////////////////////////////////////////////////
             //  Set system window cursor                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setCursor(SysCursorType cursorType)
-            {
-                SetCursor(m_cursors[cursorType]);
-            }
+            #if (VOS_POINTERLOCK == 0)
+                inline void setCursor(SysCursorType cursorType)
+                {
+                    SetCursor(m_cursors[cursorType]);
+                }
+            #endif // VOS_POINTERLOCK
 
 
             ////////////////////////////////////////////////////////////////////

@@ -189,7 +189,7 @@ bool SysWindow::create()
     m_lastMouseRight = (mask & Button3Mask);
 
     // Allocate system cursors
-    m_cursors = new (std::nothrow) HCURSOR[SYSCURSOR_CURSORSCOUNT];
+    m_cursors = new (std::nothrow) Cursor[SYSCURSOR_CURSORSCOUNT];
     if (!m_cursors)
     {
         // Could not allocate system cursors
@@ -211,20 +211,33 @@ bool SysWindow::create()
     );
     XFreePixmap(m_display, cursorPixmap);
     if (!m_cursors[SYSCURSOR_NONE]) { return false; }
-    m_cursors[SYSCURSOR_DEFAULT] = XCreateFontCursor(m_display, XC_left_ptr);
-    if (!m_cursors[SYSCURSOR_DEFAULT]) { return false; }
-    m_cursors[SYSCURSOR_NS] =
-        XCreateFontCursor(m_display, XC_sb_v_double_arrow);
-    if (!m_cursors[SYSCURSOR_NS]) { return false; }
-    m_cursors[SYSCURSOR_EW] =
-        XCreateFontCursor(m_display, XC_sb_h_double_arrow);
-    if (!m_cursors[SYSCURSOR_EW]) { return false; }
-    m_cursors[SYSCURSOR_NESW] =
-        XCreateFontCursor(m_display, XC_cross_reverse);
-    if (!m_cursors[SYSCURSOR_NESW]) { return false; }
-    m_cursors[SYSCURSOR_NWSE] =
-        XCreateFontCursor(m_display, XC_cross_reverse);
-    if (!m_cursors[SYSCURSOR_NWSE]) { return false; }
+    m_cursors[SYSCURSOR_DEFAULT] = None;
+    #if (VOS_POINTERLOCK == 0)
+        m_cursors[SYSCURSOR_TOPRESIZE] =
+            XCreateFontCursor(m_display, XC_top_side);
+        if (!m_cursors[SYSCURSOR_TOPRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_BOTTOMRESIZE] =
+            XCreateFontCursor(m_display, XC_bottom_side);
+        if (!m_cursors[SYSCURSOR_BOTTOMRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_LEFTRESIZE] =
+            XCreateFontCursor(m_display, XC_left_side);
+        if (!m_cursors[SYSCURSOR_LEFTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_RIGHTRESIZE] =
+            XCreateFontCursor(m_display, XC_right_side);
+        if (!m_cursors[SYSCURSOR_RIGHTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_TOPLEFTRESIZE] =
+            XCreateFontCursor(m_display, XC_top_left_corner);
+        if (!m_cursors[SYSCURSOR_TOPLEFTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_TOPRIGHTRESIZE] =
+            XCreateFontCursor(m_display, XC_top_right_corner);
+        if (!m_cursors[SYSCURSOR_TOPRIGHTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_BOTTOMLEFTRESIZE] =
+            XCreateFontCursor(m_display, XC_bottom_left_corner);
+        if (!m_cursors[SYSCURSOR_BOTTOMLEFTRESIZE]) { return false; }
+        m_cursors[SYSCURSOR_BOTTOMRIGHTRESIZE] =
+            XCreateFontCursor(m_display, XC_bottom_right_corner);
+        if (!m_cursors[SYSCURSOR_BOTTOMRIGHTRESIZE]) { return false; }
+    #endif // VOS_POINTERLOCK
 
     // Hide mouse cursor
     #if (VOS_POINTERLOCK == 1)

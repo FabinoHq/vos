@@ -793,10 +793,10 @@ void Game::render()
     m_pxText.render();
 
     // Render cursor
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_cursor.setPosition(m_mouseX, m_mouseY);
     m_cursor.bindTexture();
-    m_cursor.render();*/
+    m_cursor.render();
 
     // End rendering
     GRenderer.endRenderPass();

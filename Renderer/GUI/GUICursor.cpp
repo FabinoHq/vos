@@ -106,22 +106,22 @@ void GUICursor::setCursor(SysCursorType cursorType)
 {
     switch (cursorType)
     {
-        case SYSCURSOR_NS:
+        case SYSCURSOR_TOPRESIZE: case SYSCURSOR_BOTTOMRESIZE:
             m_texture = &GResources.textures.gui(TEXTURE_NSCURSOR);
             m_offset = GUICusorNSCursorOffset;
             break;
 
-        case SYSCURSOR_EW:
+        case SYSCURSOR_LEFTRESIZE: case SYSCURSOR_RIGHTRESIZE:
             m_texture = &GResources.textures.gui(TEXTURE_EWCURSOR);
             m_offset = GUICusorEWCursorOffset;
             break;
 
-        case SYSCURSOR_NESW:
+        case SYSCURSOR_TOPRIGHTRESIZE: case SYSCURSOR_BOTTOMLEFTRESIZE:
             m_texture = &GResources.textures.gui(TEXTURE_NESWCURSOR);
             m_offset = GUICusorNESWCursorOffset;
             break;
 
-        case SYSCURSOR_NWSE:
+        case SYSCURSOR_TOPLEFTRESIZE: case SYSCURSOR_BOTTOMRIGHTRESIZE:
             m_texture = &GResources.textures.gui(TEXTURE_NWSECURSOR);
             m_offset = GUICusorNWSECursorOffset;
             break;
