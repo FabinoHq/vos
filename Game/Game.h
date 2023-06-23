@@ -44,6 +44,7 @@
 
     #include "../System/System.h"
     #include "../System/SysEvent.h"
+    #include "../System/SysMouse.h"
 
     #include "../Renderer/Renderer.h"
     #include "../Renderer/BackRenderer.h"
@@ -168,8 +169,6 @@
             BoundingCircle  m_boundingCircle2;  // Bounding circle 2
             Collision2      m_collideCircle;    // Circles collision
 
-            float           m_mouseX;           // Mouse X position
-            float           m_mouseY;           // Mouse Y position
             bool            m_spaceReleased;    // Space released event
     };
 

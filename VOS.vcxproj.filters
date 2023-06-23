@@ -260,6 +260,9 @@
     <ClCompile Include="Renderer\Plane.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="System\SysMouse.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -606,6 +609,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="System\SysCursor.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysMouse.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>

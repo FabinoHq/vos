@@ -214,6 +214,11 @@ void Vos::run()
                     }
                     break;
 
+                // Mouse moved
+                case EVENT_MOUSEMOVED:
+                    GSysMouse.update(event.mouse.x, event.mouse.y);
+                    break;
+
                 default:
                     break;
             }

@@ -71,8 +71,6 @@ m_seaFarStream(),
 m_boundingCircle(),
 m_boundingCircle2(),
 m_collideCircle(),
-m_mouseX(0.0f),
-m_mouseY(0.0f),
 m_spaceReleased(false)
 {
 
@@ -341,10 +339,6 @@ void Game::destroy()
 ////////////////////////////////////////////////////////////////////////////////
 void Game::events(Event& event)
 {
-    // Get renderer scale and ratio
-    float scale = GSwapchain.getScale();
-    float ratio = GSwapchain.getRatio();
-
     // Process event
     switch (event.type)
     {
@@ -420,45 +414,20 @@ void Game::events(Event& event)
         // Mouse moved
         case EVENT_MOUSEMOVED:
         {
-            // Compute mouse position
-            #if (VOS_POINTERLOCK == 1)
-                // High precision mouse delta
-                float deltaX = (event.mouse.x*1.0f);
-                float deltaY = (event.mouse.y*1.0f);
-                m_mouseX += event.mouse.x*scale*2.0f;
-                m_mouseY -= event.mouse.y*scale*2.0f;
-                if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
-                if (m_mouseX >= ratio) { m_mouseX = ratio; }
-                if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
-                if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
-            #else
-                // OS absolute mouse position
-                float prevMouseX = m_mouseX;
-                float prevMouseY = m_mouseY;
-                m_mouseX = (-ratio + (event.mouse.x*scale*2.0f));
-                m_mouseY = (1.0f - (event.mouse.y*scale*2.0f));
-                float deltaX = ((m_mouseX - prevMouseX) * 500.0f);
-                float deltaY = ((prevMouseY - m_mouseY) * 500.0f);
-                if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
-                if (m_mouseX >= ratio) { m_mouseX = ratio; }
-                if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
-                if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
-            #endif // VOS_POINTERLOCK
-
             // Compute mouse events
-            m_freeflycam.mouseMove(deltaX, deltaY);
-            //m_orbitalcam.mouseMove(deltaX, deltaY);
-            m_guiWindow.mouseMove(m_mouseX, m_mouseY);
+            m_freeflycam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
+            //m_orbitalcam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
+            m_guiWindow.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
 
             #if (VOS_POINTERLOCK == 1)
                 // GUI cursor
                 m_cursor.setCursor(
-                    m_guiWindow.updateCursor(m_mouseX, m_mouseY)
+                    m_guiWindow.updateCursor(GSysMouse.mouseX, GSysMouse.mouseY)
                 );
             #else
                 // System cursor
                 GSysWindow.setCursor(
-                    m_guiWindow.updateCursor(m_mouseX, m_mouseY)
+                    m_guiWindow.updateCursor(GSysMouse.mouseX, GSysMouse.mouseY)
                 );
             #endif // VOS_POINTERLOCK
             break;
@@ -469,7 +438,7 @@ void Game::events(Event& event)
             if (event.mouse.button == EVENT_MOUSE_LEFT)
             {
                 //m_orbitalcam.mousePress();
-                m_guiWindow.mousePress(m_mouseX, m_mouseY);
+                m_guiWindow.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -478,7 +447,7 @@ void Game::events(Event& event)
             if (event.mouse.button == EVENT_MOUSE_LEFT)
             {
                 //m_orbitalcam.mouseRelease();
-                m_guiWindow.mouseRelease(m_mouseX, m_mouseY);
+                m_guiWindow.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -517,8 +486,8 @@ void Game::compute(float frametime)
 
     // Compute physics
     /*Vector2i collideOffset;
-    collideOffset.vec[0] = static_cast<int64_t>(m_mouseX*100000000);
-    collideOffset.vec[1] = static_cast<int64_t>(m_mouseY*100000000);
+    collideOffset.vec[0] = static_cast<int64_t>(GSysMouse.mouseX*100000000);
+    collideOffset.vec[1] = static_cast<int64_t>(GSysMouse.mouseY*100000000);
     collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
     collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
     m_collideCircle.reset();
@@ -796,7 +765,7 @@ void Game::render()
 
     // Render cursor
     GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_cursor.setPosition(m_mouseX, m_mouseY);
+    m_cursor.setPosition(GSysMouse.mouseX, GSysMouse.mouseY);
     m_cursor.bindTexture();
     m_cursor.render();
 
