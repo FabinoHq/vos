@@ -56,7 +56,7 @@ m_skybox(),
 m_skyproc(),
 m_sprite(),
 m_procSprite(),
-m_rectanle(),
+m_rectangle(),
 m_ellipse(),
 m_cuboid(),
 m_plane(),
@@ -180,7 +180,7 @@ bool Game::init()
     }
 
     // Init rectangle shape
-    if (!m_rectanle.init(1.0f, 1.0f))
+    if (!m_rectangle.init(1.0f, 1.0f))
     {
         // Could not init rectangle shape
         return false;
@@ -420,6 +420,7 @@ void Game::events(Event& event)
         // Mouse moved
         case EVENT_MOUSEMOVED:
         {
+            // Compute mouse position
             #if (VOS_POINTERLOCK == 1)
                 // High precision mouse delta
                 float deltaX = (event.mouse.x*1.0f);
@@ -436,14 +437,15 @@ void Game::events(Event& event)
                 float prevMouseY = m_mouseY;
                 m_mouseX = (-ratio + (event.mouse.x*scale*2.0f));
                 m_mouseY = (1.0f - (event.mouse.y*scale*2.0f));
-                float deltaX = (m_mouseX - prevMouseX)*500.0f;
-                float deltaY = (prevMouseY - m_mouseY)*500.0f;
+                float deltaX = ((m_mouseX - prevMouseX) * 500.0f);
+                float deltaY = ((prevMouseY - m_mouseY) * 500.0f);
                 if (m_mouseX <= -ratio) { m_mouseX = -ratio; }
                 if (m_mouseX >= ratio) { m_mouseX = ratio; }
                 if (m_mouseY <= -1.0f) { m_mouseY = -1.0f; }
                 if (m_mouseY >= 1.0f) { m_mouseY = 1.0f; }
             #endif // VOS_POINTERLOCK
 
+            // Compute mouse events
             m_freeflycam.mouseMove(deltaX, deltaY);
             //m_orbitalcam.mouseMove(deltaX, deltaY);
             m_guiWindow.mouseMove(m_mouseX, m_mouseY);
@@ -766,7 +768,7 @@ void Game::render()
 
     // Render rectangle
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
-    m_rectanle.render();*/
+    m_rectangle.render();*/
 
     // Render ellipse
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);

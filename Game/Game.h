@@ -149,7 +149,7 @@
 
             Sprite          m_sprite;           // Sprite
             ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectanle;         // Rectangle shape
+            RectangleShape  m_rectangle;        // Rectangle shape
             EllipseShape    m_ellipse;          // Ellipse shape
             CuboidShape     m_cuboid;           // Cuboid shape
             Plane           m_plane;            // Plane billboard
