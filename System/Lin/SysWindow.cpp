@@ -197,6 +197,7 @@ bool SysWindow::create()
     }
 
     // Load system cursors
+    for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i) { m_cursors[i] = 0; }
     Pixmap cursorPixmap = XCreatePixmap(m_display, m_handle, 1, 1, 1);
     GC graphicsContext = XCreateGC(m_display, cursorPixmap, 0, 0);
     XDrawPoint(m_display, cursorPixmap, graphicsContext, 0, 0);
@@ -263,11 +264,14 @@ void SysWindow::close()
     if (m_display)
     {
         // Destroy system cursors
-        for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i)
+        if (m_cursors)
         {
-            if (m_cursors[i]) { XFreeCursor(m_display, m_cursors[i]); }
+            for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i)
+            {
+                if (m_cursors[i]) { XFreeCursor(m_display, m_cursors[i]); }
+            }
+            delete[] m_cursors;
         }
-        if (m_cursors) { delete[] m_cursors; }
         m_cursors = 0;
 
         // Release the display

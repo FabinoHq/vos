@@ -101,6 +101,7 @@ bool SysWindow::create()
     }
 
     // Load system cursors
+    for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i) { m_cursors[i] = 0; }
     m_cursors[SYSCURSOR_NONE] = 0;
     m_cursors[SYSCURSOR_DEFAULT] = LoadCursor(0, IDC_ARROW);
     if (!m_cursors[SYSCURSOR_DEFAULT]) { return false; }
@@ -238,11 +239,14 @@ void SysWindow::close()
     m_instance = 0;
 
     // Destroy system cursors
-    for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i)
+    if (m_cursors)
     {
-        if (m_cursors[i]) { /*DestroyCursor(m_cursors[i]);*/ }
+        for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i)
+        {
+            if (m_cursors[i]) { /*DestroyCursor(m_cursors[i]);*/ }
+        }
+        delete[] m_cursors;
     }
-    if (m_cursors) { delete[] m_cursors; }
     m_cursors = 0;
 }
 
