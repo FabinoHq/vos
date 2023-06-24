@@ -85,6 +85,7 @@ VOS: main.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
+	Renderer/GUI/GUIButton.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Game/Game.o
@@ -127,6 +128,7 @@ VOS: main.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
+	Renderer/GUI/GUIButton.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Game/Game.o \
@@ -356,6 +358,9 @@ Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
 
 Renderer/GUI/GUIWindow.o: Renderer/GUI/GUIWindow.cpp
 	$(CC) -o Renderer/GUI/GUIWindow.o -c Renderer/GUI/GUIWindow.cpp $(CFLAGS)
+
+Renderer/GUI/GUIButton.o: Renderer/GUI/GUIButton.cpp
+	$(CC) -o Renderer/GUI/GUIButton.o -c Renderer/GUI/GUIButton.cpp $(CFLAGS)
 
 
 Resources/Resources.o: Resources/Resources.cpp

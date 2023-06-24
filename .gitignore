@@ -272,6 +272,8 @@
 !Renderer/GUI/GUIPxText.cpp
 !Renderer/GUI/GUIWindow.h
 !Renderer/GUI/GUIWindow.cpp
+!Renderer/GUI/GUIButton.h
+!Renderer/GUI/GUIButton.cpp
 
 # Resources
 !Resources/

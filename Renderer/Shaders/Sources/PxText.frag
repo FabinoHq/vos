@@ -46,7 +46,7 @@ precision highp int;
 // Texture sampler
 layout(set = 2, binding = 0) uniform sampler2D texSampler;
 
-// Color, position, offset, and time (push constant)
+// Color, offset, size, and time (push constant)
 layout(push_constant) uniform Constants
 {
 	layout(offset = 64)

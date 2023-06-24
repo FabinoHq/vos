@@ -63,6 +63,7 @@ m_plane(),
 m_cursor(),
 m_guiWindow(),
 m_pxText(),
+m_button(),
 m_staticMesh(),
 m_heightMapStream(),
 m_heightFarStream(),
@@ -231,6 +232,13 @@ bool Game::init()
     }
     m_pxText.setSmooth(0.2f);
     m_pxText.setText("FPS : 0");
+
+    // Init test button
+    if (!m_button.init(GResources.textures.high(TEXTURE_TEST)))
+    {
+        // Could not init test button
+        return false;
+    }
 
 
     // Init static mesh
@@ -747,6 +755,11 @@ void Game::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
     m_guiWindow.bindTexture();
     m_guiWindow.render();
+
+    // Render button
+    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_button.bindTexture();
+    m_button.render();
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);

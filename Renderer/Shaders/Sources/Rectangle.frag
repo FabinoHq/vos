@@ -43,7 +43,7 @@
 precision highp float;
 precision highp int;
 
-// Color, position, offset, and time (push constant)
+// Color, offset, size, and time (push constant)
 layout(push_constant) uniform Constants
 {
 	layout(offset = 64)

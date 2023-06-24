@@ -54,7 +54,7 @@ layout(set = 0, binding = 0) uniform WorldLightUniforms
     float time;
 } worldlight;
 
-// Color, position, offset, and time (push constant)
+// Color, offset, size, and time (push constant)
 layout(push_constant) uniform Constants
 {
 	layout(offset = 64)

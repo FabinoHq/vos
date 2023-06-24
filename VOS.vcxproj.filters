@@ -263,6 +263,9 @@
     <ClCompile Include="System\SysMouse.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUIButton.cpp">
+      <Filter>Renderer\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -613,6 +616,9 @@
     </ClInclude>
     <ClInclude Include="System\SysMouse.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUIButton.h">
+      <Filter>Renderer\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
