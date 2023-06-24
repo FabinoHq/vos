@@ -1513,6 +1513,21 @@ bool TextureLoader::preloadTextures()
     }
     pngfile.destroyImage();
 
+    // Load test button texture
+    if (!pngfile.loadImage("Textures/testbutton.png"))
+    {
+        return false;
+    }
+    if (!m_texturesGUI[TEXTURE_TESTBUTTON].createTexture(
+        VULKAN_MEMORY_TEXTURES,
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
+        false, true, TEXTUREMODE_CLAMP))
+    {
+        // Could not load test button texture
+        return false;
+    }
+    pngfile.destroyImage();
+
     // Load tile texture
     if (!pngfile.loadImage("Textures/tile.png"))
     {

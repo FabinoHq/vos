@@ -102,7 +102,9 @@
         TEXTURE_WINDOW = 5,
         TEXTURE_PIXELFONT = 6,
 
-        TEXTURE_GUICOUNT = 7
+        TEXTURE_TESTBUTTON = 7,
+
+        TEXTURE_GUICOUNT = 8
     };
 
     ////////////////////////////////////////////////////////////////////////////

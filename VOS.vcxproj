@@ -328,6 +328,7 @@
     <ClInclude Include="Renderer\SeaFarStream.h" />
     <ClInclude Include="Renderer\SeaNearChunk.h" />
     <ClInclude Include="Renderer\SeaNearStream.h" />
+    <ClInclude Include="Renderer\Shaders\Button.h" />
     <ClInclude Include="Renderer\Shaders\Default.h" />
     <ClInclude Include="Renderer\Shaders\DefaultProc.h" />
     <ClInclude Include="Renderer\Shaders\Ellipse.h" />

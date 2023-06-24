@@ -226,6 +226,7 @@
 !Renderer/Shaders/Sources/Rectangle.frag
 !Renderer/Shaders/Sources/Ellipse.frag
 !Renderer/Shaders/Sources/PxText.frag
+!Renderer/Shaders/Sources/Button.frag
 !Renderer/Shaders/Sources/SkyBox.vert
 !Renderer/Shaders/Sources/SkyBox.frag
 !Renderer/Shaders/Sources/SkyProc.frag
@@ -246,6 +247,7 @@
 !Renderer/Shaders/Rectangle.h
 !Renderer/Shaders/Ellipse.h
 !Renderer/Shaders/PxText.h
+!Renderer/Shaders/Button.h
 !Renderer/Shaders/SkyBox.h
 !Renderer/Shaders/SkyProc.h
 !Renderer/Shaders/StaticMesh.h
@@ -291,6 +293,7 @@
 # Textures files
 !Textures/
 !textures/testsprite.png
+!textures/testbutton.png
 !textures/tile.png
 !textures/tile2.png
 !textures/tile3.png

@@ -48,7 +48,9 @@
 GUIButton::GUIButton() :
 Transform2(),
 m_texture(0),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_round(false),
+m_state(GUIBUTTON_NONE)
 {
 
 }
@@ -58,6 +60,8 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 GUIButton::~GUIButton()
 {
+    m_state = GUIBUTTON_NONE;
+    m_round = false;
 	m_color.reset();
     m_texture = 0;
 }
@@ -67,7 +71,7 @@ GUIButton::~GUIButton()
 //  Init button                                                               //
 //  return : True if the button is successfully created                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool GUIButton::init(Texture& texture)
+bool GUIButton::init(Texture& texture, float width, float height, bool round)
 {
     // Check texture handle
     if (!texture.isValid())
@@ -84,6 +88,15 @@ bool GUIButton::init(Texture& texture)
 
     // Reset button color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Set button round state
+    m_round = round;
+
+    // Set button size
+    setSize(width, height);
+
+    // Reset button state
+    m_state = GUIBUTTON_NONE;
 
     // Button successfully created
     return true;
@@ -131,6 +144,114 @@ void GUIButton::setColor(float red, float green, float blue, float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get button picking state                                                  //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIButton::isPicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= (m_position.vec[0] - m_size.vec[0]*0.5f)) &&
+        (mouseX <= (m_position.vec[0] + m_size.vec[0]*0.5f)) &&
+        (mouseY >= (m_position.vec[1] - m_size.vec[1]*0.5f)) &&
+        (mouseY <= (m_position.vec[1] + m_size.vec[1]*0.5f)))
+    {
+        if (m_round)
+        {
+            float rx = (m_size.vec[0]*0.5f);
+            float ry = (m_size.vec[1]*0.5f);
+            float dx = (mouseX - m_position.vec[0]);
+            float dy = (mouseY - m_position.vec[1]);
+            if ((rx != 0.0f) && (ry != 0.0f))
+            {
+                if ((((dx*dx) / (rx*rx)) + ((dy*dy) / (ry*ry))) < 1.0f)
+                {
+                    // Round button is picking
+                    return true;
+                }
+            }
+        }
+        else
+        {
+            // Button is picking
+            return true;
+        }
+    }
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle button mouse press event                                           //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIButton::mousePress(float mouseX, float mouseY)
+{
+    if (isPicking(mouseX, mouseY))
+    {
+        m_state = GUIBUTTON_PRESSEDHOVER;
+        return true;
+    }
+    else
+    {
+        m_state = GUIBUTTON_NONE;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle button mouse release event                                         //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIButton::mouseRelease(float mouseX, float mouseY)
+{
+    if (isPicking(mouseX, mouseY))
+    {
+        if (m_state == GUIBUTTON_PRESSEDHOVER)
+        {
+            m_state = GUIBUTTON_HOVER;
+            return true;
+        }
+        m_state = GUIBUTTON_HOVER;
+    }
+    else
+    {
+        m_state = GUIBUTTON_NONE;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Handle button mouse move event                                            //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIButton::mouseMove(float mouseX, float mouseY)
+{
+    if (isPicking(mouseX, mouseY))
+    {
+        if ((m_state == GUIBUTTON_PRESSED) ||
+            (m_state == GUIBUTTON_PRESSEDHOVER))
+        {
+            m_state = GUIBUTTON_PRESSEDHOVER;
+            return true;
+        }
+        else
+        {
+            m_state = GUIBUTTON_HOVER;
+        }
+    }
+    else
+    {
+        if ((m_state == GUIBUTTON_PRESSED) ||
+            (m_state == GUIBUTTON_PRESSEDHOVER))
+        {
+            m_state = GUIBUTTON_PRESSED;
+            return true;
+        }
+        else
+        {
+            m_state = GUIBUTTON_NONE;
+        }
+    }
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render button                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 void GUIButton::render()
@@ -151,15 +272,33 @@ void GUIButton::render()
     pushConstants.color[1] = m_color.vec[1];
     pushConstants.color[2] = m_color.vec[2];
     pushConstants.color[3] = m_color.vec[3];
-    pushConstants.offset[0] = 0.0f;
-    pushConstants.offset[1] = 0.0f;
-    pushConstants.size[0] = 1.0f;
-    pushConstants.size[1] = 1.0f;
+    switch (m_state)
+    {
+        case GUIBUTTON_HOVER:
+            pushConstants.offset[0] = 0.5f;
+            pushConstants.offset[1] = 0.0f;
+            break;
+
+        case GUIBUTTON_PRESSED:
+            pushConstants.offset[0] = 0.0f;
+            pushConstants.offset[1] = 0.5f;
+            break;
+
+        case GUIBUTTON_PRESSEDHOVER:
+            pushConstants.offset[0] = 0.5f;
+            pushConstants.offset[1] = 0.5f;
+            break;
+
+        default:
+            pushConstants.offset[0] = 0.0f;
+            pushConstants.offset[1] = 0.0f;
+            break;
+    }
 
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
         GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
+        PushConstantDataOffset, PushConstantDataNoSizeTimeSize, &pushConstants
     );
 
     // Draw button triangles

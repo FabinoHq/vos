@@ -107,6 +107,7 @@
     const uint32_t PushConstantDataOffset = (sizeof(float)*16);
     const uint32_t PushConstantDataSize = (sizeof(float)*9);
     const uint32_t PushConstantDataNoTimeSize = (sizeof(float)*8);
+    const uint32_t PushConstantDataNoSizeTimeSize = (sizeof(float)*6);
     const uint32_t PushConstantColorOffset = (sizeof(float)*16);
     const uint32_t PushConstantColorSize = (sizeof(float)*4);
     const uint32_t PushConstantOffsetOffset = (sizeof(float)*20);

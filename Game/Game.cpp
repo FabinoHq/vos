@@ -234,7 +234,8 @@ bool Game::init()
     m_pxText.setText("FPS : 0");
 
     // Init test button
-    if (!m_button.init(GResources.textures.high(TEXTURE_TEST)))
+    if (!m_button.init(
+        GResources.textures.gui(TEXTURE_TESTBUTTON), 0.12f, 0.06f, false))
     {
         // Could not init test button
         return false;
@@ -426,6 +427,7 @@ void Game::events(Event& event)
             m_freeflycam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
             //m_orbitalcam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
             m_guiWindow.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+            m_button.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
 
             #if (VOS_POINTERLOCK == 1)
                 // GUI cursor
@@ -447,6 +449,7 @@ void Game::events(Event& event)
             {
                 //m_orbitalcam.mousePress();
                 m_guiWindow.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -456,6 +459,7 @@ void Game::events(Event& event)
             {
                 //m_orbitalcam.mouseRelease();
                 m_guiWindow.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_button.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -757,7 +761,7 @@ void Game::render()
     m_guiWindow.render();
 
     // Render button
-    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_BUTTON);
     m_button.bindTexture();
     m_button.render();
 

@@ -55,6 +55,18 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  GUIButton state enumeration                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    enum GUIButtonState
+    {
+        GUIBUTTON_NONE = 0,
+        GUIBUTTON_HOVER = 1,
+        GUIBUTTON_PRESSED = 2,
+        GUIBUTTON_PRESSEDHOVER = 3
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  GUIButton class definition                                            //
     ////////////////////////////////////////////////////////////////////////////
     class GUIButton : public Transform2
@@ -75,7 +87,8 @@
             //  Init button                                                   //
             //  return : True if the button is successfully created           //
             ////////////////////////////////////////////////////////////////////
-            bool init(Texture& texture);
+            bool init(Texture& texture,
+                float width, float height, bool round = false);
 
             ////////////////////////////////////////////////////////////////////
             //  Set button texture                                            //
@@ -127,6 +140,28 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Get button picking state                                      //
+            ////////////////////////////////////////////////////////////////////
+            bool isPicking(float mouseX, float mouseY);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle button mouse press event                               //
+            ////////////////////////////////////////////////////////////////////
+            bool mousePress(float mouseX, float mouseY);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle button mouse release event                             //
+            ////////////////////////////////////////////////////////////////////
+            bool mouseRelease(float mouseX, float mouseY);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle button mouse move event                                //
+            ////////////////////////////////////////////////////////////////////
+            bool mouseMove(float mouseX, float mouseY);
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Bind button texture                                           //
             ////////////////////////////////////////////////////////////////////
             inline void bindTexture()
@@ -155,6 +190,8 @@
         private:
             Texture*            m_texture;          // Button texture pointer
             Vector4             m_color;            // Button color
+            bool                m_round;            // Button round state
+            GUIButtonState      m_state;            // Button state
     };
 
 

@@ -620,5 +620,8 @@
     <ClInclude Include="Renderer\GUI\GUIButton.h">
       <Filter>Renderer\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Shaders\Button.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

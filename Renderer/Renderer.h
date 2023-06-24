@@ -79,6 +79,7 @@
     #include "Shaders/Rectangle.h"
     #include "Shaders/Ellipse.h"
     #include "Shaders/PxText.h"
+    #include "Shaders/Button.h"
     #include "Shaders/SkyBox.h"
     #include "Shaders/SkyProc.h"
     #include "Shaders/StaticMesh.h"

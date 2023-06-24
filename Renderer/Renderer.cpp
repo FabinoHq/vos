@@ -386,7 +386,24 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create pixel text pipeline
-        SysMessage::box() << "[0x3058] Could not create pixel text pipeline\n";
+        SysMessage::box() << "[0x3057] Could not create pixel text pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
+    // Create button pipeline
+    pipelines[RENDERER_PIPELINE_BUTTON].createVertexShader(
+        DefaultVertexShader, DefaultVertexShaderSize
+    );
+    pipelines[RENDERER_PIPELINE_BUTTON].createFragmentShader(
+        ButtonFragmentShader, ButtonFragmentShaderSize
+    );
+    if (!pipelines[RENDERER_PIPELINE_BUTTON].createPipeline(
+        VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
+    {
+        // Could not create button pipeline
+        SysMessage::box() << "[0x3058] Could not create button pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }
