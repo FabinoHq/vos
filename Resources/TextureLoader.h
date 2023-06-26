@@ -70,6 +70,7 @@
     #include "../Images/Embedded/NWSECursor.h"
     #include "../Images/Embedded/PxFont.h"
     #include "../Images/Embedded/Window.h"
+    #include "../Images/Embedded/ToggleButton.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -102,9 +103,11 @@
         TEXTURE_WINDOW = 5,
         TEXTURE_PIXELFONT = 6,
 
-        TEXTURE_TESTBUTTON = 7,
+        TEXTURE_TOGGLEBUTTON = 7,
 
-        TEXTURE_GUICOUNT = 8
+        TEXTURE_TESTBUTTON = 8,
+
+        TEXTURE_GUICOUNT = 9
     };
 
     ////////////////////////////////////////////////////////////////////////////

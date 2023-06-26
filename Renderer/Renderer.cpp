@@ -408,6 +408,23 @@ bool Renderer::initPipelines()
         return false;
     }
 
+    // Create toggle button pipeline
+    pipelines[RENDERER_PIPELINE_TOGGLEBUTTON].createVertexShader(
+        DefaultVertexShader, DefaultVertexShaderSize
+    );
+    pipelines[RENDERER_PIPELINE_TOGGLEBUTTON].createFragmentShader(
+        ToggleButtonFragmentShader, ToggleButtonFragmentShaderSize
+    );
+    if (!pipelines[RENDERER_PIPELINE_TOGGLEBUTTON].createPipeline(
+        VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
+    {
+        // Could not create toggle button pipeline
+        SysMessage::box() << "[0x3058] Could not create toggle btn pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
 
     // Create skybox pipeline
     pipelines[RENDERER_PIPELINE_SKYBOX].createVertexShader(

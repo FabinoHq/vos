@@ -64,6 +64,7 @@ m_cursor(),
 m_guiWindow(),
 m_pxText(),
 m_button(),
+m_toggleButton(),
 m_staticMesh(),
 m_heightMapStream(),
 m_heightFarStream(),
@@ -238,6 +239,14 @@ bool Game::init()
         GResources.textures.gui(TEXTURE_TESTBUTTON), 0.12f, 0.06f, false))
     {
         // Could not init test button
+        return false;
+    }
+
+    // Init toggle button
+    if (!m_toggleButton.init(
+        GResources.textures.gui(TEXTURE_TOGGLEBUTTON), 0.06f, 0.06f, false))
+    {
+        // Could not init toggle button
         return false;
     }
 
@@ -427,7 +436,8 @@ void Game::events(Event& event)
             m_freeflycam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
             //m_orbitalcam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
             m_guiWindow.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
-            m_button.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+            //m_button.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+            m_toggleButton.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
 
             #if (VOS_POINTERLOCK == 1)
                 // GUI cursor
@@ -449,7 +459,8 @@ void Game::events(Event& event)
             {
                 //m_orbitalcam.mousePress();
                 m_guiWindow.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
-                m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+                //m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_toggleButton.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -459,7 +470,12 @@ void Game::events(Event& event)
             {
                 //m_orbitalcam.mouseRelease();
                 m_guiWindow.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
-                m_button.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
+                //m_button.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
+                if (m_toggleButton.mouseRelease(
+                    GSysMouse.mouseX, GSysMouse.mouseY))
+                {
+                    m_toggleButton.toggle();
+                }
             }
             break;
 
@@ -761,9 +777,14 @@ void Game::render()
     m_guiWindow.render();
 
     // Render button
-    GRenderer.bindPipeline(RENDERER_PIPELINE_BUTTON);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_BUTTON);
     m_button.bindTexture();
-    m_button.render();
+    m_button.render();*/
+
+    // Render toggle button
+    GRenderer.bindPipeline(RENDERER_PIPELINE_TOGGLEBUTTON);
+    m_toggleButton.bindTexture();
+    m_toggleButton.render();
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);

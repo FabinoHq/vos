@@ -266,6 +266,9 @@
     <ClCompile Include="Renderer\GUI\GUIButton.cpp">
       <Filter>Renderer\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUIToggleButton.cpp">
+      <Filter>Renderer\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -622,6 +625,15 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\Button.h">
       <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\ToggleButton.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUIToggleButton.h">
+      <Filter>Renderer\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Embedded\ToggleButton.h">
+      <Filter>Images\Embedded</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

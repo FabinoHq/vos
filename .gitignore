@@ -122,6 +122,7 @@
 !Images/Embedded/NWSECursor.h
 !Images/Embedded/PxFont.h
 !Images/Embedded/Window.h
+!Images/Embedded/ToggleButton.h
 !Images/BMPFile.h
 !Images/BMPFile.cpp
 !Images/PNGFile.h
@@ -227,6 +228,7 @@
 !Renderer/Shaders/Sources/Ellipse.frag
 !Renderer/Shaders/Sources/PxText.frag
 !Renderer/Shaders/Sources/Button.frag
+!Renderer/Shaders/Sources/ToggleButton.frag
 !Renderer/Shaders/Sources/SkyBox.vert
 !Renderer/Shaders/Sources/SkyBox.frag
 !Renderer/Shaders/Sources/SkyProc.frag
@@ -248,6 +250,7 @@
 !Renderer/Shaders/Ellipse.h
 !Renderer/Shaders/PxText.h
 !Renderer/Shaders/Button.h
+!Renderer/Shaders/ToggleButton.h
 !Renderer/Shaders/SkyBox.h
 !Renderer/Shaders/SkyProc.h
 !Renderer/Shaders/StaticMesh.h
@@ -276,6 +279,8 @@
 !Renderer/GUI/GUIWindow.cpp
 !Renderer/GUI/GUIButton.h
 !Renderer/GUI/GUIButton.cpp
+!Renderer/GUI/GUIToggleButton.h
+!Renderer/GUI/GUIToggleButton.cpp
 
 # Resources
 !Resources/

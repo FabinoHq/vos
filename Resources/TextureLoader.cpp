@@ -1487,6 +1487,16 @@ bool TextureLoader::loadEmbeddedTextures()
         return false;
     }
 
+    // Load toggle button texture
+    if (!m_texturesGUI[TEXTURE_TOGGLEBUTTON].createTexture(
+        VULKAN_MEMORY_TEXTURES,
+        ToggleButtonImageWidth, ToggleButtonImageHeight, ToggleButtonImage,
+        false, true, TEXTUREMODE_CLAMP))
+    {
+        // Could not load toggle button texture
+        return false;
+    }
+
     // Embedded textures successfully loaded
     return true;
 }

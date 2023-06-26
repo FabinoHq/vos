@@ -37,244 +37,188 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Renderer.h : Renderer management                              //
+//     Renderer/GUI/GUIToggleButton.h : GUI Toggle Button management          //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_RENDERER_HEADER
-#define VOS_RENDERER_RENDERER_HEADER
+#ifndef VOS_RENDERER_GUI_GUITOGGLEBUTTON_HEADER
+#define VOS_RENDERER_GUI_GUITOGGLEBUTTON_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysMessage.h"
-    #include "../System/SysWindow.h"
-    #include "../System/SysVulkan.h"
-    #include "../System/SysSettings.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/VulkanMemory.h"
-    #include "Vulkan/VulkanQueue.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/Backchain.h"
-    #include "Vulkan/Uniformchain.h"
-    #include "Vulkan/VulkanBuffer.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "Vulkan/UniformBuffer.h"
-    #include "Vulkan/GraphicsLayout.h"
-    #include "Vulkan/ComputeLayout.h"
-    #include "Vulkan/Pipeline.h"
-    #include "Vulkan/Shader.h"
-    #include "Vulkan/Texture.h"
-    #include "Vulkan/CubeMap.h"
-    #include "BackRenderer.h"
-    #include "View.h"
-    #include "Camera.h"
-    #include "FreeFlyCam.h"
-    #include "OrbitalCam.h"
-    #include "Sprite.h"
-    #include "WorldLight.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector2.h"
-    #include "../Math/Matrix4x4.h"
-
-    #include "Shaders/Default.h"
-    #include "Shaders/DefaultProc.h"
-    #include "Shaders/NinePatch.h"
-    #include "Shaders/Rectangle.h"
-    #include "Shaders/Ellipse.h"
-    #include "Shaders/PxText.h"
-    #include "Shaders/Button.h"
-    #include "Shaders/ToggleButton.h"
-    #include "Shaders/SkyBox.h"
-    #include "Shaders/SkyProc.h"
-    #include "Shaders/StaticMesh.h"
-    #include "Shaders/StaticProc.h"
-    #include "Shaders/HeightMap.h"
-    #include "Shaders/HeightFar.h"
-    #include "Shaders/SeaNear.h"
-    #include "Shaders/SeaFar.h"
-
-    #include "../Resources/Resources.h"
-
-    #include <cstddef>
-    #include <cstdint>
-    #include <vector>
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
+    #include "../Vulkan/Texture.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
+    #include "../../Math/Vector4.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform2.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer clear color                                                  //
+    //  GUIToggleButton state enumeration                                     //
     ////////////////////////////////////////////////////////////////////////////
-    const VkClearColorValue RendererClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer compositing plane offset                                     //
-    ////////////////////////////////////////////////////////////////////////////
-    const float RendererCompositingPlaneOffset = 0.00001f;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Renderer class definition                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    class Renderer
+    enum GUIToggleButtonState
     {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer default constructor                                  //
-            ////////////////////////////////////////////////////////////////////
-            Renderer();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer destructor                                           //
-            ////////////////////////////////////////////////////////////////////
-            ~Renderer();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init renderer                                                 //
-            //  return : True if the renderer is successfully loaded          //
-            ////////////////////////////////////////////////////////////////////
-            bool init();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init renderer pipelines                                       //
-            //  return : True if the renderer pipelines are ready             //
-            ////////////////////////////////////////////////////////////////////
-            bool initPipelines();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Start rendering frame                                         //
-            //  return : True if the rendering frame is ready                 //
-            ////////////////////////////////////////////////////////////////////
-            bool startFrame();
-
-            ////////////////////////////////////////////////////////////////////
-            //  End rendering frame                                           //
-            //  return : True if the frame is rendering                       //
-            ////////////////////////////////////////////////////////////////////
-            bool endFrame();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Start render pass                                             //
-            ////////////////////////////////////////////////////////////////////
-            void startRenderPass();
-
-            ////////////////////////////////////////////////////////////////////
-            //  End render pass                                               //
-            ////////////////////////////////////////////////////////////////////
-            inline void endRenderPass()
-            {
-                GMainRenderer.endRenderPass();
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Start final render pass                                       //
-            ////////////////////////////////////////////////////////////////////
-            void startFinalPass();
-
-            ////////////////////////////////////////////////////////////////////
-            //  End final render pass                                         //
-            ////////////////////////////////////////////////////////////////////
-            inline void endFinalPass()
-            {
-                vkCmdEndRenderPass(
-                    GSwapchain.commandBuffers[GSwapchain.current]
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Wait renderer device for idle state                           //
-            //  return : True if the renderer device is in idle state         //
-            ////////////////////////////////////////////////////////////////////
-            bool waitDeviceIdle();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy renderer                                              //
-            ////////////////////////////////////////////////////////////////////
-            void destroyRenderer();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer pipeline                                        //
-            ////////////////////////////////////////////////////////////////////
-            inline void bindPipeline(RendererPipeline rendererPipeline)
-            {
-                pipelines[rendererPipeline].bind();
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer vertex buffer                                   //
-            ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer(MeshesAssets meshAsset);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute renderer default view                                 //
-            ////////////////////////////////////////////////////////////////////
-            inline void computeDefaultView()
-            {
-                view.compute(GSwapchain.ratio);
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind renderer default view                                    //
-            ////////////////////////////////////////////////////////////////////
-            inline void bindDefaultView()
-            {
-                view.bind();
-            }
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get renderer ready state                                      //
-            //  return : True if the renderer is ready, false otherwise       //
-            ////////////////////////////////////////////////////////////////////
-            inline bool isReady()
-            {
-                return ready;
-            }
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy constructor : Not copyable              //
-            ////////////////////////////////////////////////////////////////////
-            Renderer(const Renderer&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  Renderer private copy operator : Not copyable                 //
-            ////////////////////////////////////////////////////////////////////
-            Renderer& operator=(const Renderer&) = delete;
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan instance                                        //
-            //  return : True if Vulkan instance is successfully created      //
-            ////////////////////////////////////////////////////////////////////
-            bool createVulkanInstance();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Select Vulkan device                                          //
-            //  return : True if Vulkan device is successfully selected       //
-            ////////////////////////////////////////////////////////////////////
-            bool selectVulkanDevice();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Resize renderer frame                                         //
-            //  return : True if the renderer is successfully resized         //
-            ////////////////////////////////////////////////////////////////////
-            bool resize();
-
-
-        public:
-            bool                ready;                  // Renderer ready state
-            uint32_t            frameIndex;             // Current frame index
-
-            Pipeline*           pipelines;              // Pipelines
-            View                view;                   // Default view
-            Sprite              plane;                  // Compositing plane
+        GUITOGGLEBUTTON_NONE = 0,
+        GUITOGGLEBUTTON_HOVER = 1,
+        GUITOGGLEBUTTON_PRESSED = 2,
+        GUITOGGLEBUTTON_PRESSEDHOVER = 3
     };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Renderer global instance                                              //
+    //  GUIToggleButton class definition                                      //
     ////////////////////////////////////////////////////////////////////////////
-    extern Renderer GRenderer;
+    class GUIToggleButton : public Transform2
+    {
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  GUIToggleButton default constructor                           //
+            ////////////////////////////////////////////////////////////////////
+            GUIToggleButton();
+
+            ////////////////////////////////////////////////////////////////////
+            //  GUIToggleButton virtual destructor                            //
+            ////////////////////////////////////////////////////////////////////
+            virtual ~GUIToggleButton();
 
 
-#endif // VOS_RENDERER_RENDERER_HEADER
+            ////////////////////////////////////////////////////////////////////
+            //  Init toggle button                                            //
+            //  return : True if the toggle button is successfully created    //
+            ////////////////////////////////////////////////////////////////////
+            bool init(Texture& texture,
+                float width, float height, bool round = false);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button texture                                     //
+            //  return : True if toggle button texture is successfully set    //
+            ////////////////////////////////////////////////////////////////////
+            bool setTexture(Texture& texture);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button color                                       //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(const Vector4& color);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button color                                       //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(float red, float green, float blue, float alpha);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button red channel                                 //
+            ////////////////////////////////////////////////////////////////////
+            inline void setRed(float red)
+            {
+                m_color.vec[0] = red;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button green channel                               //
+            ////////////////////////////////////////////////////////////////////
+            inline void setGreen(float green)
+            {
+                m_color.vec[1] = green;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button blue channel                                //
+            ////////////////////////////////////////////////////////////////////
+            inline void setBlue(float blue)
+            {
+                m_color.vec[2] = blue;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button alpha channel                               //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAlpha(float alpha)
+            {
+                m_color.vec[3] = alpha;
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get toggle button picking state                               //
+            ////////////////////////////////////////////////////////////////////
+            bool isPicking(float mouseX, float mouseY);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle toggle button mouse press event                        //
+            ////////////////////////////////////////////////////////////////////
+            bool mousePress(float mouseX, float mouseY);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle toggle button mouse release event                      //
+            ////////////////////////////////////////////////////////////////////
+            bool mouseRelease(float mouseX, float mouseY);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Handle toggle button mouse move event                         //
+            ////////////////////////////////////////////////////////////////////
+            bool mouseMove(float mouseX, float mouseY);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Toggle button state                                           //
+            ////////////////////////////////////////////////////////////////////
+            inline bool toggle()
+            {
+                return (m_toggle = !m_toggle);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button state                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline bool setToggle(bool toggle)
+            {
+                return (m_toggle = toggle);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get toggle button state                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline bool getToggle()
+            {
+                return m_toggle;
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind toggle button texture                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void bindTexture()
+            {
+                m_texture->bind();
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render toggle button                                          //
+            ////////////////////////////////////////////////////////////////////
+            void render();
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  GUIToggleButton private copy constructor : Not copyable       //
+            ////////////////////////////////////////////////////////////////////
+            GUIToggleButton(const GUIToggleButton&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  GUIToggleButton private copy operator : Not copyable          //
+            ////////////////////////////////////////////////////////////////////
+            GUIToggleButton& operator=(const GUIToggleButton&) = delete;
+
+
+        private:
+            Texture*                m_texture;  // ToggleButton texture pointer
+            Vector4                 m_color;    // ToggleButton color
+            bool                    m_round;    // ToggleButton round state
+            GUIToggleButtonState    m_state;    // ToggleButton state
+            bool                    m_toggle;   // ToggleButton toggle state
+    };
+
+
+#endif // VOS_RENDERER_GUI_GUITOGGLEBUTTON_HEADER

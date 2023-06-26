@@ -64,6 +64,7 @@
     #include "../Renderer/GUI/GUIWindow.h"
     #include "../Renderer/GUI/GUIPxText.h"
     #include "../Renderer/GUI/GUIButton.h"
+    #include "../Renderer/GUI/GUIToggleButton.h"
 
     #include "../Renderer/Shapes/RectangleShape.h"
     #include "../Renderer/Shapes/EllipseShape.h"
@@ -160,6 +161,7 @@
             GUIWindow       m_guiWindow;        // GUI Window
             GUIPxText       m_pxText;           // GUI pixel text
             GUIButton       m_button;           // GUI button
+            GUIToggleButton m_toggleButton;     // GUI toggle button
 
             StaticMesh      m_staticMesh;       // Static mesh
             HeightMapStream m_heightMapStream;  // HeightMap stream
