@@ -37,146 +37,125 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Game/Game.h : Main game class management                               //
+//     Renderer/GUI/GUIProgressBar.h : GUI Progress bar management            //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_GAME_GAME_HEADER
-#define VOS_GAME_GAME_HEADER
+#ifndef VOS_RENDERER_GUI_GUIPROGRESSBAR_HEADER
+#define VOS_RENDERER_GUI_GUIPROGRESSBAR_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysEvent.h"
-    #include "../System/SysMouse.h"
-
-    #include "../Renderer/Renderer.h"
-    #include "../Renderer/BackRenderer.h"
-    #include "../Renderer/View.h"
-    #include "../Renderer/Camera.h"
-    #include "../Renderer/FreeFlyCam.h"
-    #include "../Renderer/OrbitalCam.h"
-    #include "../Renderer/Sprite.h"
-    #include "../Renderer/ProcSprite.h"
-    #include "../Renderer/Plane.h"
-    #include "../Renderer/SkyBox.h"
-    #include "../Renderer/SkyProc.h"
-    #include "../Renderer/WorldLight.h"
-
-    #include "../Resources/Resources.h"
-    #include "../Renderer/GUI/GUICursor.h"
-    #include "../Renderer/GUI/GUIWindow.h"
-    #include "../Renderer/GUI/GUIPxText.h"
-    #include "../Renderer/GUI/GUIButton.h"
-    #include "../Renderer/GUI/GUIToggleButton.h"
-    #include "../Renderer/GUI/GUIProgressBar.h"
-
-    #include "../Renderer/Shapes/RectangleShape.h"
-    #include "../Renderer/Shapes/EllipseShape.h"
-    #include "../Renderer/Shapes/CuboidShape.h"
-
-    #include "../Renderer/StaticMesh.h"
-    #include "../Renderer/HeightMapStream.h"
-    #include "../Renderer/HeightFarStream.h"
-    #include "../Renderer/SeaNearStream.h"
-    #include "../Renderer/SeaFarStream.h"
-
-    #include "../Physics/Physics.h"
-    #include "../Physics/Collision2.h"
-    #include "../Physics/BoundingCircle.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
+    #include "../Vulkan/Texture.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
+    #include "../../Math/Vector4.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform2.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Game main class definition                                            //
+    //  GUIProgressBar class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Game
+    class GUIProgressBar : public Transform2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Game default constructor                                      //
+            //  GUIProgressBar default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            Game();
+            GUIProgressBar();
 
             ////////////////////////////////////////////////////////////////////
-            //  Game destructor                                               //
+            //  GUIProgressBar virtual destructor                             //
             ////////////////////////////////////////////////////////////////////
-            ~Game();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init game                                                     //
-            //  return : True if game is ready, false otherwise               //
-            ////////////////////////////////////////////////////////////////////
-            bool init();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy game                                                  //
-            ////////////////////////////////////////////////////////////////////
-            void destroy();
+            virtual ~GUIProgressBar();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute game events                                           //
+            //  Init progress bar                                             //
+            //  return : True if the progress bar is successfully created     //
             ////////////////////////////////////////////////////////////////////
-            void events(Event& event);
+            bool init(Texture& texture, float width, float height);
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute game logic                                            //
+            //  Set progress bar texture                                      //
+            //  return : True if progress bar texture is successfully set     //
             ////////////////////////////////////////////////////////////////////
-            void compute(float frametime);
+            bool setTexture(Texture& texture);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render game                                                   //
+            //  Set progress bar color                                        //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(const Vector4& color);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set progress bar color                                        //
+            ////////////////////////////////////////////////////////////////////
+            void setColor(float red, float green, float blue, float alpha);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set progress bar red channel                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline void setRed(float red)
+            {
+                m_color.vec[0] = red;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set progress bar green channel                                //
+            ////////////////////////////////////////////////////////////////////
+            inline void setGreen(float green)
+            {
+                m_color.vec[1] = green;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set progress bar blue channel                                 //
+            ////////////////////////////////////////////////////////////////////
+            inline void setBlue(float blue)
+            {
+                m_color.vec[2] = blue;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set progress bar alpha channel                                //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAlpha(float alpha)
+            {
+                m_color.vec[3] = alpha;
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind progress bar texture                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void bindTexture()
+            {
+                m_texture->bind();
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render progress bar                                           //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Game private copy constructor : Not copyable                  //
+            //  GUIProgressBar private copy constructor : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            Game(const Game&) = delete;
+            GUIProgressBar(const GUIProgressBar&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Game private copy operator : Not copyable                     //
+            //  GUIProgressBar private copy operator : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            Game& operator=(const Game&) = delete;
+            GUIProgressBar& operator=(const GUIProgressBar&) = delete;
 
 
         private:
-            BackRenderer    m_backRenderer;     // Back renderer
-
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-            FreeFlyCam      m_farflycam;        // Freefly camera far
-            OrbitalCam      m_orbitalcam;       // Orbital camera
-
-            SkyBox          m_skybox;           // SkyBox
-            SkyProc         m_skyproc;          // Procedural skybox
-
-            Sprite          m_sprite;           // Sprite
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectangle;        // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
-            CuboidShape     m_cuboid;           // Cuboid shape
-            Plane           m_plane;            // Plane billboard
-
-            GUICursor       m_cursor;           // GUI Cursor
-            GUIWindow       m_guiWindow;        // GUI Window
-            GUIPxText       m_pxText;           // GUI pixel text
-            GUIButton       m_button;           // GUI button
-            GUIToggleButton m_toggleButton;     // GUI toggle button
-            GUIProgressBar  m_progressBar;      // GUI progress bar
-
-            StaticMesh      m_staticMesh;       // Static mesh
-            HeightMapStream m_heightMapStream;  // HeightMap stream
-            HeightFarStream m_heightFarStream;  // HeightFar stream
-            SeaNearStream   m_seaNearStream;    // SeaNear stream
-            SeaFarStream    m_seaFarStream;     // SeaFar stream
-
-            BoundingCircle  m_boundingCircle;   // Bounding circle
-            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
-            Collision2      m_collideCircle;    // Circles collision
-
-            bool            m_spaceReleased;    // Space released event
+            Texture*        m_texture;      // ProgressBar texture pointer
+            Vector4         m_color;        // ProgressBar color
     };
 
 
-#endif // VOS_GAME_GAME_HEADER
+#endif // VOS_RENDERER_GUI_GUIPROGRESSBAR_HEADER

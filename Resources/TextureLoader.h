@@ -71,6 +71,7 @@
     #include "../Images/Embedded/PxFont.h"
     #include "../Images/Embedded/Window.h"
     #include "../Images/Embedded/ToggleButton.h"
+    #include "../Images/Embedded/ProgressBar.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -104,10 +105,11 @@
         TEXTURE_PIXELFONT = 6,
 
         TEXTURE_TOGGLEBUTTON = 7,
+        TEXTURE_PROGRESSBAR = 8,
 
-        TEXTURE_TESTBUTTON = 8,
+        TEXTURE_TESTBUTTON = 9,
 
-        TEXTURE_GUICOUNT = 9
+        TEXTURE_GUICOUNT = 10
     };
 
     ////////////////////////////////////////////////////////////////////////////

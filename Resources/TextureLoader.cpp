@@ -1497,6 +1497,16 @@ bool TextureLoader::loadEmbeddedTextures()
         return false;
     }
 
+    // Load progress bar texture
+    if (!m_texturesGUI[TEXTURE_PROGRESSBAR].createTexture(
+        VULKAN_MEMORY_TEXTURES,
+        ProgressBarImageWidth, ProgressBarImageHeight, ProgressBarImage,
+        false, true, TEXTUREMODE_CLAMP))
+    {
+        // Could not load progress bar texture
+        return false;
+    }
+
     // Embedded textures successfully loaded
     return true;
 }

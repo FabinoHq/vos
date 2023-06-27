@@ -220,6 +220,7 @@
     <ClCompile Include="Renderer\FreeFlyCam.cpp" />
     <ClCompile Include="Renderer\GUI\GUIButton.cpp" />
     <ClCompile Include="Renderer\GUI\GUICursor.cpp" />
+    <ClCompile Include="Renderer\GUI\GUIProgressBar.cpp" />
     <ClCompile Include="Renderer\GUI\GUIPxText.cpp" />
     <ClCompile Include="Renderer\GUI\GUIToggleButton.cpp" />
     <ClCompile Include="Renderer\GUI\GUIWindow.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="Images\Embedded\NESWCursor.h" />
     <ClInclude Include="Images\Embedded\NSCursor.h" />
     <ClInclude Include="Images\Embedded\NWSECursor.h" />
+    <ClInclude Include="Images\Embedded\ProgressBar.h" />
     <ClInclude Include="Images\Embedded\PxFont.h" />
     <ClInclude Include="Images\Embedded\ToggleButton.h" />
     <ClInclude Include="Images\Embedded\Window.h" />
@@ -316,6 +318,7 @@
     <ClInclude Include="Renderer\FreeFlyCam.h" />
     <ClInclude Include="Renderer\GUI\GUIButton.h" />
     <ClInclude Include="Renderer\GUI\GUICursor.h" />
+    <ClInclude Include="Renderer\GUI\GUIProgressBar.h" />
     <ClInclude Include="Renderer\GUI\GUIPxText.h" />
     <ClInclude Include="Renderer\GUI\GUIToggleButton.h" />
     <ClInclude Include="Renderer\GUI\GUIWindow.h" />

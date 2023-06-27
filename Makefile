@@ -86,6 +86,7 @@ VOS: main.o \
 	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
+	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Game/Game.o
@@ -129,6 +130,7 @@ VOS: main.o \
 	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
+	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Game/Game.o \
@@ -365,6 +367,10 @@ Renderer/GUI/GUIButton.o: Renderer/GUI/GUIButton.cpp
 Renderer/GUI/GUIToggleButton.o: Renderer/GUI/GUIToggleButton.cpp
 	$(CC) -o Renderer/GUI/GUIToggleButton.o -c \
 	Renderer/GUI/GUIToggleButton.cpp $(CFLAGS)
+
+Renderer/GUI/GUIProgressBar.o: Renderer/GUI/GUIProgressBar.cpp
+	$(CC) -o Renderer/GUI/GUIProgressBar.o -c \
+	Renderer/GUI/GUIProgressBar.cpp $(CFLAGS)
 
 
 Resources/Resources.o: Resources/Resources.cpp
