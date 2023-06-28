@@ -425,6 +425,23 @@ bool Renderer::initPipelines()
         return false;
     }
 
+    // Create progress bar pipeline
+    pipelines[RENDERER_PIPELINE_PROGRESSBAR].createVertexShader(
+        DefaultVertexShader, DefaultVertexShaderSize
+    );
+    pipelines[RENDERER_PIPELINE_PROGRESSBAR].createFragmentShader(
+        ProgressBarFragmentShader, ProgressBarFragmentShaderSize
+    );
+    if (!pipelines[RENDERER_PIPELINE_PROGRESSBAR].createPipeline(
+        VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
+    {
+        // Could not create progress bar pipeline
+        SysMessage::box() << "[0x3058] Could not create progressbar pipeline\n";
+        SysMessage::box() << "Please update your graphics drivers";
+        return false;
+    }
+
 
     // Create skybox pipeline
     pipelines[RENDERER_PIPELINE_SKYBOX].createVertexShader(

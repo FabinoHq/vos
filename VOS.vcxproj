@@ -341,6 +341,7 @@
     <ClInclude Include="Renderer\Shaders\HeightFar.h" />
     <ClInclude Include="Renderer\Shaders\HeightMap.h" />
     <ClInclude Include="Renderer\Shaders\NinePatch.h" />
+    <ClInclude Include="Renderer\Shaders\ProgressBar.h" />
     <ClInclude Include="Renderer\Shaders\PxText.h" />
     <ClInclude Include="Renderer\Shaders\Rectangle.h" />
     <ClInclude Include="Renderer\Shaders\SeaFar.h" />

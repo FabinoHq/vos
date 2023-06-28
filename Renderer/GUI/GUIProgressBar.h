@@ -75,7 +75,8 @@
             //  Init progress bar                                             //
             //  return : True if the progress bar is successfully created     //
             ////////////////////////////////////////////////////////////////////
-            bool init(Texture& texture, float width, float height);
+            bool init(Texture& texture,
+                float width, float height, float uvFactor);
 
             ////////////////////////////////////////////////////////////////////
             //  Set progress bar texture                                      //
@@ -127,6 +128,25 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Set progress bar value                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline void setValue(float value)
+            {
+                if (value <= 0.0f) { value = 0.0f; }
+                if (value >= 1.0f) { value = 1.0f; }
+                m_value = value;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get progress bar value                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline float getValue()
+            {
+                return m_value;
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Bind progress bar texture                                     //
             ////////////////////////////////////////////////////////////////////
             inline void bindTexture()
@@ -155,6 +175,8 @@
         private:
             Texture*        m_texture;      // ProgressBar texture pointer
             Vector4         m_color;        // ProgressBar color
+            float           m_uvFactor;     // Threepatch UV factor
+            float           m_value;        // ProgressBar value
     };
 
 

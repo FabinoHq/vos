@@ -65,32 +65,32 @@ void main()
 {
     // Compute ninepatch UVs (constants.time is the UVs factor)
     vec2 patchSize = abs(constants.size*constants.time);
-    vec2 curCoord = i_texCoords*patchSize;
-    if (curCoord.x >= 0.25)
+    vec2 patchCoords = i_texCoords*patchSize;
+    if (patchCoords.x >= 0.25)
     {
-        if (curCoord.x >= (patchSize.x-0.25))
+        if (patchCoords.x >= (patchSize.x-0.25))
         {
-            curCoord.x -= (patchSize.x-0.25)-0.75;
+            patchCoords.x -= (patchSize.x-0.25)-0.75;
         }
         else
         {
-            curCoord.x = 0.25+mod(curCoord.x, 0.5);
+            patchCoords.x = 0.25+mod(patchCoords.x, 0.5);
         }
     }
-    if (curCoord.y >= 0.25)
+    if (patchCoords.y >= 0.25)
     {
-        if (curCoord.y >= (patchSize.y-0.25))
+        if (patchCoords.y >= (patchSize.y-0.25))
         {
-            curCoord.y -= (patchSize.y-0.25)-0.75;
+            patchCoords.y -= (patchSize.y-0.25)-0.75;
         }
         else
         {
-            curCoord.y = 0.25+mod(curCoord.y, 0.5);
+            patchCoords.y = 0.25+mod(patchCoords.y, 0.5);
         }
     }
-    if (patchSize.x <= 0.5) { curCoord.x = i_texCoords.x; }
-    if (patchSize.y <= 0.5) { curCoord.y = i_texCoords.y; }
+    if (patchSize.x <= 0.5) { patchCoords.x = i_texCoords.x; }
+    if (patchSize.y <= 0.5) { patchCoords.y = i_texCoords.y; }
 
     // Compute output color
-    o_color = texture(texSampler, curCoord)*constants.color;
+    o_color = (texture(texSampler, patchCoords)*constants.color);
 }

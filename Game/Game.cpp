@@ -253,7 +253,7 @@ bool Game::init()
 
     // Init progress bar
     if (!m_progressBar.init(
-        GResources.textures.gui(TEXTURE_PROGRESSBAR), 0.5f, 0.06f))
+        GResources.textures.gui(TEXTURE_PROGRESSBAR), 0.5f, 0.06f, 15.0f))
     {
         // Could not init progress bar
         return false;
@@ -520,6 +520,14 @@ void Game::compute(float frametime)
         framecnt = 0.0f;
     }
     m_pxText.setText(framestr.str());
+
+    static float valAcc = 0.0f;
+    valAcc += frametime*5.0f;
+    if (valAcc >= Math::TwoPi)
+    {
+        valAcc -= Math::TwoPi;
+    }
+    m_progressBar.setValue((std::sin(valAcc)*0.5f)+0.5f);
 
     // Compute physics
     /*Vector2i collideOffset;
@@ -796,7 +804,7 @@ void Game::render()
     m_toggleButton.render();*/
 
     // Render progress bar
-    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_PROGRESSBAR);
     m_progressBar.bindTexture();
     m_progressBar.render();
 

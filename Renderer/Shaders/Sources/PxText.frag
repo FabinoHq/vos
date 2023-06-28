@@ -69,9 +69,9 @@ void main()
     ).a;
 
     // Compute output color (constants.time is the smooth amount)
-    o_color = vec4(
+    o_color = (vec4(
         constants.color.r, constants.color.g, constants.color.b,
         smoothstep(0.5-constants.time, 0.5+constants.time, dist)*
         constants.color.a
-    );
+    ));
 }

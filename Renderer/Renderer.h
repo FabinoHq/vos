@@ -81,6 +81,7 @@
     #include "Shaders/PxText.h"
     #include "Shaders/Button.h"
     #include "Shaders/ToggleButton.h"
+    #include "Shaders/ProgressBar.h"
     #include "Shaders/SkyBox.h"
     #include "Shaders/SkyProc.h"
     #include "Shaders/StaticMesh.h"

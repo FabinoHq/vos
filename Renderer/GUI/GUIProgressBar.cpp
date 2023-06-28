@@ -48,7 +48,9 @@
 GUIProgressBar::GUIProgressBar() :
 Transform2(),
 m_texture(0),
-m_color(1.0f, 1.0f, 1.0f, 1.0f)
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_uvFactor(1.0f),
+m_value(0.0f)
 {
 
 }
@@ -58,6 +60,8 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f)
 ////////////////////////////////////////////////////////////////////////////////
 GUIProgressBar::~GUIProgressBar()
 {
+    m_value = 0.0f;
+    m_uvFactor = 0.0f;
 	m_color.reset();
     m_texture = 0;
 }
@@ -67,7 +71,8 @@ GUIProgressBar::~GUIProgressBar()
 //  Init progress bar                                                         //
 //  return : True if the progress bar is successfully created                 //
 ////////////////////////////////////////////////////////////////////////////////
-bool GUIProgressBar::init(Texture& texture, float width, float height)
+bool GUIProgressBar::init(Texture& texture,
+    float width, float height, float uvFactor)
 {
     // Check texture handle
     if (!texture.isValid())
@@ -85,8 +90,14 @@ bool GUIProgressBar::init(Texture& texture, float width, float height)
     // Reset progress bar color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 
+    // Set progress bar UV factor
+    m_uvFactor = uvFactor;
+
     // Set progress bar size
     setSize(width, height);
+
+    // Reset progress bar value
+    m_value = 0.0f;
 
     // Progress bar successfully created
     return true;
@@ -154,15 +165,31 @@ void GUIProgressBar::render()
     pushConstants.color[1] = m_color.vec[1];
     pushConstants.color[2] = m_color.vec[2];
     pushConstants.color[3] = m_color.vec[3];
-    pushConstants.offset[0] = 0.0f;
+    pushConstants.offset[0] = 1.0f;
     pushConstants.offset[1] = 0.0f;
-    pushConstants.size[0] = 1.0f;
-    pushConstants.size[1] = 1.0f;
+    pushConstants.size[0] = m_size.vec[0];
+    pushConstants.size[1] = m_size.vec[1];
+    pushConstants.time = m_uvFactor;
 
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
         GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantDataOffset, PushConstantDataNoTimeSize, &pushConstants
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
+    );
+
+    // Draw background bar triangles
+    vkCmdDrawIndexed(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        6, 1, 0, 0, 0
+    );
+
+    // Update UV offset
+    pushConstants.offset[0] = m_value;
+    pushConstants.offset[1] = 0.5f;
+    vkCmdPushConstants(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        PushConstantOffsetOffset, PushConstantOffsetSize, &pushConstants.offset
     );
 
     // Draw progress bar triangles

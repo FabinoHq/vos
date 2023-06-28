@@ -83,11 +83,11 @@ void main()
     vec3 specLight = (worldlight.color.rgb*worldlight.color.a*specular);
 
     // Compute output color
-    o_color = vec4(
+    o_color = (vec4(
         (fragOutput.xyz*ambientLight) +
         (fragOutput.xyz*worldLight) +
         (fragOutput.xyz*pointLight)*vec3(0.4) +
         (fragOutput.xyz*specLight)*vec3(0.35),
         fragOutput.a
-    );
+    ));
 }

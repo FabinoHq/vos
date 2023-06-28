@@ -644,5 +644,8 @@
     <ClInclude Include="Renderer\GUI\GUIProgressBar.h">
       <Filter>Renderer\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Shaders\ProgressBar.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

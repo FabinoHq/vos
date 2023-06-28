@@ -230,6 +230,7 @@
 !Renderer/Shaders/Sources/PxText.frag
 !Renderer/Shaders/Sources/Button.frag
 !Renderer/Shaders/Sources/ToggleButton.frag
+!Renderer/Shaders/Sources/ProgressBar.frag
 !Renderer/Shaders/Sources/SkyBox.vert
 !Renderer/Shaders/Sources/SkyBox.frag
 !Renderer/Shaders/Sources/SkyProc.frag
@@ -252,6 +253,7 @@
 !Renderer/Shaders/PxText.h
 !Renderer/Shaders/Button.h
 !Renderer/Shaders/ToggleButton.h
+!Renderer/Shaders/ProgressBar.h
 !Renderer/Shaders/SkyBox.h
 !Renderer/Shaders/SkyProc.h
 !Renderer/Shaders/StaticMesh.h

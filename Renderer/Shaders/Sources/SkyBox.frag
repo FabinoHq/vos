@@ -65,5 +65,5 @@ layout(location = 0) out vec4 o_color;
 void main()
 {
     // Compute output color
-    o_color = texture(cubeSampler, i_texCoords);
+    o_color = (texture(cubeSampler, i_texCoords));
 }

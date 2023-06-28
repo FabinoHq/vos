@@ -81,5 +81,5 @@ void main()
     fragOutput.a *= alphaFade;
 
     // Compute output color
-    o_color = fragOutput;
+    o_color = (fragOutput);
 }

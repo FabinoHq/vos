@@ -106,5 +106,5 @@ void main()
     );
 
     // Compute output color
-    o_color = vec4(fragOutput, 1.0);
+    o_color = (vec4(fragOutput, 1.0));
 }
