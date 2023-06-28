@@ -183,6 +183,15 @@ void GUIProgressBar::render()
         6, 1, 0, 0, 0
     );
 
+    // Update model matrix
+    m_matrix.translateX((m_value*0.5f)-0.5f);
+    m_matrix.scaleX(m_value);
+    vkCmdPushConstants(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
+    );
+
     // Update UV offset
     pushConstants.offset[0] = m_value;
     pushConstants.offset[1] = 0.5f;

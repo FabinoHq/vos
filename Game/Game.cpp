@@ -522,7 +522,7 @@ void Game::compute(float frametime)
     m_pxText.setText(framestr.str());
 
     static float valAcc = 0.0f;
-    valAcc += frametime*5.0f;
+    valAcc += frametime*0.5f;
     if (valAcc >= Math::TwoPi)
     {
         valAcc -= Math::TwoPi;

@@ -64,7 +64,7 @@ layout(location = 0) out vec4 o_color;
 void main()
 {
     // Compute threepatch UVs (constants.time is the UVs factor)
-    float patchSize = abs(constants.size.x*constants.time);
+    float patchSize = abs(constants.size.x*constants.time*constants.offset.x);
     float patchCoords = i_texCoords.x*patchSize;
     if (patchCoords >= 0.25)
     {
@@ -77,7 +77,19 @@ void main()
             patchCoords = 0.25+mod(patchCoords, 0.5);
         }
     }
-    if (patchSize <= 0.5) { patchCoords = i_texCoords.x; }
+    if (patchSize <= 0.5)
+    {
+        if (i_texCoords.x >= 0.5)
+        {
+            patchCoords = 0.5+
+                ((1.0-(constants.time*constants.offset.x))*0.5)+
+                (i_texCoords.x*patchSize);
+        }
+        else
+        {
+            patchCoords = (i_texCoords.x*patchSize);
+        }
+    }
 
     // Compute output color
     o_color = (texture(
