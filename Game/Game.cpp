@@ -529,6 +529,15 @@ void Game::compute(float frametime)
     }
     m_progressBar.setValue((std::sin(valAcc)*0.5f)+0.5f);
 
+    if (m_progressBar.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
+    {
+        m_progressBar.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+    else
+    {
+        m_progressBar.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+
     // Compute physics
     /*Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int64_t>(GSysMouse.mouseX*100000000);
@@ -791,6 +800,14 @@ void Game::render()
     // Render window
     GRenderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
     m_guiWindow.bindTexture();
+    if (m_guiWindow.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
+    {
+        m_guiWindow.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+    else
+    {
+        m_guiWindow.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    }
     m_guiWindow.render();
 
     // Render button
@@ -812,6 +829,14 @@ void Game::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
     m_pxText.bindTexture();
     m_pxText.setPosition(-ratio+0.01f, 1.0f-(m_pxText.getHeight()*0.7f));
+    if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
+    {
+        m_pxText.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+    else
+    {
+        m_pxText.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    }
     m_pxText.render();
 
     // Render pixel text (camera position)
@@ -821,6 +846,14 @@ void Game::render()
         " | Z : " << m_freeflycam.getZ();
     m_pxText.setText(camerastr.str());
     m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
+    if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
+    {
+        m_pxText.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+    else
+    {
+        m_pxText.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    }
     m_pxText.render();
 
     // Render cursor

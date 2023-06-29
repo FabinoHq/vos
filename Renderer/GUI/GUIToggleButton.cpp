@@ -263,7 +263,9 @@ bool GUIToggleButton::mouseMove(float mouseX, float mouseY)
 void GUIToggleButton::render()
 {
     // Compute toggle button transformations
-    computeTransforms();
+    m_matrix.setIdentity();
+    m_matrix.translate(m_position);
+    m_matrix.scale(m_size);
 
     // Push model matrix into command buffer
     vkCmdPushConstants(

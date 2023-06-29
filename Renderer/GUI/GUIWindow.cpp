@@ -623,7 +623,9 @@ SysCursorType GUIWindow::updateCursor(float mouseX, float mouseY)
 void GUIWindow::render()
 {
     // Compute window transformations
-    computeTransforms();
+    m_matrix.setIdentity();
+    m_matrix.translate(m_position);
+    m_matrix.scale(m_size);
 
     // Push model matrix into command buffer
     vkCmdPushConstants(

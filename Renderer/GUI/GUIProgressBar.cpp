@@ -145,12 +145,31 @@ void GUIProgressBar::setColor(float red, float green, float blue, float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get progress bar picking state                                            //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIProgressBar::isPicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= (m_position.vec[0] - m_size.vec[0]*0.5f)) &&
+        (mouseX <= (m_position.vec[0] + m_size.vec[0]*0.5f)) &&
+        (mouseY >= (m_position.vec[1] - m_size.vec[1]*0.5f)) &&
+        (mouseY <= (m_position.vec[1] + m_size.vec[1]*0.5f)))
+    {
+        // Progress bar is picking
+        return true;
+    }
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render progress bar                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 void GUIProgressBar::render()
 {
     // Compute progress bar transformations
-    computeTransforms();
+    m_matrix.setIdentity();
+    m_matrix.translate(m_position);
+    m_matrix.scale(m_size);
 
     // Push model matrix into command buffer
     vkCmdPushConstants(

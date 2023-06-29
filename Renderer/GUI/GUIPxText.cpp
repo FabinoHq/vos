@@ -134,8 +134,8 @@ void GUIPxText::setText(const std::string& text)
     }
     else
     {
-        m_size.vec[0] = (m_size.vec[1] +
-            (m_size.vec[1] * PixelTextDefaultXOffset * (m_text.length()-1))
+        m_size.vec[0] = (
+            m_size.vec[1] * PixelTextDefaultXOffset * m_text.length()
         );
     }
 }
@@ -164,6 +164,23 @@ void GUIPxText::setColor(float red, float green, float blue, float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get pixel text picking state                                              //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIPxText::isPicking(float mouseX, float mouseY)
+{
+    if ((mouseX >= m_position.vec[0]) &&
+        (mouseX <= (m_position.vec[0] + m_size.vec[0])) &&
+        (mouseY >= (m_position.vec[1] - m_size.vec[1]*0.5f)) &&
+        (mouseY <= (m_position.vec[1] + m_size.vec[1]*0.5f)))
+    {
+        // Pixel text is picking
+        return true;
+    }
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Render pixel text                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 void GUIPxText::render()
@@ -171,8 +188,6 @@ void GUIPxText::render()
     // Compute pixel text transformations
     m_matrix.setIdentity();
     m_matrix.translate(m_position);
-    m_matrix.rotateZ(m_angle);
-    m_matrix.translate(-m_origin);
     m_matrix.scale(m_size.vec[1], m_size.vec[1]);
 
     // Push constants into command buffer

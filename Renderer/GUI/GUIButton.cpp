@@ -257,7 +257,9 @@ bool GUIButton::mouseMove(float mouseX, float mouseY)
 void GUIButton::render()
 {
     // Compute button transformations
-    computeTransforms();
+    m_matrix.setIdentity();
+    m_matrix.translate(m_position);
+    m_matrix.scale(m_size);
 
     // Push model matrix into command buffer
     vkCmdPushConstants(
