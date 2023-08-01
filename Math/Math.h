@@ -220,6 +220,54 @@
 
 
         ////////////////////////////////////////////////////////////////////////
+        //  Get the minimum value between x and y                             //
+        //  return : Minimum value between x and y                            //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t min(int32_t x, int32_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
+        inline int64_t min(int64_t x, int32_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
+        inline float min(float x, int32_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
+        inline double min(double x, int32_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Get the maximum value between x and y                             //
+        //  return : Maximum value between x and y                            //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t max(int32_t x, int32_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
+        inline int64_t max(int64_t x, int32_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
+        inline float max(float x, int32_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
+        inline double max(double x, int32_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Modulo                                                            //
         //  return : Modulo (x % n)                                           //
         ////////////////////////////////////////////////////////////////////////
