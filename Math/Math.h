@@ -228,17 +228,17 @@
             return ((x < y) ? x : y);
         }
 
-        inline int64_t min(int64_t x, int32_t y)
+        inline int64_t min(int64_t x, int64_t y)
         {
             return ((x < y) ? x : y);
         }
 
-        inline float min(float x, int32_t y)
+        inline float min(float x, float y)
         {
             return ((x < y) ? x : y);
         }
 
-        inline double min(double x, int32_t y)
+        inline double min(double x, double y)
         {
             return ((x < y) ? x : y);
         }
@@ -252,17 +252,17 @@
             return ((x > y) ? x : y);
         }
 
-        inline int64_t max(int64_t x, int32_t y)
+        inline int64_t max(int64_t x, int64_t y)
         {
             return ((x > y) ? x : y);
         }
 
-        inline float max(float x, int32_t y)
+        inline float max(float x, float y)
         {
             return ((x > y) ? x : y);
         }
 
-        inline double max(double x, int32_t y)
+        inline double max(double x, double y)
         {
             return ((x > y) ? x : y);
         }
