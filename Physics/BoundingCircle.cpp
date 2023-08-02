@@ -135,7 +135,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	if (stepRadius <= 0) { return false; }
 	int64_t stepX = Math::abs(offset.vec[0])/stepRadius;
 	int64_t stepY = Math::abs(offset.vec[1])/stepRadius;
-	int64_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1ll);
+	int64_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1l);
 	stepX = offset.vec[0]/step;
 	stepY = offset.vec[1]/step;
 

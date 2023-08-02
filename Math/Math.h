@@ -86,6 +86,23 @@
         const int64_t PiHalfInt = 1647099;
         const int64_t PiThirdInt = 1098066;
 
+        // 32bits powers of ten
+        const int32_t MaxPowersOfTen32 = 10;
+        const int32_t PowersOfTen32[MaxPowersOfTen32] = {
+            1, 10, 100, 1000, 10000, 100000,
+            1000000, 10000000, 100000000, 1000000000
+        };
+
+        // 64bits powers of ten
+        const int64_t MaxPowersOfTen64 = 19;
+        const int64_t PowersOfTen64[MaxPowersOfTen64] = {
+            1l, 10l, 100l, 1000l, 10000l, 100000l, 1000000l, 10000000l,
+            100000000l, 1000000000l, 10000000000l, 100000000000l,
+            1000000000000l, 10000000000000l, 100000000000000l,
+            1000000000000000l, 10000000000000000l, 100000000000000000l,
+            1000000000000000000l
+        };
+
 
         ////////////////////////////////////////////////////////////////////////
         //  Get number sign (-1 or +1)                                        //
@@ -446,6 +463,46 @@
             if (x >= 0x4) { result += 2; x >>= 2; }
             if (x >= 0x2) { result += 1; x >>= 1; }
             return result;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Integer base 10 logarithm                                         //
+        //  param x : Integer to get base 10 logarithm of                     //
+        //  return : Integer base 10 logarithm (log10(x))                     //
+        ////////////////////////////////////////////////////////////////////////
+        inline int8_t log10(int32_t x)
+        {
+            return static_cast<int8_t>(std::log10(x*1.0));
+        }
+
+        inline int8_t log10(uint32_t x)
+        {
+            return static_cast<int8_t>(std::log10(x*1.0));
+        }
+
+        inline int8_t log10(int64_t x)
+        {
+            return static_cast<int8_t>(std::log10(x*1.0));
+        }
+
+        inline int8_t log10(uint64_t x)
+        {
+            return static_cast<int8_t>(std::log10(x*1.0));
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Integer power of ten                                              //
+        //  param x : Power of ten exponent                                   //
+        //  return : Integer power of ten (10 ^ x)                            //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t power10(int32_t x)
+        {
+            return PowersOfTen32[Math::clamp(x, 0, (MaxPowersOfTen32-1))];
+        }
+
+        inline int64_t power10(int64_t x)
+        {
+            return PowersOfTen64[Math::clamp(x, 0l, (MaxPowersOfTen64-1l))];
         }
 
         ////////////////////////////////////////////////////////////////////////

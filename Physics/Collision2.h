@@ -143,7 +143,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setFactor(int64_t collisionFactor)
             {
-                factor = Math::clamp(collisionFactor, 0ll, Math::OneInt);
+                factor = Math::clamp(collisionFactor, 0l, Math::OneInt);
             }
 
 
