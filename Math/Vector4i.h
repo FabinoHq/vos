@@ -190,7 +190,7 @@
             inline void normalize()
             {
                 int64_t len = length();
-                if (len > 0.0f)
+                if (len != 0.0f)
                 {
                     // Normalize between 0 and Math::OneInt
                     vec[0] = (vec[0] << Math::OneIntShift) / len;

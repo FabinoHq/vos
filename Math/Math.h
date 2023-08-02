@@ -43,9 +43,12 @@
 #define VOS_MATH_MATH_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysCPU.h"
 
     #include <cstdint>
     #include <cmath>
+    #undef min
+    #undef max
 
 
     namespace Math
@@ -228,19 +231,29 @@
             return ((x < y) ? x : y);
         }
 
+        inline uint32_t min(uint32_t x, uint32_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
         inline int64_t min(int64_t x, int64_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
+        inline uint64_t min(uint64_t x, uint64_t y)
         {
             return ((x < y) ? x : y);
         }
 
         inline float min(float x, float y)
         {
-            return ((x < y) ? x : y);
+            return SysFloatMin(x, y);
         }
 
         inline double min(double x, double y)
         {
-            return ((x < y) ? x : y);
+            return SysDoubleMin(x, y);
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -252,19 +265,63 @@
             return ((x > y) ? x : y);
         }
 
+        inline uint32_t max(uint32_t x, uint32_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
         inline int64_t max(int64_t x, int64_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
+        inline uint64_t max(uint64_t x, uint64_t y)
         {
             return ((x > y) ? x : y);
         }
 
         inline float max(float x, float y)
         {
-            return ((x > y) ? x : y);
+            return SysFloatMax(x, y);
         }
 
         inline double max(double x, double y)
         {
-            return ((x > y) ? x : y);
+            return SysDoubleMax(x, y);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Clamp x value between min and max                                 //
+        //  return : Clamped value between min and max                        //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t clamp(int32_t x, int32_t min, int32_t max)
+        {
+            return ((x < max) ? ((x > min) ? x : min) : max);
+        }
+
+        inline uint32_t clamp(uint32_t x, uint32_t min, uint32_t max)
+        {
+            return ((x < max) ? ((x > min) ? x : min) : max);
+        }
+
+        inline int64_t clamp(int64_t x, int64_t min, int64_t max)
+        {
+            return ((x < max) ? ((x > min) ? x : min) : max);
+        }
+
+        inline uint64_t clamp(uint64_t x, uint64_t min, uint64_t max)
+        {
+            return ((x < max) ? ((x > min) ? x : min) : max);
+        }
+
+        inline float clamp(float x, float min, float max)
+        {
+            return SysFloatClamp(x, min, max);
+        }
+
+        inline double clamp(double x, double min, double max)
+        {
+            return SysDoubleClamp(x, min, max);
         }
 
         ////////////////////////////////////////////////////////////////////////

@@ -124,11 +124,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setRadius(int64_t circleRadius)
             {
-                if (circleRadius <= PhysicsMinEntityHalfSize)
-                {
-                    circleRadius = PhysicsMinEntityHalfSize;
-                }
-                radius = circleRadius;
+                radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
             }
 
 

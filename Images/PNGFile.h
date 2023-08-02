@@ -46,6 +46,7 @@
     #include "../System/SysCPU.h"
     #include "../System/SysCRC.h"
     #include "../Compress/ZLib.h"
+    #include "../Math/Math.h"
 
     #include <cstddef>
     #include <cstdint>

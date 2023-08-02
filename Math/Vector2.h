@@ -186,7 +186,7 @@
             inline void normalize()
             {
                 float len = length();
-                if (len > 0.0f)
+                if (len != 0.0f)
                 {
                     float invLength = 1.0f/len;
                     vec[0] *= invLength;

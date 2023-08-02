@@ -91,29 +91,12 @@
                 int32_t lowVal, int32_t mediumVal, int32_t highVal)
             {
                 // Set sign
-                sign = ((signVal >= 0)?1:-1);
+                sign = ((signVal >= 0) ? 1 : -1);
 
-                // Clamp values
-                if (lowVal <= 0) { lowVal = 0; }
-                if (lowVal >= (MutiIntMaxLowValue-1))
-                {
-                    lowVal = (MutiIntMaxLowValue-1);
-                }
-                if (mediumVal <= 0) { mediumVal = 0; }
-                if (mediumVal >= (MutiIntMaxMediumValue-1))
-                {
-                    mediumVal = (MutiIntMaxMediumValue-1);
-                }
-                if (highVal <= 0) { highVal = 0; }
-                if (highVal >= (MutiIntMaxHighValue-1))
-                {
-                    highVal = (MutiIntMaxHighValue-1);
-                }
-
-                // Set values
-                low = lowVal;
-                medium = mediumVal;
-                high = highVal;
+                // Clamp and set values
+                low = Math::clamp(lowVal, 0, (MutiIntMaxLowValue-1));
+                medium = Math::clamp(mediumVal, 0, (MutiIntMaxMediumValue-1));
+                high = Math::clamp(highVal, 0, (MutiIntMaxHighValue-1));
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -157,29 +140,12 @@
                 int32_t lowVal, int32_t mediumVal, int32_t highVal)
             {
                 // Set sign
-                sign = ((signVal >= 0)?1:-1);
+                sign = ((signVal >= 0) ? 1 : -1);
 
-                // Clamp values
-                if (lowVal <= 0) { lowVal = 0; }
-                if (lowVal >= (MutiIntMaxLowValue-1))
-                {
-                    lowVal = (MutiIntMaxLowValue-1);
-                }
-                if (mediumVal <= 0) { mediumVal = 0; }
-                if (mediumVal >= (MutiIntMaxMediumValue-1))
-                {
-                    mediumVal = (MutiIntMaxMediumValue-1);
-                }
-                if (highVal <= 0) { highVal = 0; }
-                if (highVal >= (MutiIntMaxHighValue-1))
-                {
-                    highVal = (MutiIntMaxHighValue-1);
-                }
-
-                // Set values
-                low = lowVal;
-                medium = mediumVal;
-                high = highVal;
+                // Clamp and set values
+                low = Math::clamp(lowVal, 0, (MutiIntMaxLowValue-1));
+                medium = Math::clamp(mediumVal, 0, (MutiIntMaxMediumValue-1));
+                high = Math::clamp(highVal, 0, (MutiIntMaxHighValue-1));
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -187,7 +153,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setSign(int32_t signVal)
             {
-                sign = ((signVal >= 0)?1:-1);
+                sign = ((signVal >= 0) ? 1 : -1);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -195,12 +161,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setLow(int32_t lowVal)
             {
-                if (lowVal <= 0) { lowVal = 0; }
-                if (lowVal >= (MutiIntMaxLowValue-1))
-                {
-                    lowVal = (MutiIntMaxLowValue-1);
-                }
-                low = lowVal;
+                low = Math::clamp(lowVal, 0, (MutiIntMaxLowValue-1));
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -208,12 +169,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setMedium(int32_t mediumVal)
             {
-                if (mediumVal <= 0) { mediumVal = 0; }
-                if (mediumVal >= (MutiIntMaxMediumValue-1))
-                {
-                    mediumVal = (MutiIntMaxMediumValue-1);
-                }
-                medium = mediumVal;
+                medium = Math::clamp(mediumVal, 0, (MutiIntMaxMediumValue-1));
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -221,12 +177,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setHigh(int32_t highVal)
             {
-                if (highVal <= 0) { highVal = 0; }
-                if (highVal >= (MutiIntMaxHighValue-1))
-                {
-                    highVal = (MutiIntMaxHighValue-1);
-                }
-                high = highVal;
+                high = Math::clamp(highVal, 0, (MutiIntMaxHighValue-1));
             }
 
 
@@ -729,7 +680,7 @@
                 int32_t lowSign = Math::sign(low);
                 int32_t mediumSign = Math::sign(medium);
                 int32_t highSign = Math::sign(high);
-                sign = (lowSign < 0)?-1:1;
+                sign = ((lowSign >= 0) ? 1 : -1);
 
                 // Adjust low value
                 if ((lowSign != mediumSign) && (low != 0) && (medium != 0))
@@ -775,7 +726,7 @@
                 int32_t lowSign = Math::sign(result.low);
                 int32_t mediumSign = Math::sign(result.medium);
                 int32_t highSign = Math::sign(result.high);
-                result.sign = (lowSign < 0)?-1:1;
+                result.sign = ((lowSign >= 0) ? 1 : -1);
 
                 // Adjust low value
                 if ((lowSign != mediumSign) &&
@@ -823,26 +774,16 @@
             ////////////////////////////////////////////////////////////////////
             inline void clampLow()
             {
-                if (low >= (MutiIntMaxLowValue-1))
-                {
-                    low = (MutiIntMaxLowValue-1);
-                }
-                if (low <= -(MutiIntMaxLowValue-1))
-                {
-                    low = -(MutiIntMaxLowValue-1);
-                }
+                low = Math::clamp(low,
+                    -(MutiIntMaxLowValue-1), (MutiIntMaxLowValue-1)
+                );
             }
 
             inline void clampLow(MultiInt& result)
             {
-                if (result.low >= (MutiIntMaxLowValue-1))
-                {
-                    result.low = (MutiIntMaxLowValue-1);
-                }
-                if (result.low <= -(MutiIntMaxLowValue-1))
-                {
-                    result.low = -(MutiIntMaxLowValue-1);
-                }
+                result.low = Math::clamp(result.low,
+                    -(MutiIntMaxLowValue-1), (MutiIntMaxLowValue-1)
+                );
             }
 
             ////////////////////////////////////////////////////////////////////

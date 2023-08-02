@@ -215,15 +215,11 @@ void GUIPxText::render()
     for (size_t i = 0; i < m_text.length(); ++i)
     {
         // Get char code
-        char charCode = m_text[i]-32;
+        char charCode = (m_text[i] - 32);
         if (charCode < 0) { charCode = 31; }
         if (charCode > 94) { charCode = 31; }
-        int charX = (charCode%16);
-        int charY = (charCode/16);
-        if (charX <= 0) { charX = 0; }
-        if (charX >= 15) { charX = 15; }
-        if (charY <= 0) { charY = 0; }
-        if (charY >= 5) { charY = 5; }
+        int charX = Math::clamp((charCode%16), 0, 15);
+        int charY = Math::clamp((charCode/16), 0, 5);
 
         // Push model matrix into command buffer
         vkCmdPushConstants(

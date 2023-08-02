@@ -116,7 +116,7 @@ bool Texture::createTexture(VulkanMemoryPool memoryPool,
     {
         mipLevels = (Math::log2(((width > height) ? width : height)) + 1);
     }
-    if (mipLevels <= 1) { mipLevels = 1; }
+    mipLevels = Math::max(mipLevels, 1u);
 
     // Create image
     VkImageCreateInfo imageInfo;

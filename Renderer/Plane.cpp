@@ -148,14 +148,6 @@ void Plane::setBillboard(PlaneBillboardMode billboard)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set plane billboard target                                                //
-////////////////////////////////////////////////////////////////////////////////
-void Plane::setTarget(Camera& target)
-{
-    m_target = &target;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Set plane color                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 void Plane::setColor(const Vector4& color)
@@ -212,8 +204,6 @@ void Plane::render()
     Vector3 delta = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 delta2 = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 rotation = Vector3(0.0f, 0.0f, 0.0f);
-    float dotProduct = 0.0f;
-    float angle = 0.0f;
 
     // Check target
     if (!m_target)
@@ -235,12 +225,10 @@ void Plane::render()
         );
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
-        dotProduct = lookAt.dotProduct(delta);
-        if (dotProduct <= -1.0) { dotProduct = -1.0; }
-        if (dotProduct >= 1.0) { dotProduct = 1.0; }
-        angle = (Math::Pi - std::acos(dotProduct));
         m_matrix.rotate(
-            angle, rotation.vec[0], rotation.vec[1], rotation.vec[2]
+            (Math::Pi - std::acos(
+                Math::clamp(lookAt.dotProduct(delta), -1.0f, 1.0f)
+            )), rotation.vec[0], rotation.vec[1], rotation.vec[2]
         );
         m_matrix.rotateZ(m_angles.vec[2]);
     }
@@ -254,12 +242,10 @@ void Plane::render()
         );
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
-        dotProduct = lookAt.dotProduct(delta);
-        if (dotProduct <= -1.0) { dotProduct = -1.0; }
-        if (dotProduct >= 1.0) { dotProduct = 1.0; }
-        angle = (Math::Pi - std::acos(dotProduct));
         m_matrix.rotate(
-            angle, rotation.vec[0], rotation.vec[1], rotation.vec[2]
+            (Math::Pi - std::acos(
+                Math::clamp(lookAt.dotProduct(delta), -1.0f, 1.0f)
+            )), rotation.vec[0], rotation.vec[1], rotation.vec[2]
         );
         m_matrix.rotateZ(m_angles.vec[2]);
     }
@@ -273,12 +259,10 @@ void Plane::render()
         );
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
-        dotProduct = lookAt.dotProduct(delta);
-        if (dotProduct <= -1.0) { dotProduct = -1.0; }
-        if (dotProduct >= 1.0) { dotProduct = 1.0; }
-        angle = (Math::Pi - std::acos(dotProduct));
         m_matrix.rotate(
-            angle, rotation.vec[0], rotation.vec[1], rotation.vec[2]
+            (Math::Pi - std::acos(
+                Math::clamp(lookAt.dotProduct(delta), -1.0f, 1.0f)
+            )), rotation.vec[0], rotation.vec[1], rotation.vec[2]
         );
         delta2.set(
             (m_position.vec[0] - m_target->getX()),
@@ -286,11 +270,9 @@ void Plane::render()
             (m_position.vec[2] - m_target->getZ())
         );
         delta2.normalize();
-        dotProduct = delta.dotProduct(delta2);
-        if (dotProduct <= -1.0) { dotProduct = -1.0; }
-        if (dotProduct >= 1.0) { dotProduct = 1.0; }
-        angle = std::acos(dotProduct)*Math::signum(delta2.vec[1]);
-        m_matrix.rotateX(angle);
+        m_matrix.rotateX(std::acos(
+            Math::clamp(delta.dotProduct(delta2), -1.0f, 1.0f)
+        )*Math::signum(delta2.vec[1]));
         m_matrix.rotateZ(m_angles.vec[2]);
     }
     else

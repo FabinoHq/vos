@@ -70,11 +70,7 @@ BoundingCircle::BoundingCircle(
 {
 	position.vec[0] = circlePosition.vec[0];
 	position.vec[1] = circlePosition.vec[1];
-	if (circleRadius <= PhysicsMinEntityHalfSize)
-	{
-		circleRadius = PhysicsMinEntityHalfSize;
-	}
-	radius = circleRadius;
+	radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,11 +91,7 @@ void BoundingCircle::set(const Vector2i& circlePosition, int64_t circleRadius)
 {
 	position.vec[0] = circlePosition.vec[0];
 	position.vec[1] = circlePosition.vec[1];
-	if (circleRadius <= PhysicsMinEntityHalfSize)
-	{
-		circleRadius = PhysicsMinEntityHalfSize;
-	}
-	radius = circleRadius;
+	radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
 }
 
 
@@ -143,8 +135,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	if (stepRadius <= 0) { return false; }
 	int64_t stepX = Math::abs(offset.vec[0])/stepRadius;
 	int64_t stepY = Math::abs(offset.vec[1])/stepRadius;
-	int64_t step = (stepX >= stepY) ? stepX : stepY;
-	if (step <= 1) { step = 1; }
+	int64_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1ll);
 	stepX = offset.vec[0]/step;
 	stepY = offset.vec[1]/step;
 

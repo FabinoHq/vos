@@ -143,18 +143,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setFactor(int64_t collisionFactor)
             {
-                // Clamp collision factor
-                if (collisionFactor <= 0)
-                {
-                    collisionFactor = 0;
-                }
-                if (collisionFactor >= Math::OneInt)
-                {
-                    collisionFactor = Math::OneInt;
-                }
-
-                // Set collision factor
-                factor = collisionFactor;
+                factor = Math::clamp(collisionFactor, 0ll, Math::OneInt);
             }
 
 

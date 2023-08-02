@@ -88,20 +88,14 @@ void SysMouse::update(int x, int y)
         deltaY = (y*1.0f);
         mouseX += (x*scale*2.0f);
         mouseY -= (y*scale*2.0f);
-        if (mouseX <= -ratio) { mouseX = -ratio; }
-        if (mouseX >= ratio) { mouseX = ratio; }
-        if (mouseY <= -1.0f) { mouseY = -1.0f; }
-        if (mouseY >= 1.0f) { mouseY = 1.0f; }
+        mouseX = Math::clamp(mouseX, -ratio, ratio);
+        mouseY = Math::clamp(mouseY, -1.0f, 1.0f);
     #else
         // OS absolute mouse position
         deltaX = ((x-previousX)*1.0f);
         deltaY = ((y-previousY)*1.0f);
-        mouseX = (-ratio + (x*scale*2.0f));
-        mouseY = (1.0f - (y*scale*2.0f));
-        if (mouseX <= -ratio) { mouseX = -ratio; }
-        if (mouseX >= ratio) { mouseX = ratio; }
-        if (mouseY <= -1.0f) { mouseY = -1.0f; }
-        if (mouseY >= 1.0f) { mouseY = 1.0f; }
+        mouseX = Math::clamp((-ratio + (x*scale*2.0f)), -ratio, ratio);
+        mouseY = Math::clamp((1.0f - (y*scale*2.0f)), -1.0f, 1.0f);
     #endif // VOS_POINTERLOCK
 
     // Update previous mouse position

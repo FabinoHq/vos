@@ -138,9 +138,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setValue(float value)
             {
-                if (value <= 0.0f) { value = 0.0f; }
-                if (value >= 1.0f) { value = 1.0f; }
-                m_value = value;
+                m_value = Math::clamp(value, 0.0f, 1.0f);
             }
 
             ////////////////////////////////////////////////////////////////////

@@ -85,20 +85,14 @@ bool OrbitalCam::compute(float ratio, float frametime)
     {
         // Move forward
         m_distance -= speed;
-        if (m_distance <= OrbitalCameraMinDistance)
-        {
-            m_distance = OrbitalCameraMinDistance;
-        }
+        m_distance = Math::max(m_distance, OrbitalCameraMinDistance);
         m_forward = false;
     }
     if (m_backward)
     {
         // Move backward
         m_distance += speed;
-        if (m_distance >= OrbitalCameraMaxDistance)
-        {
-            m_distance = OrbitalCameraMaxDistance;
-        }
+        m_distance = Math::min(m_distance, OrbitalCameraMaxDistance);
         m_backward = false;
     }
 
@@ -213,15 +207,9 @@ bool OrbitalCam::compute(float ratio, OrbitalCam& orbitalCam)
 ////////////////////////////////////////////////////////////////////////////////
 void OrbitalCam::setDistance(float distance)
 {
-    if (m_distance <= OrbitalCameraMinDistance)
-    {
-        m_distance = OrbitalCameraMinDistance;
-    }
-    if (m_distance >= OrbitalCameraMaxDistance)
-    {
-        m_distance = OrbitalCameraMaxDistance;
-    }
-    m_distance = distance;
+    m_distance = Math::clamp(
+        distance, OrbitalCameraMinDistance, OrbitalCameraMaxDistance
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

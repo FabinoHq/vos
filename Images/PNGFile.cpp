@@ -1888,9 +1888,7 @@ bool PNGFile::encodePNG16bits(unsigned char* data,
             greyscale += image[inIndex++];
             greyscale += image[inIndex++];
             greyscale /= 3;
-            if (greyscale <= 0) { greyscale = 0; }
-            if (greyscale >= 255) { greyscale = 255; }
-            data[outIndex++] = (unsigned char)greyscale;
+            data[outIndex++] = (unsigned char)Math::clamp(greyscale, 0, 255);
             // Alpha channel
             data[outIndex++] = image[inIndex++];
         }
@@ -2092,9 +2090,7 @@ bool PNGFile::encodePNG8bits(unsigned char* data,
             greyscale += image[inIndex++];
             greyscale += image[inIndex++];
             greyscale /= 3;
-            if (greyscale <= 0) { greyscale = 0; }
-            if (greyscale >= 255) { greyscale = 255; }
-            data[outIndex++] = (unsigned char)greyscale;
+            data[outIndex++] = (unsigned char)Math::clamp(greyscale, 0, 255);
             // Alpha channel
             ++inIndex;
         }

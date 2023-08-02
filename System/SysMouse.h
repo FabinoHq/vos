@@ -43,6 +43,7 @@
 #define VOS_SYSTEM_SYSMOUSE_HEADER
 
     #include "System.h"
+    #include "../Math/Math.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

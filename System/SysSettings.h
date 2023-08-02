@@ -43,6 +43,7 @@
 #define VOS_SYSTEM_SYSSETTINGS_HEADER
 
     #include "System.h"
+    #include "../Math/Math.h"
     #include "../Renderer/Vulkan/Vulkan.h"
 
 

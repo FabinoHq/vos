@@ -383,7 +383,7 @@
                 float sinAngle = std::sin(-angle);
                 float cosAngle = std::cos(-angle);
                 float oneMinCos = 1.0f-cosAngle;
-                if (magnitude > 0.0f)
+                if (magnitude != 0.0f)
                 {
                     x /= magnitude;
                     y /= magnitude;

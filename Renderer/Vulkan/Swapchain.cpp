@@ -227,21 +227,14 @@ bool Swapchain::createSwapchain()
 
 
     // Set swapchain images count
-    uint32_t imagesCount = RendererMaxSwapchainFrames;
+    uint32_t imagesCount = Math::clamp(RendererMaxSwapchainFrames,
+        surfaceCapabilities.minImageCount, surfaceCapabilities.maxImageCount
+    );
 
-    // Images count clamping
-    if (imagesCount <= surfaceCapabilities.minImageCount)
-    {
-        imagesCount = surfaceCapabilities.minImageCount;
-    }
-    if (imagesCount >= surfaceCapabilities.maxImageCount)
-    {
-        imagesCount = surfaceCapabilities.maxImageCount;
-    }
-    if (imagesCount >= RendererMaxSwapchainFrames)
-    {
-        imagesCount = RendererMaxSwapchainFrames;
-    }
+    // Clamp swapchain images count
+    imagesCount = Math::min(imagesCount, RendererMaxSwapchainFrames);
+
+    // Check swapchain images count
     if (imagesCount <= 0)
     {
         // Invalid swapchain images count
@@ -292,26 +285,16 @@ bool Swapchain::createSwapchain()
 
     // Set swapchain extent
     VkExtent2D swapchainExtent;
-    swapchainExtent.width = surfaceCapabilities.currentExtent.width;
-    swapchainExtent.height = surfaceCapabilities.currentExtent.height;
-
-    // Clamp swapchain extent
-    if (swapchainExtent.width < surfaceCapabilities.minImageExtent.width)
-    {
-        swapchainExtent.width = surfaceCapabilities.minImageExtent.width;
-    }
-    if (swapchainExtent.height < surfaceCapabilities.minImageExtent.height)
-    {
-        swapchainExtent.height = surfaceCapabilities.minImageExtent.height;
-    }
-    if (swapchainExtent.width > surfaceCapabilities.maxImageExtent.width)
-    {
-        swapchainExtent.width = surfaceCapabilities.maxImageExtent.width;
-    }
-    if (swapchainExtent.height > surfaceCapabilities.maxImageExtent.height)
-    {
-        swapchainExtent.height = surfaceCapabilities.maxImageExtent.height;
-    }
+    swapchainExtent.width = Math::clamp(
+        surfaceCapabilities.currentExtent.width,
+        surfaceCapabilities.minImageExtent.width,
+        surfaceCapabilities.maxImageExtent.width
+    );
+    swapchainExtent.height = Math::clamp(
+        surfaceCapabilities.currentExtent.height,
+        surfaceCapabilities.minImageExtent.height,
+        surfaceCapabilities.maxImageExtent.height
+    );
 
     if ((swapchainExtent.width <= 0) || (swapchainExtent.height <= 0))
     {
@@ -874,21 +857,14 @@ bool Swapchain::resizeSwapchain()
 
 
     // Set swapchain images count
-    uint32_t imagesCount = RendererMaxSwapchainFrames;
+    uint32_t imagesCount = Math::clamp(RendererMaxSwapchainFrames,
+        surfaceCapabilities.minImageCount, surfaceCapabilities.maxImageCount
+    );
 
-    // Images count clamping
-    if (imagesCount <= surfaceCapabilities.minImageCount)
-    {
-        imagesCount = surfaceCapabilities.minImageCount;
-    }
-    if (imagesCount >= surfaceCapabilities.maxImageCount)
-    {
-        imagesCount = surfaceCapabilities.maxImageCount;
-    }
-    if (imagesCount >= RendererMaxSwapchainFrames)
-    {
-        imagesCount = RendererMaxSwapchainFrames;
-    }
+    // Clamp swapchain images count
+    imagesCount = Math::min(imagesCount, RendererMaxSwapchainFrames);
+
+    // Check swapchain images count
     if (imagesCount <= 0)
     {
         // Invalid swapchain images count

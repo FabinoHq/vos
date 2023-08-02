@@ -149,12 +149,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setSmooth(float smooth)
             {
-                // Clamp smooth amount
-                if (smooth <= 0.0f) { smooth = 0.0f; }
-                if (smooth >= 1.0f) { smooth = 1.0f; }
-
-                // Set smooth amount
-                m_smooth = smooth;
+                m_smooth = Math::clamp(smooth, 0.0f, 1.0f);
             }
 
 

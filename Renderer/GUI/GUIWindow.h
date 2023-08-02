@@ -246,8 +246,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setTopBarSize(float topBarSize)
             {
-                if (topBarSize <= 0.0f) { topBarSize = 0.0f; }
-                m_topBarSize = topBarSize;
+                m_topBarSize = Math::max(topBarSize, 0.0f);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -255,8 +254,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setResizeBarSize(float resizeBarSize)
             {
-                if (resizeBarSize <= 0.0f) { resizeBarSize = 0.0f; }
-                m_resizeBarSize = resizeBarSize;
+                m_resizeBarSize = Math::max(resizeBarSize, 0.0f);
             }
 
 

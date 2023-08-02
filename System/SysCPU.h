@@ -44,17 +44,12 @@
 
     #include "System.h"
     #include "SysMessage.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector2.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Vector4.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Images/BMPFile.h"
-    #include "../Images/PNGFile.h"
 
     #include <cstddef>
     #include <cstdint>
     #include <limits>
+    #undef min
+    #undef max
 
 
     ////////////////////////////////////////////////////////////////////////////

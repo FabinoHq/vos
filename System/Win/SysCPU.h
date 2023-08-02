@@ -110,4 +110,57 @@
     }
 
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  SSE Branchless float minimum                                          //
+    //  return : Minimum value between x and y                                //
+    ////////////////////////////////////////////////////////////////////////////
+    inline float SysFloatMin(float x, float y)
+    {
+        _mm_store_ss(&x, _mm_min_ss(_mm_set_ss(x), _mm_set_ss(y)));
+        return x;
+    }
+
+    inline double SysDoubleMin(double x, double y)
+    {
+        _mm_store_sd(&x, _mm_min_sd(_mm_set_sd(x), _mm_set_sd(y)));
+        return x;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SSE Branchless float maximum                                          //
+    //  return : Maximum value between x and y                                //
+    ////////////////////////////////////////////////////////////////////////////
+    inline float SysFloatMax(float x, float y)
+    {
+        _mm_store_ss(&x, _mm_max_ss(_mm_set_ss(x), _mm_set_ss(y)));
+        return x;
+    }
+
+    inline double SysDoubleMax(double x, double y)
+    {
+        _mm_store_sd(&x, _mm_max_sd(_mm_set_sd(x), _mm_set_sd(y)));
+        return x;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SSE Branchless float clamping                                         //
+    //  return : Value clamped between min and max                            //
+    ////////////////////////////////////////////////////////////////////////////
+    inline float SysFloatClamp(float x, float min, float max)
+    {
+        _mm_store_ss(&x, _mm_min_ss(_mm_max_ss(
+            _mm_set_ss(x), _mm_set_ss(min)), _mm_set_ss(max))
+        );
+        return x;
+    }
+
+    inline double SysDoubleClamp(double x, double min, double max)
+    {
+        _mm_store_sd(&x, _mm_min_sd(_mm_max_sd(
+            _mm_set_sd(x), _mm_set_sd(min)), _mm_set_sd(max))
+        );
+        return x;
+    }
+
+
 #endif // VOS_SYSTEM_WIN_SYSCPU_HEADER
