@@ -9,6 +9,7 @@
 
 # Projects files
 !Makefile
+!make.bat
 !VOS.sln
 !VOS.vcxproj
 !VOS.vcxproj.filters
