@@ -41,12 +41,12 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :: Get Visual Studio installation path
-call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"^
- -all -legacy -property installationPath
+for /f "delims=" %%i in ('call^
+ "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"^
+ -all -legacy -property installationPath') do set VCInstallationPath=%%i
 
 :: Setup Visual Studio environment
-call "C:\Program Files\Microsoft Visual Studio\2022\Community"^
-"\VC\Auxiliary\Build\vcvars64.bat"
+call "%VCInstallationPath%\VC\Auxiliary\Build\vcvars64.bat"
 
 :: Build VOS
 call msbuild /p:Configuration=Release VOS.sln
