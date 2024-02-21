@@ -203,7 +203,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Compress\ZLib.cpp" />
-    <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Images\BMPFile.cpp" />
     <ClCompile Include="Images\PNGFile.cpp" />
     <ClCompile Include="main.cpp" />
@@ -267,6 +266,7 @@
     <ClCompile Include="Resources\MeshLoader.cpp" />
     <ClCompile Include="Resources\Resources.cpp" />
     <ClCompile Include="Resources\TextureLoader.cpp" />
+    <ClCompile Include="Softwares\Softwares.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysCPU.cpp" />
     <ClCompile Include="System\SysMouse.cpp" />
@@ -280,7 +280,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compress\ZLib.h" />
-    <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Images\BMPFile.h" />
     <ClInclude Include="Images\Embedded\Cursor.h" />
     <ClInclude Include="Images\Embedded\EWCursor.h" />
@@ -382,6 +381,7 @@
     <ClInclude Include="Resources\MeshLoader.h" />
     <ClInclude Include="Resources\Resources.h" />
     <ClInclude Include="Resources\TextureLoader.h" />
+    <ClInclude Include="Softwares\Softwares.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysCPU.h" />
     <ClInclude Include="System\SysCRC.h" />

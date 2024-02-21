@@ -315,7 +315,10 @@
 !Models/
 !models/testmodel.vmsh
 
-# Game files
+# Softwares files
+!Softwares/
+!Softwares/Softwares.h
+!Softwares/Softwares.cpp
 !Game/
 !Game/Game.h
 !Game/Game.cpp

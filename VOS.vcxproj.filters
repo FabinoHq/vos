@@ -43,11 +43,11 @@
     <Filter Include="Physics">
       <UniqueIdentifier>{2aa44072-a845-4a8f-b8d8-50a1dd97a90f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{c4371f93-72cd-44b2-8aca-78bdfa21ceda}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{7044fbb2-2e6c-4616-bb73-268fb71ef8db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Softwares">
+      <UniqueIdentifier>{6a19b97c-d4de-400c-8268-ea642b5b468d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,9 +173,6 @@
     <ClCompile Include="Physics\Collision2.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Game.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="System\SysCPU.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -271,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="Renderer\GUI\GUIProgressBar.cpp">
       <Filter>Renderer\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Softwares\Softwares.cpp">
+      <Filter>Softwares</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -506,9 +506,6 @@
     <ClInclude Include="Physics\Collision2.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Game.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="System\SysCPU.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -646,6 +643,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\ProgressBar.h">
       <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\Softwares.h">
+      <Filter>Softwares</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

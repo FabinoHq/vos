@@ -48,7 +48,7 @@
 Vos::Vos() :
 m_running(false),
 m_clock(),
-m_game()
+m_softwares()
 {
 
 }
@@ -134,10 +134,10 @@ bool Vos::launch()
     }
 
 
-    // Init game
-    if (!m_game.init())
+    // Init softwares
+    if (!m_softwares.init())
     {
-        // Could not init game
+        // Could not init softwares
         return false;
     }
 
@@ -224,21 +224,21 @@ void Vos::run()
             }
 
             // Compute events
-            m_game.events(event);
+            m_softwares.events(event);
         }
 
         // Compute logic
-        m_game.compute(frametime);
+        m_softwares.compute(frametime);
 
         // Render frame
-        m_game.render();
+        m_softwares.render();
     }
 
     // Wait for renderer device idle state
     if (GRenderer.waitDeviceIdle())
     {
-        // Destroy game
-        m_game.destroy();
+        // Destroy softwares
+        m_softwares.destroy();
 
         // Destroy resources
         GResources.destroyResources();

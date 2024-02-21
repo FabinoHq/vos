@@ -53,7 +53,7 @@
 
     #include "Renderer/Renderer.h"
     #include "Resources/Resources.h"
-    #include "Game/Game.h"
+    #include "Softwares/Softwares.h"
 
     #include <cstddef>
     #include <cstdint>
@@ -104,8 +104,7 @@
         private:
             bool            m_running;          // VOS running state
             SysClock        m_clock;            // VOS clock
-
-            Game            m_game;             // Game instance
+            Softwares       m_softwares;        // VOS softwares
     };
 
 

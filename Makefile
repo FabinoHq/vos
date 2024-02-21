@@ -89,7 +89,7 @@ VOS: main.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
-	Game/Game.o
+	Softwares/Softwares.o
 
 	$(CC) -o VOS \
 	Vos.o \
@@ -133,7 +133,7 @@ VOS: main.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
-	Game/Game.o \
+	Softwares/Softwares.o \
 	main.o $(LDFLAGS)
 
 
@@ -391,8 +391,8 @@ Resources/HeightFarLoader.o: Resources/HeightFarLoader.cpp
 	Resources/HeightFarLoader.cpp $(CFLAGS)
 
 
-Game/Game.o: Game/Game.cpp
-	$(CC) -o Game/Game.o -c Game/Game.cpp $(CFLAGS)
+Softwares/Softwares.o: Softwares/Softwares.cpp
+	$(CC) -o Softwares/Softwares.o -c Softwares/Softwares.cpp $(CFLAGS)
 
 
 clean:
@@ -408,7 +408,7 @@ clean:
 	rm -rf Renderer/Shapes/*.o
 	rm -rf Renderer/GUI/*.o
 	rm -rf Resources/*.o
-	rm -rf Game/*.o
+	rm -rf Softwares/*.o
 
 mrproper: clean
 	rm -rf VOS

@@ -37,146 +37,77 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Game/Game.h : Main game class management                               //
+//     Softwares/Softwares.h : Softwares management                           //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_GAME_GAME_HEADER
-#define VOS_GAME_GAME_HEADER
+#ifndef VOS_SOFTWARES_SOFTWARES_HEADER
+#define VOS_SOFTWARES_SOFTWARES_HEADER
 
     #include "../System/System.h"
     #include "../System/SysEvent.h"
     #include "../System/SysMouse.h"
 
     #include "../Renderer/Renderer.h"
-    #include "../Renderer/BackRenderer.h"
-    #include "../Renderer/View.h"
-    #include "../Renderer/Camera.h"
-    #include "../Renderer/FreeFlyCam.h"
-    #include "../Renderer/OrbitalCam.h"
-    #include "../Renderer/Sprite.h"
-    #include "../Renderer/ProcSprite.h"
-    #include "../Renderer/Plane.h"
-    #include "../Renderer/SkyBox.h"
-    #include "../Renderer/SkyProc.h"
-    #include "../Renderer/WorldLight.h"
-
-    #include "../Resources/Resources.h"
-    #include "../Renderer/GUI/GUICursor.h"
-    #include "../Renderer/GUI/GUIWindow.h"
-    #include "../Renderer/GUI/GUIPxText.h"
-    #include "../Renderer/GUI/GUIButton.h"
-    #include "../Renderer/GUI/GUIToggleButton.h"
-    #include "../Renderer/GUI/GUIProgressBar.h"
-
-    #include "../Renderer/Shapes/RectangleShape.h"
-    #include "../Renderer/Shapes/EllipseShape.h"
-    #include "../Renderer/Shapes/CuboidShape.h"
-
-    #include "../Renderer/StaticMesh.h"
-    #include "../Renderer/HeightMapStream.h"
-    #include "../Renderer/HeightFarStream.h"
-    #include "../Renderer/SeaNearStream.h"
-    #include "../Renderer/SeaFarStream.h"
-
-    #include "../Physics/Physics.h"
-    #include "../Physics/Collision2.h"
-    #include "../Physics/BoundingCircle.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Game main class definition                                            //
+    //  Softwares main class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Game
+    class Softwares
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Game default constructor                                      //
+            //  Softwares default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            Game();
+            Softwares();
 
             ////////////////////////////////////////////////////////////////////
-            //  Game destructor                                               //
+            //  Softwares destructor                                          //
             ////////////////////////////////////////////////////////////////////
-            ~Game();
+            ~Softwares();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init game                                                     //
-            //  return : True if game is ready, false otherwise               //
+            //  Init softwares                                                //
+            //  return : True if softwares are ready, false otherwise         //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy game                                                  //
+            //  Destroy softwares                                             //
             ////////////////////////////////////////////////////////////////////
             void destroy();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute game events                                           //
+            //  Compute softwares events                                      //
             ////////////////////////////////////////////////////////////////////
             void events(Event& event);
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute game logic                                            //
+            //  Compute softwares logic                                       //
             ////////////////////////////////////////////////////////////////////
             void compute(float frametime);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render game                                                   //
+            //  Render softwares                                              //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Game private copy constructor : Not copyable                  //
+            //  Softwares private copy constructor : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            Game(const Game&) = delete;
+            Softwares(const Softwares&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Game private copy operator : Not copyable                     //
+            //  Softwares private copy operator : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            Game& operator=(const Game&) = delete;
+            Softwares& operator=(const Softwares&) = delete;
 
 
         private:
-            BackRenderer    m_backRenderer;     // Back renderer
-
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-            FreeFlyCam      m_farflycam;        // Freefly camera far
-            OrbitalCam      m_orbitalcam;       // Orbital camera
-
-            SkyBox          m_skybox;           // SkyBox
-            SkyProc         m_skyproc;          // Procedural skybox
-
-            Sprite          m_sprite;           // Sprite
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectangle;        // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
-            CuboidShape     m_cuboid;           // Cuboid shape
-            Plane           m_plane;            // Plane billboard
-
-            GUICursor       m_cursor;           // GUI Cursor
-            GUIWindow       m_guiWindow;        // GUI Window
-            GUIPxText       m_pxText;           // GUI pixel text
-            GUIButton       m_button;           // GUI button
-            GUIToggleButton m_toggleButton;     // GUI toggle button
-            GUIProgressBar  m_progressBar;      // GUI progress bar
-
-            StaticMesh      m_staticMesh;       // Static mesh
-            HeightMapStream m_heightMapStream;  // HeightMap stream
-            HeightFarStream m_heightFarStream;  // HeightFar stream
-            SeaNearStream   m_seaNearStream;    // SeaNear stream
-            SeaFarStream    m_seaFarStream;     // SeaFar stream
-
-            BoundingCircle  m_boundingCircle;   // Bounding circle
-            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
-            Collision2      m_collideCircle;    // Circles collision
-
-            bool            m_spaceReleased;    // Space released event
     };
 
 
-#endif // VOS_GAME_GAME_HEADER
+#endif // VOS_SOFTWARES_SOFTWARES_HEADER
