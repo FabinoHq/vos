@@ -319,6 +319,5 @@
 !Softwares/
 !Softwares/Softwares.h
 !Softwares/Softwares.cpp
-!Game/
-!Game/Game.h
-!Game/Game.cpp
+!Softwares/FirstPerson.h
+!Softwares/FirstPerson.cpp

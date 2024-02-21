@@ -37,80 +37,146 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/Softwares.h : Softwares management                           //
+//     Softwares/FirstPerson.h : FirstPerson class management                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SOFTWARES_SOFTWARES_HEADER
-#define VOS_SOFTWARES_SOFTWARES_HEADER
+#ifndef VOS_SOFTWARES_FIRSTPERSON_HEADER
+#define VOS_SOFTWARES_FIRSTPERSON_HEADER
 
     #include "../System/System.h"
     #include "../System/SysEvent.h"
     #include "../System/SysMouse.h"
 
     #include "../Renderer/Renderer.h"
+    #include "../Renderer/BackRenderer.h"
+    #include "../Renderer/View.h"
+    #include "../Renderer/Camera.h"
+    #include "../Renderer/FreeFlyCam.h"
+    #include "../Renderer/OrbitalCam.h"
+    #include "../Renderer/Sprite.h"
+    #include "../Renderer/ProcSprite.h"
+    #include "../Renderer/Plane.h"
+    #include "../Renderer/SkyBox.h"
+    #include "../Renderer/SkyProc.h"
+    #include "../Renderer/WorldLight.h"
 
-    #include "FirstPerson.h"
+    #include "../Resources/Resources.h"
+    #include "../Renderer/GUI/GUICursor.h"
+    #include "../Renderer/GUI/GUIWindow.h"
+    #include "../Renderer/GUI/GUIPxText.h"
+    #include "../Renderer/GUI/GUIButton.h"
+    #include "../Renderer/GUI/GUIToggleButton.h"
+    #include "../Renderer/GUI/GUIProgressBar.h"
+
+    #include "../Renderer/Shapes/RectangleShape.h"
+    #include "../Renderer/Shapes/EllipseShape.h"
+    #include "../Renderer/Shapes/CuboidShape.h"
+
+    #include "../Renderer/StaticMesh.h"
+    #include "../Renderer/HeightMapStream.h"
+    #include "../Renderer/HeightFarStream.h"
+    #include "../Renderer/SeaNearStream.h"
+    #include "../Renderer/SeaFarStream.h"
+
+    #include "../Physics/Physics.h"
+    #include "../Physics/Collision2.h"
+    #include "../Physics/BoundingCircle.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Softwares main class definition                                       //
+    //  FirstPerson main class definition                                     //
     ////////////////////////////////////////////////////////////////////////////
-    class Softwares
+    class FirstPerson
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Softwares default constructor                                 //
+            //  FirstPerson default constructor                               //
             ////////////////////////////////////////////////////////////////////
-            Softwares();
+            FirstPerson();
 
             ////////////////////////////////////////////////////////////////////
-            //  Softwares destructor                                          //
+            //  FirstPerson destructor                                        //
             ////////////////////////////////////////////////////////////////////
-            ~Softwares();
+            ~FirstPerson();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init softwares                                                //
-            //  return : True if softwares are ready, false otherwise         //
+            //  Init first person game                                        //
+            //  return : True if first person game is ready, false otherwise  //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy softwares                                             //
+            //  Destroy first person game                                     //
             ////////////////////////////////////////////////////////////////////
             void destroy();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares events                                      //
+            //  Compute first person game events                              //
             ////////////////////////////////////////////////////////////////////
             void events(Event& event);
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares logic                                       //
+            //  Compute first person game logic                               //
             ////////////////////////////////////////////////////////////////////
             void compute(float frametime);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render softwares                                              //
+            //  Render first person game                                      //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Softwares private copy constructor : Not copyable             //
+            //  FirstPerson private copy constructor : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            Softwares(const Softwares&) = delete;
+            FirstPerson(const FirstPerson&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Softwares private copy operator : Not copyable                //
+            //  FirstPerson private copy operator : Not copyable              //
             ////////////////////////////////////////////////////////////////////
-            Softwares& operator=(const Softwares&) = delete;
+            FirstPerson& operator=(const FirstPerson&) = delete;
 
 
         private:
-            FirstPerson         m_firstperson;          // First person game
+            BackRenderer    m_backRenderer;     // Back renderer
+
+            View            m_view;             // View
+            Camera          m_camera;           // Camera
+            FreeFlyCam      m_freeflycam;       // Freefly camera
+            FreeFlyCam      m_farflycam;        // Freefly camera far
+            OrbitalCam      m_orbitalcam;       // Orbital camera
+
+            SkyBox          m_skybox;           // SkyBox
+            SkyProc         m_skyproc;          // Procedural skybox
+
+            Sprite          m_sprite;           // Sprite
+            ProcSprite      m_procSprite;       // Procedural sprite
+            RectangleShape  m_rectangle;        // Rectangle shape
+            EllipseShape    m_ellipse;          // Ellipse shape
+            CuboidShape     m_cuboid;           // Cuboid shape
+            Plane           m_plane;            // Plane billboard
+
+            GUICursor       m_cursor;           // GUI Cursor
+            GUIWindow       m_guiWindow;        // GUI Window
+            GUIPxText       m_pxText;           // GUI pixel text
+            GUIButton       m_button;           // GUI button
+            GUIToggleButton m_toggleButton;     // GUI toggle button
+            GUIProgressBar  m_progressBar;      // GUI progress bar
+
+            StaticMesh      m_staticMesh;       // Static mesh
+            HeightMapStream m_heightMapStream;  // HeightMap stream
+            HeightFarStream m_heightFarStream;  // HeightFar stream
+            SeaNearStream   m_seaNearStream;    // SeaNear stream
+            SeaFarStream    m_seaFarStream;     // SeaFar stream
+
+            BoundingCircle  m_boundingCircle;   // Bounding circle
+            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
+            Collision2      m_collideCircle;    // Circles collision
+
+            bool            m_spaceReleased;    // Space released event
     };
 
 
-#endif // VOS_SOFTWARES_SOFTWARES_HEADER
+#endif // VOS_SOFTWARES_FIRSTPERSON_HEADER

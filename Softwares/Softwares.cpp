@@ -45,7 +45,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Softwares default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
-Softwares::Softwares()
+Softwares::Softwares() :
+m_firstperson()
 {
 
 }
@@ -65,6 +66,13 @@ Softwares::~Softwares()
 ////////////////////////////////////////////////////////////////////////////////
 bool Softwares::init()
 {
+    // Init first person game
+    if (!m_firstperson.init())
+    {
+        // Could not init first person game
+        return false;
+    }
+
     // Softwares are ready
     return true;
 }
@@ -74,7 +82,8 @@ bool Softwares::init()
 ////////////////////////////////////////////////////////////////////////////////
 void Softwares::destroy()
 {
-
+    // Destroy softwares
+    m_firstperson.destroy();
 }
 
 
@@ -83,49 +92,8 @@ void Softwares::destroy()
 ////////////////////////////////////////////////////////////////////////////////
 void Softwares::events(Event& event)
 {
-    // Process event
-    switch (event.type)
-    {
-        // Key pressed
-        case EVENT_KEYPRESSED:
-            switch (event.key)
-            {
-                default:
-                    break;
-            }
-            break;
-
-        // Key released
-        case EVENT_KEYRELEASED:
-            switch (event.key)
-            {
-                case EVENT_KEY_ESCAPE:
-                    break;
-
-                default:
-                    break;
-            }
-            break;
-
-        // Mouse moved
-        case EVENT_MOUSEMOVED:
-            break;
-
-        // Mouse button pressed
-        case EVENT_MOUSEPRESSED:
-            break;
-
-        // Mouse button released
-        case EVENT_MOUSERELEASED:
-            break;
-
-        // Mouse wheel
-        case EVENT_MOUSEWHEEL:
-            break;
-
-        default:
-            break;
-    }
+    // Dispatch events to softwares
+    m_firstperson.events(event);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +101,8 @@ void Softwares::events(Event& event)
 ////////////////////////////////////////////////////////////////////////////////
 void Softwares::compute(float frametime)
 {
-    
+    // Compute softwares logic
+    m_firstperson.compute(frametime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,56 +110,6 @@ void Softwares::compute(float frametime)
 ////////////////////////////////////////////////////////////////////////////////
 void Softwares::render()
 {
-    // Start frame rendering
-    if (!GRenderer.startFrame())
-    {
-        return;
-    }
-
-    // Get renderer scale and ratio
-    //float scale = GSwapchain.getScale();
-    float ratio = GSwapchain.getRatio();
-
-    // Start rendering
-    GRenderer.startRenderPass();
-
-
-    // Set default screen view
-    GMainRenderer.bindDefaultView();
-
-    // Bind default vertex buffer
-    GRenderer.bindVertexBuffer(MESHES_DEFAULT);
-
-
-    // Render cursor
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_cursor.setPosition(GSysMouse.mouseX, GSysMouse.mouseY);
-    m_cursor.bindTexture();
-    m_cursor.render();*/
-
-    // End rendering
-    GRenderer.endRenderPass();
-
-
-    // Start final pass
-    GRenderer.startFinalPass();
-
-    // Render main compositing quad
-    GRenderer.bindDefaultView();
-    GRenderer.bindPipeline(RENDERER_PIPELINE_COMPOSITING);
-    GRenderer.bindVertexBuffer(MESHES_DEFAULT);
-    GMainRenderer.bind();
-    GRenderer.plane.setSize(
-        (GSwapchain.ratio*2.0f)+RendererCompositingPlaneOffset,
-        2.0f+RendererCompositingPlaneOffset
-    );
-    GRenderer.plane.setPosition(0.0f, 0.0f);
-    GRenderer.plane.render();
-
-    // End final pass
-    GRenderer.endFinalPass();
-
-
-    // End frame rendering
-    GRenderer.endFrame();
+    // Render softwares
+    m_firstperson.render();
 }

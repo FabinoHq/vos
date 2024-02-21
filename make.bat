@@ -56,3 +56,4 @@ copy x64\Release\VOS.exe VOS.exe
 
 :: Delete build files
 rd /s /q x64
+rd /s /q VOS

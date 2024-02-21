@@ -272,6 +272,9 @@
     <ClCompile Include="Softwares\Softwares.cpp">
       <Filter>Softwares</Filter>
     </ClCompile>
+    <ClCompile Include="Softwares\FirstPerson.cpp">
+      <Filter>Softwares</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -645,6 +648,9 @@
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Softwares\Softwares.h">
+      <Filter>Softwares</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\FirstPerson.h">
       <Filter>Softwares</Filter>
     </ClInclude>
   </ItemGroup>
