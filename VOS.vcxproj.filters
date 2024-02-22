@@ -52,6 +52,9 @@
     <Filter Include="Softwares\FirstPerson">
       <UniqueIdentifier>{e240329a-ee38-4539-abdb-159c8e01aca1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Softwares\TopDown">
+      <UniqueIdentifier>{133d67bb-745e-4cb5-8851-136194e96d25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -277,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="Softwares\FirstPerson\FirstPerson.cpp">
       <Filter>Softwares\FirstPerson</Filter>
+    </ClCompile>
+    <ClCompile Include="Softwares\TopDown\TopDown.cpp">
+      <Filter>Softwares\TopDown</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -655,6 +661,9 @@
     </ClInclude>
     <ClInclude Include="Softwares\FirstPerson\FirstPerson.h">
       <Filter>Softwares\FirstPerson</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\TopDown\TopDown.h">
+      <Filter>Softwares\TopDown</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -52,7 +52,10 @@ call "%VCInstallationPath%\VC\Auxiliary\Build\vcvars64.bat"
 call msbuild /p:Configuration=Release VOS.sln
 
 :: Delete previous binary
-rd /s /q VOS.exe
+del /q VOS.exe
 
 :: Copy output binary
 copy x64\Release\VOS.exe VOS.exe
+
+:: System pause
+pause

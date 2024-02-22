@@ -46,6 +46,7 @@
 //  Softwares default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
 Softwares::Softwares() :
+m_topdown(),
 m_firstperson()
 {
 
@@ -66,6 +67,13 @@ Softwares::~Softwares()
 ////////////////////////////////////////////////////////////////////////////////
 bool Softwares::init()
 {
+    // Init top down game
+    if (!m_topdown.init())
+    {
+        // Could not init top down game
+        return false;
+    }
+
     // Init first person game
     if (!m_firstperson.init())
     {
@@ -84,6 +92,7 @@ void Softwares::destroy()
 {
     // Destroy softwares
     m_firstperson.destroy();
+    m_topdown.destroy();
 }
 
 
@@ -93,7 +102,8 @@ void Softwares::destroy()
 void Softwares::events(Event& event)
 {
     // Dispatch events to softwares
-    m_firstperson.events(event);
+    m_topdown.events(event);
+    //m_firstperson.events(event);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +112,8 @@ void Softwares::events(Event& event)
 void Softwares::compute(float frametime)
 {
     // Compute softwares logic
-    m_firstperson.compute(frametime);
+    m_topdown.compute(frametime);
+    //m_firstperson.compute(frametime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,5 +122,6 @@ void Softwares::compute(float frametime)
 void Softwares::render()
 {
     // Render softwares
-    m_firstperson.render();
+    m_topdown.render();
+    //m_firstperson.render();
 }

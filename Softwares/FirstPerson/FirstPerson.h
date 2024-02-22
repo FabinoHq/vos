@@ -77,10 +77,6 @@
     #include "../../Renderer/SeaNearStream.h"
     #include "../../Renderer/SeaFarStream.h"
 
-    #include "../../Physics/Physics.h"
-    #include "../../Physics/Collision2.h"
-    #include "../../Physics/BoundingCircle.h"
-
 
     ////////////////////////////////////////////////////////////////////////////
     //  FirstPerson main class definition                                     //
@@ -159,21 +155,13 @@
             Plane           m_plane;            // Plane billboard
 
             GUICursor       m_cursor;           // GUI Cursor
-            GUIWindow       m_guiWindow;        // GUI Window
             GUIPxText       m_pxText;           // GUI pixel text
-            GUIButton       m_button;           // GUI button
-            GUIToggleButton m_toggleButton;     // GUI toggle button
-            GUIProgressBar  m_progressBar;      // GUI progress bar
 
             StaticMesh      m_staticMesh;       // Static mesh
             HeightMapStream m_heightMapStream;  // HeightMap stream
             HeightFarStream m_heightFarStream;  // HeightFar stream
             SeaNearStream   m_seaNearStream;    // SeaNear stream
             SeaFarStream    m_seaFarStream;     // SeaFar stream
-
-            BoundingCircle  m_boundingCircle;   // Bounding circle
-            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
-            Collision2      m_collideCircle;    // Circles collision
 
             bool            m_spaceReleased;    // Space released event
     };

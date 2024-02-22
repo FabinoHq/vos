@@ -320,8 +320,9 @@
 !Softwares/
 !Softwares/Softwares.h
 !Softwares/Softwares.cpp
-!Softwares/FirstPerson.h
-!Softwares/FirstPerson.cpp
+!Softwares/TopDown/
+!Softwares/TopDown/TopDown.h
+!Softwares/TopDown/TopDown.cpp
 !Softwares/FirstPerson/
 !Softwares/FirstPerson/FirstPerson.h
 !Softwares/FirstPerson/FirstPerson.cpp

@@ -37,82 +37,116 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/Softwares.h : Softwares management                           //
+//     Softwares/TopDown/TopDown.h : TopDown class management                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SOFTWARES_SOFTWARES_HEADER
-#define VOS_SOFTWARES_SOFTWARES_HEADER
+#ifndef VOS_SOFTWARES_TOPDOWN_TOPDOWN_HEADER
+#define VOS_SOFTWARES_TOPDOWN_TOPDOWN_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysEvent.h"
-    #include "../System/SysMouse.h"
+    #include "../../System/System.h"
+    #include "../../System/SysEvent.h"
+    #include "../../System/SysMouse.h"
 
-    #include "../Renderer/Renderer.h"
+    #include "../../Renderer/Renderer.h"
+    #include "../../Renderer/BackRenderer.h"
+    #include "../../Renderer/View.h"
+    #include "../../Renderer/Sprite.h"
+    #include "../../Renderer/ProcSprite.h"
 
-    #include "TopDown/TopDown.h"
-    #include "FirstPerson/FirstPerson.h"
+    #include "../../Resources/Resources.h"
+    #include "../../Renderer/GUI/GUICursor.h"
+    #include "../../Renderer/GUI/GUIWindow.h"
+    #include "../../Renderer/GUI/GUIPxText.h"
+    #include "../../Renderer/GUI/GUIButton.h"
+    #include "../../Renderer/GUI/GUIToggleButton.h"
+    #include "../../Renderer/GUI/GUIProgressBar.h"
+
+    #include "../../Renderer/Shapes/RectangleShape.h"
+    #include "../../Renderer/Shapes/EllipseShape.h"
+
+    #include "../../Physics/Physics.h"
+    #include "../../Physics/Collision2.h"
+    #include "../../Physics/BoundingCircle.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Softwares main class definition                                       //
+    //  TopDown main class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
-    class Softwares
+    class TopDown
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Softwares default constructor                                 //
+            //  TopDown default constructor                                   //
             ////////////////////////////////////////////////////////////////////
-            Softwares();
+            TopDown();
 
             ////////////////////////////////////////////////////////////////////
-            //  Softwares destructor                                          //
+            //  TopDown destructor                                            //
             ////////////////////////////////////////////////////////////////////
-            ~Softwares();
+            ~TopDown();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init softwares                                                //
-            //  return : True if softwares are ready, false otherwise         //
+            //  Init top down game                                            //
+            //  return : True if top down game is ready, false otherwise      //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy softwares                                             //
+            //  Destroy top down game                                         //
             ////////////////////////////////////////////////////////////////////
             void destroy();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares events                                      //
+            //  Compute top down game events                                  //
             ////////////////////////////////////////////////////////////////////
             void events(Event& event);
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares logic                                       //
+            //  Compute top down game logic                                   //
             ////////////////////////////////////////////////////////////////////
             void compute(float frametime);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render softwares                                              //
+            //  Render top down game                                          //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Softwares private copy constructor : Not copyable             //
+            //  TopDown private copy constructor : Not copyable               //
             ////////////////////////////////////////////////////////////////////
-            Softwares(const Softwares&) = delete;
+            TopDown(const TopDown&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Softwares private copy operator : Not copyable                //
+            //  TopDown private copy operator : Not copyable                  //
             ////////////////////////////////////////////////////////////////////
-            Softwares& operator=(const Softwares&) = delete;
+            TopDown& operator=(const TopDown&) = delete;
 
 
         private:
-            TopDown             m_topdown;              // Top down game
-            FirstPerson         m_firstperson;          // First person game
+            BackRenderer    m_backRenderer;     // Back renderer
+            View            m_view;             // View
+
+            Sprite          m_sprite;           // Sprite
+            ProcSprite      m_procSprite;       // Procedural sprite
+            RectangleShape  m_rectangle;        // Rectangle shape
+            EllipseShape    m_ellipse;          // Ellipse shape
+
+            GUICursor       m_cursor;           // GUI Cursor
+            GUIWindow       m_guiWindow;        // GUI Window
+            GUIPxText       m_pxText;           // GUI pixel text
+            GUIButton       m_button;           // GUI button
+            GUIToggleButton m_toggleButton;     // GUI toggle button
+            GUIProgressBar  m_progressBar;      // GUI progress bar
+
+            BoundingCircle  m_boundingCircle;   // Bounding circle
+            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
+            Collision2      m_collideCircle;    // Circles collision
+
+            bool            m_spaceReleased;    // Space released event
     };
 
 
-#endif // VOS_SOFTWARES_SOFTWARES_HEADER
+#endif // VOS_SOFTWARES_TOPDOWN_TOPDOWN_HEADER
