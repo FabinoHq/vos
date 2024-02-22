@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/FirstPerson.cpp : FirstPerson class management               //
+//     Softwares/FirstPerson/FirstPerson.cpp : FirstPerson class management   //
 ////////////////////////////////////////////////////////////////////////////////
 #include "FirstPerson.h"
 

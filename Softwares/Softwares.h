@@ -48,7 +48,7 @@
 
     #include "../Renderer/Renderer.h"
 
-    #include "FirstPerson.h"
+    #include "FirstPerson/FirstPerson.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

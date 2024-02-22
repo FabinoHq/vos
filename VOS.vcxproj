@@ -266,7 +266,7 @@
     <ClCompile Include="Resources\MeshLoader.cpp" />
     <ClCompile Include="Resources\Resources.cpp" />
     <ClCompile Include="Resources\TextureLoader.cpp" />
-    <ClCompile Include="Softwares\FirstPerson.cpp" />
+    <ClCompile Include="Softwares\FirstPerson\FirstPerson.cpp" />
     <ClCompile Include="Softwares\Softwares.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysCPU.cpp" />
@@ -382,7 +382,7 @@
     <ClInclude Include="Resources\MeshLoader.h" />
     <ClInclude Include="Resources\Resources.h" />
     <ClInclude Include="Resources\TextureLoader.h" />
-    <ClInclude Include="Softwares\FirstPerson.h" />
+    <ClInclude Include="Softwares\FirstPerson\FirstPerson.h" />
     <ClInclude Include="Softwares\Softwares.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysCPU.h" />

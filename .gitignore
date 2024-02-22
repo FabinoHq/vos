@@ -10,6 +10,7 @@
 # Projects files
 !Makefile
 !make.bat
+!makeclean.bat
 !VOS.sln
 !VOS.vcxproj
 !VOS.vcxproj.filters
@@ -321,3 +322,6 @@
 !Softwares/Softwares.cpp
 !Softwares/FirstPerson.h
 !Softwares/FirstPerson.cpp
+!Softwares/FirstPerson/
+!Softwares/FirstPerson/FirstPerson.h
+!Softwares/FirstPerson/FirstPerson.cpp

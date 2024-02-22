@@ -37,49 +37,49 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/FirstPerson.h : FirstPerson class management                 //
+//     Softwares/FirstPerson/FirstPerson.h : FirstPerson class management     //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SOFTWARES_FIRSTPERSON_HEADER
-#define VOS_SOFTWARES_FIRSTPERSON_HEADER
+#ifndef VOS_SOFTWARES_FIRSTPERSON_FIRSTPERSON_HEADER
+#define VOS_SOFTWARES_FIRSTPERSON_FIRSTPERSON_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysEvent.h"
-    #include "../System/SysMouse.h"
+    #include "../../System/System.h"
+    #include "../../System/SysEvent.h"
+    #include "../../System/SysMouse.h"
 
-    #include "../Renderer/Renderer.h"
-    #include "../Renderer/BackRenderer.h"
-    #include "../Renderer/View.h"
-    #include "../Renderer/Camera.h"
-    #include "../Renderer/FreeFlyCam.h"
-    #include "../Renderer/OrbitalCam.h"
-    #include "../Renderer/Sprite.h"
-    #include "../Renderer/ProcSprite.h"
-    #include "../Renderer/Plane.h"
-    #include "../Renderer/SkyBox.h"
-    #include "../Renderer/SkyProc.h"
-    #include "../Renderer/WorldLight.h"
+    #include "../../Renderer/Renderer.h"
+    #include "../../Renderer/BackRenderer.h"
+    #include "../../Renderer/View.h"
+    #include "../../Renderer/Camera.h"
+    #include "../../Renderer/FreeFlyCam.h"
+    #include "../../Renderer/OrbitalCam.h"
+    #include "../../Renderer/Sprite.h"
+    #include "../../Renderer/ProcSprite.h"
+    #include "../../Renderer/Plane.h"
+    #include "../../Renderer/SkyBox.h"
+    #include "../../Renderer/SkyProc.h"
+    #include "../../Renderer/WorldLight.h"
 
-    #include "../Resources/Resources.h"
-    #include "../Renderer/GUI/GUICursor.h"
-    #include "../Renderer/GUI/GUIWindow.h"
-    #include "../Renderer/GUI/GUIPxText.h"
-    #include "../Renderer/GUI/GUIButton.h"
-    #include "../Renderer/GUI/GUIToggleButton.h"
-    #include "../Renderer/GUI/GUIProgressBar.h"
+    #include "../../Resources/Resources.h"
+    #include "../../Renderer/GUI/GUICursor.h"
+    #include "../../Renderer/GUI/GUIWindow.h"
+    #include "../../Renderer/GUI/GUIPxText.h"
+    #include "../../Renderer/GUI/GUIButton.h"
+    #include "../../Renderer/GUI/GUIToggleButton.h"
+    #include "../../Renderer/GUI/GUIProgressBar.h"
 
-    #include "../Renderer/Shapes/RectangleShape.h"
-    #include "../Renderer/Shapes/EllipseShape.h"
-    #include "../Renderer/Shapes/CuboidShape.h"
+    #include "../../Renderer/Shapes/RectangleShape.h"
+    #include "../../Renderer/Shapes/EllipseShape.h"
+    #include "../../Renderer/Shapes/CuboidShape.h"
 
-    #include "../Renderer/StaticMesh.h"
-    #include "../Renderer/HeightMapStream.h"
-    #include "../Renderer/HeightFarStream.h"
-    #include "../Renderer/SeaNearStream.h"
-    #include "../Renderer/SeaFarStream.h"
+    #include "../../Renderer/StaticMesh.h"
+    #include "../../Renderer/HeightMapStream.h"
+    #include "../../Renderer/HeightFarStream.h"
+    #include "../../Renderer/SeaNearStream.h"
+    #include "../../Renderer/SeaFarStream.h"
 
-    #include "../Physics/Physics.h"
-    #include "../Physics/Collision2.h"
-    #include "../Physics/BoundingCircle.h"
+    #include "../../Physics/Physics.h"
+    #include "../../Physics/Collision2.h"
+    #include "../../Physics/BoundingCircle.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -179,4 +179,4 @@
     };
 
 
-#endif // VOS_SOFTWARES_FIRSTPERSON_HEADER
+#endif // VOS_SOFTWARES_FIRSTPERSON_FIRSTPERSON_HEADER

@@ -89,7 +89,7 @@ VOS: main.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
-	Softwares/Softwares.o Softwares/FirstPerson.o
+	Softwares/Softwares.o Softwares/FirstPerson/FirstPerson.o
 
 	$(CC) -o VOS \
 	Vos.o \
@@ -133,7 +133,7 @@ VOS: main.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
-	Softwares/Softwares.o Softwares/FirstPerson.o \
+	Softwares/Softwares.o Softwares/FirstPerson/FirstPerson.o \
 	main.o $(LDFLAGS)
 
 
@@ -394,8 +394,9 @@ Resources/HeightFarLoader.o: Resources/HeightFarLoader.cpp
 Softwares/Softwares.o: Softwares/Softwares.cpp
 	$(CC) -o Softwares/Softwares.o -c Softwares/Softwares.cpp $(CFLAGS)
 
-Softwares/FirstPerson.o: Softwares/FirstPerson.cpp
-	$(CC) -o Softwares/FirstPerson.o -c Softwares/FirstPerson.cpp $(CFLAGS)
+Softwares/FirstPerson/FirstPerson.o: Softwares/FirstPerson/FirstPerson.cpp
+	$(CC) -o Softwares/FirstPerson/FirstPerson.o -c \
+	Softwares/FirstPerson/FirstPerson.cpp $(CFLAGS)
 
 
 clean:
@@ -412,6 +413,7 @@ clean:
 	rm -rf Renderer/GUI/*.o
 	rm -rf Resources/*.o
 	rm -rf Softwares/*.o
+	rm -rf Softwares/FirstPerson*.o
 
 mrproper: clean
 	rm -rf VOS

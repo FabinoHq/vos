@@ -40,19 +40,7 @@
 ::     make.bat : Windows make compilation file                               ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-:: Get Visual Studio installation path
-for /f "delims=" %%i in ('call^
- "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"^
- -all -legacy -property installationPath') do set VCInstallationPath=%%i
-
-:: Setup Visual Studio environment
-call "%VCInstallationPath%\VC\Auxiliary\Build\vcvars64.bat"
-
-:: Build VOS
-call msbuild /p:Configuration=Release VOS.sln
-
-:: Delete previous binary
-rd /s /q VOS.exe
-
-:: Copy output binary
-copy x64\Release\VOS.exe VOS.exe
+:: Delete build files
+rd /s /q x64
+rd /s /q VOS
+rd /s /q .vs

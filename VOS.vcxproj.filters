@@ -49,6 +49,9 @@
     <Filter Include="Softwares">
       <UniqueIdentifier>{6a19b97c-d4de-400c-8268-ea642b5b468d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Softwares\FirstPerson">
+      <UniqueIdentifier>{e240329a-ee38-4539-abdb-159c8e01aca1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -272,8 +275,8 @@
     <ClCompile Include="Softwares\Softwares.cpp">
       <Filter>Softwares</Filter>
     </ClCompile>
-    <ClCompile Include="Softwares\FirstPerson.cpp">
-      <Filter>Softwares</Filter>
+    <ClCompile Include="Softwares\FirstPerson\FirstPerson.cpp">
+      <Filter>Softwares\FirstPerson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -650,8 +653,8 @@
     <ClInclude Include="Softwares\Softwares.h">
       <Filter>Softwares</Filter>
     </ClInclude>
-    <ClInclude Include="Softwares\FirstPerson.h">
-      <Filter>Softwares</Filter>
+    <ClInclude Include="Softwares\FirstPerson\FirstPerson.h">
+      <Filter>Softwares\FirstPerson</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
