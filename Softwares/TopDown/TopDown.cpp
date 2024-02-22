@@ -366,7 +366,7 @@ void TopDown::compute(float frametime)
     }*/
 
     // Compute physics
-    /*Vector2i collideOffset;
+    Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int64_t>(GSysMouse.mouseX*100000000);
     collideOffset.vec[1] = static_cast<int64_t>(GSysMouse.mouseY*100000000);
     collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
@@ -382,7 +382,7 @@ void TopDown::compute(float frametime)
         m_boundingCircle2.position.vec[0] = m_collideCircle.position.vec[0];
         m_boundingCircle2.position.vec[1] = m_collideCircle.position.vec[1];
         m_spaceReleased = false;
-    }*/
+    }
 
     // Start uniforms upload
     if (GUniformchain.startUpload())
@@ -450,14 +450,14 @@ void TopDown::render()
 
 
     // Render bounding circle
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     float positionX =
         m_boundingCircle.position.vec[0]*PhysicsToRenderer;
     float positionY =
         m_boundingCircle.position.vec[1]*PhysicsToRenderer;
     float radius = m_boundingCircle.radius*PhysicsToRenderer;
     m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
-    m_ellipse.setOrigin(radius, radius);
+    m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setSmooth(0.025f);
@@ -468,7 +468,7 @@ void TopDown::render()
     positionY = m_boundingCircle2.position.vec[1]*PhysicsToRenderer;
     radius = m_boundingCircle2.radius*PhysicsToRenderer;
     m_ellipse.setColor(0.0f, 0.2f, 0.8f, 0.8f);
-    m_ellipse.setOrigin(radius, radius);
+    m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.04f, radius*2.04f);
     m_ellipse.setSmooth(0.022f);
@@ -483,11 +483,11 @@ void TopDown::render()
     {
         m_ellipse.setColor(0.8f, 0.2f, 0.2f, 0.8f);
     }
-    m_ellipse.setOrigin(radius, radius);
+    m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.07f, radius*2.07f);
     m_ellipse.setSmooth(0.028f);
-    m_ellipse.render();*/
+    m_ellipse.render();
 
 
     // Set default screen view
