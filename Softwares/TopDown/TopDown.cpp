@@ -60,7 +60,9 @@ m_toggleButton(),
 m_progressBar(),
 m_boundingCircle(),
 m_boundingCircle2(),
-m_collideCircle(),
+m_boundingRect(),
+m_boundingRect2(),
+m_collide(),
 m_spaceReleased(false)
 {
 
@@ -182,6 +184,14 @@ bool TopDown::init()
     m_boundingCircle2.setPosition(20000000, 0);
     m_boundingCircle2.setRadius(8000000);
 
+    // Init bounding rect
+    m_boundingRect.setPosition(-20000000, 0);
+    m_boundingRect.setSize(10000000, 7000000);
+
+    // Init bounding rect2
+    m_boundingRect2.setPosition(20000000, 0);
+    m_boundingRect2.setSize(7500000, 6000000);
+
 
     // Top down game is ready
     return true;
@@ -263,6 +273,7 @@ void TopDown::events(Event& event)
 
                 case EVENT_KEY_R:
                     m_boundingCircle2.setPosition(20000000, 0);
+                    m_boundingRect2.setPosition(20000000, 0);
                     break;
 
                 default:
@@ -366,23 +377,43 @@ void TopDown::compute(float frametime)
     }*/
 
     // Compute physics
-    Vector2i collideOffset;
+    /*Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int64_t>(GSysMouse.mouseX*100000000);
     collideOffset.vec[1] = static_cast<int64_t>(GSysMouse.mouseY*100000000);
     collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
     collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
-    m_collideCircle.reset();
+    m_collide.reset();
     m_boundingCircle2.collideCircle(
-        m_boundingCircle, collideOffset, m_collideCircle
+        m_boundingCircle, collideOffset, m_collide
     );
 
     // Space key released event
     if (m_spaceReleased)
     {
-        m_boundingCircle2.position.vec[0] = m_collideCircle.position.vec[0];
-        m_boundingCircle2.position.vec[1] = m_collideCircle.position.vec[1];
+        m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
+        m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];
+        m_spaceReleased = false;
+    }*/
+
+    // Compute physics
+    Vector2i collideOffset;
+    collideOffset.vec[0] = static_cast<int64_t>(GSysMouse.mouseX*100000000);
+    collideOffset.vec[1] = static_cast<int64_t>(GSysMouse.mouseY*100000000);
+    collideOffset.vec[0] -= m_boundingRect2.position.vec[0];
+    collideOffset.vec[1] -= m_boundingRect2.position.vec[1];
+    m_collide.reset();
+    m_boundingRect2.collideRect(
+        m_boundingRect, collideOffset, m_collide
+    );
+
+    // Space key released event
+    if (m_spaceReleased)
+    {
+        m_boundingRect2.position.vec[0] = m_collide.position.vec[0];
+        m_boundingRect2.position.vec[1] = m_collide.position.vec[1];
         m_spaceReleased = false;
     }
+    
 
     // Start uniforms upload
     if (GUniformchain.startUpload())
@@ -450,7 +481,7 @@ void TopDown::render()
 
 
     // Render bounding circle
-    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     float positionX =
         m_boundingCircle.position.vec[0]*PhysicsToRenderer;
     float positionY =
@@ -475,11 +506,11 @@ void TopDown::render()
     m_ellipse.render();
 
     // Render bounding circle 2 projection
-    positionX = m_collideCircle.position.vec[0]*PhysicsToRenderer;
-    positionY = m_collideCircle.position.vec[1]*PhysicsToRenderer;
+    positionX = m_collide.position.vec[0]*PhysicsToRenderer;
+    positionY = m_collide.position.vec[1]*PhysicsToRenderer;
     radius = m_boundingCircle2.radius*PhysicsToRenderer;
     m_ellipse.setColor(0.8f, 0.2f, 0.8f, 0.8f);
-    if (m_collideCircle.collide)
+    if (m_collide.collide)
     {
         m_ellipse.setColor(0.8f, 0.2f, 0.2f, 0.8f);
     }
@@ -487,7 +518,51 @@ void TopDown::render()
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.07f, radius*2.07f);
     m_ellipse.setSmooth(0.028f);
-    m_ellipse.render();
+    m_ellipse.render();*/
+
+
+    // Render bounding rect
+    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    float positionX =
+        m_boundingRect.position.vec[0]*PhysicsToRenderer;
+    float positionY =
+        m_boundingRect.position.vec[1]*PhysicsToRenderer;
+    float width = m_boundingRect.size.vec[0]*PhysicsToRenderer;
+    float height = m_boundingRect.size.vec[1]*PhysicsToRenderer;
+    m_rectangle.setColor(0.0f, 0.8f, 0.2f, 0.8f);
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setPosition(positionX, positionY);
+    m_rectangle.setSize(width*2.05f, height*2.05f);
+    m_rectangle.setSmooth(0.025f);
+    m_rectangle.render();
+
+    // Render bounding rect 2
+    positionX = m_boundingRect2.position.vec[0]*PhysicsToRenderer;
+    positionY = m_boundingRect2.position.vec[1]*PhysicsToRenderer;
+    width = m_boundingRect2.size.vec[0]*PhysicsToRenderer;
+    height = m_boundingRect2.size.vec[1]*PhysicsToRenderer;
+    m_rectangle.setColor(0.0f, 0.2f, 0.8f, 0.8f);
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setPosition(positionX, positionY);
+    m_rectangle.setSize(width*2.04f, height*2.04f);
+    m_rectangle.setSmooth(0.022f);
+    m_rectangle.render();
+
+    // Render bounding rect 2 projection
+    positionX = m_collide.position.vec[0]*PhysicsToRenderer;
+    positionY = m_collide.position.vec[1]*PhysicsToRenderer;
+    width = m_boundingRect2.size.vec[0]*PhysicsToRenderer;
+    height = m_boundingRect2.size.vec[1]*PhysicsToRenderer;
+    m_rectangle.setColor(0.8f, 0.2f, 0.8f, 0.8f);
+    if (m_collide.collide)
+    {
+        m_rectangle.setColor(0.8f, 0.2f, 0.2f, 0.8f);
+    }
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setPosition(positionX, positionY);
+    m_rectangle.setSize(width*2.07f, height*2.07f);
+    m_rectangle.setSmooth(0.028f);
+    m_rectangle.render();
 
 
     // Set default screen view

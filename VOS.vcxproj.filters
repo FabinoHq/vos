@@ -284,6 +284,9 @@
     <ClCompile Include="Softwares\TopDown\TopDown.cpp">
       <Filter>Softwares\TopDown</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\BoundingRect.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -664,6 +667,9 @@
     </ClInclude>
     <ClInclude Include="Softwares\TopDown\TopDown.h">
       <Filter>Softwares\TopDown</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\BoundingRect.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

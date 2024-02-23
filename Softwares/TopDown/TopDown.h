@@ -66,6 +66,7 @@
     #include "../../Physics/Physics.h"
     #include "../../Physics/Collision2.h"
     #include "../../Physics/BoundingCircle.h"
+    #include "../../Physics/BoundingRect.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -143,7 +144,9 @@
 
             BoundingCircle  m_boundingCircle;   // Bounding circle
             BoundingCircle  m_boundingCircle2;  // Bounding circle 2
-            Collision2      m_collideCircle;    // Circles collision
+            BoundingRect    m_boundingRect;     // Bounding rect
+            BoundingRect   m_boundingRect2;     // Bounding rect 2
+            Collision2      m_collide;          // Collision
 
             bool            m_spaceReleased;    // Space released event
     };

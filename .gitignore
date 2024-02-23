@@ -139,6 +139,8 @@
 !Physics/Collision2.cpp
 !Physics/BoundingCircle.h
 !Physics/BoundingCircle.cpp
+!Physics/BoundingRect.h
+!Physics/BoundingRect.cpp
 
 # Renderer
 !Renderer/
