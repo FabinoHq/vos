@@ -89,6 +89,9 @@ bool Vos::launch()
         return false;
     }
 
+    // Start physics solver thread
+    GPhysics.start();
+
     // Init VOS renderer
     if (!GRenderer.init())
     {
@@ -115,6 +118,34 @@ bool Vos::launch()
     {
         // Unable to start resources loading
         return false;
+    }
+
+
+    // Wait for physics solver
+    bool physicsReady = false;
+    while (!physicsReady)
+    {
+        // Get physics solver states
+        PhysicsState physicsState = GPhysics.getState();
+
+        // Check physics solver state
+        if (physicsState == PHYSICS_STATE_ERROR)
+        {
+            // Physics solver error
+            return false;
+        }
+
+        // Check physics solver init state
+        if (physicsState == PHYSICS_STATE_IDLE)
+        {
+            // Physics solver ready
+            physicsReady = true;
+        }
+        else
+        {
+            // Release some CPU while loading
+            SysSleep(PhysicsWaitSleepTime);
+        }
     }
 
 

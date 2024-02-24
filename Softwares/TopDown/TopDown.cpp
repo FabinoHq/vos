@@ -179,18 +179,22 @@ bool TopDown::init()
     // Init bounding circle
     m_boundingCircle.setPosition(-200000, 0);
     m_boundingCircle.setRadius(110000);
+    m_boundingCircle.setAngle(0);
 
     // Init bounding circle 2
     m_boundingCircle2.setPosition(200000, 0);
     m_boundingCircle2.setRadius(90000);
+    m_boundingCircle2.setAngle(0);
 
     // Init bounding rect
     m_boundingRect.setPosition(-200000, 0);
     m_boundingRect.setSize(110000, 90000);
+    m_boundingRect.setAngle(2000000);
 
     // Init bounding rect2
     m_boundingRect2.setPosition(200000, 0);
     m_boundingRect2.setSize(80000, 70000);
+    m_boundingRect2.setAngle(1000000);
 
 
     // Top down game is ready
@@ -499,6 +503,7 @@ void TopDown::render()
     m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
+    m_ellipse.setAngle(m_boundingCircle.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.025f);
     m_ellipse.render();
 
@@ -510,6 +515,7 @@ void TopDown::render()
     m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.04f, radius*2.04f);
+    m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.022f);
     m_ellipse.render();
 
@@ -525,6 +531,7 @@ void TopDown::render()
     m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.07f, radius*2.07f);
+    m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.028f);
     m_ellipse.render();*/
 
@@ -541,6 +548,7 @@ void TopDown::render()
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setPosition(positionX, positionY);
     m_rectangle.setSize(width*2.05f, height*2.05f);
+    m_rectangle.setAngle(m_boundingRect.angle*PhysicsAngleToRenderer);
     m_rectangle.setSmooth(0.025f);
     m_rectangle.render();
 
@@ -553,6 +561,7 @@ void TopDown::render()
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setPosition(positionX, positionY);
     m_rectangle.setSize(width*2.04f, height*2.04f);
+    m_rectangle.setAngle(m_boundingRect2.angle*PhysicsAngleToRenderer);
     m_rectangle.setSmooth(0.022f);
     m_rectangle.render();
 
@@ -569,6 +578,7 @@ void TopDown::render()
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setPosition(positionX, positionY);
     m_rectangle.setSize(width*2.07f, height*2.07f);
+    m_rectangle.setAngle(m_boundingRect2.angle*PhysicsAngleToRenderer);
     m_rectangle.setSmooth(0.028f);
     m_rectangle.render();
 

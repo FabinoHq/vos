@@ -43,6 +43,8 @@
 #define VOS_PHYSICS_PHYSICS_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysThread.h"
+    #include "../System/SysMutex.h"
     #include "../Math/Math.h"
 
     #include <cstdint>
@@ -53,18 +55,36 @@
     ////////////////////////////////////////////////////////////////////////////
     const int64_t RendererToPhysics = Math::OneInt;
     const float PhysicsToRenderer = (1.0f / Math::OneInt);
+    const float PhysicsAngleToRenderer = (Math::Pi / (Math::PiInt*1.0f));
 
     ////////////////////////////////////////////////////////////////////////////
     //  Physics solver settings                                               //
     ////////////////////////////////////////////////////////////////////////////
     const int64_t PhysicsMinEntityHalfSize = (Math::OneInt / 200);
     const int64_t PhysicsMaxSmallStepsIterations = 40;
+    const double PhysicsIdleSleepTime = 0.01;
+    const double PhysicsErrorSleepTime = 0.1;
+    const double PhysicsWaitSleepTime = 0.02;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  PhysicsState enumeration                                              //
+    ////////////////////////////////////////////////////////////////////////////
+    enum PhysicsState
+    {
+        PHYSICS_STATE_NONE = 0,
+        PHYSICS_STATE_INIT = 1,
+
+        PHYSICS_STATE_IDLE = 2,
+
+        PHYSICS_STATE_ERROR = 3
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
     //  Physics class definition                                              //
     ////////////////////////////////////////////////////////////////////////////
-    class Physics
+    class Physics : public SysThread
     {
         public:
             ////////////////////////////////////////////////////////////////////
@@ -73,9 +93,28 @@
             Physics();
 
             ////////////////////////////////////////////////////////////////////
-            //  Physics destructor                                            //
+            //  Physics virtual destructor                                    //
             ////////////////////////////////////////////////////////////////////
-            ~Physics();
+            virtual ~Physics();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Physics solver thread process                                 //
+            ////////////////////////////////////////////////////////////////////
+            virtual void process();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Init physics solver                                           //
+            //  return : True if the physics solver is successfully loaded    //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get physics solver state                                      //
+            //  return : Current physics solver state                         //
+            ////////////////////////////////////////////////////////////////////
+            PhysicsState getState();
 
 
         private:
@@ -91,7 +130,15 @@
 
 
         private:
+            PhysicsState            m_state;            // Physics solver state
+            SysMutex                m_stateMutex;       // State mutex
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Physics global instance                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    extern Physics GPhysics;
 
 
 #endif // VOS_PHYSICS_PHYSICS_HEADER

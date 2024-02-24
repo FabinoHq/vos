@@ -43,9 +43,17 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Physics global instance                                                   //
+////////////////////////////////////////////////////////////////////////////////
+Physics GPhysics = Physics();
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Physics default constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
-Physics::Physics()
+Physics::Physics() :
+m_state(PHYSICS_STATE_NONE),
+m_stateMutex()
 {
 
 }
@@ -55,5 +63,84 @@ Physics::Physics()
 ////////////////////////////////////////////////////////////////////////////////
 Physics::~Physics()
 {
+    m_state = PHYSICS_STATE_NONE;
+}
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Physics solver thread process                                             //
+////////////////////////////////////////////////////////////////////////////////
+void Physics::process()
+{
+    PhysicsState state = PHYSICS_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+
+    switch (state)
+    {
+        case PHYSICS_STATE_NONE:
+            // Boot to init state
+            m_stateMutex.lock();
+            m_state = PHYSICS_STATE_INIT;
+            m_stateMutex.unlock();
+            break;
+
+        case PHYSICS_STATE_INIT:
+            // Init heightmap loader
+            if (init())
+            {
+                m_stateMutex.lock();
+                m_state = PHYSICS_STATE_IDLE;
+                m_stateMutex.unlock();
+            }
+            else
+            {
+                m_stateMutex.lock();
+                m_state = PHYSICS_STATE_ERROR;
+                m_stateMutex.unlock();
+            }
+            break;
+
+        case PHYSICS_STATE_IDLE:
+            // Physics solver in idle state
+            SysSleep(PhysicsIdleSleepTime);
+            break;
+
+        case PHYSICS_STATE_ERROR:
+            // Physics solver error
+            SysSleep(PhysicsErrorSleepTime);
+            break;
+
+        default:
+            // Invalid state
+            m_stateMutex.lock();
+            m_state = PHYSICS_STATE_ERROR;
+            m_stateMutex.unlock();
+            break;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init physics solver                                                       //
+//  return : True if the physics solver is successfully loaded                //
+////////////////////////////////////////////////////////////////////////////////
+bool Physics::init()
+{
+    // Physics solver successfully loaded
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get heightmap loader state                                                //
+//  return : Current heightmap loader state                                   //
+////////////////////////////////////////////////////////////////////////////////
+PhysicsState Physics::getState()
+{
+    PhysicsState state = PHYSICS_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    return state;
 }
