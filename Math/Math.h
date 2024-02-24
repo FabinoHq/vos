@@ -79,7 +79,7 @@
 
         // Integer constants
         const int64_t OneIntShift = 20;
-        const int64_t OneInt = (1 << OneIntShift);
+        const int64_t OneInt = (1 << OneIntShift);  // 1048576
         const int64_t PiInt = 3294198;
         const int64_t TwoPiInt = 6588396;
         const int64_t TwoPiThirdInt = 2196132;

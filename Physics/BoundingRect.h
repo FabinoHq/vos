@@ -69,10 +69,10 @@
             BoundingRect(const BoundingRect& boundingRect);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingRect position and size constructor                    //
+            //  BoundingRect position size and angle constructor              //
             ////////////////////////////////////////////////////////////////////
-            BoundingRect(
-                const Vector2i& rectPosition, const Vector2i& rectSize);
+            BoundingRect(const Vector2i& rectPosition,
+                const Vector2i& rectSize, int64_t rectAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  BoundingRect destructor                                       //
@@ -81,9 +81,10 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect position and size                           //
+            //  Set bounding rect position size and angle                     //
             ////////////////////////////////////////////////////////////////////
-            void set(const Vector2i& rectPosition, const Vector2i& rectSize);
+            void set(const Vector2i& rectPosition,
+                const Vector2i& rectSize, int64_t rectAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect position                                    //
@@ -157,6 +158,14 @@
                 size.vec[1] = Math::max(rectHeight, PhysicsMinEntityHalfSize);
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set bounding rect height                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAngle(int64_t rectAngle)
+            {
+                angle = (rectAngle % Math::TwoPiInt);
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Collide bounding rect with bounding rect                      //
@@ -179,6 +188,7 @@
         public:
             Vector2i    position;   // Bounding rectangle position
             Vector2i    size;       // Bounding rectangle size
+            int64_t     angle;      // Bounding rectangle angle
     };
 
 

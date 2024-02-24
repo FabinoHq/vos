@@ -47,7 +47,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle::BoundingCircle() :
 position(0, 0),
-radius(PhysicsMinEntityHalfSize)
+radius(PhysicsMinEntityHalfSize),
+angle(0)
 {
 
 }
@@ -60,17 +61,19 @@ BoundingCircle::BoundingCircle(const BoundingCircle& boundingCircle)
     position.vec[0] = boundingCircle.position.vec[0];
 	position.vec[1] = boundingCircle.position.vec[1];
     radius = boundingCircle.radius;
+    angle = boundingCircle.angle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  BoundingCircle position and radius constructor                            //
+//  BoundingCircle position radius and angle constructor                      //
 ////////////////////////////////////////////////////////////////////////////////
-BoundingCircle::BoundingCircle(
-	const Vector2i& circlePosition, int64_t circleRadius)
+BoundingCircle::BoundingCircle(const Vector2i& circlePosition,
+	int64_t circleRadius, int64_t circleAngle)
 {
 	position.vec[0] = circlePosition.vec[0];
 	position.vec[1] = circlePosition.vec[1];
 	radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
+	angle = (circleAngle % Math::TwoPiInt);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +81,7 @@ BoundingCircle::BoundingCircle(
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle::~BoundingCircle()
 {
+	angle = 0;
 	radius = 0;
 	position.vec[1] = 0;
 	position.vec[0] = 0;
@@ -85,13 +89,15 @@ BoundingCircle::~BoundingCircle()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set bounding circle position and radius                                   //
+//  Set bounding circle position radius and angle                             //
 ////////////////////////////////////////////////////////////////////////////////
-void BoundingCircle::set(const Vector2i& circlePosition, int64_t circleRadius)
+void BoundingCircle::set(const Vector2i& circlePosition,
+	int64_t circleRadius, int64_t circleAngle)
 {
 	position.vec[0] = circlePosition.vec[0];
 	position.vec[1] = circlePosition.vec[1];
 	radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
+	angle = (circleAngle % Math::TwoPiInt);
 }
 
 
@@ -229,5 +235,6 @@ BoundingCircle& BoundingCircle::operator=(const BoundingCircle& boundingCircle)
 	position.vec[0] = boundingCircle.position.vec[0];
 	position.vec[1] = boundingCircle.position.vec[1];
 	radius = boundingCircle.radius;
+	angle = boundingCircle.angle;
 	return *this;
 }

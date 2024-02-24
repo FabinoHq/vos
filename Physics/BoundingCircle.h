@@ -69,10 +69,10 @@
             BoundingCircle(const BoundingCircle& boundingCircle);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingCircle position and radius constructor                //
+            //  BoundingCircle position radius and angle constructor          //
             ////////////////////////////////////////////////////////////////////
-            BoundingCircle(
-                const Vector2i& circlePosition, int64_t circleRadius);
+            BoundingCircle(const Vector2i& circlePosition,
+                int64_t circleRadius, int64_t circleAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  BoundingCircle destructor                                     //
@@ -81,9 +81,10 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding circle position and radius                       //
+            //  Set bounding circle position radius and angle                 //
             ////////////////////////////////////////////////////////////////////
-            void set(const Vector2i& circlePosition, int64_t circleRadius);
+            void set(const Vector2i& circlePosition,
+                int64_t circleRadius, int64_t circleAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle position                                  //
@@ -127,6 +128,14 @@
                 radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set bounding circle angle                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void setAngle(int64_t circleAngle)
+            {
+                angle = (circleAngle % Math::TwoPiInt);
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Collide bounding circle with bounding circle                  //
@@ -149,6 +158,7 @@
         public:
             Vector2i    position;   // Bounding circle position
             int64_t     radius;     // Bounding circle radius
+            int64_t     angle;      // Bounding circle angle
     };
 
 
