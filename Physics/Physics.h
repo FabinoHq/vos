@@ -45,6 +45,7 @@
     #include "../System/System.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
+    #include "../System/SysClock.h"
     #include "../Math/Math.h"
 
     #include <cstdint>
@@ -62,6 +63,8 @@
     ////////////////////////////////////////////////////////////////////////////
     const int64_t PhysicsMinEntityHalfSize = (Math::OneInt / 200);
     const int64_t PhysicsMaxSmallStepsIterations = 40;
+    const double PhysicsTickTime = 0.01;
+    const double PhysicsRunSleepTime = 0.001;
     const double PhysicsIdleSleepTime = 0.01;
     const double PhysicsErrorSleepTime = 0.1;
     const double PhysicsWaitSleepTime = 0.02;
@@ -76,8 +79,9 @@
         PHYSICS_STATE_INIT = 1,
 
         PHYSICS_STATE_IDLE = 2,
+        PHYSICS_STATE_RUN = 3,
 
-        PHYSICS_STATE_ERROR = 3
+        PHYSICS_STATE_ERROR = 4
     };
 
 
@@ -116,6 +120,25 @@
             ////////////////////////////////////////////////////////////////////
             PhysicsState getState();
 
+            ////////////////////////////////////////////////////////////////////
+            //  Launch physics solver                                         //
+            //  return : True if the physics solver is successfully started   //
+            ////////////////////////////////////////////////////////////////////
+            bool launch();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get current physics solver tick                               //
+            //  return : Current physics solver tick                          //
+            ////////////////////////////////////////////////////////////////////
+            int64_t getTick();
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  Run physics solver                                            //
+            ////////////////////////////////////////////////////////////////////
+            void run();
+
 
         private:
             ////////////////////////////////////////////////////////////////////
@@ -132,6 +155,10 @@
         private:
             PhysicsState            m_state;            // Physics solver state
             SysMutex                m_stateMutex;       // State mutex
+            SysClock                m_clock;            // Physics clock
+            double                  m_clockTime;        // Physics clock time
+            int64_t                 m_tick;             // Current tick
+            SysMutex                m_tickMutex;        // Tick mutex
     };
 
 

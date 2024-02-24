@@ -196,6 +196,9 @@ bool TopDown::init()
     m_boundingRect2.setSize(80000, 70000);
     m_boundingRect2.setAngle(1000000);
 
+    // Launch physics solver
+    GPhysics.launch();
+
 
     // Top down game is ready
     return true;
@@ -658,6 +661,21 @@ void TopDown::render()
     camerastr << "X : " << m_view.getX() << " | Y : " << m_view.getY();
     m_pxText.setText(camerastr.str());
     m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
+    if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
+    {
+        m_pxText.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+    else
+    {
+        m_pxText.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+    m_pxText.render();
+
+    // Render pixel text (physics current tick)
+    std::ostringstream physicstr;
+    physicstr << "Ticks : " << GPhysics.getTick();
+    m_pxText.setText(physicstr.str());
+    m_pxText.setPosition(-ratio+0.01f, 0.92f-(m_pxText.getHeight()*0.7f));
     if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
     {
         m_pxText.setColor(0.0f, 0.0f, 1.0f, 1.0f);

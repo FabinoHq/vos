@@ -53,7 +53,11 @@ Physics GPhysics = Physics();
 ////////////////////////////////////////////////////////////////////////////////
 Physics::Physics() :
 m_state(PHYSICS_STATE_NONE),
-m_stateMutex()
+m_stateMutex(),
+m_clock(),
+m_clockTime(0.0),
+m_tick(0),
+m_tickMutex()
 {
 
 }
@@ -87,7 +91,7 @@ void Physics::process()
             break;
 
         case PHYSICS_STATE_INIT:
-            // Init heightmap loader
+            // Init physics solver
             if (init())
             {
                 m_stateMutex.lock();
@@ -105,6 +109,11 @@ void Physics::process()
         case PHYSICS_STATE_IDLE:
             // Physics solver in idle state
             SysSleep(PhysicsIdleSleepTime);
+            break;
+
+        case PHYSICS_STATE_RUN:
+            // Physics solver running
+            run();
             break;
 
         case PHYSICS_STATE_ERROR:
@@ -129,12 +138,13 @@ void Physics::process()
 bool Physics::init()
 {
     // Physics solver successfully loaded
+    m_clock.reset();
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get heightmap loader state                                                //
-//  return : Current heightmap loader state                                   //
+//  Get physics solver state                                                  //
+//  return : Current physics solver state                                     //
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsState Physics::getState()
 {
@@ -143,4 +153,62 @@ PhysicsState Physics::getState()
     state = m_state;
     m_stateMutex.unlock();
     return state;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Launch physics solver                                                     //
+////////////////////////////////////////////////////////////////////////////////
+bool Physics::launch()
+{
+    bool launched = false;
+    m_stateMutex.lock();
+    if (m_state == PHYSICS_STATE_IDLE)
+    {
+        // Run physics solver
+        m_state = PHYSICS_STATE_RUN;
+        m_clock.reset();
+        launched = true;
+
+        // Reset ticks counter
+        m_tickMutex.lock();
+        m_tick = 0;
+        m_tickMutex.unlock();
+    }
+    m_stateMutex.unlock();
+    return launched;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get current physics solver tick                                           //
+//  return : Current physics solver tick                                      //
+////////////////////////////////////////////////////////////////////////////////
+int64_t Physics::getTick()
+{
+    int64_t tick = 0;
+    m_tickMutex.lock();
+    tick = m_tick;
+    m_tickMutex.unlock();
+    return tick;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Run physics solver                                                        //
+////////////////////////////////////////////////////////////////////////////////
+void Physics::run()
+{
+    m_clockTime += m_clock.getAndReset();
+    if (m_clockTime >= PhysicsTickTime)
+    {
+        // Compute physics tick
+        m_clockTime -= PhysicsTickTime;
+        m_tickMutex.lock();
+        ++m_tick;
+        m_tickMutex.unlock();
+    }
+    else
+    {
+        // Release some CPU
+        SysSleep(PhysicsRunSleepTime);
+    }
 }
