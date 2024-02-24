@@ -177,20 +177,20 @@ bool TopDown::init()
 
 
     // Init bounding circle
-    m_boundingCircle.setPosition(-20000000, 0);
-    m_boundingCircle.setRadius(10000000);
+    m_boundingCircle.setPosition(-200000, 0);
+    m_boundingCircle.setRadius(110000);
 
     // Init bounding circle 2
-    m_boundingCircle2.setPosition(20000000, 0);
-    m_boundingCircle2.setRadius(8000000);
+    m_boundingCircle2.setPosition(200000, 0);
+    m_boundingCircle2.setRadius(90000);
 
     // Init bounding rect
-    m_boundingRect.setPosition(-20000000, 0);
-    m_boundingRect.setSize(10000000, 7000000);
+    m_boundingRect.setPosition(-200000, 0);
+    m_boundingRect.setSize(110000, 90000);
 
     // Init bounding rect2
-    m_boundingRect2.setPosition(20000000, 0);
-    m_boundingRect2.setSize(7500000, 6000000);
+    m_boundingRect2.setPosition(200000, 0);
+    m_boundingRect2.setSize(80000, 70000);
 
 
     // Top down game is ready
@@ -272,8 +272,8 @@ void TopDown::events(Event& event)
                     break;
 
                 case EVENT_KEY_R:
-                    m_boundingCircle2.setPosition(20000000, 0);
-                    m_boundingRect2.setPosition(20000000, 0);
+                    m_boundingCircle2.setPosition(200000, 0);
+                    m_boundingRect2.setPosition(200000, 0);
                     break;
 
                 default:
@@ -378,8 +378,12 @@ void TopDown::compute(float frametime)
 
     // Compute physics
     /*Vector2i collideOffset;
-    collideOffset.vec[0] = static_cast<int64_t>(GSysMouse.mouseX*100000000);
-    collideOffset.vec[1] = static_cast<int64_t>(GSysMouse.mouseY*100000000);
+    collideOffset.vec[0] = static_cast<int64_t>(
+        GSysMouse.mouseX*RendererToPhysics
+    );
+    collideOffset.vec[1] = static_cast<int64_t>(
+        GSysMouse.mouseY*RendererToPhysics
+    );
     collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
     collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
     m_collide.reset();
@@ -397,8 +401,12 @@ void TopDown::compute(float frametime)
 
     // Compute physics
     Vector2i collideOffset;
-    collideOffset.vec[0] = static_cast<int64_t>(GSysMouse.mouseX*100000000);
-    collideOffset.vec[1] = static_cast<int64_t>(GSysMouse.mouseY*100000000);
+    collideOffset.vec[0] = static_cast<int64_t>(
+        GSysMouse.mouseX*RendererToPhysics
+    );
+    collideOffset.vec[1] = static_cast<int64_t>(
+        GSysMouse.mouseY*RendererToPhysics
+    );
     collideOffset.vec[0] -= m_boundingRect2.position.vec[0];
     collideOffset.vec[1] -= m_boundingRect2.position.vec[1];
     m_collide.reset();
@@ -637,8 +645,7 @@ void TopDown::render()
 
     // Render pixel text (view position)
     std::ostringstream camerastr;
-    camerastr << "X : " << m_view.getX() <<
-        " | Y : " << m_view.getY();
+    camerastr << "X : " << m_view.getX() << " | Y : " << m_view.getY();
     m_pxText.setText(camerastr.str());
     m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
     if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))

@@ -59,8 +59,8 @@ BoundingRect::BoundingRect(const BoundingRect& boundingRect)
 {
     position.vec[0] = boundingRect.position.vec[0];
 	position.vec[1] = boundingRect.position.vec[1];
-	size.vec[0] = boundingRect.size.vec[0];
-	size.vec[1] = boundingRect.size.vec[1];
+	size.vec[0] = Math::max(boundingRect.size.vec[0], PhysicsMinEntityHalfSize);
+	size.vec[1] = Math::max(boundingRect.size.vec[1], PhysicsMinEntityHalfSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,8 +71,8 @@ BoundingRect::BoundingRect(
 {
 	position.vec[0] = rectPosition.vec[0];
 	position.vec[1] = rectPosition.vec[1];
-	size.vec[0] = rectSize.vec[0];
-	size.vec[1] = rectSize.vec[1];
+	size.vec[0] = Math::max(rectSize.vec[0], PhysicsMinEntityHalfSize);
+	size.vec[1] = Math::max(rectSize.vec[1], PhysicsMinEntityHalfSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,8 +94,8 @@ void BoundingRect::set(const Vector2i& rectPosition, const Vector2i& rectSize)
 {
 	position.vec[0] = rectPosition.vec[0];
 	position.vec[1] = rectPosition.vec[1];
-	size.vec[0] = rectSize.vec[0];
-	size.vec[1] = rectSize.vec[1];
+	size.vec[0] = Math::max(rectSize.vec[0], PhysicsMinEntityHalfSize);
+	size.vec[1] = Math::max(rectSize.vec[1], PhysicsMinEntityHalfSize);
 }
 
 

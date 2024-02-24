@@ -43,6 +43,7 @@
 #define VOS_PHYSICS_PHYSICS_HEADER
 
     #include "../System/System.h"
+    #include "../Math/Math.h"
 
     #include <cstdint>
 
@@ -50,12 +51,13 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Physics to Renderer conversions                                       //
     ////////////////////////////////////////////////////////////////////////////
-    const float PhysicsToRenderer = 0.00000001f;
+    const int64_t RendererToPhysics = Math::OneInt;
+    const float PhysicsToRenderer = (1.0f / Math::OneInt);
 
     ////////////////////////////////////////////////////////////////////////////
     //  Physics solver settings                                               //
     ////////////////////////////////////////////////////////////////////////////
-    const int64_t PhysicsMinEntityHalfSize = 500000;
+    const int64_t PhysicsMinEntityHalfSize = (Math::OneInt / 200);
     const int64_t PhysicsMaxSmallStepsIterations = 40;
 
 
