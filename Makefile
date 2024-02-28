@@ -90,7 +90,8 @@ VOS: main.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
-	Softwares/Softwares.o Softwares/FirstPerson/FirstPerson.o
+	Softwares/Softwares.o \
+	Softwares/FirstPerson/FirstPerson.o Softwares/TopDown/TopDown.o
 
 	$(CC) -o VOS \
 	Vos.o \
@@ -135,7 +136,8 @@ VOS: main.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
-	Softwares/Softwares.o Softwares/FirstPerson/FirstPerson.o \
+	Softwares/Softwares.o \
+	Softwares/FirstPerson/FirstPerson.o Softwares/TopDown/TopDown.o \
 	main.o $(LDFLAGS)
 
 
@@ -403,6 +405,10 @@ Softwares/FirstPerson/FirstPerson.o: Softwares/FirstPerson/FirstPerson.cpp
 	$(CC) -o Softwares/FirstPerson/FirstPerson.o -c \
 	Softwares/FirstPerson/FirstPerson.cpp $(CFLAGS)
 
+Softwares/TopDown/TopDown.o: Softwares/TopDown/TopDown.cpp
+	$(CC) -o Softwares/TopDown/TopDown.o -c \
+	Softwares/TopDown/TopDown.cpp $(CFLAGS)
+
 
 clean:
 	rm -rf *.o
@@ -418,7 +424,8 @@ clean:
 	rm -rf Renderer/GUI/*.o
 	rm -rf Resources/*.o
 	rm -rf Softwares/*.o
-	rm -rf Softwares/FirstPerson*.o
+	rm -rf Softwares/FirstPerson/*.o
+	rm -rf Softwares/TopDown/*.o
 
 mrproper: clean
 	rm -rf VOS
