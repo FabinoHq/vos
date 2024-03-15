@@ -379,9 +379,9 @@
             ////////////////////////////////////////////////////////////////////
             void rotate(float angle, float x, float y, float z)
             {
-                float magnitude = std::sqrt(x*x + y*y + z*z);
-                float sinAngle = std::sin(-angle);
-                float cosAngle = std::cos(-angle);
+                float magnitude = Math::sqrt(x*x + y*y + z*z);
+                float sinAngle = Math::sin(-angle);
+                float cosAngle = Math::cos(-angle);
                 float oneMinCos = 1.0f-cosAngle;
                 if (magnitude != 0.0f)
                 {
@@ -458,8 +458,8 @@
             ////////////////////////////////////////////////////////////////////
             void rotateX(float angleX)
             {
-                float sinAngle = std::sin(-angleX);
-                float cosAngle = std::cos(-angleX);
+                float sinAngle = Math::sin(-angleX);
+                float cosAngle = Math::cos(-angleX);
                 float rotMat4 = (mat[4]*cosAngle + mat[8]*-sinAngle);
                 float rotMat5 = (mat[5]*cosAngle + mat[9]*-sinAngle);
                 float rotMat6 = (mat[6]*cosAngle + mat[10]*-sinAngle);
@@ -483,8 +483,8 @@
             ////////////////////////////////////////////////////////////////////
             void rotateY(float angleY)
             {
-                float sinAngle = std::sin(-angleY);
-                float cosAngle = std::cos(-angleY);
+                float sinAngle = Math::sin(-angleY);
+                float cosAngle = Math::cos(-angleY);
                 float rotMat0 = (mat[0]*cosAngle + mat[8]*sinAngle);
                 float rotMat1 = (mat[1]*cosAngle + mat[9]*sinAngle);
                 float rotMat2 = (mat[2]*cosAngle + mat[10]*sinAngle);
@@ -508,8 +508,8 @@
             ////////////////////////////////////////////////////////////////////
             void rotateZ(float angleZ)
             {
-                float sinAngle = std::sin(-angleZ);
-                float cosAngle = std::cos(-angleZ);
+                float sinAngle = Math::sin(-angleZ);
+                float cosAngle = Math::cos(-angleZ);
                 float rotMat0 = (mat[0]*cosAngle + mat[4]*-sinAngle);
                 float rotMat1 = (mat[1]*cosAngle + mat[5]*-sinAngle);
                 float rotMat2 = (mat[2]*cosAngle + mat[6]*-sinAngle);

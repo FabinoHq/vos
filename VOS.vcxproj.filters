@@ -671,5 +671,8 @@
     <ClInclude Include="Physics\BoundingRect.h">
       <Filter>Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Sinus.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

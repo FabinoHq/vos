@@ -82,11 +82,11 @@ bool FreeFlyCam::compute(float ratio, float frametime)
     float crossSpeed = speed*Math::OneSqrtTwo;
 
     // Compute freefly camera target
-    m_target.vec[0] = std::cos(m_angles.vec[0]);
-    m_target.vec[0] *= std::sin(m_angles.vec[1]);
-    m_target.vec[1] = std::sin(m_angles.vec[0]);
-    m_target.vec[2] = std::cos(m_angles.vec[0]);
-    m_target.vec[2] *= std::cos(m_angles.vec[1]);
+    m_target.vec[0] = Math::cos(m_angles.vec[0]);
+    m_target.vec[0] *= Math::sin(m_angles.vec[1]);
+    m_target.vec[1] = Math::sin(m_angles.vec[0]);
+    m_target.vec[2] = Math::cos(m_angles.vec[0]);
+    m_target.vec[2] *= Math::cos(m_angles.vec[1]);
     m_target.normalize();
 
     // Compute freefly camera cross product

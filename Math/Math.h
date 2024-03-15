@@ -45,6 +45,8 @@
     #include "../System/System.h"
     #include "../System/SysCPU.h"
 
+    #include "Sinus.h"
+
     #include <cstdint>
     #include <cmath>
     #undef min
@@ -414,6 +416,16 @@
             return (static_cast<int64_t>(std::sqrt(x)));
         }
 
+        inline float sqrt(float x)
+        {
+            return std::sqrt(x);
+        }
+
+        inline double sqrt(double x)
+        {
+            return std::sqrt(x);
+        }
+
         ////////////////////////////////////////////////////////////////////////
         //  Integer binary logarithm                                          //
         //  param x : Integer to get binary logarithm of                      //
@@ -506,6 +518,85 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //  Sinus                                                             //
+        //  param x : Sinus argument                                          //
+        //  return : Sinus of x (sin(x))                                      //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t sin(int32_t x)
+        {
+            return SinusTable[Math::clamp(
+                (Math::modulo(x, ((int32_t)Math::TwoPiInt)) >> SinusTableShift),
+                0, (SinusTableSize-1)
+            )];
+        }
+
+        inline int64_t sin(int64_t x)
+        {
+            return SinusTable[Math::clamp(
+                (Math::modulo(x, Math::TwoPiInt) >> SinusTableShift),
+                0l, (SinusTableSize-1l)
+            )];
+        }
+
+        inline float sin(float x)
+        {
+            return std::sin(x);
+        }
+
+        inline double sin(double x)
+        {
+            return std::sin(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Cosinus                                                           //
+        //  param x : Cosinus argument                                        //
+        //  return : Cosinus of x (cos(x))                                    //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t cos(int32_t x)
+        {
+            return SinusTable[Math::clamp(
+                (Math::modulo((x+((int32_t)Math::PiHalfInt)),
+                    ((int32_t)Math::TwoPiInt)) >> SinusTableShift),
+                0, (SinusTableSize-1)
+            )];
+        }
+
+        inline int64_t cos(int64_t x)
+        {
+            return SinusTable[Math::clamp(
+                (Math::modulo((x + Math::PiHalfInt),
+                    Math::TwoPiInt) >> SinusTableShift),
+                0l, (SinusTableSize-1l)
+            )];
+        }
+
+        inline float cos(float x)
+        {
+            return std::cos(x);
+        }
+
+        inline double cos(double x)
+        {
+            return std::cos(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Exponential                                                       //
+        //  param x : Exponential argument                                    //
+        //  return : Exponential of x (exp(x))                                //
+        ////////////////////////////////////////////////////////////////////////
+        inline float exp(float x)
+        {
+            return std::exp(x);
+        }
+
+        inline double exp(double x)
+        {
+            return std::exp(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Linear interpolation                                              //
         //  return : Interpolated value                                       //
         ////////////////////////////////////////////////////////////////////////
@@ -568,12 +659,12 @@
 
         inline float distance(float x1, float y1, float x2, float y2)
         {
-            return (std::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))));
+            return (Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))));
         }
 
         inline double distance(double x1, double y1, double x2, double y2)
         {
-            return (std::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))));
+            return (Math::sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))));
         }
     };
 

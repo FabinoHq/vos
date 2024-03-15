@@ -103,6 +103,7 @@
 # Math
 !Math/
 !Math/Math.h
+!Math/Sinus.h
 !Math/MultiInt.h
 !Math/Vector2.h
 !Math/Vector2i.h

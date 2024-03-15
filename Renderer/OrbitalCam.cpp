@@ -97,11 +97,11 @@ bool OrbitalCam::compute(float ratio, float frametime)
     }
 
     // Compute camera position
-    m_position.vec[0] = std::cos(m_angles.vec[0]);
-    m_position.vec[0] *= std::sin(m_angles.vec[1]);
-    m_position.vec[1] = std::sin(-m_angles.vec[0]);
-    m_position.vec[2] = std::cos(m_angles.vec[0]);
-    m_position.vec[2] *= std::cos(m_angles.vec[1]);
+    m_position.vec[0] = Math::cos(m_angles.vec[0]);
+    m_position.vec[0] *= Math::sin(m_angles.vec[1]);
+    m_position.vec[1] = Math::sin(-m_angles.vec[0]);
+    m_position.vec[2] = Math::cos(m_angles.vec[0]);
+    m_position.vec[2] *= Math::cos(m_angles.vec[1]);
     m_position *= m_distance;
     m_position += m_target;
 

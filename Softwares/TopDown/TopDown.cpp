@@ -372,7 +372,7 @@ void TopDown::compute(float frametime)
     {
         valAcc -= Math::TwoPi;
     }
-    m_progressBar.setValue((std::sin(valAcc)*0.5f)+0.5f);
+    m_progressBar.setValue((Math::sin(valAcc)*0.5f)+0.5f);
 
     if (m_progressBar.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
     {

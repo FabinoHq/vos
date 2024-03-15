@@ -296,6 +296,7 @@
     <ClInclude Include="Images\PNGFile.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
+    <ClInclude Include="Math\Sinus.h" />
     <ClInclude Include="Math\Transform2.h" />
     <ClInclude Include="Math\Transform3.h" />
     <ClInclude Include="Math\Vector2.h" />

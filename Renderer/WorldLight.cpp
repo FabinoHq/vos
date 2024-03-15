@@ -196,11 +196,11 @@ void WorldLight::destroyWorldLight()
 bool WorldLight::compute(const Vector3& cameraPosition)
 {
     // Compute time weights
-    float sunrise = std::exp(-(time*time)*64.0f);
-    float day = (std::sin(time*Math::Pi)*0.5f)+0.5f;
+    float sunrise = Math::exp(-(time*time)*64.0f);
+    float day = (Math::sin(time*Math::Pi)*0.5f)+0.5f;
     float sunset = (
-        std::exp(-((time-1.0f)*(time-1.0f))*64.0f)+
-        std::exp(-((time+1.0f)*(time+1.0f))*64.0f)
+        Math::exp(-((time-1.0f)*(time-1.0f))*64.0f)+
+        Math::exp(-((time+1.0f)*(time+1.0f))*64.0f)
     );
     float night = (1.0f-day);
 
@@ -220,18 +220,18 @@ bool WorldLight::compute(const Vector3& cameraPosition)
 
     // Compute world light angle
     angles.vec[0] = (
-        (((Math::positive(time))*(std::sin(-time*Math::Pi)))-0.1f)+
-        (((Math::negative(time))*(std::sin(time*Math::Pi)*0.2f))-0.1f)
+        (((Math::positive(time))*(Math::sin(-time*Math::Pi)))-0.1f)+
+        (((Math::negative(time))*(Math::sin(time*Math::Pi)*0.2f))-0.1f)
     );
     angles.vec[1] = -(time*Math::Pi)+Math::PiHalf;
     angles.vec[2] = 0.0f;
 
     // Compute world light position
-    position.vec[0] = std::cos(angles.vec[0]);
-    position.vec[0] *= std::sin(angles.vec[1]);
-    position.vec[1] = std::sin(-angles.vec[0]);
-    position.vec[2] = std::cos(angles.vec[0]);
-    position.vec[2] *= std::cos(angles.vec[1]);
+    position.vec[0] = Math::cos(angles.vec[0]);
+    position.vec[0] *= Math::sin(angles.vec[1]);
+    position.vec[1] = Math::sin(-angles.vec[0]);
+    position.vec[2] = Math::cos(angles.vec[0]);
+    position.vec[2] *= Math::cos(angles.vec[1]);
     position *= WorldLightDistanceFromCamera;
     position += cameraPosition;
 
