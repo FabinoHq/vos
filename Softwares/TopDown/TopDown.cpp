@@ -62,6 +62,7 @@ m_boundingCircle(),
 m_boundingCircle2(),
 m_boundingRect(),
 m_boundingRect2(),
+m_matrixChunk(),
 m_collide(),
 m_spaceReleased(false)
 {
@@ -178,12 +179,12 @@ bool TopDown::init()
 
     // Init bounding circle
     m_boundingCircle.setPosition(-200000, 0);
-    m_boundingCircle.setRadius(110000);
+    m_boundingCircle.setRadius(70000);
     m_boundingCircle.setAngle(0);
 
     // Init bounding circle 2
     m_boundingCircle2.setPosition(200000, 0);
-    m_boundingCircle2.setRadius(90000);
+    m_boundingCircle2.setRadius(40000);
     m_boundingCircle2.setAngle(0);
 
     // Init bounding rect
@@ -195,6 +196,9 @@ bool TopDown::init()
     m_boundingRect2.setPosition(200000, 0);
     m_boundingRect2.setSize(80000, 70000);
     m_boundingRect2.setAngle(1000000);
+
+    // Init matrix chunk 2
+    //m_matrixChunk2.init();
 
     // Launch physics solver
     GPhysics.launch();
@@ -414,18 +418,18 @@ void TopDown::compute(float frametime)
     collideOffset.vec[1] = static_cast<int64_t>(
         GSysMouse.mouseY*RendererToPhysics
     );
-    collideOffset.vec[0] -= m_boundingRect2.position.vec[0];
-    collideOffset.vec[1] -= m_boundingRect2.position.vec[1];
+    collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
+    collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
     m_collide.reset();
-    m_boundingRect2.collideRect(
-        m_boundingRect, collideOffset, m_collide
+    m_boundingCircle2.collideMatrix2(
+        m_matrixChunk, collideOffset, m_collide
     );
 
     // Space key released event
     if (m_spaceReleased)
     {
-        m_boundingRect2.position.vec[0] = m_collide.position.vec[0];
-        m_boundingRect2.position.vec[1] = m_collide.position.vec[1];
+        m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
+        m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];
         m_spaceReleased = false;
     }
     
@@ -495,6 +499,29 @@ void TopDown::render()
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
 
+
+    // Render matrix chunk
+    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectangle.setColor(0.8f, 0.7f, 0.1f, 0.8f);
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setSize(100000*PhysicsToRenderer, 100000*PhysicsToRenderer);
+    m_rectangle.setAngle(0.0f);
+    m_rectangle.setSmooth(0.025f);
+
+    float positionX = (50000*PhysicsToRenderer);
+    float positionY = (50000*PhysicsToRenderer);
+    for (int i = 0; i < 10; ++i)
+    {
+        for (int j = 0; j < 10; ++j)
+        {
+            m_rectangle.setPosition(positionX, positionY);
+            m_rectangle.render();
+            positionY += 100000*PhysicsToRenderer;
+        }
+        positionY = (50000*PhysicsToRenderer);
+        positionX += 100000*PhysicsToRenderer;
+    }
+
     // Render bounding circle
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     float positionX =
@@ -508,12 +535,13 @@ void TopDown::render()
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setAngle(m_boundingCircle.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.025f);
-    m_ellipse.render();
+    m_ellipse.render();*/
 
     // Render bounding circle 2
+    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     positionX = m_boundingCircle2.position.vec[0]*PhysicsToRenderer;
     positionY = m_boundingCircle2.position.vec[1]*PhysicsToRenderer;
-    radius = m_boundingCircle2.radius*PhysicsToRenderer;
+    float radius = m_boundingCircle2.radius*PhysicsToRenderer;
     m_ellipse.setColor(0.0f, 0.2f, 0.8f, 0.8f);
     m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
@@ -536,11 +564,11 @@ void TopDown::render()
     m_ellipse.setSize(radius*2.07f, radius*2.07f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.028f);
-    m_ellipse.render();*/
+    m_ellipse.render();
 
 
     // Render bounding rect
-    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
     float positionX =
         m_boundingRect.position.vec[0]*PhysicsToRenderer;
     float positionY =
@@ -583,7 +611,7 @@ void TopDown::render()
     m_rectangle.setSize(width*2.07f, height*2.07f);
     m_rectangle.setAngle(m_boundingRect2.angle*PhysicsAngleToRenderer);
     m_rectangle.setSmooth(0.028f);
-    m_rectangle.render();
+    m_rectangle.render();*/
 
 
     // Set default screen view

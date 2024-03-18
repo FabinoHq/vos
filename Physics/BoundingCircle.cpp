@@ -228,6 +228,31 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Collide bounding circle with matrix chunk 2                               //
+////////////////////////////////////////////////////////////////////////////////
+bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
+{
+	return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Collide bounding circle with matrix chunk 2                               //
+////////////////////////////////////////////////////////////////////////////////
+bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
+    const Vector2i& offset, Collision2& collision)
+{
+	// Reset collision
+	collision.reset();
+	collision.position.vec[0] = (position.vec[0]+offset.vec[0]);
+	collision.position.vec[1] = (position.vec[1]+offset.vec[1]);
+	collision.offset.vec[0] = offset.vec[0];
+	collision.offset.vec[1] = offset.vec[1];
+	collision.setFactor(Math::OneInt);
+	return collision.collide;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  BoundingCircle affectation operator                                       //
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle& BoundingCircle::operator=(const BoundingCircle& boundingCircle)
