@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightMapChunk.h : HeightMap chunk management                 //
+//     Renderer/HeightMapChunk.h : HeightMap chunk renderer management        //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
 #define VOS_RENDERER_HEIGHTMAPCHUNK_HEADER

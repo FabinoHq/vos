@@ -37,113 +37,23 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightFarChunk.cpp : HeightFar chunk renderer management      //
+//     Physics/MatrixChunk2.cpp : 2D Matrix chunk physics management          //
 ////////////////////////////////////////////////////////////////////////////////
-#include "HeightFarChunk.h"
+#include "MatrixChunk2.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  HeightFarChunk default constructor                                        //
+//  MatrixChunk2 default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
-HeightFarChunk::HeightFarChunk() :
-Transform3(),
-m_vertexBuffer(0),
-m_textureArray(0)
+MatrixChunk2::MatrixChunk2()
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  HeightFarChunk virtual destructor                                         //
+//  MatrixChunk2 destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-HeightFarChunk::~HeightFarChunk()
+MatrixChunk2::~MatrixChunk2()
 {
-    m_textureArray = 0;
-    m_vertexBuffer = 0;
-}
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Init heightfar chunk                                                      //
-//  return : True if the heightfar chunk is successfully created              //
-////////////////////////////////////////////////////////////////////////////////
-bool HeightFarChunk::init(VertexBuffer& vertexBuffer,
-    TextureArray& textureArray)
-{
-    // Check texture array handle
-    if (!textureArray.isValid())
-    {
-        // Invalid texture array handle
-        return false;
-    }
-
-    // Set static mesh vertex buffer pointer
-    m_vertexBuffer = &vertexBuffer;
-
-    // Set heightfar chunk texture array pointer
-    m_textureArray = &textureArray;
-
-    // Reset heightfar chunk transformations
-    resetTransforms();
-
-    // Heightfar chunk successfully created
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Set heightfar chunk texture array                                         //
-//  return : True if heightfar chunk texture array is set                     //
-////////////////////////////////////////////////////////////////////////////////
-bool HeightFarChunk::setTextureArray(TextureArray& textureArray)
-{
-    // Check texture array handle
-    if (!textureArray.isValid())
-    {
-        // Invalid texture array handle
-        return false;
-    }
-
-    // Set heightfar chunk texture array pointer
-    m_textureArray = &textureArray;
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind heightfar chunk vertex buffer                                        //
-////////////////////////////////////////////////////////////////////////////////
-void HeightFarChunk::bindVertexBuffer()
-{
-    // Bind vertex buffer
-    VkDeviceSize offset = 0;
-    vkCmdBindVertexBuffers(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
-    );
-
-    vkCmdBindIndexBuffer(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Render heightfar chunk                                                    //
-////////////////////////////////////////////////////////////////////////////////
-void HeightFarChunk::render()
-{
-    // Compute heightfar chunk transformations
-    computeTransforms();
-
-    // Push model matrix into command buffer
-    vkCmdPushConstants(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
-    );
-
-    // Draw heightfar chunk triangles
-    vkCmdDrawIndexed(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        (m_vertexBuffer->indexCount), 1, 0, 0, 0
-    );
 }

@@ -214,6 +214,7 @@
     <ClCompile Include="Physics\BoundingCircle.cpp" />
     <ClCompile Include="Physics\BoundingRect.cpp" />
     <ClCompile Include="Physics\Collision2.cpp" />
+    <ClCompile Include="Physics\MatrixChunk2.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Renderer\BackRenderer.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
@@ -316,6 +317,7 @@
     <ClInclude Include="Physics\BoundingCircle.h" />
     <ClInclude Include="Physics\BoundingRect.h" />
     <ClInclude Include="Physics\Collision2.h" />
+    <ClInclude Include="Physics\MatrixChunk2.h" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Renderer\BackRenderer.h" />
     <ClInclude Include="Renderer\Camera.h" />

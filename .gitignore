@@ -142,6 +142,8 @@
 !Physics/BoundingCircle.cpp
 !Physics/BoundingRect.h
 !Physics/BoundingRect.cpp
+!Physics/MatrixChunk2.h
+!Physics/MatrixChunk2.cpp
 
 # Renderer
 !Renderer/

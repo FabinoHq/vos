@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightFarStream.cpp : HeightFar stream management             //
+//     Renderer/HeightFarStream.cpp : HeightFar stream renderer management    //
 ////////////////////////////////////////////////////////////////////////////////
 #include "HeightFarStream.h"
 

@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightFarChunk.h : HeightFar chunk management                 //
+//     Renderer/HeightFarChunk.h : HeightFar chunk renderer management        //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_RENDERER_HEIGHTFARCHUNK_HEADER
 #define VOS_RENDERER_HEIGHTFARCHUNK_HEADER

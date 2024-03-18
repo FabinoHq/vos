@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightFarStream.h : HeightFar stream management               //
+//     Renderer/HeightFarStream.h : HeightFar stream renderer management      //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_RENDERER_HEIGHTFARSTREAM_HEADER
 #define VOS_RENDERER_HEIGHTFARSTREAM_HEADER

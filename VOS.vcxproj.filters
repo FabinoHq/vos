@@ -287,6 +287,9 @@
     <ClCompile Include="Physics\BoundingRect.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\MatrixChunk2.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -673,6 +676,9 @@
     </ClInclude>
     <ClInclude Include="Math\Sinus.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\MatrixChunk2.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

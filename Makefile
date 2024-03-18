@@ -59,6 +59,7 @@ VOS: main.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o Physics/Collision2.o \
 	Physics/BoundingCircle.o Physics/BoundingRect.o \
+	Physics/MatrixChunk2.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
 	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
@@ -105,6 +106,7 @@ VOS: main.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o Physics/Collision2.o \
 	Physics/BoundingCircle.o Physics/BoundingRect.o \
+	Physics/MatrixChunk2.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
 	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
@@ -212,6 +214,9 @@ Physics/BoundingCircle.o: Physics/BoundingCircle.cpp
 
 Physics/BoundingRect.o: Physics/BoundingRect.cpp
 	$(CC) -o Physics/BoundingRect.o -c Physics/BoundingRect.cpp $(CFLAGS)
+
+Physics/MatrixChunk2.o: Physics/MatrixChunk2.cpp
+	$(CC) -o Physics/MatrixChunk2.o -c Physics/MatrixChunk2.cpp $(CFLAGS)
 
 
 Renderer/Vulkan/Vulkan.o: Renderer/Vulkan/Vulkan.cpp

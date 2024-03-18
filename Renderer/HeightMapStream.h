@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightMapStream.h : HeightMap stream management               //
+//     Renderer/HeightMapStream.h : HeightMap stream renderer management      //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_RENDERER_HEIGHTMAPSTREAM_HEADER
 #define VOS_RENDERER_HEIGHTMAPSTREAM_HEADER
