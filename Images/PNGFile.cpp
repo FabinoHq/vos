@@ -102,7 +102,7 @@ bool PNGFile::setImage(uint32_t width, uint32_t height,
 
     // Allocate image data
     size_t imageSize = (width*height*4);
-    m_image = new (std::nothrow) unsigned char[imageSize];
+    m_image = new(std::nothrow) unsigned char[imageSize];
     if (!m_image) return false;
 
     // Copy image data
@@ -686,7 +686,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     }
 
     // Allocate raw image data
-    unsigned char* rawData = new (std::nothrow)
+    unsigned char* rawData = new(std::nothrow)
         unsigned char[pngIDATChunksLength];
     if (!rawData)
     {
@@ -769,7 +769,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     // Allocate decompressed data
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
-    unsigned char* pngData = new (std::nothrow) unsigned char[pngDataSize];
+    unsigned char* pngData = new(std::nothrow) unsigned char[pngDataSize];
     if (!pngData)
     {
         // Could not allocate decompressed data
@@ -789,7 +789,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
 
     // Allocate 32bits RGBA internal image data
     size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
-    m_image = new (std::nothrow) unsigned char[imageSize];
+    m_image = new(std::nothrow) unsigned char[imageSize];
     if (!m_image)
     {
         // Could not allocate internal image data
@@ -950,7 +950,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
     }
 
     // Allocate raw image data
-    unsigned char* rawData = new (std::nothrow)
+    unsigned char* rawData = new(std::nothrow)
         unsigned char[pngIDATChunksLength];
     if (!rawData)
     {
@@ -1039,7 +1039,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
     // Allocate decompressed data
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
-    unsigned char* pngData = new (std::nothrow) unsigned char[pngDataSize];
+    unsigned char* pngData = new(std::nothrow) unsigned char[pngDataSize];
     if (!pngData)
     {
         // Could not allocate decompressed data
@@ -1059,7 +1059,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
 
     // Allocate 32bits RGBA internal image data
     size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
-    m_image = new (std::nothrow) unsigned char[imageSize];
+    m_image = new(std::nothrow) unsigned char[imageSize];
     if (!m_image)
     {
         // Could not allocate internal image data
@@ -1191,7 +1191,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     // Allocate PNG data
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
-    unsigned char* pngData = new (std::nothrow) unsigned char[pngDataSize];
+    unsigned char* pngData = new(std::nothrow) unsigned char[pngDataSize];
     if (!pngData)
     {
         // Could not allocate PNG data
@@ -1254,7 +1254,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     size_t compressedDataSize = ZLibComputeDeflateCompressSize(pngDataSize);
 
     // Allocate compressed data
-    unsigned char* compressedData = new (std::nothrow)
+    unsigned char* compressedData = new(std::nothrow)
         unsigned char[compressedDataSize];
     if (!compressedData)
     {

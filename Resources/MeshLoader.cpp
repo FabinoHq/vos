@@ -251,7 +251,7 @@ bool MeshLoader::init()
     }
 
     // Allocate meshes vertex buffers
-    m_meshes = new (std::nothrow) VertexBuffer[MESHES_ASSETSCOUNT];
+    m_meshes = new(std::nothrow) VertexBuffer[MESHES_ASSETSCOUNT];
     if (!m_meshes)
     {
         // Could not allocate meshes vertex buffers
@@ -259,7 +259,7 @@ bool MeshLoader::init()
     }
 
     // Allocate mesh vertices
-    m_vertices = new (std::nothrow) float[MeshLoaderMaxVerticesCount];
+    m_vertices = new(std::nothrow) float[MeshLoaderMaxVerticesCount];
     if (!m_vertices)
     {
         // Could not allocate mesh vertices
@@ -267,7 +267,7 @@ bool MeshLoader::init()
     }
 
     // Allocate mesh indices
-    m_indices = new (std::nothrow) uint16_t[MeshLoaderMaxIndicesCount];
+    m_indices = new(std::nothrow) uint16_t[MeshLoaderMaxIndicesCount];
     if (!m_indices)
     {
         // Could not allocate mesh indices

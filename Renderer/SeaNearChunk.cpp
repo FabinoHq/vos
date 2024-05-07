@@ -103,7 +103,7 @@ void SeaNearChunk::render()
 bool SeaNearChunk::generateSeaNearChunk(VertexBuffer& vertexBuffer)
 {
     // Allocate sea near vertices
-    float* vertices = new (std::nothrow) float[SeaNearChunkVerticesCount];
+    float* vertices = new(std::nothrow) float[SeaNearChunkVerticesCount];
     if (!vertices)
     {
         // Could not allocate sea near vertices
@@ -111,7 +111,7 @@ bool SeaNearChunk::generateSeaNearChunk(VertexBuffer& vertexBuffer)
     }
 
     // Allocate sea near indices
-    uint16_t* indices = new (std::nothrow) uint16_t[SeaNearChunkIndicesCount];
+    uint16_t* indices = new(std::nothrow) uint16_t[SeaNearChunkIndicesCount];
     if (!indices)
     {
         // Could not allocate sea near indices

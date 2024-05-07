@@ -189,7 +189,7 @@ bool SysWindow::create()
     m_lastMouseRight = (mask & Button3Mask);
 
     // Allocate system cursors
-    m_cursors = new (std::nothrow) Cursor[SYSCURSOR_CURSORSCOUNT];
+    m_cursors = new(std::nothrow) Cursor[SYSCURSOR_CURSORSCOUNT];
     if (!m_cursors)
     {
         // Could not allocate system cursors

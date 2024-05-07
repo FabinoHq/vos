@@ -103,7 +103,7 @@ void SeaFarChunk::render()
 bool SeaFarChunk::generateSeaFarChunk(VertexBuffer& vertexBuffer)
 {
     // Allocate sea far vertices
-    float* vertices = new (std::nothrow) float[SeaFarChunkVerticesCount];
+    float* vertices = new(std::nothrow) float[SeaFarChunkVerticesCount];
     if (!vertices)
     {
         // Could not allocate sea far vertices
@@ -111,7 +111,7 @@ bool SeaFarChunk::generateSeaFarChunk(VertexBuffer& vertexBuffer)
     }
 
     // Allocate sea far indices
-    uint16_t* indices = new (std::nothrow) uint16_t[SeaFarChunkIndicesCount];
+    uint16_t* indices = new(std::nothrow) uint16_t[SeaFarChunkIndicesCount];
     if (!indices)
     {
         // Could not allocate sea far indices

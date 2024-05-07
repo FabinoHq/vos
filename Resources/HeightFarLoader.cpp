@@ -246,7 +246,7 @@ bool HeightFarLoader::init()
     }
 
     // Allocate heightfars vertex buffers
-    m_heightfars = new (std::nothrow) VertexBuffer[HEIGHTFAR_ASSETSCOUNT];
+    m_heightfars = new(std::nothrow) VertexBuffer[HEIGHTFAR_ASSETSCOUNT];
     if (!m_heightfars)
     {
         // Could not allocate heightfars vertex buffers
@@ -261,7 +261,7 @@ bool HeightFarLoader::init()
     }
 
     // Allocate chunk vertices
-    m_vertices = new (std::nothrow) float[HeightFarChunkVerticesCount];
+    m_vertices = new(std::nothrow) float[HeightFarChunkVerticesCount];
     if (!m_vertices)
     {
         // Could not allocate chunk vertices
@@ -269,7 +269,7 @@ bool HeightFarLoader::init()
     }
 
     // Allocate chunk indices
-    m_indices = new (std::nothrow) uint16_t[HeightFarChunkIndicesCount];
+    m_indices = new(std::nothrow) uint16_t[HeightFarChunkIndicesCount];
     if (!m_indices)
     {
         // Could not allocate chunk indices

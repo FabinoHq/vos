@@ -95,7 +95,7 @@ bool BMPFile::setImage(uint32_t width, uint32_t height,
 
     // Allocate image data
     size_t imageSize = (width*height*4);
-    m_image = new (std::nothrow) unsigned char[imageSize];
+    m_image = new(std::nothrow) unsigned char[imageSize];
     if (!m_image) return false;
 
     // Copy image data
@@ -442,7 +442,7 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
     unsigned char* rawData = 0;
 
     // Allocate raw image data
-    rawData = new (std::nothrow) unsigned char[rawDataSize];
+    rawData = new(std::nothrow) unsigned char[rawDataSize];
     if (!rawData) return false;
 
     // Read BMP raw image data
@@ -452,7 +452,7 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 
     // Allocate image data
     size_t imageSize = (width*height*4);
-    m_image = new (std::nothrow) unsigned char[imageSize];
+    m_image = new(std::nothrow) unsigned char[imageSize];
     if (!m_image) return false;
 
     // Convert 24bits BMP image data
@@ -505,7 +505,7 @@ bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize,
     }
 
     // Allocate raw image data
-    unsigned char* rawData = new (std::nothrow) unsigned char[imageSize];
+    unsigned char* rawData = new(std::nothrow) unsigned char[imageSize];
     if (!rawData) return false;
 
     // Convert 24bits BMP image data
@@ -552,7 +552,7 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
     unsigned char* rawData = 0;
 
     // Allocate raw image data
-    rawData = new (std::nothrow) unsigned char[rawDataSize];
+    rawData = new(std::nothrow) unsigned char[rawDataSize];
     if (!rawData) return false;
 
     // Read BMP raw image data
@@ -566,7 +566,7 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 
     // Allocate image data
     size_t imageSize = (width*height*4);
-    m_image = new (std::nothrow) unsigned char[imageSize];
+    m_image = new(std::nothrow) unsigned char[imageSize];
     if (!m_image) return false;
 
     // Convert 16bits BMP image data
@@ -627,7 +627,7 @@ bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize,
     }
 
     // Allocate raw image data
-    uint16_t* rawData = new (std::nothrow) uint16_t[imageSize/2];
+    uint16_t* rawData = new(std::nothrow) uint16_t[imageSize/2];
     if (!rawData) return false;
 
     // Convert 16bits BMP image data

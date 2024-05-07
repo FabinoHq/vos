@@ -93,7 +93,7 @@ bool SysWindow::create()
     }
 
     // Allocate system cursors
-    m_cursors = new (std::nothrow) HCURSOR[SYSCURSOR_CURSORSCOUNT];
+    m_cursors = new(std::nothrow) HCURSOR[SYSCURSOR_CURSORSCOUNT];
     if (!m_cursors)
     {
         // Could not allocate system cursors

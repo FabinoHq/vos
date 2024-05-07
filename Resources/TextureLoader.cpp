@@ -243,7 +243,7 @@ bool TextureLoader::init()
     }
 
     // Allocate GUI textures
-    m_texturesGUI = new (std::nothrow) Texture[TEXTURE_GUICOUNT];
+    m_texturesGUI = new(std::nothrow) Texture[TEXTURE_GUICOUNT];
     if (!m_texturesGUI)
     {
         // Could not allocate GUI textures
@@ -251,7 +251,7 @@ bool TextureLoader::init()
     }
 
     // Allocate high textures
-    m_texturesHigh = new (std::nothrow) Texture[TEXTURE_ASSETSCOUNT];
+    m_texturesHigh = new(std::nothrow) Texture[TEXTURE_ASSETSCOUNT];
     if (!m_texturesHigh)
     {
         // Could not allocate high textures
@@ -259,7 +259,7 @@ bool TextureLoader::init()
     }
 
     // Allocate textures arrays
-    m_texturesArrays = new (std::nothrow) TextureArray[TEXTURE_ARRAYSCOUNT];
+    m_texturesArrays = new(std::nothrow) TextureArray[TEXTURE_ARRAYSCOUNT];
     if (!m_texturesArrays)
     {
         // Could not allocate textures arrays
@@ -267,7 +267,7 @@ bool TextureLoader::init()
     }
 
     // Allocate cubemaps assets
-    m_cubemaps = new (std::nothrow) CubeMap[TEXTURE_CUBEMAPCOUNT];
+    m_cubemaps = new(std::nothrow) CubeMap[TEXTURE_CUBEMAPCOUNT];
     if (!m_cubemaps)
     {
         // Could not allocate textures assets
@@ -1578,7 +1578,7 @@ bool TextureLoader::preloadTextures()
     // Allocate texture array data
     unsigned int texArrayWidth = texArray1.getWidth();
     unsigned int texArrayHeight = texArray1.getHeight();
-    unsigned char* texArrayData = new (std::nothrow)
+    unsigned char* texArrayData = new(std::nothrow)
         unsigned char[texArrayWidth*texArrayHeight*4*texArrayLayers];
     if (!texArrayData) return false;
 
@@ -1634,7 +1634,7 @@ bool TextureLoader::preloadTextures()
     // Allocate cubemap data
     unsigned int cubemapWidth = cubeMapFront.getWidth();
     unsigned int cubemapHeight = cubeMapFront.getHeight();
-    unsigned char* cubemapData = new (std::nothrow)
+    unsigned char* cubemapData = new(std::nothrow)
         unsigned char[cubemapWidth*cubemapHeight*4*6];
     if (!cubemapData) return false;
 

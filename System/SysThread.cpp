@@ -72,7 +72,7 @@ bool SysThread::start()
     stop();
 
     // Start the thread
-    m_thread = new (std::nothrow) std::thread(&SysThread::run, this);
+    m_thread = new(std::nothrow) std::thread(&SysThread::run, this);
     if (!m_thread) return false;
 
     // Thread successfully started

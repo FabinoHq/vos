@@ -283,7 +283,7 @@ bool Renderer::initPipelines()
     }
 
     // Allocate pipelines
-    pipelines = new (std::nothrow) Pipeline[RENDERER_PIPELINE_PIPELINESCOUNT];
+    pipelines = new(std::nothrow) Pipeline[RENDERER_PIPELINE_PIPELINESCOUNT];
     if (!pipelines)
     {
         // Could not allocate pipelines

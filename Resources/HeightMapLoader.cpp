@@ -246,7 +246,7 @@ bool HeightMapLoader::init()
     }
 
     // Allocate heightmaps vertex buffers
-    m_heightmaps = new (std::nothrow) VertexBuffer[HEIGHTMAP_ASSETSCOUNT];
+    m_heightmaps = new(std::nothrow) VertexBuffer[HEIGHTMAP_ASSETSCOUNT];
     if (!m_heightmaps)
     {
         // Could not allocate heightmaps vertex buffers
@@ -261,7 +261,7 @@ bool HeightMapLoader::init()
     }
 
     // Allocate chunk vertices
-    m_vertices = new (std::nothrow) float[HeightMapChunkVerticesCount];
+    m_vertices = new(std::nothrow) float[HeightMapChunkVerticesCount];
     if (!m_vertices)
     {
         // Could not allocate chunk vertices
@@ -269,7 +269,7 @@ bool HeightMapLoader::init()
     }
 
     // Allocate chunk indices
-    m_indices = new (std::nothrow) uint16_t[HeightMapChunkIndicesCount];
+    m_indices = new(std::nothrow) uint16_t[HeightMapChunkIndicesCount];
     if (!m_indices)
     {
         // Could not allocate chunk indices
