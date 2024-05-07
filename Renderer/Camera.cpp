@@ -48,7 +48,7 @@
 Camera::Camera() :
 Transform3(),
 m_projMatrix(),
-m_projViewMatrix(),
+m_projviewMatrix(),
 m_target(0.0f, 0.0f, 0.0f),
 m_upward(0.0f, 0.0f, 0.0f),
 m_fovy(0.0f),
@@ -60,7 +60,7 @@ m_farPlane(0.0f)
         m_descriptorSets[i] = 0;
     }
     m_projMatrix.reset();
-    m_projViewMatrix.reset();
+    m_projviewMatrix.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ Camera::~Camera()
     m_fovy = 0.0f;
     m_upward.reset();
     m_target.reset();
-    m_projViewMatrix.reset();
+    m_projviewMatrix.reset();
     m_projMatrix.reset();
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -113,15 +113,15 @@ bool Camera::init()
     m_matrix.setIdentity();
 
     // Reset projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_matrix;
+    m_projviewMatrix.set(m_projMatrix);
+    m_projviewMatrix *= m_matrix;
 
     // Copy matrices data into camera uniform data
     CameraUniformData cameraUniformData;
     memcpy(
-        cameraUniformData.projView,
-        m_projViewMatrix.mat,
-        sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projview,
+        m_projviewMatrix.mat,
+        sizeof(m_projviewMatrix.mat)
     );
     memcpy(
         cameraUniformData.view,
@@ -202,7 +202,7 @@ void Camera::destroyCamera()
     m_upward.reset();
     m_target.reset();
     m_angles.reset();
-    m_projViewMatrix.reset();
+    m_projviewMatrix.reset();
     m_projMatrix.reset();
 
     // Destroy uniform buffers and descriptor sets
@@ -238,15 +238,15 @@ bool Camera::compute(float ratio)
     m_matrix.translate(-m_position);
 
     // Compute projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_matrix;
+    m_projviewMatrix.set(m_projMatrix);
+    m_projviewMatrix *= m_matrix;
 
     // Copy matrices data into camera uniform data
     CameraUniformData cameraUniformData;
     memcpy(
-        cameraUniformData.projView,
-        m_projViewMatrix.mat,
-        sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projview,
+        m_projviewMatrix.mat,
+        sizeof(m_projviewMatrix.mat)
     );
     memcpy(
         cameraUniformData.view,
@@ -291,15 +291,15 @@ bool Camera::compute(float ratio, Camera& camera)
     m_matrix.set(camera.m_matrix);
 
     // Compute projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_matrix;
+    m_projviewMatrix.set(m_projMatrix);
+    m_projviewMatrix *= m_matrix;
 
     // Copy matrices data into camera uniform data
     CameraUniformData cameraUniformData;
     memcpy(
-        cameraUniformData.projView,
-        m_projViewMatrix.mat,
-        sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projview,
+        m_projviewMatrix.mat,
+        sizeof(m_projviewMatrix.mat)
     );
     memcpy(
         cameraUniformData.view,

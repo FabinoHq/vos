@@ -48,14 +48,14 @@
 View::View() :
 Transform2(),
 m_projMatrix(),
-m_projViewMatrix()
+m_projviewMatrix()
 {
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         m_descriptorSets[i] = 0;
     }
     m_projMatrix.reset();
-    m_projViewMatrix.reset();
+    m_projviewMatrix.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ m_projViewMatrix()
 ////////////////////////////////////////////////////////////////////////////////
 View::~View()
 {
-    m_projViewMatrix.reset();
+    m_projviewMatrix.reset();
     m_projMatrix.reset();
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
@@ -89,8 +89,8 @@ bool View::init()
     m_projMatrix.translateZ(-1.0f);
 
     // Reset projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_matrix;
+    m_projviewMatrix.set(m_projMatrix);
+    m_projviewMatrix *= m_matrix;
 
     // Reset view matrix
     m_matrix.setIdentity();
@@ -98,9 +98,9 @@ bool View::init()
     // Copy matrices data into camera uniform data
     CameraUniformData cameraUniformData;
     memcpy(
-        cameraUniformData.projView,
-        m_projViewMatrix.mat,
-        sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projview,
+        m_projviewMatrix.mat,
+        sizeof(m_projviewMatrix.mat)
     );
     memcpy(
         cameraUniformData.view,
@@ -176,7 +176,7 @@ bool View::init()
 ////////////////////////////////////////////////////////////////////////////////
 void View::destroyView()
 {
-    m_projViewMatrix.reset();
+    m_projviewMatrix.reset();
     m_projMatrix.reset();
 
     // Destroy uniform buffers and descriptor sets
@@ -207,15 +207,15 @@ bool View::compute(float ratio)
     m_matrix.scale(m_size);
 
     // Compute projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_matrix;
+    m_projviewMatrix.set(m_projMatrix);
+    m_projviewMatrix *= m_matrix;
 
     // Copy matrices data into camera uniform data
     CameraUniformData cameraUniformData;
     memcpy(
-        cameraUniformData.projView,
-        m_projViewMatrix.mat,
-        sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projview,
+        m_projviewMatrix.mat,
+        sizeof(m_projviewMatrix.mat)
     );
     memcpy(
         cameraUniformData.view,

@@ -200,15 +200,15 @@ bool FreeFlyCam::compute(float ratio, float frametime)
     m_matrix.translate(-m_position);
 
     // Compute projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_matrix;
+    m_projviewMatrix.set(m_projMatrix);
+    m_projviewMatrix *= m_matrix;
 
     // Copy matrices data into camera uniform data
     CameraUniformData cameraUniformData;
     memcpy(
-        cameraUniformData.projView,
-        m_projViewMatrix.mat,
-        sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projview,
+        m_projviewMatrix.mat,
+        sizeof(m_projviewMatrix.mat)
     );
     memcpy(
         cameraUniformData.view,
@@ -253,15 +253,15 @@ bool FreeFlyCam::compute(float ratio, FreeFlyCam& freeFlyCam)
     m_matrix.set(freeFlyCam.m_matrix);
 
     // Compute projview matrix
-    m_projViewMatrix.set(m_projMatrix);
-    m_projViewMatrix *= m_matrix;
+    m_projviewMatrix.set(m_projMatrix);
+    m_projviewMatrix *= m_matrix;
 
     // Copy matrices data into camera uniform data
     CameraUniformData cameraUniformData;
     memcpy(
-        cameraUniformData.projView,
-        m_projViewMatrix.mat,
-        sizeof(m_projViewMatrix.mat)
+        cameraUniformData.projview,
+        m_projviewMatrix.mat,
+        sizeof(m_projviewMatrix.mat)
     );
     memcpy(
         cameraUniformData.view,

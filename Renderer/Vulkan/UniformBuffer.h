@@ -64,7 +64,7 @@
     ////////////////////////////////////////////////////////////////////////////
     struct CameraUniformData
     {
-        float   projView[16];   // Projection view combined matrix
+        float   projview[16];   // Projection view combined matrix
         float   view[16];       // View matrix (optional)
         float   position[3];    // Camera position
         float   align;

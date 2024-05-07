@@ -204,7 +204,7 @@
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
             UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
             Matrix4x4           m_projMatrix;       // Projection matrix
-            Matrix4x4           m_projViewMatrix;   // Projview matrix
+            Matrix4x4           m_projviewMatrix;   // Projview matrix
 
             Vector3             m_target;           // Camera target vector
             Vector3             m_upward;           // Camera upward vector

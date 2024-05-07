@@ -120,7 +120,7 @@
             VkDescriptorSet     m_descriptorSets[RendererMaxSwapchainFrames];
             UniformBuffer       m_uniformBuffers[RendererMaxSwapchainFrames];
             Matrix4x4           m_projMatrix;       // Projection matrix
-            Matrix4x4           m_projViewMatrix;   // Projview matrix
+            Matrix4x4           m_projviewMatrix;   // Projview matrix
     };
 
 
