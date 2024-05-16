@@ -98,13 +98,13 @@
             //  Compute camera                                                //
             //  return : True if the camera is successfully computed          //
             ////////////////////////////////////////////////////////////////////
-            bool compute(float ratio);
+            virtual bool compute(float ratio);
 
             ////////////////////////////////////////////////////////////////////
             //  Compute camera from another camera                            //
             //  return : True if the camera is successfully computed          //
             ////////////////////////////////////////////////////////////////////
-            bool compute(float ratio, Camera& camera);
+            virtual bool compute(float ratio, Camera& camera);
 
             ////////////////////////////////////////////////////////////////////
             //  Bind camera                                                   //

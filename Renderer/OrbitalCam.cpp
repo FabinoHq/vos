@@ -47,7 +47,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 OrbitalCam::OrbitalCam() :
 Camera(),
-m_target(),
 m_distance(1.0f),
 m_speed(1.0f),
 m_mousePressed(false),
@@ -67,7 +66,6 @@ OrbitalCam::~OrbitalCam()
     m_mousePressed = false;
     m_speed = 0.0f;
     m_distance = 0.0f;
-    m_target.reset();
 }
 
 

@@ -402,9 +402,9 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
-        //  Integer square root                                               //
-        //  param x : Integer to get square root of                           //
-        //  return : Integer square root (sqrt(x))                            //
+        //  Square root                                                       //
+        //  param x : Number to get square root of                            //
+        //  return : Square root (sqrt(x))                                    //
         ////////////////////////////////////////////////////////////////////////
         inline int32_t sqrt(int32_t x)
         {

@@ -85,13 +85,13 @@
             //  Compute orbital camera                                        //
             //  return : True if the orbital camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            bool compute(float ratio, float frametime);
+            virtual bool compute(float ratio, float frametime);
 
             ////////////////////////////////////////////////////////////////////
             //  Compute orbital camera from another orbital camera            //
             //  return : True if the orbital camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            bool compute(float ratio, OrbitalCam& orbitalCam);
+            virtual bool compute(float ratio, OrbitalCam& orbitalCam);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -157,7 +157,6 @@
 
 
         private:
-            Vector3     m_target;       // Orbitalcam target
             float       m_distance;     // Orbitalcam distance from target
             float       m_speed;        // Orbitalcam speed
 
