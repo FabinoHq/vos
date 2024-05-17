@@ -285,7 +285,7 @@ void SysWindow::close()
 //  Get window event                                                          //
 //  return : True if an event occurred, false otherwise                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool SysWindow::getEvent(Event& event)
+bool SysWindow::getEvent(SysEvent& event)
 {
     // Events processing
     XEvent msg;
@@ -298,7 +298,7 @@ bool SysWindow::getEvent(Event& event)
     if (m_hasFocus)
     {
         // Raw mouse input
-        Event event;
+        SysEvent event;
         Window root;
         int rootMouseX = 0;
         int rootMouseY = 0;
@@ -421,7 +421,7 @@ void SysWindow::processEvent(XEvent msg)
 {
     if (m_handle)
     {
-        Event event;
+        SysEvent event;
         event.type = EVENT_NONE;
 
         // Event type
@@ -554,7 +554,7 @@ void SysWindow::processEvent(XEvent msg)
 ////////////////////////////////////////////////////////////////////////////////
 //  Transcript key event                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-EventKey SysWindow::transcriptKey(KeySym key)
+SysEventKey SysWindow::transcriptKey(KeySym key)
 {
     switch (key)
     {

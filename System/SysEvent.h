@@ -46,9 +46,9 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Event type enumeration                                                //
+    //  SysEvent type enumeration                                             //
     ////////////////////////////////////////////////////////////////////////////
-    enum EventType
+    enum SysEventType
     {
         EVENT_NONE = 0,
         EVENT_CREATED = 1,
@@ -62,9 +62,9 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Event key enumeration                                                 //
+    //  SysEvent key enumeration                                              //
     ////////////////////////////////////////////////////////////////////////////
-    enum EventKey
+    enum SysEventKey
     {
         EVENT_KEY_NONE = 0,
 
@@ -144,9 +144,9 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Event mouse button enumeration                                        //
+    //  SysEvent mouse button enumeration                                     //
     ////////////////////////////////////////////////////////////////////////////
-    enum EventMouseButton
+    enum SysEventMouseButton
     {
         EVENT_MOUSE_NONE = 0,
         EVENT_MOUSE_LEFT = 1,
@@ -155,27 +155,27 @@
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Event mouse struct definition                                         //
+    //  SysEvent mouse struct definition                                      //
     ////////////////////////////////////////////////////////////////////////////
-    struct EventMouse
+    struct SysEventMouse
     {
-        EventMouseButton    button;
-        int                 x;
-        int                 y;
-        int                 wheel;
+        SysEventMouseButton     button;
+        int                     x;
+        int                     y;
+        int                     wheel;
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Event struct definition                                               //
+    //  SysEvent struct definition                                            //
     ////////////////////////////////////////////////////////////////////////////
-    struct Event
+    struct SysEvent
     {
-        EventType   type;
+        SysEventType    type;
 
         union
         {
-            EventKey    key;
-            EventMouse  mouse;
+            SysEventKey     key;
+            SysEventMouse   mouse;
         };
     };
 

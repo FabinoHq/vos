@@ -255,7 +255,7 @@ void SysWindow::close()
 //  Get window event                                                          //
 //  return : True if an event occurred, false otherwise                       //
 ////////////////////////////////////////////////////////////////////////////////
-bool SysWindow::getEvent(Event& event)
+bool SysWindow::getEvent(SysEvent& event)
 {
     // Events processing
     MSG msg;
@@ -322,7 +322,7 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (m_handle)
     {
-        Event event;
+        SysEvent event;
         event.type = EVENT_NONE;
 
         // Event type
@@ -480,7 +480,7 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
 ////////////////////////////////////////////////////////////////////////////////
 //  Transcript key event                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-EventKey SysWindow::transcriptKey(WPARAM wparam, LPARAM lparam)
+SysEventKey SysWindow::transcriptKey(WPARAM wparam, LPARAM lparam)
 {
     switch (wparam)
     {

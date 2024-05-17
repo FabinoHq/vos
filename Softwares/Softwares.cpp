@@ -99,7 +99,7 @@ void Softwares::destroy()
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute softwares events                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void Softwares::events(Event& event)
+void Softwares::events(SysEvent& event)
 {
     // Dispatch events to softwares
     m_topdown.events(event);

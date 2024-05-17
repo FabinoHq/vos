@@ -316,7 +316,7 @@ void FirstPerson::destroy()
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute first person game events                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void FirstPerson::events(Event& event)
+void FirstPerson::events(SysEvent& event)
 {
     // Process event
     switch (event.type)

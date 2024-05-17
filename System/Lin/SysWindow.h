@@ -123,7 +123,7 @@
             //  Get window event                                              //
             //  return : True if an event occurred, false otherwise           //
             ////////////////////////////////////////////////////////////////////
-            bool getEvent(Event& event);
+            bool getEvent(SysEvent& event);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -174,7 +174,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Transcript key event                                          //
             ////////////////////////////////////////////////////////////////////
-            EventKey transcriptKey(KeySym key);
+            SysEventKey transcriptKey(KeySym key);
 
 
         private:
@@ -193,7 +193,7 @@
 
             Cursor*             m_cursors;          // Window cursors
 
-            std::queue<Event>   m_events;           // Events FIFO queue
+            std::queue<SysEvent>    m_events;       // Events FIFO queue
     };
 
 

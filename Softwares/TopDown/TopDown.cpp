@@ -227,7 +227,7 @@ void TopDown::destroy()
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute top down game events                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDown::events(Event& event)
+void TopDown::events(SysEvent& event)
 {
     // Process event
     switch (event.type)

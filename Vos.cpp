@@ -221,7 +221,7 @@ void Vos::run()
         }
 
         // Get main window event
-        Event event;
+        SysEvent event;
         while (GSysWindow.getEvent(event))
         {
             // Process event
