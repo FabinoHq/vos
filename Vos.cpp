@@ -228,15 +228,15 @@ void Vos::run()
             switch (event.type)
             {
                 // Close event
-                case EVENT_CLOSED:
+                case SYSEVENT_CLOSED:
                     m_running = false;
                     break;
 
                 // Key released
-                case EVENT_KEYRELEASED:
+                case SYSEVENT_KEYRELEASED:
                     switch (event.key)
                     {
-                        case EVENT_KEY_ESCAPE:
+                        case SYSEVENT_KEY_ESCAPE:
                             m_running = false;
                             break;
 
@@ -246,7 +246,7 @@ void Vos::run()
                     break;
 
                 // Mouse moved
-                case EVENT_MOUSEMOVED:
+                case SYSEVENT_MOUSEMOVED:
                     GSysMouse.update(event.mouse.x, event.mouse.y);
                     break;
 

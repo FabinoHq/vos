@@ -322,29 +322,29 @@ void FirstPerson::events(SysEvent& event)
     switch (event.type)
     {
         // Key pressed
-        case EVENT_KEYPRESSED:
+        case SYSEVENT_KEYPRESSED:
             switch (event.key)
             {
-                case EVENT_KEY_Z:
+                case SYSEVENT_KEY_Z:
                     m_freeflycam.setForward(true);
                     break;
 
-                case EVENT_KEY_S:
+                case SYSEVENT_KEY_S:
                     m_freeflycam.setBackward(true);
                     break;
 
-                case EVENT_KEY_Q:
+                case SYSEVENT_KEY_Q:
                     m_freeflycam.setLeftward(true);
                     break;
 
-                case EVENT_KEY_D:
+                case SYSEVENT_KEY_D:
                     m_freeflycam.setRightward(true);
                     break;
 
-                case EVENT_KEY_SPACE:
+                case SYSEVENT_KEY_SPACE:
                     break;
 
-                case EVENT_KEY_LSHIFT:
+                case SYSEVENT_KEY_LSHIFT:
                     m_freeflycam.setSpeed(300.0f);
                     break;
 
@@ -354,30 +354,30 @@ void FirstPerson::events(SysEvent& event)
             break;
 
         // Key released
-        case EVENT_KEYRELEASED:
+        case SYSEVENT_KEYRELEASED:
             switch (event.key)
             {
-                case EVENT_KEY_Z:
+                case SYSEVENT_KEY_Z:
                     m_freeflycam.setForward(false);
                     break;
 
-                case EVENT_KEY_S:
+                case SYSEVENT_KEY_S:
                     m_freeflycam.setBackward(false);
                     break;
 
-                case EVENT_KEY_Q:
+                case SYSEVENT_KEY_Q:
                     m_freeflycam.setLeftward(false);
                     break;
 
-                case EVENT_KEY_D:
+                case SYSEVENT_KEY_D:
                     m_freeflycam.setRightward(false);
                     break;
 
-                case EVENT_KEY_SPACE:
+                case SYSEVENT_KEY_SPACE:
                     m_spaceReleased = true;
                     break;
 
-                case EVENT_KEY_LSHIFT:
+                case SYSEVENT_KEY_LSHIFT:
                     m_freeflycam.setSpeed(10.0f);
                     break;
 
@@ -387,7 +387,7 @@ void FirstPerson::events(SysEvent& event)
             break;
 
         // Mouse moved
-        case EVENT_MOUSEMOVED:
+        case SYSEVENT_MOUSEMOVED:
         {
             // Compute mouse events
             m_freeflycam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
@@ -396,23 +396,23 @@ void FirstPerson::events(SysEvent& event)
         }
 
         // Mouse button pressed
-        case EVENT_MOUSEPRESSED:
-            if (event.mouse.button == EVENT_MOUSE_LEFT)
+        case SYSEVENT_MOUSEPRESSED:
+            if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
             {
                 //m_orbitalcam.mousePress();
             }
             break;
 
         // Mouse button released
-        case EVENT_MOUSERELEASED:
-            if (event.mouse.button == EVENT_MOUSE_LEFT)
+        case SYSEVENT_MOUSERELEASED:
+            if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
             {
                 //m_orbitalcam.mouseRelease();
             }
             break;
 
         // Mouse wheel
-        case EVENT_MOUSEWHEEL:
+        case SYSEVENT_MOUSEWHEEL:
             //m_orbitalcam.mouseWheel(event.mouse.wheel);
             break;
 

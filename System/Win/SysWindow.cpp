@@ -266,7 +266,7 @@ bool SysWindow::getEvent(SysEvent& event)
     }
 
     // Get event in the FIFO queue
-    event.type = EVENT_NONE;
+    event.type = SYSEVENT_NONE;
     if (!m_events.empty())
     {
         event = m_events.front();
@@ -323,25 +323,25 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
     if (m_handle)
     {
         SysEvent event;
-        event.type = EVENT_NONE;
+        event.type = SYSEVENT_NONE;
 
         // Event type
         switch (msg)
         {
             // Create window event
             case WM_CREATE:
-                event.type = EVENT_CREATED;
+                event.type = SYSEVENT_CREATED;
                 m_events.push(event);
                 break;
 
             // Close window events
             case WM_CLOSE:
-                event.type = EVENT_CLOSED;
+                event.type = SYSEVENT_CLOSED;
                 m_events.push(event);
                 break;
 
             case WM_QUIT:
-                event.type = EVENT_CLOSED;
+                event.type = SYSEVENT_CLOSED;
                 m_events.push(event);
                 break;
 
@@ -363,14 +363,14 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
             // Keys events
             case WM_KEYDOWN:
             case WM_SYSKEYDOWN:
-                event.type = EVENT_KEYPRESSED;
+                event.type = SYSEVENT_KEYPRESSED;
                 event.key = transcriptKey(wparam, lparam);
                 m_events.push(event);
                 break;
 
             case WM_KEYUP:
             case WM_SYSKEYUP:
-                event.type = EVENT_KEYRELEASED;
+                event.type = SYSEVENT_KEYRELEASED;
                 event.key = transcriptKey(wparam, lparam);
                 m_events.push(event);
                 break;
@@ -378,7 +378,7 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
             // Mouse events
             #if (VOS_POINTERLOCK == 0)
                 case WM_MOUSEMOVE:
-                    event.type = EVENT_MOUSEMOVED;
+                    event.type = SYSEVENT_MOUSEMOVED;
                     event.mouse.x = GET_X_LPARAM(lparam);
                     event.mouse.y = GET_Y_LPARAM(lparam);
                     m_events.push(event);
@@ -404,7 +404,7 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                         {
                             // Mouse move event
                             #if (VOS_POINTERLOCK == 1)
-                                event.type = EVENT_MOUSEMOVED;
+                                event.type = SYSEVENT_MOUSEMOVED;
                                 event.mouse.x = raw->data.mouse.lLastX;
                                 event.mouse.y = raw->data.mouse.lLastY;
                                 m_events.push(event);
@@ -418,8 +418,8 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                             if (raw->data.mouse.usButtonFlags &
                                 RI_MOUSE_LEFT_BUTTON_DOWN)
                             {
-                                event.type = EVENT_MOUSEPRESSED;
-                                event.mouse.button = EVENT_MOUSE_LEFT;
+                                event.type = SYSEVENT_MOUSEPRESSED;
+                                event.mouse.button = SYSEVENT_MOUSE_LEFT;
                                 event.mouse.x = raw->data.mouse.lLastX;
                                 event.mouse.y = raw->data.mouse.lLastY;
                                 m_events.push(event);
@@ -427,8 +427,8 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                             if (raw->data.mouse.usButtonFlags &
                                 RI_MOUSE_RIGHT_BUTTON_DOWN)
                             {
-                                event.type = EVENT_MOUSEPRESSED;
-                                event.mouse.button = EVENT_MOUSE_RIGHT;
+                                event.type = SYSEVENT_MOUSEPRESSED;
+                                event.mouse.button = SYSEVENT_MOUSE_RIGHT;
                                 event.mouse.x = raw->data.mouse.lLastX;
                                 event.mouse.y = raw->data.mouse.lLastY;
                                 m_events.push(event);
@@ -438,8 +438,8 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                             if (raw->data.mouse.usButtonFlags &
                                 RI_MOUSE_LEFT_BUTTON_UP)
                             {
-                                event.type = EVENT_MOUSERELEASED;
-                                event.mouse.button = EVENT_MOUSE_LEFT;
+                                event.type = SYSEVENT_MOUSERELEASED;
+                                event.mouse.button = SYSEVENT_MOUSE_LEFT;
                                 event.mouse.x = raw->data.mouse.lLastX;
                                 event.mouse.y = raw->data.mouse.lLastY;
                                 m_events.push(event);
@@ -447,8 +447,8 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                             if (raw->data.mouse.usButtonFlags &
                                 RI_MOUSE_RIGHT_BUTTON_UP)
                             {
-                                event.type = EVENT_MOUSERELEASED;
-                                event.mouse.button = EVENT_MOUSE_RIGHT;
+                                event.type = SYSEVENT_MOUSERELEASED;
+                                event.mouse.button = SYSEVENT_MOUSE_RIGHT;
                                 event.mouse.x = raw->data.mouse.lLastX;
                                 event.mouse.y = raw->data.mouse.lLastY;
                                 m_events.push(event);
@@ -457,7 +457,7 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                             // Mouse wheel event
                             if (raw->data.mouse.usButtonFlags & RI_MOUSE_WHEEL)
                             {
-                                event.type = EVENT_MOUSEWHEEL;
+                                event.type = SYSEVENT_MOUSEWHEEL;
                                 event.mouse.wheel =
                                     (short)raw->data.mouse.usButtonData;
                                 m_events.push(event);
@@ -484,90 +484,90 @@ SysEventKey SysWindow::transcriptKey(WPARAM wparam, LPARAM lparam)
 {
     switch (wparam)
     {
-        case VK_ESCAPE: return EVENT_KEY_ESCAPE;
-        case VK_RETURN: return EVENT_KEY_RETURN;
-        case VK_SPACE: return EVENT_KEY_SPACE;
-        case VK_BACK: return EVENT_KEY_BACKSPACE;
+        case VK_ESCAPE: return SYSEVENT_KEY_ESCAPE;
+        case VK_RETURN: return SYSEVENT_KEY_RETURN;
+        case VK_SPACE: return SYSEVENT_KEY_SPACE;
+        case VK_BACK: return SYSEVENT_KEY_BACKSPACE;
 
-        case VK_UP: return EVENT_KEY_UP;
-        case VK_DOWN: return EVENT_KEY_DOWN;
-        case VK_LEFT: return EVENT_KEY_LEFT;
-        case VK_RIGHT: return EVENT_KEY_RIGHT;
+        case VK_UP: return SYSEVENT_KEY_UP;
+        case VK_DOWN: return SYSEVENT_KEY_DOWN;
+        case VK_LEFT: return SYSEVENT_KEY_LEFT;
+        case VK_RIGHT: return SYSEVENT_KEY_RIGHT;
 
-        case VK_RWIN: return EVENT_KEY_RSYS;
-        case VK_LWIN: return EVENT_KEY_LSYS;
+        case VK_RWIN: return SYSEVENT_KEY_RSYS;
+        case VK_LWIN: return SYSEVENT_KEY_LSYS;
         case VK_CONTROL:
         {
             return ((HIWORD(lparam)&KF_EXTENDED) ?
-                EVENT_KEY_RCTRL : EVENT_KEY_LCTRL);
+                SYSEVENT_KEY_RCTRL : SYSEVENT_KEY_LCTRL);
         }
         case VK_MENU:
         {
             return ((HIWORD(lparam)&KF_EXTENDED) ?
-                EVENT_KEY_RALT : EVENT_KEY_LALT);
+                SYSEVENT_KEY_RALT : SYSEVENT_KEY_LALT);
         }
         case VK_SHIFT:
         {
             static UINT rshift = MapVirtualKeyW(VK_RSHIFT, MAPVK_VK_TO_VSC);
             return ((((lparam & 0x00FF0000) >> 16) == rshift) ?
-                EVENT_KEY_RSHIFT : EVENT_KEY_LSHIFT);
+                SYSEVENT_KEY_RSHIFT : SYSEVENT_KEY_LSHIFT);
         }
-        case VK_TAB: return EVENT_KEY_TAB;
+        case VK_TAB: return SYSEVENT_KEY_TAB;
 
-        case VK_F1: return EVENT_KEY_F1;
-        case VK_F2: return EVENT_KEY_F2;
-        case VK_F3: return EVENT_KEY_F3;
-        case VK_F4: return EVENT_KEY_F4;
-        case VK_F5: return EVENT_KEY_F5;
-        case VK_F6: return EVENT_KEY_F6;
-        case VK_F7: return EVENT_KEY_F7;
-        case VK_F8: return EVENT_KEY_F8;
-        case VK_F9: return EVENT_KEY_F9;
-        case VK_F10: return EVENT_KEY_F10;
-        case VK_F11: return EVENT_KEY_F11;
-        case VK_F12: return EVENT_KEY_F12;
-        case VK_F13: return EVENT_KEY_F13;
-        case VK_F14: return EVENT_KEY_F14;
-        case VK_F15: return EVENT_KEY_F15;
+        case VK_F1: return SYSEVENT_KEY_F1;
+        case VK_F2: return SYSEVENT_KEY_F2;
+        case VK_F3: return SYSEVENT_KEY_F3;
+        case VK_F4: return SYSEVENT_KEY_F4;
+        case VK_F5: return SYSEVENT_KEY_F5;
+        case VK_F6: return SYSEVENT_KEY_F6;
+        case VK_F7: return SYSEVENT_KEY_F7;
+        case VK_F8: return SYSEVENT_KEY_F8;
+        case VK_F9: return SYSEVENT_KEY_F9;
+        case VK_F10: return SYSEVENT_KEY_F10;
+        case VK_F11: return SYSEVENT_KEY_F11;
+        case VK_F12: return SYSEVENT_KEY_F12;
+        case VK_F13: return SYSEVENT_KEY_F13;
+        case VK_F14: return SYSEVENT_KEY_F14;
+        case VK_F15: return SYSEVENT_KEY_F15;
 
-        case 'A': return EVENT_KEY_A;
-        case 'B': return EVENT_KEY_B;
-        case 'C': return EVENT_KEY_C;
-        case 'D': return EVENT_KEY_D;
-        case 'E': return EVENT_KEY_E;
-        case 'F': return EVENT_KEY_F;
-        case 'G': return EVENT_KEY_G;
-        case 'H': return EVENT_KEY_H;
-        case 'I': return EVENT_KEY_I;
-        case 'J': return EVENT_KEY_J;
-        case 'K': return EVENT_KEY_K;
-        case 'L': return EVENT_KEY_L;
-        case 'M': return EVENT_KEY_M;
-        case 'N': return EVENT_KEY_N;
-        case 'O': return EVENT_KEY_O;
-        case 'P': return EVENT_KEY_P;
-        case 'Q': return EVENT_KEY_Q;
-        case 'R': return EVENT_KEY_R;
-        case 'S': return EVENT_KEY_S;
-        case 'T': return EVENT_KEY_T;
-        case 'U': return EVENT_KEY_U;
-        case 'V': return EVENT_KEY_V;
-        case 'W': return EVENT_KEY_W;
-        case 'X': return EVENT_KEY_X;
-        case 'Y': return EVENT_KEY_Y;
-        case 'Z': return EVENT_KEY_Z;
+        case 'A': return SYSEVENT_KEY_A;
+        case 'B': return SYSEVENT_KEY_B;
+        case 'C': return SYSEVENT_KEY_C;
+        case 'D': return SYSEVENT_KEY_D;
+        case 'E': return SYSEVENT_KEY_E;
+        case 'F': return SYSEVENT_KEY_F;
+        case 'G': return SYSEVENT_KEY_G;
+        case 'H': return SYSEVENT_KEY_H;
+        case 'I': return SYSEVENT_KEY_I;
+        case 'J': return SYSEVENT_KEY_J;
+        case 'K': return SYSEVENT_KEY_K;
+        case 'L': return SYSEVENT_KEY_L;
+        case 'M': return SYSEVENT_KEY_M;
+        case 'N': return SYSEVENT_KEY_N;
+        case 'O': return SYSEVENT_KEY_O;
+        case 'P': return SYSEVENT_KEY_P;
+        case 'Q': return SYSEVENT_KEY_Q;
+        case 'R': return SYSEVENT_KEY_R;
+        case 'S': return SYSEVENT_KEY_S;
+        case 'T': return SYSEVENT_KEY_T;
+        case 'U': return SYSEVENT_KEY_U;
+        case 'V': return SYSEVENT_KEY_V;
+        case 'W': return SYSEVENT_KEY_W;
+        case 'X': return SYSEVENT_KEY_X;
+        case 'Y': return SYSEVENT_KEY_Y;
+        case 'Z': return SYSEVENT_KEY_Z;
 
-        case '0': return EVENT_KEY_0;
-        case '1': return EVENT_KEY_1;
-        case '2': return EVENT_KEY_2;
-        case '3': return EVENT_KEY_3;
-        case '4': return EVENT_KEY_4;
-        case '5': return EVENT_KEY_5;
-        case '6': return EVENT_KEY_6;
-        case '7': return EVENT_KEY_7;
-        case '8': return EVENT_KEY_8;
-        case '9': return EVENT_KEY_9;
+        case '0': return SYSEVENT_KEY_0;
+        case '1': return SYSEVENT_KEY_1;
+        case '2': return SYSEVENT_KEY_2;
+        case '3': return SYSEVENT_KEY_3;
+        case '4': return SYSEVENT_KEY_4;
+        case '5': return SYSEVENT_KEY_5;
+        case '6': return SYSEVENT_KEY_6;
+        case '7': return SYSEVENT_KEY_7;
+        case '8': return SYSEVENT_KEY_8;
+        case '9': return SYSEVENT_KEY_9;
 
-        default: return EVENT_KEY_NONE;
+        default: return SYSEVENT_KEY_NONE;
     }
 }

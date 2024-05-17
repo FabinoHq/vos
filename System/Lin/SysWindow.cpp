@@ -320,7 +320,7 @@ bool SysWindow::getEvent(SysEvent& event)
             if ((mouseX != centerX) || (mouseY != centerY))
             {
                 // Mouse move event
-                event.type = EVENT_MOUSEMOVED;
+                event.type = SYSEVENT_MOUSEMOVED;
                 event.mouse.x = mouseX-centerX;
                 event.mouse.y = mouseY-centerY;
                 m_events.push(event);
@@ -335,7 +335,7 @@ bool SysWindow::getEvent(SysEvent& event)
             // Mouse move event
             if ((mouseX != m_lastMouseX) || (mouseY != m_lastMouseY))
             {
-                event.type = EVENT_MOUSEMOVED;
+                event.type = SYSEVENT_MOUSEMOVED;
                 event.mouse.x = mouseX;
                 event.mouse.y = mouseY;
                 m_events.push(event);
@@ -352,8 +352,8 @@ bool SysWindow::getEvent(SysEvent& event)
             if (!m_lastMouseLeft)
             {
                 // Left mouse button pressed
-                event.type = EVENT_MOUSEPRESSED;
-                event.mouse.button = EVENT_MOUSE_LEFT;
+                event.type = SYSEVENT_MOUSEPRESSED;
+                event.mouse.button = SYSEVENT_MOUSE_LEFT;
                 event.mouse.x = mouseX;
                 event.mouse.y = mouseY;
                 m_events.push(event);
@@ -365,8 +365,8 @@ bool SysWindow::getEvent(SysEvent& event)
             if (m_lastMouseLeft)
             {
                 // Left mouse button released
-                event.type = EVENT_MOUSERELEASED;
-                event.mouse.button = EVENT_MOUSE_LEFT;
+                event.type = SYSEVENT_MOUSERELEASED;
+                event.mouse.button = SYSEVENT_MOUSE_LEFT;
                 event.mouse.x = mouseX;
                 event.mouse.y = mouseY;
                 m_events.push(event);
@@ -378,8 +378,8 @@ bool SysWindow::getEvent(SysEvent& event)
             if (!m_lastMouseRight)
             {
                 // Right mouse button pressed
-                event.type = EVENT_MOUSEPRESSED;
-                event.mouse.button = EVENT_MOUSE_RIGHT;
+                event.type = SYSEVENT_MOUSEPRESSED;
+                event.mouse.button = SYSEVENT_MOUSE_RIGHT;
                 event.mouse.x = mouseX;
                 event.mouse.y = mouseY;
                 m_events.push(event);
@@ -391,8 +391,8 @@ bool SysWindow::getEvent(SysEvent& event)
             if (m_lastMouseRight)
             {
                 // Right mouse button released
-                event.type = EVENT_MOUSERELEASED;
-                event.mouse.button = EVENT_MOUSE_RIGHT;
+                event.type = SYSEVENT_MOUSERELEASED;
+                event.mouse.button = SYSEVENT_MOUSE_RIGHT;
                 event.mouse.x = mouseX;
                 event.mouse.y = mouseY;
                 m_events.push(event);
@@ -402,7 +402,7 @@ bool SysWindow::getEvent(SysEvent& event)
     }
 
     // Get event in the FIFO queue
-    event.type = EVENT_NONE;
+    event.type = SYSEVENT_NONE;
     if (!m_events.empty())
     {
         event = m_events.front();
@@ -422,7 +422,7 @@ void SysWindow::processEvent(XEvent msg)
     if (m_handle)
     {
         SysEvent event;
-        event.type = EVENT_NONE;
+        event.type = SYSEVENT_NONE;
 
         // Event type
         switch (msg.type)
@@ -431,13 +431,13 @@ void SysWindow::processEvent(XEvent msg)
             case ClientMessage:
                 if (msg.xclient.data.l[0] == m_closeMsg)
                 {
-                    event.type = EVENT_CLOSED;
+                    event.type = SYSEVENT_CLOSED;
                     m_events.push(event);
                 }
                 break;
 
             case DestroyNotify:
-                event.type = EVENT_CLOSED;
+                event.type = SYSEVENT_CLOSED;
                 m_events.push(event);
                 break;
 
@@ -500,11 +500,11 @@ void SysWindow::processEvent(XEvent msg)
             // Keys events
             case KeyPress:
             {
-                event.type = EVENT_KEYPRESSED;
+                event.type = SYSEVENT_KEYPRESSED;
                 for (int i = 0; i < 4; ++i)
                 {
                     event.key = transcriptKey(XLookupKeysym(&msg.xkey, i));
-                    if (event.key != EVENT_KEY_NONE) break;
+                    if (event.key != SYSEVENT_KEY_NONE) break;
                 }
                 m_events.push(event);
                 break;
@@ -512,11 +512,11 @@ void SysWindow::processEvent(XEvent msg)
 
             case KeyRelease:
             {
-                event.type = EVENT_KEYRELEASED;
+                event.type = SYSEVENT_KEYRELEASED;
                 for (int i = 0; i < 4; ++i)
                 {
                     event.key = transcriptKey(XLookupKeysym(&msg.xkey, i));
-                    if (event.key != EVENT_KEY_NONE) break;
+                    if (event.key != SYSEVENT_KEY_NONE) break;
                 }
                 m_events.push(event);
                 break;
@@ -528,14 +528,14 @@ void SysWindow::processEvent(XEvent msg)
                 {
                     // Mouse wheel up
                     case Button4:
-                        event.type = EVENT_MOUSEWHEEL;
+                        event.type = SYSEVENT_MOUSEWHEEL;
                         event.mouse.wheel = 127;
                         m_events.push(event);
                         break;
 
                     // Mouse wheel down
                     case Button5:
-                        event.type = EVENT_MOUSEWHEEL;
+                        event.type = SYSEVENT_MOUSEWHEEL;
                         event.mouse.wheel = -127;
                         m_events.push(event);
                         break;
@@ -558,80 +558,80 @@ SysEventKey SysWindow::transcriptKey(KeySym key)
 {
     switch (key)
     {
-        case XK_Escape: return EVENT_KEY_ESCAPE;
-        case XK_Return: case XK_KP_Enter: return EVENT_KEY_RETURN;
-        case XK_space: return EVENT_KEY_SPACE;
-        case XK_BackSpace: return EVENT_KEY_BACKSPACE;
+        case XK_Escape: return SYSEVENT_KEY_ESCAPE;
+        case XK_Return: case XK_KP_Enter: return SYSEVENT_KEY_RETURN;
+        case XK_space: return SYSEVENT_KEY_SPACE;
+        case XK_BackSpace: return SYSEVENT_KEY_BACKSPACE;
 
-        case XK_Super_R: return EVENT_KEY_RSYS;
-        case XK_Super_L: return EVENT_KEY_LSYS;
-        case XK_Control_R: return EVENT_KEY_RCTRL;
-        case XK_Control_L: return EVENT_KEY_LCTRL;
-        case XK_Alt_R: return EVENT_KEY_RALT;
-        case XK_Alt_L: return EVENT_KEY_LALT;
-        case XK_Shift_R: return EVENT_KEY_RSHIFT;
-        case XK_Shift_L: return EVENT_KEY_LSHIFT;
-        case XK_Tab: return EVENT_KEY_TAB;
+        case XK_Super_R: return SYSEVENT_KEY_RSYS;
+        case XK_Super_L: return SYSEVENT_KEY_LSYS;
+        case XK_Control_R: return SYSEVENT_KEY_RCTRL;
+        case XK_Control_L: return SYSEVENT_KEY_LCTRL;
+        case XK_Alt_R: return SYSEVENT_KEY_RALT;
+        case XK_Alt_L: return SYSEVENT_KEY_LALT;
+        case XK_Shift_R: return SYSEVENT_KEY_RSHIFT;
+        case XK_Shift_L: return SYSEVENT_KEY_LSHIFT;
+        case XK_Tab: return SYSEVENT_KEY_TAB;
 
-        case XK_Up: return EVENT_KEY_UP;
-        case XK_Down: return EVENT_KEY_DOWN;
-        case XK_Left: return EVENT_KEY_LEFT;
-        case XK_Right: return EVENT_KEY_RIGHT;
+        case XK_Up: return SYSEVENT_KEY_UP;
+        case XK_Down: return SYSEVENT_KEY_DOWN;
+        case XK_Left: return SYSEVENT_KEY_LEFT;
+        case XK_Right: return SYSEVENT_KEY_RIGHT;
 
-        case XK_F1: return EVENT_KEY_F1;
-        case XK_F2: return EVENT_KEY_F2;
-        case XK_F3: return EVENT_KEY_F3;
-        case XK_F4: return EVENT_KEY_F4;
-        case XK_F5: return EVENT_KEY_F5;
-        case XK_F6: return EVENT_KEY_F6;
-        case XK_F7: return EVENT_KEY_F7;
-        case XK_F8: return EVENT_KEY_F8;
-        case XK_F9: return EVENT_KEY_F9;
-        case XK_F10: return EVENT_KEY_F10;
-        case XK_F11: return EVENT_KEY_F11;
-        case XK_F12: return EVENT_KEY_F12;
-        case XK_F13: return EVENT_KEY_F13;
-        case XK_F14: return EVENT_KEY_F14;
-        case XK_F15: return EVENT_KEY_F15;
+        case XK_F1: return SYSEVENT_KEY_F1;
+        case XK_F2: return SYSEVENT_KEY_F2;
+        case XK_F3: return SYSEVENT_KEY_F3;
+        case XK_F4: return SYSEVENT_KEY_F4;
+        case XK_F5: return SYSEVENT_KEY_F5;
+        case XK_F6: return SYSEVENT_KEY_F6;
+        case XK_F7: return SYSEVENT_KEY_F7;
+        case XK_F8: return SYSEVENT_KEY_F8;
+        case XK_F9: return SYSEVENT_KEY_F9;
+        case XK_F10: return SYSEVENT_KEY_F10;
+        case XK_F11: return SYSEVENT_KEY_F11;
+        case XK_F12: return SYSEVENT_KEY_F12;
+        case XK_F13: return SYSEVENT_KEY_F13;
+        case XK_F14: return SYSEVENT_KEY_F14;
+        case XK_F15: return SYSEVENT_KEY_F15;
 
-        case XK_A: case XK_a: return EVENT_KEY_A;
-        case XK_B: case XK_b: return EVENT_KEY_B;
-        case XK_C: case XK_c: return EVENT_KEY_C;
-        case XK_D: case XK_d: return EVENT_KEY_D;
-        case XK_E: case XK_e: return EVENT_KEY_E;
-        case XK_F: case XK_f: return EVENT_KEY_F;
-        case XK_G: case XK_g: return EVENT_KEY_G;
-        case XK_H: case XK_h: return EVENT_KEY_H;
-        case XK_I: case XK_i: return EVENT_KEY_I;
-        case XK_J: case XK_j: return EVENT_KEY_J;
-        case XK_K: case XK_k: return EVENT_KEY_K;
-        case XK_L: case XK_l: return EVENT_KEY_L;
-        case XK_M: case XK_m: return EVENT_KEY_M;
-        case XK_N: case XK_n: return EVENT_KEY_N;
-        case XK_O: case XK_o: return EVENT_KEY_O;
-        case XK_P: case XK_p: return EVENT_KEY_P;
-        case XK_Q: case XK_q: return EVENT_KEY_Q;
-        case XK_R: case XK_r: return EVENT_KEY_R;
-        case XK_S: case XK_s: return EVENT_KEY_S;
-        case XK_T: case XK_t: return EVENT_KEY_T;
-        case XK_U: case XK_u: return EVENT_KEY_U;
-        case XK_V: case XK_v: return EVENT_KEY_V;
-        case XK_W: case XK_w: return EVENT_KEY_W;
-        case XK_X: case XK_x: return EVENT_KEY_X;
-        case XK_Y: case XK_y: return EVENT_KEY_Y;
-        case XK_Z: case XK_z: return EVENT_KEY_Z;
+        case XK_A: case XK_a: return SYSEVENT_KEY_A;
+        case XK_B: case XK_b: return SYSEVENT_KEY_B;
+        case XK_C: case XK_c: return SYSEVENT_KEY_C;
+        case XK_D: case XK_d: return SYSEVENT_KEY_D;
+        case XK_E: case XK_e: return SYSEVENT_KEY_E;
+        case XK_F: case XK_f: return SYSEVENT_KEY_F;
+        case XK_G: case XK_g: return SYSEVENT_KEY_G;
+        case XK_H: case XK_h: return SYSEVENT_KEY_H;
+        case XK_I: case XK_i: return SYSEVENT_KEY_I;
+        case XK_J: case XK_j: return SYSEVENT_KEY_J;
+        case XK_K: case XK_k: return SYSEVENT_KEY_K;
+        case XK_L: case XK_l: return SYSEVENT_KEY_L;
+        case XK_M: case XK_m: return SYSEVENT_KEY_M;
+        case XK_N: case XK_n: return SYSEVENT_KEY_N;
+        case XK_O: case XK_o: return SYSEVENT_KEY_O;
+        case XK_P: case XK_p: return SYSEVENT_KEY_P;
+        case XK_Q: case XK_q: return SYSEVENT_KEY_Q;
+        case XK_R: case XK_r: return SYSEVENT_KEY_R;
+        case XK_S: case XK_s: return SYSEVENT_KEY_S;
+        case XK_T: case XK_t: return SYSEVENT_KEY_T;
+        case XK_U: case XK_u: return SYSEVENT_KEY_U;
+        case XK_V: case XK_v: return SYSEVENT_KEY_V;
+        case XK_W: case XK_w: return SYSEVENT_KEY_W;
+        case XK_X: case XK_x: return SYSEVENT_KEY_X;
+        case XK_Y: case XK_y: return SYSEVENT_KEY_Y;
+        case XK_Z: case XK_z: return SYSEVENT_KEY_Z;
 
-        case XK_0: return EVENT_KEY_0;
-        case XK_1: return EVENT_KEY_1;
-        case XK_2: return EVENT_KEY_2;
-        case XK_3: return EVENT_KEY_3;
-        case XK_4: return EVENT_KEY_4;
-        case XK_5: return EVENT_KEY_5;
-        case XK_6: return EVENT_KEY_6;
-        case XK_7: return EVENT_KEY_7;
-        case XK_8: return EVENT_KEY_8;
-        case XK_9: return EVENT_KEY_9;
+        case XK_0: return SYSEVENT_KEY_0;
+        case XK_1: return SYSEVENT_KEY_1;
+        case XK_2: return SYSEVENT_KEY_2;
+        case XK_3: return SYSEVENT_KEY_3;
+        case XK_4: return SYSEVENT_KEY_4;
+        case XK_5: return SYSEVENT_KEY_5;
+        case XK_6: return SYSEVENT_KEY_6;
+        case XK_7: return SYSEVENT_KEY_7;
+        case XK_8: return SYSEVENT_KEY_8;
+        case XK_9: return SYSEVENT_KEY_9;
 
-        default: return EVENT_KEY_NONE;
+        default: return SYSEVENT_KEY_NONE;
     }
 }

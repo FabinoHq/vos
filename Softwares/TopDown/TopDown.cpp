@@ -233,25 +233,25 @@ void TopDown::events(SysEvent& event)
     switch (event.type)
     {
         // Key pressed
-        case EVENT_KEYPRESSED:
+        case SYSEVENT_KEYPRESSED:
             switch (event.key)
             {
-                case EVENT_KEY_Z:
+                case SYSEVENT_KEY_Z:
                     break;
 
-                case EVENT_KEY_S:
+                case SYSEVENT_KEY_S:
                     break;
 
-                case EVENT_KEY_Q:
+                case SYSEVENT_KEY_Q:
                     break;
 
-                case EVENT_KEY_D:
+                case SYSEVENT_KEY_D:
                     break;
 
-                case EVENT_KEY_SPACE:
+                case SYSEVENT_KEY_SPACE:
                     break;
 
-                case EVENT_KEY_LSHIFT:
+                case SYSEVENT_KEY_LSHIFT:
                     break;
 
                 default:
@@ -260,29 +260,29 @@ void TopDown::events(SysEvent& event)
             break;
 
         // Key released
-        case EVENT_KEYRELEASED:
+        case SYSEVENT_KEYRELEASED:
             switch (event.key)
             {
-                case EVENT_KEY_Z:
+                case SYSEVENT_KEY_Z:
                     break;
 
-                case EVENT_KEY_S:
+                case SYSEVENT_KEY_S:
                     break;
 
-                case EVENT_KEY_Q:
+                case SYSEVENT_KEY_Q:
                     break;
 
-                case EVENT_KEY_D:
+                case SYSEVENT_KEY_D:
                     break;
 
-                case EVENT_KEY_SPACE:
+                case SYSEVENT_KEY_SPACE:
                     m_spaceReleased = true;
                     break;
 
-                case EVENT_KEY_LSHIFT:
+                case SYSEVENT_KEY_LSHIFT:
                     break;
 
-                case EVENT_KEY_R:
+                case SYSEVENT_KEY_R:
                     m_boundingCircle2.setPosition(200000, 0);
                     m_boundingRect2.setPosition(200000, 0);
                     break;
@@ -293,7 +293,7 @@ void TopDown::events(SysEvent& event)
             break;
 
         // Mouse moved
-        case EVENT_MOUSEMOVED:
+        case SYSEVENT_MOUSEMOVED:
         {
             // Compute mouse events
             //m_guiWindow.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
@@ -315,8 +315,8 @@ void TopDown::events(SysEvent& event)
         }
 
         // Mouse button pressed
-        case EVENT_MOUSEPRESSED:
-            if (event.mouse.button == EVENT_MOUSE_LEFT)
+        case SYSEVENT_MOUSEPRESSED:
+            if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
             {
                 //m_guiWindow.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 //m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
@@ -325,8 +325,8 @@ void TopDown::events(SysEvent& event)
             break;
 
         // Mouse button released
-        case EVENT_MOUSERELEASED:
-            if (event.mouse.button == EVENT_MOUSE_LEFT)
+        case SYSEVENT_MOUSERELEASED:
+            if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
             {
                 //m_guiWindow.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
                 //m_button.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
@@ -339,7 +339,7 @@ void TopDown::events(SysEvent& event)
             break;
 
         // Mouse wheel
-        case EVENT_MOUSEWHEEL:
+        case SYSEVENT_MOUSEWHEEL:
             break;
 
         default:
