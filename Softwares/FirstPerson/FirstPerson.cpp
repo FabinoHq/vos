@@ -579,7 +579,7 @@ void FirstPerson::render()
     m_staticMesh.render();*/
 
     // Render cuboid shape
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_SHAPE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICPROC);
     GRenderer.bindVertexBuffer(MESHES_CUBOID);
     m_cuboid.setScale(10.0f);
     m_cuboid.setPosition(0.0f, 700.0f, 0.0f);

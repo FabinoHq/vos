@@ -53,7 +53,6 @@
     #include "../../Math/Transform3.h"
 
     #include <cstdint>
-    #include <cstring>
 
 
     ////////////////////////////////////////////////////////////////////////////

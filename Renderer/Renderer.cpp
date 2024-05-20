@@ -460,19 +460,19 @@ bool Renderer::initPipelines()
         return false;
     }
 
-    // Create shape pipeline
-    pipelines[RENDERER_PIPELINE_SHAPE].createVertexShader(
+    // Create static proc pipeline
+    pipelines[RENDERER_PIPELINE_STATICPROC].createVertexShader(
         StaticMeshVertexShader, StaticMeshVertexShaderSize
     );
-    pipelines[RENDERER_PIPELINE_SHAPE].createFragmentShader(
+    pipelines[RENDERER_PIPELINE_STATICPROC].createFragmentShader(
         StaticProcFragmentShader, StaticProcFragmentShaderSize
     );
-    if (!pipelines[RENDERER_PIPELINE_SHAPE].createPipeline(
+    if (!pipelines[RENDERER_PIPELINE_STATICPROC].createPipeline(
         VERTEX_INPUTS_STATICMESH, true, true,
         ALPHA_BLENDING_PREMULTIPLIED))
     {
-        // Could not create shape pipeline
-        SysMessage::box() << "[0x3057] Could not create shape pipeline\n";
+        // Could not create static proc pipeline
+        SysMessage::box() << "[0x3057] Could not create static proc pipeline\n";
         SysMessage::box() << "Please update your graphics drivers";
         return false;
     }

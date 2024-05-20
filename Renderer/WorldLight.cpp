@@ -264,6 +264,6 @@ bool WorldLight::compute(const Vector3& cameraPosition)
         return false;
     }
 
-    // View successfully computed
+    // World light successfully computed
     return true;
 }
