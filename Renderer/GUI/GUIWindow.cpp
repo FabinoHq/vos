@@ -269,6 +269,128 @@ bool GUIWindow::isRightResizePicking(float mouseX, float mouseY)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Handle window mouse move event                                            //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIWindow::mouseMove(float mouseX, float mouseY)
+{
+    Vector2 moveOffset(0.0f, 0.0f);
+
+    if (m_grabTop && m_grabLeft)
+    {
+        // Resize top left window
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
+        m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
+        m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] += moveOffset.vec[0];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] -= moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabTop && m_grabRight)
+    {
+        // Resize top right window
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
+        m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
+        m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] -= moveOffset.vec[0];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] -= moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabBottom && m_grabLeft)
+    {
+        // Resize bottom left window
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
+        m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
+        m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] += moveOffset.vec[0];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] += moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabBottom && m_grabRight)
+    {
+        // Resize bottom right window
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
+        m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
+        m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] -= moveOffset.vec[0];
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] += moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabTop)
+    {
+        // Resize top window
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
+        m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
+        clampWindowSize();
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] -= moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabBottom)
+    {
+        // Resize bottom window
+        moveOffset.vec[1] = m_size.vec[1]*0.5f;
+        m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
+        clampWindowSize();
+        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
+        m_position.vec[1] += moveOffset.vec[1];
+        return true;
+    }
+
+    if (m_grabLeft)
+    {
+        // Resize left window
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] += moveOffset.vec[0];
+        return true;
+    }
+
+    if (m_grabRight)
+    {
+        // Resize right window
+        moveOffset.vec[0] = m_size.vec[0]*0.5f;
+        m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
+        clampWindowSize();
+        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
+        m_position.vec[0] -= moveOffset.vec[0];
+        return true;
+    }
+
+    if (m_grabWindow)
+    {
+        // Move window
+        m_position.vec[0] = (m_grabVector.vec[0] + mouseX);
+        m_position.vec[1] = (m_grabVector.vec[1] + mouseY);
+        return true;
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Handle window mouse press event                                           //
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::mousePress(float mouseX, float mouseY)
@@ -407,128 +529,6 @@ bool GUIWindow::mouseRelease(float mouseX, float mouseY)
     m_grabLeft = false;
     m_grabRight = false;
     return isPicking(mouseX, mouseY);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Handle window mouse move event                                            //
-////////////////////////////////////////////////////////////////////////////////
-bool GUIWindow::mouseMove(float mouseX, float mouseY)
-{
-    Vector2 moveOffset(0.0f, 0.0f);
-
-    if (m_grabTop && m_grabLeft)
-    {
-        // Resize top left window
-        moveOffset.vec[0] = m_size.vec[0]*0.5f;
-        moveOffset.vec[1] = m_size.vec[1]*0.5f;
-        m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
-        m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
-        clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
-        m_position.vec[0] += moveOffset.vec[0];
-        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
-        m_position.vec[1] -= moveOffset.vec[1];
-        return true;
-    }
-
-    if (m_grabTop && m_grabRight)
-    {
-        // Resize top right window
-        moveOffset.vec[0] = m_size.vec[0]*0.5f;
-        moveOffset.vec[1] = m_size.vec[1]*0.5f;
-        m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
-        m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
-        clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
-        m_position.vec[0] -= moveOffset.vec[0];
-        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
-        m_position.vec[1] -= moveOffset.vec[1];
-        return true;
-    }
-
-    if (m_grabBottom && m_grabLeft)
-    {
-        // Resize bottom left window
-        moveOffset.vec[0] = m_size.vec[0]*0.5f;
-        moveOffset.vec[1] = m_size.vec[1]*0.5f;
-        m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
-        m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
-        clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
-        m_position.vec[0] += moveOffset.vec[0];
-        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
-        m_position.vec[1] += moveOffset.vec[1];
-        return true;
-    }
-
-    if (m_grabBottom && m_grabRight)
-    {
-        // Resize bottom right window
-        moveOffset.vec[0] = m_size.vec[0]*0.5f;
-        moveOffset.vec[1] = m_size.vec[1]*0.5f;
-        m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
-        m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
-        clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
-        m_position.vec[0] -= moveOffset.vec[0];
-        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
-        m_position.vec[1] += moveOffset.vec[1];
-        return true;
-    }
-
-    if (m_grabTop)
-    {
-        // Resize top window
-        moveOffset.vec[1] = m_size.vec[1]*0.5f;
-        m_size.vec[1] = (m_grabVector.vec[1] + mouseY);
-        clampWindowSize();
-        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
-        m_position.vec[1] -= moveOffset.vec[1];
-        return true;
-    }
-
-    if (m_grabBottom)
-    {
-        // Resize bottom window
-        moveOffset.vec[1] = m_size.vec[1]*0.5f;
-        m_size.vec[1] = (m_grabVector.vec[1] - mouseY);
-        clampWindowSize();
-        moveOffset.vec[1] -= m_size.vec[1]*0.5f;
-        m_position.vec[1] += moveOffset.vec[1];
-        return true;
-    }
-
-    if (m_grabLeft)
-    {
-        // Resize left window
-        moveOffset.vec[0] = m_size.vec[0]*0.5f;
-        m_size.vec[0] = (m_grabVector.vec[0] - mouseX);
-        clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
-        m_position.vec[0] += moveOffset.vec[0];
-        return true;
-    }
-
-    if (m_grabRight)
-    {
-        // Resize right window
-        moveOffset.vec[0] = m_size.vec[0]*0.5f;
-        m_size.vec[0] = (m_grabVector.vec[0] + mouseX);
-        clampWindowSize();
-        moveOffset.vec[0] -= m_size.vec[0]*0.5f;
-        m_position.vec[0] -= moveOffset.vec[0];
-        return true;
-    }
-
-    if (m_grabWindow)
-    {
-        // Move window
-        m_position.vec[0] = (m_grabVector.vec[0] + mouseX);
-        m_position.vec[1] = (m_grabVector.vec[1] + mouseY);
-        return true;
-    }
-
-    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

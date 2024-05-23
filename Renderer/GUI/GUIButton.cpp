@@ -179,6 +179,40 @@ bool GUIButton::isPicking(float mouseX, float mouseY)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Handle button mouse move event                                            //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIButton::mouseMove(float mouseX, float mouseY)
+{
+    if (isPicking(mouseX, mouseY))
+    {
+        if ((m_state == GUIBUTTON_PRESSED) ||
+            (m_state == GUIBUTTON_PRESSEDHOVER))
+        {
+            m_state = GUIBUTTON_PRESSEDHOVER;
+            return true;
+        }
+        else
+        {
+            m_state = GUIBUTTON_HOVER;
+        }
+    }
+    else
+    {
+        if ((m_state == GUIBUTTON_PRESSED) ||
+            (m_state == GUIBUTTON_PRESSEDHOVER))
+        {
+            m_state = GUIBUTTON_PRESSED;
+            return true;
+        }
+        else
+        {
+            m_state = GUIBUTTON_NONE;
+        }
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Handle button mouse press event                                           //
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIButton::mousePress(float mouseX, float mouseY)
@@ -212,40 +246,6 @@ bool GUIButton::mouseRelease(float mouseX, float mouseY)
     else
     {
         m_state = GUIBUTTON_NONE;
-    }
-    return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Handle button mouse move event                                            //
-////////////////////////////////////////////////////////////////////////////////
-bool GUIButton::mouseMove(float mouseX, float mouseY)
-{
-    if (isPicking(mouseX, mouseY))
-    {
-        if ((m_state == GUIBUTTON_PRESSED) ||
-            (m_state == GUIBUTTON_PRESSEDHOVER))
-        {
-            m_state = GUIBUTTON_PRESSEDHOVER;
-            return true;
-        }
-        else
-        {
-            m_state = GUIBUTTON_HOVER;
-        }
-    }
-    else
-    {
-        if ((m_state == GUIBUTTON_PRESSED) ||
-            (m_state == GUIBUTTON_PRESSEDHOVER))
-        {
-            m_state = GUIBUTTON_PRESSED;
-            return true;
-        }
-        else
-        {
-            m_state = GUIBUTTON_NONE;
-        }
     }
     return false;
 }

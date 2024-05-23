@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/GUI/GUIToggleButton.cpp : GUI Toggle Button management        //
+//     Renderer/GUI/GUIToggleButton.cpp : GUI Toggle button management        //
 ////////////////////////////////////////////////////////////////////////////////
 #include "GUIToggleButton.h"
 
@@ -185,6 +185,40 @@ bool GUIToggleButton::isPicking(float mouseX, float mouseY)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Handle toggle button mouse move event                                     //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIToggleButton::mouseMove(float mouseX, float mouseY)
+{
+    if (isPicking(mouseX, mouseY))
+    {
+        if ((m_state == GUITOGGLEBUTTON_PRESSED) ||
+            (m_state == GUITOGGLEBUTTON_PRESSEDHOVER))
+        {
+            m_state = GUITOGGLEBUTTON_PRESSEDHOVER;
+            return true;
+        }
+        else
+        {
+            m_state = GUITOGGLEBUTTON_HOVER;
+        }
+    }
+    else
+    {
+        if ((m_state == GUITOGGLEBUTTON_PRESSED) ||
+            (m_state == GUITOGGLEBUTTON_PRESSEDHOVER))
+        {
+            m_state = GUITOGGLEBUTTON_PRESSED;
+            return true;
+        }
+        else
+        {
+            m_state = GUITOGGLEBUTTON_NONE;
+        }
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Handle toggle button mouse press event                                    //
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIToggleButton::mousePress(float mouseX, float mouseY)
@@ -218,40 +252,6 @@ bool GUIToggleButton::mouseRelease(float mouseX, float mouseY)
     else
     {
         m_state = GUITOGGLEBUTTON_NONE;
-    }
-    return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Handle toggle button mouse move event                                     //
-////////////////////////////////////////////////////////////////////////////////
-bool GUIToggleButton::mouseMove(float mouseX, float mouseY)
-{
-    if (isPicking(mouseX, mouseY))
-    {
-        if ((m_state == GUITOGGLEBUTTON_PRESSED) ||
-            (m_state == GUITOGGLEBUTTON_PRESSEDHOVER))
-        {
-            m_state = GUITOGGLEBUTTON_PRESSEDHOVER;
-            return true;
-        }
-        else
-        {
-            m_state = GUITOGGLEBUTTON_HOVER;
-        }
-    }
-    else
-    {
-        if ((m_state == GUITOGGLEBUTTON_PRESSED) ||
-            (m_state == GUITOGGLEBUTTON_PRESSEDHOVER))
-        {
-            m_state = GUITOGGLEBUTTON_PRESSED;
-            return true;
-        }
-        else
-        {
-            m_state = GUITOGGLEBUTTON_NONE;
-        }
     }
     return false;
 }

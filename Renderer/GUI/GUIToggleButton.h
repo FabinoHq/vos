@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/GUI/GUIToggleButton.h : GUI Toggle Button management          //
+//     Renderer/GUI/GUIToggleButton.h : GUI Toggle button management          //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef VOS_RENDERER_GUI_GUITOGGLEBUTTON_HEADER
 #define VOS_RENDERER_GUI_GUITOGGLEBUTTON_HEADER
@@ -146,6 +146,11 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Handle toggle button mouse move event                         //
+            ////////////////////////////////////////////////////////////////////
+            bool mouseMove(float mouseX, float mouseY);
+
+            ////////////////////////////////////////////////////////////////////
             //  Handle toggle button mouse press event                        //
             ////////////////////////////////////////////////////////////////////
             bool mousePress(float mouseX, float mouseY);
@@ -154,11 +159,6 @@
             //  Handle toggle button mouse release event                      //
             ////////////////////////////////////////////////////////////////////
             bool mouseRelease(float mouseX, float mouseY);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Handle toggle button mouse move event                         //
-            ////////////////////////////////////////////////////////////////////
-            bool mouseMove(float mouseX, float mouseY);
 
 
             ////////////////////////////////////////////////////////////////////
