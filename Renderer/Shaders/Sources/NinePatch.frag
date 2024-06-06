@@ -49,7 +49,7 @@ layout(set = 2, binding = 0) uniform sampler2D texSampler;
 // Color, offset, size, and time (push constant)
 layout(push_constant) uniform Constants
 {
-	layout(offset = 64)
+    layout(offset = 64)
     vec4 color;
     vec2 offset;
     vec2 size;
@@ -88,8 +88,16 @@ void main()
             patchCoords.y = 0.25+mod(patchCoords.y, 0.5);
         }
     }
-    if (patchSize.x <= 0.5) { patchCoords.x = i_texCoords.x; }
-    if (patchSize.y <= 0.5) { patchCoords.y = i_texCoords.y; }
+    if (patchSize.x <= 0.5)
+    {
+        patchCoords.x = (i_texCoords.x*patchSize.x);
+        if (i_texCoords.x >= 0.5) { patchCoords.x += (1.0-patchSize.x); }
+    }
+    if (patchSize.y <= 0.5)
+    {
+        patchCoords.y = (i_texCoords.y*patchSize.y);
+        if (i_texCoords.y >= 0.5) { patchCoords.y += (1.0-patchSize.y); }
+    }
 
     // Compute output color
     o_color = (texture(texSampler, patchCoords)*constants.color);

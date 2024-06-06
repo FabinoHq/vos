@@ -46,7 +46,7 @@ precision highp int;
 // Color, offset, size, and time (push constant)
 layout(push_constant) uniform Constants
 {
-	layout(offset = 64)
+    layout(offset = 64)
     vec4 color;
     vec2 offset;
     vec2 size;
