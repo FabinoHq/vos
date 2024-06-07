@@ -49,6 +49,8 @@
     #define UNICODE
     #undef _WINSOCKAPI_
     #define _WINSOCKAPI_
+    #undef NOMINMAX
+    #define NOMINMAX
     #include <windows.h>
     #include <string>
     #include <sstream>

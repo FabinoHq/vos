@@ -52,8 +52,6 @@
     #include "VulkanBuffer.h"
 
     #include <cstdint>
-    #undef min
-    #undef max
 
 
     ////////////////////////////////////////////////////////////////////////////
