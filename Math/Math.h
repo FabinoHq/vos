@@ -51,6 +51,9 @@
     #include <cmath>
 
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  Math functions and constants namespace                                //
+    ////////////////////////////////////////////////////////////////////////////
     namespace Math
     {
         // Float precision epsilon
@@ -202,6 +205,7 @@
 
         ////////////////////////////////////////////////////////////////////////
         //  Get the absolute value of x                                       //
+        //  param x : Value to get absolute of                                //
         //  return : Absolute value of x                                      //
         ////////////////////////////////////////////////////////////////////////
         inline int32_t abs(int32_t x)
@@ -225,7 +229,54 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //  round : Get the round value of x                                  //
+        //  param x : Value to get round value of                             //
+        //  Return : Round value of x                                         //
+        ////////////////////////////////////////////////////////////////////////
+        inline float round(float x)
+        {
+            return std::round(x);
+        }
+
+        inline double round(double x)
+        {
+            return std::round(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  floor : Get the floor value of x                                  //
+        //  param x : Value to get floor value of                             //
+        //  Return : Floor value of x                                         //
+        ////////////////////////////////////////////////////////////////////////
+        inline float floor(float x)
+        {
+            return std::floor(x);
+        }
+
+        inline double floor(double x)
+        {
+            return std::floor(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  ceil : Get the ceil value of x                                    //
+        //  param x : Value to get ceil value of                              //
+        //  Return : Ceil value of x                                          //
+        ////////////////////////////////////////////////////////////////////////
+        inline float ceil(float x)
+        {
+            return std::ceil(x);
+        }
+
+        inline double ceil(double x)
+        {
+            return std::ceil(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Compare two floating points values                                //
+        //  param x : First value to compare                                  //
+        //  param y : Second value to compare                                 //
         //  return : True if values are nearly equal, false otherwise         //
         ////////////////////////////////////////////////////////////////////////
         inline bool areEqual(float x, float y)
@@ -577,6 +628,82 @@
         inline double cos(double x)
         {
             return std::cos(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Tangent                                                           //
+        //  param x : Tangent argument                                        //
+        //  return : Tangent of x (tan(x))                                    //
+        ////////////////////////////////////////////////////////////////////////
+        inline float tan(float x)
+        {
+            return std::tan(x);
+        }
+
+        inline double tan(double x)
+        {
+            return std::tan(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Arc sinus                                                         //
+        //  param x : Arc sinus argument                                      //
+        //  return : Arc sinus of x (asin(x))                                 //
+        ////////////////////////////////////////////////////////////////////////
+        inline float asin(float x)
+        {
+            return std::asin(x);
+        }
+
+        inline double asin(double x)
+        {
+            return std::asin(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Arc cosinus                                                       //
+        //  param x : Arc cosinus argument                                    //
+        //  return : Arc cosinus of x (acos(x))                               //
+        ////////////////////////////////////////////////////////////////////////
+        inline float acos(float x)
+        {
+            return std::acos(x);
+        }
+
+        inline double acos(double x)
+        {
+            return std::acos(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Arc tangent                                                       //
+        //  param x : Arc tangent argument                                    //
+        //  return : Arc tangent of x (atan(x))                               //
+        ////////////////////////////////////////////////////////////////////////
+        inline float atan(float x)
+        {
+            return std::atan(x);
+        }
+
+        inline double atan(double x)
+        {
+            return std::atan(x);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Full quadrants arc tangent                                        //
+        //  param x : Arc tangent x argument                                  //
+        //  param y : Arc tangent y argument                                  //
+        //  return : Full quadrants arc tangent of x/y (atan2(x, y))          //
+        ////////////////////////////////////////////////////////////////////////
+        inline float atan(float x, float y)
+        {
+            return std::atan2(x, y);
+        }
+
+        inline double atan(double x, float y)
+        {
+            return std::atan2(x, y);
         }
 
         ////////////////////////////////////////////////////////////////////////

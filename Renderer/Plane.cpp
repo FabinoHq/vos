@@ -226,7 +226,7 @@ void Plane::render()
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
         m_matrix.rotate(
-            (Math::Pi - std::acos(
+            (Math::Pi - Math::acos(
                 Math::clamp(lookAt.dotProduct(delta), -1.0f, 1.0f)
             )), rotation.vec[0], rotation.vec[1], rotation.vec[2]
         );
@@ -243,7 +243,7 @@ void Plane::render()
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
         m_matrix.rotate(
-            (Math::Pi - std::acos(
+            (Math::Pi - Math::acos(
                 Math::clamp(lookAt.dotProduct(delta), -1.0f, 1.0f)
             )), rotation.vec[0], rotation.vec[1], rotation.vec[2]
         );
@@ -260,7 +260,7 @@ void Plane::render()
         delta.normalize();
         rotation.crossProduct(lookAt, delta);
         m_matrix.rotate(
-            (Math::Pi - std::acos(
+            (Math::Pi - Math::acos(
                 Math::clamp(lookAt.dotProduct(delta), -1.0f, 1.0f)
             )), rotation.vec[0], rotation.vec[1], rotation.vec[2]
         );
@@ -270,7 +270,7 @@ void Plane::render()
             (m_position.vec[2] - m_target->getZ())
         );
         delta2.normalize();
-        m_matrix.rotateX(std::acos(
+        m_matrix.rotateX(Math::acos(
             Math::clamp(delta.dotProduct(delta2), -1.0f, 1.0f)
         )*Math::signum(delta2.vec[1]));
         m_matrix.rotateZ(m_angles.vec[2]);

@@ -262,7 +262,7 @@
                 float fovy, float ratio, float znear, float zfar)
             {
                 // Compute view frustum
-                float frustHeight = std::tan(fovy*0.5f)*znear;
+                float frustHeight = Math::tan(fovy*0.5f)*znear;
                 float frustWidth = frustHeight*ratio;
                 float left = -frustWidth;
                 float right = frustWidth;
