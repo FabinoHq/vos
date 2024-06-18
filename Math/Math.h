@@ -99,11 +99,11 @@
         // 64bits powers of ten
         const int64_t MaxPowersOfTen64 = 19;
         const int64_t PowersOfTen64[MaxPowersOfTen64] = {
-            1l, 10l, 100l, 1000l, 10000l, 100000l, 1000000l, 10000000l,
-            100000000l, 1000000000l, 10000000000l, 100000000000l,
-            1000000000000l, 10000000000000l, 100000000000000l,
-            1000000000000000l, 10000000000000000l, 100000000000000000l,
-            1000000000000000000l
+            1ll, 10ll, 100ll, 1000ll, 10000ll, 100000ll, 1000000ll, 10000000ll,
+            100000000ll, 1000000000ll, 10000000000ll, 100000000000ll,
+            1000000000000ll, 10000000000000ll, 100000000000000ll,
+            1000000000000000ll, 10000000000000000ll, 100000000000000000ll,
+            1000000000000000000ll
         };
 
 
@@ -563,7 +563,7 @@
 
         inline int64_t power10(int64_t x)
         {
-            return PowersOfTen64[Math::clamp(x, 0l, (MaxPowersOfTen64-1l))];
+            return PowersOfTen64[Math::clamp(x, 0ll, (MaxPowersOfTen64-1ll))];
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -583,7 +583,7 @@
         {
             return SinusTable[Math::clamp(
                 (Math::modulo(x, Math::TwoPiInt) >> SinusTableShift),
-                0l, (SinusTableSize-1l)
+                0ll, (SinusTableSize-1ll)
             )];
         }
 
@@ -616,7 +616,7 @@
             return SinusTable[Math::clamp(
                 (Math::modulo((x + Math::PiHalfInt),
                     Math::TwoPiInt) >> SinusTableShift),
-                0l, (SinusTableSize-1l)
+                0ll, (SinusTableSize-1ll)
             )];
         }
 
