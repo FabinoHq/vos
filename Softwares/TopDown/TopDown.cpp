@@ -43,6 +43,12 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  TopDown global instance                                                   //
+////////////////////////////////////////////////////////////////////////////////
+TopDown GTopDown = TopDown();
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  TopDown default constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
 TopDown::TopDown() :
@@ -426,12 +432,14 @@ void TopDown::compute(float frametime)
     );
 
     // Space key released event
-    if (m_spaceReleased)
+    /*if (m_spaceReleased)
     {
         m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
         m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];
         m_spaceReleased = false;
-    }
+    }*/
+    m_boundingCircle2.position.vec[0] = (GPhysics.getTick()*10000);
+    m_boundingCircle2.position.vec[1] = 0;
     
 
     // Start uniforms upload
@@ -456,6 +464,14 @@ void TopDown::compute(float frametime)
         GVulkanMemory.dumpMemory();
         memDump = 0;
     }*/
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute top down game physics (threaded)                                  //
+////////////////////////////////////////////////////////////////////////////////
+void TopDown::physics(int64_t tick)
+{
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -506,7 +522,7 @@ void TopDown::render()
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setSize(100000*PhysicsToRenderer, 100000*PhysicsToRenderer);
     m_rectangle.setAngle(0.0f);
-    m_rectangle.setSmooth(0.025f);
+    m_rectangle.setSmooth(0.05f);
 
     float positionX = (50000*PhysicsToRenderer);
     float positionY = (50000*PhysicsToRenderer);
@@ -516,10 +532,10 @@ void TopDown::render()
         {
             m_rectangle.setPosition(positionX, positionY);
             m_rectangle.render();
-            positionY += 100000*PhysicsToRenderer;
+            positionY += (100000*PhysicsToRenderer);
         }
         positionY = (50000*PhysicsToRenderer);
-        positionX += 100000*PhysicsToRenderer;
+        positionX += (100000*PhysicsToRenderer);
     }
 
     // Render bounding circle
@@ -699,7 +715,7 @@ void TopDown::render()
     }
     m_pxText.render();
 
-    // Render pixel text (physics current tick)
+    // Render pixel text (physics current ticks)
     std::ostringstream physicstr;
     physicstr << "Ticks : " << GPhysics.getTick();
     m_pxText.setText(physicstr.str());

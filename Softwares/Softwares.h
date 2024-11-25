@@ -47,9 +47,12 @@
     #include "../System/SysMouse.h"
 
     #include "../Renderer/Renderer.h"
+    #include "../Physics/Physics.h"
 
     #include "TopDown/TopDown.h"
     #include "FirstPerson/FirstPerson.h"
+
+    #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -92,6 +95,11 @@
             void compute(float frametime);
 
             ////////////////////////////////////////////////////////////////////
+            //  Compute softwares physics (threaded)                          //
+            ////////////////////////////////////////////////////////////////////
+            void physics(int64_t tick);
+
+            ////////////////////////////////////////////////////////////////////
             //  Render softwares                                              //
             ////////////////////////////////////////////////////////////////////
             void render();
@@ -110,9 +118,13 @@
 
 
         private:
-            TopDown             m_topdown;              // Top down game
-            FirstPerson         m_firstperson;          // First person game
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Softwares global instance                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    extern Softwares GSoftwares;
 
 
 #endif // VOS_SOFTWARES_SOFTWARES_HEADER

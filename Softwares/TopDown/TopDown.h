@@ -68,6 +68,8 @@
     #include "../../Physics/BoundingCircle.h"
     #include "../../Physics/BoundingRect.h"
 
+    #include <cstdint>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  TopDown main class definition                                         //
@@ -107,6 +109,11 @@
             //  Compute top down game logic                                   //
             ////////////////////////////////////////////////////////////////////
             void compute(float frametime);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Compute top down game physics (threaded)                      //
+            ////////////////////////////////////////////////////////////////////
+            void physics(int64_t tick);
 
             ////////////////////////////////////////////////////////////////////
             //  Render top down game                                          //
@@ -151,6 +158,12 @@
 
             bool            m_spaceReleased;    // Space released event
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TopDown global instance                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    extern TopDown GTopDown;
 
 
 #endif // VOS_SOFTWARES_TOPDOWN_TOPDOWN_HEADER

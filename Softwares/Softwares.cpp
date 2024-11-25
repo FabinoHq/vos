@@ -43,11 +43,15 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Softwares global instance                                                 //
+////////////////////////////////////////////////////////////////////////////////
+Softwares GSoftwares = Softwares();
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Softwares default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
-Softwares::Softwares() :
-m_topdown(),
-m_firstperson()
+Softwares::Softwares()
 {
 
 }
@@ -68,18 +72,18 @@ Softwares::~Softwares()
 bool Softwares::init()
 {
     // Init top down game
-    if (!m_topdown.init())
+    if (!GTopDown.init())
     {
         // Could not init top down game
         return false;
     }
 
     // Init first person game
-    if (!m_firstperson.init())
+    /*if (!GFirstPerson.init())
     {
         // Could not init first person game
         return false;
-    }
+    }*/
 
     // Softwares are ready
     return true;
@@ -91,8 +95,8 @@ bool Softwares::init()
 void Softwares::destroy()
 {
     // Destroy softwares
-    m_firstperson.destroy();
-    m_topdown.destroy();
+    //GFirstPerson.destroy();
+    GTopDown.destroy();
 }
 
 
@@ -102,8 +106,8 @@ void Softwares::destroy()
 void Softwares::events(SysEvent& event)
 {
     // Dispatch events to softwares
-    m_topdown.events(event);
-    //m_firstperson.events(event);
+    GTopDown.events(event);
+    //GFirstPerson.events(event);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,8 +116,18 @@ void Softwares::events(SysEvent& event)
 void Softwares::compute(float frametime)
 {
     // Compute softwares logic
-    m_topdown.compute(frametime);
-    //m_firstperson.compute(frametime);
+    GTopDown.compute(frametime);
+    //GFirstPerson.compute(frametime);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute softwares physics (threaded)                                      //
+////////////////////////////////////////////////////////////////////////////////
+void Softwares::physics(int64_t tick)
+{
+    // Compute softwares physics
+    GTopDown.physics(tick);
+    //GFirstPerson.physics(tick);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,6 +136,6 @@ void Softwares::compute(float frametime)
 void Softwares::render()
 {
     // Render softwares
-    m_topdown.render();
-    //m_firstperson.render();
+    GTopDown.render();
+    //GFirstPerson.render();
 }

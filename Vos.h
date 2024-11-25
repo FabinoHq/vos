@@ -104,7 +104,6 @@
         private:
             bool            m_running;          // VOS running state
             SysClock        m_clock;            // VOS clock
-            Softwares       m_softwares;        // VOS softwares
     };
 
 

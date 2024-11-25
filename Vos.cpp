@@ -47,8 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 Vos::Vos() :
 m_running(false),
-m_clock(),
-m_softwares()
+m_clock()
 {
 
 }
@@ -166,7 +165,7 @@ bool Vos::launch()
 
 
     // Init softwares
-    if (!m_softwares.init())
+    if (!GSoftwares.init())
     {
         // Could not init softwares
         return false;
@@ -255,21 +254,21 @@ void Vos::run()
             }
 
             // Compute events
-            m_softwares.events(event);
+            GSoftwares.events(event);
         }
 
         // Compute logic
-        m_softwares.compute(frametime);
+        GSoftwares.compute(frametime);
 
         // Render frame
-        m_softwares.render();
+        GSoftwares.render();
     }
 
     // Wait for renderer device idle state
     if (GRenderer.waitDeviceIdle())
     {
         // Destroy softwares
-        m_softwares.destroy();
+        GSoftwares.destroy();
 
         // Destroy resources
         GResources.destroyResources();

@@ -78,7 +78,7 @@
 
         // Square roots constants
         const float SqrtTwo = 1.4142135623730950488016887242097f;
-        const float OneSqrtTwo = 0.7071067811865475244008443621048f;
+        const float InvSqrtTwo = 0.7071067811865475244008443621048f;
 
         // Integer constants
         const int64_t OneIntShift = 20;
@@ -756,7 +756,7 @@
         inline float hermitInterp(float w, float x, float y, float z, float t)
         {
             return (x + (t*t*(3.0f-2.0f*t))*(y-x) +
-                (0.5f*(x-w)+0.5f*(y-x))*(t*t*t-2.0f*t*t+t) +
+                (0.5f*(x-w)+0.5f*(y-x))*((t*t*t)-(2.0f*t*t+t)) +
                 (0.5f*(y-x)+0.5f*(z-y))*(t*t*t-t*t));
         }
 
@@ -764,7 +764,7 @@
             double w, double x, double y, double z, double t)
         {
             return (x + (t*t*(3.0-2.0*t))*(y-x) +
-                (0.5*(x-w)+0.5*(y-x))*(t*t*t-2.0*t*t+t) +
+                (0.5*(x-w)+0.5*(y-x))*((t*t*t)-(2.0*t*t+t)) +
                 (0.5*(y-x)+0.5*(z-y))*(t*t*t-t*t));
         }
 

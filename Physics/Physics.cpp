@@ -40,6 +40,7 @@
 //     Physics/Physics.cpp : Physics management                               //
 ////////////////////////////////////////////////////////////////////////////////
 #include "Physics.h"
+#include "../Softwares/Softwares.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,10 +64,12 @@ m_tickMutex()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Physics destructor                                                        //
+//  Physics virtual destructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
 Physics::~Physics()
 {
+    m_tick = 0;
+    m_clockTime = 0.0;
     m_state = PHYSICS_STATE_NONE;
 }
 
@@ -164,15 +167,15 @@ bool Physics::launch()
     m_stateMutex.lock();
     if (m_state == PHYSICS_STATE_IDLE)
     {
-        // Run physics solver
-        m_state = PHYSICS_STATE_RUN;
-        m_clock.reset();
-        launched = true;
-
         // Reset ticks counter
         m_tickMutex.lock();
         m_tick = 0;
         m_tickMutex.unlock();
+
+        // Run physics solver
+        m_state = PHYSICS_STATE_RUN;
+        m_clock.reset();
+        launched = true;
     }
     m_stateMutex.unlock();
     return launched;
@@ -201,10 +204,15 @@ void Physics::run()
     if (m_clockTime >= PhysicsTickTime)
     {
         // Compute physics tick
+        int64_t tick = 0;
         m_clockTime -= PhysicsTickTime;
         m_tickMutex.lock();
         ++m_tick;
+        tick = m_tick;
         m_tickMutex.unlock();
+
+        // Compute software physics
+        GSoftwares.physics(tick);
     }
     else
     {

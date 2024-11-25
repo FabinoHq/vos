@@ -79,7 +79,7 @@ bool FreeFlyCam::compute(float ratio, float frametime)
 {
     // Compute freefly camera speed
     float speed = m_speed*frametime;
-    float crossSpeed = speed*Math::OneSqrtTwo;
+    float crossSpeed = speed*Math::InvSqrtTwo;
 
     // Compute freefly camera target
     m_target.vec[0] = Math::cos(m_angles.vec[0]);

@@ -77,6 +77,8 @@
     #include "../../Renderer/SeaNearStream.h"
     #include "../../Renderer/SeaFarStream.h"
 
+    #include <cstdint>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  FirstPerson main class definition                                     //
@@ -116,6 +118,11 @@
             //  Compute first person game logic                               //
             ////////////////////////////////////////////////////////////////////
             void compute(float frametime);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Compute first person game physics (threaded)                  //
+            ////////////////////////////////////////////////////////////////////
+            void physics(int64_t tick);
 
             ////////////////////////////////////////////////////////////////////
             //  Render first person game                                      //
@@ -165,6 +172,12 @@
 
             bool            m_spaceReleased;    // Space released event
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  FirstPerson global instance                                           //
+    ////////////////////////////////////////////////////////////////////////////
+    extern FirstPerson GFirstPerson;
 
 
 #endif // VOS_SOFTWARES_FIRSTPERSON_FIRSTPERSON_HEADER
