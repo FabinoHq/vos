@@ -271,6 +271,7 @@
     <ClCompile Include="Softwares\FirstPerson\FirstPerson.cpp" />
     <ClCompile Include="Softwares\Softwares.cpp" />
     <ClCompile Include="Softwares\TopDown\TopDown.cpp" />
+    <ClCompile Include="Softwares\TopDown\TopDownPlayer.cpp" />
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysCPU.cpp" />
     <ClCompile Include="System\SysMouse.cpp" />
@@ -391,6 +392,7 @@
     <ClInclude Include="Softwares\FirstPerson\FirstPerson.h" />
     <ClInclude Include="Softwares\Softwares.h" />
     <ClInclude Include="Softwares\TopDown\TopDown.h" />
+    <ClInclude Include="Softwares\TopDown\TopDownPlayer.h" />
     <ClInclude Include="System\SysClock.h" />
     <ClInclude Include="System\SysCPU.h" />
     <ClInclude Include="System\SysCRC.h" />

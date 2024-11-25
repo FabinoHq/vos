@@ -328,6 +328,8 @@
 !Softwares/TopDown/
 !Softwares/TopDown/TopDown.h
 !Softwares/TopDown/TopDown.cpp
+!Softwares/TopDown/TopDownPlayer.h
+!Softwares/TopDown/TopDownPlayer.cpp
 !Softwares/FirstPerson/
 !Softwares/FirstPerson/FirstPerson.h
 !Softwares/FirstPerson/FirstPerson.cpp

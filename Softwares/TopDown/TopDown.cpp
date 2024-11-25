@@ -70,6 +70,7 @@ m_boundingRect(),
 m_boundingRect2(),
 m_matrixChunk(),
 m_collide(),
+m_player(),
 m_spaceReleased(false)
 {
 
@@ -205,6 +206,13 @@ bool TopDown::init()
 
     // Init matrix chunk 2
     //m_matrixChunk2.init();
+
+    // Init player
+    if (!m_player.init())
+    {
+        // Could not init player
+        return false;
+    }
 
     // Launch physics solver
     GPhysics.launch();
@@ -471,7 +479,8 @@ void TopDown::compute(float frametime)
 ////////////////////////////////////////////////////////////////////////////////
 void TopDown::physics(int64_t tick)
 {
-
+    // Compute player physics
+    m_player.physics(tick);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -685,6 +694,9 @@ void TopDown::render()
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_PROGRESSBAR);
     m_progressBar.bindTexture();
     m_progressBar.render();*/
+
+    // Render player
+    m_player.render();
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);

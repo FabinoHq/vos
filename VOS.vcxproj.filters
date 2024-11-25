@@ -290,6 +290,9 @@
     <ClCompile Include="Physics\MatrixChunk2.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Softwares\TopDown\TopDownPlayer.cpp">
+      <Filter>Softwares\TopDown</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -679,6 +682,9 @@
     </ClInclude>
     <ClInclude Include="Physics\MatrixChunk2.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\TopDown\TopDownPlayer.h">
+      <Filter>Softwares\TopDown</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
