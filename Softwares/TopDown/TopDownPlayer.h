@@ -43,8 +43,34 @@
 #define VOS_SOFTWARES_TOPDOWN_TOPDOWNPLAYER_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysMutex.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
+
+    #include "../../Renderer/Renderer.h"
+    #include "../../Renderer/Shapes/EllipseShape.h"
+
+    #include "../../Physics/Physics.h"
+    #include "../../Physics/Collision2.h"
+    #include "../../Physics/BoundingCircle.h"
+    #include "../../Physics/BoundingRect.h"
 
     #include <cstdint>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TopDownPlayerPos structure                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    struct TopDownPlayerPos
+    {
+        Vector2     pos;
+        Vector2     nextPos;
+        Vector2     prevPos;
+        float       angle;
+        float       nextAngle;
+        float       prevAngle;
+        float       time;
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -77,6 +103,11 @@
             void physics(int64_t tick);
 
             ////////////////////////////////////////////////////////////////////
+            //  Compute top down player logic                                 //
+            ////////////////////////////////////////////////////////////////////
+            void compute(float frametime);
+
+            ////////////////////////////////////////////////////////////////////
             //  Render top down player                                        //
             ////////////////////////////////////////////////////////////////////
             void render();
@@ -95,6 +126,11 @@
 
 
         private:
+            TopDownPlayerPos    m_position;             // Position
+            BoundingCircle      m_bounding;             // Bounding circle
+            SysMutex            m_mutex;                // Position mutex
+
+            EllipseShape        m_ellipse;              // Ellipse shape
     };
 
 

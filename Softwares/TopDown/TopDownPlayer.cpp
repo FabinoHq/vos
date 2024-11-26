@@ -45,9 +45,22 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  TopDownPlayer default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-TopDownPlayer::TopDownPlayer()
+TopDownPlayer::TopDownPlayer() :
+m_position(),
+m_bounding(),
+m_ellipse(),
+m_mutex()
 {
-
+    m_position.pos.vec[0] = 0.0f;
+    m_position.pos.vec[1] = 0.0f;
+    m_position.nextPos.vec[0] = 0.0f;
+    m_position.nextPos.vec[1] = 0.0f;
+    m_position.prevPos.vec[0] = 0.0f;
+    m_position.prevPos.vec[1] = 0.0f;
+    m_position.angle = 0.0f;
+    m_position.nextAngle = 0.0f;
+    m_position.prevAngle = 0.0f;
+    m_position.time = 0.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,6 +78,30 @@ TopDownPlayer::~TopDownPlayer()
 ////////////////////////////////////////////////////////////////////////////////
 bool TopDownPlayer::init()
 {
+    // Reset position
+    m_position.pos.vec[0] = 0.0f;
+    m_position.pos.vec[1] = 0.0f;
+    m_position.nextPos.vec[0] = 0.0f;
+    m_position.nextPos.vec[1] = 0.0f;
+    m_position.prevPos.vec[0] = 0.0f;
+    m_position.prevPos.vec[1] = 0.0f;
+    m_position.angle = 0.0f;
+    m_position.nextAngle = 0.0f;
+    m_position.prevAngle = 0.0f;
+    m_position.time = 0.0f;
+
+    // Init bounding circle
+    m_bounding.setPosition(0, 0);
+    m_bounding.setRadius(40000);
+    m_bounding.setAngle(0);
+
+    // Init ellipse shape
+    if (!m_ellipse.init(0.2f, 0.2f))
+    {
+        // Could not init ellipse shape
+        return false;
+    }
+
     // Top down player is ready
     return true;
 }
@@ -75,7 +112,48 @@ bool TopDownPlayer::init()
 ////////////////////////////////////////////////////////////////////////////////
 void TopDownPlayer::physics(int64_t tick)
 {
+    // Lock position mutex
+    m_mutex.lock();
 
+    // Convert previous position to renderer
+    m_position.prevPos.vec[0] = (m_bounding.position.vec[0]*PhysicsToRenderer);
+    m_position.prevPos.vec[1] = (m_bounding.position.vec[1]*PhysicsToRenderer);
+    m_position.prevAngle = (m_bounding.angle*PhysicsAngleToRenderer);
+
+    // Compute top down player physics
+    m_bounding.position.vec[0] += 10000;
+
+    // Convert next position to renderer
+    m_position.nextPos.vec[0] = (m_bounding.position.vec[0]*PhysicsToRenderer);
+    m_position.nextPos.vec[1] = (m_bounding.position.vec[1]*PhysicsToRenderer);
+    m_position.nextAngle = (m_bounding.angle*PhysicsAngleToRenderer);
+    m_position.time = 0.0f;
+
+    // Unlock position mutex
+    m_mutex.unlock();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute top down player logic                                             //
+////////////////////////////////////////////////////////////////////////////////
+void TopDownPlayer::compute(float frametime)
+{
+    // Compute physics time
+    float physicstime = (frametime/(static_cast<float>(PhysicsTickTime)));
+
+    // Compute current position
+    m_position.time = Math::clamp((m_position.time + physicstime), 0.0f, 1.0f);
+    m_mutex.lock();
+    m_position.pos.vec[0] = (m_position.prevPos.vec[0] +
+        ((m_position.nextPos.vec[0]-m_position.prevPos.vec[0])*m_position.time)
+    );
+    m_position.pos.vec[1] = (m_position.prevPos.vec[1] +
+        ((m_position.nextPos.vec[1]-m_position.prevPos.vec[1])*m_position.time)
+    );
+    m_position.angle = (m_position.prevAngle +
+        ((m_position.nextAngle-m_position.prevAngle)*m_position.time)
+    );
+    m_mutex.unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,5 +161,16 @@ void TopDownPlayer::physics(int64_t tick)
 ////////////////////////////////////////////////////////////////////////////////
 void TopDownPlayer::render()
 {
-    
+    // Render ellipse shape
+    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
+    m_ellipse.setOrigin(0.0f, 0.0f);
+    m_ellipse.setPosition(m_position.pos.vec[0], m_position.pos.vec[1]);
+    m_ellipse.setSize(
+        (m_bounding.radius*PhysicsToRenderer*2.05f),
+        (m_bounding.radius*PhysicsToRenderer*2.05f)
+    );
+    m_ellipse.setAngle(m_position.angle);
+    m_ellipse.setSmooth(0.025f);
+    m_ellipse.render();
 }

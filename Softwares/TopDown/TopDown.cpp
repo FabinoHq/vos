@@ -414,15 +414,10 @@ void TopDown::compute(float frametime)
     m_collide.reset();
     m_boundingCircle2.collideCircle(
         m_boundingCircle, collideOffset, m_collide
-    );
+    );*/
 
-    // Space key released event
-    if (m_spaceReleased)
-    {
-        m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
-        m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];
-        m_spaceReleased = false;
-    }*/
+    // Compute top down player
+    m_player.compute(frametime);
 
     // Compute physics
     Vector2i collideOffset;
@@ -440,14 +435,12 @@ void TopDown::compute(float frametime)
     );
 
     // Space key released event
-    /*if (m_spaceReleased)
+    if (m_spaceReleased)
     {
         m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
         m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];
         m_spaceReleased = false;
-    }*/
-    m_boundingCircle2.position.vec[0] = (GPhysics.getTick()*10000);
-    m_boundingCircle2.position.vec[1] = 0;
+    }
     
 
     // Start uniforms upload
