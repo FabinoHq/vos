@@ -112,6 +112,8 @@ bool TopDownPlayer::init()
 ////////////////////////////////////////////////////////////////////////////////
 void TopDownPlayer::physics(int64_t tick)
 {
+    (void)tick;
+
     // Lock position mutex
     m_mutex.lock();
 
@@ -142,8 +144,8 @@ void TopDownPlayer::compute(float frametime)
     float physicstime = (frametime/(static_cast<float>(PhysicsTickTime)));
 
     // Compute current position
-    m_position.time = Math::clamp((m_position.time + physicstime), 0.0f, 1.0f);
     m_mutex.lock();
+    m_position.time = Math::clamp((m_position.time + physicstime), 0.0f, 1.0f);
     m_position.pos.vec[0] = (m_position.prevPos.vec[0] +
         ((m_position.nextPos.vec[0]-m_position.prevPos.vec[0])*m_position.time)
     );
