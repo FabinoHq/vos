@@ -150,7 +150,8 @@
             ////////////////////////////////////////////////////////////////////
             //  linearInterp : Linear interpolation                           //
             ////////////////////////////////////////////////////////////////////
-            inline void linearInterp(Vector3& v1, Vector3& v2, float t)
+            inline void linearInterp(
+                const Vector3& v1, const Vector3& v2, float t)
             {
                 vec[0] = v1.vec[0] + t*(v2.vec[0]-v1.vec[0]);
                 vec[1] = v1.vec[1] + t*(v2.vec[1]-v1.vec[1]);
@@ -160,7 +161,8 @@
             ////////////////////////////////////////////////////////////////////
             //  Cubic interpolation                                           //
             ////////////////////////////////////////////////////////////////////
-            inline void cubicInterp(Vector3& v1, Vector3& v2, float t)
+            inline void cubicInterp(
+                const Vector3& v1, const Vector3& v2, float t)
             {
                 vec[0] = v1.vec[0] + (t*t*(3.0f-2.0f*t))*(v2.vec[0]-v1.vec[0]);
                 vec[1] = v1.vec[1] + (t*t*(3.0f-2.0f*t))*(v2.vec[1]-v1.vec[1]);
@@ -171,7 +173,8 @@
             //  Hermit interpolation                                          //
             ////////////////////////////////////////////////////////////////////
             inline void hermitInterp(
-                Vector3& v0, Vector3& v1, Vector3& v2, Vector3& v3, float t)
+                const Vector3& v0, const Vector3& v1,
+                const Vector3& v2, const Vector3& v3, float t)
             {
                 vec[0] = Math::hermitInterp(
                     v0.vec[0], v1.vec[0], v2.vec[0], v3.vec[0], t
@@ -187,7 +190,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
-            inline float dotProduct(Vector3& v) const
+            inline float dotProduct(const Vector3& v) const
             {
                 return (
                     (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) + (vec[2]*v.vec[2])
@@ -197,7 +200,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set this vector as the cross product from 2 vectors           //
             ////////////////////////////////////////////////////////////////////
-            inline void crossProduct(Vector3& v1, Vector3& v2)
+            inline void crossProduct(const Vector3& v1, const Vector3& v2)
             {
                 vec[0] = ((v2.vec[1]*v1.vec[2]) - (v2.vec[2]*v1.vec[1]));
                 vec[1] = ((v2.vec[2]*v1.vec[0]) - (v2.vec[0]*v1.vec[2]));

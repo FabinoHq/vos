@@ -532,6 +532,17 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Transformations linear interpolation                          //
+            ////////////////////////////////////////////////////////////////////
+            inline void linearInterp(
+                const Vector3& prevPos, const Vector3& pos,
+                const Vector3& prevAngles, const Vector3& angles, float time)
+            {
+                m_position.linearInterp(prevPos, pos, time);
+                m_angles.linearInterp(prevAngles, angles, time);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Compute transformations                                       //
             ////////////////////////////////////////////////////////////////////
             inline void computeTransforms()

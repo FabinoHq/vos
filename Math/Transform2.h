@@ -449,6 +449,17 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Transformations linear interpolation                          //
+            ////////////////////////////////////////////////////////////////////
+            inline void linearInterp(
+                const Vector2& prevPos, const Vector2& pos,
+                float prevAngle, float angle, float time)
+            {
+                m_position.linearInterp(prevPos, pos, time);
+                m_angle = Math::linearInterp(prevAngle, angle, time);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Compute transformations                                       //
             ////////////////////////////////////////////////////////////////////
             inline void computeTransforms()

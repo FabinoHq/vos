@@ -214,9 +214,6 @@ bool TopDown::init()
         return false;
     }
 
-    // Launch physics solver
-    GPhysics.launch();
-
 
     // Top down game is ready
     return true;
@@ -362,6 +359,24 @@ void TopDown::events(SysEvent& event)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Compute top down game physics (threaded)                                  //
+////////////////////////////////////////////////////////////////////////////////
+void TopDown::physics()
+{
+    // Compute player physics
+    m_player.physics();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Precompute top down game                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void TopDown::precompute(float physicstime)
+{
+    // Precompute player
+    m_player.precompute(physicstime);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Compute top down game logic                                               //
 ////////////////////////////////////////////////////////////////////////////////
 void TopDown::compute(float frametime)
@@ -416,9 +431,6 @@ void TopDown::compute(float frametime)
         m_boundingCircle, collideOffset, m_collide
     );*/
 
-    // Compute top down player
-    m_player.compute(frametime);
-
     // Compute physics
     Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int64_t>(
@@ -465,15 +477,6 @@ void TopDown::compute(float frametime)
         GVulkanMemory.dumpMemory();
         memDump = 0;
     }*/
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Compute top down game physics (threaded)                                  //
-////////////////////////////////////////////////////////////////////////////////
-void TopDown::physics(int64_t tick)
-{
-    // Compute player physics
-    m_player.physics(tick);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -552,7 +555,7 @@ void TopDown::render()
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setAngle(m_boundingCircle.angle*PhysicsAngleToRenderer);
-    m_ellipse.setSmooth(0.025f);
+    m_ellipse.setSmooth(0.05f);
     m_ellipse.render();*/
 
     // Render bounding circle 2
@@ -565,7 +568,7 @@ void TopDown::render()
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.04f, radius*2.04f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
-    m_ellipse.setSmooth(0.022f);
+    m_ellipse.setSmooth(0.05f);
     m_ellipse.render();
 
     // Render bounding circle 2 projection
@@ -581,7 +584,7 @@ void TopDown::render()
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.07f, radius*2.07f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
-    m_ellipse.setSmooth(0.028f);
+    m_ellipse.setSmooth(0.05f);
     m_ellipse.render();
 
 
@@ -598,7 +601,7 @@ void TopDown::render()
     m_rectangle.setPosition(positionX, positionY);
     m_rectangle.setSize(width*2.05f, height*2.05f);
     m_rectangle.setAngle(m_boundingRect.angle*PhysicsAngleToRenderer);
-    m_rectangle.setSmooth(0.025f);
+    m_rectangle.setSmooth(0.05f);
     m_rectangle.render();
 
     // Render bounding rect 2
@@ -628,7 +631,7 @@ void TopDown::render()
     m_rectangle.setPosition(positionX, positionY);
     m_rectangle.setSize(width*2.07f, height*2.07f);
     m_rectangle.setAngle(m_boundingRect2.angle*PhysicsAngleToRenderer);
-    m_rectangle.setSmooth(0.028f);
+    m_rectangle.setSmooth(0.05f);
     m_rectangle.render();*/
 
 

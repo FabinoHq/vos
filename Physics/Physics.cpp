@@ -58,7 +58,8 @@ m_stateMutex(),
 m_clock(),
 m_clockTime(0.0),
 m_tick(0),
-m_tickMutex()
+m_tickMutex(),
+m_mutex()
 {
 
 }
@@ -141,9 +142,13 @@ void Physics::process()
 bool Physics::init()
 {
     // Physics solver successfully loaded
+    m_tickMutex.lock();
+    m_tick = 0;
+    m_tickMutex.unlock();
     m_clock.reset();
     return true;
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get physics solver state                                                  //
@@ -200,23 +205,26 @@ int64_t Physics::getTick()
 ////////////////////////////////////////////////////////////////////////////////
 void Physics::run()
 {
+    // Compute physics clock
+    m_mutex.lock();
     m_clockTime += m_clock.getAndReset();
+
+    // Physics tick
     if (m_clockTime >= PhysicsTickTime)
     {
-        // Compute physics tick
-        int64_t tick = 0;
+        // Reset physics clock time
         m_clockTime -= PhysicsTickTime;
+
+        // Compute physics tick
         m_tickMutex.lock();
         ++m_tick;
-        tick = m_tick;
         m_tickMutex.unlock();
 
         // Compute software physics
-        GSoftwares.physics(tick);
+        GSoftwares.physics();
     }
-    else
-    {
-        // Release some CPU
-        SysSleep(PhysicsRunSleepTime);
-    }
+
+    // Release some CPU
+    m_mutex.unlock();
+    SysSleep(PhysicsRunSleepTime);
 }

@@ -98,26 +98,26 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect position                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(int64_t positionX, int64_t positionY)
+            inline void setPosition(int64_t x, int64_t y)
             {
-                position.vec[0] = positionX;
-                position.vec[1] = positionY;
+                position.vec[0] = x;
+                position.vec[1] = y;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect X position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setPositionX(int64_t positionX)
+            inline void setX(int64_t x)
             {
-                position.vec[0] = positionX;
+                position.vec[0] = x;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect Y position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setPositionY(int64_t positionY)
+            inline void setY(int64_t y)
             {
-                position.vec[1] = positionY;
+                position.vec[1] = y;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -177,6 +177,63 @@
             ////////////////////////////////////////////////////////////////////
             bool collideRect(const BoundingRect& boundingRect,
                 const Vector2i& offset, Collision2& collision);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding rect position                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2i getPosition() const
+            {
+                return position;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding rect X position                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getX() const
+            {
+                return position.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding rect Y position                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getY() const
+            {
+                return position.vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding rect size                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2i getSize() const
+            {
+                return size;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding rect width                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getWidth() const
+            {
+                return size.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding rect height                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getHeight() const
+            {
+                return size.vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding rect angle                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getAngle() const
+            {
+                return angle;
+            }
 
 
             ////////////////////////////////////////////////////////////////////

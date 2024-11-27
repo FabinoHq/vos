@@ -178,6 +178,9 @@ bool Vos::launch()
         return false;
     }
 
+    // Launch physics solver
+    GPhysics.launch();
+
     // Run VOS
     run();
 
@@ -256,6 +259,11 @@ void Vos::run()
             // Compute events
             GSoftwares.events(event);
         }
+
+        // Precompute
+        float physicstime = GPhysics.startPrecompute();
+        GSoftwares.precompute(physicstime);
+        GPhysics.endPrecompute();
 
         // Compute logic
         GSoftwares.compute(frametime);

@@ -64,12 +64,9 @@
     struct TopDownPlayerPos
     {
         Vector2     pos;
-        Vector2     nextPos;
         Vector2     prevPos;
         float       angle;
-        float       nextAngle;
         float       prevAngle;
-        float       time;
     };
 
 
@@ -100,12 +97,12 @@
             ////////////////////////////////////////////////////////////////////
             //  Compute top down player physics (threaded)                    //
             ////////////////////////////////////////////////////////////////////
-            void physics(int64_t tick);
+            void physics();
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute top down player logic                                 //
+            //  Precompute top down player                                    //
             ////////////////////////////////////////////////////////////////////
-            void compute(float frametime);
+            void precompute(float physicstime);
 
             ////////////////////////////////////////////////////////////////////
             //  Render top down player                                        //
@@ -128,7 +125,6 @@
         private:
             TopDownPlayerPos    m_position;             // Position
             BoundingCircle      m_bounding;             // Bounding circle
-            SysMutex            m_mutex;                // Position mutex
 
             EllipseShape        m_ellipse;              // Ellipse shape
     };

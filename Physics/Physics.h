@@ -63,7 +63,8 @@
     ////////////////////////////////////////////////////////////////////////////
     const int64_t PhysicsMinEntityHalfSize = (Math::OneInt / 200);
     const int64_t PhysicsMaxSmallStepsIterations = 40;
-    const double PhysicsTickTime = 0.01;
+    const double PhysicsTickRate = 100.0;
+    const double PhysicsTickTime = (1.0 / PhysicsTickRate);
     const double PhysicsRunSleepTime = 0.001;
     const double PhysicsIdleSleepTime = 0.01;
     const double PhysicsErrorSleepTime = 0.1;
@@ -115,6 +116,24 @@
             bool init();
 
             ////////////////////////////////////////////////////////////////////
+            //  Start physics precompute                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline float startPrecompute()
+            {
+                m_mutex.lock();
+                return (static_cast<float>(m_clockTime*PhysicsTickRate));
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  End physics precompute                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline void endPrecompute()
+            {
+                m_mutex.unlock();
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
             //  Get physics solver state                                      //
             //  return : Current physics solver state                         //
             ////////////////////////////////////////////////////////////////////
@@ -159,6 +178,7 @@
             double                  m_clockTime;        // Physics clock time
             int64_t                 m_tick;             // Current tick
             SysMutex                m_tickMutex;        // Tick mutex
+            SysMutex                m_mutex;            // Physics mutex
     };
 
 

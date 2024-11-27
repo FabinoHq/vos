@@ -99,26 +99,26 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(int64_t positionX, int64_t positionY)
+            inline void setPosition(int64_t x, int64_t y)
             {
-                position.vec[0] = positionX;
-                position.vec[1] = positionY;
+                position.vec[0] = x;
+                position.vec[1] = y;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle X position                                //
             ////////////////////////////////////////////////////////////////////
-            inline void setPositionX(int64_t positionX)
+            inline void setX(int64_t x)
             {
-                position.vec[0] = positionX;
+                position.vec[0] = x;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle Y position                                //
             ////////////////////////////////////////////////////////////////////
-            inline void setPositionY(int64_t positionY)
+            inline void setY(int64_t y)
             {
-                position.vec[1] = positionY;
+                position.vec[1] = y;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -160,6 +160,47 @@
             ////////////////////////////////////////////////////////////////////
             bool collideMatrix2(const MatrixChunk2& matrixChunk2,
                 const Vector2i& offset, Collision2& collision);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding circle position                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2i getPosition() const
+            {
+                return position;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding circle X position                                //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getX() const
+            {
+                return position.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding circle Y position                                //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getY() const
+            {
+                return position.vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding circle radius                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getRadius() const
+            {
+                return radius;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding circle angle                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getAngle() const
+            {
+                return angle;
+            }
 
 
             ////////////////////////////////////////////////////////////////////

@@ -96,10 +96,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Set collision position                                        //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(int64_t positionX, int64_t positionY)
+            inline void setPosition(int64_t x, int64_t y)
             {
-                position.vec[0] = positionX;
-                position.vec[1] = positionY;
+                position.vec[0] = x;
+                position.vec[1] = y;
             }
 
             ////////////////////////////////////////////////////////////////////
