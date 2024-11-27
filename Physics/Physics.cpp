@@ -226,5 +226,5 @@ void Physics::run()
 
     // Release some CPU
     m_mutex.unlock();
-    SysSleep(PhysicsRunSleepTime);
+    SysYield();
 }

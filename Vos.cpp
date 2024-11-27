@@ -201,6 +201,7 @@ void Vos::run()
     m_running = true;
     while (m_running)
     {
+        // Compute frametime
         float frametime = m_clock.getAndResetF();
         float framelimit = frametime;
 
@@ -270,6 +271,9 @@ void Vos::run()
 
         // Render frame
         GSoftwares.render();
+
+        // Release some CPU
+        SysYield();
     }
 
     // Wait for renderer device idle state
