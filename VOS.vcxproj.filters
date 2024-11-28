@@ -293,6 +293,9 @@
     <ClCompile Include="Softwares\TopDown\TopDownPlayer.cpp">
       <Filter>Softwares\TopDown</Filter>
     </ClCompile>
+    <ClCompile Include="System\SysKeys.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -685,6 +688,9 @@
     </ClInclude>
     <ClInclude Include="Softwares\TopDown\TopDownPlayer.h">
       <Filter>Softwares\TopDown</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysKeys.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

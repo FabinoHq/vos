@@ -52,7 +52,7 @@ VOS: main.o \
 	System/SysThread.o System/SysClock.o System/SysCPU.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	System/SysMouse.o System/SysSettings.o \
+	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
 	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
 	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
@@ -100,7 +100,7 @@ VOS: main.o \
 	System/SysThread.o System/SysClock.o System/SysCPU.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
-	System/SysMouse.o System/SysSettings.o \
+	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
 	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
 	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
@@ -176,6 +176,9 @@ System/Lin/SysVulkan.o: System/Lin/SysVulkan.cpp
 
 System/SysMouse.o: System/SysMouse.cpp
 	$(CC) -o System/SysMouse.o -c System/SysMouse.cpp $(CFLAGS)
+
+System/SysKeys.o: System/SysKeys.cpp
+	$(CC) -o System/SysKeys.o -c System/SysKeys.cpp $(CFLAGS)
 
 System/SysSettings.o: System/SysSettings.cpp
 	$(CC) -o System/SysSettings.o -c System/SysSettings.cpp $(CFLAGS)

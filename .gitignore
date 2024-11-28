@@ -48,6 +48,8 @@
 !System/SysClock.cpp
 !System/SysMouse.h
 !System/SysMouse.cpp
+!System/SysKeys.h
+!System/SysKeys.cpp
 !System/SysSettings.h
 !System/SysSettings.cpp
 !System/Lin/SysMessage.h
