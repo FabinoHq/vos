@@ -150,7 +150,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t dotProduct(Vector3i& v) const
+            inline int64_t dotProduct(const Vector3i& v) const
             {
                 return (
                     (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) + (vec[2]*v.vec[2])
@@ -160,7 +160,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set this vector as a cross product from 2 vectors             //
             ////////////////////////////////////////////////////////////////////
-            inline void crossProduct(Vector3i& v1, Vector3i& v2)
+            inline void crossProduct(const Vector3i& v1, const Vector3i& v2)
             {
                 vec[0] = ((v2.vec[1]*v1.vec[2]) - (v2.vec[2]*v1.vec[1]));
                 vec[1] = ((v2.vec[2]*v1.vec[0]) - (v2.vec[0]*v1.vec[2]));

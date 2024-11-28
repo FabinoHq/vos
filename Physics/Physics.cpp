@@ -220,7 +220,8 @@ void Physics::run()
         ++m_tick;
         m_tickMutex.unlock();
 
-        // Sync keys with physics
+        // Sync inputs with physics
+        GSysMouse.sync();
         GSysKeys.sync();
 
         // Compute software physics

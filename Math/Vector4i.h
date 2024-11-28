@@ -165,7 +165,7 @@
             ////////////////////////////////////////////////////////////////////
             //  dotProduct : Get the dot product of this vector and another   //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t dotProduct(Vector4i& v) const
+            inline int64_t dotProduct(const Vector4i& v) const
             {
                 return (
                     (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) +

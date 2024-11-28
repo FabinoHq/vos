@@ -453,6 +453,9 @@ void TopDown::compute(float frametime)
         m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];
         m_spaceReleased = false;
     }
+
+    // Update view position
+    m_view.setPosition(m_player.getPosition());
     
 
     // Start uniforms upload
@@ -559,7 +562,7 @@ void TopDown::render()
     m_ellipse.render();*/
 
     // Render bounding circle 2
-    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     positionX = m_boundingCircle2.position.vec[0]*PhysicsToRenderer;
     positionY = m_boundingCircle2.position.vec[1]*PhysicsToRenderer;
     float radius = m_boundingCircle2.radius*PhysicsToRenderer;
@@ -585,7 +588,7 @@ void TopDown::render()
     m_ellipse.setSize(radius*2.07f, radius*2.07f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.05f);
-    m_ellipse.render();
+    m_ellipse.render();*/
 
 
     // Render bounding rect
@@ -633,6 +636,10 @@ void TopDown::render()
     m_rectangle.setAngle(m_boundingRect2.angle*PhysicsAngleToRenderer);
     m_rectangle.setSmooth(0.05f);
     m_rectangle.render();*/
+
+
+    // Render player
+    m_player.render();
 
 
     // Set default screen view
@@ -690,9 +697,6 @@ void TopDown::render()
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_PROGRESSBAR);
     m_progressBar.bindTexture();
     m_progressBar.render();*/
-
-    // Render player
-    m_player.render();
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);

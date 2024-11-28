@@ -53,12 +53,15 @@ SysMouse GSysMouse = SysMouse();
 //  SysMouse default constructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
 SysMouse::SysMouse() :
+m_mutex(),
+m_angle(0.0f),
+previousX(0),
+previousY(0),
 mouseX(0.0f),
 mouseY(0.0f),
 deltaX(0.0f),
 deltaY(0.0f),
-previousX(0),
-previousY(0)
+angle(0)
 {
 
 }
@@ -98,7 +101,24 @@ void SysMouse::update(int x, int y)
         mouseY = Math::clamp((1.0f - (y*scale*2.0f)), -1.0f, 1.0f);
     #endif // VOS_POINTERLOCK
 
+    // Compute mouse angle
+    m_mutex.lock();
+    m_angle = Math::atan(mouseX, mouseY);
+    m_mutex.unlock();
+
     // Update previous mouse position
     previousX = x;
     previousY = y;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Sync mouse with physics (copy internal states)                            //
+////////////////////////////////////////////////////////////////////////////////
+void SysMouse::sync()
+{
+    // Copy mouse internal states
+    m_mutex.lock();
+    angle = static_cast<int64_t>(m_angle*RendererAngleToPhysics);
+    m_mutex.unlock();
 }

@@ -43,7 +43,9 @@
 #define VOS_SYSTEM_SYSMOUSE_HEADER
 
     #include "System.h"
+    #include "SysMutex.h"
     #include "../Math/Math.h"
+    #include "../Physics/Physics.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -69,6 +71,12 @@
             void update(int x, int y);
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Sync mouse with physics (copy internal states)                //
+            ////////////////////////////////////////////////////////////////////
+            void sync();
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  SysMouse private copy constructor : Not copyable              //
@@ -81,13 +89,19 @@
             SysMouse& operator=(const SysMouse&) = delete;
 
 
+        private:
+            SysMutex        m_mutex;            // Mouse mutex
+            float           m_angle;            // Mouse internal angle
+
+
         public:
+            int             previousX;          // Previous mouse X position
+            int             previousY;          // Previous mouse Y position
             float           mouseX;             // Mouse X position
             float           mouseY;             // Mouse Y position
             float           deltaX;             // Mouse X delta
             float           deltaY;             // Mouse Y delta
-            int             previousX;          // Previous mouse X position
-            int             previousY;          // Previous mouse Y position
+            int             angle;              // Mouse angle
     };
 
 

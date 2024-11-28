@@ -59,6 +59,9 @@
     ////////////////////////////////////////////////////////////////////////////
     const int64_t RendererToPhysics = Math::OneInt;
     const float PhysicsToRenderer = (1.0f / Math::OneInt);
+    const int64_t RendererAngleToPhysics = static_cast<int64_t>(
+        (Math::PiInt*1.0f) / Math::Pi
+    );
     const float PhysicsAngleToRenderer = (Math::Pi / (Math::PiInt*1.0f));
 
     ////////////////////////////////////////////////////////////////////////////
