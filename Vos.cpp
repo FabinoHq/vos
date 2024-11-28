@@ -235,8 +235,14 @@ void Vos::run()
                     m_running = false;
                     break;
 
+                // Key pressed
+                case SYSEVENT_KEYPRESSED:
+                    GSysKeys.pressed(event.key);
+                    break;
+
                 // Key released
                 case SYSEVENT_KEYRELEASED:
+                    GSysKeys.released(event.key);
                     switch (event.key)
                     {
                         case SYSEVENT_KEY_ESCAPE:

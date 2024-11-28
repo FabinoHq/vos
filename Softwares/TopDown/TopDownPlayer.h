@@ -43,7 +43,11 @@
 #define VOS_SOFTWARES_TOPDOWN_TOPDOWNPLAYER_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysEvent.h"
+    #include "../../System/SysMouse.h"
+    #include "../../System/SysKeys.h"
     #include "../../System/SysMutex.h"
+
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
 

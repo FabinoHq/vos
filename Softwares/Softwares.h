@@ -45,6 +45,7 @@
     #include "../System/System.h"
     #include "../System/SysEvent.h"
     #include "../System/SysMouse.h"
+    #include "../System/SysKeys.h"
 
     #include "../Renderer/Renderer.h"
     #include "../Physics/Physics.h"

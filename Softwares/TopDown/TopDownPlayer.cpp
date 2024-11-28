@@ -112,7 +112,22 @@ void TopDownPlayer::physics()
     m_position.prevAngle = (m_bounding.angle*PhysicsAngleToRenderer);
 
     // Compute top down player physics
-    m_bounding.position.vec[0] += 1000;
+    if (GSysKeys.up && !GSysKeys.down)
+    {
+        m_bounding.position.vec[1] += 10000;
+    }
+    if (GSysKeys.down && !GSysKeys.up)
+    {
+        m_bounding.position.vec[1] -= 10000;
+    }
+    if (GSysKeys.left && !GSysKeys.right)
+    {
+        m_bounding.position.vec[0] -= 10000;
+    }
+    if (GSysKeys.right && !GSysKeys.left)
+    {
+        m_bounding.position.vec[0] += 10000;
+    }
 
     // Convert position to renderer
     m_position.pos.vec[0] = (m_bounding.position.vec[0]*PhysicsToRenderer);

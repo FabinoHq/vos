@@ -46,6 +46,9 @@
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
     #include "../System/SysClock.h"
+    #include "../System/SysEvent.h"
+    #include "../System/SysMouse.h"
+    #include "../System/SysKeys.h"
     #include "../Math/Math.h"
 
     #include <cstdint>

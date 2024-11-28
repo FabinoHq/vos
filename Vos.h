@@ -44,6 +44,8 @@
 
     #include "System/System.h"
     #include "System/SysEvent.h"
+    #include "System/SysMouse.h"
+    #include "System/SysKeys.h"
     #include "System/SysMessage.h"
     #include "System/SysCPU.h"
     #include "System/SysWindow.h"

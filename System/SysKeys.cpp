@@ -52,6 +52,11 @@ SysKeys GSysKeys = SysKeys();
 //  SysKeys default constructor                                               //
 ////////////////////////////////////////////////////////////////////////////////
 SysKeys::SysKeys() :
+m_mutex(),
+m_up(false),
+m_down(false),
+m_left(false),
+m_right(false),
 up(false),
 down(false),
 left(false),
@@ -66,4 +71,64 @@ right(false)
 SysKeys::~SysKeys()
 {
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Key pressed event                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void SysKeys::pressed(const SysEventKey& key)
+{
+	// Compute key pressed event
+	m_mutex.lock();
+	switch (key)
+	{
+		case SYSEVENT_KEY_UP: m_up = true; break;
+		case SYSEVENT_KEY_DOWN: m_down = true; break;
+		case SYSEVENT_KEY_LEFT: m_left = true; break;
+		case SYSEVENT_KEY_RIGHT: m_right = true; break;
+		case SYSEVENT_KEY_Z: m_up = true; break;
+		case SYSEVENT_KEY_S: m_down = true; break;
+		case SYSEVENT_KEY_Q: m_left = true; break;
+		case SYSEVENT_KEY_D: m_right = true; break;
+		default: break;
+	}
+	m_mutex.unlock();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Key released event                                                        //
+////////////////////////////////////////////////////////////////////////////////
+void SysKeys::released(const SysEventKey& key)
+{
+	// Compute key released event
+	m_mutex.lock();
+	switch (key)
+	{
+		case SYSEVENT_KEY_UP: m_up = false; break;
+		case SYSEVENT_KEY_DOWN: m_down = false; break;
+		case SYSEVENT_KEY_LEFT: m_left = false; break;
+		case SYSEVENT_KEY_RIGHT: m_right = false; break;
+		case SYSEVENT_KEY_Z: m_up = false; break;
+		case SYSEVENT_KEY_S: m_down = false; break;
+		case SYSEVENT_KEY_Q: m_left = false; break;
+		case SYSEVENT_KEY_D: m_right = false; break;
+		default: break;
+	}
+	m_mutex.unlock();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Sync keys with physics (copy internal states)                             //
+////////////////////////////////////////////////////////////////////////////////
+void SysKeys::sync()
+{
+	// Copy keys internal states
+	m_mutex.lock();
+	up = m_up;
+	down = m_down;
+	left = m_left;
+	right = m_right;
+	m_mutex.unlock();
 }

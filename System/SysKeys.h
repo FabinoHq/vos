@@ -43,6 +43,8 @@
 #define VOS_SYSTEM_SYSKEYS_HEADER
 
     #include "System.h"
+    #include "SysEvent.h"
+    #include "SysMutex.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -62,6 +64,23 @@
             ~SysKeys();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Key pressed event                                             //
+            ////////////////////////////////////////////////////////////////////
+            void pressed(const SysEventKey& key);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Key released event                                            //
+            ////////////////////////////////////////////////////////////////////
+            void released(const SysEventKey& key);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Sync keys with physics (copy internal states)                 //
+            ////////////////////////////////////////////////////////////////////
+            void sync();
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  SysKeys private copy constructor : Not copyable               //
@@ -72,6 +91,14 @@
             //  SysKeys private copy operator : Not copyable                  //
             ////////////////////////////////////////////////////////////////////
             SysKeys& operator=(const SysKeys&) = delete;
+
+
+        private:
+            SysMutex        m_mutex;            // Keys mutex
+            bool            m_up;               // Internal key up
+            bool            m_down;             // Internal key down
+            bool            m_left;             // Internal key left
+            bool            m_right;            // Internal key right
 
 
         public:
