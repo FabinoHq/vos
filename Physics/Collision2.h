@@ -96,7 +96,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set collision position                                        //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(int64_t x, int64_t y)
+            inline void setPosition(int32_t x, int32_t y)
             {
                 position.vec[0] = x;
                 position.vec[1] = y;
@@ -114,7 +114,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set collision offset                                          //
             ////////////////////////////////////////////////////////////////////
-            inline void setOffset(int64_t offsetX, int64_t offsetY)
+            inline void setOffset(int32_t offsetX, int32_t offsetY)
             {
                 offset.vec[0] = offsetX;
                 offset.vec[1] = offsetY;
@@ -132,7 +132,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set collision normal                                          //
             ////////////////////////////////////////////////////////////////////
-            inline void setNormal(int64_t normalX, int64_t normalY)
+            inline void setNormal(int32_t normalX, int32_t normalY)
             {
                 normal.vec[0] = normalX;
                 normal.vec[1] = normalY;
@@ -141,9 +141,9 @@
             ////////////////////////////////////////////////////////////////////
             //  Set collision factor                                          //
             ////////////////////////////////////////////////////////////////////
-            inline void setFactor(int64_t collisionFactor)
+            inline void setFactor(int32_t collisionFactor)
             {
-                factor = Math::clamp(collisionFactor, 0ll, Math::OneInt);
+                factor = Math::clamp(collisionFactor, 0, Math::OneInt);
             }
 
 
@@ -158,7 +158,7 @@
             Vector2i        position;       // Collision position
             Vector2i        offset;         // Collision offset
             Vector2i        normal;         // Collision normal
-            int64_t         factor;         // Collision factor
+            int32_t         factor;         // Collision factor
     };
 
 

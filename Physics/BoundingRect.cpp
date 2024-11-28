@@ -69,7 +69,7 @@ BoundingRect::BoundingRect(const BoundingRect& boundingRect)
 //  BoundingRect position size and angle constructor                          //
 ////////////////////////////////////////////////////////////////////////////////
 BoundingRect::BoundingRect(const Vector2i& rectPosition,
-	const Vector2i& rectSize, int64_t rectAngle)
+	const Vector2i& rectSize, int32_t rectAngle)
 {
 	position.vec[0] = rectPosition.vec[0];
 	position.vec[1] = rectPosition.vec[1];
@@ -95,7 +95,7 @@ BoundingRect::~BoundingRect()
 //  Set bounding rect position size and angle                                 //
 ////////////////////////////////////////////////////////////////////////////////
 void BoundingRect::set(const Vector2i& rectPosition,
-	const Vector2i& rectSize, int64_t rectAngle)
+	const Vector2i& rectSize, int32_t rectAngle)
 {
 	position.vec[0] = rectPosition.vec[0];
 	position.vec[1] = rectPosition.vec[1];

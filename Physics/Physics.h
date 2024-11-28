@@ -57,9 +57,9 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Physics to Renderer conversions                                       //
     ////////////////////////////////////////////////////////////////////////////
-    const int64_t RendererToPhysics = Math::OneInt;
+    const int32_t RendererToPhysics = Math::OneInt;
     const float PhysicsToRenderer = (1.0f / Math::OneInt);
-    const int64_t RendererAngleToPhysics = static_cast<int64_t>(
+    const int32_t RendererAngleToPhysics = static_cast<int32_t>(
         (Math::PiInt*1.0f) / Math::Pi
     );
     const float PhysicsAngleToRenderer = (Math::Pi / (Math::PiInt*1.0f));
@@ -67,8 +67,8 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Physics solver settings                                               //
     ////////////////////////////////////////////////////////////////////////////
-    const int64_t PhysicsMinEntityHalfSize = (Math::OneInt / 200);
-    const int64_t PhysicsMaxSmallStepsIterations = 40;
+    const int32_t PhysicsMinEntityHalfSize = (Math::OneInt / 200);
+    const int32_t PhysicsMaxSmallStepsIterations = 40;
     const double PhysicsTickRate = 100.0;
     const double PhysicsTickTime = (1.0 / PhysicsTickRate);
     const double PhysicsIdleSleepTime = 0.01;

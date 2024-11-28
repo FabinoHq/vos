@@ -418,10 +418,10 @@ void TopDown::compute(float frametime)
 
     // Compute physics
     /*Vector2i collideOffset;
-    collideOffset.vec[0] = static_cast<int64_t>(
+    collideOffset.vec[0] = static_cast<int32_t>(
         GSysMouse.mouseX*RendererToPhysics
     );
-    collideOffset.vec[1] = static_cast<int64_t>(
+    collideOffset.vec[1] = static_cast<int32_t>(
         GSysMouse.mouseY*RendererToPhysics
     );
     collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
@@ -433,10 +433,10 @@ void TopDown::compute(float frametime)
 
     // Compute physics
     Vector2i collideOffset;
-    collideOffset.vec[0] = static_cast<int64_t>(
+    collideOffset.vec[0] = static_cast<int32_t>(
         GSysMouse.mouseX*RendererToPhysics
     );
-    collideOffset.vec[1] = static_cast<int64_t>(
+    collideOffset.vec[1] = static_cast<int32_t>(
         GSysMouse.mouseY*RendererToPhysics
     );
     collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
@@ -714,7 +714,7 @@ void TopDown::render()
 
     // Render pixel text (view position)
     std::ostringstream camerastr;
-    camerastr << "X : " << m_view.getX() << " | Y : " << m_view.getY();
+    camerastr << "X : " << m_player.getX() << " | Y : " << m_player.getY();
     m_pxText.setText(camerastr.str());
     m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
     if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))

@@ -75,7 +75,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector3i components constructor                               //
             ////////////////////////////////////////////////////////////////////
-            Vector3i(int64_t x, int64_t y, int64_t z)
+            Vector3i(int32_t x, int32_t y, int32_t z)
             {
                 vec[0] = x;
                 vec[1] = y;
@@ -116,7 +116,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector3i components from X, Y and Z components            //
             ////////////////////////////////////////////////////////////////////
-            inline void set(int64_t x, int64_t y, int64_t z)
+            inline void set(int32_t x, int32_t y, int32_t z)
             {
                 vec[0] = x;
                 vec[1] = y;
@@ -126,7 +126,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector3i X component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setX(int64_t x)
+            inline void setX(int32_t x)
             {
                 vec[0] = x;
             }
@@ -134,7 +134,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector3i Y component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setY(int64_t y)
+            inline void setY(int32_t y)
             {
                 vec[1] = y;
             }
@@ -142,7 +142,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector3i Z component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setZ(int64_t z)
+            inline void setZ(int32_t z)
             {
                 vec[2] = z;
             }
@@ -150,7 +150,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t dotProduct(const Vector3i& v) const
+            inline int32_t dotProduct(const Vector3i& v) const
             {
                 return (
                     (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) + (vec[2]*v.vec[2])
@@ -170,7 +170,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get Vector3i length                                           //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t length() const
+            inline int32_t length() const
             {
                 return Math::sqrt(
                     (vec[0]*vec[0]) + (vec[1]*vec[1]) + (vec[2]*vec[2])
@@ -182,7 +182,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void normalize()
             {
-                int64_t len = length();
+                int32_t len = length();
                 if (len != 0)
                 {
                     // Normalize between 0 and Math::OneInt
@@ -197,7 +197,7 @@
             //  Get Vector3i x component                                      //
             //  return : X component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t& x()
+            inline int32_t& x()
             {
                 return vec[0];
             }
@@ -206,7 +206,7 @@
             //  Get Vector3i y component                                      //
             //  return : Y component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t& y()
+            inline int32_t& y()
             {
                 return vec[1];
             }
@@ -215,7 +215,7 @@
             //  Get Vector3i z component                                      //
             //  return : Z component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t& z()
+            inline int32_t& z()
             {
                 return vec[2];
             }
@@ -232,7 +232,7 @@
                 return *this;
             }
 
-            inline Vector3i& operator=(int64_t val)
+            inline Vector3i& operator=(int32_t val)
             {
                 vec[0] = val;
                 vec[1] = val;
@@ -252,7 +252,7 @@
                 );
             }
 
-            inline Vector3i operator+(int64_t val) const
+            inline Vector3i operator+(int32_t val) const
             {
                 return Vector3i(vec[0]+val, vec[1]+val, vec[2]+val);
             }
@@ -269,7 +269,7 @@
                 );
             }
 
-            inline Vector3i operator-(int64_t val) const
+            inline Vector3i operator-(int32_t val) const
             {
                 return Vector3i(vec[0]-val, vec[1]-val, vec[2]-val);
             }
@@ -299,7 +299,7 @@
                     vec[2]*vector.vec[2]);
             }
 
-            inline Vector3i operator*(int64_t val) const
+            inline Vector3i operator*(int32_t val) const
             {
                 return Vector3i(vec[0]*val, vec[1]*val, vec[2]*val);
             }
@@ -325,7 +325,7 @@
                 return result;
             }
 
-            inline Vector3i operator/(int64_t val) const
+            inline Vector3i operator/(int32_t val) const
             {
                 Vector3i result(*this);
                 if (val != 0)
@@ -386,7 +386,7 @@
                 return *this;
             }
 
-            inline Vector3i& operator+=(int64_t val)
+            inline Vector3i& operator+=(int32_t val)
             {
                 vec[0] += val;
                 vec[1] += val;
@@ -405,7 +405,7 @@
                 return *this;
             }
 
-            inline Vector3i& operator-=(int64_t val)
+            inline Vector3i& operator-=(int32_t val)
             {
                 vec[0] -= val;
                 vec[1] -= val;
@@ -424,7 +424,7 @@
                 return *this;
             }
 
-            inline Vector3i& operator*=(int64_t val)
+            inline Vector3i& operator*=(int32_t val)
             {
                 vec[0] *= val;
                 vec[1] *= val;
@@ -452,7 +452,7 @@
                 return *this;
             }
 
-            inline Vector3i& operator/=(int64_t val)
+            inline Vector3i& operator/=(int32_t val)
             {
                 if (val != 0)
                 {
@@ -489,7 +489,7 @@
 
 
         public:
-            int64_t     vec[3];     // 3 components int vector representation
+            int32_t     vec[3];     // 3 components int vector representation
     };
 
 

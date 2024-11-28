@@ -73,7 +73,7 @@
             //  BoundingCircle position radius and angle constructor          //
             ////////////////////////////////////////////////////////////////////
             BoundingCircle(const Vector2i& circlePosition,
-                int64_t circleRadius, int64_t circleAngle = 0);
+                int32_t circleRadius, int32_t circleAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  BoundingCircle destructor                                     //
@@ -85,7 +85,7 @@
             //  Set bounding circle position radius and angle                 //
             ////////////////////////////////////////////////////////////////////
             void set(const Vector2i& circlePosition,
-                int64_t circleRadius, int64_t circleAngle = 0);
+                int32_t circleRadius, int32_t circleAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle position                                  //
@@ -99,7 +99,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(int64_t x, int64_t y)
+            inline void setPosition(int32_t x, int32_t y)
             {
                 position.vec[0] = x;
                 position.vec[1] = y;
@@ -108,7 +108,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle X position                                //
             ////////////////////////////////////////////////////////////////////
-            inline void setX(int64_t x)
+            inline void setX(int32_t x)
             {
                 position.vec[0] = x;
             }
@@ -116,7 +116,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle Y position                                //
             ////////////////////////////////////////////////////////////////////
-            inline void setY(int64_t y)
+            inline void setY(int32_t y)
             {
                 position.vec[1] = y;
             }
@@ -124,7 +124,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle radius                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setRadius(int64_t circleRadius)
+            inline void setRadius(int32_t circleRadius)
             {
                 radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
             }
@@ -132,7 +132,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding circle angle                                     //
             ////////////////////////////////////////////////////////////////////
-            inline void setAngle(int64_t circleAngle)
+            inline void setAngle(int32_t circleAngle)
             {
                 angle = (circleAngle % Math::TwoPiInt);
             }
@@ -173,7 +173,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding circle X position                                //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getX() const
+            inline int32_t getX() const
             {
                 return position.vec[0];
             }
@@ -181,7 +181,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding circle Y position                                //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getY() const
+            inline int32_t getY() const
             {
                 return position.vec[1];
             }
@@ -189,7 +189,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding circle radius                                    //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getRadius() const
+            inline int32_t getRadius() const
             {
                 return radius;
             }
@@ -197,7 +197,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding circle angle                                     //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getAngle() const
+            inline int32_t getAngle() const
             {
                 return angle;
             }
@@ -211,8 +211,8 @@
 
         public:
             Vector2i    position;   // Bounding circle position
-            int64_t     radius;     // Bounding circle radius
-            int64_t     angle;      // Bounding circle angle
+            int32_t     radius;     // Bounding circle radius
+            int32_t     angle;      // Bounding circle angle
     };
 
 

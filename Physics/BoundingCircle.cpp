@@ -68,7 +68,7 @@ BoundingCircle::BoundingCircle(const BoundingCircle& boundingCircle)
 //  BoundingCircle position radius and angle constructor                      //
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle::BoundingCircle(const Vector2i& circlePosition,
-	int64_t circleRadius, int64_t circleAngle)
+	int32_t circleRadius, int32_t circleAngle)
 {
 	position.vec[0] = circlePosition.vec[0];
 	position.vec[1] = circlePosition.vec[1];
@@ -92,7 +92,7 @@ BoundingCircle::~BoundingCircle()
 //  Set bounding circle position radius and angle                             //
 ////////////////////////////////////////////////////////////////////////////////
 void BoundingCircle::set(const Vector2i& circlePosition,
-	int64_t circleRadius, int64_t circleAngle)
+	int32_t circleRadius, int32_t circleAngle)
 {
 	position.vec[0] = circlePosition.vec[0];
 	position.vec[1] = circlePosition.vec[1];
@@ -107,8 +107,8 @@ void BoundingCircle::set(const Vector2i& circlePosition,
 bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
 {
 	Vector2i dist = (position - boundingCircle.position);
-	int64_t distance = (dist.vec[0]*dist.vec[0])+(dist.vec[1]*dist.vec[1]);
-	int64_t radiuses = (radius + boundingCircle.radius);
+	int32_t distance = (dist.vec[0]*dist.vec[0])+(dist.vec[1]*dist.vec[1]);
+	int32_t radiuses = (radius + boundingCircle.radius);
 	return (distance <= (radiuses*radiuses));
 }
 
@@ -136,19 +136,19 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	}
 
 	// Compute step offset
-	int64_t stepRadius =
+	int32_t stepRadius =
 		(radius <= boundingCircle.radius) ? radius : boundingCircle.radius;
 	if (stepRadius <= 0) { return false; }
-	int64_t stepX = Math::abs(offset.vec[0])/stepRadius;
-	int64_t stepY = Math::abs(offset.vec[1])/stepRadius;
-	int64_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1ll);
+	int32_t stepX = Math::abs(offset.vec[0])/stepRadius;
+	int32_t stepY = Math::abs(offset.vec[1])/stepRadius;
+	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
 	stepX = offset.vec[0]/step;
 	stepY = offset.vec[1]/step;
 
 	// Iterative collision detection
 	bool collide = false;
 	BoundingCircle currentCircle(*this);
-	for (int64_t i = 0; i < step; ++i)
+	for (int32_t i = 0; i < step; ++i)
 	{
 		if (currentCircle.collideCircle(boundingCircle))
 		{
@@ -188,7 +188,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	stepY >>= 1;	// stepY = stepY/2
 	currentCircle.position.vec[0] = collision.position.vec[0];
 	currentCircle.position.vec[1] = collision.position.vec[1];
-	for (int64_t i = 0; i < PhysicsMaxSmallStepsIterations; ++i)
+	for (int32_t i = 0; i < PhysicsMaxSmallStepsIterations; ++i)
 	{
 		currentCircle.position.vec[0] += stepX;
 		currentCircle.position.vec[1] += stepY;

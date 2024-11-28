@@ -101,7 +101,7 @@
             float           mouseY;             // Mouse Y position
             float           deltaX;             // Mouse X delta
             float           deltaY;             // Mouse Y delta
-            int             angle;              // Mouse angle
+            int32_t         angle;              // Mouse angle
     };
 
 

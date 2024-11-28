@@ -72,7 +72,7 @@
             //  BoundingRect position size and angle constructor              //
             ////////////////////////////////////////////////////////////////////
             BoundingRect(const Vector2i& rectPosition,
-                const Vector2i& rectSize, int64_t rectAngle = 0);
+                const Vector2i& rectSize, int32_t rectAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  BoundingRect destructor                                       //
@@ -84,7 +84,7 @@
             //  Set bounding rect position size and angle                     //
             ////////////////////////////////////////////////////////////////////
             void set(const Vector2i& rectPosition,
-                const Vector2i& rectSize, int64_t rectAngle = 0);
+                const Vector2i& rectSize, int32_t rectAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect position                                    //
@@ -98,7 +98,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect position                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(int64_t x, int64_t y)
+            inline void setPosition(int32_t x, int32_t y)
             {
                 position.vec[0] = x;
                 position.vec[1] = y;
@@ -107,7 +107,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect X position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setX(int64_t x)
+            inline void setX(int32_t x)
             {
                 position.vec[0] = x;
             }
@@ -115,7 +115,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect Y position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setY(int64_t y)
+            inline void setY(int32_t y)
             {
                 position.vec[1] = y;
             }
@@ -136,7 +136,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect size                                        //
             ////////////////////////////////////////////////////////////////////
-            inline void setSize(int64_t width, int64_t height)
+            inline void setSize(int32_t width, int32_t height)
             {
                 size.vec[0] = Math::max(width, PhysicsMinEntityHalfSize);
                 size.vec[1] = Math::max(height, PhysicsMinEntityHalfSize);
@@ -145,7 +145,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect width                                       //
             ////////////////////////////////////////////////////////////////////
-            inline void setWidth(int64_t rectWidth)
+            inline void setWidth(int32_t rectWidth)
             {
                 size.vec[0] = Math::max(rectWidth, PhysicsMinEntityHalfSize);
             }
@@ -153,7 +153,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect height                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setHeight(int64_t rectHeight)
+            inline void setHeight(int32_t rectHeight)
             {
                 size.vec[1] = Math::max(rectHeight, PhysicsMinEntityHalfSize);
             }
@@ -161,7 +161,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set bounding rect height                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setAngle(int64_t rectAngle)
+            inline void setAngle(int32_t rectAngle)
             {
                 angle = (rectAngle % Math::TwoPiInt);
             }
@@ -190,7 +190,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding rect X position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getX() const
+            inline int32_t getX() const
             {
                 return position.vec[0];
             }
@@ -198,7 +198,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding rect Y position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getY() const
+            inline int32_t getY() const
             {
                 return position.vec[1];
             }
@@ -214,7 +214,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding rect width                                       //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getWidth() const
+            inline int32_t getWidth() const
             {
                 return size.vec[0];
             }
@@ -222,7 +222,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding rect height                                      //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getHeight() const
+            inline int32_t getHeight() const
             {
                 return size.vec[1];
             }
@@ -230,7 +230,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get bounding rect angle                                       //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t getAngle() const
+            inline int32_t getAngle() const
             {
                 return angle;
             }
@@ -245,7 +245,7 @@
         public:
             Vector2i    position;   // Bounding rectangle position
             Vector2i    size;       // Bounding rectangle size
-            int64_t     angle;      // Bounding rectangle angle
+            int32_t     angle;      // Bounding rectangle angle
     };
 
 

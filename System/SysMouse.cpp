@@ -119,6 +119,6 @@ void SysMouse::sync()
 {
     // Copy mouse internal states
     m_mutex.lock();
-    angle = static_cast<int64_t>(m_angle*RendererAngleToPhysics);
+    angle = static_cast<int32_t>(m_angle*RendererAngleToPhysics);
     m_mutex.unlock();
 }

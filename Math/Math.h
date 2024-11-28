@@ -81,13 +81,13 @@
         const float InvSqrtTwo = 0.7071067811865475244008443621048f;
 
         // Integer constants
-        const int64_t OneIntShift = 20;
-        const int64_t OneInt = (1 << OneIntShift);  // 1048576
-        const int64_t PiInt = 3294198;
-        const int64_t TwoPiInt = 6588396;
-        const int64_t TwoPiThirdInt = 2196132;
-        const int64_t PiHalfInt = 1647099;
-        const int64_t PiThirdInt = 1098066;
+        const int32_t OneIntShift = 20;
+        const int32_t OneInt = (1 << OneIntShift);  // 1048576
+        const int32_t PiInt = 3294198;
+        const int32_t TwoPiInt = 6588396;
+        const int32_t TwoPiThirdInt = 2196132;
+        const int32_t PiHalfInt = 1647099;
+        const int32_t PiThirdInt = 1098066;
 
         // 32bits powers of ten
         const int32_t MaxPowersOfTen32 = 10;
@@ -574,7 +574,7 @@
         inline int32_t sin(int32_t x)
         {
             return SinusTable[Math::clamp(
-                (Math::modulo(x, ((int32_t)Math::TwoPiInt)) >> SinusTableShift),
+                (Math::modulo(x, Math::TwoPiInt) >> SinusTableShift),
                 0, (SinusTableSize-1)
             )];
         }
@@ -582,7 +582,7 @@
         inline int64_t sin(int64_t x)
         {
             return SinusTable[Math::clamp(
-                (Math::modulo(x, Math::TwoPiInt) >> SinusTableShift),
+                (Math::modulo(x, ((int64_t)Math::TwoPiInt)) >> SinusTableShift),
                 0ll, (SinusTableSize-1ll)
             )];
         }
@@ -605,8 +605,8 @@
         inline int32_t cos(int32_t x)
         {
             return SinusTable[Math::clamp(
-                (Math::modulo((x+((int32_t)Math::PiHalfInt)),
-                    ((int32_t)Math::TwoPiInt)) >> SinusTableShift),
+                (Math::modulo((x + Math::PiHalfInt),
+                    Math::TwoPiInt) >> SinusTableShift),
                 0, (SinusTableSize-1)
             )];
         }
@@ -614,8 +614,8 @@
         inline int64_t cos(int64_t x)
         {
             return SinusTable[Math::clamp(
-                (Math::modulo((x + Math::PiHalfInt),
-                    Math::TwoPiInt) >> SinusTableShift),
+                (Math::modulo((x + ((int64_t)Math::PiHalfInt)),
+                    ((int64_t)Math::TwoPiInt)) >> SinusTableShift),
                 0ll, (SinusTableSize-1ll)
             )];
         }

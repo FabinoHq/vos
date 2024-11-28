@@ -77,7 +77,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Vector4i components constructor                               //
             ////////////////////////////////////////////////////////////////////
-            Vector4i(int64_t x, int64_t y, int64_t z, int64_t w)
+            Vector4i(int32_t x, int32_t y, int32_t z, int32_t w)
             {
                 vec[0] = x;
                 vec[1] = y;
@@ -122,7 +122,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector4i components from X, Y, Z and W components         //
             ////////////////////////////////////////////////////////////////////
-            inline void set(int64_t x, int64_t y, int64_t z, int64_t w)
+            inline void set(int32_t x, int32_t y, int32_t z, int32_t w)
             {
                 vec[0] = x;
                 vec[1] = y;
@@ -133,7 +133,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector4i X component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setX(int64_t x)
+            inline void setX(int32_t x)
             {
                 vec[0] = x;
             }
@@ -141,7 +141,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector4i Y component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setY(int64_t y)
+            inline void setY(int32_t y)
             {
                 vec[1] = y;
             }
@@ -149,7 +149,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector4i Z component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setZ(int64_t z)
+            inline void setZ(int32_t z)
             {
                 vec[2] = z;
             }
@@ -157,7 +157,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector4i W component                                      //
             ////////////////////////////////////////////////////////////////////
-            inline void setW(int64_t w)
+            inline void setW(int32_t w)
             {
                 vec[3] = w;
             }
@@ -165,7 +165,7 @@
             ////////////////////////////////////////////////////////////////////
             //  dotProduct : Get the dot product of this vector and another   //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t dotProduct(const Vector4i& v) const
+            inline int32_t dotProduct(const Vector4i& v) const
             {
                 return (
                     (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) +
@@ -176,7 +176,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Get Vector4i length                                           //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t length() const
+            inline int32_t length() const
             {
                 return Math::sqrt(
                     (vec[0]*vec[0]) + (vec[1]*vec[1]) +
@@ -189,7 +189,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void normalize()
             {
-                int64_t len = length();
+                int32_t len = length();
                 if (len != 0.0f)
                 {
                     // Normalize between 0 and Math::OneInt
@@ -205,7 +205,7 @@
             //  Get Vector4i x component                                      //
             //  return : X component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t& x()
+            inline int32_t& x()
             {
                 return vec[0];
             }
@@ -214,7 +214,7 @@
             //  Get Vector4i y component                                      //
             //  return : Y component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t& y()
+            inline int32_t& y()
             {
                 return vec[1];
             }
@@ -223,7 +223,7 @@
             //  Get Vector4i z component                                      //
             //  return : Z component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t& z()
+            inline int32_t& z()
             {
                 return vec[2];
             }
@@ -232,7 +232,7 @@
             //  Get Vector4i w component                                      //
             //  return : W component of the vector                            //
             ////////////////////////////////////////////////////////////////////
-            inline int64_t& w()
+            inline int32_t& w()
             {
                 return vec[3];
             }
@@ -250,7 +250,7 @@
                 return *this;
             }
 
-            inline Vector4i& operator=(int64_t val)
+            inline Vector4i& operator=(int32_t val)
             {
                 vec[0] = val;
                 vec[1] = val;
@@ -270,7 +270,7 @@
                 );
             }
 
-            inline Vector4i operator+(int64_t val) const
+            inline Vector4i operator+(int32_t val) const
             {
                 return Vector4i(vec[0]+val, vec[1]+val, vec[2]+val, vec[3]+val);
             }
@@ -286,7 +286,7 @@
                 );
             }
 
-            inline Vector4i operator-(int64_t val) const
+            inline Vector4i operator-(int32_t val) const
             {
                 return Vector4i(vec[0]-val, vec[1]-val, vec[2]-val, vec[3]-val);
             }
@@ -318,7 +318,7 @@
                 );
             }
 
-            inline Vector4i operator*(int64_t val) const
+            inline Vector4i operator*(int32_t val) const
             {
                 return Vector4i(vec[0]*val, vec[1]*val, vec[2]*val, vec[3]*val);
             }
@@ -348,7 +348,7 @@
                 return result;
             }
 
-            inline Vector4i operator/(int64_t val) const
+            inline Vector4i operator/(int32_t val) const
             {
                 Vector4i result(*this);
                 if (val != 0)
@@ -413,7 +413,7 @@
                 return *this;
             }
 
-            inline Vector4i& operator+=(int64_t val)
+            inline Vector4i& operator+=(int32_t val)
             {
                 vec[0] += val;
                 vec[1] += val;
@@ -434,7 +434,7 @@
                 return *this;
             }
 
-            inline Vector4i& operator-=(int64_t val)
+            inline Vector4i& operator-=(int32_t val)
             {
                 vec[0] -= val;
                 vec[1] -= val;
@@ -455,7 +455,7 @@
                 return *this;
             }
 
-            inline Vector4i& operator*=(int64_t val)
+            inline Vector4i& operator*=(int32_t val)
             {
                 vec[0] *= val;
                 vec[1] *= val;
@@ -488,7 +488,7 @@
                 return *this;
             }
 
-            inline Vector4i& operator/=(int64_t val)
+            inline Vector4i& operator/=(int32_t val)
             {
                 if (val != 0)
                 {
@@ -528,7 +528,7 @@
 
 
         public:
-            int64_t     vec[4];     // 4 components int vector representation
+            int32_t     vec[4];     // 4 components int vector representation
     };
 
 
