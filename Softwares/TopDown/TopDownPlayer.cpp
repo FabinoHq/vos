@@ -47,6 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 TopDownPlayer::TopDownPlayer() :
 m_position(),
+m_speed(),
 m_bounding(),
 m_ellipse()
 {
@@ -71,11 +72,14 @@ TopDownPlayer::~TopDownPlayer()
 ////////////////////////////////////////////////////////////////////////////////
 bool TopDownPlayer::init()
 {
-    // Reset position
+    // Reset player position
     m_position.pos.reset();
     m_position.prevPos.reset();
     m_position.angle = 0.0f;
     m_position.prevAngle = 0.0f;
+
+    // Reset player speed
+    m_speed.reset();
 
     // Init bounding circle
     m_bounding.setPosition(0, 0);
@@ -111,23 +115,32 @@ void TopDownPlayer::physics()
     m_position.prevPos.vec[1] = (m_bounding.position.vec[1]*PhysicsToRenderer);
     m_position.prevAngle = (m_bounding.angle*PhysicsAngleToRenderer);
 
-    // Compute top down player physics
-    if (GSysKeys.up && !GSysKeys.down)
+    // Compute top down player speed
+    if (GSysKeys.axis.vec[0] != 0)
     {
-        m_bounding.position.vec[1] += 10000;
+        // Accelerate X
+        m_speed.vec[0] += (GSysKeys.axis.vec[0] >> 2);
     }
-    if (GSysKeys.down && !GSysKeys.up)
+    else
     {
-        m_bounding.position.vec[1] -= 10000;
+        // Decelerate X
+        m_speed.moveXTowards(0, 100000);
     }
-    if (GSysKeys.left && !GSysKeys.right)
+    if (GSysKeys.axis.vec[1] != 0)
     {
-        m_bounding.position.vec[0] -= 10000;
+        // Accelerate Y
+        m_speed.vec[1] += (GSysKeys.axis.vec[1] >> 2);
     }
-    if (GSysKeys.right && !GSysKeys.left)
+    else
     {
-        m_bounding.position.vec[0] += 10000;
+        // Decelerate Y
+        m_speed.moveYTowards(0, 100000);
     }
+    m_speed.clamp(-Math::OneInt, Math::OneInt);
+
+    // Compute top down player position
+    m_bounding.position.vec[0] += (m_speed.vec[0] >> 7);
+    m_bounding.position.vec[1] += (m_speed.vec[1] >> 7);
 
     // Convert position to renderer
     m_position.pos.vec[0] = (m_bounding.position.vec[0]*PhysicsToRenderer);

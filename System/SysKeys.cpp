@@ -57,12 +57,13 @@ m_up(false),
 m_down(false),
 m_left(false),
 m_right(false),
+axis(),
 up(false),
 down(false),
 left(false),
 right(false)
 {
-
+	axis.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,4 +132,81 @@ void SysKeys::sync()
 	left = m_left;
 	right = m_right;
 	m_mutex.unlock();
+
+	// Compute input axis
+	computeAxis();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute input axis from keys states                                       //
+////////////////////////////////////////////////////////////////////////////////
+void SysKeys::computeAxis()
+{
+	// Compute input axis
+	axis.reset();
+	if (up && !down && !left && !right)
+    {
+    	// Up
+        axis.vec[1] = Math::OneInt;
+    }
+    else if (!up && down && !left && !right)
+    {
+    	// Down
+        axis.vec[1] = -Math::OneInt;
+    }
+    else if (!up && !down && left && !right)
+    {
+    	// Left
+        axis.vec[0] = -Math::OneInt;
+    }
+    else if (!up && !down && !left && right)
+    {
+    	// Right
+        axis.vec[0] = Math::OneInt;
+    }
+    else if (up && !down && left && right)
+    {
+    	// Up (left and right pressed)
+        axis.vec[1] = Math::OneInt;
+    }
+    else if (!up && down && left && right)
+    {
+    	// Down (left and right pressed)
+        axis.vec[1] = -Math::OneInt;
+    }
+    else if (up && down && left && !right)
+    {
+    	// Left (up and down pressed)
+        axis.vec[0] = -Math::OneInt;
+    }
+    else if (up && down && !left && right)
+    {
+    	// Right (up and down pressed)
+        axis.vec[0] = Math::OneInt;
+    }
+    else if (up && !down && left && !right)
+    {
+    	// Up left
+        axis.vec[0] = -Math::InvSqrtTwoInt;
+        axis.vec[1] = Math::InvSqrtTwoInt;
+    }
+    else if (up && !down && !left && right)
+    {
+    	// Up right
+        axis.vec[0] = Math::InvSqrtTwoInt;
+        axis.vec[1] = Math::InvSqrtTwoInt;
+    }
+    else if (!up && down && left && !right)
+    {
+    	// Down left
+        axis.vec[0] = -Math::InvSqrtTwoInt;
+        axis.vec[1] = -Math::InvSqrtTwoInt;
+    }
+    else if (!up && down && !left && right)
+    {
+    	// Down right
+        axis.vec[0] = Math::InvSqrtTwoInt;
+        axis.vec[1] = -Math::InvSqrtTwoInt;
+    }
 }

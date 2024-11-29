@@ -45,6 +45,8 @@
     #include "System.h"
     #include "SysEvent.h"
     #include "SysMutex.h"
+    #include "../Math/Math.h"
+    #include "../Math/Vector2i.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -93,6 +95,12 @@
             SysKeys& operator=(const SysKeys&) = delete;
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Compute input axis from keys states                           //
+            ////////////////////////////////////////////////////////////////////
+            void computeAxis();
+
+
         private:
             SysMutex        m_mutex;            // Keys mutex
             bool            m_up;               // Internal key up
@@ -102,6 +110,7 @@
 
 
         public:
+            Vector2i        axis;               // Input axis
             bool            up;                 // Key up
             bool            down;               // Key down
             bool            left;               // Key left

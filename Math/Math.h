@@ -88,6 +88,10 @@
         const int32_t TwoPiThirdInt = 2196132;
         const int32_t PiHalfInt = 1647099;
         const int32_t PiThirdInt = 1098066;
+        const int32_t PiFourthInt = 823550;
+        const int32_t PiEighthInt = 411775;
+        const int32_t SqrtTwoInt = 1482910;
+        const int32_t InvSqrtTwoInt = 741455;
 
         // 32bits powers of ten
         const int32_t MaxPowersOfTen32 = 10;

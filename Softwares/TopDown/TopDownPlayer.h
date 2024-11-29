@@ -152,7 +152,8 @@
 
 
         private:
-            TopDownPlayerPos    m_position;             // Position
+            TopDownPlayerPos    m_position;             // Player position
+            Vector2i            m_speed;                // Player speed
             BoundingCircle      m_bounding;             // Bounding circle
 
             EllipseShape        m_ellipse;              // Ellipse shape

@@ -131,6 +131,17 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Set Vector4i components from a single value                   //
+            ////////////////////////////////////////////////////////////////////
+            inline void set(int32_t value)
+            {
+                vec[0] = value;
+                vec[1] = value;
+                vec[2] = value;
+                vec[4] = value;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Set Vector4i X component                                      //
             ////////////////////////////////////////////////////////////////////
             inline void setX(int32_t x)
@@ -161,45 +172,6 @@
             {
                 vec[3] = w;
             }
-
-            ////////////////////////////////////////////////////////////////////
-            //  dotProduct : Get the dot product of this vector and another   //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t dotProduct(const Vector4i& v) const
-            {
-                return (
-                    (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) +
-                    (vec[2]*v.vec[2]) + (vec[3]*v.vec[3])
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector4i length                                           //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t length() const
-            {
-                return Math::sqrt(
-                    (vec[0]*vec[0]) + (vec[1]*vec[1]) +
-                    (vec[2]*vec[2]) + (vec[3]*vec[3])
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Normalize Vector4i                                            //
-            ////////////////////////////////////////////////////////////////////
-            inline void normalize()
-            {
-                int32_t len = length();
-                if (len != 0.0f)
-                {
-                    // Normalize between 0 and Math::OneInt
-                    vec[0] = (vec[0] << Math::OneIntShift) / len;
-                    vec[1] = (vec[1] << Math::OneIntShift) / len;
-                    vec[2] = (vec[2] << Math::OneIntShift) / len;
-                    vec[3] = (vec[3] << Math::OneIntShift) / len;
-                }
-            }
-
 
             ////////////////////////////////////////////////////////////////////
             //  Get Vector4i x component                                      //
@@ -235,6 +207,166 @@
             inline int32_t& w()
             {
                 return vec[3];
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if vector is equal to zero                              //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isZero()
+            {
+                return (
+                    (vec[0] == 0) && (vec[1] == 0) &&
+                    (vec[2] == 0) && (vec[3] == 0)
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Clamp vector between min and max                              //
+            ////////////////////////////////////////////////////////////////////
+            inline void clamp(int32_t min, int32_t max)
+            {
+                vec[0] = Math::clamp(vec[0], min, max);
+                vec[1] = Math::clamp(vec[1], min, max);
+                vec[2] = Math::clamp(vec[2], min, max);
+                vec[3] = Math::clamp(vec[3], min, max);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move components towards a specified value                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveTowards(int32_t value, int32_t delta)
+            {
+                if (vec[0] > value)
+                {
+                    vec[0] = Math::max(vec[0]-delta, value);
+                }
+                else if (vec[0] < value)
+                {
+                    vec[0] = Math::min(vec[0]+delta, value);
+                }
+                if (vec[1] > value)
+                {
+                    vec[1] = Math::max(vec[1]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[1] = Math::min(vec[1]+delta, value);
+                }
+                if (vec[2] > value)
+                {
+                    vec[2] = Math::max(vec[2]-delta, value);
+                }
+                else if (vec[2] < value)
+                {
+                    vec[2] = Math::min(vec[2]+delta, value);
+                }
+                if (vec[3] > value)
+                {
+                    vec[3] = Math::max(vec[3]-delta, value);
+                }
+                else if (vec[3] < value)
+                {
+                    vec[3] = Math::min(vec[3]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move X component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveXTowards(int32_t value, int32_t delta)
+            {
+                if (vec[0] > value)
+                {
+                    vec[0] = Math::max(vec[0]-delta, value);
+                }
+                else if (vec[0] < value)
+                {
+                    vec[0] = Math::min(vec[0]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move Y component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveYTowards(int32_t value, int32_t delta)
+            {
+                if (vec[1] > value)
+                {
+                    vec[1] = Math::max(vec[1]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[1] = Math::min(vec[1]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move Z component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveZTowards(int32_t value, int32_t delta)
+            {
+                if (vec[2] > value)
+                {
+                    vec[2] = Math::max(vec[2]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[2] = Math::min(vec[2]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move W component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveWTowards(int32_t value, int32_t delta)
+            {
+                if (vec[3] > value)
+                {
+                    vec[3] = Math::max(vec[3]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[3] = Math::min(vec[3]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get the dot product of this vector and another                //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t dotProduct(const Vector4i& v) const
+            {
+                return (
+                    (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) +
+                    (vec[2]*v.vec[2]) + (vec[3]*v.vec[3])
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector4i length                                           //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t length() const
+            {
+                return Math::sqrt(
+                    (vec[0]*vec[0]) + (vec[1]*vec[1]) +
+                    (vec[2]*vec[2]) + (vec[3]*vec[3])
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Normalize Vector4i                                            //
+            ////////////////////////////////////////////////////////////////////
+            inline void normalize()
+            {
+                int32_t len = length();
+                if (len != 0.0f)
+                {
+                    // Normalize between 0 and Math::OneInt
+                    vec[0] = (vec[0] << Math::OneIntShift) / len;
+                    vec[1] = (vec[1] << Math::OneIntShift) / len;
+                    vec[2] = (vec[2] << Math::OneIntShift) / len;
+                    vec[3] = (vec[3] << Math::OneIntShift) / len;
+                }
             }
 
 

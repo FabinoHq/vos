@@ -117,6 +117,15 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Set Vector2 components from a single value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void set(float value)
+            {
+                vec[0] = value;
+                vec[1] = value;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Set Vector2 X component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setX(float x)
@@ -130,6 +139,98 @@
             inline void setY(float y)
             {
                 vec[1] = y;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector2 x component                                       //
+            //  return : X component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline float& x()
+            {
+                return vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector2 y component                                       //
+            //  return : Y component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline float& y()
+            {
+                return vec[1];
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if vector is equal to zero                              //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isZero()
+            {
+                return (
+                    Math::areEqual(vec[0], 0.0f) &&
+                    Math::areEqual(vec[1], 0.0f)
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Clamp vector between min and max                              //
+            ////////////////////////////////////////////////////////////////////
+            inline void clamp(float min, float max)
+            {
+                vec[0] = Math::clamp(vec[0], min, max);
+                vec[1] = Math::clamp(vec[1], min, max);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move components towards a specified value                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveTowards(float value, float delta)
+            {
+                if (vec[0] > value)
+                {
+                    vec[0] = Math::max(vec[0]-delta, value);
+                }
+                else if (vec[0] < value)
+                {
+                    vec[0] = Math::min(vec[0]+delta, value);
+                }
+                if (vec[1] > value)
+                {
+                    vec[1] = Math::max(vec[1]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[1] = Math::min(vec[1]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move X component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveXTowards(float value, float delta)
+            {
+                if (vec[0] > value)
+                {
+                    vec[0] = Math::max(vec[0]-delta, value);
+                }
+                else if (vec[0] < value)
+                {
+                    vec[0] = Math::min(vec[0]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move Y component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveYTowards(float value, float delta)
+            {
+                if (vec[1] > value)
+                {
+                    vec[1] = Math::max(vec[1]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[1] = Math::min(vec[1]+delta, value);
+                }
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -195,25 +296,6 @@
                     vec[0] *= invLength;
                     vec[1] *= invLength;
                 }
-            }
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector2 x component                                       //
-            //  return : X component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline float& x()
-            {
-                return vec[0];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector2 y component                                       //
-            //  return : Y component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline float& y()
-            {
-                return vec[1];
             }
 
 

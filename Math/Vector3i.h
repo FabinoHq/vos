@@ -124,6 +124,16 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Set Vector3i components from a single value                   //
+            ////////////////////////////////////////////////////////////////////
+            inline void set(int32_t value)
+            {
+                vec[0] = value;
+                vec[1] = value;
+                vec[2] = value;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Set Vector3i X component                                      //
             ////////////////////////////////////////////////////////////////////
             inline void setX(int32_t x)
@@ -145,6 +155,128 @@
             inline void setZ(int32_t z)
             {
                 vec[2] = z;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector3i x component                                      //
+            //  return : X component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t& x()
+            {
+                return vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector3i y component                                      //
+            //  return : Y component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t& y()
+            {
+                return vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector3i z component                                      //
+            //  return : Z component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t& z()
+            {
+                return vec[2];
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if vector is equal to zero                              //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isZero()
+            {
+                return ((vec[0] == 0) && (vec[1] == 0) && (vec[2] == 0));
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Clamp vector between min and max                              //
+            ////////////////////////////////////////////////////////////////////
+            inline void clamp(int32_t min, int32_t max)
+            {
+                vec[0] = Math::clamp(vec[0], min, max);
+                vec[1] = Math::clamp(vec[1], min, max);
+                vec[2] = Math::clamp(vec[2], min, max);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move components towards a specified value                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveTowards(int32_t value, int32_t delta)
+            {
+                if (vec[0] > value)
+                {
+                    vec[0] = Math::max(vec[0]-delta, value);
+                }
+                else if (vec[0] < value)
+                {
+                    vec[0] = Math::min(vec[0]+delta, value);
+                }
+                if (vec[1] > value)
+                {
+                    vec[1] = Math::max(vec[1]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[1] = Math::min(vec[1]+delta, value);
+                }
+                if (vec[2] > value)
+                {
+                    vec[2] = Math::max(vec[2]-delta, value);
+                }
+                else if (vec[2] < value)
+                {
+                    vec[2] = Math::min(vec[2]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move X component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveXTowards(int32_t value, int32_t delta)
+            {
+                if (vec[0] > value)
+                {
+                    vec[0] = Math::max(vec[0]-delta, value);
+                }
+                else if (vec[0] < value)
+                {
+                    vec[0] = Math::min(vec[0]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move Y component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveYTowards(int32_t value, int32_t delta)
+            {
+                if (vec[1] > value)
+                {
+                    vec[1] = Math::max(vec[1]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[1] = Math::min(vec[1]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move Z component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveZTowards(int32_t value, int32_t delta)
+            {
+                if (vec[2] > value)
+                {
+                    vec[2] = Math::max(vec[2]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[2] = Math::min(vec[2]+delta, value);
+                }
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -190,34 +322,6 @@
                     vec[1] = (vec[1] << Math::OneIntShift) / len;
                     vec[2] = (vec[2] << Math::OneIntShift) / len;
                 }
-            }
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector3i x component                                      //
-            //  return : X component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t& x()
-            {
-                return vec[0];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector3i y component                                      //
-            //  return : Y component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t& y()
-            {
-                return vec[1];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector3i z component                                      //
-            //  return : Z component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t& z()
-            {
-                return vec[2];
             }
 
 

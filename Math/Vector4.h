@@ -131,6 +131,17 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Set Vector4 components from a single value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void set(float value)
+            {
+                vec[0] = value;
+                vec[1] = value;
+                vec[2] = value;
+                vec[3] = value;
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Set Vector4 X component                                       //
             ////////////////////////////////////////////////////////////////////
             inline void setX(float x)
@@ -160,6 +171,166 @@
             inline void setW(float w)
             {
                 vec[3] = w;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector4 x component                                       //
+            //  return : X component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline float& x()
+            {
+                return vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector4 y component                                       //
+            //  return : Y component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline float& y()
+            {
+                return vec[1];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector4 z component                                       //
+            //  return : Z component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline float& z()
+            {
+                return vec[2];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get Vector4 w component                                       //
+            //  return : W component of the vector                            //
+            ////////////////////////////////////////////////////////////////////
+            inline float& w()
+            {
+                return vec[3];
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if vector is equal to zero                              //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isZero()
+            {
+                return (
+                    Math::areEqual(vec[0], 0.0f) &&
+                    Math::areEqual(vec[1], 0.0f) &&
+                    Math::areEqual(vec[2], 0.0f) &&
+                    Math::areEqual(vec[3], 0.0f)
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Clamp vector between min and max                              //
+            ////////////////////////////////////////////////////////////////////
+            inline void clamp(float min, float max)
+            {
+                vec[0] = Math::clamp(vec[0], min, max);
+                vec[1] = Math::clamp(vec[1], min, max);
+                vec[2] = Math::clamp(vec[2], min, max);
+                vec[3] = Math::clamp(vec[2], min, max);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move components towards a specified value                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveTowards(float value, float delta)
+            {
+                if (vec[0] > value)
+                {
+                    vec[0] = Math::max(vec[0]-delta, value);
+                }
+                else if (vec[0] < value)
+                {
+                    vec[0] = Math::min(vec[0]+delta, value);
+                }
+                if (vec[1] > value)
+                {
+                    vec[1] = Math::max(vec[1]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[1] = Math::min(vec[1]+delta, value);
+                }
+                if (vec[2] > value)
+                {
+                    vec[2] = Math::max(vec[2]-delta, value);
+                }
+                else if (vec[2] < value)
+                {
+                    vec[2] = Math::min(vec[2]+delta, value);
+                }
+                if (vec[3] > value)
+                {
+                    vec[3] = Math::max(vec[3]-delta, value);
+                }
+                else if (vec[3] < value)
+                {
+                    vec[3] = Math::min(vec[3]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move X component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveXTowards(float value, float delta)
+            {
+                if (vec[0] > value)
+                {
+                    vec[0] = Math::max(vec[0]-delta, value);
+                }
+                else if (vec[0] < value)
+                {
+                    vec[0] = Math::min(vec[0]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move Y component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveYTowards(float value, float delta)
+            {
+                if (vec[1] > value)
+                {
+                    vec[1] = Math::max(vec[1]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[1] = Math::min(vec[1]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move Z component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveZTowards(float value, float delta)
+            {
+                if (vec[2] > value)
+                {
+                    vec[2] = Math::max(vec[2]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[2] = Math::min(vec[2]+delta, value);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move W component towards a specified value                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void moveWTowards(float value, float delta)
+            {
+                if (vec[3] > value)
+                {
+                    vec[3] = Math::max(vec[3]-delta, value);
+                }
+                else if (vec[1] < value)
+                {
+                    vec[3] = Math::min(vec[3]+delta, value);
+                }
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -208,7 +379,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  dotProduct : Get the dot product of this vector and another   //
+            //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
             inline float dotProduct(const Vector4& v) const
             {
@@ -243,43 +414,6 @@
                     vec[2] *= invLength;
                     vec[3] *= invLength;
                 }
-            }
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector4 x component                                       //
-            //  return : X component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline float& x()
-            {
-                return vec[0];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector4 y component                                       //
-            //  return : Y component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline float& y()
-            {
-                return vec[1];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector4 z component                                       //
-            //  return : Z component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline float& z()
-            {
-                return vec[2];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get Vector4 w component                                       //
-            //  return : W component of the vector                            //
-            ////////////////////////////////////////////////////////////////////
-            inline float& w()
-            {
-                return vec[3];
             }
 
 
