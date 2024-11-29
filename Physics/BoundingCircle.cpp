@@ -219,9 +219,9 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	collision.normal.vec[1] =
 		(collision.position.vec[1] - boundingCircle.position.vec[1]);
 	collision.normal.normalize();
-	collision.setFactor(
+	collision.setFactor(static_cast<int32_t>(
 		(collision.offset.length() << Math::OneIntShift) / offset.length()
-	);
+	));
 	collision.collide = true;
 	return collision.collide;
 }

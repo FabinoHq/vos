@@ -136,7 +136,11 @@ void TopDownPlayer::physics()
         // Decelerate Y
         m_speed.moveYTowards(0, 100000);
     }
-    m_speed.clamp(-Math::OneInt, Math::OneInt);
+    if (m_speed.length() >= Math::OneInt)
+    {
+        // Clamp speed
+        m_speed.normalize();
+    }
 
     // Compute top down player position
     m_bounding.position.vec[0] += (m_speed.vec[0] >> 7);

@@ -282,10 +282,15 @@
             ////////////////////////////////////////////////////////////////////
             //  Get the dot product of this vector and another                //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t dotProduct(const Vector3i& v) const
+            inline int64_t dotProduct(const Vector3i& v) const
             {
                 return (
-                    (vec[0]*v.vec[0]) + (vec[1]*v.vec[1]) + (vec[2]*v.vec[2])
+                    (static_cast<int64_t>(vec[0])*
+                    static_cast<int64_t>(v.vec[0]))+
+                    (static_cast<int64_t>(vec[1])*
+                    static_cast<int64_t>(v.vec[1]))+
+                    (static_cast<int64_t>(vec[2])*
+                    static_cast<int64_t>(v.vec[2]))
                 );
             }
 
@@ -294,18 +299,35 @@
             ////////////////////////////////////////////////////////////////////
             inline void crossProduct(const Vector3i& v1, const Vector3i& v2)
             {
-                vec[0] = ((v2.vec[1]*v1.vec[2]) - (v2.vec[2]*v1.vec[1]));
-                vec[1] = ((v2.vec[2]*v1.vec[0]) - (v2.vec[0]*v1.vec[2]));
-                vec[2] = ((v2.vec[0]*v1.vec[1]) - (v2.vec[1]*v1.vec[0]));
+                vec[0] = static_cast<int32_t>(
+                    (static_cast<int64_t>(v2.vec[1])*
+                    static_cast<int64_t>(v1.vec[2]))-
+                    (static_cast<int64_t>(v2.vec[2])*
+                    static_cast<int64_t>(v1.vec[1]))
+                );
+                vec[1] = static_cast<int32_t>(
+                    (static_cast<int64_t>(v2.vec[2])*
+                    static_cast<int64_t>(v1.vec[0]))-
+                    (static_cast<int64_t>(v2.vec[0])*
+                    static_cast<int64_t>(v1.vec[2]))
+                );
+                vec[2] = static_cast<int32_t>(
+                    (static_cast<int64_t>(v2.vec[0])*
+                    static_cast<int64_t>(v1.vec[1]))-
+                    (static_cast<int64_t>(v2.vec[1])*
+                    static_cast<int64_t>(v1.vec[0]))
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Get Vector3i length                                           //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t length() const
+            inline int64_t length() const
             {
                 return Math::sqrt(
-                    (vec[0]*vec[0]) + (vec[1]*vec[1]) + (vec[2]*vec[2])
+                    (static_cast<int64_t>(vec[0])*static_cast<int64_t>(vec[0]))+
+                    (static_cast<int64_t>(vec[1])*static_cast<int64_t>(vec[1]))+
+                    (static_cast<int64_t>(vec[2])*static_cast<int64_t>(vec[2]))
                 );
             }
 
@@ -314,13 +336,18 @@
             ////////////////////////////////////////////////////////////////////
             inline void normalize()
             {
-                int32_t len = length();
+                int64_t len = length();
                 if (len != 0)
                 {
-                    // Normalize between 0 and Math::OneInt
-                    vec[0] = (vec[0] << Math::OneIntShift) / len;
-                    vec[1] = (vec[1] << Math::OneIntShift) / len;
-                    vec[2] = (vec[2] << Math::OneIntShift) / len;
+                    vec[0] = static_cast<int32_t>(
+                        (static_cast<int64_t>(vec[0])<<Math::OneIntShift) / len
+                    );
+                    vec[1] = static_cast<int32_t>(
+                        (static_cast<int64_t>(vec[1])<<Math::OneIntShift) / len
+                    );
+                    vec[2] = static_cast<int32_t>(
+                        (static_cast<int64_t>(vec[2])<<Math::OneIntShift) / len
+                    );
                 }
             }
 
