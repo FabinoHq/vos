@@ -119,32 +119,34 @@ void TopDownPlayer::physics()
     if (GSysKeys.axis.vec[0] != 0)
     {
         // Accelerate X
-        m_speed.vec[0] += (GSysKeys.axis.vec[0] >> 2);
+        m_speed.vec[0] += (GSysKeys.axis.vec[0] * 2);
     }
     else
     {
         // Decelerate X
-        m_speed.moveXTowards(0, 100000);
+        m_speed.moveXTowards(0, (Math::OneInt / 2));
     }
     if (GSysKeys.axis.vec[1] != 0)
     {
         // Accelerate Y
-        m_speed.vec[1] += (GSysKeys.axis.vec[1] >> 2);
+        m_speed.vec[1] += (GSysKeys.axis.vec[1] * 2);
     }
     else
     {
         // Decelerate Y
-        m_speed.moveYTowards(0, 100000);
+        m_speed.moveYTowards(0, (Math::OneInt / 2));
     }
-    if (m_speed.length() >= Math::OneInt)
+
+    // Clamp speed
+    if (m_speed.length() >= (Math::OneInt * 8))
     {
-        // Clamp speed
         m_speed.normalize();
+        m_speed *= 8;
     }
 
     // Compute top down player position
-    m_bounding.position.vec[0] += (m_speed.vec[0] >> 7);
-    m_bounding.position.vec[1] += (m_speed.vec[1] >> 7);
+    m_bounding.position.vec[0] += (m_speed.vec[0]>>PhysicsSpeedToPositionShift);
+    m_bounding.position.vec[1] += (m_speed.vec[1]>>PhysicsSpeedToPositionShift);
 
     // Convert position to renderer
     m_position.pos.vec[0] = (m_bounding.position.vec[0]*PhysicsToRenderer);

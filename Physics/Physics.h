@@ -55,6 +55,15 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Physics solver settings                                               //
+    ////////////////////////////////////////////////////////////////////////////
+    const double PhysicsTickRate = 100.0;
+    const double PhysicsTickTime = (1.0 / PhysicsTickRate);
+    const double PhysicsIdleSleepTime = 0.01;
+    const double PhysicsErrorSleepTime = 0.1;
+    const double PhysicsWaitSleepTime = 0.02;
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Physics to Renderer conversions                                       //
     ////////////////////////////////////////////////////////////////////////////
     const int32_t RendererToPhysics = Math::OneInt;
@@ -65,15 +74,12 @@
     const float PhysicsAngleToRenderer = (Math::Pi / (Math::PiInt*1.0f));
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Physics solver settings                                               //
+    //  Physics solver constants                                              //
     ////////////////////////////////////////////////////////////////////////////
     const int32_t PhysicsMinEntityHalfSize = (Math::OneInt / 200);
     const int32_t PhysicsMaxSmallStepsIterations = 40;
-    const double PhysicsTickRate = 100.0;
-    const double PhysicsTickTime = (1.0 / PhysicsTickRate);
-    const double PhysicsIdleSleepTime = 0.01;
-    const double PhysicsErrorSleepTime = 0.1;
-    const double PhysicsWaitSleepTime = 0.02;
+    const int32_t PhysicsSpeedToPositionShift = 10;
+    const int32_t PhysicsSpeedToPosition = (1 << PhysicsSpeedToPositionShift);
 
 
     ////////////////////////////////////////////////////////////////////////////
