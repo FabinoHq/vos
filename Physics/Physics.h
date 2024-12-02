@@ -129,19 +129,12 @@
             ////////////////////////////////////////////////////////////////////
             //  Start physics precompute                                      //
             ////////////////////////////////////////////////////////////////////
-            inline float startPrecompute()
-            {
-                m_mutex.lock();
-                return (static_cast<float>(m_clockTime*PhysicsTickRate));
-            }
+            float startPrecompute();
 
             ////////////////////////////////////////////////////////////////////
             //  End physics precompute                                        //
             ////////////////////////////////////////////////////////////////////
-            inline void endPrecompute()
-            {
-                m_mutex.unlock();
-            }
+            void endPrecompute();
 
 
             ////////////////////////////////////////////////////////////////////

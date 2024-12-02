@@ -149,6 +149,36 @@ bool Physics::init()
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Start physics precompute                                                  //
+////////////////////////////////////////////////////////////////////////////////
+float Physics::startPrecompute()
+{
+    // Get physics clock
+    m_mutex.lock();
+    m_clockTime += m_clock.getAndReset();
+
+    // Wait for pending physics tick
+    while (m_clockTime >= PhysicsTickTime)
+    {
+        m_mutex.unlock();
+        SysYield();
+        m_mutex.lock();
+        m_clockTime += m_clock.getAndReset();
+    }
+
+    // Return physics time
+    return (static_cast<float>(m_clockTime*PhysicsTickRate));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  End physics precompute                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void Physics::endPrecompute()
+{
+    m_mutex.unlock();
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get physics solver state                                                  //
@@ -214,21 +244,32 @@ void Physics::run()
     {
         // Reset physics clock time
         m_clockTime -= PhysicsTickTime;
+        if (m_clockTime >= PhysicsTickTime)
+        {
+            // Physics solver is overloaded
+        }
 
         // Compute physics tick
         m_tickMutex.lock();
         ++m_tick;
         m_tickMutex.unlock();
 
+        // Sync physics with renderer
+        GSoftwares.prephysics();
+        m_mutex.unlock();
+
         // Sync inputs with physics
         GSysMouse.sync();
         GSysKeys.sync();
 
-        // Compute software physics
+        // Compute softwares physics
         GSoftwares.physics();
+    }
+    else
+    {
+        m_mutex.unlock();
     }
 
     // Release some CPU
-    m_mutex.unlock();
     SysYield();
 }

@@ -106,47 +106,14 @@ bool TopDownPlayer::init()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Compute top down player physics (threaded)                                //
+//  Precompute top down player physics (thread sync)                          //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::physics()
+void TopDownPlayer::prephysics()
 {
-    // Convert previous position to renderer
-    m_position.prevPos.vec[0] = (m_bounding.position.vec[0]*PhysicsToRenderer);
-    m_position.prevPos.vec[1] = (m_bounding.position.vec[1]*PhysicsToRenderer);
-    m_position.prevAngle = (m_bounding.angle*PhysicsAngleToRenderer);
-
-    // Compute top down player speed
-    if (GSysKeys.axis.vec[0] != 0)
-    {
-        // Accelerate X
-        m_speed.vec[0] += (GSysKeys.axis.vec[0] * 2);
-    }
-    else
-    {
-        // Decelerate X
-        m_speed.moveXTowards(0, (Math::OneInt / 2));
-    }
-    if (GSysKeys.axis.vec[1] != 0)
-    {
-        // Accelerate Y
-        m_speed.vec[1] += (GSysKeys.axis.vec[1] * 2);
-    }
-    else
-    {
-        // Decelerate Y
-        m_speed.moveYTowards(0, (Math::OneInt / 2));
-    }
-
-    // Clamp speed
-    if (m_speed.length() >= (Math::OneInt * 8))
-    {
-        m_speed.normalize();
-        m_speed *= 8;
-    }
-
-    // Compute top down player position
-    m_bounding.position.vec[0] += (m_speed.vec[0]>>PhysicsSpeedToPositionShift);
-    m_bounding.position.vec[1] += (m_speed.vec[1]>>PhysicsSpeedToPositionShift);
+    // Store previous position
+    m_position.prevPos.vec[0] = m_position.pos.vec[0];
+    m_position.prevPos.vec[1] = m_position.pos.vec[1];
+    m_position.prevAngle = m_position.angle;
 
     // Convert position to renderer
     m_position.pos.vec[0] = (m_bounding.position.vec[0]*PhysicsToRenderer);
@@ -155,7 +122,46 @@ void TopDownPlayer::physics()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Precompute top down player                                                //
+//  Compute top down player physics (threaded)                                //
+////////////////////////////////////////////////////////////////////////////////
+void TopDownPlayer::physics()
+{
+    // Compute top down player speed
+    if (GSysKeys.axis.vec[0] != 0)
+    {
+        // Accelerate X
+        m_speed.vec[0] += (GSysKeys.axis.vec[0] * 4);
+    }
+    else
+    {
+        // Decelerate X
+        m_speed.moveXTowards(0, Math::OneInt);
+    }
+    if (GSysKeys.axis.vec[1] != 0)
+    {
+        // Accelerate Y
+        m_speed.vec[1] += (GSysKeys.axis.vec[1] * 4);
+    }
+    else
+    {
+        // Decelerate Y
+        m_speed.moveYTowards(0, Math::OneInt);
+    }
+
+    // Clamp speed
+    if (m_speed.length() >= (Math::OneInt * 12))
+    {
+        m_speed.normalize();
+        m_speed *= 12;
+    }
+
+    // Compute top down player position
+    m_bounding.position.vec[0] += (m_speed.vec[0]>>PhysicsSpeedToPositionShift);
+    m_bounding.position.vec[1] += (m_speed.vec[1]>>PhysicsSpeedToPositionShift);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Precompute top down player renderer interpolations                        //
 ////////////////////////////////////////////////////////////////////////////////
 void TopDownPlayer::precompute(float physicstime)
 {
