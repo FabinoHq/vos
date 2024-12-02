@@ -108,8 +108,8 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
 {
 	Vector2i dist = (position - boundingCircle.position);
 	int64_t distance = (
-		static_cast<int64_t>(dist.vec[0])*static_cast<int64_t>(dist.vec[0]))+
-		(static_cast<int64_t>(dist.vec[1])*static_cast<int64_t>(dist.vec[1])
+		(static_cast<int64_t>(dist.vec[0])*static_cast<int64_t>(dist.vec[0]))+
+		(static_cast<int64_t>(dist.vec[1])*static_cast<int64_t>(dist.vec[1]))
 	);
 	int64_t radiuses = (
 		static_cast<int64_t>(radius)+
@@ -148,8 +148,8 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
 	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
 	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
-	stepX = offset.vec[0]/step;
-	stepY = offset.vec[1]/step;
+	stepX = (offset.vec[0] / step);
+	stepY = (offset.vec[1] / step);
 
 	// Iterative collision detection
 	bool collide = false;
