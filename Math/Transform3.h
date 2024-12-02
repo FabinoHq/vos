@@ -536,13 +536,13 @@
             //  Precompute transformations                                    //
             ////////////////////////////////////////////////////////////////////
             inline void precomputeTransforms(
-                const PhysicsTransform3& transforms, float time)
+                const PhysicsTransform3& transforms, float physicstime)
             {
                 m_position.linearInterp(
-                    transforms.prevPos, transforms.pos, time
+                    transforms.prevPos, transforms.pos, physicstime
                 );
                 m_angles.linearInterp(
-                    transforms.prevAngles, transforms.angles, time
+                    transforms.prevAngles, transforms.angles, physicstime
                 );
             }
 

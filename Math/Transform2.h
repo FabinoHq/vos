@@ -453,13 +453,13 @@
             //  Precompute transformations                                    //
             ////////////////////////////////////////////////////////////////////
             inline void precomputeTransforms(
-                const PhysicsTransform2& transforms, float time)
+                const PhysicsTransform2& transforms, float physicstime)
             {
                 m_position.linearInterp(
-                    transforms.prevPos, transforms.pos, time
+                    transforms.prevPos, transforms.pos, physicstime
                 );
                 m_angle = Math::linearInterp(
-                    transforms.prevAngle, transforms.angle, time
+                    transforms.prevAngle, transforms.angle, physicstime
                 );
             }
 

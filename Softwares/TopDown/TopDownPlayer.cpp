@@ -105,7 +105,7 @@ bool TopDownPlayer::init()
 ////////////////////////////////////////////////////////////////////////////////
 void TopDownPlayer::prephysics()
 {
-    // Compute prephysics transforms
+    // Compute prephysics transformations
     m_transforms.prephysics(m_bounding.position, m_bounding.angle);
 }
 
