@@ -107,8 +107,14 @@ void BoundingCircle::set(const Vector2i& circlePosition,
 bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
 {
 	Vector2i dist = (position - boundingCircle.position);
-	int32_t distance = (dist.vec[0]*dist.vec[0])+(dist.vec[1]*dist.vec[1]);
-	int32_t radiuses = (radius + boundingCircle.radius);
+	int64_t distance = (
+		static_cast<int64_t>(dist.vec[0])*static_cast<int64_t>(dist.vec[0]))+
+		(static_cast<int64_t>(dist.vec[1])*static_cast<int64_t>(dist.vec[1])
+	);
+	int64_t radiuses = (
+		static_cast<int64_t>(radius)+
+		static_cast<int64_t>(boundingCircle.radius)
+	);
 	return (distance <= (radiuses*radiuses));
 }
 
@@ -137,10 +143,10 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 
 	// Compute step offset
 	int32_t stepRadius =
-		(radius <= boundingCircle.radius) ? radius : boundingCircle.radius;
+		((radius <= boundingCircle.radius) ? radius : boundingCircle.radius);
 	if (stepRadius <= 0) { return false; }
-	int32_t stepX = Math::abs(offset.vec[0])/stepRadius;
-	int32_t stepY = Math::abs(offset.vec[1])/stepRadius;
+	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
+	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
 	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
 	stepX = offset.vec[0]/step;
 	stepY = offset.vec[1]/step;
@@ -169,13 +175,13 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	if (!collide)
 	{
 		// Last collision detection
-		currentCircle.position.vec[0] = position.vec[0]+offset.vec[0];
-		currentCircle.position.vec[1] = position.vec[1]+offset.vec[1];
+		currentCircle.position.vec[0] = (position.vec[0] + offset.vec[0]);
+		currentCircle.position.vec[1] = (position.vec[1] + offset.vec[1]);
 		if (!currentCircle.collideCircle(boundingCircle))
 		{
 			// No collision detected
-			collision.position.vec[0] = position.vec[0]+offset.vec[0];
-			collision.position.vec[1] = position.vec[1]+offset.vec[1];
+			collision.position.vec[0] = (position.vec[0] + offset.vec[0]);
+			collision.position.vec[1] = (position.vec[1] + offset.vec[1]);
 			collision.offset.vec[0] = offset.vec[0];
 			collision.offset.vec[1] = offset.vec[1];
 			collision.collide = false;
@@ -210,8 +216,8 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	}
 
 	// Collision detected
-	collision.offset.vec[0] = currentCircle.position.vec[0] - position.vec[0];
-	collision.offset.vec[1] = currentCircle.position.vec[1] - position.vec[1];
+	collision.offset.vec[0] = (currentCircle.position.vec[0] - position.vec[0]);
+	collision.offset.vec[1] = (currentCircle.position.vec[1] - position.vec[1]);
 	collision.position.vec[0] = currentCircle.position.vec[0];
 	collision.position.vec[1] = currentCircle.position.vec[1];
 	collision.normal.vec[0] =
@@ -243,8 +249,8 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 {
 	// Reset collision
 	collision.reset();
-	collision.position.vec[0] = (position.vec[0]+offset.vec[0]);
-	collision.position.vec[1] = (position.vec[1]+offset.vec[1]);
+	collision.position.vec[0] = (position.vec[0] + offset.vec[0]);
+	collision.position.vec[1] = (position.vec[1] + offset.vec[1]);
 	collision.offset.vec[0] = offset.vec[0];
 	collision.offset.vec[1] = offset.vec[1];
 	collision.setFactor(Math::OneInt);

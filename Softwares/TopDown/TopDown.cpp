@@ -426,21 +426,6 @@ void TopDown::compute(float frametime)
     }*/
 
     // Compute physics
-    /*Vector2i collideOffset;
-    collideOffset.vec[0] = static_cast<int32_t>(
-        GSysMouse.mouseX*RendererToPhysics
-    );
-    collideOffset.vec[1] = static_cast<int32_t>(
-        GSysMouse.mouseY*RendererToPhysics
-    );
-    collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
-    collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
-    m_collide.reset();
-    m_boundingCircle2.collideCircle(
-        m_boundingCircle, collideOffset, m_collide
-    );*/
-
-    // Compute physics
     Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int32_t>(
         GSysMouse.mouseX*RendererToPhysics
@@ -450,10 +435,19 @@ void TopDown::compute(float frametime)
     );
     collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
     collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
-    m_collide.reset();
-    m_boundingCircle2.collideMatrix2(
-        m_matrixChunk, collideOffset, m_collide
+    m_boundingCircle2.collideCircle(m_boundingCircle, collideOffset, m_collide);
+
+    // Compute physics
+    /*Vector2i collideOffset;
+    collideOffset.vec[0] = static_cast<int32_t>(
+        GSysMouse.mouseX*RendererToPhysics
     );
+    collideOffset.vec[1] = static_cast<int32_t>(
+        GSysMouse.mouseY*RendererToPhysics
+    );
+    collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
+    collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
+    m_boundingCircle2.collideMatrix2(m_matrixChunk, collideOffset, m_collide);*/
 
     // Space key released event
     if (m_spaceReleased)
@@ -464,7 +458,7 @@ void TopDown::compute(float frametime)
     }
 
     // Update view position
-    m_view.setPosition(m_player.getPosition());
+    //m_view.setPosition(m_player.getPosition());
     
 
     // Start uniforms upload
@@ -556,29 +550,27 @@ void TopDown::render()
     }
 
     // Render bounding circle
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
-    float positionX =
-        m_boundingCircle.position.vec[0]*PhysicsToRenderer;
-    float positionY =
-        m_boundingCircle.position.vec[1]*PhysicsToRenderer;
-    float radius = m_boundingCircle.radius*PhysicsToRenderer;
+    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    positionX = (m_boundingCircle.position.vec[0]*PhysicsToRenderer);
+    positionY = (m_boundingCircle.position.vec[1]*PhysicsToRenderer);
+    float radius = (m_boundingCircle.radius*PhysicsToRenderer);
     m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
     m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
-    m_ellipse.setSize(radius*2.05f, radius*2.05f);
+    m_ellipse.setSize(radius*2.1f, radius*2.1f);
     m_ellipse.setAngle(m_boundingCircle.angle*PhysicsAngleToRenderer);
-    m_ellipse.setSmooth(0.05f);
-    m_ellipse.render();*/
+    m_ellipse.setSmooth(0.035f);
+    m_ellipse.render();
 
     // Render bounding circle 2
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
-    positionX = m_boundingCircle2.position.vec[0]*PhysicsToRenderer;
-    positionY = m_boundingCircle2.position.vec[1]*PhysicsToRenderer;
-    float radius = m_boundingCircle2.radius*PhysicsToRenderer;
+    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    positionX = (m_boundingCircle2.position.vec[0]*PhysicsToRenderer);
+    positionY = (m_boundingCircle2.position.vec[1]*PhysicsToRenderer);
+    radius = (m_boundingCircle2.radius*PhysicsToRenderer);
     m_ellipse.setColor(0.0f, 0.2f, 0.8f, 0.8f);
     m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
-    m_ellipse.setSize(radius*2.04f, radius*2.04f);
+    m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.05f);
     m_ellipse.render();
@@ -586,18 +578,15 @@ void TopDown::render()
     // Render bounding circle 2 projection
     positionX = m_collide.position.vec[0]*PhysicsToRenderer;
     positionY = m_collide.position.vec[1]*PhysicsToRenderer;
-    radius = m_boundingCircle2.radius*PhysicsToRenderer;
+    radius = (m_boundingCircle2.radius*PhysicsToRenderer);
     m_ellipse.setColor(0.8f, 0.2f, 0.8f, 0.8f);
-    if (m_collide.collide)
-    {
-        m_ellipse.setColor(0.8f, 0.2f, 0.2f, 0.8f);
-    }
+    if (m_collide.collide) { m_ellipse.setColor(0.8f, 0.2f, 0.2f, 0.8f); }
     m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
-    m_ellipse.setSize(radius*2.07f, radius*2.07f);
+    m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.05f);
-    m_ellipse.render();*/
+    m_ellipse.render();
 
 
     // Render bounding rect
