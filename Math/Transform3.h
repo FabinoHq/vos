@@ -46,6 +46,7 @@
     #include "Math.h"
     #include "Vector3.h"
     #include "Matrix4x4.h"
+    #include "../Physics/PhysicsTransform3.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -532,14 +533,17 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Transformations linear interpolation                          //
+            //  Precompute transformations                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void linearInterp(
-                const Vector3& prevPos, const Vector3& pos,
-                const Vector3& prevAngles, const Vector3& angles, float time)
+            inline void precomputeTransforms(
+                const PhysicsTransform3& transforms, float time)
             {
-                m_position.linearInterp(prevPos, pos, time);
-                m_angles.linearInterp(prevAngles, angles, time);
+                m_position.linearInterp(
+                    transforms.prevPos, transforms.pos, time
+                );
+                m_angles.linearInterp(
+                    transforms.prevAngles, transforms.angles, time
+                );
             }
 
             ////////////////////////////////////////////////////////////////////

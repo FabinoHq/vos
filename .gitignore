@@ -138,6 +138,10 @@
 !Physics/
 !Physics/Physics.h
 !Physics/Physics.cpp
+!Physics/PhysicsTransform2.h
+!Physics/PhysicsTransform2.cpp
+!Physics/PhysicsTransform3.h
+!Physics/PhysicsTransform3.cpp
 !Physics/Collision2.h
 !Physics/Collision2.cpp
 !Physics/BoundingCircle.h

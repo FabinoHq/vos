@@ -37,121 +37,67 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/TopDown/TopDownPlayer.h : TopDown player management          //
+//     Physics/PhysicsTransform3.h : 3D physics transformations               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SOFTWARES_TOPDOWN_TOPDOWNPLAYER_HEADER
-#define VOS_SOFTWARES_TOPDOWN_TOPDOWNPLAYER_HEADER
+#ifndef VOS_PHYSICS_PHYSICSTRANSFORM3_HEADER
+#define VOS_PHYSICS_PHYSICSTRANSFORM3_HEADER
 
-    #include "../../System/System.h"
-    #include "../../System/SysEvent.h"
-    #include "../../System/SysMouse.h"
-    #include "../../System/SysKeys.h"
-    #include "../../System/SysMutex.h"
-
-    #include "../../Math/Math.h"
-    #include "../../Math/Vector2.h"
-
-    #include "../../Renderer/Renderer.h"
-    #include "../../Renderer/Shapes/EllipseShape.h"
-
-    #include "../../Physics/Physics.h"
-    #include "../../Physics/PhysicsTransform2.h"
-    #include "../../Physics/Collision2.h"
-    #include "../../Physics/BoundingCircle.h"
-    #include "../../Physics/BoundingRect.h"
+    #include "../System/System.h"
+    #include "../Math/Math.h"
+    #include "../Math/Vector3.h"
+    #include "../Math/Vector3i.h"
+    #include "Physics.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  TopDownPlayer class definition                                        //
+    //  PhysicsTransform3 class definition                                    //
     ////////////////////////////////////////////////////////////////////////////
-    class TopDownPlayer
+    class PhysicsTransform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  TopDownPlayer default constructor                             //
+            //  PhysicsTransform3 default constructor                         //
             ////////////////////////////////////////////////////////////////////
-            TopDownPlayer();
+            PhysicsTransform3();
 
             ////////////////////////////////////////////////////////////////////
-            //  TopDownPlayer destructor                                      //
+            //  PhysicsTransform3 destructor                                  //
             ////////////////////////////////////////////////////////////////////
-            ~TopDownPlayer();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init top down player                                          //
-            //  return : True if top down player is ready, false otherwise    //
-            ////////////////////////////////////////////////////////////////////
-            bool init();
+            ~PhysicsTransform3();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get player position                                           //
+            //  Reset physics transformations                                 //
             ////////////////////////////////////////////////////////////////////
-            inline Vector2 getPosition()
-            {
-                return m_ellipse.getPosition();
-            }
+            void reset();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get player X position                                         //
+            //  Precompute physics transforms (thread sync)                   //
             ////////////////////////////////////////////////////////////////////
-            inline float getX()
-            {
-                return m_ellipse.getX();
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get player Y position                                         //
-            ////////////////////////////////////////////////////////////////////
-            inline float getY()
-            {
-                return m_ellipse.getY();
-            }
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Precompute top down player physics (thread sync)              //
-            ////////////////////////////////////////////////////////////////////
-            void prephysics();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute top down player physics (threaded)                    //
-            ////////////////////////////////////////////////////////////////////
-            void physics();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Precompute top down player renderer interpolations            //
-            ////////////////////////////////////////////////////////////////////
-            void precompute(float physicstime);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Render top down player                                        //
-            ////////////////////////////////////////////////////////////////////
-            void render();
+            void prephysics(
+                const Vector3i& physicsPos, const Vector3i& physicsAngles);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  TopDownPlayer private copy constructor : Not copyable         //
+            //  PhysicsTransform3 private copy constructor : Not copyable     //
             ////////////////////////////////////////////////////////////////////
-            TopDownPlayer(const TopDownPlayer&) = delete;
+            PhysicsTransform3(const PhysicsTransform3&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  TopDownPlayer private copy operator : Not copyable            //
+            //  PhysicsTransform3 private copy operator : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            TopDownPlayer& operator=(const TopDownPlayer&) = delete;
+            PhysicsTransform3& operator=(const PhysicsTransform3&) = delete;
 
 
-        private:
-            PhysicsTransform2   m_transforms;           // Player transforms
-            Vector2i            m_speed;                // Player speed
-            BoundingCircle      m_bounding;             // Bounding circle
-
-            EllipseShape        m_ellipse;              // Ellipse shape
+        public:
+            Vector3         pos;            // Current position
+            Vector3         prevPos;        // Previous position
+            Vector3         angles;         // Current angles
+            Vector3         prevAngles;     // Previous angles
     };
 
 
-#endif // VOS_SOFTWARES_TOPDOWN_TOPDOWNPLAYER_HEADER
+#endif // VOS_PHYSICS_PHYSICSTRANSFORM3_HEADER

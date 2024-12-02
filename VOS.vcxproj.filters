@@ -296,6 +296,12 @@
     <ClCompile Include="System\SysKeys.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\PhysicsTransform2.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsTransform3.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -691,6 +697,12 @@
     </ClInclude>
     <ClInclude Include="System\SysKeys.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsTransform2.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsTransform3.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

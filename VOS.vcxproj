@@ -216,6 +216,8 @@
     <ClCompile Include="Physics\Collision2.cpp" />
     <ClCompile Include="Physics\MatrixChunk2.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Physics\PhysicsTransform2.cpp" />
+    <ClCompile Include="Physics\PhysicsTransform3.cpp" />
     <ClCompile Include="Renderer\BackRenderer.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
     <ClCompile Include="Renderer\FreeFlyCam.cpp" />
@@ -321,6 +323,8 @@
     <ClInclude Include="Physics\Collision2.h" />
     <ClInclude Include="Physics\MatrixChunk2.h" />
     <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Physics\PhysicsTransform2.h" />
+    <ClInclude Include="Physics\PhysicsTransform3.h" />
     <ClInclude Include="Renderer\BackRenderer.h" />
     <ClInclude Include="Renderer\Camera.h" />
     <ClInclude Include="Renderer\FreeFlyCam.h" />

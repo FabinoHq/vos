@@ -37,132 +37,59 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/TopDown/TopDownPlayer.cpp : TopDown player management        //
+//     Physics/PhysicsTransform2.cpp : 2D physics transformations             //
 ////////////////////////////////////////////////////////////////////////////////
-#include "TopDownPlayer.h"
+#include "PhysicsTransform2.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  TopDownPlayer default constructor                                         //
+//  PhysicsTransform2 default constructor                                     //
 ////////////////////////////////////////////////////////////////////////////////
-TopDownPlayer::TopDownPlayer() :
-m_transforms(),
-m_speed(),
-m_bounding(),
-m_ellipse()
+PhysicsTransform2::PhysicsTransform2() :
+pos(),
+prevPos(),
+angle(0.0f),
+prevAngle(0.0f)
 {
-    m_transforms.reset();
+	pos.reset();
+	prevPos.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  TopDownPlayer destructor                                                  //
+//  PhysicsTransform2 destructor                                              //
 ////////////////////////////////////////////////////////////////////////////////
-TopDownPlayer::~TopDownPlayer()
+PhysicsTransform2::~PhysicsTransform2()
 {
-    m_speed.reset();
-    m_transforms.reset();
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Init top down player                                                      //
-//  return : True if top down player is ready, false otherwise                //
-////////////////////////////////////////////////////////////////////////////////
-bool TopDownPlayer::init()
-{
-    // Reset player transformations
-    m_transforms.reset();
-
-    // Reset player speed
-    m_speed.reset();
-
-    // Init bounding circle
-    m_bounding.setPosition(0, 0);
-    m_bounding.setRadius(40000);
-    m_bounding.setAngle(0);
-
-    // Init ellipse shape
-    if (!m_ellipse.init(0.2f, 0.2f))
-    {
-        // Could not init ellipse shape
-        return false;
-    }
-    m_ellipse.setSmooth(0.05f);
-    m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
-    m_ellipse.setOrigin(0.0f, 0.0f);
-    m_ellipse.setSize(
-        (m_bounding.radius*PhysicsToRenderer*2.05f),
-        (m_bounding.radius*PhysicsToRenderer*2.05f)
-    );
-
-    // Top down player is ready
-    return true;
+	prevAngle = 0.0f;
+	angle = 0.0f;
+	prevPos.reset();
+	pos.reset();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Precompute top down player physics (thread sync)                          //
+//  Reset physics transformations                                             //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::prephysics()
+void PhysicsTransform2::reset()
 {
-    // Compute prephysics transforms
-    m_transforms.prephysics(m_bounding.position, m_bounding.angle);
+	pos.reset();
+	prevPos.reset();
+	angle = 0.0f;
+	prevAngle = 0.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Compute top down player physics (threaded)                                //
+//  Precompute physics transforms (thread sync)                               //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::physics()
+void PhysicsTransform2::prephysics(
+	const Vector2i& physicsPos, int32_t physicsAngle)
 {
-    // Compute top down player speed
-    if (GSysKeys.axis.vec[0] != 0)
-    {
-        // Accelerate X
-        m_speed.vec[0] += (GSysKeys.axis.vec[0] * 4);
-    }
-    else
-    {
-        // Decelerate X
-        m_speed.moveXTowards(0, Math::OneInt);
-    }
-    if (GSysKeys.axis.vec[1] != 0)
-    {
-        // Accelerate Y
-        m_speed.vec[1] += (GSysKeys.axis.vec[1] * 4);
-    }
-    else
-    {
-        // Decelerate Y
-        m_speed.moveYTowards(0, Math::OneInt);
-    }
+	// Store previous physics transformations
+	prevPos = pos;
+    prevAngle = angle;
 
-    // Clamp speed
-    if (m_speed.length() >= (Math::OneInt * 12))
-    {
-        m_speed.normalize();
-        m_speed *= 12;
-    }
-
-    // Compute top down player position
-    m_bounding.position.vec[0] += (m_speed.vec[0]>>PhysicsSpeedToPositionShift);
-    m_bounding.position.vec[1] += (m_speed.vec[1]>>PhysicsSpeedToPositionShift);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Precompute top down player renderer interpolations                        //
-////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::precompute(float physicstime)
-{
-    // Precompute ellipse transformations
-    m_ellipse.precomputeTransforms(m_transforms, physicstime);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Render top down player                                                    //
-////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::render()
-{
-    // Render ellipse shape
-    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
-    m_ellipse.render();
+    // Convert physics transformations to renderer
+    pos.vec[0] = (physicsPos.vec[0]*PhysicsToRenderer);
+    pos.vec[1] = (physicsPos.vec[1]*PhysicsToRenderer);
+    angle = (physicsAngle*PhysicsAngleToRenderer);
 }

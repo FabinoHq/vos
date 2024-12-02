@@ -76,12 +76,12 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt copy constructor                                     //
             ////////////////////////////////////////////////////////////////////
-            MultiInt(const MultiInt& value)
+            MultiInt(const MultiInt& val)
             {
-                sign = value.sign;
-                low = value.low;
-                medium = value.medium;
-                high = value.high;
+                sign = val.sign;
+                low = val.low;
+                medium = val.medium;
+                high = val.high;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -125,12 +125,12 @@
             ////////////////////////////////////////////////////////////////////
             //  Set MultiInt components from a multi integer                  //
             ////////////////////////////////////////////////////////////////////
-            inline void set(const MultiInt& value)
+            inline void set(const MultiInt& val)
             {
-                sign = value.sign;
-                low = value.low;
-                medium = value.medium;
-                high = value.high;
+                sign = val.sign;
+                low = val.low;
+                medium = val.medium;
+                high = val.high;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -221,19 +221,19 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt affectation operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline MultiInt& operator=(const MultiInt& value)
+            inline MultiInt& operator=(const MultiInt& val)
             {
-                sign = value.sign;
-                low = value.low;
-                medium = value.medium;
-                high = value.high;
+                sign = val.sign;
+                low = val.low;
+                medium = val.medium;
+                high = val.high;
                 return *this;
             }
 
             ////////////////////////////////////////////////////////////////////
             //  MultiInt addition operator                                    //
             ////////////////////////////////////////////////////////////////////
-            inline MultiInt operator+(const MultiInt& value)
+            inline MultiInt operator+(const MultiInt& val)
             {
                 MultiInt result;
                 result.low = low*sign;
@@ -241,15 +241,15 @@
                 result.high = high*sign;
 
                 // Add high precision
-                result.high += value.high*value.sign;
+                result.high += val.high*val.sign;
                 clampHigh(result);
 
                 // Add medium precision
-                result.medium += value.medium*value.sign;
+                result.medium += val.medium*val.sign;
                 clampMedium(result);
 
                 // Add low precision
-                result.low += value.low*value.sign;
+                result.low += val.low*val.sign;
                 clampLow(result);
 
                 // Compute result sign
@@ -259,7 +259,7 @@
                 return result;
             }
 
-            inline MultiInt operator+(const int32_t& value)
+            inline MultiInt operator+(const int32_t& val)
             {
                 MultiInt result;
                 result.low = low*sign;
@@ -267,7 +267,7 @@
                 result.high = high*sign;
 
                 // Add high precision
-                result.high += value;
+                result.high += val;
                 clampHigh(result);
 
                 // Clamp medium precision
@@ -286,7 +286,7 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt subtraction operator                                 //
             ////////////////////////////////////////////////////////////////////
-            inline MultiInt operator-(const MultiInt& value)
+            inline MultiInt operator-(const MultiInt& val)
             {
                 MultiInt result;
                 result.low = low*sign;
@@ -294,15 +294,15 @@
                 result.high = high*sign;
 
                 // Subtract high precision
-                result.high -= value.high*value.sign;
+                result.high -= val.high*val.sign;
                 clampHigh(result);
 
                 // Subtract medium precision
-                result.medium -= value.medium*value.sign;
+                result.medium -= val.medium*val.sign;
                 clampMedium(result);
 
                 // Subtract low precision
-                result.low -= value.low*value.sign;
+                result.low -= val.low*val.sign;
                 clampLow(result);
 
                 // Compute result sign
@@ -312,7 +312,7 @@
                 return result;
             }
 
-            inline MultiInt operator-(const int32_t& value)
+            inline MultiInt operator-(const int32_t& val)
             {
                 MultiInt result;
                 result.low = low*sign;
@@ -320,7 +320,7 @@
                 result.high = high*sign;
 
                 // Subtract high precision
-                result.high -= value;
+                result.high -= val;
                 clampHigh(result);
 
                 // Clamp medium precision
@@ -461,22 +461,22 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt addition assignment operator                         //
             ////////////////////////////////////////////////////////////////////
-            inline MultiInt& operator+=(const MultiInt& value)
+            inline MultiInt& operator+=(const MultiInt& val)
             {
                 low *= sign;
                 medium *= sign;
                 high *= sign;
 
                 // Add high precision
-                high += value.high*value.sign;
+                high += val.high*val.sign;
                 clampHigh();
 
                 // Add medium precision
-                medium += value.medium*value.sign;
+                medium += val.medium*val.sign;
                 clampMedium();
 
                 // Add low precision
-                low += value.low*value.sign;
+                low += val.low*val.sign;
                 clampLow();
 
                 // Compute result sign
@@ -486,14 +486,14 @@
                 return *this;
             }
 
-            inline MultiInt& operator+=(const int32_t& value)
+            inline MultiInt& operator+=(const int32_t& val)
             {
                 low *= sign;
                 medium *= sign;
                 high *= sign;
 
                 // Add high precision
-                high += value;
+                high += val;
                 clampHigh();
 
                 // Clamp medium precision
@@ -512,22 +512,22 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt subtraction assignment operator                      //
             ////////////////////////////////////////////////////////////////////
-            inline MultiInt& operator-=(const MultiInt& value)
+            inline MultiInt& operator-=(const MultiInt& val)
             {
                 low *= sign;
                 medium *= sign;
                 high *= sign;
 
                 // Subtract high precision
-                high -= value.high*value.sign;
+                high -= val.high*val.sign;
                 clampHigh();
 
                 // Subtract medium precision
-                medium -= value.medium*value.sign;
+                medium -= val.medium*val.sign;
                 clampMedium();
 
                 // Subtract low precision
-                low -= value.low*value.sign;
+                low -= val.low*val.sign;
                 clampLow();
 
                 // Compute result sign
@@ -537,14 +537,14 @@
                 return *this;
             }
 
-            inline MultiInt& operator-=(const int32_t& value)
+            inline MultiInt& operator-=(const int32_t& val)
             {
                 low *= sign;
                 medium *= sign;
                 high *= sign;
 
                 // Subtract high precision
-                high -= value;
+                high -= val;
                 clampHigh();
 
                 // Clamp medium precision
@@ -563,38 +563,38 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt equal to operator                                    //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator==(const MultiInt& value)
+            inline bool operator==(const MultiInt& val)
             {
-                return ((sign == value.sign) && (low == value.low) &&
-                    (medium == value.medium) && (high == value.high));
+                return ((sign == val.sign) && (low == val.low) &&
+                    (medium == val.medium) && (high == val.high));
             }
 
             ////////////////////////////////////////////////////////////////////
             //  MultiInt not equal to operator                                //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator!=(const MultiInt& value)
+            inline bool operator!=(const MultiInt& val)
             {
-                return ((sign != value.sign) || (low != value.low) ||
-                    (medium != value.medium) || (high != value.high));
+                return ((sign != val.sign) || (low != val.low) ||
+                    (medium != val.medium) || (high != val.high));
             }
 
             ////////////////////////////////////////////////////////////////////
             //  MultiInt greater than operator                                //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator>(const MultiInt& value)
+            inline bool operator>(const MultiInt& val)
             {
-                if (low*sign > value.low*value.sign)
+                if (low*sign > (val.low*val.sign))
                 {
                     return true;
                 }
-                if ((low*sign == value.low*value.sign) &&
-                    (medium*sign > value.medium*value.sign))
+                if ((low*sign == (val.low*val.sign)) &&
+                    (medium*sign > (val.medium*val.sign)))
                 {
                     return true;
                 }
-                if ((low*sign == value.low*value.sign) &&
-                    (medium*sign == value.medium*value.sign) &&
-                    (high*sign > value.high*value.sign))
+                if ((low*sign == (val.low*val.sign)) &&
+                    (medium*sign == (val.medium*val.sign)) &&
+                    (high*sign > (val.high*val.sign)))
                 {
                     return true;
                 }
@@ -604,20 +604,20 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt greater than or equal to operator                    //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator>=(const MultiInt& value)
+            inline bool operator>=(const MultiInt& val)
             {
-                if (low*sign < value.low*value.sign)
+                if (low*sign < (val.low*val.sign))
                 {
                     return false;
                 }
-                if ((low*sign == value.low*value.sign) &&
-                    (medium*sign < value.medium*value.sign))
+                if ((low*sign == (val.low*val.sign)) &&
+                    (medium*sign < (val.medium*val.sign)))
                 {
                     return false;
                 }
-                if ((low*sign == value.low*value.sign) &&
-                    (medium*sign == value.medium*value.sign) &&
-                    (high*sign < value.high*value.sign))
+                if ((low*sign == (val.low*val.sign)) &&
+                    (medium*sign == (val.medium*val.sign)) &&
+                    (high*sign < (val.high*val.sign)))
                 {
                     return false;
                 }
@@ -627,20 +627,20 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt less than operator                                   //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator<(const MultiInt& value)
+            inline bool operator<(const MultiInt& val)
             {
-                if (low*sign < value.low*value.sign)
+                if (low*sign < (val.low*val.sign))
                 {
                     return true;
                 }
-                if ((low*sign == value.low*value.sign) &&
-                    (medium*sign < value.medium*value.sign))
+                if ((low*sign == (val.low*val.sign)) &&
+                    (medium*sign < (val.medium*val.sign)))
                 {
                     return true;
                 }
-                if ((low*sign == value.low*value.sign) &&
-                    (medium*sign == value.medium*value.sign) &&
-                    (high*sign < value.high*value.sign))
+                if ((low*sign == (val.low*val.sign)) &&
+                    (medium*sign == (val.medium*val.sign)) &&
+                    (high*sign < (val.high*val.sign)))
                 {
                     return true;
                 }
@@ -650,20 +650,20 @@
             ////////////////////////////////////////////////////////////////////
             //  MultiInt less than or equal to operator                       //
             ////////////////////////////////////////////////////////////////////
-            inline bool operator<=(const MultiInt& value)
+            inline bool operator<=(const MultiInt& val)
             {
-                if (low*sign > value.low*value.sign)
+                if (low*sign > (val.low*val.sign))
                 {
                     return false;
                 }
-                if ((low*sign == value.low*value.sign) &&
-                    (medium*sign > value.medium*value.sign))
+                if ((low*sign == (val.low*val.sign)) &&
+                    (medium*sign > (val.medium*val.sign)))
                 {
                     return false;
                 }
-                if ((low*sign == value.low*value.sign) &&
-                    (medium*sign == value.medium*value.sign) &&
-                    (high*sign > value.high*value.sign))
+                if ((low*sign == (val.low*val.sign)) &&
+                    (medium*sign == (val.medium*val.sign)) &&
+                    (high*sign > (val.high*val.sign)))
                 {
                     return false;
                 }

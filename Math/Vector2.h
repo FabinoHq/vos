@@ -119,10 +119,10 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector2 components from a single value                    //
             ////////////////////////////////////////////////////////////////////
-            inline void set(float value)
+            inline void set(float val)
             {
-                vec[0] = value;
-                vec[1] = value;
+                vec[0] = val;
+                vec[1] = val;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -183,53 +183,53 @@
             ////////////////////////////////////////////////////////////////////
             //  Move components towards a specified value                     //
             ////////////////////////////////////////////////////////////////////
-            inline void moveTowards(float value, float delta)
+            inline void moveTowards(float val, float delta)
             {
-                if (vec[0] > value)
+                if (vec[0] > val)
                 {
-                    vec[0] = Math::max(vec[0]-delta, value);
+                    vec[0] = Math::max(vec[0]-delta, val);
                 }
-                else if (vec[0] < value)
+                else if (vec[0] < val)
                 {
-                    vec[0] = Math::min(vec[0]+delta, value);
+                    vec[0] = Math::min(vec[0]+delta, val);
                 }
-                if (vec[1] > value)
+                if (vec[1] > val)
                 {
-                    vec[1] = Math::max(vec[1]-delta, value);
+                    vec[1] = Math::max(vec[1]-delta, val);
                 }
-                else if (vec[1] < value)
+                else if (vec[1] < val)
                 {
-                    vec[1] = Math::min(vec[1]+delta, value);
+                    vec[1] = Math::min(vec[1]+delta, val);
                 }
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Move X component towards a specified value                    //
             ////////////////////////////////////////////////////////////////////
-            inline void moveXTowards(float value, float delta)
+            inline void moveXTowards(float val, float delta)
             {
-                if (vec[0] > value)
+                if (vec[0] > val)
                 {
-                    vec[0] = Math::max(vec[0]-delta, value);
+                    vec[0] = Math::max(vec[0]-delta, val);
                 }
-                else if (vec[0] < value)
+                else if (vec[0] < val)
                 {
-                    vec[0] = Math::min(vec[0]+delta, value);
+                    vec[0] = Math::min(vec[0]+delta, val);
                 }
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Move Y component towards a specified value                    //
             ////////////////////////////////////////////////////////////////////
-            inline void moveYTowards(float value, float delta)
+            inline void moveYTowards(float val, float delta)
             {
-                if (vec[1] > value)
+                if (vec[1] > val)
                 {
-                    vec[1] = Math::max(vec[1]-delta, value);
+                    vec[1] = Math::max(vec[1]-delta, val);
                 }
-                else if (vec[1] < value)
+                else if (vec[1] < val)
                 {
-                    vec[1] = Math::min(vec[1]+delta, value);
+                    vec[1] = Math::min(vec[1]+delta, val);
                 }
             }
 

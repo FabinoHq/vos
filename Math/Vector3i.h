@@ -126,11 +126,11 @@
             ////////////////////////////////////////////////////////////////////
             //  Set Vector3i components from a single value                   //
             ////////////////////////////////////////////////////////////////////
-            inline void set(int32_t value)
+            inline void set(int32_t val)
             {
-                vec[0] = value;
-                vec[1] = value;
-                vec[2] = value;
+                vec[0] = val;
+                vec[1] = val;
+                vec[2] = val;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -206,76 +206,76 @@
             ////////////////////////////////////////////////////////////////////
             //  Move components towards a specified value                     //
             ////////////////////////////////////////////////////////////////////
-            inline void moveTowards(int32_t value, int32_t delta)
+            inline void moveTowards(int32_t val, int32_t delta)
             {
-                if (vec[0] > value)
+                if (vec[0] > val)
                 {
-                    vec[0] = Math::max(vec[0]-delta, value);
+                    vec[0] = Math::max(vec[0]-delta, val);
                 }
-                else if (vec[0] < value)
+                else if (vec[0] < val)
                 {
-                    vec[0] = Math::min(vec[0]+delta, value);
+                    vec[0] = Math::min(vec[0]+delta, val);
                 }
-                if (vec[1] > value)
+                if (vec[1] > val)
                 {
-                    vec[1] = Math::max(vec[1]-delta, value);
+                    vec[1] = Math::max(vec[1]-delta, val);
                 }
-                else if (vec[1] < value)
+                else if (vec[1] < val)
                 {
-                    vec[1] = Math::min(vec[1]+delta, value);
+                    vec[1] = Math::min(vec[1]+delta, val);
                 }
-                if (vec[2] > value)
+                if (vec[2] > val)
                 {
-                    vec[2] = Math::max(vec[2]-delta, value);
+                    vec[2] = Math::max(vec[2]-delta, val);
                 }
-                else if (vec[2] < value)
+                else if (vec[2] < val)
                 {
-                    vec[2] = Math::min(vec[2]+delta, value);
+                    vec[2] = Math::min(vec[2]+delta, val);
                 }
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Move X component towards a specified value                    //
             ////////////////////////////////////////////////////////////////////
-            inline void moveXTowards(int32_t value, int32_t delta)
+            inline void moveXTowards(int32_t val, int32_t delta)
             {
-                if (vec[0] > value)
+                if (vec[0] > val)
                 {
-                    vec[0] = Math::max(vec[0]-delta, value);
+                    vec[0] = Math::max(vec[0]-delta, val);
                 }
-                else if (vec[0] < value)
+                else if (vec[0] < val)
                 {
-                    vec[0] = Math::min(vec[0]+delta, value);
+                    vec[0] = Math::min(vec[0]+delta, val);
                 }
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Move Y component towards a specified value                    //
             ////////////////////////////////////////////////////////////////////
-            inline void moveYTowards(int32_t value, int32_t delta)
+            inline void moveYTowards(int32_t val, int32_t delta)
             {
-                if (vec[1] > value)
+                if (vec[1] > val)
                 {
-                    vec[1] = Math::max(vec[1]-delta, value);
+                    vec[1] = Math::max(vec[1]-delta, val);
                 }
-                else if (vec[1] < value)
+                else if (vec[1] < val)
                 {
-                    vec[1] = Math::min(vec[1]+delta, value);
+                    vec[1] = Math::min(vec[1]+delta, val);
                 }
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Move Z component towards a specified value                    //
             ////////////////////////////////////////////////////////////////////
-            inline void moveZTowards(int32_t value, int32_t delta)
+            inline void moveZTowards(int32_t val, int32_t delta)
             {
-                if (vec[2] > value)
+                if (vec[2] > val)
                 {
-                    vec[2] = Math::max(vec[2]-delta, value);
+                    vec[2] = Math::max(vec[2]-delta, val);
                 }
-                else if (vec[1] < value)
+                else if (vec[1] < val)
                 {
-                    vec[2] = Math::min(vec[2]+delta, value);
+                    vec[2] = Math::min(vec[2]+delta, val);
                 }
             }
 

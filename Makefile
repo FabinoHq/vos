@@ -57,7 +57,9 @@ VOS: main.o \
 	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
-	Physics/Physics.o Physics/Collision2.o \
+	Physics/Physics.o \
+	Physics/PhysicsTransform2.o Physics/PhysicsTransform3.o \
+	Physics/Collision2.o \
 	Physics/BoundingCircle.o Physics/BoundingRect.o \
 	Physics/MatrixChunk2.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
@@ -105,7 +107,9 @@ VOS: main.o \
 	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
-	Physics/Physics.o Physics/Collision2.o \
+	Physics/Physics.o \
+	Physics/PhysicsTransform2.o Physics/PhysicsTransform3.o \
+	Physics/Collision2.o \
 	Physics/BoundingCircle.o Physics/BoundingRect.o \
 	Physics/MatrixChunk2.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
@@ -210,6 +214,14 @@ Images/PNGFile.o: Images/PNGFile.cpp
 
 Physics/Physics.o: Physics/Physics.cpp
 	$(CC) -o Physics/Physics.o -c Physics/Physics.cpp $(CFLAGS)
+
+Physics/PhysicsTransform2.o: Physics/PhysicsTransform2.cpp
+	$(CC) -o Physics/PhysicsTransform2.o -c \
+	Physics/PhysicsTransform2.cpp $(CFLAGS)
+
+Physics/PhysicsTransform3.o: Physics/PhysicsTransform3.cpp
+	$(CC) -o Physics/PhysicsTransform3.o -c \
+	Physics/PhysicsTransform3.cpp $(CFLAGS)
 
 Physics/Collision2.o: Physics/Collision2.cpp
 	$(CC) -o Physics/Collision2.o -c Physics/Collision2.cpp $(CFLAGS)
