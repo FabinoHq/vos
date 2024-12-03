@@ -142,9 +142,9 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	}
 
 	// Compute step offset
-	int32_t stepRadius =
-		((radius <= boundingCircle.radius) ? radius : boundingCircle.radius);
-	if (stepRadius <= 0) { return false; }
+	int32_t stepRadius = Math::max(
+		((radius <= boundingCircle.radius) ? radius : boundingCircle.radius), 1
+	);
 	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
 	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
 	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
@@ -238,7 +238,12 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 ////////////////////////////////////////////////////////////////////////////////
 bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
 {
-	return false;
+	// Get matrix element
+	int8_t elem = matrixChunk2.get(
+		Math::divide(position.vec[0], MatrixChunk2ElemWidth),
+		Math::divide(position.vec[1], MatrixChunk2ElemHeight)
+	);
+	return (elem != 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -249,11 +254,27 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 {
 	// Reset collision
 	collision.reset();
+	collision.position.vec[0] = position.vec[0];
+	collision.position.vec[1] = position.vec[1];
+	collision.setFactor(Math::OneInt);
+
+	// Check offset vector
+	if ((offset.vec[0] == 0) && (offset.vec[1] == 0)) { return false; }
+
+	// Check current collision
+	if (collideMatrix2(matrixChunk2))
+	{
+		// Currently colliding
+		collision.collide = true;
+		return collision.collide;
+	}
+
+	// No collision detected
 	collision.position.vec[0] = (position.vec[0] + offset.vec[0]);
 	collision.position.vec[1] = (position.vec[1] + offset.vec[1]);
 	collision.offset.vec[0] = offset.vec[0];
 	collision.offset.vec[1] = offset.vec[1];
-	collision.setFactor(Math::OneInt);
+	collision.collide = false;
 	return collision.collide;
 }
 

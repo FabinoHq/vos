@@ -44,8 +44,21 @@
 
     #include "../System/System.h"
     #include "../Math/Math.h"
-
     #include "Physics.h"
+
+    #include <cstdint>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  MatrixChunk2 settings                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const int32_t MatrixChunk2Width = 10;
+    const int32_t MatrixChunk2Height = 10;
+    const int32_t MatrixChunk2Size = (MatrixChunk2Width*MatrixChunk2Height);
+    const int32_t MatrixChunk2ElemHalfWidth = 50000;
+    const int32_t MatrixChunk2ElemHalfHeight = 50000;
+    const int32_t MatrixChunk2ElemWidth = (MatrixChunk2ElemHalfWidth*2);
+    const int32_t MatrixChunk2ElemHeight = (MatrixChunk2ElemHalfHeight*2);
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -65,6 +78,23 @@
             ~MatrixChunk2();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Init matrix chunk                                             //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get matrix element at given coordinates                       //
+            ////////////////////////////////////////////////////////////////////
+            inline int8_t get(int x, int y) const
+            {
+                return m_matrix[
+                    (Math::clamp(y, 0, (MatrixChunk2Height-1))*
+                    MatrixChunk2Width)+Math::clamp(x, 0, (MatrixChunk2Width-1))
+                ];
+            }
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  MatrixChunk2 private copy constructor : Not copyable          //
@@ -78,6 +108,7 @@
 
 
         public:
+            int8_t*     m_matrix;       // Matrix chunk representation
     };
 
 

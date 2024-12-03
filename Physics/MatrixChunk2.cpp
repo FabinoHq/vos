@@ -45,7 +45,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  MatrixChunk2 default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
-MatrixChunk2::MatrixChunk2()
+MatrixChunk2::MatrixChunk2() :
+m_matrix(0)
 {
 
 }
@@ -55,5 +56,56 @@ MatrixChunk2::MatrixChunk2()
 ////////////////////////////////////////////////////////////////////////////////
 MatrixChunk2::~MatrixChunk2()
 {
+	if (m_matrix) { delete[] m_matrix; }
+	m_matrix = 0;
+}
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init matrix chunk                                                         //
+////////////////////////////////////////////////////////////////////////////////
+bool MatrixChunk2::init()
+{
+	// Create matrix
+	m_matrix = new(std::nothrow) int8_t[MatrixChunk2Size];
+	if (!m_matrix) { return false; }
+	for (int i = 0; i < MatrixChunk2Size; ++i)
+	{
+		m_matrix[i] = 1;
+	}
+
+	// Test elements
+	m_matrix[(0*MatrixChunk2Width)+0] = 0;
+	m_matrix[(0*MatrixChunk2Width)+1] = 0;
+	m_matrix[(0*MatrixChunk2Width)+2] = 0;
+	m_matrix[(0*MatrixChunk2Width)+3] = 0;
+	m_matrix[(0*MatrixChunk2Width)+4] = 0;
+	m_matrix[(0*MatrixChunk2Width)+5] = 0;
+	m_matrix[(0*MatrixChunk2Width)+7] = 0;
+	m_matrix[(0*MatrixChunk2Width)+8] = 0;
+	m_matrix[(0*MatrixChunk2Width)+9] = 0;
+	m_matrix[(1*MatrixChunk2Width)+5] = 0;
+	m_matrix[(1*MatrixChunk2Width)+7] = 0;
+	m_matrix[(1*MatrixChunk2Width)+8] = 0;
+	m_matrix[(2*MatrixChunk2Width)+5] = 0;
+	m_matrix[(2*MatrixChunk2Width)+2] = 0;
+	m_matrix[(2*MatrixChunk2Width)+8] = 0;
+	m_matrix[(3*MatrixChunk2Width)+2] = 0;
+	m_matrix[(3*MatrixChunk2Width)+3] = 0;
+	m_matrix[(3*MatrixChunk2Width)+4] = 0;
+	m_matrix[(3*MatrixChunk2Width)+5] = 0;
+	m_matrix[(4*MatrixChunk2Width)+4] = 0;
+	m_matrix[(4*MatrixChunk2Width)+5] = 0;
+	m_matrix[(4*MatrixChunk2Width)+6] = 0;
+	m_matrix[(5*MatrixChunk2Width)+4] = 0;
+	m_matrix[(5*MatrixChunk2Width)+5] = 0;
+	m_matrix[(5*MatrixChunk2Width)+6] = 0;
+	m_matrix[(6*MatrixChunk2Width)+4] = 0;
+	m_matrix[(6*MatrixChunk2Width)+5] = 0;
+	m_matrix[(6*MatrixChunk2Width)+6] = 0;
+	m_matrix[(8*MatrixChunk2Width)+7] = 0;
+	m_matrix[(8*MatrixChunk2Width)+8] = 0;
+
+	// Matrix chunk successfully created
+	return true;
 }
