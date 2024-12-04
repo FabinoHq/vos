@@ -106,15 +106,20 @@ void BoundingCircle::set(const Vector2i& circlePosition,
 ////////////////////////////////////////////////////////////////////////////////
 bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
 {
+	// Compute squared distance between circles
 	Vector2i dist = (position - boundingCircle.position);
 	int64_t distance = (
 		(static_cast<int64_t>(dist.vec[0])*static_cast<int64_t>(dist.vec[0]))+
 		(static_cast<int64_t>(dist.vec[1])*static_cast<int64_t>(dist.vec[1]))
 	);
+
+	// Compute squared radiuses
 	int64_t radiuses = (
 		static_cast<int64_t>(radius)+
 		static_cast<int64_t>(boundingCircle.radius)
 	);
+
+	// Check if circles are colliding
 	return (distance <= (radiuses*radiuses));
 }
 
@@ -143,7 +148,8 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 
 	// Compute step offset
 	int32_t stepRadius = Math::max(
-		((radius <= boundingCircle.radius) ? radius : boundingCircle.radius), 1
+		((radius <= boundingCircle.radius) ? radius : boundingCircle.radius),
+		PhysicsMinEntityHalfSize
 	);
 	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
 	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
@@ -238,12 +244,61 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 ////////////////////////////////////////////////////////////////////////////////
 bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
 {
-	// Get matrix element
-	int8_t elem = matrixChunk2.get(
-		Math::divide(position.vec[0], MatrixChunk2ElemWidth),
-		Math::divide(position.vec[1], MatrixChunk2ElemHeight)
+	// Compute start and end matrix coordinates
+	int32_t startX = Math::divide(
+		position.vec[0]-radius, MatrixChunk2ElemWidth
 	);
-	return (elem != 0);
+	int32_t endX = Math::divide(
+		position.vec[0]+radius, MatrixChunk2ElemWidth
+	);
+	int32_t startY = Math::divide(
+		position.vec[1]-radius, MatrixChunk2ElemHeight
+	);
+	int32_t endY = Math::divide(
+		position.vec[1]+radius, MatrixChunk2ElemHeight
+	);
+
+	// Check matrix elements
+	Vector2i elemPos = Vector2i(0, 0);
+	Vector2i dist = Vector2i(0, 0);
+	int64_t distance = 0;
+	int64_t squareRadius = (
+		static_cast<int64_t>(radius)*static_cast<int64_t>(radius)
+	);
+	for (int i = startX; i <= endX; ++i)
+	{
+		for (int j = startY; j <= endY; ++j)
+		{
+			if (matrixChunk2.isColliding(i, j))
+			{
+				// Compute clamped distance between circle and matrix element
+				elemPos = Vector2i(
+					((i*MatrixChunk2ElemWidth) + MatrixChunk2ElemHalfWidth),
+					((j*MatrixChunk2ElemHeight) + MatrixChunk2ElemHalfHeight)
+				);
+				dist = (position - elemPos);
+				dist.clamp(
+					-MatrixChunk2ElemHalfWidth, -MatrixChunk2ElemHalfHeight,
+					MatrixChunk2ElemHalfWidth, MatrixChunk2ElemHalfHeight
+				);
+
+				// Compute distance between circle and closest element point
+				dist = (position - (elemPos + dist));
+				distance = (
+					(static_cast<int64_t>(dist.vec[0])*
+					static_cast<int64_t>(dist.vec[0]))+
+					(static_cast<int64_t>(dist.vec[1])*
+					static_cast<int64_t>(dist.vec[1]))
+				);
+
+				// Check if circle is colliding with matrix element
+				if (distance <= squareRadius) { return true; }
+			}
+		}
+	}
+
+	// No collision detected
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -233,6 +233,30 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Clamp vector between min and max vectors                      //
+            ////////////////////////////////////////////////////////////////////
+            inline void clamp(const Vector4i& min, const Vector4i& max)
+            {
+                vec[0] = Math::clamp(vec[0], min.vec[0], max.vec[0]);
+                vec[1] = Math::clamp(vec[1], min.vec[1], max.vec[1]);
+                vec[2] = Math::clamp(vec[2], min.vec[2], max.vec[2]);
+                vec[3] = Math::clamp(vec[3], min.vec[3], max.vec[3]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Clamp vector between min and max X Y Z W components           //
+            ////////////////////////////////////////////////////////////////////
+            inline void clamp(
+                int32_t minX, int32_t minY, int32_t minZ, int32_t minW,
+                int32_t maxX, int32_t maxY, int32_t maxZ, int32_t maxW)
+            {
+                vec[0] = Math::clamp(vec[0], minX, maxX);
+                vec[1] = Math::clamp(vec[1], minY, maxY);
+                vec[2] = Math::clamp(vec[2], minZ, maxZ);
+                vec[3] = Math::clamp(vec[3], minW, maxW);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Move components towards a specified value                     //
             ////////////////////////////////////////////////////////////////////
             inline void moveTowards(int32_t val, int32_t delta)

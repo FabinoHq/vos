@@ -86,12 +86,20 @@
             ////////////////////////////////////////////////////////////////////
             //  Get matrix element at given coordinates                       //
             ////////////////////////////////////////////////////////////////////
-            inline int8_t get(int x, int y) const
+            inline int8_t get(int32_t x, int32_t y) const
             {
                 return m_matrix[
                     (Math::clamp(y, 0, (MatrixChunk2Height-1))*
                     MatrixChunk2Width)+Math::clamp(x, 0, (MatrixChunk2Width-1))
                 ];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get matrix element collide state at given coordinates         //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isColliding(int32_t x, int32_t y) const
+            {
+                return (get(x, y) != 0);
             }
 
 
