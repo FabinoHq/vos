@@ -472,12 +472,12 @@ void TopDown::compute(float frametime)
     }*/
 
     // Compute align rect vs align rect collision
-    /*collideOffset.vec[0] -= m_boundingAlignRect2.position.vec[0];
+    collideOffset.vec[0] -= m_boundingAlignRect2.position.vec[0];
     collideOffset.vec[1] -= m_boundingAlignRect2.position.vec[1];
     m_boundingAlignRect2.collideAlignRect(
         m_boundingAlignRect, collideOffset, m_collide
-    );*/
-    m_boundingAlignRect2.position.vec[0] = collideOffset.vec[0];
+    );
+    /*m_boundingAlignRect2.position.vec[0] = collideOffset.vec[0];
     m_boundingAlignRect2.position.vec[1] = collideOffset.vec[1];
     m_collide.reset();
     if (m_boundingAlignRect2.collideAlignRect(m_boundingAlignRect))
@@ -487,15 +487,15 @@ void TopDown::compute(float frametime)
     else
     {
         m_collide.collide = false;
-    }
+    }*/
 
     // Space key released event
     if (m_spaceReleased)
     {
         /*m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
         m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];*/
-        /*m_boundingAlignRect2.position.vec[0] = m_collide.position.vec[0];
-        m_boundingAlignRect2.position.vec[1] = m_collide.position.vec[1];*/
+        m_boundingAlignRect2.position.vec[0] = m_collide.position.vec[0];
+        m_boundingAlignRect2.position.vec[1] = m_collide.position.vec[1];
         m_spaceReleased = false;
     }
 
@@ -702,7 +702,6 @@ void TopDown::render()
     halfWidth = (m_boundingAlignRect2.halfSize.vec[0]*PhysicsToRenderer);
     halfHeight = (m_boundingAlignRect2.halfSize.vec[1]*PhysicsToRenderer);
     m_rectangle.setColor(0.0f, 0.2f, 0.8f, 0.8f);
-    if (m_collide.collide) { m_rectangle.setColor(0.8f, 0.2f, 0.2f, 0.8f); }
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setPosition(positionX, positionY);
     m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
@@ -711,7 +710,7 @@ void TopDown::render()
     m_rectangle.render();
 
     // Render bounding align rect 2 projection
-    /*positionX = (m_collide.position.vec[0]*PhysicsToRenderer);
+    positionX = (m_collide.position.vec[0]*PhysicsToRenderer);
     positionY = (m_collide.position.vec[1]*PhysicsToRenderer);
     halfWidth = (m_boundingAlignRect2.halfSize.vec[0]*PhysicsToRenderer);
     halfHeight = (m_boundingAlignRect2.halfSize.vec[1]*PhysicsToRenderer);
@@ -722,7 +721,7 @@ void TopDown::render()
     m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
     m_rectangle.setAngle(0.0f);
     m_rectangle.setSmooth(0.01f);
-    m_rectangle.render();*/
+    m_rectangle.render();
 
 
     // Render bounding rect
