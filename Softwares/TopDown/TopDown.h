@@ -67,6 +67,7 @@
     #include "../../Physics/Physics.h"
     #include "../../Physics/Collision2.h"
     #include "../../Physics/BoundingCircle.h"
+    #include "../../Physics/BoundingAlignRect.h"
     #include "../../Physics/BoundingRect.h"
 
     #include "TopDownPlayer.h"
@@ -147,31 +148,33 @@
 
 
         private:
-            BackRenderer    m_backRenderer;     // Back renderer
-            View            m_view;             // View
+            BackRenderer        m_backRenderer;         // Back renderer
+            View                m_view;                 // View
 
-            Sprite          m_sprite;           // Sprite
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectangle;        // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
+            Sprite              m_sprite;               // Sprite
+            ProcSprite          m_procSprite;           // Procedural sprite
+            RectangleShape      m_rectangle;            // Rectangle shape
+            EllipseShape        m_ellipse;              // Ellipse shape
 
-            GUICursor       m_cursor;           // GUI Cursor
-            GUIWindow       m_guiWindow;        // GUI Window
-            GUIPxText       m_pxText;           // GUI pixel text
-            GUIButton       m_button;           // GUI button
-            GUIToggleButton m_toggleButton;     // GUI toggle button
-            GUIProgressBar  m_progressBar;      // GUI progress bar
+            GUICursor           m_cursor;               // GUI Cursor
+            GUIWindow           m_guiWindow;            // GUI Window
+            GUIPxText           m_pxText;               // GUI pixel text
+            GUIButton           m_button;               // GUI button
+            GUIToggleButton     m_toggleButton;         // GUI toggle button
+            GUIProgressBar      m_progressBar;          // GUI progress bar
 
-            BoundingCircle  m_boundingCircle;   // Bounding circle
-            BoundingCircle  m_boundingCircle2;  // Bounding circle 2
-            BoundingRect    m_boundingRect;     // Bounding rect
-            BoundingRect    m_boundingRect2;    // Bounding rect 2
-            MatrixChunk2    m_matrixChunk;      // Matrix chunk
-            Collision2      m_collide;          // Collision
+            BoundingCircle      m_boundingCircle;       // Bounding circle
+            BoundingCircle      m_boundingCircle2;      // Bounding circle 2
+            BoundingAlignRect   m_boundingAlignRect;    // Bounding align rect
+            BoundingAlignRect   m_boundingAlignRect2;   // Bounding align rect 2
+            BoundingRect        m_boundingRect;         // Bounding rect
+            BoundingRect        m_boundingRect2;        // Bounding rect 2
+            MatrixChunk2        m_matrixChunk;          // Matrix chunk
+            Collision2          m_collide;              // Collision
 
-            TopDownPlayer   m_player;           // Player
+            TopDownPlayer       m_player;               // Player
 
-            bool            m_spaceReleased;    // Space released event
+            bool                m_spaceReleased;        // Space released event
     };
 
 

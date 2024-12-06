@@ -66,6 +66,8 @@ m_toggleButton(),
 m_progressBar(),
 m_boundingCircle(),
 m_boundingCircle2(),
+m_boundingAlignRect(),
+m_boundingAlignRect2(),
 m_boundingRect(),
 m_boundingRect2(),
 m_matrixChunk(),
@@ -194,6 +196,14 @@ bool TopDown::init()
     m_boundingCircle2.setRadius(40000);
     m_boundingCircle2.setAngle(0);
 
+    // Init bounding align rect
+    m_boundingAlignRect.setPosition(-200000, 0);
+    m_boundingAlignRect.setSize(110000, 90000);
+
+    // Init bounding rect2
+    m_boundingAlignRect2.setPosition(200000, 0);
+    m_boundingAlignRect2.setSize(80000, 70000);
+
     // Init bounding rect
     m_boundingRect.setPosition(-200000, 0);
     m_boundingRect.setSize(110000, 90000);
@@ -299,6 +309,7 @@ void TopDown::events(SysEvent& event)
 
                 case SYSEVENT_KEY_R:
                     m_boundingCircle2.setPosition(200000, 0);
+                    m_boundingAlignRect2.setPosition(200000, 0);
                     m_boundingRect2.setPosition(200000, 0);
                     break;
 
@@ -474,7 +485,7 @@ void TopDown::compute(float frametime)
     }
 
     // Update view position
-    //m_view.setPosition(m_player.getPosition());
+    m_view.setPosition(m_player.getPosition());
     
 
     // Start uniforms upload
@@ -585,7 +596,7 @@ void TopDown::render()
     m_ellipse.render();*/
 
     // Render bounding circle 2
-    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     positionX = (m_boundingCircle2.position.vec[0]*PhysicsToRenderer);
     positionY = (m_boundingCircle2.position.vec[1]*PhysicsToRenderer);
     float radius = (m_boundingCircle2.radius*PhysicsToRenderer);
@@ -596,10 +607,10 @@ void TopDown::render()
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.05f);
-    m_ellipse.render();
+    m_ellipse.render();*/
 
     // Render bounding circle 2 projection
-    positionX = m_collide.position.vec[0]*PhysicsToRenderer;
+    /*positionX = m_collide.position.vec[0]*PhysicsToRenderer;
     positionY = m_collide.position.vec[1]*PhysicsToRenderer;
     radius = (m_boundingCircle2.radius*PhysicsToRenderer);
     m_ellipse.setColor(0.8f, 0.2f, 0.8f, 0.8f);
@@ -609,7 +620,7 @@ void TopDown::render()
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.05f);
-    m_ellipse.render();
+    m_ellipse.render();*/
 
     // Render test matrix collisions
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);

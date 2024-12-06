@@ -60,7 +60,8 @@ VOS: main.o \
 	Physics/Physics.o \
 	Physics/PhysicsTransform2.o Physics/PhysicsTransform3.o \
 	Physics/Collision2.o \
-	Physics/BoundingCircle.o Physics/BoundingRect.o \
+	Physics/BoundingCircle.o \
+	Physics/BoundingAlignRect.o Physics/BoundingRect.o \
 	Physics/MatrixChunk2.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
@@ -110,7 +111,8 @@ VOS: main.o \
 	Physics/Physics.o \
 	Physics/PhysicsTransform2.o Physics/PhysicsTransform3.o \
 	Physics/Collision2.o \
-	Physics/BoundingCircle.o Physics/BoundingRect.o \
+	Physics/BoundingCircle.o \
+	Physics/BoundingAlignRect.o Physics/BoundingRect.o \
 	Physics/MatrixChunk2.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
@@ -228,6 +230,10 @@ Physics/Collision2.o: Physics/Collision2.cpp
 
 Physics/BoundingCircle.o: Physics/BoundingCircle.cpp
 	$(CC) -o Physics/BoundingCircle.o -c Physics/BoundingCircle.cpp $(CFLAGS)
+
+Physics/BoundingAlignRect.o: Physics/BoundingAlignRect.cpp
+	$(CC) -o Physics/BoundingAlignRect.o -c \
+	Physics/BoundingAlignRect.cpp $(CFLAGS)
 
 Physics/BoundingRect.o: Physics/BoundingRect.cpp
 	$(CC) -o Physics/BoundingRect.o -c Physics/BoundingRect.cpp $(CFLAGS)

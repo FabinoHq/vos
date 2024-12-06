@@ -146,6 +146,8 @@
 !Physics/Collision2.cpp
 !Physics/BoundingCircle.h
 !Physics/BoundingCircle.cpp
+!Physics/BoundingAlignRect.h
+!Physics/BoundingAlignRect.cpp
 !Physics/BoundingRect.h
 !Physics/BoundingRect.cpp
 !Physics/MatrixChunk2.h

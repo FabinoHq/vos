@@ -37,163 +37,110 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/TopDown/TopDownPlayer.cpp : TopDown player management        //
+//     Physics/BoundingAlignRect.cpp : Bounding Aligned Rectangle management  //
 ////////////////////////////////////////////////////////////////////////////////
-#include "TopDownPlayer.h"
+#include "BoundingAlignRect.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  TopDownPlayer default constructor                                         //
+//  BoundingAlignRect default constructor                                     //
 ////////////////////////////////////////////////////////////////////////////////
-TopDownPlayer::TopDownPlayer() :
-m_transforms(),
-m_speed(),
-m_bounding(),
-m_matrixChunk(),
-m_ellipse()
+BoundingAlignRect::BoundingAlignRect() :
+position(0, 0),
+size(PhysicsMinEntityHalfSize, PhysicsMinEntityHalfSize)
 {
-    m_transforms.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  TopDownPlayer destructor                                                  //
+//  BoundingAlignRect copy constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
-TopDownPlayer::~TopDownPlayer()
+BoundingAlignRect::BoundingAlignRect(const BoundingAlignRect& boundingAlignRect)
 {
-    m_speed.reset();
-    m_transforms.reset();
+    position.vec[0] = boundingAlignRect.position.vec[0];
+	position.vec[1] = boundingAlignRect.position.vec[1];
+	size.vec[0] = Math::max(
+		boundingAlignRect.size.vec[0], PhysicsMinEntityHalfSize
+	);
+	size.vec[1] = Math::max(
+		boundingAlignRect.size.vec[1], PhysicsMinEntityHalfSize
+	);
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
-//  Init top down player                                                      //
-//  return : True if top down player is ready, false otherwise                //
+//  BoundingAlignRect position and size constructor                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool TopDownPlayer::init()
+BoundingAlignRect::BoundingAlignRect(const Vector2i& rectPosition,
+	const Vector2i& rectSize)
 {
-    // Reset player transformations
-    m_transforms.reset();
+	position.vec[0] = rectPosition.vec[0];
+	position.vec[1] = rectPosition.vec[1];
+	size.vec[0] = Math::max(rectSize.vec[0], PhysicsMinEntityHalfSize);
+	size.vec[1] = Math::max(rectSize.vec[1], PhysicsMinEntityHalfSize);
+}
 
-    // Reset player speed
-    m_speed.reset();
-
-    // Init bounding circle
-    m_bounding.setPosition(0, 0);
-    m_bounding.setRadius(40000);
-    m_bounding.setAngle(0);
-
-    // Init test matrix chunk
-    if (!m_matrixChunk.init())
-    {
-        // Could not init matrix chunk
-        return false;
-    }
-
-    // Init ellipse shape
-    if (!m_ellipse.init(0.2f, 0.2f))
-    {
-        // Could not init ellipse shape
-        return false;
-    }
-    m_ellipse.setSmooth(0.05f);
-    m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
-    m_ellipse.setOrigin(0.0f, 0.0f);
-    m_ellipse.setSize(
-        (m_bounding.radius*PhysicsToRenderer*2.05f),
-        (m_bounding.radius*PhysicsToRenderer*2.05f)
-    );
-
-    // Top down player is ready
-    return true;
+////////////////////////////////////////////////////////////////////////////////
+//  BoundingAlignRect destructor                                              //
+////////////////////////////////////////////////////////////////////////////////
+BoundingAlignRect::~BoundingAlignRect()
+{
+	size.vec[1] = 0;
+	size.vec[0] = 0;
+	position.vec[1] = 0;
+	position.vec[0] = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Precompute top down player physics (thread sync)                          //
+//  Set bounding align rect position and size                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::prephysics()
+void BoundingAlignRect::set(const Vector2i& rectPosition,
+	const Vector2i& rectSize)
 {
-    // Compute prephysics transformations
-    m_transforms.prephysics(m_bounding.position, m_bounding.angle);
+	position.vec[0] = rectPosition.vec[0];
+	position.vec[1] = rectPosition.vec[1];
+	size.vec[0] = Math::max(rectSize.vec[0], PhysicsMinEntityHalfSize);
+	size.vec[1] = Math::max(rectSize.vec[1], PhysicsMinEntityHalfSize);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Collide bounding align rect with bounding align rect                      //
+////////////////////////////////////////////////////////////////////////////////
+bool BoundingAlignRect::collideAlignRect(
+	const BoundingAlignRect& boundingAlignRect)
+{
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Compute top down player physics (threaded)                                //
+//  Collide bounding align rect with bounding align rect                      //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::physics()
+bool BoundingAlignRect::collideAlignRect(
+	const BoundingAlignRect& boundingAlignRect,
+	const Vector2i& offset, Collision2& collision)
 {
-    // Compute top down player speed
-    if (GSysKeys.axis.vec[0] != 0)
-    {
-        // Accelerate X
-        m_speed.vec[0] += (GSysKeys.axis.vec[0] * 4);
-    }
-    else
-    {
-        // Decelerate X
-        m_speed.moveXTowards(0, Math::OneInt);
-    }
-    if (GSysKeys.axis.vec[1] != 0)
-    {
-        // Accelerate Y
-        m_speed.vec[1] += (GSysKeys.axis.vec[1] * 4);
-    }
-    else
-    {
-        // Decelerate Y
-        m_speed.moveYTowards(0, Math::OneInt);
-    }
-
-    // Clamp speed
-    if (m_speed.length() >= (Math::OneInt * 12))
-    {
-        m_speed.normalize();
-        m_speed *= 12;
-    }
-
-    // Compute top down player matrix collisions
-    Collision2 collide;
-    Vector2i offset = Vector2i(
-        (m_speed.vec[0] >> PhysicsSpeedToPositionShift),
-        (m_speed.vec[1] >> PhysicsSpeedToPositionShift)
-    );
-    if (m_bounding.collideMatrix2(m_matrixChunk, offset, collide))
-    {
-        // Move into collide position
-        m_bounding.position.vec[0] = collide.position.vec[0];
-        m_bounding.position.vec[1] = collide.position.vec[1];
-
-        // Compute separated X axis
-        Vector2i remain = (offset - collide.offset);
-        offset = Vector2i(remain.vec[0], 0);
-        if (m_bounding.collideMatrix2(m_matrixChunk, offset, collide))
-        {
-            // Compute separated Y axis
-            offset = Vector2i(0, remain.vec[1]);
-            m_bounding.collideMatrix2(m_matrixChunk, offset, collide);
-        }
-    }
-
-    // Compute top down player position
-    m_bounding.position.vec[0] = collide.position.vec[0];
-    m_bounding.position.vec[1] = collide.position.vec[1];
+	// Reset collision
+	collision.reset();
+	collision.position.vec[0] = position.vec[0]+offset.vec[0];
+	collision.position.vec[1] = position.vec[1]+offset.vec[1];
+	collision.offset.vec[0] = offset.vec[0];
+	collision.offset.vec[1] = offset.vec[1];
+	collision.setFactor(Math::OneInt);
+	collision.collide = false;
+	return collision.collide;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Precompute top down player renderer interpolations                        //
-////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::precompute(float physicstime)
-{
-    // Precompute ellipse transformations
-    m_ellipse.precomputeTransforms(m_transforms, physicstime);
-}
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render top down player                                                    //
+//  BoundingAlignRect affectation operator                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::render()
+BoundingAlignRect& BoundingAlignRect::operator=(
+	const BoundingAlignRect& boundingAlignRect)
 {
-    // Render ellipse shape
-    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
-    m_ellipse.render();
+	position.vec[0] = boundingAlignRect.position.vec[0];
+	position.vec[1] = boundingAlignRect.position.vec[1];
+	size.vec[0] = boundingAlignRect.size.vec[0];
+	size.vec[1] = boundingAlignRect.size.vec[1];
+	return *this;
 }

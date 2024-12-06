@@ -58,6 +58,7 @@
     #include "../../Physics/PhysicsTransform2.h"
     #include "../../Physics/Collision2.h"
     #include "../../Physics/BoundingCircle.h"
+    #include "../../Physics/BoundingAlignRect.h"
     #include "../../Physics/BoundingRect.h"
 
     #include <cstdint>
@@ -146,11 +147,12 @@
 
 
         private:
-            PhysicsTransform2   m_transforms;           // Player transforms
-            Vector2i            m_speed;                // Player speed
-            BoundingCircle      m_bounding;             // Bounding circle
+            PhysicsTransform2       m_transforms;       // Player transforms
+            Vector2i                m_speed;            // Player speed
+            BoundingCircle          m_bounding;         // Bounding circle
+            MatrixChunk2            m_matrixChunk;      // Test matrix chunk
 
-            EllipseShape        m_ellipse;              // Ellipse shape
+            EllipseShape            m_ellipse;          // Ellipse shape
     };
 
 

@@ -211,6 +211,7 @@
     <ClCompile Include="Network\Win\NetworkInit.cpp" />
     <ClCompile Include="Network\Win\TCPSocket.cpp" />
     <ClCompile Include="Network\Win\UDPSocket.cpp" />
+    <ClCompile Include="Physics\BoundingAlignRect.cpp" />
     <ClCompile Include="Physics\BoundingCircle.cpp" />
     <ClCompile Include="Physics\BoundingRect.cpp" />
     <ClCompile Include="Physics\Collision2.cpp" />
@@ -318,6 +319,7 @@
     <ClInclude Include="Network\Win\IPAddress6.h" />
     <ClInclude Include="Network\Win\TCPSocket.h" />
     <ClInclude Include="Network\Win\UDPSocket.h" />
+    <ClInclude Include="Physics\BoundingAlignRect.h" />
     <ClInclude Include="Physics\BoundingCircle.h" />
     <ClInclude Include="Physics\BoundingRect.h" />
     <ClInclude Include="Physics\Collision2.h" />

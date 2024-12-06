@@ -302,6 +302,9 @@
     <ClCompile Include="Physics\PhysicsTransform3.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\BoundingAlignRect.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -702,6 +705,9 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="Physics\PhysicsTransform3.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\BoundingAlignRect.h">
       <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
