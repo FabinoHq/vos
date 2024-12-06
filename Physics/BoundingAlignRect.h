@@ -48,6 +48,7 @@
 
     #include "Physics.h"
     #include "Collision2.h"
+    #include "MatrixChunk2.h"
 
     #include <cstdint>
 
@@ -222,6 +223,18 @@
             //  Collide bounding align rect with bounding align rect          //
             ////////////////////////////////////////////////////////////////////
             bool collideAlignRect(const BoundingAlignRect& boundingAlignRect,
+                const Vector2i& offset, Collision2& collision);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Collide bounding align rect with matrix chunk 2               //
+            ////////////////////////////////////////////////////////////////////
+            bool collideMatrix2(const MatrixChunk2& matrixChunk2);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Collide bounding align rect with matrix chunk 2               //
+            ////////////////////////////////////////////////////////////////////
+            bool collideMatrix2(const MatrixChunk2& matrixChunk2,
                 const Vector2i& offset, Collision2& collision);
 
 

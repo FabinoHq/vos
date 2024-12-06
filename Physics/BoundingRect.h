@@ -48,6 +48,7 @@
 
     #include "Physics.h"
     #include "Collision2.h"
+    #include "MatrixChunk2.h"
 
     #include <cstdint>
 
