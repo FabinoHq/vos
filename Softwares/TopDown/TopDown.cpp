@@ -690,7 +690,7 @@ void TopDown::render()
 
 
     // Render bounding align rect
-    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
     positionX = (m_boundingAlignRect.position.vec[0]*PhysicsToRenderer);
     positionY = (m_boundingAlignRect.position.vec[1]*PhysicsToRenderer);
     float halfWidth = (m_boundingAlignRect.halfSize.vec[0]*PhysicsToRenderer);
@@ -729,7 +729,7 @@ void TopDown::render()
     m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
     m_rectangle.setAngle(0.0f);
     m_rectangle.setSmooth(0.01f);
-    m_rectangle.render();
+    m_rectangle.render();*/
 
 
     // Render bounding rect
@@ -777,7 +777,7 @@ void TopDown::render()
 
 
     // Render player
-    //m_player.render();
+    m_player.render();
 
 
     // Set default screen view

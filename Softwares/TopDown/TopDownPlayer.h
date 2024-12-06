@@ -52,6 +52,7 @@
     #include "../../Math/Vector2.h"
 
     #include "../../Renderer/Renderer.h"
+    #include "../../Renderer/Shapes/RectangleShape.h"
     #include "../../Renderer/Shapes/EllipseShape.h"
 
     #include "../../Physics/Physics.h"
@@ -149,9 +150,10 @@
         private:
             PhysicsTransform2       m_transforms;       // Player transforms
             Vector2i                m_speed;            // Player speed
-            BoundingCircle          m_bounding;         // Bounding circle
+            BoundingAlignRect       m_bounding;         // Bounding align rect
             MatrixChunk2            m_matrixChunk;      // Test matrix chunk
 
+            RectangleShape          m_rectangle;        // Rectangle shape
             EllipseShape            m_ellipse;          // Ellipse shape
     };
 

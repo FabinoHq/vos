@@ -50,9 +50,11 @@ m_transforms(),
 m_speed(),
 m_bounding(),
 m_matrixChunk(),
+m_rectangle(),
 m_ellipse()
 {
     m_transforms.reset();
+    m_speed.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,10 +79,10 @@ bool TopDownPlayer::init()
     // Reset player speed
     m_speed.reset();
 
-    // Init bounding circle
+    // Init bounding aligned rectangle
     m_bounding.setPosition(0, 0);
-    m_bounding.setRadius(40000);
-    m_bounding.setAngle(0);
+    m_bounding.setHalfSize(40000, 40000);
+    //m_bounding.setAngle(0);
 
     // Init test matrix chunk
     if (!m_matrixChunk.init())
@@ -89,8 +91,22 @@ bool TopDownPlayer::init()
         return false;
     }
 
+    // Init rectangle shape
+    if (!m_rectangle.init(0.2f, 0.2f))
+    {
+        // Could not init rectangle shape
+        return false;
+    }
+    m_rectangle.setSmooth(0.05f);
+    m_rectangle.setColor(0.0f, 0.8f, 0.2f, 0.8f);
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setSize(
+        (m_bounding.halfSize.vec[0]*PhysicsToRenderer*2.05f),
+        (m_bounding.halfSize.vec[1]*PhysicsToRenderer*2.05f)
+    );
+
     // Init ellipse shape
-    if (!m_ellipse.init(0.2f, 0.2f))
+    /*if (!m_ellipse.init(0.2f, 0.2f))
     {
         // Could not init ellipse shape
         return false;
@@ -101,7 +117,7 @@ bool TopDownPlayer::init()
     m_ellipse.setSize(
         (m_bounding.radius*PhysicsToRenderer*2.05f),
         (m_bounding.radius*PhysicsToRenderer*2.05f)
-    );
+    );*/
 
     // Top down player is ready
     return true;
@@ -114,7 +130,8 @@ bool TopDownPlayer::init()
 void TopDownPlayer::prephysics()
 {
     // Compute prephysics transformations
-    m_transforms.prephysics(m_bounding.position, m_bounding.angle);
+    m_transforms.prephysics(m_bounding.position, 0);
+    //m_transforms.prephysics(m_bounding.position, m_bounding.angle);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -184,8 +201,9 @@ void TopDownPlayer::physics()
 ////////////////////////////////////////////////////////////////////////////////
 void TopDownPlayer::precompute(float physicstime)
 {
-    // Precompute ellipse transformations
-    m_ellipse.precomputeTransforms(m_transforms, physicstime);
+    // Precompute transformations
+    m_rectangle.precomputeTransforms(m_transforms, physicstime);
+    //m_ellipse.precomputeTransforms(m_transforms, physicstime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +211,10 @@ void TopDownPlayer::precompute(float physicstime)
 ////////////////////////////////////////////////////////////////////////////////
 void TopDownPlayer::render()
 {
+    // Render rectangle shape
+    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectangle.render();
     // Render ellipse shape
-    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
-    m_ellipse.render();
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    m_ellipse.render();*/
 }
