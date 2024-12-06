@@ -92,8 +92,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setPosition(const Vector2i& circlePosition)
             {
-                position.vec[0] = circlePosition.vec[0];
-                position.vec[1] = circlePosition.vec[1];
+                position = circlePosition;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -127,6 +126,16 @@
             inline void setRadius(int32_t circleRadius)
             {
                 radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set bounding circle diameter                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline void setDiameter(int32_t circleDiameter)
+            {
+                radius = Math::max(
+                    (circleDiameter >> 1), PhysicsMinEntityHalfSize
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -192,6 +201,14 @@
             inline int32_t getRadius() const
             {
                 return radius;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding circle diameter                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getDiameter() const
+            {
+                return (radius << 1);
             }
 
             ////////////////////////////////////////////////////////////////////

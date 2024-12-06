@@ -47,7 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 BoundingRect::BoundingRect() :
 position(0, 0),
-size(PhysicsMinEntityHalfSize, PhysicsMinEntityHalfSize),
+halfSize(PhysicsMinEntityHalfSize, PhysicsMinEntityHalfSize),
 angle(0)
 {
 
@@ -58,10 +58,13 @@ angle(0)
 ////////////////////////////////////////////////////////////////////////////////
 BoundingRect::BoundingRect(const BoundingRect& boundingRect)
 {
-    position.vec[0] = boundingRect.position.vec[0];
-	position.vec[1] = boundingRect.position.vec[1];
-	size.vec[0] = Math::max(boundingRect.size.vec[0], PhysicsMinEntityHalfSize);
-	size.vec[1] = Math::max(boundingRect.size.vec[1], PhysicsMinEntityHalfSize);
+    position = boundingRect.position;
+	halfSize.vec[0] = Math::max(
+		boundingRect.halfSize.vec[0], PhysicsMinEntityHalfSize
+	);
+	halfSize.vec[1] = Math::max(
+		boundingRect.halfSize.vec[1], PhysicsMinEntityHalfSize
+	);
 	angle = boundingRect.angle;
 }
 
@@ -69,12 +72,11 @@ BoundingRect::BoundingRect(const BoundingRect& boundingRect)
 //  BoundingRect position size and angle constructor                          //
 ////////////////////////////////////////////////////////////////////////////////
 BoundingRect::BoundingRect(const Vector2i& rectPosition,
-	const Vector2i& rectSize, int32_t rectAngle)
+	const Vector2i& rectHalfSize, int32_t rectAngle)
 {
-	position.vec[0] = rectPosition.vec[0];
-	position.vec[1] = rectPosition.vec[1];
-	size.vec[0] = Math::max(rectSize.vec[0], PhysicsMinEntityHalfSize);
-	size.vec[1] = Math::max(rectSize.vec[1], PhysicsMinEntityHalfSize);
+	position = rectPosition;
+	halfSize.vec[0] = Math::max(rectHalfSize.vec[0], PhysicsMinEntityHalfSize);
+	halfSize.vec[1] = Math::max(rectHalfSize.vec[1], PhysicsMinEntityHalfSize);
 	angle = (rectAngle % Math::TwoPiInt);
 }
 
@@ -84,10 +86,8 @@ BoundingRect::BoundingRect(const Vector2i& rectPosition,
 BoundingRect::~BoundingRect()
 {
 	angle = 0;
-	size.vec[1] = 0;
-	size.vec[0] = 0;
-	position.vec[1] = 0;
-	position.vec[0] = 0;
+	halfSize.reset();
+	position.reset();
 }
 
 
@@ -95,12 +95,11 @@ BoundingRect::~BoundingRect()
 //  Set bounding rect position size and angle                                 //
 ////////////////////////////////////////////////////////////////////////////////
 void BoundingRect::set(const Vector2i& rectPosition,
-	const Vector2i& rectSize, int32_t rectAngle)
+	const Vector2i& rectHalfSize, int32_t rectAngle)
 {
-	position.vec[0] = rectPosition.vec[0];
-	position.vec[1] = rectPosition.vec[1];
-	size.vec[0] = Math::max(rectSize.vec[0], PhysicsMinEntityHalfSize);
-	size.vec[1] = Math::max(rectSize.vec[1], PhysicsMinEntityHalfSize);
+	position = rectPosition;
+	halfSize.vec[0] = Math::max(rectHalfSize.vec[0], PhysicsMinEntityHalfSize);
+	halfSize.vec[1] = Math::max(rectHalfSize.vec[1], PhysicsMinEntityHalfSize);
 	angle = (rectAngle % Math::TwoPiInt);
 }
 
@@ -121,10 +120,8 @@ bool BoundingRect::collideRect(const BoundingRect& boundingRect,
 {
 	// Reset collision
 	collision.reset();
-	collision.position.vec[0] = position.vec[0]+offset.vec[0];
-	collision.position.vec[1] = position.vec[1]+offset.vec[1];
-	collision.offset.vec[0] = offset.vec[0];
-	collision.offset.vec[1] = offset.vec[1];
+	collision.position = (position + offset);
+	collision.offset = offset;
 	collision.setFactor(Math::OneInt);
 	collision.collide = false;
 	return collision.collide;
@@ -136,10 +133,8 @@ bool BoundingRect::collideRect(const BoundingRect& boundingRect,
 ////////////////////////////////////////////////////////////////////////////////
 BoundingRect& BoundingRect::operator=(const BoundingRect& boundingRect)
 {
-	position.vec[0] = boundingRect.position.vec[0];
-	position.vec[1] = boundingRect.position.vec[1];
-	size.vec[0] = boundingRect.size.vec[0];
-	size.vec[1] = boundingRect.size.vec[1];
+	position = boundingRect.position;
+	halfSize = boundingRect.halfSize;
 	angle = (boundingRect.angle % Math::TwoPiInt);
 	return *this;
 }

@@ -69,10 +69,10 @@
             BoundingAlignRect(const BoundingAlignRect& boundingAlignRect);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingAlignRect position and size constructor               //
+            //  BoundingAlignRect position and half size constructor          //
             ////////////////////////////////////////////////////////////////////
             BoundingAlignRect(const Vector2i& rectPosition,
-                const Vector2i& rectSize);
+                const Vector2i& rectHalfSize);
 
             ////////////////////////////////////////////////////////////////////
             //  BoundingAlignRect destructor                                  //
@@ -81,10 +81,10 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect position and size                     //
+            //  Set bounding align rect position and half size                //
             ////////////////////////////////////////////////////////////////////
             void set(const Vector2i& rectPosition,
-                const Vector2i& rectSize);
+                const Vector2i& rectHalfSize);
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding align rect position                              //
@@ -121,15 +121,41 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Set bounding align rect half size                             //
+            ////////////////////////////////////////////////////////////////////
+            inline void setHalfSize(Vector2i rectHalfSize)
+            {
+                halfSize.vec[0] = Math::max(
+                    rectHalfSize.vec[0], PhysicsMinEntityHalfSize
+                );
+                halfSize.vec[1] = Math::max(
+                    rectHalfSize.vec[1], PhysicsMinEntityHalfSize
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set bounding align rect half size                             //
+            ////////////////////////////////////////////////////////////////////
+            inline void setHalfSize(int32_t halfWidth, int32_t halfHeight)
+            {
+                halfSize.vec[0] = Math::max(
+                    halfWidth, PhysicsMinEntityHalfSize
+                );
+                halfSize.vec[1] = Math::max(
+                    halfHeight, PhysicsMinEntityHalfSize
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Set bounding align rect size                                  //
             ////////////////////////////////////////////////////////////////////
             inline void setSize(Vector2i rectSize)
             {
-                size.vec[0] = Math::max(
-                    rectSize.vec[0], PhysicsMinEntityHalfSize
+                halfSize.vec[0] = Math::max(
+                    (rectSize.vec[0] >> 1), PhysicsMinEntityHalfSize
                 );
-                size.vec[1] = Math::max(
-                    rectSize.vec[1], PhysicsMinEntityHalfSize
+                halfSize.vec[1] = Math::max(
+                    (rectSize.vec[1] >> 1), PhysicsMinEntityHalfSize
                 );
             }
 
@@ -138,24 +164,52 @@
             ////////////////////////////////////////////////////////////////////
             inline void setSize(int32_t width, int32_t height)
             {
-                size.vec[0] = Math::max(width, PhysicsMinEntityHalfSize);
-                size.vec[1] = Math::max(height, PhysicsMinEntityHalfSize);
+                halfSize.vec[0] = Math::max(
+                    (width >> 1), PhysicsMinEntityHalfSize
+                );
+                halfSize.vec[1] = Math::max(
+                    (height >> 1), PhysicsMinEntityHalfSize
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set bounding align rect half width                            //
+            ////////////////////////////////////////////////////////////////////
+            inline void setHalfWidth(int32_t halfWidth)
+            {
+                halfSize.vec[0] = Math::max(
+                    halfWidth, PhysicsMinEntityHalfSize
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding align rect width                                 //
             ////////////////////////////////////////////////////////////////////
-            inline void setWidth(int32_t rectWidth)
+            inline void setWidth(int32_t width)
             {
-                size.vec[0] = Math::max(rectWidth, PhysicsMinEntityHalfSize);
+                halfSize.vec[0] = Math::max(
+                    (width >> 1), PhysicsMinEntityHalfSize
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set bounding align rect half height                           //
+            ////////////////////////////////////////////////////////////////////
+            inline void setHalfHeight(int32_t halfHeight)
+            {
+                halfSize.vec[1] = Math::max(
+                    halfHeight, PhysicsMinEntityHalfSize
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Set bounding align rect height                                //
             ////////////////////////////////////////////////////////////////////
-            inline void setHeight(int32_t rectHeight)
+            inline void setHeight(int32_t height)
             {
-                size.vec[1] = Math::max(rectHeight, PhysicsMinEntityHalfSize);
+                halfSize.vec[1] = Math::max(
+                    (height >> 1), PhysicsMinEntityHalfSize
+                );
             }
 
 
@@ -196,11 +250,27 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding alignrect size                                   //
+            //  Get bounding align rect half size                             //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2i getHalfSize() const
+            {
+                return halfSize;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding align rect size                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector2i getSize() const
             {
-                return size;
+                return Vector2i((halfSize.vec[0] << 1), (halfSize.vec[1] << 1));
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding align rect half width                            //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getHalfWidth() const
+            {
+                return halfSize.vec[0];
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -208,7 +278,15 @@
             ////////////////////////////////////////////////////////////////////
             inline int32_t getWidth() const
             {
-                return size.vec[0];
+                return (halfSize.vec[0] << 1);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding align rect half height                           //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getHalfHeight() const
+            {
+                return halfSize.vec[1];
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -216,7 +294,7 @@
             ////////////////////////////////////////////////////////////////////
             inline int32_t getHeight() const
             {
-                return size.vec[1];
+                return (halfSize.vec[1] << 1);
             }
 
 
@@ -229,7 +307,7 @@
 
         public:
             Vector2i    position;   // Bounding aligned rectangle position
-            Vector2i    size;       // Bounding aligned rectangle size
+            Vector2i    halfSize;   // Bounding aligned rectangle half size
     };
 
 

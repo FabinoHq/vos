@@ -47,7 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 BoundingAlignRect::BoundingAlignRect() :
 position(0, 0),
-size(PhysicsMinEntityHalfSize, PhysicsMinEntityHalfSize)
+halfSize(PhysicsMinEntityHalfSize, PhysicsMinEntityHalfSize)
 {
 
 }
@@ -57,13 +57,12 @@ size(PhysicsMinEntityHalfSize, PhysicsMinEntityHalfSize)
 ////////////////////////////////////////////////////////////////////////////////
 BoundingAlignRect::BoundingAlignRect(const BoundingAlignRect& boundingAlignRect)
 {
-    position.vec[0] = boundingAlignRect.position.vec[0];
-	position.vec[1] = boundingAlignRect.position.vec[1];
-	size.vec[0] = Math::max(
-		boundingAlignRect.size.vec[0], PhysicsMinEntityHalfSize
+    position = boundingAlignRect.position;
+	halfSize.vec[0] = Math::max(
+		boundingAlignRect.halfSize.vec[0], PhysicsMinEntityHalfSize
 	);
-	size.vec[1] = Math::max(
-		boundingAlignRect.size.vec[1], PhysicsMinEntityHalfSize
+	halfSize.vec[1] = Math::max(
+		boundingAlignRect.halfSize.vec[1], PhysicsMinEntityHalfSize
 	);
 }
 
@@ -71,12 +70,11 @@ BoundingAlignRect::BoundingAlignRect(const BoundingAlignRect& boundingAlignRect)
 //  BoundingAlignRect position and size constructor                           //
 ////////////////////////////////////////////////////////////////////////////////
 BoundingAlignRect::BoundingAlignRect(const Vector2i& rectPosition,
-	const Vector2i& rectSize)
+	const Vector2i& rectHalfSize)
 {
-	position.vec[0] = rectPosition.vec[0];
-	position.vec[1] = rectPosition.vec[1];
-	size.vec[0] = Math::max(rectSize.vec[0], PhysicsMinEntityHalfSize);
-	size.vec[1] = Math::max(rectSize.vec[1], PhysicsMinEntityHalfSize);
+	position = rectPosition;
+	halfSize.vec[0] = Math::max(rectHalfSize.vec[0], PhysicsMinEntityHalfSize);
+	halfSize.vec[1] = Math::max(rectHalfSize.vec[1], PhysicsMinEntityHalfSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,10 +82,8 @@ BoundingAlignRect::BoundingAlignRect(const Vector2i& rectPosition,
 ////////////////////////////////////////////////////////////////////////////////
 BoundingAlignRect::~BoundingAlignRect()
 {
-	size.vec[1] = 0;
-	size.vec[0] = 0;
-	position.vec[1] = 0;
-	position.vec[0] = 0;
+	halfSize.reset();
+	position.reset();
 }
 
 
@@ -95,12 +91,11 @@ BoundingAlignRect::~BoundingAlignRect()
 //  Set bounding align rect position and size                                 //
 ////////////////////////////////////////////////////////////////////////////////
 void BoundingAlignRect::set(const Vector2i& rectPosition,
-	const Vector2i& rectSize)
+	const Vector2i& rectHalfSize)
 {
-	position.vec[0] = rectPosition.vec[0];
-	position.vec[1] = rectPosition.vec[1];
-	size.vec[0] = Math::max(rectSize.vec[0], PhysicsMinEntityHalfSize);
-	size.vec[1] = Math::max(rectSize.vec[1], PhysicsMinEntityHalfSize);
+	position = rectPosition;
+	halfSize.vec[0] = Math::max(rectHalfSize.vec[0], PhysicsMinEntityHalfSize);
+	halfSize.vec[1] = Math::max(rectHalfSize.vec[1], PhysicsMinEntityHalfSize);
 }
 
 
@@ -110,7 +105,16 @@ void BoundingAlignRect::set(const Vector2i& rectPosition,
 bool BoundingAlignRect::collideAlignRect(
 	const BoundingAlignRect& boundingAlignRect)
 {
-	return false;
+	return (
+		((position.vec[0]-halfSize.vec[0]) <=
+		(boundingAlignRect.position.vec[0]+boundingAlignRect.halfSize.vec[0]))&&
+		((position.vec[0]+halfSize.vec[0]) >=
+		(boundingAlignRect.position.vec[0]-boundingAlignRect.halfSize.vec[0]))&&
+		((position.vec[1]-halfSize.vec[1]) <=
+		(boundingAlignRect.position.vec[1]+boundingAlignRect.halfSize.vec[1]))&&
+		((position.vec[1]+halfSize.vec[1]) >=
+		(boundingAlignRect.position.vec[1]-boundingAlignRect.halfSize.vec[1]))
+	);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,10 +126,8 @@ bool BoundingAlignRect::collideAlignRect(
 {
 	// Reset collision
 	collision.reset();
-	collision.position.vec[0] = position.vec[0]+offset.vec[0];
-	collision.position.vec[1] = position.vec[1]+offset.vec[1];
-	collision.offset.vec[0] = offset.vec[0];
-	collision.offset.vec[1] = offset.vec[1];
+	collision.position = (position + offset);
+	collision.offset = offset;
 	collision.setFactor(Math::OneInt);
 	collision.collide = false;
 	return collision.collide;
@@ -138,9 +140,7 @@ bool BoundingAlignRect::collideAlignRect(
 BoundingAlignRect& BoundingAlignRect::operator=(
 	const BoundingAlignRect& boundingAlignRect)
 {
-	position.vec[0] = boundingAlignRect.position.vec[0];
-	position.vec[1] = boundingAlignRect.position.vec[1];
-	size.vec[0] = boundingAlignRect.size.vec[0];
-	size.vec[1] = boundingAlignRect.size.vec[1];
+	position = boundingAlignRect.position;
+	halfSize = boundingAlignRect.halfSize;
 	return *this;
 }

@@ -440,20 +440,7 @@ void TopDown::compute(float frametime)
         m_progressBar.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }*/
 
-    // Compute physics
-    /*Vector2i collideOffset;
-    collideOffset.vec[0] = static_cast<int32_t>(
-        GSysMouse.mouseX*RendererToPhysics
-    );
-    collideOffset.vec[1] = static_cast<int32_t>(
-        GSysMouse.mouseY*RendererToPhysics
-    );
-    collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
-    collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
-    m_boundingCircle2.collideCircle(m_boundingCircle, collideOffset, m_collide);
-    */
-
-    // Compute physics
+    // Compute collision offset from mouse
     Vector2i collideOffset;
     collideOffset.vec[0] = static_cast<int32_t>(
         GSysMouse.mouseX*RendererToPhysics
@@ -461,9 +448,17 @@ void TopDown::compute(float frametime)
     collideOffset.vec[1] = static_cast<int32_t>(
         GSysMouse.mouseY*RendererToPhysics
     );
-    collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
+
+    // Compute circle vs circle collision
+    /*collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
     collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
-    m_boundingCircle2.collideMatrix2(m_matrixChunk, collideOffset, m_collide);
+    m_boundingCircle2.collideCircle(m_boundingCircle, collideOffset, m_collide);
+    */
+
+    // Compute circle vs matrix collision
+    /*collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
+    collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
+    m_boundingCircle2.collideMatrix2(m_matrixChunk, collideOffset, m_collide);*/
     /*m_boundingCircle2.position.vec[0] = collideOffset.vec[0];
     m_boundingCircle2.position.vec[1] = collideOffset.vec[1];
     m_collide.reset();
@@ -476,16 +471,36 @@ void TopDown::compute(float frametime)
         m_collide.collide = false;
     }*/
 
+    // Compute align rect vs align rect collision
+    /*collideOffset.vec[0] -= m_boundingAlignRect2.position.vec[0];
+    collideOffset.vec[1] -= m_boundingAlignRect2.position.vec[1];
+    m_boundingAlignRect2.collideAlignRect(
+        m_boundingAlignRect, collideOffset, m_collide
+    );*/
+    m_boundingAlignRect2.position.vec[0] = collideOffset.vec[0];
+    m_boundingAlignRect2.position.vec[1] = collideOffset.vec[1];
+    m_collide.reset();
+    if (m_boundingAlignRect2.collideAlignRect(m_boundingAlignRect))
+    {
+        m_collide.collide = true;
+    }
+    else
+    {
+        m_collide.collide = false;
+    }
+
     // Space key released event
     if (m_spaceReleased)
     {
-        m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
-        m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];
+        /*m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
+        m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];*/
+        /*m_boundingAlignRect2.position.vec[0] = m_collide.position.vec[0];
+        m_boundingAlignRect2.position.vec[1] = m_collide.position.vec[1];*/
         m_spaceReleased = false;
     }
 
     // Update view position
-    m_view.setPosition(m_player.getPosition());
+    //m_view.setPosition(m_player.getPosition());
     
 
     // Start uniforms upload
@@ -667,18 +682,61 @@ void TopDown::render()
     }*/
 
 
+    // Render bounding align rect
+    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    positionX = (m_boundingAlignRect.position.vec[0]*PhysicsToRenderer);
+    positionY = (m_boundingAlignRect.position.vec[1]*PhysicsToRenderer);
+    float halfWidth = (m_boundingAlignRect.halfSize.vec[0]*PhysicsToRenderer);
+    float halfHeight = (m_boundingAlignRect.halfSize.vec[1]*PhysicsToRenderer);
+    m_rectangle.setColor(0.0f, 0.8f, 0.2f, 0.8f);
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setPosition(positionX, positionY);
+    m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
+    m_rectangle.setAngle(0.0f);
+    m_rectangle.setSmooth(0.01f);
+    m_rectangle.render();
+
+    // Render bounding align rect 2
+    positionX = (m_boundingAlignRect2.position.vec[0]*PhysicsToRenderer);
+    positionY = (m_boundingAlignRect2.position.vec[1]*PhysicsToRenderer);
+    halfWidth = (m_boundingAlignRect2.halfSize.vec[0]*PhysicsToRenderer);
+    halfHeight = (m_boundingAlignRect2.halfSize.vec[1]*PhysicsToRenderer);
+    m_rectangle.setColor(0.0f, 0.2f, 0.8f, 0.8f);
+    if (m_collide.collide) { m_rectangle.setColor(0.8f, 0.2f, 0.2f, 0.8f); }
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setPosition(positionX, positionY);
+    m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
+    m_rectangle.setAngle(0.0f);
+    m_rectangle.setSmooth(0.01f);
+    m_rectangle.render();
+
+    // Render bounding align rect 2 projection
+    /*positionX = (m_collide.position.vec[0]*PhysicsToRenderer);
+    positionY = (m_collide.position.vec[1]*PhysicsToRenderer);
+    halfWidth = (m_boundingAlignRect2.halfSize.vec[0]*PhysicsToRenderer);
+    halfHeight = (m_boundingAlignRect2.halfSize.vec[1]*PhysicsToRenderer);
+    m_rectangle.setColor(0.8f, 0.2f, 0.8f, 0.8f);
+    if (m_collide.collide) { m_rectangle.setColor(0.8f, 0.2f, 0.2f, 0.8f); }
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setPosition(positionX, positionY);
+    m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
+    m_rectangle.setAngle(0.0f);
+    m_rectangle.setSmooth(0.01f);
+    m_rectangle.render();*/
+
+
     // Render bounding rect
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
     float positionX =
         m_boundingRect.position.vec[0]*PhysicsToRenderer;
     float positionY =
         m_boundingRect.position.vec[1]*PhysicsToRenderer;
-    float width = m_boundingRect.size.vec[0]*PhysicsToRenderer;
-    float height = m_boundingRect.size.vec[1]*PhysicsToRenderer;
+    float halfWidth = m_boundingRect.halfSize.vec[0]*PhysicsToRenderer;
+    float halfHeight = m_boundingRect.halfSize.vec[1]*PhysicsToRenderer;
     m_rectangle.setColor(0.0f, 0.8f, 0.2f, 0.8f);
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setPosition(positionX, positionY);
-    m_rectangle.setSize(width*2.05f, height*2.05f);
+    m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
     m_rectangle.setAngle(m_boundingRect.angle*PhysicsAngleToRenderer);
     m_rectangle.setSmooth(0.05f);
     m_rectangle.render();
@@ -686,12 +744,12 @@ void TopDown::render()
     // Render bounding rect 2
     positionX = m_boundingRect2.position.vec[0]*PhysicsToRenderer;
     positionY = m_boundingRect2.position.vec[1]*PhysicsToRenderer;
-    width = m_boundingRect2.size.vec[0]*PhysicsToRenderer;
-    height = m_boundingRect2.size.vec[1]*PhysicsToRenderer;
+    halfWidth = m_boundingRect2.halfSize.vec[0]*PhysicsToRenderer;
+    halfHeight = m_boundingRect2.halfSize.vec[1]*PhysicsToRenderer;
     m_rectangle.setColor(0.0f, 0.2f, 0.8f, 0.8f);
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setPosition(positionX, positionY);
-    m_rectangle.setSize(width*2.04f, height*2.04f);
+    m_rectangle.setSize(halfWidth*2.04f, halfHeight*2.04f);
     m_rectangle.setAngle(m_boundingRect2.angle*PhysicsAngleToRenderer);
     m_rectangle.setSmooth(0.022f);
     m_rectangle.render();
@@ -699,23 +757,20 @@ void TopDown::render()
     // Render bounding rect 2 projection
     positionX = m_collide.position.vec[0]*PhysicsToRenderer;
     positionY = m_collide.position.vec[1]*PhysicsToRenderer;
-    width = m_boundingRect2.size.vec[0]*PhysicsToRenderer;
-    height = m_boundingRect2.size.vec[1]*PhysicsToRenderer;
+    halfWidth = m_boundingRect2.halfSize.vec[0]*PhysicsToRenderer;
+    halfHeight = m_boundingRect2.halfSize.vec[1]*PhysicsToRenderer;
     m_rectangle.setColor(0.8f, 0.2f, 0.8f, 0.8f);
-    if (m_collide.collide)
-    {
-        m_rectangle.setColor(0.8f, 0.2f, 0.2f, 0.8f);
-    }
+    if (m_collide.collide) { m_rectangle.setColor(0.8f, 0.2f, 0.2f, 0.8f); }
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setPosition(positionX, positionY);
-    m_rectangle.setSize(width*2.07f, height*2.07f);
+    m_rectangle.setSize(halfWidth*2.07f, halfHeight*2.07f);
     m_rectangle.setAngle(m_boundingRect2.angle*PhysicsAngleToRenderer);
     m_rectangle.setSmooth(0.05f);
     m_rectangle.render();*/
 
 
     // Render player
-    m_player.render();
+    //m_player.render();
 
 
     // Set default screen view

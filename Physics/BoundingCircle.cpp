@@ -58,8 +58,7 @@ angle(0)
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle::BoundingCircle(const BoundingCircle& boundingCircle)
 {
-    position.vec[0] = boundingCircle.position.vec[0];
-	position.vec[1] = boundingCircle.position.vec[1];
+    position = boundingCircle.position;
     radius = boundingCircle.radius;
     angle = boundingCircle.angle;
 }
@@ -70,8 +69,7 @@ BoundingCircle::BoundingCircle(const BoundingCircle& boundingCircle)
 BoundingCircle::BoundingCircle(const Vector2i& circlePosition,
 	int32_t circleRadius, int32_t circleAngle)
 {
-	position.vec[0] = circlePosition.vec[0];
-	position.vec[1] = circlePosition.vec[1];
+	position = circlePosition;
 	radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
 	angle = (circleAngle % Math::TwoPiInt);
 }
@@ -83,8 +81,7 @@ BoundingCircle::~BoundingCircle()
 {
 	angle = 0;
 	radius = 0;
-	position.vec[1] = 0;
-	position.vec[0] = 0;
+	position.reset();
 }
 
 
@@ -94,8 +91,7 @@ BoundingCircle::~BoundingCircle()
 void BoundingCircle::set(const Vector2i& circlePosition,
 	int32_t circleRadius, int32_t circleAngle)
 {
-	position.vec[0] = circlePosition.vec[0];
-	position.vec[1] = circlePosition.vec[1];
+	position = circlePosition;
 	radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
 	angle = (circleAngle % Math::TwoPiInt);
 }
@@ -131,8 +127,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 {
 	// Reset collision
 	collision.reset();
-	collision.position.vec[0] = position.vec[0];
-	collision.position.vec[1] = position.vec[1];
+	collision.position = position;
 	collision.setFactor(Math::OneInt);
 
 	// Check offset vector
@@ -170,8 +165,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 		else
 		{
 			// Next iteration
-			collision.position.vec[0] = currentCircle.position.vec[0];
-			collision.position.vec[1] = currentCircle.position.vec[1];
+			collision.position = currentCircle.position;
 			currentCircle.position.vec[0] += stepX;
 			currentCircle.position.vec[1] += stepY;
 		}
@@ -180,15 +174,12 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	if (!collide)
 	{
 		// Last collision detection
-		currentCircle.position.vec[0] = (position.vec[0] + offset.vec[0]);
-		currentCircle.position.vec[1] = (position.vec[1] + offset.vec[1]);
+		currentCircle.position = (position + offset);
 		if (!currentCircle.collideCircle(boundingCircle))
 		{
 			// No collision detected
-			collision.position.vec[0] = (position.vec[0] + offset.vec[0]);
-			collision.position.vec[1] = (position.vec[1] + offset.vec[1]);
-			collision.offset.vec[0] = offset.vec[0];
-			collision.offset.vec[1] = offset.vec[1];
+			collision.position = (position + offset);
+			collision.offset = offset;
 			collision.collide = false;
 			return collision.collide;
 		}
@@ -197,8 +188,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	// Small steps iterative collision
 	stepX >>= 1;	// stepX = stepX/2
 	stepY >>= 1;	// stepY = stepY/2
-	currentCircle.position.vec[0] = collision.position.vec[0];
-	currentCircle.position.vec[1] = collision.position.vec[1];
+	currentCircle.position = collision.position;
 	for (int32_t i = 0; i < PhysicsMaxSmallStepsIterations; ++i)
 	{
 		currentCircle.position.vec[0] += stepX;
@@ -206,29 +196,22 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 		if (currentCircle.collideCircle(boundingCircle))
 		{
 			// Rollback to previous position
-			currentCircle.position.vec[0] = collision.position.vec[0];
-			currentCircle.position.vec[1] = collision.position.vec[1];
+			currentCircle.position = collision.position;
 			stepX >>= 1;	// stepX = stepX/2
 			stepY >>= 1;	// stepY = stepY/2
 		}
 		else
 		{
 			// Store current position
-			collision.position.vec[0] = currentCircle.position.vec[0];
-			collision.position.vec[1] = currentCircle.position.vec[1];
+			collision.position = currentCircle.position;
 		}
 		if ((stepX == 0) && (stepY == 0)) { break; }
 	}
 
 	// Collision detected
-	collision.offset.vec[0] = (currentCircle.position.vec[0] - position.vec[0]);
-	collision.offset.vec[1] = (currentCircle.position.vec[1] - position.vec[1]);
-	collision.position.vec[0] = currentCircle.position.vec[0];
-	collision.position.vec[1] = currentCircle.position.vec[1];
-	collision.normal.vec[0] =
-		(collision.position.vec[0] - boundingCircle.position.vec[0]);
-	collision.normal.vec[1] =
-		(collision.position.vec[1] - boundingCircle.position.vec[1]);
+	collision.offset = (currentCircle.position - position);
+	collision.position = currentCircle.position;
+	collision.normal = (collision.position - boundingCircle.position);
 	collision.normal.normalize();
 	collision.setFactor(static_cast<int32_t>(
 		(collision.offset.length() << Math::OneIntShift) / offset.length()
@@ -308,8 +291,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 {
 	// Reset collision
 	collision.reset();
-	collision.position.vec[0] = position.vec[0];
-	collision.position.vec[1] = position.vec[1];
+	collision.position = position;
 	collision.setFactor(Math::OneInt);
 
 	// Check offset vector
@@ -349,8 +331,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 		else
 		{
 			// Next iteration
-			collision.position.vec[0] = currentCircle.position.vec[0];
-			collision.position.vec[1] = currentCircle.position.vec[1];
+			collision.position = currentCircle.position;
 			currentCircle.position.vec[0] += stepX;
 			currentCircle.position.vec[1] += stepY;
 		}
@@ -359,15 +340,12 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	if (!collide)
 	{
 		// Last collision detection
-		currentCircle.position.vec[0] = (position.vec[0] + offset.vec[0]);
-		currentCircle.position.vec[1] = (position.vec[1] + offset.vec[1]);
+		currentCircle.position = (position + offset);
 		if (!currentCircle.collideMatrix2(matrixChunk2))
 		{
 			// No collision detected
-			collision.position.vec[0] = (position.vec[0] + offset.vec[0]);
-			collision.position.vec[1] = (position.vec[1] + offset.vec[1]);
-			collision.offset.vec[0] = offset.vec[0];
-			collision.offset.vec[1] = offset.vec[1];
+			collision.position = (position + offset);
+			collision.offset = offset;
 			collision.collide = false;
 			return collision.collide;
 		}
@@ -376,8 +354,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	// Small steps iterative collision
 	stepX >>= 1;	// stepX = stepX/2
 	stepY >>= 1;	// stepY = stepY/2
-	currentCircle.position.vec[0] = collision.position.vec[0];
-	currentCircle.position.vec[1] = collision.position.vec[1];
+	currentCircle.position = collision.position;
 	for (int32_t i = 0; i < PhysicsMaxSmallStepsIterations; ++i)
 	{
 		currentCircle.position.vec[0] += stepX;
@@ -385,29 +362,22 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 		if (currentCircle.collideMatrix2(matrixChunk2))
 		{
 			// Rollback to previous position
-			currentCircle.position.vec[0] = collision.position.vec[0];
-			currentCircle.position.vec[1] = collision.position.vec[1];
+			currentCircle.position = collision.position;
 			stepX >>= 1;	// stepX = stepX/2
 			stepY >>= 1;	// stepY = stepY/2
 		}
 		else
 		{
 			// Store current position
-			collision.position.vec[0] = currentCircle.position.vec[0];
-			collision.position.vec[1] = currentCircle.position.vec[1];
+			collision.position = currentCircle.position;
 		}
 		if ((stepX == 0) && (stepY == 0)) { break; }
 	}
 
 	// Collision detected
-	collision.offset.vec[0] = (currentCircle.position.vec[0] - position.vec[0]);
-	collision.offset.vec[1] = (currentCircle.position.vec[1] - position.vec[1]);
-	collision.position.vec[0] = currentCircle.position.vec[0];
-	collision.position.vec[1] = currentCircle.position.vec[1];
-	/*collision.normal.vec[0] =
-		(collision.position.vec[0] - boundingCircle.position.vec[0]);
-	collision.normal.vec[1] =
-		(collision.position.vec[1] - boundingCircle.position.vec[1]);
+	collision.offset = (currentCircle.position - position);
+	collision.position = currentCircle.position;
+	/*collision.normal = (collision.position - matrixElement.position);
 	collision.normal.normalize();*/
 	collision.setFactor(static_cast<int32_t>(
 		(collision.offset.length() << Math::OneIntShift) / offset.length()
@@ -422,8 +392,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 ////////////////////////////////////////////////////////////////////////////////
 BoundingCircle& BoundingCircle::operator=(const BoundingCircle& boundingCircle)
 {
-	position.vec[0] = boundingCircle.position.vec[0];
-	position.vec[1] = boundingCircle.position.vec[1];
+	position = boundingCircle.position;
 	radius = boundingCircle.radius;
 	angle = boundingCircle.angle;
 	return *this;
