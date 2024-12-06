@@ -136,7 +136,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	collision.setFactor(Math::OneInt);
 
 	// Check offset vector
-	if ((offset.vec[0] == 0) && (offset.vec[1] == 0)) { return false; }
+	if (offset.isZero()) { return false; }
 
 	// Check current collision
 	if (collideCircle(boundingCircle))
@@ -148,8 +148,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 
 	// Compute step offset
 	int32_t stepRadius = Math::max(
-		((radius <= boundingCircle.radius) ? radius : boundingCircle.radius),
-		PhysicsMinEntityHalfSize
+		Math::min(radius, boundingCircle.radius), PhysicsMinEntityHalfSize
 	);
 	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
 	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
@@ -314,7 +313,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	collision.setFactor(Math::OneInt);
 
 	// Check offset vector
-	if ((offset.vec[0] == 0) && (offset.vec[1] == 0)) { return false; }
+	if (offset.isZero()) { return false; }
 
 	// Check current collision
 	if (collideMatrix2(matrixChunk2))
@@ -324,12 +323,96 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 		return collision.collide;
 	}
 
-	// No collision detected
-	collision.position.vec[0] = (position.vec[0] + offset.vec[0]);
-	collision.position.vec[1] = (position.vec[1] + offset.vec[1]);
-	collision.offset.vec[0] = offset.vec[0];
-	collision.offset.vec[1] = offset.vec[1];
-	collision.collide = false;
+	// Compute step offset
+	int32_t stepRadius = Math::max(
+		Math::min(radius,
+			Math::min(MatrixChunk2ElemHalfWidth, MatrixChunk2ElemHalfHeight)
+		), PhysicsMinEntityHalfSize
+	);
+	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
+	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
+	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
+	stepX = (offset.vec[0] / step);
+	stepY = (offset.vec[1] / step);
+
+	// Iterative collision detection
+	bool collide = false;
+	BoundingCircle currentCircle(*this);
+	for (int32_t i = 0; i < step; ++i)
+	{
+		if (currentCircle.collideMatrix2(matrixChunk2))
+		{
+			// Collision detected
+			collide = true;
+			break;
+		}
+		else
+		{
+			// Next iteration
+			collision.position.vec[0] = currentCircle.position.vec[0];
+			collision.position.vec[1] = currentCircle.position.vec[1];
+			currentCircle.position.vec[0] += stepX;
+			currentCircle.position.vec[1] += stepY;
+		}
+	}
+
+	if (!collide)
+	{
+		// Last collision detection
+		currentCircle.position.vec[0] = (position.vec[0] + offset.vec[0]);
+		currentCircle.position.vec[1] = (position.vec[1] + offset.vec[1]);
+		if (!currentCircle.collideMatrix2(matrixChunk2))
+		{
+			// No collision detected
+			collision.position.vec[0] = (position.vec[0] + offset.vec[0]);
+			collision.position.vec[1] = (position.vec[1] + offset.vec[1]);
+			collision.offset.vec[0] = offset.vec[0];
+			collision.offset.vec[1] = offset.vec[1];
+			collision.collide = false;
+			return collision.collide;
+		}
+	}
+
+	// Small steps iterative collision
+	stepX >>= 1;	// stepX = stepX/2
+	stepY >>= 1;	// stepY = stepY/2
+	currentCircle.position.vec[0] = collision.position.vec[0];
+	currentCircle.position.vec[1] = collision.position.vec[1];
+	for (int32_t i = 0; i < PhysicsMaxSmallStepsIterations; ++i)
+	{
+		currentCircle.position.vec[0] += stepX;
+		currentCircle.position.vec[1] += stepY;
+		if (currentCircle.collideMatrix2(matrixChunk2))
+		{
+			// Rollback to previous position
+			currentCircle.position.vec[0] = collision.position.vec[0];
+			currentCircle.position.vec[1] = collision.position.vec[1];
+			stepX >>= 1;	// stepX = stepX/2
+			stepY >>= 1;	// stepY = stepY/2
+		}
+		else
+		{
+			// Store current position
+			collision.position.vec[0] = currentCircle.position.vec[0];
+			collision.position.vec[1] = currentCircle.position.vec[1];
+		}
+		if ((stepX == 0) && (stepY == 0)) { break; }
+	}
+
+	// Collision detected
+	collision.offset.vec[0] = (currentCircle.position.vec[0] - position.vec[0]);
+	collision.offset.vec[1] = (currentCircle.position.vec[1] - position.vec[1]);
+	collision.position.vec[0] = currentCircle.position.vec[0];
+	collision.position.vec[1] = currentCircle.position.vec[1];
+	/*collision.normal.vec[0] =
+		(collision.position.vec[0] - boundingCircle.position.vec[0]);
+	collision.normal.vec[1] =
+		(collision.position.vec[1] - boundingCircle.position.vec[1]);
+	collision.normal.normalize();*/
+	collision.setFactor(static_cast<int32_t>(
+		(collision.offset.length() << Math::OneIntShift) / offset.length()
+	));
+	collision.collide = true;
 	return collision.collide;
 }
 

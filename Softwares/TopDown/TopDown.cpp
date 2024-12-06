@@ -191,7 +191,7 @@ bool TopDown::init()
 
     // Init bounding circle 2
     m_boundingCircle2.setPosition(200000, 0);
-    m_boundingCircle2.setRadius(80000);
+    m_boundingCircle2.setRadius(40000);
     m_boundingCircle2.setAngle(0);
 
     // Init bounding rect
@@ -450,10 +450,10 @@ void TopDown::compute(float frametime)
     collideOffset.vec[1] = static_cast<int32_t>(
         GSysMouse.mouseY*RendererToPhysics
     );
-    /*collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
+    collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
     collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
-    m_boundingCircle2.collideMatrix2(m_matrixChunk, collideOffset, m_collide);*/
-    m_boundingCircle2.position.vec[0] = collideOffset.vec[0];
+    m_boundingCircle2.collideMatrix2(m_matrixChunk, collideOffset, m_collide);
+    /*m_boundingCircle2.position.vec[0] = collideOffset.vec[0];
     m_boundingCircle2.position.vec[1] = collideOffset.vec[1];
     m_collide.reset();
     if (m_boundingCircle2.collideMatrix2(m_matrixChunk))
@@ -463,15 +463,15 @@ void TopDown::compute(float frametime)
     else
     {
         m_collide.collide = false;
-    }
+    }*/
 
     // Space key released event
-    /*if (m_spaceReleased)
+    if (m_spaceReleased)
     {
         m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
         m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];
         m_spaceReleased = false;
-    }*/
+    }
 
     // Update view position
     //m_view.setPosition(m_player.getPosition());
@@ -590,7 +590,7 @@ void TopDown::render()
     positionY = (m_boundingCircle2.position.vec[1]*PhysicsToRenderer);
     float radius = (m_boundingCircle2.radius*PhysicsToRenderer);
     m_ellipse.setColor(0.0f, 0.2f, 0.8f, 0.8f);
-    if (m_collide.collide) { m_ellipse.setColor(0.8f, 0.2f, 0.2f, 0.8f); }
+    //if (m_collide.collide) { m_ellipse.setColor(0.8f, 0.2f, 0.2f, 0.8f); }
     m_ellipse.setOrigin(0.0f, 0.0f);
     m_ellipse.setPosition(positionX, positionY);
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
@@ -599,7 +599,7 @@ void TopDown::render()
     m_ellipse.render();
 
     // Render bounding circle 2 projection
-    /*positionX = m_collide.position.vec[0]*PhysicsToRenderer;
+    positionX = m_collide.position.vec[0]*PhysicsToRenderer;
     positionY = m_collide.position.vec[1]*PhysicsToRenderer;
     radius = (m_boundingCircle2.radius*PhysicsToRenderer);
     m_ellipse.setColor(0.8f, 0.2f, 0.8f, 0.8f);
@@ -609,7 +609,51 @@ void TopDown::render()
     m_ellipse.setSize(radius*2.05f, radius*2.05f);
     m_ellipse.setAngle(m_boundingCircle2.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.05f);
-    m_ellipse.render();*/
+    m_ellipse.render();
+
+    // Render test matrix collisions
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectangle.setSmooth(0.05f);
+    int32_t startX = Math::divide(
+        m_boundingCircle2.position.vec[0]-m_boundingCircle2.radius,
+        MatrixChunk2ElemWidth
+    );
+    int32_t endX = Math::divide(
+        m_boundingCircle2.position.vec[0]+m_boundingCircle2.radius,
+        MatrixChunk2ElemWidth
+    );
+    int32_t startY = Math::divide(
+        m_boundingCircle2.position.vec[1]-m_boundingCircle2.radius,
+        MatrixChunk2ElemHeight
+    );
+    int32_t endY = Math::divide(
+        m_boundingCircle2.position.vec[1]+m_boundingCircle2.radius,
+        MatrixChunk2ElemHeight
+    );
+    Vector2i elemPos = Vector2i(0, 0);
+    for (int i = startX; i <= endX; ++i)
+    {
+        for (int j = startY; j <= endY; ++j)
+        {
+            if (m_matrixChunk.isColliding(i, j))
+            {
+                m_rectangle.setColor(1.0f, 0.5f, 0.0f, 0.5f);
+            }
+            else
+            {
+                m_rectangle.setColor(0.5f, 1.0f, 0.0f, 0.5f);
+            }
+            elemPos = Vector2i(
+                ((i*MatrixChunk2ElemWidth) + MatrixChunk2ElemHalfWidth),
+                ((j*MatrixChunk2ElemHeight) + MatrixChunk2ElemHalfHeight)
+            );
+            m_rectangle.setPosition(
+                elemPos.vec[0]*PhysicsToRenderer,
+                elemPos.vec[1]*PhysicsToRenderer
+            );
+            m_rectangle.render();
+        }
+    }*/
 
 
     // Render bounding rect

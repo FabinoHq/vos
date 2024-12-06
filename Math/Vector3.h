@@ -188,7 +188,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Check if vector is equal to zero                              //
             ////////////////////////////////////////////////////////////////////
-            inline bool isZero()
+            inline bool isZero() const
             {
                 return (
                     Math::areEqual(vec[0], 0.0f) &&

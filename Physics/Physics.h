@@ -76,7 +76,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  Physics solver constants                                              //
     ////////////////////////////////////////////////////////////////////////////
-    const int32_t PhysicsMinEntityHalfSize = (Math::OneInt / 200);
+    const int32_t PhysicsMinEntityHalfSize = (Math::OneInt >> 8);
     const int32_t PhysicsMaxSmallStepsIterations = 40;
     const int32_t PhysicsSpeedToPositionShift = 10;
     const int32_t PhysicsSpeedToPosition = (1 << PhysicsSpeedToPositionShift);
