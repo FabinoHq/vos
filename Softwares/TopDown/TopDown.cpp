@@ -507,7 +507,7 @@ void TopDown::compute(float frametime)
     }
 
     // Update view position
-    //m_view.setPosition(m_player.getPosition());
+    m_view.setPosition(m_player.getPosition());
     
 
     // Start uniforms upload
@@ -581,8 +581,8 @@ void TopDown::render()
     m_rectangle.setColor(0.8f, 0.7f, 0.1f, 0.8f);
     m_rectangle.setOrigin(0.0f, 0.0f);
     m_rectangle.setSize(
-        (MatrixChunk2ElemWidth*PhysicsToRenderer),
-        (MatrixChunk2ElemHeight*PhysicsToRenderer)
+        (MatrixChunk2ElemWidth*PhysicsToRenderer)+0.00001f,
+        (MatrixChunk2ElemHeight*PhysicsToRenderer)+0.00001f
     );
     m_rectangle.setAngle(0.0f);
     m_rectangle.setSmooth(0.0f);

@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/BoundingRect.cpp : Bounding Rectangle management               //
+//     Physics/BoundingSurfaces/BoundingRect.cpp : Bounding Rectangle         //
 ////////////////////////////////////////////////////////////////////////////////
 #include "BoundingRect.h"
 

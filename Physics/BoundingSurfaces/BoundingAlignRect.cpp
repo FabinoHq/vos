@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/BoundingAlignRect.cpp : Bounding Aligned Rectangle management  //
+//     Physics/BoundingSurfaces/BoundingAlignRect.cpp : Aligned Rectangle     //
 ////////////////////////////////////////////////////////////////////////////////
 #include "BoundingAlignRect.h"
 

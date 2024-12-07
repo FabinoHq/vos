@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/BoundingCircle.cpp : Bounding Circle management                //
+//     Physics/BoundingSurfaces/BoundingCircle.cpp : Bounding Circle          //
 ////////////////////////////////////////////////////////////////////////////////
 #include "BoundingCircle.h"
 

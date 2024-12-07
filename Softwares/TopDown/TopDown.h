@@ -66,9 +66,9 @@
 
     #include "../../Physics/Physics.h"
     #include "../../Physics/Collision2.h"
-    #include "../../Physics/BoundingCircle.h"
-    #include "../../Physics/BoundingAlignRect.h"
-    #include "../../Physics/BoundingRect.h"
+    #include "../../Physics/BoundingSurfaces/BoundingCircle.h"
+    #include "../../Physics/BoundingSurfaces/BoundingAlignRect.h"
+    #include "../../Physics/BoundingSurfaces/BoundingRect.h"
 
     #include "TopDownPlayer.h"
 

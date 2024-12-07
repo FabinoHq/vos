@@ -144,14 +144,21 @@
 !Physics/PhysicsTransform3.cpp
 !Physics/Collision2.h
 !Physics/Collision2.cpp
+!Physics/MatrixChunk2.h
+!Physics/MatrixChunk2.cpp
+!Physics/BoundingSurfaces/
+!Physics/BoundingSurfaces/BoundingCircle.h
+!Physics/BoundingSurfaces/BoundingCircle.cpp
+!Physics/BoundingSurfaces/BoundingAlignRect.h
+!Physics/BoundingSurfaces/BoundingAlignRect.cpp
+!Physics/BoundingSurfaces/BoundingRect.h
+!Physics/BoundingSurfaces/BoundingRect.cpp
 !Physics/BoundingCircle.h
 !Physics/BoundingCircle.cpp
 !Physics/BoundingAlignRect.h
 !Physics/BoundingAlignRect.cpp
 !Physics/BoundingRect.h
 !Physics/BoundingRect.cpp
-!Physics/MatrixChunk2.h
-!Physics/MatrixChunk2.cpp
 
 # Renderer
 !Renderer/

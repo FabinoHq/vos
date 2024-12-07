@@ -59,10 +59,10 @@ VOS: main.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o \
 	Physics/PhysicsTransform2.o Physics/PhysicsTransform3.o \
-	Physics/Collision2.o \
-	Physics/BoundingCircle.o \
-	Physics/BoundingAlignRect.o Physics/BoundingRect.o \
-	Physics/MatrixChunk2.o \
+	Physics/Collision2.o Physics/MatrixChunk2.o \
+	Physics/BoundingSurfaces/BoundingCircle.o \
+	Physics/BoundingSurfaces/BoundingAlignRect.o \
+	Physics/BoundingSurfaces/BoundingRect.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
 	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
@@ -110,10 +110,10 @@ VOS: main.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o \
 	Physics/PhysicsTransform2.o Physics/PhysicsTransform3.o \
-	Physics/Collision2.o \
-	Physics/BoundingCircle.o \
-	Physics/BoundingAlignRect.o Physics/BoundingRect.o \
-	Physics/MatrixChunk2.o \
+	Physics/Collision2.o Physics/MatrixChunk2.o \
+	Physics/BoundingSurfaces/BoundingCircle.o \
+	Physics/BoundingSurfaces/BoundingAlignRect.o \
+	Physics/BoundingSurfaces/BoundingRect.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
 	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
@@ -228,6 +228,9 @@ Physics/PhysicsTransform3.o: Physics/PhysicsTransform3.cpp
 Physics/Collision2.o: Physics/Collision2.cpp
 	$(CC) -o Physics/Collision2.o -c Physics/Collision2.cpp $(CFLAGS)
 
+Physics/MatrixChunk2.o: Physics/MatrixChunk2.cpp
+	$(CC) -o Physics/MatrixChunk2.o -c Physics/MatrixChunk2.cpp $(CFLAGS)
+
 Physics/BoundingCircle.o: Physics/BoundingCircle.cpp
 	$(CC) -o Physics/BoundingCircle.o -c Physics/BoundingCircle.cpp $(CFLAGS)
 
@@ -237,9 +240,6 @@ Physics/BoundingAlignRect.o: Physics/BoundingAlignRect.cpp
 
 Physics/BoundingRect.o: Physics/BoundingRect.cpp
 	$(CC) -o Physics/BoundingRect.o -c Physics/BoundingRect.cpp $(CFLAGS)
-
-Physics/MatrixChunk2.o: Physics/MatrixChunk2.cpp
-	$(CC) -o Physics/MatrixChunk2.o -c Physics/MatrixChunk2.cpp $(CFLAGS)
 
 
 Renderer/Vulkan/Vulkan.o: Renderer/Vulkan/Vulkan.cpp
@@ -450,6 +450,7 @@ clean:
 	rm -rf Compress/*.o
 	rm -rf Images/*.o
 	rm -rf Physics/*.o
+	rm -rf Physics/BoundingSurfaces/*.o
 	rm -rf Renderer/*.o
 	rm -rf Renderer/Vulkan/*.o
 	rm -rf Renderer/Shapes/*.o

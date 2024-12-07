@@ -37,67 +37,66 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/BoundingAlignRect.h : Bounding Aligned Rectangle management    //
+//     Physics/BoundingSurfaces/BoundingCircle.h : Bounding Circle            //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_PHYSICS_BOUNDINGALIGNRECT_HEADER
-#define VOS_PHYSICS_BOUNDINGALIGNRECT_HEADER
+#ifndef VOS_PHYSICS_BOUNDINGSURFACES_BOUNDINGCIRCLE_HEADER
+#define VOS_PHYSICS_BOUNDINGSURFACES_BOUNDINGCIRCLE_HEADER
 
-    #include "../System/System.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector2i.h"
+    #include "../../System/System.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2i.h"
 
-    #include "Physics.h"
-    #include "Collision2.h"
-    #include "MatrixChunk2.h"
+    #include "../Physics.h"
+    #include "../Collision2.h"
+    #include "../MatrixChunk2.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  BoundingAlignRect class definition                                    //
+    //  BoundingCircle class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class BoundingAlignRect
+    class BoundingCircle
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  BoundingAlignRect default constructor                         //
+            //  BoundingCircle default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            BoundingAlignRect();
+            BoundingCircle();
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingAlignRect copy constructor                            //
+            //  BoundingCircle copy constructor                               //
             ////////////////////////////////////////////////////////////////////
-            BoundingAlignRect(const BoundingAlignRect& boundingAlignRect);
+            BoundingCircle(const BoundingCircle& boundingCircle);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingAlignRect position and half size constructor          //
+            //  BoundingCircle position radius and angle constructor          //
             ////////////////////////////////////////////////////////////////////
-            BoundingAlignRect(const Vector2i& rectPosition,
-                const Vector2i& rectHalfSize);
+            BoundingCircle(const Vector2i& circlePosition,
+                int32_t circleRadius, int32_t circleAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingAlignRect destructor                                  //
+            //  BoundingCircle destructor                                     //
             ////////////////////////////////////////////////////////////////////
-            ~BoundingAlignRect();
+            ~BoundingCircle();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect position and half size                //
+            //  Set bounding circle position radius and angle                 //
             ////////////////////////////////////////////////////////////////////
-            void set(const Vector2i& rectPosition,
-                const Vector2i& rectHalfSize);
+            void set(const Vector2i& circlePosition,
+                int32_t circleRadius, int32_t circleAngle = 0);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect position                              //
+            //  Set bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setPosition(const Vector2i& rectPosition)
+            inline void setPosition(const Vector2i& circlePosition)
             {
-                position.vec[0] = rectPosition.vec[0];
-                position.vec[1] = rectPosition.vec[1];
+                position = circlePosition;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect position                              //
+            //  Set bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
             inline void setPosition(int32_t x, int32_t y)
             {
@@ -106,7 +105,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect X position                            //
+            //  Set bounding circle X position                                //
             ////////////////////////////////////////////////////////////////////
             inline void setX(int32_t x)
             {
@@ -114,7 +113,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect Y position                            //
+            //  Set bounding circle Y position                                //
             ////////////////////////////////////////////////////////////////////
             inline void setY(int32_t y)
             {
@@ -122,124 +121,58 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect half size                             //
+            //  Set bounding circle radius                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setHalfSize(Vector2i rectHalfSize)
+            inline void setRadius(int32_t circleRadius)
             {
-                halfSize.vec[0] = Math::max(
-                    rectHalfSize.vec[0], PhysicsMinEntityHalfSize
-                );
-                halfSize.vec[1] = Math::max(
-                    rectHalfSize.vec[1], PhysicsMinEntityHalfSize
+                radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set bounding circle diameter                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline void setDiameter(int32_t circleDiameter)
+            {
+                radius = Math::max(
+                    (circleDiameter >> 1), PhysicsMinEntityHalfSize
                 );
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect half size                             //
+            //  Set bounding circle angle                                     //
             ////////////////////////////////////////////////////////////////////
-            inline void setHalfSize(int32_t halfWidth, int32_t halfHeight)
+            inline void setAngle(int32_t circleAngle)
             {
-                halfSize.vec[0] = Math::max(
-                    halfWidth, PhysicsMinEntityHalfSize
-                );
-                halfSize.vec[1] = Math::max(
-                    halfHeight, PhysicsMinEntityHalfSize
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect size                                  //
-            ////////////////////////////////////////////////////////////////////
-            inline void setSize(Vector2i rectSize)
-            {
-                halfSize.vec[0] = Math::max(
-                    (rectSize.vec[0] >> 1), PhysicsMinEntityHalfSize
-                );
-                halfSize.vec[1] = Math::max(
-                    (rectSize.vec[1] >> 1), PhysicsMinEntityHalfSize
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect size                                  //
-            ////////////////////////////////////////////////////////////////////
-            inline void setSize(int32_t width, int32_t height)
-            {
-                halfSize.vec[0] = Math::max(
-                    (width >> 1), PhysicsMinEntityHalfSize
-                );
-                halfSize.vec[1] = Math::max(
-                    (height >> 1), PhysicsMinEntityHalfSize
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect half width                            //
-            ////////////////////////////////////////////////////////////////////
-            inline void setHalfWidth(int32_t halfWidth)
-            {
-                halfSize.vec[0] = Math::max(
-                    halfWidth, PhysicsMinEntityHalfSize
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect width                                 //
-            ////////////////////////////////////////////////////////////////////
-            inline void setWidth(int32_t width)
-            {
-                halfSize.vec[0] = Math::max(
-                    (width >> 1), PhysicsMinEntityHalfSize
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect half height                           //
-            ////////////////////////////////////////////////////////////////////
-            inline void setHalfHeight(int32_t halfHeight)
-            {
-                halfSize.vec[1] = Math::max(
-                    halfHeight, PhysicsMinEntityHalfSize
-                );
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set bounding align rect height                                //
-            ////////////////////////////////////////////////////////////////////
-            inline void setHeight(int32_t height)
-            {
-                halfSize.vec[1] = Math::max(
-                    (height >> 1), PhysicsMinEntityHalfSize
-                );
+                angle = (circleAngle % Math::TwoPiInt);
             }
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with bounding align rect          //
+            //  Collide bounding circle with bounding circle                  //
             ////////////////////////////////////////////////////////////////////
-            bool collideAlignRect(const BoundingAlignRect& boundingAlignRect);
+            bool collideCircle(const BoundingCircle& boundingCircle);
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with bounding align rect          //
+            //  Collide bounding circle with bounding circle                  //
             ////////////////////////////////////////////////////////////////////
-            bool collideAlignRect(const BoundingAlignRect& boundingAlignRect,
+            bool collideCircle(const BoundingCircle& boundingCircle,
                 const Vector2i& offset, Collision2& collision);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with matrix chunk 2               //
+            //  Collide bounding circle with matrix chunk 2                   //
             ////////////////////////////////////////////////////////////////////
             bool collideMatrix2(const MatrixChunk2& matrixChunk2);
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with matrix chunk 2               //
+            //  Collide bounding circle with matrix chunk 2                   //
             ////////////////////////////////////////////////////////////////////
             bool collideMatrix2(const MatrixChunk2& matrixChunk2,
                 const Vector2i& offset, Collision2& collision);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect position                              //
+            //  Get bounding circle position                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector2i getPosition() const
             {
@@ -247,7 +180,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect X position                            //
+            //  Get bounding circle X position                                //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getX() const
             {
@@ -255,7 +188,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect Y position                            //
+            //  Get bounding circle Y position                                //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getY() const
             {
@@ -263,65 +196,41 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect half size                             //
+            //  Get bounding circle radius                                    //
             ////////////////////////////////////////////////////////////////////
-            inline Vector2i getHalfSize() const
+            inline int32_t getRadius() const
             {
-                return halfSize;
+                return radius;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect size                                  //
+            //  Get bounding circle diameter                                  //
             ////////////////////////////////////////////////////////////////////
-            inline Vector2i getSize() const
+            inline int32_t getDiameter() const
             {
-                return Vector2i((halfSize.vec[0] << 1), (halfSize.vec[1] << 1));
+                return (radius << 1);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect half width                            //
+            //  Get bounding circle angle                                     //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getHalfWidth() const
+            inline int32_t getAngle() const
             {
-                return halfSize.vec[0];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect width                                 //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t getWidth() const
-            {
-                return (halfSize.vec[0] << 1);
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect half height                           //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t getHalfHeight() const
-            {
-                return halfSize.vec[1];
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get bounding align rect height                                //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t getHeight() const
-            {
-                return (halfSize.vec[1] << 1);
+                return angle;
             }
 
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingAlignRect affectation operator                        //
+            //  BoundingCircle affectation operator                           //
             ////////////////////////////////////////////////////////////////////
-            BoundingAlignRect& operator=(
-                const BoundingAlignRect& boundingAlignRect);
+            BoundingCircle& operator=(const BoundingCircle& boundingCircle);
 
 
         public:
-            Vector2i    position;   // Bounding aligned rectangle position
-            Vector2i    halfSize;   // Bounding aligned rectangle half size
+            Vector2i    position;   // Bounding circle position
+            int32_t     radius;     // Bounding circle radius
+            int32_t     angle;      // Bounding circle angle
     };
 
 
-#endif // VOS_PHYSICS_BOUNDINGALIGNRECT_HEADER
+#endif // VOS_PHYSICS_BOUNDINGSURFACES_BOUNDINGCIRCLE_HEADER

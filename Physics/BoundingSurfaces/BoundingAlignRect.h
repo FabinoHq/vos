@@ -37,66 +37,67 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/BoundingRect.h : Bounding Rectangle management                 //
+//     Physics/BoundingSurfaces/BoundingAlignRect.h : Aligned Rectangle       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_PHYSICS_BOUNDINGRECT_HEADER
-#define VOS_PHYSICS_BOUNDINGRECT_HEADER
+#ifndef VOS_PHYSICS_BOUNDINGSURFACES_BOUNDINGALIGNRECT_HEADER
+#define VOS_PHYSICS_BOUNDINGSURFACES_BOUNDINGALIGNRECT_HEADER
 
-    #include "../System/System.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector2i.h"
+    #include "../../System/System.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2i.h"
 
-    #include "Physics.h"
-    #include "Collision2.h"
-    #include "MatrixChunk2.h"
+    #include "../Physics.h"
+    #include "../Collision2.h"
+    #include "../MatrixChunk2.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  BoundingRect class definition                                         //
+    //  BoundingAlignRect class definition                                    //
     ////////////////////////////////////////////////////////////////////////////
-    class BoundingRect
+    class BoundingAlignRect
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  BoundingRect default constructor                              //
+            //  BoundingAlignRect default constructor                         //
             ////////////////////////////////////////////////////////////////////
-            BoundingRect();
+            BoundingAlignRect();
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingRect copy constructor                                 //
+            //  BoundingAlignRect copy constructor                            //
             ////////////////////////////////////////////////////////////////////
-            BoundingRect(const BoundingRect& boundingRect);
+            BoundingAlignRect(const BoundingAlignRect& boundingAlignRect);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingRect position half size and angle constructor         //
+            //  BoundingAlignRect position and half size constructor          //
             ////////////////////////////////////////////////////////////////////
-            BoundingRect(const Vector2i& rectPosition,
-                const Vector2i& rectHalfSize, int32_t rectAngle = 0);
+            BoundingAlignRect(const Vector2i& rectPosition,
+                const Vector2i& rectHalfSize);
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingRect destructor                                       //
+            //  BoundingAlignRect destructor                                  //
             ////////////////////////////////////////////////////////////////////
-            ~BoundingRect();
+            ~BoundingAlignRect();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect position half size and angle                //
+            //  Set bounding align rect position and half size                //
             ////////////////////////////////////////////////////////////////////
             void set(const Vector2i& rectPosition,
-                const Vector2i& rectHalfSize, int32_t rectAngle = 0);
+                const Vector2i& rectHalfSize);
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect position                                    //
+            //  Set bounding align rect position                              //
             ////////////////////////////////////////////////////////////////////
             inline void setPosition(const Vector2i& rectPosition)
             {
-                position = rectPosition;
+                position.vec[0] = rectPosition.vec[0];
+                position.vec[1] = rectPosition.vec[1];
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect position                                    //
+            //  Set bounding align rect position                              //
             ////////////////////////////////////////////////////////////////////
             inline void setPosition(int32_t x, int32_t y)
             {
@@ -105,7 +106,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect X position                                  //
+            //  Set bounding align rect X position                            //
             ////////////////////////////////////////////////////////////////////
             inline void setX(int32_t x)
             {
@@ -113,7 +114,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect Y position                                  //
+            //  Set bounding align rect Y position                            //
             ////////////////////////////////////////////////////////////////////
             inline void setY(int32_t y)
             {
@@ -121,7 +122,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect half size                                   //
+            //  Set bounding align rect half size                             //
             ////////////////////////////////////////////////////////////////////
             inline void setHalfSize(Vector2i rectHalfSize)
             {
@@ -134,7 +135,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect half size                                   //
+            //  Set bounding align rect half size                             //
             ////////////////////////////////////////////////////////////////////
             inline void setHalfSize(int32_t halfWidth, int32_t halfHeight)
             {
@@ -147,7 +148,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect size                                        //
+            //  Set bounding align rect size                                  //
             ////////////////////////////////////////////////////////////////////
             inline void setSize(Vector2i rectSize)
             {
@@ -160,7 +161,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect size                                        //
+            //  Set bounding align rect size                                  //
             ////////////////////////////////////////////////////////////////////
             inline void setSize(int32_t width, int32_t height)
             {
@@ -173,7 +174,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect half width                                  //
+            //  Set bounding align rect half width                            //
             ////////////////////////////////////////////////////////////////////
             inline void setHalfWidth(int32_t halfWidth)
             {
@@ -183,7 +184,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect width                                       //
+            //  Set bounding align rect width                                 //
             ////////////////////////////////////////////////////////////////////
             inline void setWidth(int32_t width)
             {
@@ -193,7 +194,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect half height                                 //
+            //  Set bounding align rect half height                           //
             ////////////////////////////////////////////////////////////////////
             inline void setHalfHeight(int32_t halfHeight)
             {
@@ -203,7 +204,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect height                                      //
+            //  Set bounding align rect height                                //
             ////////////////////////////////////////////////////////////////////
             inline void setHeight(int32_t height)
             {
@@ -212,29 +213,33 @@
                 );
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Set bounding rect height                                      //
-            ////////////////////////////////////////////////////////////////////
-            inline void setAngle(int32_t rectAngle)
-            {
-                angle = (rectAngle % Math::TwoPiInt);
-            }
-
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding rect with bounding rect                      //
+            //  Collide bounding align rect with bounding align rect          //
             ////////////////////////////////////////////////////////////////////
-            bool collideRect(const BoundingRect& boundingRect);
+            bool collideAlignRect(const BoundingAlignRect& boundingAlignRect);
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding rect with bounding rect                      //
+            //  Collide bounding align rect with bounding align rect          //
             ////////////////////////////////////////////////////////////////////
-            bool collideRect(const BoundingRect& boundingRect,
+            bool collideAlignRect(const BoundingAlignRect& boundingAlignRect,
                 const Vector2i& offset, Collision2& collision);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect position                                    //
+            //  Collide bounding align rect with matrix chunk 2               //
+            ////////////////////////////////////////////////////////////////////
+            bool collideMatrix2(const MatrixChunk2& matrixChunk2);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Collide bounding align rect with matrix chunk 2               //
+            ////////////////////////////////////////////////////////////////////
+            bool collideMatrix2(const MatrixChunk2& matrixChunk2,
+                const Vector2i& offset, Collision2& collision);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding align rect position                              //
             ////////////////////////////////////////////////////////////////////
             inline Vector2i getPosition() const
             {
@@ -242,7 +247,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect X position                                  //
+            //  Get bounding align rect X position                            //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getX() const
             {
@@ -250,7 +255,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect Y position                                  //
+            //  Get bounding align rect Y position                            //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getY() const
             {
@@ -258,7 +263,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect half size                                   //
+            //  Get bounding align rect half size                             //
             ////////////////////////////////////////////////////////////////////
             inline Vector2i getHalfSize() const
             {
@@ -266,7 +271,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect size                                        //
+            //  Get bounding align rect size                                  //
             ////////////////////////////////////////////////////////////////////
             inline Vector2i getSize() const
             {
@@ -274,7 +279,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect half width                                  //
+            //  Get bounding align rect half width                            //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getHalfWidth() const
             {
@@ -282,7 +287,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect width                                       //
+            //  Get bounding align rect width                                 //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getWidth() const
             {
@@ -290,7 +295,7 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect half height                                 //
+            //  Get bounding align rect half height                           //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getHalfHeight() const
             {
@@ -298,33 +303,25 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect height                                      //
+            //  Get bounding align rect height                                //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getHeight() const
             {
                 return (halfSize.vec[1] << 1);
             }
 
-            ////////////////////////////////////////////////////////////////////
-            //  Get bounding rect angle                                       //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t getAngle() const
-            {
-                return angle;
-            }
-
 
             ////////////////////////////////////////////////////////////////////
-            //  BoundingRect affectation operator                             //
+            //  BoundingAlignRect affectation operator                        //
             ////////////////////////////////////////////////////////////////////
-            BoundingRect& operator=(const BoundingRect& boundingRect);
+            BoundingAlignRect& operator=(
+                const BoundingAlignRect& boundingAlignRect);
 
 
         public:
-            Vector2i    position;   // Bounding rectangle position
-            Vector2i    halfSize;   // Bounding rectangle half size
-            int32_t     angle;      // Bounding rectangle angle
+            Vector2i    position;   // Bounding aligned rectangle position
+            Vector2i    halfSize;   // Bounding aligned rectangle half size
     };
 
 
-#endif // VOS_PHYSICS_BOUNDINGRECT_HEADER
+#endif // VOS_PHYSICS_BOUNDINGSURFACES_BOUNDINGALIGNRECT_HEADER

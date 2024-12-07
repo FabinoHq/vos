@@ -58,9 +58,9 @@
     #include "../../Physics/Physics.h"
     #include "../../Physics/PhysicsTransform2.h"
     #include "../../Physics/Collision2.h"
-    #include "../../Physics/BoundingCircle.h"
-    #include "../../Physics/BoundingAlignRect.h"
-    #include "../../Physics/BoundingRect.h"
+    #include "../../Physics/BoundingSurfaces/BoundingCircle.h"
+    #include "../../Physics/BoundingSurfaces/BoundingAlignRect.h"
+    #include "../../Physics/BoundingSurfaces/BoundingRect.h"
 
     #include <cstdint>
 
@@ -94,7 +94,7 @@
             ////////////////////////////////////////////////////////////////////
             inline Vector2 getPosition()
             {
-                return m_ellipse.getPosition();
+                return m_rectangle.getPosition();
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@
             ////////////////////////////////////////////////////////////////////
             inline float getX()
             {
-                return m_ellipse.getX();
+                return m_rectangle.getX();
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -110,7 +110,7 @@
             ////////////////////////////////////////////////////////////////////
             inline float getY()
             {
-                return m_ellipse.getY();
+                return m_rectangle.getY();
             }
 
 

@@ -170,6 +170,7 @@ void TopDownPlayer::physics()
 
     // Compute top down player matrix collisions
     Collision2 collide;
+    Vector2i remain = Vector2i(0, 0);
     Vector2i offset = Vector2i(
         (m_speed.vec[0] >> PhysicsSpeedToPositionShift),
         (m_speed.vec[1] >> PhysicsSpeedToPositionShift)
@@ -181,7 +182,7 @@ void TopDownPlayer::physics()
         m_bounding.position.vec[1] = collide.position.vec[1];
 
         // Compute separated X axis
-        Vector2i remain = (offset - collide.offset);
+        remain = (offset - collide.offset);
         offset = Vector2i(remain.vec[0], 0);
         if (m_bounding.collideMatrix2(m_matrixChunk, offset, collide))
         {
