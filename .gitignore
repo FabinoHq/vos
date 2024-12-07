@@ -153,12 +153,6 @@
 !Physics/BoundingSurfaces/BoundingAlignRect.cpp
 !Physics/BoundingSurfaces/BoundingRect.h
 !Physics/BoundingSurfaces/BoundingRect.cpp
-!Physics/BoundingCircle.h
-!Physics/BoundingCircle.cpp
-!Physics/BoundingAlignRect.h
-!Physics/BoundingAlignRect.cpp
-!Physics/BoundingRect.h
-!Physics/BoundingRect.cpp
 
 # Renderer
 !Renderer/
