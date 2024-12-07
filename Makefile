@@ -59,7 +59,7 @@ VOS: main.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o \
 	Physics/PhysicsTransform2.o Physics/PhysicsTransform3.o \
-	Physics/Collision2.o Physics/MatrixChunk2.o \
+	Physics/Collision2.o Physics/MatrixChunk2.o Physics/MatrixStream2.o \
 	Physics/BoundingSurfaces/BoundingCircle.o \
 	Physics/BoundingSurfaces/BoundingAlignRect.o \
 	Physics/BoundingSurfaces/BoundingRect.o \
@@ -110,7 +110,7 @@ VOS: main.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o \
 	Physics/PhysicsTransform2.o Physics/PhysicsTransform3.o \
-	Physics/Collision2.o Physics/MatrixChunk2.o \
+	Physics/Collision2.o Physics/MatrixChunk2.o Physics/MatrixStream2.o \
 	Physics/BoundingSurfaces/BoundingCircle.o \
 	Physics/BoundingSurfaces/BoundingAlignRect.o \
 	Physics/BoundingSurfaces/BoundingRect.o \
@@ -230,6 +230,9 @@ Physics/Collision2.o: Physics/Collision2.cpp
 
 Physics/MatrixChunk2.o: Physics/MatrixChunk2.cpp
 	$(CC) -o Physics/MatrixChunk2.o -c Physics/MatrixChunk2.cpp $(CFLAGS)
+
+Physics/MatrixStream2.o: Physics/MatrixStream2.cpp
+	$(CC) -o Physics/MatrixStream2.o -c Physics/MatrixStream2.cpp $(CFLAGS)
 
 Physics/BoundingCircle.o: Physics/BoundingCircle.cpp
 	$(CC) -o Physics/BoundingCircle.o -c Physics/BoundingCircle.cpp $(CFLAGS)

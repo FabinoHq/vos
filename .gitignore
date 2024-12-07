@@ -146,6 +146,8 @@
 !Physics/Collision2.cpp
 !Physics/MatrixChunk2.h
 !Physics/MatrixChunk2.cpp
+!Physics/MatrixStream2.h
+!Physics/MatrixStream2.cpp
 !Physics/BoundingSurfaces/
 !Physics/BoundingSurfaces/BoundingCircle.h
 !Physics/BoundingSurfaces/BoundingCircle.cpp

@@ -216,6 +216,7 @@
     <ClCompile Include="Physics\BoundingSurfaces\BoundingRect.cpp" />
     <ClCompile Include="Physics\Collision2.cpp" />
     <ClCompile Include="Physics\MatrixChunk2.cpp" />
+    <ClCompile Include="Physics\MatrixStream2.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Physics\PhysicsTransform2.cpp" />
     <ClCompile Include="Physics\PhysicsTransform3.cpp" />
@@ -324,6 +325,7 @@
     <ClInclude Include="Physics\BoundingSurfaces\BoundingRect.h" />
     <ClInclude Include="Physics\Collision2.h" />
     <ClInclude Include="Physics\MatrixChunk2.h" />
+    <ClInclude Include="Physics\MatrixStream2.h" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Physics\PhysicsTransform2.h" />
     <ClInclude Include="Physics\PhysicsTransform3.h" />

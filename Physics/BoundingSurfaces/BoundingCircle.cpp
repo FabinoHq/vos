@@ -436,7 +436,7 @@ bool BoundingCircle::collideAlignRect(
 ////////////////////////////////////////////////////////////////////////////////
 //  Collide bounding circle with matrix chunk 2                               //
 ////////////////////////////////////////////////////////////////////////////////
-bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
+bool BoundingCircle::collideMatrix2(const MatrixStream2& matrixStream2)
 {
 	// Compute start and end matrix coordinates
 	int32_t startX = Math::divide(
@@ -463,7 +463,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
 	{
 		for (int j = startY; j <= endY; ++j)
 		{
-			if (matrixChunk2.isColliding(i, j))
+			if (matrixStream2.get(i, j) != 0)
 			{
 				// Compute clamped distance between circle and matrix element
 				elemPos = Vector2i(
@@ -498,7 +498,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
 ////////////////////////////////////////////////////////////////////////////////
 //  Collide bounding circle with matrix chunk 2                               //
 ////////////////////////////////////////////////////////////////////////////////
-bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
+bool BoundingCircle::collideMatrix2(const MatrixStream2& matrixStream2,
     const Vector2i& offset, Collision2& collision)
 {
 	// Reset collision
@@ -510,7 +510,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	if (offset.isZero()) { return false; }
 
 	// Check current collision
-	if (collideMatrix2(matrixChunk2))
+	if (collideMatrix2(matrixStream2))
 	{
 		// Currently colliding
 		collision.collide = true;
@@ -533,7 +533,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	BoundingCircle currentCircle(*this);
 	for (int32_t i = 0; i < step; ++i)
 	{
-		if (currentCircle.collideMatrix2(matrixChunk2))
+		if (currentCircle.collideMatrix2(matrixStream2))
 		{
 			// Collision detected
 			collide = true;
@@ -552,7 +552,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	{
 		// Last collision detection
 		currentCircle.position = (position + offset);
-		if (!currentCircle.collideMatrix2(matrixChunk2))
+		if (!currentCircle.collideMatrix2(matrixStream2))
 		{
 			// No collision detected
 			collision.position = (position + offset);
@@ -570,7 +570,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	{
 		currentCircle.position.vec[0] += stepX;
 		currentCircle.position.vec[1] += stepY;
-		if (currentCircle.collideMatrix2(matrixChunk2))
+		if (currentCircle.collideMatrix2(matrixStream2))
 		{
 			// Rollback to previous position
 			currentCircle.position = collision.position;
@@ -598,7 +598,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 ////////////////////////////////////////////////////////////////////////////////
 //  Collide bounding circle with matrix chunk 2                               //
 ////////////////////////////////////////////////////////////////////////////////
-bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
+bool BoundingCircle::collideMatrix2(const MatrixStream2& matrixStream2,
     const Vector2i& offset, Collision2& collision, int64_t& length)
 {
 	// Compute both axis simultaneously
@@ -606,19 +606,19 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	Vector2i currentPosition = position;
 	Vector2i remaining = offset;
 	int64_t currentLen = offset.squaredLength();
-    if (collideMatrix2(matrixChunk2, offset, currentCollision))
+    if (collideMatrix2(matrixStream2, offset, currentCollision))
     {
         // Compute separated X axis
         currentLen = Math::min(currentLen, currentCollision.length);
         remaining = (offset - currentCollision.offset);
         position = currentCollision.position;
-        if (collideMatrix2(matrixChunk2,
+        if (collideMatrix2(matrixStream2,
         	Vector2i(remaining.vec[0], 0), currentCollision))
         {
             // Compute separated Y axis
             currentLen = Math::min(currentLen, currentCollision.length);
             position = currentCollision.position;
-            collideMatrix2(matrixChunk2,
+            collideMatrix2(matrixStream2,
             	Vector2i(0, remaining.vec[1]), currentCollision
             );
         }

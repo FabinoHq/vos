@@ -70,7 +70,6 @@ m_boundingAlignRect(),
 m_boundingAlignRect2(),
 m_boundingRect(),
 m_boundingRect2(),
-m_matrixChunk(),
 m_collide(),
 m_player(),
 m_spaceReleased(false)
@@ -214,8 +213,8 @@ bool TopDown::init()
     m_boundingRect2.setSize(80000, 70000);
     m_boundingRect2.setAngle(1000000);
 
-    // Init matrix chunk
-    if (!m_matrixChunk.init())
+    // Init matrix stream
+    if (!GMatrixStream2.init())
     {
         // Could not init matrix chunk
         return false;
@@ -476,11 +475,12 @@ void TopDown::compute(float frametime)
     // Compute circle vs matrix collision
     /*collideOffset.vec[0] -= m_boundingCircle2.position.vec[0];
     collideOffset.vec[1] -= m_boundingCircle2.position.vec[1];
-    m_boundingCircle2.collideMatrix2(m_matrixChunk, collideOffset, m_collide);*/
+    m_boundingCircle2.collideMatrix2(GMatrixStream2, collideOffset, m_collide);
+    */
     /*m_boundingCircle2.position.vec[0] = collideOffset.vec[0];
     m_boundingCircle2.position.vec[1] = collideOffset.vec[1];
     m_collide.reset();
-    if (m_boundingCircle2.collideMatrix2(m_matrixChunk))
+    if (m_boundingCircle2.collideMatrix2(GMatrixStream2))
     {
         m_collide.collide = true;
     }
@@ -518,12 +518,12 @@ void TopDown::compute(float frametime)
     /*collideOffset.vec[0] -= m_boundingAlignRect2.position.vec[0];
     collideOffset.vec[1] -= m_boundingAlignRect2.position.vec[1];
     m_boundingAlignRect2.collideMatrix2(
-        m_matrixChunk, collideOffset, m_collide
+        GMatrixStream2, collideOffset, m_collide
     );*/
     /*m_boundingAlignRect2.position.vec[0] = collideOffset.vec[0];
     m_boundingAlignRect2.position.vec[1] = collideOffset.vec[1];
     m_collide.reset();
-    if (m_boundingAlignRect2.collideMatrix2(m_matrixChunk))
+    if (m_boundingAlignRect2.collideMatrix2(GMatrixStream2))
     {
         m_collide.collide = true;
     }
@@ -627,7 +627,7 @@ void TopDown::render()
     {
         for (int j = 0; j < MatrixChunk2Height; ++j)
         {
-            if (m_matrixChunk.get(i, j) != 0)
+            if (GMatrixStream2.get(i, j) != 0)
             {
                 m_sprite.setPosition(positionX, positionY);
                 m_sprite.bindTexture();
@@ -704,7 +704,7 @@ void TopDown::render()
     {
         for (int j = startY; j <= endY; ++j)
         {
-            if (m_matrixChunk.isColliding(i, j))
+            if (GMatrixStream2.get(i, j) != 0)
             {
                 m_rectangle.setColor(1.0f, 0.5f, 0.0f, 0.5f);
             }

@@ -58,6 +58,7 @@
     #include "../../Physics/Physics.h"
     #include "../../Physics/PhysicsTransform2.h"
     #include "../../Physics/Collision2.h"
+    #include "../../Physics/MatrixStream2.h"
     #include "../../Physics/BoundingSurfaces/BoundingCircle.h"
     #include "../../Physics/BoundingSurfaces/BoundingAlignRect.h"
     #include "../../Physics/BoundingSurfaces/BoundingRect.h"
@@ -151,7 +152,6 @@
             PhysicsTransform2       m_transforms;       // Player transforms
             Vector2i                m_speed;            // Player speed
             BoundingAlignRect       m_bounding;         // Bounding align rect
-            MatrixChunk2            m_matrixChunk;      // Test matrix chunk
 
             RectangleShape          m_rectangle;        // Rectangle shape
             EllipseShape            m_ellipse;          // Ellipse shape

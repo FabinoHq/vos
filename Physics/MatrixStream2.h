@@ -37,49 +37,36 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/MatrixChunk2.h : 2D Matrix chunk physics management            //
+//     Physics/MatrixStream2.h : 2D Matrix stream physics management          //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_PHYSICS_MATRIXCHUNK2_HEADER
-#define VOS_PHYSICS_MATRIXCHUNK2_HEADER
+#ifndef VOS_PHYSICS_MATRIXSTREAM2_HEADER
+#define VOS_PHYSICS_MATRIXSTREAM2_HEADER
 
     #include "../System/System.h"
     #include "../Math/Math.h"
     #include "Physics.h"
-
-    #include <cstdint>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  MatrixChunk2 settings                                                 //
-    ////////////////////////////////////////////////////////////////////////////
-    const int32_t MatrixChunk2Width = 10;
-    const int32_t MatrixChunk2Height = 10;
-    const int32_t MatrixChunk2Size = (MatrixChunk2Width*MatrixChunk2Height);
-    const int32_t MatrixChunk2ElemHalfWidth = 50000;
-    const int32_t MatrixChunk2ElemHalfHeight = 50000;
-    const int32_t MatrixChunk2ElemWidth = (MatrixChunk2ElemHalfWidth*2);
-    const int32_t MatrixChunk2ElemHeight = (MatrixChunk2ElemHalfHeight*2);
+    #include "MatrixChunk2.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  MatrixChunk2 class definition                                         //
+    //  MatrixStream2 class definition                                        //
     ////////////////////////////////////////////////////////////////////////////
-    class MatrixChunk2
+    class MatrixStream2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  MatrixChunk2 default constructor                              //
+            //  MatrixStream2 default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            MatrixChunk2();
+            MatrixStream2();
 
             ////////////////////////////////////////////////////////////////////
-            //  MatrixChunk2 destructor                                       //
+            //  MatrixStream2 destructor                                      //
             ////////////////////////////////////////////////////////////////////
-            ~MatrixChunk2();
+            ~MatrixStream2();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init matrix chunk                                             //
+            //  Init matrix stream                                            //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
@@ -89,28 +76,31 @@
             ////////////////////////////////////////////////////////////////////
             inline int8_t get(int32_t x, int32_t y) const
             {
-                return m_matrix[
-                    (Math::clamp(y, 0, (MatrixChunk2Height-1))*
-                    MatrixChunk2Width)+Math::clamp(x, 0, (MatrixChunk2Width-1))
-                ];
+                return m_matrix.get(x, y);
             }
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  MatrixChunk2 private copy constructor : Not copyable          //
+            //  MatrixStream2 private copy constructor : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            MatrixChunk2(const MatrixChunk2&) = delete;
+            MatrixStream2(const MatrixStream2&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  MatrixChunk2 private copy operator : Not copyable             //
+            //  MatrixStream2 private copy operator : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            MatrixChunk2& operator=(const MatrixChunk2&) = delete;
+            MatrixStream2& operator=(const MatrixStream2&) = delete;
 
 
-        public:
-            int8_t*     m_matrix;       // Matrix chunk representation
+        private:
+            MatrixChunk2        m_matrix;       // Matrix chunk
     };
 
 
-#endif // VOS_PHYSICS_MATRIXCHUNK2_HEADER
+    ////////////////////////////////////////////////////////////////////////////
+    //  MatrixStream2 global instance                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    extern MatrixStream2 GMatrixStream2;
+
+
+#endif // VOS_PHYSICS_MATRIXSTREAM2_HEADER

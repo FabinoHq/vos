@@ -308,6 +308,9 @@
     <ClCompile Include="Physics\BoundingSurfaces\BoundingRect.cpp">
       <Filter>Physics\BoundingSurfaces</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\MatrixStream2.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -712,6 +715,9 @@
     </ClInclude>
     <ClInclude Include="Physics\BoundingSurfaces\BoundingRect.h">
       <Filter>Physics\BoundingSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\MatrixStream2.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

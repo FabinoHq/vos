@@ -49,7 +49,6 @@ TopDownPlayer::TopDownPlayer() :
 m_transforms(),
 m_speed(),
 m_bounding(),
-m_matrixChunk(),
 m_rectangle(),
 m_ellipse()
 {
@@ -82,13 +81,6 @@ bool TopDownPlayer::init()
     // Init bounding aligned rectangle
     m_bounding.setPosition(0, 0);
     m_bounding.setHalfSize(40000, 40000);
-
-    // Init test matrix chunk
-    if (!m_matrixChunk.init())
-    {
-        // Could not init matrix chunk
-        return false;
-    }
 
     // Init rectangle shape
     if (!m_rectangle.init(0.2f, 0.2f))
@@ -176,7 +168,7 @@ void TopDownPlayer::physics()
     int64_t length = offset.squaredLength();
 
     // Compute top down player matrix collisions
-    m_bounding.collideMatrix2(m_matrixChunk, offset, collision, length);
+    m_bounding.collideMatrix2(GMatrixStream2, offset, collision, length);
 
     // Update top down player position
     m_bounding.position = collision.position;

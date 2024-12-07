@@ -66,6 +66,7 @@
 
     #include "../../Physics/Physics.h"
     #include "../../Physics/Collision2.h"
+    #include "../../Physics/MatrixStream2.h"
     #include "../../Physics/BoundingSurfaces/BoundingCircle.h"
     #include "../../Physics/BoundingSurfaces/BoundingAlignRect.h"
     #include "../../Physics/BoundingSurfaces/BoundingRect.h"
@@ -169,7 +170,6 @@
             BoundingAlignRect   m_boundingAlignRect2;   // Bounding align rect 2
             BoundingRect        m_boundingRect;         // Bounding rect
             BoundingRect        m_boundingRect2;        // Bounding rect 2
-            MatrixChunk2        m_matrixChunk;          // Matrix chunk
             Collision2          m_collide;              // Collision
 
             TopDownPlayer       m_player;               // Player
