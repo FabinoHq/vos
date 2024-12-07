@@ -109,7 +109,7 @@ bool TopDown::init()
 
 
     // Init sprite
-    if (!m_sprite.init(GResources.textures.high(TEXTURE_TEST), 1.0f, 1.0f))
+    if (!m_sprite.init(GResources.textures.high(TEXTURE_TILE), 1.0f, 1.0f))
     {
         // Could not init sprite
         return false;
@@ -497,11 +497,11 @@ void TopDown::compute(float frametime)
     );*/
 
     // Compute align rect vs circle collision
-    collideOffset.vec[0] -= m_boundingAlignRect2.position.vec[0];
+    /*collideOffset.vec[0] -= m_boundingAlignRect2.position.vec[0];
     collideOffset.vec[1] -= m_boundingAlignRect2.position.vec[1];
     m_boundingAlignRect2.collideCircle(
         m_boundingCircle, collideOffset, m_collide
-    );
+    );*/
     /*m_boundingAlignRect2.position.vec[0] = collideOffset.vec[0];
     m_boundingAlignRect2.position.vec[1] = collideOffset.vec[1];
     m_collide.reset();
@@ -537,13 +537,13 @@ void TopDown::compute(float frametime)
     {
         /*m_boundingCircle2.position.vec[0] = m_collide.position.vec[0];
         m_boundingCircle2.position.vec[1] = m_collide.position.vec[1];*/
-        m_boundingAlignRect2.position.vec[0] = m_collide.position.vec[0];
-        m_boundingAlignRect2.position.vec[1] = m_collide.position.vec[1];
+        /*m_boundingAlignRect2.position.vec[0] = m_collide.position.vec[0];
+        m_boundingAlignRect2.position.vec[1] = m_collide.position.vec[1];*/
         m_spaceReleased = false;
     }
 
     // Update view position
-    //m_view.setPosition(m_player.getPosition());
+    m_view.setPosition(m_player.getPosition());
     
 
     // Start uniforms upload
@@ -612,15 +612,14 @@ void TopDown::render()
 
 
     // Render matrix chunk
-    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
-    m_rectangle.setColor(0.8f, 0.7f, 0.1f, 0.8f);
-    m_rectangle.setOrigin(0.0f, 0.0f);
-    m_rectangle.setSize(
+    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_sprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    m_sprite.setOrigin(0.0f, 0.0f);
+    m_sprite.setSize(
         (MatrixChunk2ElemWidth*PhysicsToRenderer)+0.00001f,
         (MatrixChunk2ElemHeight*PhysicsToRenderer)+0.00001f
     );
-    m_rectangle.setAngle(0.0f);
-    m_rectangle.setSmooth(0.0f);
+    m_sprite.setAngle(0.0f);
 
     float positionX = (MatrixChunk2ElemHalfWidth*PhysicsToRenderer);
     float positionY = (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
@@ -630,8 +629,9 @@ void TopDown::render()
         {
             if (m_matrixChunk.get(i, j) != 0)
             {
-                m_rectangle.setPosition(positionX, positionY);
-                m_rectangle.render();
+                m_sprite.setPosition(positionX, positionY);
+                m_sprite.bindTexture();
+                m_sprite.render();
             }
             positionY += (MatrixChunk2ElemHeight*PhysicsToRenderer);
         }
@@ -641,7 +641,7 @@ void TopDown::render()
 
 
     // Render bounding circle
-    GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     positionX = (m_boundingCircle.position.vec[0]*PhysicsToRenderer);
     positionY = (m_boundingCircle.position.vec[1]*PhysicsToRenderer);
     float radius = (m_boundingCircle.radius*PhysicsToRenderer);
@@ -651,7 +651,7 @@ void TopDown::render()
     m_ellipse.setSize(radius*2.1f, radius*2.1f);
     m_ellipse.setAngle(m_boundingCircle.angle*PhysicsAngleToRenderer);
     m_ellipse.setSmooth(0.035f);
-    m_ellipse.render();
+    m_ellipse.render();*/
 
     // Render bounding circle 2
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
@@ -740,7 +740,7 @@ void TopDown::render()
     m_rectangle.render();*/
 
     // Render bounding align rect 2
-    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
     positionX = (m_boundingAlignRect2.position.vec[0]*PhysicsToRenderer);
     positionY = (m_boundingAlignRect2.position.vec[1]*PhysicsToRenderer);
     float halfWidth = (m_boundingAlignRect2.halfSize.vec[0]*PhysicsToRenderer);
@@ -752,10 +752,10 @@ void TopDown::render()
     m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
     m_rectangle.setAngle(0.0f);
     m_rectangle.setSmooth(0.01f);
-    m_rectangle.render();
+    m_rectangle.render();*/
 
     // Render bounding align rect 2 projection
-    positionX = (m_collide.position.vec[0]*PhysicsToRenderer);
+    /*positionX = (m_collide.position.vec[0]*PhysicsToRenderer);
     positionY = (m_collide.position.vec[1]*PhysicsToRenderer);
     halfWidth = (m_boundingAlignRect2.halfSize.vec[0]*PhysicsToRenderer);
     halfHeight = (m_boundingAlignRect2.halfSize.vec[1]*PhysicsToRenderer);
@@ -766,7 +766,7 @@ void TopDown::render()
     m_rectangle.setSize(halfWidth*2.05f, halfHeight*2.05f);
     m_rectangle.setAngle(0.0f);
     m_rectangle.setSmooth(0.01f);
-    m_rectangle.render();
+    m_rectangle.render();*/
 
 
     // Render bounding rect
@@ -812,7 +812,7 @@ void TopDown::render()
 
 
     // Render player
-    //m_player.render();
+    m_player.render();
 
 
     // Set default screen view
