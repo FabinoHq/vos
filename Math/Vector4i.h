@@ -386,6 +386,19 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get Vector4i squared length                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t squaredLength() const
+            {
+                return (
+                    (static_cast<int64_t>(vec[0])*static_cast<int64_t>(vec[0]))+
+                    (static_cast<int64_t>(vec[1])*static_cast<int64_t>(vec[1]))+
+                    (static_cast<int64_t>(vec[2])*static_cast<int64_t>(vec[2]))+
+                    (static_cast<int64_t>(vec[3])*static_cast<int64_t>(vec[3]))
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Normalize Vector4i                                            //
             ////////////////////////////////////////////////////////////////////
             inline void normalize()

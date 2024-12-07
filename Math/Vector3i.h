@@ -353,6 +353,18 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get Vector3i squared length                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t squaredLength() const
+            {
+                return (
+                    (static_cast<int64_t>(vec[0])*static_cast<int64_t>(vec[0]))+
+                    (static_cast<int64_t>(vec[1])*static_cast<int64_t>(vec[1]))+
+                    (static_cast<int64_t>(vec[2])*static_cast<int64_t>(vec[2]))
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Normalize Vector3i                                            //
             ////////////////////////////////////////////////////////////////////
             inline void normalize()

@@ -50,7 +50,7 @@ collide(false),
 position(0, 0),
 offset(0, 0),
 normal(0, 0),
-factor(0)
+length(0)
 {
 
 }
@@ -67,7 +67,7 @@ Collision2::Collision2(const Collision2& collision2)
 	offset.vec[1] = collision2.offset.vec[1];
 	normal.vec[0] = collision2.normal.vec[0];
 	normal.vec[1] = collision2.normal.vec[1];
-	factor = collision2.factor;
+	length = collision2.length;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ Collision2::Collision2(const Collision2& collision2)
 ////////////////////////////////////////////////////////////////////////////////
 Collision2::~Collision2()
 {
-	factor = 0;
+	length = 0;
 	normal.reset();
 	offset.reset();
 	position.reset();
@@ -92,7 +92,7 @@ void Collision2::reset()
 	position.reset();
 	offset.reset();
 	normal.reset();
-	factor = 0;
+	length = 0;
 }
 
 
@@ -108,6 +108,6 @@ Collision2& Collision2::operator=(const Collision2& collision2)
 	offset.vec[1] = collision2.offset.vec[1];
 	normal.vec[0] = collision2.normal.vec[0];
 	normal.vec[1] = collision2.normal.vec[1];
-	factor = collision2.factor;
+	length = collision2.length;
 	return *this;
 }

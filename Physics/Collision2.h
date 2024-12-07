@@ -139,11 +139,11 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set collision factor                                          //
+            //  Set collision squared length                                  //
             ////////////////////////////////////////////////////////////////////
-            inline void setFactor(int32_t collisionFactor)
+            inline void setLength(int64_t collisionLength)
             {
-                factor = Math::clamp(collisionFactor, 0, Math::OneInt);
+                length = collisionLength;
             }
 
 
@@ -158,7 +158,7 @@
             Vector2i        position;       // Collision position
             Vector2i        offset;         // Collision offset
             Vector2i        normal;         // Collision normal
-            int32_t         factor;         // Collision factor
+            int64_t         length;         // Collision squared length
     };
 
 

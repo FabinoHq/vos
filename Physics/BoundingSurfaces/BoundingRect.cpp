@@ -122,7 +122,7 @@ bool BoundingRect::collideRect(const BoundingRect& boundingRect,
 	collision.reset();
 	collision.position = (position + offset);
 	collision.offset = offset;
-	collision.setFactor(Math::OneInt);
+	collision.length = offset.squaredLength();
 	collision.collide = false;
 	return collision.collide;
 }

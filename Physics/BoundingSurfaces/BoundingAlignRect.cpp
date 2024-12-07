@@ -128,7 +128,7 @@ bool BoundingAlignRect::collideAlignRect(
 	// Reset collision
 	collision.reset();
 	collision.position = position;
-	collision.setFactor(Math::OneInt);
+	collision.length = offset.squaredLength();
 
 	// Check offset vector
 	if (offset.isZero()) { return false; }
@@ -215,9 +215,7 @@ bool BoundingAlignRect::collideAlignRect(
 	collision.position = currentAlignRect.position;
 	collision.normal = (collision.position - boundingAlignRect.position);
 	collision.normal.normalize();
-	collision.setFactor(static_cast<int32_t>(
-		(collision.offset.length() << Math::OneIntShift) / offset.length()
-	));
+	collision.length = collision.offset.squaredLength();
 	collision.collide = true;
 	return collision.collide;
 }
@@ -235,9 +233,9 @@ bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle)
 		halfSize.vec[0], halfSize.vec[1]
 	);
 
-	// Compute distance between circle and closest align rect point
+	// Compute squared length between circle and closest align rect point
 	dist = (position - (boundingCircle.position + dist));
-	int64_t distance = (
+	int64_t squaredLen = (
 		(static_cast<int64_t>(dist.vec[0])*
 		static_cast<int64_t>(dist.vec[0]))+
 		(static_cast<int64_t>(dist.vec[1])*
@@ -246,7 +244,7 @@ bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle)
 
 	// Check if align rect is colliding with circle
 	return (
-		distance <= (
+		squaredLen <= (
 			static_cast<int64_t>(boundingCircle.radius)*
 			static_cast<int64_t>(boundingCircle.radius)
 		)
@@ -262,7 +260,7 @@ bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle,
 	// Reset collision
 	collision.reset();
 	collision.position = position;
-	collision.setFactor(Math::OneInt);
+	collision.length = offset.squaredLength();
 
 	// Check offset vector
 	if (offset.isZero()) { return false; }
@@ -348,9 +346,7 @@ bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle,
 	collision.position = currentAlignRect.position;
 	collision.normal = (collision.position - boundingCircle.position);
 	collision.normal.normalize();
-	collision.setFactor(static_cast<int32_t>(
-		(collision.offset.length() << Math::OneIntShift) / offset.length()
-	));
+	collision.length = collision.offset.squaredLength();
 	collision.collide = true;
 	return collision.collide;
 }
@@ -398,7 +394,7 @@ bool BoundingAlignRect::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	// Reset collision
 	collision.reset();
 	collision.position = position;
-	collision.setFactor(Math::OneInt);
+	collision.length = offset.squaredLength();
 
 	// Check offset vector
 	if (offset.isZero()) { return false; }
@@ -485,9 +481,7 @@ bool BoundingAlignRect::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	collision.position = currentAlignRect.position;
 	/*collision.normal = (collision.position - boundingAlignRect.position);
 	collision.normal.normalize();*/
-	collision.setFactor(static_cast<int32_t>(
-		(collision.offset.length() << Math::OneIntShift) / offset.length()
-	));
+	collision.length = collision.offset.squaredLength();
 	collision.collide = true;
 	return collision.collide;
 }

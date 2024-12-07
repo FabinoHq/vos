@@ -103,9 +103,9 @@ void BoundingCircle::set(const Vector2i& circlePosition,
 ////////////////////////////////////////////////////////////////////////////////
 bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
 {
-	// Compute squared distance between circles
+	// Compute squared length between circles
 	Vector2i dist = (position - boundingCircle.position);
-	int64_t distance = (
+	int64_t squaredLen = (
 		(static_cast<int64_t>(dist.vec[0])*static_cast<int64_t>(dist.vec[0]))+
 		(static_cast<int64_t>(dist.vec[1])*static_cast<int64_t>(dist.vec[1]))
 	);
@@ -117,7 +117,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle)
 	);
 
 	// Check if circles are colliding
-	return (distance <= (radiuses*radiuses));
+	return (squaredLen <= (radiuses*radiuses));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	// Reset collision
 	collision.reset();
 	collision.position = position;
-	collision.setFactor(Math::OneInt);
+	collision.length = offset.squaredLength();
 
 	// Check offset vector
 	if (offset.isZero()) { return false; }
@@ -214,9 +214,7 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	collision.position = currentCircle.position;
 	collision.normal = (collision.position - boundingCircle.position);
 	collision.normal.normalize();
-	collision.setFactor(static_cast<int32_t>(
-		(collision.offset.length() << Math::OneIntShift) / offset.length()
-	));
+	collision.length = collision.offset.squaredLength();
 	collision.collide = true;
 	return collision.collide;
 }
@@ -235,9 +233,9 @@ bool BoundingCircle::collideAlignRect(
 		boundingAlignRect.halfSize.vec[0], boundingAlignRect.halfSize.vec[1]
 	);
 
-	// Compute distance between circle and closest align rect point
+	// Compute squared length between circle and closest align rect point
 	dist = (position - (boundingAlignRect.position + dist));
-	int64_t distance = (
+	int64_t squaredLen = (
 		(static_cast<int64_t>(dist.vec[0])*
 		static_cast<int64_t>(dist.vec[0]))+
 		(static_cast<int64_t>(dist.vec[1])*
@@ -246,7 +244,9 @@ bool BoundingCircle::collideAlignRect(
 
 	// Check if circle is colliding with align rect
 	return (
-		distance <= (static_cast<int64_t>(radius)*static_cast<int64_t>(radius))
+		squaredLen <= (
+			static_cast<int64_t>(radius)*static_cast<int64_t>(radius)
+		)
 	);
 }
 
@@ -260,7 +260,7 @@ bool BoundingCircle::collideAlignRect(
 	// Reset collision
 	collision.reset();
 	collision.position = position;
-	collision.setFactor(Math::OneInt);
+	collision.length = offset.squaredLength();
 
 	// Check offset vector
 	if (offset.isZero()) { return false; }
@@ -346,9 +346,7 @@ bool BoundingCircle::collideAlignRect(
 	collision.position = currentCircle.position;
 	collision.normal = (collision.position - boundingAlignRect.position);
 	collision.normal.normalize();
-	collision.setFactor(static_cast<int32_t>(
-		(collision.offset.length() << Math::OneIntShift) / offset.length()
-	));
+	collision.length = collision.offset.squaredLength();
 	collision.collide = true;
 	return collision.collide;
 }
@@ -376,7 +374,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
 	// Check matrix elements
 	Vector2i elemPos = Vector2i(0, 0);
 	Vector2i dist = Vector2i(0, 0);
-	int64_t distance = 0;
+	int64_t squaredLen = 0;
 	int64_t squareRadius = (
 		static_cast<int64_t>(radius)*static_cast<int64_t>(radius)
 	);
@@ -397,9 +395,9 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
 					MatrixChunk2ElemHalfWidth, MatrixChunk2ElemHalfHeight
 				);
 
-				// Compute distance between circle and closest element point
+				// Compute squared len between circle and closest element point
 				dist = (position - (elemPos + dist));
-				distance = (
+				squaredLen = (
 					(static_cast<int64_t>(dist.vec[0])*
 					static_cast<int64_t>(dist.vec[0]))+
 					(static_cast<int64_t>(dist.vec[1])*
@@ -407,7 +405,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2)
 				);
 
 				// Check if circle is colliding with matrix element
-				if (distance <= squareRadius) { return true; }
+				if (squaredLen <= squareRadius) { return true; }
 			}
 		}
 	}
@@ -425,7 +423,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	// Reset collision
 	collision.reset();
 	collision.position = position;
-	collision.setFactor(Math::OneInt);
+	collision.length = offset.squaredLength();
 
 	// Check offset vector
 	if (offset.isZero()) { return false; }
@@ -511,9 +509,7 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	collision.position = currentCircle.position;
 	/*collision.normal = (collision.position - matrixElement.position);
 	collision.normal.normalize();*/
-	collision.setFactor(static_cast<int32_t>(
-		(collision.offset.length() << Math::OneIntShift) / offset.length()
-	));
+	collision.length = collision.offset.squaredLength();
 	collision.collide = true;
 	return collision.collide;
 }
