@@ -177,24 +177,21 @@ void TopDownPlayer::physics()
     );
     if (m_bounding.collideMatrix2(m_matrixChunk, offset, collide))
     {
-        // Move into collide position
-        m_bounding.position.vec[0] = collide.position.vec[0];
-        m_bounding.position.vec[1] = collide.position.vec[1];
-
         // Compute separated X axis
         remain = (offset - collide.offset);
+        m_bounding.position = collide.position;
         offset = Vector2i(remain.vec[0], 0);
         if (m_bounding.collideMatrix2(m_matrixChunk, offset, collide))
         {
             // Compute separated Y axis
+            m_bounding.position = collide.position;
             offset = Vector2i(0, remain.vec[1]);
             m_bounding.collideMatrix2(m_matrixChunk, offset, collide);
         }
     }
 
     // Compute top down player position
-    m_bounding.position.vec[0] = collide.position.vec[0];
-    m_bounding.position.vec[1] = collide.position.vec[1];
+    m_bounding.position = collide.position;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
