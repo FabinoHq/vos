@@ -89,8 +89,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setPosition(const Vector2i& collisionPosition)
             {
-                position.vec[0] = collisionPosition.vec[0];
-                position.vec[1] = collisionPosition.vec[1];
+                position = collisionPosition;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -107,8 +106,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setOffset(const Vector2i& collisionOffset)
             {
-                offset.vec[0] = collisionOffset.vec[0];
-                offset.vec[1] = collisionOffset.vec[1];
+                offset = collisionOffset;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -125,8 +123,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setNormal(const Vector2i& collisionNormal)
             {
-                normal.vec[0] = collisionNormal.vec[0];
-                normal.vec[1] = collisionNormal.vec[1];
+                normal = collisionNormal;
             }
 
             ////////////////////////////////////////////////////////////////////

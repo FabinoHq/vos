@@ -82,7 +82,6 @@ bool TopDownPlayer::init()
     // Init bounding aligned rectangle
     m_bounding.setPosition(0, 0);
     m_bounding.setHalfSize(40000, 40000);
-    //m_bounding.setAngle(0);
 
     // Init test matrix chunk
     if (!m_matrixChunk.init())
@@ -169,34 +168,18 @@ void TopDownPlayer::physics()
     }
 
     // Compute top down player collisions
-    Collision2 collide;
-    Vector2i position = m_bounding.position;
-    Vector2i remain = Vector2i(0, 0);
+    Collision2 collision;
     Vector2i offset = Vector2i(
         (m_speed.vec[0] >> PhysicsSpeedToPositionShift),
         (m_speed.vec[1] >> PhysicsSpeedToPositionShift)
     );
-    int64_t squaredLen = offset.squaredLength();
+    int64_t length = offset.squaredLength();
 
     // Compute top down player matrix collisions
-    if (m_bounding.collideMatrix2(m_matrixChunk, offset, collide))
-    {
-        // Compute separated X axis
-        squaredLen = Math::min(squaredLen, collide.length);
-        remain = (offset - collide.offset);
-        m_bounding.position = collide.position;
-        offset = Vector2i(remain.vec[0], 0);
-        if (m_bounding.collideMatrix2(m_matrixChunk, offset, collide))
-        {
-            // Compute separated Y axis
-            squaredLen = Math::min(squaredLen, collide.length);
-            m_bounding.position = collide.position;
-            offset = Vector2i(0, remain.vec[1]);
-            m_bounding.collideMatrix2(m_matrixChunk, offset, collide);
-        }
-    }
-    squaredLen = Math::min(squaredLen, collide.length);
-    m_bounding.position = collide.position;
+    m_bounding.collideMatrix2(m_matrixChunk, offset, collision, length);
+
+    // Update top down player position
+    m_bounding.position = collision.position;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

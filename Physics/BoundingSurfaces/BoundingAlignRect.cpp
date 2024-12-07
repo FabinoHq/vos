@@ -220,6 +220,47 @@ bool BoundingAlignRect::collideAlignRect(
 	return collision.collide;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//  Collide bounding align rect with bounding align rect                      //
+////////////////////////////////////////////////////////////////////////////////
+bool BoundingAlignRect::collideAlignRect(
+	const BoundingAlignRect& boundingAlignRect,
+	const Vector2i& offset, Collision2& collision, int64_t& length)
+{
+	// Compute both axis simultaneously
+	Collision2 currentCollision;
+	Vector2i currentPosition = position;
+	Vector2i remaining = offset;
+	int64_t currentLen = offset.squaredLength();
+    if (collideAlignRect(boundingAlignRect, offset, currentCollision))
+    {
+        // Compute separated X axis
+        currentLen = Math::min(currentLen, currentCollision.length);
+        remaining = (offset - currentCollision.offset);
+        position = currentCollision.position;
+        if (collideAlignRect(boundingAlignRect,
+        	Vector2i(remaining.vec[0], 0), currentCollision))
+        {
+            // Compute separated Y axis
+            currentLen = Math::min(currentLen, currentCollision.length);
+            position = currentCollision.position;
+            collideAlignRect(boundingAlignRect,
+            	Vector2i(0, remaining.vec[1]), currentCollision
+            );
+        }
+        position = currentPosition;
+    }
+    currentLen = Math::min(currentLen, currentCollision.length);
+
+    // Update collision if length is less than previous length
+    if (currentLen <= length)
+    {
+    	collision = currentCollision;
+    	length = currentLen;
+    }
+    return collision.collide;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Collide bounding align rect with bounding circle                          //
@@ -349,6 +390,46 @@ bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle,
 	collision.length = collision.offset.squaredLength();
 	collision.collide = true;
 	return collision.collide;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Collide bounding align rect with bounding circle                          //
+////////////////////////////////////////////////////////////////////////////////
+bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle,
+	const Vector2i& offset, Collision2& collision, int64_t& length)
+{
+	// Compute both axis simultaneously
+	Collision2 currentCollision;
+	Vector2i currentPosition = position;
+	Vector2i remaining = offset;
+	int64_t currentLen = offset.squaredLength();
+    if (collideCircle(boundingCircle, offset, currentCollision))
+    {
+        // Compute separated X axis
+        currentLen = Math::min(currentLen, currentCollision.length);
+        remaining = (offset - currentCollision.offset);
+        position = currentCollision.position;
+        if (collideCircle(boundingCircle,
+        	Vector2i(remaining.vec[0], 0), currentCollision))
+        {
+            // Compute separated Y axis
+            currentLen = Math::min(currentLen, currentCollision.length);
+            position = currentCollision.position;
+            collideCircle(boundingCircle,
+            	Vector2i(0, remaining.vec[1]), currentCollision
+            );
+        }
+        position = currentPosition;
+    }
+    currentLen = Math::min(currentLen, currentCollision.length);
+
+    // Update collision if length is less than previous length
+    if (currentLen <= length)
+    {
+    	collision = currentCollision;
+    	length = currentLen;
+    }
+    return collision.collide;
 }
 
 
@@ -484,6 +565,46 @@ bool BoundingAlignRect::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	collision.length = collision.offset.squaredLength();
 	collision.collide = true;
 	return collision.collide;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Collide bounding align rect with matrix chunk 2                           //
+////////////////////////////////////////////////////////////////////////////////
+bool BoundingAlignRect::collideMatrix2(const MatrixChunk2& matrixChunk2,
+    const Vector2i& offset, Collision2& collision, int64_t& length)
+{
+	// Compute both axis simultaneously
+	Collision2 currentCollision;
+	Vector2i currentPosition = position;
+	Vector2i remaining = offset;
+	int64_t currentLen = offset.squaredLength();
+    if (collideMatrix2(matrixChunk2, offset, currentCollision))
+    {
+        // Compute separated X axis
+        currentLen = Math::min(currentLen, currentCollision.length);
+        remaining = (offset - currentCollision.offset);
+        position = currentCollision.position;
+        if (collideMatrix2(matrixChunk2,
+        	Vector2i(remaining.vec[0], 0), currentCollision))
+        {
+            // Compute separated Y axis
+            currentLen = Math::min(currentLen, currentCollision.length);
+            position = currentCollision.position;
+            collideMatrix2(matrixChunk2,
+            	Vector2i(0, remaining.vec[1]), currentCollision
+            );
+        }
+        position = currentPosition;
+    }
+    currentLen = Math::min(currentLen, currentCollision.length);
+
+    // Update collision if length is less than previous length
+    if (currentLen <= length)
+    {
+    	collision = currentCollision;
+    	length = currentLen;
+    }
+    return collision.collide;
 }
 
 

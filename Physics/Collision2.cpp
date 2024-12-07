@@ -61,12 +61,9 @@ length(0)
 Collision2::Collision2(const Collision2& collision2)
 {
 	collide = collision2.collide;
-	position.vec[0] = collision2.position.vec[0];
-	position.vec[1] = collision2.position.vec[1];
-	offset.vec[0] = collision2.offset.vec[0];
-	offset.vec[1] = collision2.offset.vec[1];
-	normal.vec[0] = collision2.normal.vec[0];
-	normal.vec[1] = collision2.normal.vec[1];
+	position = collision2.position;
+	offset = collision2.offset;
+	normal = collision2.normal;
 	length = collision2.length;
 }
 
@@ -102,12 +99,9 @@ void Collision2::reset()
 Collision2& Collision2::operator=(const Collision2& collision2)
 {
 	collide = collision2.collide;
-	position.vec[0] = collision2.position.vec[0];
-	position.vec[1] = collision2.position.vec[1];
-	offset.vec[0] = collision2.offset.vec[0];
-	offset.vec[1] = collision2.offset.vec[1];
-	normal.vec[0] = collision2.normal.vec[0];
-	normal.vec[1] = collision2.normal.vec[1];
+	position = collision2.position;
+	offset = collision2.offset;
+	normal = collision2.normal;
 	length = collision2.length;
 	return *this;
 }

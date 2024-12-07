@@ -105,30 +105,6 @@ void BoundingRect::set(const Vector2i& rectPosition,
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Collide bounding rect with bounding rect                                  //
-////////////////////////////////////////////////////////////////////////////////
-bool BoundingRect::collideRect(const BoundingRect& boundingRect)
-{
-	return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Collide bounding rect with bounding rect                                  //
-////////////////////////////////////////////////////////////////////////////////
-bool BoundingRect::collideRect(const BoundingRect& boundingRect,
-	const Vector2i& offset, Collision2& collision)
-{
-	// Reset collision
-	collision.reset();
-	collision.position = (position + offset);
-	collision.offset = offset;
-	collision.length = offset.squaredLength();
-	collision.collide = false;
-	return collision.collide;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 //  BoundingRect affectation operator                                         //
 ////////////////////////////////////////////////////////////////////////////////
 BoundingRect& BoundingRect::operator=(const BoundingRect& boundingRect)
