@@ -143,11 +143,11 @@ bool BoundingCircle::collideCircle(const BoundingCircle& boundingCircle,
 	}
 
 	// Compute step offset
-	int32_t stepRadius = Math::max(
+	int32_t stepOffset = Math::max(
 		Math::min(radius, boundingCircle.radius), PhysicsMinEntityHalfSize
 	);
-	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
-	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
+	int32_t stepX = (Math::abs(offset.vec[0]) / stepOffset);
+	int32_t stepY = (Math::abs(offset.vec[1]) / stepOffset);
 	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
 	stepX = (offset.vec[0] / step);
 	stepY = (offset.vec[1] / step);
@@ -244,7 +244,7 @@ bool BoundingCircle::collideAlignRect(
 		static_cast<int64_t>(dist.vec[1]))
 	);
 
-	// Check if circle is colliding with matrix element
+	// Check if circle is colliding with align rect
 	return (
 		distance <= (static_cast<int64_t>(radius)*static_cast<int64_t>(radius))
 	);
@@ -274,13 +274,12 @@ bool BoundingCircle::collideAlignRect(
 	}
 
 	// Compute step offset
-	int32_t stepRadius = Math::max(
-		Math::min(radius, Math::min(
-		boundingAlignRect.halfSize.vec[0], boundingAlignRect.halfSize.vec[1])
-		), PhysicsMinEntityHalfSize
+	int32_t stepOffset = Math::max(Math::min(radius, Math::min(
+		boundingAlignRect.halfSize.vec[0], boundingAlignRect.halfSize.vec[1])),
+		PhysicsMinEntityHalfSize
 	);
-	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
-	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
+	int32_t stepX = (Math::abs(offset.vec[0]) / stepOffset);
+	int32_t stepY = (Math::abs(offset.vec[1]) / stepOffset);
 	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
 	stepX = (offset.vec[0] / step);
 	stepY = (offset.vec[1] / step);
@@ -440,13 +439,12 @@ bool BoundingCircle::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	}
 
 	// Compute step offset
-	int32_t stepRadius = Math::max(
-		Math::min(radius,
-		Math::min(MatrixChunk2ElemHalfWidth, MatrixChunk2ElemHalfHeight)
-		), PhysicsMinEntityHalfSize
+	int32_t stepOffset = Math::max(Math::min(radius,
+		Math::min(MatrixChunk2ElemHalfWidth, MatrixChunk2ElemHalfHeight)),
+		PhysicsMinEntityHalfSize
 	);
-	int32_t stepX = (Math::abs(offset.vec[0]) / stepRadius);
-	int32_t stepY = (Math::abs(offset.vec[1]) / stepRadius);
+	int32_t stepX = (Math::abs(offset.vec[0]) / stepOffset);
+	int32_t stepY = (Math::abs(offset.vec[1]) / stepOffset);
 	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
 	stepX = (offset.vec[0] / step);
 	stepY = (offset.vec[1] / step);

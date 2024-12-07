@@ -142,13 +142,13 @@ bool BoundingAlignRect::collideAlignRect(
 	}
 
 	// Compute step offset
-	int32_t stepHalfSize = Math::max(Math::min(
+	int32_t stepOffset = Math::max(Math::min(
 		Math::min(halfSize.vec[0], boundingAlignRect.halfSize.vec[0]),
 		Math::min(halfSize.vec[1], boundingAlignRect.halfSize.vec[1])),
 		PhysicsMinEntityHalfSize
 	);
-	int32_t stepX = (Math::abs(offset.vec[0]) / stepHalfSize);
-	int32_t stepY = (Math::abs(offset.vec[1]) / stepHalfSize);
+	int32_t stepX = (Math::abs(offset.vec[0]) / stepOffset);
+	int32_t stepY = (Math::abs(offset.vec[1]) / stepOffset);
 	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
 	stepX = (offset.vec[0] / step);
 	stepY = (offset.vec[1] / step);
@@ -224,6 +224,139 @@ bool BoundingAlignRect::collideAlignRect(
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Collide bounding align rect with bounding circle                          //
+////////////////////////////////////////////////////////////////////////////////
+bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle)
+{
+	// Compute clamped distance between align rect and circle
+	Vector2i dist = (position - boundingCircle.position);
+	dist.clamp(
+		-halfSize.vec[0], -halfSize.vec[1],
+		halfSize.vec[0], halfSize.vec[1]
+	);
+
+	// Compute distance between circle and closest align rect point
+	dist = (position - (boundingCircle.position + dist));
+	int64_t distance = (
+		(static_cast<int64_t>(dist.vec[0])*
+		static_cast<int64_t>(dist.vec[0]))+
+		(static_cast<int64_t>(dist.vec[1])*
+		static_cast<int64_t>(dist.vec[1]))
+	);
+
+	// Check if align rect is colliding with circle
+	return (
+		distance <= (
+			static_cast<int64_t>(boundingCircle.radius)*
+			static_cast<int64_t>(boundingCircle.radius)
+		)
+	);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Collide bounding align rect with bounding circle                          //
+////////////////////////////////////////////////////////////////////////////////
+bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle,
+	const Vector2i& offset, Collision2& collision)
+{
+	// Reset collision
+	collision.reset();
+	collision.position = position;
+	collision.setFactor(Math::OneInt);
+
+	// Check offset vector
+	if (offset.isZero()) { return false; }
+
+	// Check current collision
+	if (collideCircle(boundingCircle))
+	{
+		// Currently colliding
+		collision.collide = true;
+		return collision.collide;
+	}
+
+	// Compute step offset
+	int32_t stepOffset = Math::max(Math::min(boundingCircle.radius,
+		Math::min(halfSize.vec[0], halfSize.vec[1])),
+		PhysicsMinEntityHalfSize
+	);
+	int32_t stepX = (Math::abs(offset.vec[0]) / stepOffset);
+	int32_t stepY = (Math::abs(offset.vec[1]) / stepOffset);
+	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
+	stepX = (offset.vec[0] / step);
+	stepY = (offset.vec[1] / step);
+
+	// Iterative collision detection
+	bool collide = false;
+	BoundingAlignRect currentAlignRect(*this);
+	for (int32_t i = 0; i < step; ++i)
+	{
+		if (currentAlignRect.collideCircle(boundingCircle))
+		{
+			// Collision detected
+			collide = true;
+			break;
+		}
+		else
+		{
+			// Next iteration
+			collision.position = currentAlignRect.position;
+			currentAlignRect.position.vec[0] += stepX;
+			currentAlignRect.position.vec[1] += stepY;
+		}
+	}
+
+	if (!collide)
+	{
+		// Last collision detection
+		currentAlignRect.position = (position + offset);
+		if (!currentAlignRect.collideCircle(boundingCircle))
+		{
+			// No collision detected
+			collision.position = (position + offset);
+			collision.offset = offset;
+			collision.collide = false;
+			return collision.collide;
+		}
+	}
+
+	// Small steps iterative collision
+	stepX >>= 1;	// stepX = stepX/2
+	stepY >>= 1;	// stepY = stepY/2
+	currentAlignRect.position = collision.position;
+	for (int32_t i = 0; i < PhysicsMaxSmallStepsIterations; ++i)
+	{
+		currentAlignRect.position.vec[0] += stepX;
+		currentAlignRect.position.vec[1] += stepY;
+		if (currentAlignRect.collideCircle(boundingCircle))
+		{
+			// Rollback to previous position
+			currentAlignRect.position = collision.position;
+			stepX >>= 1;	// stepX = stepX/2
+			stepY >>= 1;	// stepY = stepY/2
+		}
+		else
+		{
+			// Store current position
+			collision.position = currentAlignRect.position;
+		}
+		if ((stepX == 0) && (stepY == 0)) { break; }
+	}
+
+	// Collision detected
+	collision.offset = (currentAlignRect.position - position);
+	collision.position = currentAlignRect.position;
+	collision.normal = (collision.position - boundingCircle.position);
+	collision.normal.normalize();
+	collision.setFactor(static_cast<int32_t>(
+		(collision.offset.length() << Math::OneIntShift) / offset.length()
+	));
+	collision.collide = true;
+	return collision.collide;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Collide bounding align rect with matrix chunk 2                           //
 ////////////////////////////////////////////////////////////////////////////////
 bool BoundingAlignRect::collideMatrix2(const MatrixChunk2& matrixChunk2)
@@ -279,13 +412,13 @@ bool BoundingAlignRect::collideMatrix2(const MatrixChunk2& matrixChunk2,
 	}
 
 	// Compute step offset
-	int32_t stepHalfSize = Math::max(Math::min(
+	int32_t stepOffset = Math::max(Math::min(
 		Math::min(halfSize.vec[0], MatrixChunk2ElemHalfWidth),
 		Math::min(halfSize.vec[1], MatrixChunk2ElemHalfHeight)),
 		PhysicsMinEntityHalfSize
 	);
-	int32_t stepX = (Math::abs(offset.vec[0]) / stepHalfSize);
-	int32_t stepY = (Math::abs(offset.vec[1]) / stepHalfSize);
+	int32_t stepX = (Math::abs(offset.vec[0]) / stepOffset);
+	int32_t stepY = (Math::abs(offset.vec[1]) / stepOffset);
 	int32_t step = Math::max(((stepX >= stepY) ? stepX : stepY), 1);
 	stepX = (offset.vec[0] / step);
 	stepY = (offset.vec[1] / step);
