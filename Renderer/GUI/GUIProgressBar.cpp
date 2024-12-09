@@ -62,7 +62,7 @@ GUIProgressBar::~GUIProgressBar()
 {
     m_value = 0.0f;
     m_uvFactor = 0.0f;
-	m_color.reset();
+    m_color.reset();
     m_texture = 0;
 }
 

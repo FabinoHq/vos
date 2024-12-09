@@ -54,8 +54,6 @@ m_projviewMatrix()
     {
         m_descriptorSets[i] = 0;
     }
-    m_projMatrix.reset();
-    m_projviewMatrix.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

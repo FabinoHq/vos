@@ -51,10 +51,7 @@ prevPos(),
 angles(),
 prevAngles()
 {
-	pos.reset();
-	prevPos.reset();
-	angles.reset();
-	prevAngles.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,10 +59,10 @@ prevAngles()
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsTransform3::~PhysicsTransform3()
 {
-	prevAngles.reset();
-	angles.reset();
-	prevPos.reset();
-	pos.reset();
+    prevAngles.reset();
+    angles.reset();
+    prevPos.reset();
+    pos.reset();
 }
 
 
@@ -74,20 +71,20 @@ PhysicsTransform3::~PhysicsTransform3()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsTransform3::reset()
 {
-	pos.reset();
-	prevPos.reset();
-	angles.reset();
-	prevAngles.reset();
+    pos.reset();
+    prevPos.reset();
+    angles.reset();
+    prevAngles.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Precompute physics transforms (thread sync)                               //
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsTransform3::prephysics(
-	const Vector3i& physicsPos, const Vector3i& physicsAngles)
+    const Vector3i& physicsPos, const Vector3i& physicsAngles)
 {
-	// Store previous physics transformations
-	prevPos = pos;
+    // Store previous physics transformations
+    prevPos = pos;
     prevAngles = angles;
 
     // Convert physics transformations to renderer

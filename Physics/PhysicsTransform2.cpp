@@ -51,8 +51,7 @@ prevPos(),
 angle(0.0f),
 prevAngle(0.0f)
 {
-	pos.reset();
-	prevPos.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,10 +59,10 @@ prevAngle(0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsTransform2::~PhysicsTransform2()
 {
-	prevAngle = 0.0f;
-	angle = 0.0f;
-	prevPos.reset();
-	pos.reset();
+    prevAngle = 0.0f;
+    angle = 0.0f;
+    prevPos.reset();
+    pos.reset();
 }
 
 
@@ -72,20 +71,20 @@ PhysicsTransform2::~PhysicsTransform2()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsTransform2::reset()
 {
-	pos.reset();
-	prevPos.reset();
-	angle = 0.0f;
-	prevAngle = 0.0f;
+    pos.reset();
+    prevPos.reset();
+    angle = 0.0f;
+    prevAngle = 0.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Precompute physics transforms (thread sync)                               //
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsTransform2::prephysics(
-	const Vector2i& physicsPos, int32_t physicsAngle)
+    const Vector2i& physicsPos, int32_t physicsAngle)
 {
-	// Store previous physics transformations
-	prevPos = pos;
+    // Store previous physics transformations
+    prevPos = pos;
     prevAngle = angle;
 
     // Convert physics transformations to renderer

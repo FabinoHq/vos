@@ -54,7 +54,7 @@ Uniformchain GUniformchain = Uniformchain();
 Uniformchain::Uniformchain() :
 uniformQueue()
 {
-	for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         uniformsReady[i] = 0;
         fences[i] = 0;
@@ -68,9 +68,9 @@ uniformQueue()
 ////////////////////////////////////////////////////////////////////////////////
 Uniformchain::~Uniformchain()
 {
-	for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
-    	commandBuffers[i] = 0;
+        commandBuffers[i] = 0;
         commandPools[i] = 0;
         fences[i] = 0;
         uniformsReady[i] = 0;
@@ -84,7 +84,7 @@ Uniformchain::~Uniformchain()
 ////////////////////////////////////////////////////////////////////////////////
 bool Uniformchain::createUniformchain()
 {
-	// Request uniforms queue handle
+    // Request uniforms queue handle
     if (!uniformQueue.getVulkanQueue(VULKAN_QUEUE_UNIFORMS))
     {
         // Could not get uniforms queue handle
@@ -179,8 +179,8 @@ bool Uniformchain::createUniformchain()
         }
     }
 
-	// Uniformchain sucessfully created
-	return true;
+    // Uniformchain sucessfully created
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

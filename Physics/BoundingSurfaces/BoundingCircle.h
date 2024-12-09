@@ -165,10 +165,10 @@
                 const Vector2i& offset, Collision2& collision);
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding circle with bounding circle                  //
+            //  Move bounding circle against bounding circle                  //
             ////////////////////////////////////////////////////////////////////
-            bool collideCircle(const BoundingCircle& boundingCircle,
-                const Vector2i& offset, Collision2& collision, int64_t& length);
+            bool moveCircle(const BoundingCircle& boundingCircle,
+                const Vector2i& offset, Collision2& collision);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -183,28 +183,26 @@
                 const Vector2i& offset, Collision2& collision);
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding circle with bounding align rect              //
+            //  Move bounding circle against bounding align rect              //
             ////////////////////////////////////////////////////////////////////
-            bool collideAlignRect(const BoundingAlignRect& boundingAlignRect,
-                const Vector2i& offset, Collision2& collision, int64_t& length);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Collide bounding circle with matrix chunk 2                   //
-            ////////////////////////////////////////////////////////////////////
-            bool collideMatrix2(const MatrixStream2& matrixStream2);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Collide bounding circle with matrix chunk 2                   //
-            ////////////////////////////////////////////////////////////////////
-            bool collideMatrix2(const MatrixStream2& matrixStream2,
+            bool moveAlignRect(const BoundingAlignRect& boundingAlignRect,
                 const Vector2i& offset, Collision2& collision);
 
+
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding circle with matrix chunk 2                   //
+            //  Collide bounding circle with matrix stream 2                  //
             ////////////////////////////////////////////////////////////////////
-            bool collideMatrix2(const MatrixStream2& matrixStream2,
-                const Vector2i& offset, Collision2& collision, int64_t& length);
+            bool collideMatrix2();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Collide bounding circle with matrix stream 2                  //
+            ////////////////////////////////////////////////////////////////////
+            bool collideMatrix2(const Vector2i& offset, Collision2& collision);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move bounding circle against matrix stream 2                  //
+            ////////////////////////////////////////////////////////////////////
+            bool moveMatrix2(const Vector2i& offset, Collision2& collision);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -240,11 +238,32 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Get bounding circle squared radius                            //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getSquaredRadius() const
+            {
+                return (
+                    static_cast<int64_t>(radius)*static_cast<int64_t>(radius)
+                );
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Get bounding circle diameter                                  //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getDiameter() const
             {
                 return (radius << 1);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get bounding circle squared diameter                          //
+            ////////////////////////////////////////////////////////////////////
+            inline int64_t getSquaredDiameter() const
+            {
+                return (
+                    static_cast<int64_t>((radius << 1))*
+                    static_cast<int64_t>((radius << 1))
+                );
             }
 
             ////////////////////////////////////////////////////////////////////

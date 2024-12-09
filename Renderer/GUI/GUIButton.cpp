@@ -62,7 +62,7 @@ GUIButton::~GUIButton()
 {
     m_state = GUIBUTTON_NONE;
     m_round = false;
-	m_color.reset();
+    m_color.reset();
     m_texture = 0;
 }
 

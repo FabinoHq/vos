@@ -63,7 +63,7 @@ down(false),
 left(false),
 right(false)
 {
-	axis.reset();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,21 +80,21 @@ SysKeys::~SysKeys()
 ////////////////////////////////////////////////////////////////////////////////
 void SysKeys::pressed(const SysEventKey& key)
 {
-	// Compute key pressed event
-	m_mutex.lock();
-	switch (key)
-	{
-		case SYSEVENT_KEY_UP: m_up = true; break;
-		case SYSEVENT_KEY_DOWN: m_down = true; break;
-		case SYSEVENT_KEY_LEFT: m_left = true; break;
-		case SYSEVENT_KEY_RIGHT: m_right = true; break;
-		case SYSEVENT_KEY_Z: m_up = true; break;
-		case SYSEVENT_KEY_S: m_down = true; break;
-		case SYSEVENT_KEY_Q: m_left = true; break;
-		case SYSEVENT_KEY_D: m_right = true; break;
-		default: break;
-	}
-	m_mutex.unlock();
+    // Compute key pressed event
+    m_mutex.lock();
+    switch (key)
+    {
+        case SYSEVENT_KEY_UP: m_up = true; break;
+        case SYSEVENT_KEY_DOWN: m_down = true; break;
+        case SYSEVENT_KEY_LEFT: m_left = true; break;
+        case SYSEVENT_KEY_RIGHT: m_right = true; break;
+        case SYSEVENT_KEY_Z: m_up = true; break;
+        case SYSEVENT_KEY_S: m_down = true; break;
+        case SYSEVENT_KEY_Q: m_left = true; break;
+        case SYSEVENT_KEY_D: m_right = true; break;
+        default: break;
+    }
+    m_mutex.unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,21 +102,21 @@ void SysKeys::pressed(const SysEventKey& key)
 ////////////////////////////////////////////////////////////////////////////////
 void SysKeys::released(const SysEventKey& key)
 {
-	// Compute key released event
-	m_mutex.lock();
-	switch (key)
-	{
-		case SYSEVENT_KEY_UP: m_up = false; break;
-		case SYSEVENT_KEY_DOWN: m_down = false; break;
-		case SYSEVENT_KEY_LEFT: m_left = false; break;
-		case SYSEVENT_KEY_RIGHT: m_right = false; break;
-		case SYSEVENT_KEY_Z: m_up = false; break;
-		case SYSEVENT_KEY_S: m_down = false; break;
-		case SYSEVENT_KEY_Q: m_left = false; break;
-		case SYSEVENT_KEY_D: m_right = false; break;
-		default: break;
-	}
-	m_mutex.unlock();
+    // Compute key released event
+    m_mutex.lock();
+    switch (key)
+    {
+        case SYSEVENT_KEY_UP: m_up = false; break;
+        case SYSEVENT_KEY_DOWN: m_down = false; break;
+        case SYSEVENT_KEY_LEFT: m_left = false; break;
+        case SYSEVENT_KEY_RIGHT: m_right = false; break;
+        case SYSEVENT_KEY_Z: m_up = false; break;
+        case SYSEVENT_KEY_S: m_down = false; break;
+        case SYSEVENT_KEY_Q: m_left = false; break;
+        case SYSEVENT_KEY_D: m_right = false; break;
+        default: break;
+    }
+    m_mutex.unlock();
 }
 
 
@@ -125,16 +125,16 @@ void SysKeys::released(const SysEventKey& key)
 ////////////////////////////////////////////////////////////////////////////////
 void SysKeys::sync()
 {
-	// Copy keys internal states
-	m_mutex.lock();
-	up = m_up;
-	down = m_down;
-	left = m_left;
-	right = m_right;
-	m_mutex.unlock();
+    // Copy keys internal states
+    m_mutex.lock();
+    up = m_up;
+    down = m_down;
+    left = m_left;
+    right = m_right;
+    m_mutex.unlock();
 
-	// Compute input axis
-	computeAxis();
+    // Compute input axis
+    computeAxis();
 }
 
 
@@ -143,69 +143,69 @@ void SysKeys::sync()
 ////////////////////////////////////////////////////////////////////////////////
 void SysKeys::computeAxis()
 {
-	// Compute input axis
-	axis.reset();
-	if (up && !down && !left && !right)
+    // Compute input axis
+    axis.reset();
+    if (up && !down && !left && !right)
     {
-    	// Up
+        // Up
         axis.vec[1] = Math::OneInt;
     }
     else if (!up && down && !left && !right)
     {
-    	// Down
+        // Down
         axis.vec[1] = -Math::OneInt;
     }
     else if (!up && !down && left && !right)
     {
-    	// Left
+        // Left
         axis.vec[0] = -Math::OneInt;
     }
     else if (!up && !down && !left && right)
     {
-    	// Right
+        // Right
         axis.vec[0] = Math::OneInt;
     }
     else if (up && !down && left && right)
     {
-    	// Up (left and right pressed)
+        // Up (left and right pressed)
         axis.vec[1] = Math::OneInt;
     }
     else if (!up && down && left && right)
     {
-    	// Down (left and right pressed)
+        // Down (left and right pressed)
         axis.vec[1] = -Math::OneInt;
     }
     else if (up && down && left && !right)
     {
-    	// Left (up and down pressed)
+        // Left (up and down pressed)
         axis.vec[0] = -Math::OneInt;
     }
     else if (up && down && !left && right)
     {
-    	// Right (up and down pressed)
+        // Right (up and down pressed)
         axis.vec[0] = Math::OneInt;
     }
     else if (up && !down && left && !right)
     {
-    	// Up left
+        // Up left
         axis.vec[0] = -Math::InvSqrtTwoInt;
         axis.vec[1] = Math::InvSqrtTwoInt;
     }
     else if (up && !down && !left && right)
     {
-    	// Up right
+        // Up right
         axis.vec[0] = Math::InvSqrtTwoInt;
         axis.vec[1] = Math::InvSqrtTwoInt;
     }
     else if (!up && down && left && !right)
     {
-    	// Down left
+        // Down left
         axis.vec[0] = -Math::InvSqrtTwoInt;
         axis.vec[1] = -Math::InvSqrtTwoInt;
     }
     else if (!up && down && !left && right)
     {
-    	// Down right
+        // Down right
         axis.vec[0] = Math::InvSqrtTwoInt;
         axis.vec[1] = -Math::InvSqrtTwoInt;
     }

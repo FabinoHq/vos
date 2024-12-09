@@ -62,7 +62,7 @@ GUICursor::~GUICursor()
 {
     m_scale = 1.0f;
     m_offset.reset();
-	m_color.reset();
+    m_color.reset();
     m_texture = 0;
 }
 

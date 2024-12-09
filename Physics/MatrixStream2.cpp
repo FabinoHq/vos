@@ -71,12 +71,12 @@ MatrixStream2::~MatrixStream2()
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixStream2::init()
 {
-	// Create matrix chunk
-	if (!m_matrix.init())
-	{
-		return false;
-	}
+    // Create matrix chunk
+    if (!m_matrix.init())
+    {
+        return false;
+    }
 
-	// Matrix stream successfully created
-	return true;
+    // Matrix stream successfully created
+    return true;
 }

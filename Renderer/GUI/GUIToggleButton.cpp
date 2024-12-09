@@ -64,7 +64,7 @@ GUIToggleButton::~GUIToggleButton()
     m_toggle = false;
     m_state = GUITOGGLEBUTTON_NONE;
     m_round = false;
-	m_color.reset();
+    m_color.reset();
     m_texture = 0;
 }
 

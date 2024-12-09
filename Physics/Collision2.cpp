@@ -60,11 +60,24 @@ length(0)
 ////////////////////////////////////////////////////////////////////////////////
 Collision2::Collision2(const Collision2& collision2)
 {
-	collide = collision2.collide;
-	position = collision2.position;
-	offset = collision2.offset;
-	normal = collision2.normal;
-	length = collision2.length;
+    collide = collision2.collide;
+    position = collision2.position;
+    offset = collision2.offset;
+    normal = collision2.normal;
+    length = collision2.length;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Collision2 position and offset constructor                                //
+////////////////////////////////////////////////////////////////////////////////
+Collision2::Collision2(const Vector2i& collisionPosition,
+    const Vector2i& collisionOffset)
+{
+    collide = false;
+    position = collisionPosition;
+    offset = collisionOffset;
+    normal.reset();
+    length = offset.squaredLength();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,11 +85,11 @@ Collision2::Collision2(const Collision2& collision2)
 ////////////////////////////////////////////////////////////////////////////////
 Collision2::~Collision2()
 {
-	length = 0;
-	normal.reset();
-	offset.reset();
-	position.reset();
-	collide = false;
+    length = 0;
+    normal.reset();
+    offset.reset();
+    position.reset();
+    collide = false;
 }
 
 
@@ -85,11 +98,24 @@ Collision2::~Collision2()
 ////////////////////////////////////////////////////////////////////////////////
 void Collision2::reset()
 {
-	collide = false;
-	position.reset();
-	offset.reset();
-	normal.reset();
-	length = 0;
+    collide = false;
+    position.reset();
+    offset.reset();
+    normal.reset();
+    length = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set collision from position and offset                                    //
+////////////////////////////////////////////////////////////////////////////////
+void Collision2::set(const Vector2i& collisionPosition,
+    const Vector2i& collisionOffset)
+{
+    collide = false;
+    position = collisionPosition;
+    offset = collisionOffset;
+    normal.reset();
+    length = offset.squaredLength();
 }
 
 
@@ -98,10 +124,10 @@ void Collision2::reset()
 ////////////////////////////////////////////////////////////////////////////////
 Collision2& Collision2::operator=(const Collision2& collision2)
 {
-	collide = collision2.collide;
-	position = collision2.position;
-	offset = collision2.offset;
-	normal = collision2.normal;
-	length = collision2.length;
-	return *this;
+    collide = collision2.collide;
+    position = collision2.position;
+    offset = collision2.offset;
+    normal = collision2.normal;
+    length = collision2.length;
+    return *this;
 }

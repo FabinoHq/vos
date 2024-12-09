@@ -66,6 +66,12 @@
             Collision2(const Collision2& collision2);
 
             ////////////////////////////////////////////////////////////////////
+            //  Collision2 position and offset constructor                    //
+            ////////////////////////////////////////////////////////////////////
+            Collision2(const Vector2i& collisionPosition,
+                const Vector2i& collisionOffset);
+
+            ////////////////////////////////////////////////////////////////////
             //  Collision2 destructor                                         //
             ////////////////////////////////////////////////////////////////////
             ~Collision2();
@@ -75,6 +81,12 @@
             //  Reset collision                                               //
             ////////////////////////////////////////////////////////////////////
             void reset();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set collision from position and offset                        //
+            ////////////////////////////////////////////////////////////////////
+            void set(const Vector2i& collisionPosition,
+                const Vector2i& collisionOffset);
 
             ////////////////////////////////////////////////////////////////////
             //  Set collision collide state                                   //

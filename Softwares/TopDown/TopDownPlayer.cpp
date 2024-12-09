@@ -160,15 +160,14 @@ void TopDownPlayer::physics()
     }
 
     // Compute top down player collisions
-    Collision2 collision;
     Vector2i offset = Vector2i(
         (m_speed.vec[0] >> PhysicsSpeedToPositionShift),
         (m_speed.vec[1] >> PhysicsSpeedToPositionShift)
     );
-    int64_t length = offset.squaredLength();
+    Collision2 collision((m_bounding.position + offset), offset);
 
     // Compute top down player matrix collisions
-    m_bounding.collideMatrix2(GMatrixStream2, offset, collision, length);
+    m_bounding.moveMatrix2(offset, collision);
 
     // Update top down player position
     m_bounding.position = collision.position;

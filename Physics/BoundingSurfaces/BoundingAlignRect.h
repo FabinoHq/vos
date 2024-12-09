@@ -232,10 +232,10 @@
                 const Vector2i& offset, Collision2& collision);
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with bounding align rect          //
+            //  Move bounding align rect against bounding align rect          //
             ////////////////////////////////////////////////////////////////////
-            bool collideAlignRect(const BoundingAlignRect& boundingAlignRect,
-                const Vector2i& offset, Collision2& collision, int64_t& length);
+            bool moveAlignRect(const BoundingAlignRect& boundingAlignRect,
+                const Vector2i& offset, Collision2& collision);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -250,28 +250,26 @@
                 const Vector2i& offset, Collision2& collision);
 
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with bounding circle              //
+            //  Move bounding align rect against bounding circle              //
             ////////////////////////////////////////////////////////////////////
-            bool collideCircle(const BoundingCircle& boundingCircle,
-                const Vector2i& offset, Collision2& collision, int64_t& length);
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with matrix chunk 2               //
-            ////////////////////////////////////////////////////////////////////
-            bool collideMatrix2(const MatrixStream2& matrixStream2);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with matrix chunk 2               //
-            ////////////////////////////////////////////////////////////////////
-            bool collideMatrix2(const MatrixStream2& matrixStream2,
+            bool moveCircle(const BoundingCircle& boundingCircle,
                 const Vector2i& offset, Collision2& collision);
 
+
             ////////////////////////////////////////////////////////////////////
-            //  Collide bounding align rect with matrix chunk 2               //
+            //  Collide bounding align rect with matrix stream 2              //
             ////////////////////////////////////////////////////////////////////
-            bool collideMatrix2(const MatrixStream2& matrixStream2,
-                const Vector2i& offset, Collision2& collision, int64_t& length);
+            bool collideMatrix2();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Collide bounding align rect with matrix stream 2              //
+            ////////////////////////////////////////////////////////////////////
+            bool collideMatrix2(const Vector2i& offset, Collision2& collision);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Move bounding align rect against matrix stream 2              //
+            ////////////////////////////////////////////////////////////////////
+            bool moveMatrix2(const Vector2i& offset, Collision2& collision);
 
 
             ////////////////////////////////////////////////////////////////////
