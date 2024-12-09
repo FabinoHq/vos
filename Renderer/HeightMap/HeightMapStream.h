@@ -37,114 +37,132 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightMapChunk.h : HeightMap chunk renderer management        //
+//     Renderer/HeightMap/HeightMapStream.h : HeightMap stream renderer       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
-#define VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
+#ifndef VOS_RENDERER_HEIGHTMAP_HEIGHTMAPSTREAM_HEADER
+#define VOS_RENDERER_HEIGHTMAP_HEIGHTMAPSTREAM_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/GraphicsLayout.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "Vulkan/TextureArray.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Math/Transform3.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
+    #include "../../Resources/Resources.h"
+    #include "../../Resources/HeightMapLoader.h"
+    #include "../../Resources/TextureLoader.h"
+
+    #include "HeightMapChunk.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapChunk settings                                               //
+    //  HeightMapStream class definition                                      //
     ////////////////////////////////////////////////////////////////////////////
-    const uint16_t HeightMapChunkWidth = 128;
-    const uint16_t HeightMapChunkHeight = 128;
-    const float HeightMapChunkPlaneWidth = 4.0f;
-    const float HeightMapChunkPlaneHeight = 4.0f;
-    const float HeightMapChunkXStride = 512.0f;
-    const float HeightMapChunkZStride = 512.0f;
-    const float HeightMapChunkTexcoordsWidth = 128.0f;
-    const float HeightMapChunkTexcoordsHeight = 128.0f;
-    const uint32_t HeightMapChunkVerticesCount =
-        ((HeightMapChunkWidth+1)*(HeightMapChunkHeight+1)*8);
-    const uint32_t HeightMapChunkIndicesCount =
-        (6*HeightMapChunkWidth*HeightMapChunkHeight);
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapChunk class definition                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    class HeightMapChunk : public Transform3
+    class HeightMapStream
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapChunk default constructor                            //
+            //  HeightMapStream default constructor                           //
             ////////////////////////////////////////////////////////////////////
-            HeightMapChunk();
+            HeightMapStream();
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapChunk virtual destructor                             //
+            //  HeightMapStream destructor                                    //
             ////////////////////////////////////////////////////////////////////
-            virtual ~HeightMapChunk();
+            ~HeightMapStream();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init heightmap chunk                                          //
-            //  return : True if the heightmap chunk is successfully created  //
+            //  Init heightmap stream                                         //
+            //  return : True if the heightmap stream is successfully created //
             ////////////////////////////////////////////////////////////////////
-            bool init(VertexBuffer& vertexBuffer, TextureArray& textureArray);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Set heightmap chunk vertex buffer                             //
+            //  Reload heightmap stream                                       //
+            //  return : True if the heightmap stream is reloading            //
             ////////////////////////////////////////////////////////////////////
-            inline void setVertexBuffer(VertexBuffer& vertexBuffer)
+            inline bool isReady()
             {
-                m_vertexBuffer = &vertexBuffer;
+                return (GResources.heightmaps.getState() ==
+                    HEIGHTMAPLOADER_STATE_IDLE);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set heightmap chunk texture array                             //
-            //  return : True if heightmap chunk texture array is set         //
+            //  Reload heightmap stream                                       //
+            //  return : True if the heightmap stream is reloading            //
             ////////////////////////////////////////////////////////////////////
-            bool setTextureArray(TextureArray& textureArray);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind heightmap chunk vertex buffer                            //
-            ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind heightmap chunk texture array                            //
-            ////////////////////////////////////////////////////////////////////
-            inline void bindTextureArray()
+            inline bool reload(int32_t chunkX, int32_t chunkY)
             {
-                m_textureArray->bind();
+                if (GResources.heightmaps.reload(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.heightmaps.getChunkX();
+                    m_chunkY = GResources.heightmaps.getChunkY();
+                    return true;
+                }
+                return false;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Render heightmap chunk                                        //
+            //  Update heightmap stream                                       //
+            //  return : True if the heightmap stream is updated              //
+            ////////////////////////////////////////////////////////////////////
+            inline bool update(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.heightmaps.update(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.heightmaps.getChunkX();
+                    m_chunkY = GResources.heightmaps.getChunkY();
+                    return true;
+                }
+                return false;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render heightmap stream                                       //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get heightmap chunk X                                         //
+            //  return : Heightmap chunk X                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkX() const
+            {
+                return m_chunkX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get heightmap chunk Y                                         //
+            //  return : Heightmap chunk Y                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkY() const
+            {
+                return m_chunkY;
+            }
+
+
         private:
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapChunk private copy constructor : Not copyable        //
+            //  HeightMapStream private copy constructor : Not copyable       //
             ////////////////////////////////////////////////////////////////////
-            HeightMapChunk(const HeightMapChunk&) = delete;
+            HeightMapStream(const HeightMapStream&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapChunk private copy operator : Not copyable           //
+            //  HeightMapStream private copy operator : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            HeightMapChunk& operator=(const HeightMapChunk&) = delete;
+            HeightMapStream& operator=(const HeightMapStream&) = delete;
 
 
         private:
-            VertexBuffer*   m_vertexBuffer;     // Heightmap chunk vertex buffer
-            TextureArray*   m_textureArray;     // Heightmap chunk texture ptr
+            HeightMapChunk      m_heightMapChunk;   // HeightMap chunk
+            int32_t             m_chunkX;           // Chunk X
+            int32_t             m_chunkY;           // Chunk Y
     };
 
 
-#endif // VOS_RENDERER_HEIGHTMAPCHUNK_HEADER
+#endif // VOS_RENDERER_HEIGHTMAP_HEIGHTMAPSTREAM_HEADER

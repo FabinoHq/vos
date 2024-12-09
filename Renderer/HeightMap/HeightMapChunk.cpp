@@ -37,48 +37,101 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/SeaFarChunk.cpp : Sea far chunk management                    //
+//     Renderer/HeightMap/HeightMapChunk.cpp : HeightMap chunk renderer       //
 ////////////////////////////////////////////////////////////////////////////////
-#include "SeaFarChunk.h"
+#include "HeightMapChunk.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  SeaFarChunk default constructor                                           //
+//  HeightMapChunk default constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
-SeaFarChunk::SeaFarChunk() :
-Transform3()
+HeightMapChunk::HeightMapChunk() :
+Transform3(),
+m_vertexBuffer(0),
+m_textureArray(0)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  SeaFarChunk virtual destructor                                            //
+//  HeightMapChunk virtual destructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-SeaFarChunk::~SeaFarChunk()
+HeightMapChunk::~HeightMapChunk()
 {
-
+    m_textureArray = 0;
+    m_vertexBuffer = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init sea far chunk                                                        //
-//  return : True if the sea far is successfully created                      //
+//  Init heightmap chunk                                                      //
+//  return : True if the heightmap chunk is successfully created              //
 ////////////////////////////////////////////////////////////////////////////////
-bool SeaFarChunk::init()
+bool HeightMapChunk::init(VertexBuffer& vertexBuffer,
+    TextureArray& textureArray)
 {
-    // Reset sea far chunk transformations
+    // Check texture array handle
+    if (!textureArray.isValid())
+    {
+        // Invalid texture array handle
+        return false;
+    }
+
+    // Set static mesh vertex buffer pointer
+    m_vertexBuffer = &vertexBuffer;
+
+    // Set heightmap chunk texture array pointer
+    m_textureArray = &textureArray;
+
+    // Reset heightmap chunk transformations
     resetTransforms();
 
-    // Sea far chunk successfully created
+    // Heightmap chunk successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render sea far chunk                                                      //
+//  Set heightmap chunk texture array                                         //
+//  return : True if heightmap chunk texture array is set                     //
 ////////////////////////////////////////////////////////////////////////////////
-void SeaFarChunk::render()
+bool HeightMapChunk::setTextureArray(TextureArray& textureArray)
 {
-    // Compute sea far chunk transformations
+    // Check texture array handle
+    if (!textureArray.isValid())
+    {
+        // Invalid texture array handle
+        return false;
+    }
+
+    // Set heightmap chunk texture array pointer
+    m_textureArray = &textureArray;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind heightmap chunk vertex buffer                                        //
+////////////////////////////////////////////////////////////////////////////////
+void HeightMapChunk::bindVertexBuffer()
+{
+    // Bind vertex buffer
+    VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
+    );
+
+    vkCmdBindIndexBuffer(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Render heightmap chunk                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void HeightMapChunk::render()
+{
+    // Compute heightmap chunk transformations
     computeTransforms();
 
     // Push model matrix into command buffer
@@ -88,112 +141,9 @@ void SeaFarChunk::render()
         PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
     );
 
-    // Draw sea far chunk triangles
+    // Draw heightmap chunk triangles
     vkCmdDrawIndexed(
         GSwapchain.commandBuffers[GSwapchain.current],
-        SeaFarChunkIndicesCount, 1, 0, 0, 0
+        (m_vertexBuffer->indexCount), 1, 0, 0, 0
     );
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Generate sea far chunk                                                    //
-//  return : True if the sea far chunk is generated                           //
-////////////////////////////////////////////////////////////////////////////////
-bool SeaFarChunk::generateSeaFarChunk(VertexBuffer& vertexBuffer)
-{
-    // Allocate sea far vertices
-    float* vertices = new(std::nothrow) float[SeaFarChunkVerticesCount];
-    if (!vertices)
-    {
-        // Could not allocate sea far vertices
-        return false;
-    }
-
-    // Allocate sea far indices
-    uint16_t* indices = new(std::nothrow) uint16_t[SeaFarChunkIndicesCount];
-    if (!indices)
-    {
-        // Could not allocate sea far indices
-        if (vertices) { delete[] vertices; }
-        return false;
-    }
-
-    // Generate vertices data
-    float texCoordIncX = SeaFarChunkTexcoordsWidth /
-        (SeaFarChunkWidth * 1.0f);
-    float texCoordIncY = SeaFarChunkTexcoordsHeight /
-        (SeaFarChunkHeight * 1.0f);
-    float vertX = 0.0f;
-    float vertZ = 0.0f;
-    float texCoordX = 0.0f;
-    float texCoordY = 0.0f;
-    uint32_t vIndex = 0;
-    uint32_t iIndex = 0;
-    uint16_t iOffset = 0;
-
-    // Flat sea far chunk
-    for (uint32_t j = 0; j <= SeaFarChunkHeight; ++j)
-    {
-        vertX = 0.0f;
-        texCoordX = 0.0f;
-
-        for (uint32_t i = 0; i <= SeaFarChunkWidth; ++i)
-        {
-            // Set flat sea chunk
-            vertices[vIndex+0] = vertX;
-            vertices[vIndex+1] = 0.0f;
-            vertices[vIndex+2] = vertZ;
-
-            vertices[vIndex+3] = texCoordX;
-            vertices[vIndex+4] = texCoordY;
-
-            vertices[vIndex+5] = 0.0f;
-            vertices[vIndex+6] = 1.0f;
-            vertices[vIndex+7] = 0.0f;
-
-            vIndex += 8;
-            vertX += SeaFarChunkPlaneWidth;
-            texCoordX += texCoordIncX;
-        }
-
-        vertZ += SeaFarChunkPlaneHeight;
-        texCoordY += texCoordIncY;
-    }
-
-    // Generate indices data
-    for (uint32_t j = 0; j < SeaFarChunkHeight; ++j)
-    {
-        for (uint32_t i = 0; i < SeaFarChunkWidth; ++i)
-        {
-            indices[iIndex+0] = iOffset+(SeaFarChunkWidth+1);
-            indices[iIndex+1] = iOffset+(SeaFarChunkWidth+2);
-            indices[iIndex+2] = iOffset+1;
-            indices[iIndex+3] = iOffset+1;
-            indices[iIndex+4] = iOffset;
-            indices[iIndex+5] = iOffset+(SeaFarChunkWidth+1);
-
-            iIndex += 6;
-            ++iOffset;
-        }
-        ++iOffset;
-    }
-
-    // Create vertex buffer
-    if (!vertexBuffer.createMeshBuffer(VULKAN_MEMORY_MESHES,
-        vertices, indices,
-        SeaFarChunkVerticesCount, SeaFarChunkIndicesCount))
-    {
-        // Could not create vertex buffer
-        if (indices) { delete[] indices; }
-        if (vertices) { delete[] vertices; }
-        return false;
-    }
-
-    // Delete indices and vertices data
-    if (indices) { delete[] indices; }
-    if (vertices) { delete[] vertices; }
-
-    // Sea far chunk successfully generated
-    return true;
 }

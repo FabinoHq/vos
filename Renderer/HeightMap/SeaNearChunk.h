@@ -37,132 +37,92 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightMapStream.h : HeightMap stream renderer management      //
+//     Renderer/HeightMap/SeaNearChunk.h : Sea near chunk                     //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_HEIGHTMAPSTREAM_HEADER
-#define VOS_RENDERER_HEIGHTMAPSTREAM_HEADER
+#ifndef VOS_RENDERER_HEIGHTMAP_SEANEARCHUNK_HEADER
+#define VOS_RENDERER_HEIGHTMAP_SEANEARCHUNK_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Math/Transform3.h"
-    #include "../Resources/Resources.h"
-    #include "../Resources/HeightMapLoader.h"
-    #include "../Resources/TextureLoader.h"
-
-    #include "HeightMapChunk.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightMapStream class definition                                      //
+    //  SeaNearChunk settings                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    class HeightMapStream
+    const uint16_t SeaNearChunkWidth = 64;
+    const uint16_t SeaNearChunkHeight = 64;
+    const float SeaNearChunkPlaneWidth = 8.0f;
+    const float SeaNearChunkPlaneHeight = 8.0f;
+    const float SeaNearChunkXStride = 512.0f;
+    const float SeaNearChunkZStride = 512.0f;
+    const float SeaNearChunkTexcoordsWidth = 128.0f;
+    const float SeaNearChunkTexcoordsHeight = 128.0f;
+    const uint32_t SeaNearChunkVerticesCount =
+        ((SeaNearChunkWidth+1)*(SeaNearChunkHeight+1)*8);
+    const uint32_t SeaNearChunkIndicesCount =
+        (6*SeaNearChunkWidth*SeaNearChunkHeight);
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SeaNearChunk class definition                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    class SeaNearChunk : public Transform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapStream default constructor                           //
+            //  SeaNearChunk default constructor                              //
             ////////////////////////////////////////////////////////////////////
-            HeightMapStream();
+            SeaNearChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapStream destructor                                    //
+            //  SeaNearChunk virtual destructor                               //
             ////////////////////////////////////////////////////////////////////
-            ~HeightMapStream();
+            virtual ~SeaNearChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init heightmap stream                                         //
-            //  return : True if the heightmap stream is successfully created //
+            //  Init sea near chunk                                           //
+            //  return : True if the sea near chunk is successfully created   //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Reload heightmap stream                                       //
-            //  return : True if the heightmap stream is reloading            //
-            ////////////////////////////////////////////////////////////////////
-            inline bool isReady()
-            {
-                return (GResources.heightmaps.getState() ==
-                    HEIGHTMAPLOADER_STATE_IDLE);
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Reload heightmap stream                                       //
-            //  return : True if the heightmap stream is reloading            //
-            ////////////////////////////////////////////////////////////////////
-            inline bool reload(int32_t chunkX, int32_t chunkY)
-            {
-                if (GResources.heightmaps.reload(chunkX, chunkY))
-                {
-                    m_chunkX = GResources.heightmaps.getChunkX();
-                    m_chunkY = GResources.heightmaps.getChunkY();
-                    return true;
-                }
-                return false;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Update heightmap stream                                       //
-            //  return : True if the heightmap stream is updated              //
-            ////////////////////////////////////////////////////////////////////
-            inline bool update(int32_t chunkX, int32_t chunkY)
-            {
-                if (GResources.heightmaps.update(chunkX, chunkY))
-                {
-                    m_chunkX = GResources.heightmaps.getChunkX();
-                    m_chunkY = GResources.heightmaps.getChunkY();
-                    return true;
-                }
-                return false;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Render heightmap stream                                       //
+            //  Render sea near chunk                                         //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
+        public:
             ////////////////////////////////////////////////////////////////////
-            //  Get heightmap chunk X                                         //
-            //  return : Heightmap chunk X                                    //
+            //  Generate sea near chunk                                       //
+            //  return : True if the sea near chunk is generated              //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getChunkX() const
-            {
-                return m_chunkX;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get heightmap chunk Y                                         //
-            //  return : Heightmap chunk Y                                    //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t getChunkY() const
-            {
-                return m_chunkY;
-            }
+            static bool generateSeaNearChunk(VertexBuffer& vertexBuffer);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapStream private copy constructor : Not copyable       //
+            //  SeaNearChunk private copy constructor : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            HeightMapStream(const HeightMapStream&) = delete;
+            SeaNearChunk(const SeaNearChunk&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightMapStream private copy operator : Not copyable          //
+            //  SeaNearChunk private copy operator : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            HeightMapStream& operator=(const HeightMapStream&) = delete;
+            SeaNearChunk& operator=(const SeaNearChunk&) = delete;
 
 
         private:
-            HeightMapChunk      m_heightMapChunk;   // HeightMap chunk
-            int32_t             m_chunkX;           // Chunk X
-            int32_t             m_chunkY;           // Chunk Y
     };
 
 
-#endif // VOS_RENDERER_HEIGHTMAPSTREAM_HEADER
+#endif // VOS_RENDERER_HEIGHTMAP_SEANEARCHUNK_HEADER

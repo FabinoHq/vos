@@ -50,8 +50,8 @@
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
-    #include "../Renderer/SeaNearChunk.h"
-    #include "../Renderer/SeaFarChunk.h"
+    #include "../Renderer/HeightMap/SeaNearChunk.h"
+    #include "../Renderer/HeightMap/SeaFarChunk.h"
 
     #include <fstream>
     #include <cstdint>

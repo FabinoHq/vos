@@ -37,114 +37,92 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightFarChunk.h : HeightFar chunk renderer management        //
+//     Renderer/HeightMap/SeaFarChunk.h : Sea far chunk                       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_HEIGHTFARCHUNK_HEADER
-#define VOS_RENDERER_HEIGHTFARCHUNK_HEADER
+#ifndef VOS_RENDERER_HEIGHTMAP_SEAFARCHUNK_HEADER
+#define VOS_RENDERER_HEIGHTMAP_SEAFARCHUNK_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/GraphicsLayout.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "Vulkan/TextureArray.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Math/Transform3.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightFarChunk settings                                               //
+    //  SeaFarChunk settings                                                  //
     ////////////////////////////////////////////////////////////////////////////
-    const uint16_t HeightFarChunkWidth = 128;
-    const uint16_t HeightFarChunkHeight = 128;
-    const float HeightFarChunkPlaneWidth = 64.0f;
-    const float HeightFarChunkPlaneHeight = 64.0f;
-    const float HeightFarChunkXStride = 8192.0f;
-    const float HeightFarChunkZStride = 8192.0f;
-    const float HeightFarChunkTexcoordsWidth = 128.0f;
-    const float HeightFarChunkTexcoordsHeight = 128.0f;
-    const uint32_t HeightFarChunkVerticesCount =
-        ((HeightFarChunkWidth+1)*(HeightFarChunkHeight+1)*8);
-    const uint32_t HeightFarChunkIndicesCount =
-        (6*HeightFarChunkWidth*HeightFarChunkHeight);
+    const uint16_t SeaFarChunkWidth = 64;
+    const uint16_t SeaFarChunkHeight = 64;
+    const float SeaFarChunkPlaneWidth = 128.0f;
+    const float SeaFarChunkPlaneHeight = 128.0f;
+    const float SeaFarChunkXStride = 8192.0f;
+    const float SeaFarChunkZStride = 8192.0f;
+    const float SeaFarChunkTexcoordsWidth = 128.0f;
+    const float SeaFarChunkTexcoordsHeight = 128.0f;
+    const uint32_t SeaFarChunkVerticesCount =
+        ((SeaFarChunkWidth+1)*(SeaFarChunkHeight+1)*8);
+    const uint32_t SeaFarChunkIndicesCount =
+        (6*SeaFarChunkWidth*SeaFarChunkHeight);
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightFarChunk class definition                                       //
+    //  SeaFarChunk class definition                                          //
     ////////////////////////////////////////////////////////////////////////////
-    class HeightFarChunk : public Transform3
+    class SeaFarChunk : public Transform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarChunk default constructor                            //
+            //  SeaFarChunk default constructor                               //
             ////////////////////////////////////////////////////////////////////
-            HeightFarChunk();
+            SeaFarChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarChunk virtual destructor                             //
+            //  SeaFarChunk virtual destructor                                //
             ////////////////////////////////////////////////////////////////////
-            virtual ~HeightFarChunk();
+            virtual ~SeaFarChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init heightfar chunk                                          //
-            //  return : True if the heightfar chunk is successfully created  //
+            //  Init sea far chunk                                            //
+            //  return : True if the sea far chunk is successfully created    //
             ////////////////////////////////////////////////////////////////////
-            bool init(VertexBuffer& vertexBuffer, TextureArray& textureArray);
+            bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Set heightfar chunk vertex buffer                             //
-            ////////////////////////////////////////////////////////////////////
-            inline void setVertexBuffer(VertexBuffer& vertexBuffer)
-            {
-                m_vertexBuffer = &vertexBuffer;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set heightfar chunk texture array                             //
-            //  return : True if heightfar chunk texture array is set         //
-            ////////////////////////////////////////////////////////////////////
-            bool setTextureArray(TextureArray& textureArray);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind heightfar chunk vertex buffer                            //
-            ////////////////////////////////////////////////////////////////////
-            void bindVertexBuffer();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Bind heightfar chunk texture array                            //
-            ////////////////////////////////////////////////////////////////////
-            inline void bindTextureArray()
-            {
-                m_textureArray->bind();
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Render heightfar chunk                                        //
+            //  Render sea far chunk                                          //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
-        private:
+        public:
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarChunk private copy constructor : Not copyable        //
+            //  Generate sea far chunk                                        //
+            //  return : True if the sea far chunk is generated               //
             ////////////////////////////////////////////////////////////////////
-            HeightFarChunk(const HeightFarChunk&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  HeightFarChunk private copy operator : Not copyable           //
-            ////////////////////////////////////////////////////////////////////
-            HeightFarChunk& operator=(const HeightFarChunk&) = delete;
+            static bool generateSeaFarChunk(VertexBuffer& vertexBuffer);
 
 
         private:
-            VertexBuffer*   m_vertexBuffer;     // Heightfar chunk vertex buffer
-            TextureArray*   m_textureArray;     // Heightfar chunk texture ptr
+            ////////////////////////////////////////////////////////////////////
+            //  SeaFarChunk private copy constructor : Not copyable           //
+            ////////////////////////////////////////////////////////////////////
+            SeaFarChunk(const SeaFarChunk&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  SeaFarChunk private copy operator : Not copyable              //
+            ////////////////////////////////////////////////////////////////////
+            SeaFarChunk& operator=(const SeaFarChunk&) = delete;
+
+
+        private:
     };
 
 
-#endif // VOS_RENDERER_HEIGHTFARCHUNK_HEADER
+#endif // VOS_RENDERER_HEIGHTMAP_SEAFARCHUNK_HEADER

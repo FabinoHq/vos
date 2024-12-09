@@ -37,21 +37,21 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightFarStream.h : HeightFar stream renderer management      //
+//     Renderer/HeightMap/HeightFarStream.h : HeightFar stream renderer       //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_HEIGHTFARSTREAM_HEADER
-#define VOS_RENDERER_HEIGHTFARSTREAM_HEADER
+#ifndef VOS_RENDERER_HEIGHTMAP_HEIGHTFARSTREAM_HEADER
+#define VOS_RENDERER_HEIGHTMAP_HEIGHTFARSTREAM_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Math/Transform3.h"
-    #include "../Resources/Resources.h"
-    #include "../Resources/HeightFarLoader.h"
-    #include "../Resources/TextureLoader.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
+    #include "../../Resources/Resources.h"
+    #include "../../Resources/HeightFarLoader.h"
+    #include "../../Resources/TextureLoader.h"
 
     #include "HeightFarChunk.h"
 
@@ -165,4 +165,4 @@
     };
 
 
-#endif // VOS_RENDERER_HEIGHTFARSTREAM_HEADER
+#endif // VOS_RENDERER_HEIGHTMAP_HEIGHTFARSTREAM_HEADER

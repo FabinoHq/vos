@@ -37,76 +37,67 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightFarStream.cpp : HeightFar stream renderer management    //
+//     Renderer/HeightMap/SeaNearStream.cpp : SeaNear stream                  //
 ////////////////////////////////////////////////////////////////////////////////
-#include "HeightFarStream.h"
+#include "SeaNearStream.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  HeightFarStream default constructor                                       //
+//  SeaNearStream default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-HeightFarStream::HeightFarStream() :
-m_heightFarChunk(),
-m_chunkX(0),
-m_chunkY(0)
+SeaNearStream::SeaNearStream() :
+m_seaNearChunk()
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  HeightFarStream destructor                                                //
+//  SeaNearStream destructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-HeightFarStream::~HeightFarStream()
+SeaNearStream::~SeaNearStream()
 {
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init heightfar stream                                                     //
-//  return : True if the heightfar stream is successfully created             //
+//  Init sea near stream                                                      //
+//  return : True if the sea near stream is successfully created              //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightFarStream::init()
+bool SeaNearStream::init()
 {
-    // Init heightfar chunk
-    if (!m_heightFarChunk.init(
-        GResources.heightfars.heightfar(0),
-        GResources.textures.array(TEXTURE_ARRAY1)))
+    // Init sea near chunk
+    if (!m_seaNearChunk.init())
     {
-        // Could not init heightfar chunk
+        // Could not init sea near chunk
         return false;
     }
 
-    // Heightfar stream successfully created
+    // Sea near stream successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render heightfar stream                                                   //
+//  Render sea near stream                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-void HeightFarStream::render()
+void SeaNearStream::render(int32_t chunkX, int32_t chunkY)
 {
-    // Synchronize heightfar stream with renderer
-    GResources.heightfars.sync();
-
-    // Render heightfar chunks
-    m_heightFarChunk.bindTextureArray();
-    for (int i = 1; i < HEIGHTFAR_STREAMWIDTH-1; ++i)
+    for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)
     {
-        for (int j = 1; j < HEIGHTFAR_STREAMHEIGHT-1; ++j)
+        for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
         {
-            m_heightFarChunk.setVertexBuffer(
-                GResources.heightfars.heightfar((j*HEIGHTFAR_STREAMWIDTH)+i)
-            );
-            m_heightFarChunk.setPosition(
-                -(HEIGHTFAR_STREAMHALFWIDTH*HeightFarChunkXStride)+
-                (m_chunkX*HeightFarChunkXStride)+(i*HeightFarChunkXStride),
-                0.0f,
-                -(HEIGHTFAR_STREAMHALFHEIGHT*HeightFarChunkZStride)+
-                (m_chunkY*HeightFarChunkXStride)+(j*HeightFarChunkZStride)
-            );
-            m_heightFarChunk.bindVertexBuffer();
-            m_heightFarChunk.render();
+            if (GResources.heightmaps.getFlags(
+                (j*HEIGHTMAP_STREAMWIDTH)+i) & HEIGHTMAP_FLAGS_RENDERSEA)
+            {
+                m_seaNearChunk.setPosition(
+                    -(HEIGHTMAP_STREAMHALFWIDTH*SeaNearChunkXStride)+
+                    (chunkX*SeaNearChunkXStride)+(i*SeaNearChunkXStride),
+                    0.0f,
+                    -(HEIGHTMAP_STREAMHALFHEIGHT*SeaNearChunkZStride)+
+                    (chunkY*SeaNearChunkXStride)+(j*SeaNearChunkZStride)
+                );
+                m_seaNearChunk.render();
+            }
         }
     }
 }

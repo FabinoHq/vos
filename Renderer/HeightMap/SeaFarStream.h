@@ -37,76 +37,70 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightMapStream.cpp : HeightMap stream renderer management    //
+//     Renderer/HeightMap/SeaFarStream.h : SeaFar stream                      //
 ////////////////////////////////////////////////////////////////////////////////
-#include "HeightMapStream.h"
+#ifndef VOS_RENDERER_HEIGHTMAP_SEAFARSTREAM_HEADER
+#define VOS_RENDERER_HEIGHTMAP_SEAFARSTREAM_HEADER
+
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
+    #include "../../Resources/Resources.h"
+
+    #include "SeaFarChunk.h"
+    #include "HeightFarStream.h"
+
+    #include <cstdint>
 
 
-////////////////////////////////////////////////////////////////////////////////
-//  HeightMapStream default constructor                                       //
-////////////////////////////////////////////////////////////////////////////////
-HeightMapStream::HeightMapStream() :
-m_heightMapChunk(),
-m_chunkX(0),
-m_chunkY(0)
-{
-
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  HeightMapStream destructor                                                //
-////////////////////////////////////////////////////////////////////////////////
-HeightMapStream::~HeightMapStream()
-{
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Init heightmap stream                                                     //
-//  return : True if the heightmap stream is successfully created             //
-////////////////////////////////////////////////////////////////////////////////
-bool HeightMapStream::init()
-{
-    // Init heightmap chunk
-    if (!m_heightMapChunk.init(
-        GResources.heightmaps.heightmap(0),
-        GResources.textures.array(TEXTURE_ARRAY1)))
+    ////////////////////////////////////////////////////////////////////////////
+    //  SeaFarStream class definition                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    class SeaFarStream
     {
-        // Could not init heightmap chunk
-        return false;
-    }
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  SeaFarStream default constructor                              //
+            ////////////////////////////////////////////////////////////////////
+            SeaFarStream();
 
-    // Heightmap stream successfully created
-    return true;
-}
+            ////////////////////////////////////////////////////////////////////
+            //  SeaFarStream destructor                                       //
+            ////////////////////////////////////////////////////////////////////
+            ~SeaFarStream();
 
-////////////////////////////////////////////////////////////////////////////////
-//  Render heightmap stream                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapStream::render()
-{
-    // Synchronize heightmap stream with renderer
-    GResources.heightmaps.sync();
 
-    // Render heightmap chunks
-    m_heightMapChunk.bindTextureArray();
-    for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)
-    {
-        for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
-        {
-            m_heightMapChunk.setVertexBuffer(
-                GResources.heightmaps.heightmap((j*HEIGHTMAP_STREAMWIDTH)+i)
-            );
-            m_heightMapChunk.setPosition(
-                -(HEIGHTMAP_STREAMHALFWIDTH*HeightMapChunkXStride)+
-                (m_chunkX*HeightMapChunkXStride)+(i*HeightMapChunkXStride),
-                0.0f,
-                -(HEIGHTMAP_STREAMHALFHEIGHT*HeightMapChunkZStride)+
-                (m_chunkY*HeightMapChunkXStride)+(j*HeightMapChunkZStride)
-            );
-            m_heightMapChunk.bindVertexBuffer();
-            m_heightMapChunk.render();
-        }
-    }
-}
+            ////////////////////////////////////////////////////////////////////
+            //  Init sea far stream                                           //
+            //  return : True if the sea far stream is successfully created   //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render sea far stream                                         //
+            ////////////////////////////////////////////////////////////////////
+            void render(int32_t chunkX, int32_t chunkY);
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  SeaFarStream private copy constructor : Not copyable          //
+            ////////////////////////////////////////////////////////////////////
+            SeaFarStream(const SeaFarStream&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  SeaFarStream private copy operator : Not copyable             //
+            ////////////////////////////////////////////////////////////////////
+            SeaFarStream& operator=(const SeaFarStream&) = delete;
+
+
+        private:
+            SeaFarChunk         m_seaFarChunk;      // SeaFar chunk
+    };
+
+
+#endif // VOS_RENDERER_HEIGHTMAP_SEAFARSTREAM_HEADER

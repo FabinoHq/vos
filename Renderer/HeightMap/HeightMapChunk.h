@@ -37,92 +37,114 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/SeaNearChunk.h : Sea near chunk management                    //
+//     Renderer/HeightMap/HeightMapChunk.h : HeightMap chunk renderer         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SEANEARCHUNK_HEADER
-#define VOS_RENDERER_SEANEARCHUNK_HEADER
+#ifndef VOS_RENDERER_HEIGHTMAP_HEIGHTMAPCHUNK_HEADER
+#define VOS_RENDERER_HEIGHTMAP_HEIGHTMAPCHUNK_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/Swapchain.h"
-    #include "Vulkan/GraphicsLayout.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Math/Transform3.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../Vulkan/TextureArray.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SeaNearChunk settings                                                 //
+    //  HeightMapChunk settings                                               //
     ////////////////////////////////////////////////////////////////////////////
-    const uint16_t SeaNearChunkWidth = 64;
-    const uint16_t SeaNearChunkHeight = 64;
-    const float SeaNearChunkPlaneWidth = 8.0f;
-    const float SeaNearChunkPlaneHeight = 8.0f;
-    const float SeaNearChunkXStride = 512.0f;
-    const float SeaNearChunkZStride = 512.0f;
-    const float SeaNearChunkTexcoordsWidth = 128.0f;
-    const float SeaNearChunkTexcoordsHeight = 128.0f;
-    const uint32_t SeaNearChunkVerticesCount =
-        ((SeaNearChunkWidth+1)*(SeaNearChunkHeight+1)*8);
-    const uint32_t SeaNearChunkIndicesCount =
-        (6*SeaNearChunkWidth*SeaNearChunkHeight);
+    const uint16_t HeightMapChunkWidth = 128;
+    const uint16_t HeightMapChunkHeight = 128;
+    const float HeightMapChunkPlaneWidth = 4.0f;
+    const float HeightMapChunkPlaneHeight = 4.0f;
+    const float HeightMapChunkXStride = 512.0f;
+    const float HeightMapChunkZStride = 512.0f;
+    const float HeightMapChunkTexcoordsWidth = 128.0f;
+    const float HeightMapChunkTexcoordsHeight = 128.0f;
+    const uint32_t HeightMapChunkVerticesCount =
+        ((HeightMapChunkWidth+1)*(HeightMapChunkHeight+1)*8);
+    const uint32_t HeightMapChunkIndicesCount =
+        (6*HeightMapChunkWidth*HeightMapChunkHeight);
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SeaNearChunk class definition                                         //
+    //  HeightMapChunk class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class SeaNearChunk : public Transform3
+    class HeightMapChunk : public Transform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearChunk default constructor                              //
+            //  HeightMapChunk default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            SeaNearChunk();
+            HeightMapChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearChunk virtual destructor                               //
+            //  HeightMapChunk virtual destructor                             //
             ////////////////////////////////////////////////////////////////////
-            virtual ~SeaNearChunk();
+            virtual ~HeightMapChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init sea near chunk                                           //
-            //  return : True if the sea near chunk is successfully created   //
+            //  Init heightmap chunk                                          //
+            //  return : True if the heightmap chunk is successfully created  //
             ////////////////////////////////////////////////////////////////////
-            bool init();
+            bool init(VertexBuffer& vertexBuffer, TextureArray& textureArray);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render sea near chunk                                         //
+            //  Set heightmap chunk vertex buffer                             //
+            ////////////////////////////////////////////////////////////////////
+            inline void setVertexBuffer(VertexBuffer& vertexBuffer)
+            {
+                m_vertexBuffer = &vertexBuffer;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set heightmap chunk texture array                             //
+            //  return : True if heightmap chunk texture array is set         //
+            ////////////////////////////////////////////////////////////////////
+            bool setTextureArray(TextureArray& textureArray);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind heightmap chunk vertex buffer                            //
+            ////////////////////////////////////////////////////////////////////
+            void bindVertexBuffer();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind heightmap chunk texture array                            //
+            ////////////////////////////////////////////////////////////////////
+            inline void bindTextureArray()
+            {
+                m_textureArray->bind();
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render heightmap chunk                                        //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
-        public:
+        private:
             ////////////////////////////////////////////////////////////////////
-            //  Generate sea near chunk                                       //
-            //  return : True if the sea near chunk is generated              //
+            //  HeightMapChunk private copy constructor : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            static bool generateSeaNearChunk(VertexBuffer& vertexBuffer);
+            HeightMapChunk(const HeightMapChunk&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  HeightMapChunk private copy operator : Not copyable           //
+            ////////////////////////////////////////////////////////////////////
+            HeightMapChunk& operator=(const HeightMapChunk&) = delete;
 
 
         private:
-            ////////////////////////////////////////////////////////////////////
-            //  SeaNearChunk private copy constructor : Not copyable          //
-            ////////////////////////////////////////////////////////////////////
-            SeaNearChunk(const SeaNearChunk&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  SeaNearChunk private copy operator : Not copyable             //
-            ////////////////////////////////////////////////////////////////////
-            SeaNearChunk& operator=(const SeaNearChunk&) = delete;
-
-
-        private:
+            VertexBuffer*   m_vertexBuffer;     // Heightmap chunk vertex buffer
+            TextureArray*   m_textureArray;     // Heightmap chunk texture ptr
     };
 
 
-#endif // VOS_RENDERER_SEANEARCHUNK_HEADER
+#endif // VOS_RENDERER_HEIGHTMAP_HEIGHTMAPCHUNK_HEADER

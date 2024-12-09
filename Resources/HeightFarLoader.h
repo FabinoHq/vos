@@ -58,7 +58,7 @@
     #include <cstdint>
     #include <new>
 
-    #include "../Renderer/HeightFarChunk.h"
+    #include "../Renderer/HeightMap/HeightFarChunk.h"
 
 
     ////////////////////////////////////////////////////////////////////////////

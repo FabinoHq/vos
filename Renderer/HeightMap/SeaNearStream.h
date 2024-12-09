@@ -37,67 +37,70 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/SeaFarStream.cpp : SeaFar stream management                   //
+//     Renderer/HeightMap/SeaNearStream.h : SeaNear stream                    //
 ////////////////////////////////////////////////////////////////////////////////
-#include "SeaFarStream.h"
+#ifndef VOS_RENDERER_HEIGHTMAP_SEANEARSTREAM_HEADER
+#define VOS_RENDERER_HEIGHTMAP_SEANEARSTREAM_HEADER
+
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
+    #include "../../Resources/Resources.h"
+
+    #include "SeaNearChunk.h"
+    #include "HeightMapStream.h"
+
+    #include <cstdint>
 
 
-////////////////////////////////////////////////////////////////////////////////
-//  SeaFarStream default constructor                                          //
-////////////////////////////////////////////////////////////////////////////////
-SeaFarStream::SeaFarStream() :
-m_seaFarChunk()
-{
-
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  SeaFarStream destructor                                                   //
-////////////////////////////////////////////////////////////////////////////////
-SeaFarStream::~SeaFarStream()
-{
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Init sea far stream                                                       //
-//  return : True if the sea far stream is successfully created               //
-////////////////////////////////////////////////////////////////////////////////
-bool SeaFarStream::init()
-{
-    // Init sea far chunk
-    if (!m_seaFarChunk.init())
+    ////////////////////////////////////////////////////////////////////////////
+    //  SeaNearStream class definition                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    class SeaNearStream
     {
-        // Could not init sea far chunk
-        return false;
-    }
+        public:
+            ////////////////////////////////////////////////////////////////////
+            //  SeaNearStream default constructor                             //
+            ////////////////////////////////////////////////////////////////////
+            SeaNearStream();
 
-    // Sea far stream successfully created
-    return true;
-}
+            ////////////////////////////////////////////////////////////////////
+            //  SeaNearStream destructor                                      //
+            ////////////////////////////////////////////////////////////////////
+            ~SeaNearStream();
 
-////////////////////////////////////////////////////////////////////////////////
-//  Render sea far stream                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void SeaFarStream::render(int32_t chunkX, int32_t chunkY)
-{
-    for (int i = 1; i < HEIGHTFAR_STREAMWIDTH-1; ++i)
-    {
-        for (int j = 1; j < HEIGHTFAR_STREAMHEIGHT-1; ++j)
-        {
-            if (GResources.heightfars.getFlags(
-                (j*HEIGHTFAR_STREAMWIDTH)+i) & HEIGHTFAR_FLAGS_RENDERSEA)
-            {
-                m_seaFarChunk.setPosition(
-                    -(HEIGHTFAR_STREAMHALFWIDTH*SeaFarChunkXStride)+
-                    (chunkX*SeaFarChunkXStride)+(i*SeaFarChunkXStride),
-                    0.0f,
-                    -(HEIGHTFAR_STREAMHALFHEIGHT*SeaFarChunkZStride)+
-                    (chunkY*SeaFarChunkXStride)+(j*SeaFarChunkZStride)
-                );
-                m_seaFarChunk.render();
-            }
-        }
-    }
-}
+
+            ////////////////////////////////////////////////////////////////////
+            //  Init sea near stream                                          //
+            //  return : True if the sea near stream is successfully created  //
+            ////////////////////////////////////////////////////////////////////
+            bool init();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render sea near stream                                        //
+            ////////////////////////////////////////////////////////////////////
+            void render(int32_t chunkX, int32_t chunkY);
+
+
+        private:
+            ////////////////////////////////////////////////////////////////////
+            //  SeaNearStream private copy constructor : Not copyable         //
+            ////////////////////////////////////////////////////////////////////
+            SeaNearStream(const SeaNearStream&) = delete;
+
+            ////////////////////////////////////////////////////////////////////
+            //  SeaNearStream private copy operator : Not copyable            //
+            ////////////////////////////////////////////////////////////////////
+            SeaNearStream& operator=(const SeaNearStream&) = delete;
+
+
+        private:
+            SeaNearChunk        m_seaNearChunk;     // SeaNear chunk
+    };
+
+
+#endif // VOS_RENDERER_HEIGHTMAP_SEANEARSTREAM_HEADER

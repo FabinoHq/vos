@@ -58,6 +58,9 @@
     <Filter Include="Physics\BoundingSurfaces">
       <UniqueIdentifier>{6e7a4329-88c4-4a38-8f22-af62ce15fbc3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\HeightMap">
+      <UniqueIdentifier>{133a93f0-a84a-42de-86e7-a0fbe5dbf6aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -134,9 +137,6 @@
     <ClCompile Include="Renderer\StaticMesh.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\HeightMapChunk.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\GUI\GUIPxText.cpp">
       <Filter>Renderer\GUI</Filter>
     </ClCompile>
@@ -206,9 +206,6 @@
     <ClCompile Include="Renderer\Vulkan\Texture.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\HeightMapStream.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Vulkan\TextureArray.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
@@ -230,12 +227,6 @@
     <ClCompile Include="Resources\HeightFarLoader.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\HeightFarChunk.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\HeightFarStream.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Vulkan\ComputeLayout.cpp">
       <Filter>Renderer\Vulkan</Filter>
     </ClCompile>
@@ -246,18 +237,6 @@
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\SkyProc.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\SeaNearChunk.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\SeaNearStream.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\SeaFarChunk.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\SeaFarStream.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\Plane.cpp">
@@ -310,6 +289,30 @@
     </ClCompile>
     <ClCompile Include="Physics\MatrixStream2.cpp">
       <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\HeightMap\HeightFarChunk.cpp">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\HeightMap\HeightFarStream.cpp">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\HeightMap\HeightMapChunk.cpp">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\HeightMap\HeightMapStream.cpp">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\HeightMap\SeaFarChunk.cpp">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\HeightMap\SeaFarStream.cpp">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\HeightMap\SeaNearChunk.cpp">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\HeightMap\SeaNearStream.cpp">
+      <Filter>Renderer\HeightMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -439,9 +442,6 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\StaticMesh.h">
       <Filter>Renderer\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\HeightMapChunk.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Math\Transform2.h">
       <Filter>Math</Filter>
@@ -575,9 +575,6 @@
     <ClInclude Include="Renderer\Vulkan\Texture.h">
       <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\HeightMapStream.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Vulkan\TextureArray.h">
       <Filter>Renderer\Vulkan</Filter>
     </ClInclude>
@@ -599,12 +596,6 @@
     <ClInclude Include="Resources\HeightFarLoader.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\HeightFarChunk.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\HeightFarStream.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Shaders\HeightFar.h">
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
@@ -623,9 +614,6 @@
     <ClInclude Include="Renderer\Shaders\SkyProc.h">
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\SeaNearChunk.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Shaders\SeaNear.h">
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
@@ -634,15 +622,6 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\SkyBox.h">
       <Filter>Renderer\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\SeaNearStream.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\SeaFarChunk.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\SeaFarStream.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\SeaFar.h">
       <Filter>Renderer\Shaders</Filter>
@@ -718,6 +697,30 @@
     </ClInclude>
     <ClInclude Include="Physics\MatrixStream2.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMap\HeightFarChunk.h">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMap\HeightFarStream.h">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMap\HeightMapChunk.h">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMap\HeightMapStream.h">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMap\SeaFarChunk.h">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMap\SeaFarStream.h">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMap\SeaNearChunk.h">
+      <Filter>Renderer\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\HeightMap\SeaNearStream.h">
+      <Filter>Renderer\HeightMap</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

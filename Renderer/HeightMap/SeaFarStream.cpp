@@ -37,70 +37,67 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/SeaFarStream.h : SeaFar stream management                     //
+//     Renderer/HeightMap/SeaFarStream.cpp : SeaFar stream                    //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SEAFARSTREAM_HEADER
-#define VOS_RENDERER_SEAFARSTREAM_HEADER
-
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Math/Transform3.h"
-    #include "../Resources/Resources.h"
-
-    #include "SeaFarChunk.h"
-    #include "HeightFarStream.h"
-
-    #include <cstdint>
+#include "SeaFarStream.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  SeaFarStream class definition                                         //
-    ////////////////////////////////////////////////////////////////////////////
-    class SeaFarStream
+////////////////////////////////////////////////////////////////////////////////
+//  SeaFarStream default constructor                                          //
+////////////////////////////////////////////////////////////////////////////////
+SeaFarStream::SeaFarStream() :
+m_seaFarChunk()
+{
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  SeaFarStream destructor                                                   //
+////////////////////////////////////////////////////////////////////////////////
+SeaFarStream::~SeaFarStream()
+{
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Init sea far stream                                                       //
+//  return : True if the sea far stream is successfully created               //
+////////////////////////////////////////////////////////////////////////////////
+bool SeaFarStream::init()
+{
+    // Init sea far chunk
+    if (!m_seaFarChunk.init())
     {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  SeaFarStream default constructor                              //
-            ////////////////////////////////////////////////////////////////////
-            SeaFarStream();
+        // Could not init sea far chunk
+        return false;
+    }
 
-            ////////////////////////////////////////////////////////////////////
-            //  SeaFarStream destructor                                       //
-            ////////////////////////////////////////////////////////////////////
-            ~SeaFarStream();
+    // Sea far stream successfully created
+    return true;
+}
 
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init sea far stream                                           //
-            //  return : True if the sea far stream is successfully created   //
-            ////////////////////////////////////////////////////////////////////
-            bool init();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Render sea far stream                                         //
-            ////////////////////////////////////////////////////////////////////
-            void render(int32_t chunkX, int32_t chunkY);
-
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  SeaFarStream private copy constructor : Not copyable          //
-            ////////////////////////////////////////////////////////////////////
-            SeaFarStream(const SeaFarStream&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  SeaFarStream private copy operator : Not copyable             //
-            ////////////////////////////////////////////////////////////////////
-            SeaFarStream& operator=(const SeaFarStream&) = delete;
-
-
-        private:
-            SeaFarChunk         m_seaFarChunk;      // SeaFar chunk
-    };
-
-
-#endif // VOS_RENDERER_SEAFARSTREAM_HEADER
+////////////////////////////////////////////////////////////////////////////////
+//  Render sea far stream                                                     //
+////////////////////////////////////////////////////////////////////////////////
+void SeaFarStream::render(int32_t chunkX, int32_t chunkY)
+{
+    for (int i = 1; i < HEIGHTFAR_STREAMWIDTH-1; ++i)
+    {
+        for (int j = 1; j < HEIGHTFAR_STREAMHEIGHT-1; ++j)
+        {
+            if (GResources.heightfars.getFlags(
+                (j*HEIGHTFAR_STREAMWIDTH)+i) & HEIGHTFAR_FLAGS_RENDERSEA)
+            {
+                m_seaFarChunk.setPosition(
+                    -(HEIGHTFAR_STREAMHALFWIDTH*SeaFarChunkXStride)+
+                    (chunkX*SeaFarChunkXStride)+(i*SeaFarChunkXStride),
+                    0.0f,
+                    -(HEIGHTFAR_STREAMHALFHEIGHT*SeaFarChunkZStride)+
+                    (chunkY*SeaFarChunkXStride)+(j*SeaFarChunkZStride)
+                );
+                m_seaFarChunk.render();
+            }
+        }
+    }
+}

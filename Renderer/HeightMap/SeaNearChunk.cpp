@@ -37,7 +37,7 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/SeaNearChunk.cpp : Sea near chunk management                  //
+//     Renderer/HeightMap/SeaNearChunk.cpp : Sea near chunk                   //
 ////////////////////////////////////////////////////////////////////////////////
 #include "SeaNearChunk.h"
 

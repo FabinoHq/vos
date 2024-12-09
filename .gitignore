@@ -158,6 +158,34 @@
 
 # Renderer
 !Renderer/
+!Renderer/View.h
+!Renderer/View.cpp
+!Renderer/Camera.h
+!Renderer/Camera.cpp
+!Renderer/FreeFlyCam.h
+!Renderer/FreeFlyCam.cpp
+!Renderer/OrbitalCam.h
+!Renderer/OrbitalCam.cpp
+!Renderer/Sprite.h
+!Renderer/Sprite.cpp
+!Renderer/ProcSprite.h
+!Renderer/ProcSprite.cpp
+!Renderer/Plane.h
+!Renderer/Plane.cpp
+!Renderer/SkyBox.h
+!Renderer/SkyBox.cpp
+!Renderer/SkyProc.h
+!Renderer/SkyProc.cpp
+!Renderer/StaticMesh.h
+!Renderer/StaticMesh.cpp
+!Renderer/WorldLight.h
+!Renderer/WorldLight.cpp
+!Renderer/BackRenderer.h
+!Renderer/BackRenderer.cpp
+!Renderer/Renderer.h
+!Renderer/Renderer.cpp
+
+# Vulkan
 !Renderer/Vulkan/
 !Renderer/Vulkan/Vulkan.h
 !Renderer/Vulkan/Vulkan.cpp
@@ -193,26 +221,8 @@
 !Renderer/Vulkan/TextureArray.cpp
 !Renderer/Vulkan/CubeMap.h
 !Renderer/Vulkan/CubeMap.cpp
-!Renderer/View.h
-!Renderer/View.cpp
-!Renderer/Camera.h
-!Renderer/Camera.cpp
-!Renderer/FreeFlyCam.h
-!Renderer/FreeFlyCam.cpp
-!Renderer/OrbitalCam.h
-!Renderer/OrbitalCam.cpp
-!Renderer/Sprite.h
-!Renderer/Sprite.cpp
-!Renderer/ProcSprite.h
-!Renderer/ProcSprite.cpp
-!Renderer/Plane.h
-!Renderer/Plane.cpp
-!Renderer/SkyBox.h
-!Renderer/SkyBox.cpp
-!Renderer/SkyProc.h
-!Renderer/SkyProc.cpp
-!Renderer/StaticMesh.h
-!Renderer/StaticMesh.cpp
+
+# HeightMap
 !Renderer/HeightMapChunk.h
 !Renderer/HeightMapChunk.cpp
 !Renderer/HeightFarChunk.h
@@ -229,12 +239,23 @@
 !Renderer/SeaNearStream.cpp
 !Renderer/SeaFarStream.h
 !Renderer/SeaFarStream.cpp
-!Renderer/WorldLight.h
-!Renderer/WorldLight.cpp
-!Renderer/BackRenderer.h
-!Renderer/BackRenderer.cpp
-!Renderer/Renderer.h
-!Renderer/Renderer.cpp
+!Renderer/HeightMap/
+!Renderer/HeightMap/HeightMapChunk.h
+!Renderer/HeightMap/HeightMapChunk.cpp
+!Renderer/HeightMap/HeightFarChunk.h
+!Renderer/HeightMap/HeightFarChunk.cpp
+!Renderer/HeightMap/HeightMapStream.h
+!Renderer/HeightMap/HeightMapStream.cpp
+!Renderer/HeightMap/HeightFarStream.h
+!Renderer/HeightMap/HeightFarStream.cpp
+!Renderer/HeightMap/SeaNearChunk.h
+!Renderer/HeightMap/SeaNearChunk.cpp
+!Renderer/HeightMap/SeaFarChunk.h
+!Renderer/HeightMap/SeaFarChunk.cpp
+!Renderer/HeightMap/SeaNearStream.h
+!Renderer/HeightMap/SeaNearStream.cpp
+!Renderer/HeightMap/SeaFarStream.h
+!Renderer/HeightMap/SeaFarStream.cpp
 
 # Shaders
 !Renderer/Shaders/

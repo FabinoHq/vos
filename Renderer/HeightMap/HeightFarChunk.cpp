@@ -37,67 +37,113 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/SeaNearStream.cpp : SeaNear stream management                 //
+//     Renderer/HeightMap/HeightFarChunk.cpp : HeightFar chunk renderer       //
 ////////////////////////////////////////////////////////////////////////////////
-#include "SeaNearStream.h"
+#include "HeightFarChunk.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  SeaNearStream default constructor                                         //
+//  HeightFarChunk default constructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
-SeaNearStream::SeaNearStream() :
-m_seaNearChunk()
+HeightFarChunk::HeightFarChunk() :
+Transform3(),
+m_vertexBuffer(0),
+m_textureArray(0)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  SeaNearStream destructor                                                  //
+//  HeightFarChunk virtual destructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-SeaNearStream::~SeaNearStream()
+HeightFarChunk::~HeightFarChunk()
 {
-
+    m_textureArray = 0;
+    m_vertexBuffer = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init sea near stream                                                      //
-//  return : True if the sea near stream is successfully created              //
+//  Init heightfar chunk                                                      //
+//  return : True if the heightfar chunk is successfully created              //
 ////////////////////////////////////////////////////////////////////////////////
-bool SeaNearStream::init()
+bool HeightFarChunk::init(VertexBuffer& vertexBuffer,
+    TextureArray& textureArray)
 {
-    // Init sea near chunk
-    if (!m_seaNearChunk.init())
+    // Check texture array handle
+    if (!textureArray.isValid())
     {
-        // Could not init sea near chunk
+        // Invalid texture array handle
         return false;
     }
 
-    // Sea near stream successfully created
+    // Set static mesh vertex buffer pointer
+    m_vertexBuffer = &vertexBuffer;
+
+    // Set heightfar chunk texture array pointer
+    m_textureArray = &textureArray;
+
+    // Reset heightfar chunk transformations
+    resetTransforms();
+
+    // Heightfar chunk successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render sea near stream                                                    //
+//  Set heightfar chunk texture array                                         //
+//  return : True if heightfar chunk texture array is set                     //
 ////////////////////////////////////////////////////////////////////////////////
-void SeaNearStream::render(int32_t chunkX, int32_t chunkY)
+bool HeightFarChunk::setTextureArray(TextureArray& textureArray)
 {
-    for (int i = 1; i < HEIGHTMAP_STREAMWIDTH-1; ++i)
+    // Check texture array handle
+    if (!textureArray.isValid())
     {
-        for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
-        {
-            if (GResources.heightmaps.getFlags(
-                (j*HEIGHTMAP_STREAMWIDTH)+i) & HEIGHTMAP_FLAGS_RENDERSEA)
-            {
-                m_seaNearChunk.setPosition(
-                    -(HEIGHTMAP_STREAMHALFWIDTH*SeaNearChunkXStride)+
-                    (chunkX*SeaNearChunkXStride)+(i*SeaNearChunkXStride),
-                    0.0f,
-                    -(HEIGHTMAP_STREAMHALFHEIGHT*SeaNearChunkZStride)+
-                    (chunkY*SeaNearChunkXStride)+(j*SeaNearChunkZStride)
-                );
-                m_seaNearChunk.render();
-            }
-        }
+        // Invalid texture array handle
+        return false;
     }
+
+    // Set heightfar chunk texture array pointer
+    m_textureArray = &textureArray;
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Bind heightfar chunk vertex buffer                                        //
+////////////////////////////////////////////////////////////////////////////////
+void HeightFarChunk::bindVertexBuffer()
+{
+    // Bind vertex buffer
+    VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
+    );
+
+    vkCmdBindIndexBuffer(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Render heightfar chunk                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void HeightFarChunk::render()
+{
+    // Compute heightfar chunk transformations
+    computeTransforms();
+
+    // Push model matrix into command buffer
+    vkCmdPushConstants(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
+    );
+
+    // Draw heightfar chunk triangles
+    vkCmdDrawIndexed(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        (m_vertexBuffer->indexCount), 1, 0, 0, 0
+    );
 }

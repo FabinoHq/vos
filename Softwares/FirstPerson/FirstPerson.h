@@ -73,10 +73,10 @@
     #include "../../Renderer/Shapes/CuboidShape.h"
 
     #include "../../Renderer/StaticMesh.h"
-    #include "../../Renderer/HeightMapStream.h"
-    #include "../../Renderer/HeightFarStream.h"
-    #include "../../Renderer/SeaNearStream.h"
-    #include "../../Renderer/SeaFarStream.h"
+    #include "../../Renderer/HeightMap/HeightMapStream.h"
+    #include "../../Renderer/HeightMap/HeightFarStream.h"
+    #include "../../Renderer/HeightMap/SeaNearStream.h"
+    #include "../../Renderer/HeightMap/SeaFarStream.h"
 
     #include <cstdint>
 

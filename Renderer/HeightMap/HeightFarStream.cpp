@@ -37,113 +37,76 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/HeightMapChunk.cpp : HeightMap chunk renderer management      //
+//     Renderer/HeightMap/HeightFarStream.cpp : HeightFar stream renderer     //
 ////////////////////////////////////////////////////////////////////////////////
-#include "HeightMapChunk.h"
+#include "HeightFarStream.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  HeightMapChunk default constructor                                        //
+//  HeightFarStream default constructor                                       //
 ////////////////////////////////////////////////////////////////////////////////
-HeightMapChunk::HeightMapChunk() :
-Transform3(),
-m_vertexBuffer(0),
-m_textureArray(0)
+HeightFarStream::HeightFarStream() :
+m_heightFarChunk(),
+m_chunkX(0),
+m_chunkY(0)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  HeightMapChunk virtual destructor                                         //
+//  HeightFarStream destructor                                                //
 ////////////////////////////////////////////////////////////////////////////////
-HeightMapChunk::~HeightMapChunk()
+HeightFarStream::~HeightFarStream()
 {
-    m_textureArray = 0;
-    m_vertexBuffer = 0;
+
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init heightmap chunk                                                      //
-//  return : True if the heightmap chunk is successfully created              //
+//  Init heightfar stream                                                     //
+//  return : True if the heightfar stream is successfully created             //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapChunk::init(VertexBuffer& vertexBuffer,
-    TextureArray& textureArray)
+bool HeightFarStream::init()
 {
-    // Check texture array handle
-    if (!textureArray.isValid())
+    // Init heightfar chunk
+    if (!m_heightFarChunk.init(
+        GResources.heightfars.heightfar(0),
+        GResources.textures.array(TEXTURE_ARRAY1)))
     {
-        // Invalid texture array handle
+        // Could not init heightfar chunk
         return false;
     }
 
-    // Set static mesh vertex buffer pointer
-    m_vertexBuffer = &vertexBuffer;
-
-    // Set heightmap chunk texture array pointer
-    m_textureArray = &textureArray;
-
-    // Reset heightmap chunk transformations
-    resetTransforms();
-
-    // Heightmap chunk successfully created
+    // Heightfar stream successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Set heightmap chunk texture array                                         //
-//  return : True if heightmap chunk texture array is set                     //
+//  Render heightfar stream                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapChunk::setTextureArray(TextureArray& textureArray)
+void HeightFarStream::render()
 {
-    // Check texture array handle
-    if (!textureArray.isValid())
+    // Synchronize heightfar stream with renderer
+    GResources.heightfars.sync();
+
+    // Render heightfar chunks
+    m_heightFarChunk.bindTextureArray();
+    for (int i = 1; i < HEIGHTFAR_STREAMWIDTH-1; ++i)
     {
-        // Invalid texture array handle
-        return false;
+        for (int j = 1; j < HEIGHTFAR_STREAMHEIGHT-1; ++j)
+        {
+            m_heightFarChunk.setVertexBuffer(
+                GResources.heightfars.heightfar((j*HEIGHTFAR_STREAMWIDTH)+i)
+            );
+            m_heightFarChunk.setPosition(
+                -(HEIGHTFAR_STREAMHALFWIDTH*HeightFarChunkXStride)+
+                (m_chunkX*HeightFarChunkXStride)+(i*HeightFarChunkXStride),
+                0.0f,
+                -(HEIGHTFAR_STREAMHALFHEIGHT*HeightFarChunkZStride)+
+                (m_chunkY*HeightFarChunkXStride)+(j*HeightFarChunkZStride)
+            );
+            m_heightFarChunk.bindVertexBuffer();
+            m_heightFarChunk.render();
+        }
     }
-
-    // Set heightmap chunk texture array pointer
-    m_textureArray = &textureArray;
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Bind heightmap chunk vertex buffer                                        //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::bindVertexBuffer()
-{
-    // Bind vertex buffer
-    VkDeviceSize offset = 0;
-    vkCmdBindVertexBuffers(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        0, 1, &m_vertexBuffer->vertexBuffer.handle, &offset
-    );
-
-    vkCmdBindIndexBuffer(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        m_vertexBuffer->indexBuffer.handle, 0, VK_INDEX_TYPE_UINT16
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Render heightmap chunk                                                    //
-////////////////////////////////////////////////////////////////////////////////
-void HeightMapChunk::render()
-{
-    // Compute heightmap chunk transformations
-    computeTransforms();
-
-    // Push model matrix into command buffer
-    vkCmdPushConstants(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
-        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
-    );
-
-    // Draw heightmap chunk triangles
-    vkCmdDrawIndexed(
-        GSwapchain.commandBuffers[GSwapchain.current],
-        (m_vertexBuffer->indexCount), 1, 0, 0, 0
-    );
 }

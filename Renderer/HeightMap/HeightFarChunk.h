@@ -37,70 +37,114 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/SeaNearStream.h : SeaNear stream management                   //
+//     Renderer/HeightMap/HeightFarChunk.h : HeightFar chunk renderer         //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_SEANEARSTREAM_HEADER
-#define VOS_RENDERER_SEANEARSTREAM_HEADER
+#ifndef VOS_RENDERER_HEIGHTMAP_HEIGHTFARCHUNK_HEADER
+#define VOS_RENDERER_HEIGHTMAP_HEIGHTFARCHUNK_HEADER
 
-    #include "../System/System.h"
-    #include "Vulkan/Vulkan.h"
-    #include "Vulkan/VertexBuffer.h"
-    #include "../Math/Math.h"
-    #include "../Math/Vector3.h"
-    #include "../Math/Matrix4x4.h"
-    #include "../Math/Transform3.h"
-    #include "../Resources/Resources.h"
-
-    #include "SeaNearChunk.h"
-    #include "HeightMapStream.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../Vulkan/TextureArray.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SeaNearStream class definition                                        //
+    //  HeightFarChunk settings                                               //
     ////////////////////////////////////////////////////////////////////////////
-    class SeaNearStream
+    const uint16_t HeightFarChunkWidth = 128;
+    const uint16_t HeightFarChunkHeight = 128;
+    const float HeightFarChunkPlaneWidth = 64.0f;
+    const float HeightFarChunkPlaneHeight = 64.0f;
+    const float HeightFarChunkXStride = 8192.0f;
+    const float HeightFarChunkZStride = 8192.0f;
+    const float HeightFarChunkTexcoordsWidth = 128.0f;
+    const float HeightFarChunkTexcoordsHeight = 128.0f;
+    const uint32_t HeightFarChunkVerticesCount =
+        ((HeightFarChunkWidth+1)*(HeightFarChunkHeight+1)*8);
+    const uint32_t HeightFarChunkIndicesCount =
+        (6*HeightFarChunkWidth*HeightFarChunkHeight);
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  HeightFarChunk class definition                                       //
+    ////////////////////////////////////////////////////////////////////////////
+    class HeightFarChunk : public Transform3
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearStream default constructor                             //
+            //  HeightFarChunk default constructor                            //
             ////////////////////////////////////////////////////////////////////
-            SeaNearStream();
+            HeightFarChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearStream destructor                                      //
+            //  HeightFarChunk virtual destructor                             //
             ////////////////////////////////////////////////////////////////////
-            ~SeaNearStream();
+            virtual ~HeightFarChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init sea near stream                                          //
-            //  return : True if the sea near stream is successfully created  //
+            //  Init heightfar chunk                                          //
+            //  return : True if the heightfar chunk is successfully created  //
             ////////////////////////////////////////////////////////////////////
-            bool init();
+            bool init(VertexBuffer& vertexBuffer, TextureArray& textureArray);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render sea near stream                                        //
+            //  Set heightfar chunk vertex buffer                             //
             ////////////////////////////////////////////////////////////////////
-            void render(int32_t chunkX, int32_t chunkY);
+            inline void setVertexBuffer(VertexBuffer& vertexBuffer)
+            {
+                m_vertexBuffer = &vertexBuffer;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set heightfar chunk texture array                             //
+            //  return : True if heightfar chunk texture array is set         //
+            ////////////////////////////////////////////////////////////////////
+            bool setTextureArray(TextureArray& textureArray);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind heightfar chunk vertex buffer                            //
+            ////////////////////////////////////////////////////////////////////
+            void bindVertexBuffer();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Bind heightfar chunk texture array                            //
+            ////////////////////////////////////////////////////////////////////
+            inline void bindTextureArray()
+            {
+                m_textureArray->bind();
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render heightfar chunk                                        //
+            ////////////////////////////////////////////////////////////////////
+            void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearStream private copy constructor : Not copyable         //
+            //  HeightFarChunk private copy constructor : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            SeaNearStream(const SeaNearStream&) = delete;
+            HeightFarChunk(const HeightFarChunk&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  SeaNearStream private copy operator : Not copyable            //
+            //  HeightFarChunk private copy operator : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            SeaNearStream& operator=(const SeaNearStream&) = delete;
+            HeightFarChunk& operator=(const HeightFarChunk&) = delete;
 
 
         private:
-            SeaNearChunk        m_seaNearChunk;     // SeaNear chunk
+            VertexBuffer*   m_vertexBuffer;     // Heightfar chunk vertex buffer
+            TextureArray*   m_textureArray;     // Heightfar chunk texture ptr
     };
 
 
-#endif // VOS_RENDERER_SEANEARSTREAM_HEADER
+#endif // VOS_RENDERER_HEIGHTMAP_HEIGHTFARCHUNK_HEADER

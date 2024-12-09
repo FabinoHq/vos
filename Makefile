@@ -63,6 +63,14 @@ VOS: main.o \
 	Physics/BoundingSurfaces/BoundingCircle.o \
 	Physics/BoundingSurfaces/BoundingAlignRect.o \
 	Physics/BoundingSurfaces/BoundingRect.o \
+	Renderer/View.o Renderer/Camera.o \
+	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
+	Renderer/Sprite.o Renderer/ProcSprite.o \
+	Renderer/Plane.o \
+	Renderer/SkyBox.o Renderer/SkyProc.o \
+	Renderer/StaticMesh.o \
+	Renderer/WorldLight.o \
+	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
 	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
@@ -74,18 +82,10 @@ VOS: main.o \
 	Renderer/Vulkan/Shader.o \
 	Renderer/Vulkan/Texture.o Renderer/Vulkan/TextureArray.o \
 	Renderer/Vulkan/CubeMap.o \
-	Renderer/View.o Renderer/Camera.o \
-	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
-	Renderer/Sprite.o Renderer/ProcSprite.o \
-	Renderer/Plane.o \
-	Renderer/SkyBox.o Renderer/SkyProc.o \
-	Renderer/StaticMesh.o \
-	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
-	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
-	Renderer/SeaNearChunk.o Renderer/SeaFarChunk.o \
-	Renderer/SeaNearStream.o Renderer/SeaFarStream.o \
-	Renderer/WorldLight.o \
-	Renderer/BackRenderer.o Renderer/Renderer.o \
+	Renderer/HeightMap/HeightMapChunk.o Renderer/HeightMap/HeightFarChunk.o \
+	Renderer/HeightMap/HeightMapStream.o Renderer/HeightMap/HeightFarStream.o \
+	Renderer/HeightMap/SeaNearChunk.o Renderer/HeightMap/SeaFarChunk.o \
+	Renderer/HeightMap/SeaNearStream.o Renderer/HeightMap/SeaFarStream.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUICursor.o \
@@ -114,6 +114,14 @@ VOS: main.o \
 	Physics/BoundingSurfaces/BoundingCircle.o \
 	Physics/BoundingSurfaces/BoundingAlignRect.o \
 	Physics/BoundingSurfaces/BoundingRect.o \
+	Renderer/View.o Renderer/Camera.o \
+	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
+	Renderer/Sprite.o Renderer/ProcSprite.o \
+	Renderer/Plane.o \
+	Renderer/SkyBox.o Renderer/SkyProc.o \
+	Renderer/StaticMesh.o \
+	Renderer/WorldLight.o \
+	Renderer/BackRenderer.o Renderer/Renderer.o \
 	Renderer/Vulkan/Vulkan.o Renderer/Vulkan/VulkanMemory.o \
 	Renderer/Vulkan/VulkanQueue.o \
 	Renderer/Vulkan/Swapchain.o Renderer/Vulkan/Backchain.o \
@@ -125,18 +133,10 @@ VOS: main.o \
 	Renderer/Vulkan/Shader.o \
 	Renderer/Vulkan/Texture.o Renderer/Vulkan/TextureArray.o \
 	Renderer/Vulkan/CubeMap.o \
-	Renderer/View.o Renderer/Camera.o \
-	Renderer/FreeFlyCam.o Renderer/OrbitalCam.o \
-	Renderer/Sprite.o Renderer/ProcSprite.o \
-	Renderer/Plane.o \
-	Renderer/SkyBox.o Renderer/SkyProc.o \
-	Renderer/StaticMesh.o \
-	Renderer/HeightMapChunk.o Renderer/HeightFarChunk.o \
-	Renderer/HeightMapStream.o Renderer/HeightFarStream.o \
-	Renderer/SeaNearChunk.o Renderer/SeaFarChunk.o \
-	Renderer/SeaNearStream.o Renderer/SeaFarStream.o \
-	Renderer/WorldLight.o \
-	Renderer/BackRenderer.o Renderer/Renderer.o \
+	Renderer/HeightMap/HeightMapChunk.o Renderer/HeightMap/HeightFarChunk.o \
+	Renderer/HeightMap/HeightMapStream.o Renderer/HeightMap/HeightFarStream.o \
+	Renderer/HeightMap/SeaNearChunk.o Renderer/HeightMap/SeaFarChunk.o \
+	Renderer/HeightMap/SeaNearStream.o Renderer/HeightMap/SeaFarStream.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUICursor.o \
@@ -309,6 +309,7 @@ Renderer/Vulkan/TextureArray.o: Renderer/Vulkan/TextureArray.cpp
 Renderer/Vulkan/CubeMap.o: Renderer/Vulkan/CubeMap.cpp
 	$(CC) -o Renderer/Vulkan/CubeMap.o -c Renderer/Vulkan/CubeMap.cpp $(CFLAGS)
 
+
 Renderer/View.o: Renderer/View.cpp
 	$(CC) -o Renderer/View.o -c Renderer/View.cpp $(CFLAGS)
 
@@ -339,42 +340,47 @@ Renderer/SkyProc.o: Renderer/SkyProc.cpp
 Renderer/StaticMesh.o: Renderer/StaticMesh.cpp
 	$(CC) -o Renderer/StaticMesh.o -c Renderer/StaticMesh.cpp $(CFLAGS)
 
-Renderer/HeightMapChunk.o: Renderer/HeightMapChunk.cpp
-	$(CC) -o Renderer/HeightMapChunk.o -c Renderer/HeightMapChunk.cpp $(CFLAGS)
-
-Renderer/HeightFarChunk.o: Renderer/HeightFarChunk.cpp
-	$(CC) -o Renderer/HeightFarChunk.o -c Renderer/HeightFarChunk.cpp $(CFLAGS)
-
-Renderer/HeightMapStream.o: Renderer/HeightMapStream.cpp
-	$(CC) -o Renderer/HeightMapStream.o -c \
-	Renderer/HeightMapStream.cpp $(CFLAGS)
-
-Renderer/HeightFarStream.o: Renderer/HeightFarStream.cpp
-	$(CC) -o Renderer/HeightFarStream.o -c \
-	Renderer/HeightFarStream.cpp $(CFLAGS)
-
-Renderer/SeaNearChunk.o: Renderer/SeaNearChunk.cpp
-	$(CC) -o Renderer/SeaNearChunk.o -c Renderer/SeaNearChunk.cpp $(CFLAGS)
-
-Renderer/SeaFarChunk.o: Renderer/SeaFarChunk.cpp
-	$(CC) -o Renderer/SeaFarChunk.o -c Renderer/SeaFarChunk.cpp $(CFLAGS)
-
-Renderer/SeaNearStream.o: Renderer/SeaNearStream.cpp
-	$(CC) -o Renderer/SeaNearStream.o -c Renderer/SeaNearStream.cpp $(CFLAGS)
-
-Renderer/SeaFarStream.o: Renderer/SeaFarStream.cpp
-	$(CC) -o Renderer/SeaFarStream.o -c Renderer/SeaFarStream.cpp $(CFLAGS)
-
-
 Renderer/WorldLight.o: Renderer/WorldLight.cpp
 	$(CC) -o Renderer/WorldLight.o -c Renderer/WorldLight.cpp $(CFLAGS)
-
 
 Renderer/BackRenderer.o: Renderer/BackRenderer.cpp
 	$(CC) -o Renderer/BackRenderer.o -c Renderer/BackRenderer.cpp $(CFLAGS)
 
 Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
+
+
+Renderer/HeightMap/HeightMapChunk.o: Renderer/HeightMap/HeightMapChunk.cpp
+	$(CC) -o Renderer/HeightMap/HeightMapChunk.o -c \
+	Renderer/HeightMap/HeightMapChunk.cpp $(CFLAGS)
+
+Renderer/HeightMap/HeightFarChunk.o: Renderer/HeightMap/HeightFarChunk.cpp
+	$(CC) -o Renderer/HeightMap/HeightFarChunk.o -c \
+	Renderer/HeightMap/HeightFarChunk.cpp $(CFLAGS)
+
+Renderer/HeightMap/HeightMapStream.o: Renderer/HeightMap/HeightMapStream.cpp
+	$(CC) -o Renderer/HeightMap/HeightMapStream.o -c \
+	Renderer/HeightMap/HeightMapStream.cpp $(CFLAGS)
+
+Renderer/HeightMap/HeightFarStream.o: Renderer/HeightMap/HeightFarStream.cpp
+	$(CC) -o Renderer/HeightMap/HeightFarStream.o -c \
+	Renderer/HeightMap/HeightFarStream.cpp $(CFLAGS)
+
+Renderer/HeightMap/SeaNearChunk.o: Renderer/HeightMap/SeaNearChunk.cpp
+	$(CC) -o Renderer/HeightMap/SeaNearChunk.o -c \
+	Renderer/HeightMap/SeaNearChunk.cpp $(CFLAGS)
+
+Renderer/HeightMap/SeaFarChunk.o: Renderer/HeightMap/SeaFarChunk.cpp
+	$(CC) -o Renderer/HeightMap/SeaFarChunk.o -c \
+	Renderer/HeightMap/SeaFarChunk.cpp $(CFLAGS)
+
+Renderer/HeightMap/SeaNearStream.o: Renderer/HeightMap/SeaNearStream.cpp
+	$(CC) -o Renderer/HeightMap/SeaNearStream.o -c \
+	Renderer/HeightMap/SeaNearStream.cpp $(CFLAGS)
+
+Renderer/HeightMap/SeaFarStream.o: Renderer/HeightMap/SeaFarStream.cpp
+	$(CC) -o Renderer/HeightMap/SeaFarStream.o -c \
+	Renderer/HeightMap/SeaFarStream.cpp $(CFLAGS)
 
 
 Renderer/Shapes/RectangleShape.o: Renderer/Shapes/RectangleShape.cpp
@@ -456,6 +462,7 @@ clean:
 	rm -rf Physics/BoundingSurfaces/*.o
 	rm -rf Renderer/*.o
 	rm -rf Renderer/Vulkan/*.o
+	rm -rf Renderer/HeightMap/*.o
 	rm -rf Renderer/Shapes/*.o
 	rm -rf Renderer/GUI/*.o
 	rm -rf Resources/*.o
