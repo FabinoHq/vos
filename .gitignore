@@ -223,22 +223,6 @@
 !Renderer/Vulkan/CubeMap.cpp
 
 # HeightMap
-!Renderer/HeightMapChunk.h
-!Renderer/HeightMapChunk.cpp
-!Renderer/HeightFarChunk.h
-!Renderer/HeightFarChunk.cpp
-!Renderer/HeightMapStream.h
-!Renderer/HeightMapStream.cpp
-!Renderer/HeightFarStream.h
-!Renderer/HeightFarStream.cpp
-!Renderer/SeaNearChunk.h
-!Renderer/SeaNearChunk.cpp
-!Renderer/SeaFarChunk.h
-!Renderer/SeaFarChunk.cpp
-!Renderer/SeaNearStream.h
-!Renderer/SeaNearStream.cpp
-!Renderer/SeaFarStream.h
-!Renderer/SeaFarStream.cpp
 !Renderer/HeightMap/
 !Renderer/HeightMap/HeightMapChunk.h
 !Renderer/HeightMap/HeightMapChunk.cpp
