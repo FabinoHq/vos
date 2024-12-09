@@ -78,6 +78,8 @@
     #include "../../Renderer/HeightMap/SeaNearStream.h"
     #include "../../Renderer/HeightMap/SeaFarStream.h"
 
+    #include "FirstPersonPlayer.h"
+
     #include <cstdint>
 
 
@@ -154,34 +156,34 @@
 
 
         private:
-            BackRenderer    m_backRenderer;     // Back renderer
+            BackRenderer        m_backRenderer;         // Back renderer
 
-            View            m_view;             // View
-            Camera          m_camera;           // Camera
-            FreeFlyCam      m_freeflycam;       // Freefly camera
-            FreeFlyCam      m_farflycam;        // Freefly camera far
-            OrbitalCam      m_orbitalcam;       // Orbital camera
+            View                m_view;                 // View
+            Camera              m_camera;               // Camera
+            FreeFlyCam          m_freeflycam;           // Freefly camera
+            FreeFlyCam          m_farflycam;            // Freefly camera far
+            OrbitalCam          m_orbitalcam;           // Orbital camera
 
-            SkyBox          m_skybox;           // SkyBox
-            SkyProc         m_skyproc;          // Procedural skybox
+            SkyBox              m_skybox;               // SkyBox
+            SkyProc             m_skyproc;              // Procedural skybox
 
-            Sprite          m_sprite;           // Sprite
-            ProcSprite      m_procSprite;       // Procedural sprite
-            RectangleShape  m_rectangle;        // Rectangle shape
-            EllipseShape    m_ellipse;          // Ellipse shape
-            CuboidShape     m_cuboid;           // Cuboid shape
-            Plane           m_plane;            // Plane billboard
+            Sprite              m_sprite;               // Sprite
+            ProcSprite          m_procSprite;           // Procedural sprite
+            RectangleShape      m_rectangle;            // Rectangle shape
+            EllipseShape        m_ellipse;              // Ellipse shape
+            CuboidShape         m_cuboid;               // Cuboid shape
+            Plane               m_plane;                // Plane billboard
 
-            GUICursor       m_cursor;           // GUI Cursor
-            GUIPxText       m_pxText;           // GUI pixel text
+            GUICursor           m_cursor;               // GUI Cursor
+            GUIPxText           m_pxText;               // GUI pixel text
 
-            StaticMesh      m_staticMesh;       // Static mesh
-            HeightMapStream m_heightMapStream;  // HeightMap stream
-            HeightFarStream m_heightFarStream;  // HeightFar stream
-            SeaNearStream   m_seaNearStream;    // SeaNear stream
-            SeaFarStream    m_seaFarStream;     // SeaFar stream
+            StaticMesh          m_staticMesh;           // Static mesh
+            HeightMapStream     m_heightMapStream;      // HeightMap stream
+            HeightFarStream     m_heightFarStream;      // HeightFar stream
+            SeaNearStream       m_seaNearStream;        // SeaNear stream
+            SeaFarStream        m_seaFarStream;         // SeaFar stream
 
-            bool            m_spaceReleased;    // Space released event
+            FirstPersonPlayer   m_player;               // Player
     };
 
 

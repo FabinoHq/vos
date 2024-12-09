@@ -273,6 +273,7 @@
     <ClCompile Include="Resources\Resources.cpp" />
     <ClCompile Include="Resources\TextureLoader.cpp" />
     <ClCompile Include="Softwares\FirstPerson\FirstPerson.cpp" />
+    <ClCompile Include="Softwares\FirstPerson\FirstPersonPlayer.cpp" />
     <ClCompile Include="Softwares\Softwares.cpp" />
     <ClCompile Include="Softwares\TopDown\TopDown.cpp" />
     <ClCompile Include="Softwares\TopDown\TopDownPlayer.cpp" />
@@ -399,6 +400,7 @@
     <ClInclude Include="Resources\Resources.h" />
     <ClInclude Include="Resources\TextureLoader.h" />
     <ClInclude Include="Softwares\FirstPerson\FirstPerson.h" />
+    <ClInclude Include="Softwares\FirstPerson\FirstPersonPlayer.h" />
     <ClInclude Include="Softwares\Softwares.h" />
     <ClInclude Include="Softwares\TopDown\TopDown.h" />
     <ClInclude Include="Softwares\TopDown\TopDownPlayer.h" />

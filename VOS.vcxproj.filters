@@ -314,6 +314,9 @@
     <ClCompile Include="Renderer\HeightMap\SeaNearStream.cpp">
       <Filter>Renderer\HeightMap</Filter>
     </ClCompile>
+    <ClCompile Include="Softwares\FirstPerson\FirstPersonPlayer.cpp">
+      <Filter>Softwares\FirstPerson</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -721,6 +724,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\HeightMap\SeaNearStream.h">
       <Filter>Renderer\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\FirstPerson\FirstPersonPlayer.h">
+      <Filter>Softwares\FirstPerson</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

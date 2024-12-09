@@ -73,7 +73,7 @@ m_heightMapStream(),
 m_heightFarStream(),
 m_seaNearStream(),
 m_seaFarStream(),
-m_spaceReleased(false)
+m_player()
 {
 
 }
@@ -283,6 +283,14 @@ bool FirstPerson::init()
         }
     }
 
+    // Init player
+    if (!m_player.init())
+    {
+        // Could not init player
+        return false;
+    }
+
+
     // First person game is ready
     return true;
 }
@@ -379,10 +387,6 @@ void FirstPerson::events(SysEvent& event)
                     m_freeflycam.setRightward(false);
                     break;
 
-                case SYSEVENT_KEY_SPACE:
-                    m_spaceReleased = true;
-                    break;
-
                 case SYSEVENT_KEY_LSHIFT:
                     m_freeflycam.setSpeed(10.0f);
                     break;
@@ -432,7 +436,7 @@ void FirstPerson::events(SysEvent& event)
 ////////////////////////////////////////////////////////////////////////////////
 void FirstPerson::prephysics()
 {
-    
+    m_player.prephysics();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -440,7 +444,7 @@ void FirstPerson::prephysics()
 ////////////////////////////////////////////////////////////////////////////////
 void FirstPerson::physics()
 {
-
+    m_player.physics();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -448,7 +452,7 @@ void FirstPerson::physics()
 ////////////////////////////////////////////////////////////////////////////////
 void FirstPerson::precompute(float physicstime)
 {
-
+    m_player.precompute(physicstime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -622,6 +626,9 @@ void FirstPerson::render()
     m_plane.setPosition(0.0f, 700.0f, 0.0f);
     m_plane.setSize(10.0f, 10.0f, 1.0f);
     m_plane.render();
+
+    // Render player
+    m_player.render();
 
 
     // Set 2D view

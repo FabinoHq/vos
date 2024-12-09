@@ -95,8 +95,9 @@ VOS: main.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
+	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
 	Softwares/FirstPerson/FirstPerson.o \
-	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o
+	Softwares/FirstPerson/FirstPersonPlayer.o
 
 	$(CC) -o VOS \
 	Vos.o \
@@ -146,8 +147,9 @@ VOS: main.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
-	Softwares/FirstPerson/FirstPerson.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
+	Softwares/FirstPerson/FirstPerson.o \
+	Softwares/FirstPerson/FirstPersonPlayer.o \
 	main.o $(LDFLAGS)
 
 
@@ -438,10 +440,6 @@ Resources/HeightFarLoader.o: Resources/HeightFarLoader.cpp
 Softwares/Softwares.o: Softwares/Softwares.cpp
 	$(CC) -o Softwares/Softwares.o -c Softwares/Softwares.cpp $(CFLAGS)
 
-Softwares/FirstPerson/FirstPerson.o: Softwares/FirstPerson/FirstPerson.cpp
-	$(CC) -o Softwares/FirstPerson/FirstPerson.o -c \
-	Softwares/FirstPerson/FirstPerson.cpp $(CFLAGS)
-
 Softwares/TopDown/TopDown.o: Softwares/TopDown/TopDown.cpp
 	$(CC) -o Softwares/TopDown/TopDown.o -c \
 	Softwares/TopDown/TopDown.cpp $(CFLAGS)
@@ -449,6 +447,15 @@ Softwares/TopDown/TopDown.o: Softwares/TopDown/TopDown.cpp
 Softwares/TopDown/TopDownPlayer.o: Softwares/TopDown/TopDownPlayer.cpp
 	$(CC) -o Softwares/TopDown/TopDownPlayer.o -c \
 	Softwares/TopDown/TopDownPlayer.cpp $(CFLAGS)
+
+Softwares/FirstPerson/FirstPerson.o: Softwares/FirstPerson/FirstPerson.cpp
+	$(CC) -o Softwares/FirstPerson/FirstPerson.o -c \
+	Softwares/FirstPerson/FirstPerson.cpp $(CFLAGS)
+
+Softwares/FirstPerson/FirstPersonPlayer.o: \
+	Softwares/FirstPerson/FirstPersonPlayer.cpp
+	$(CC) -o Softwares/FirstPerson/FirstPersonPlayer.o -c \
+	Softwares/FirstPerson/FirstPersonPlayer.cpp $(CFLAGS)
 
 
 clean:
