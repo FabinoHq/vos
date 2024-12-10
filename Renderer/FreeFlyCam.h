@@ -43,21 +43,19 @@
 #define VOS_RENDERER_FREEFLYCAM_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysEvent.h"
+    #include "../System/SysMouse.h"
+    #include "../System/SysKeys.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
+    #include "../Math/Vector3i.h"
     #include "../Math/Matrix4x4.h"
+    #include "../Physics/Physics.h"
+    #include "../Physics/PhysicsTransform3.h"
     #include "Camera.h"
 
     #include <cstdint>
     #include <cstring>
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Freefly camera default settings                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    const float FreeflyCameraMouseFactor = 0.004f;
-    const float FreeflyCameraMinAngle = -(Math::PiHalf-0.001f);
-    const float FreeflyCameraMaxAngle = (Math::PiHalf-0.001f);
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -78,62 +76,117 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Precompute freefly camera physics (thread sync)               //
+            ////////////////////////////////////////////////////////////////////
+            void prephysics();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Compute freefly camera physics (threaded)                     //
+            ////////////////////////////////////////////////////////////////////
+            void physics();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Precompute freefly camera renderer interpolations             //
+            ////////////////////////////////////////////////////////////////////
+            void precompute(float physicstime);
+
+            ////////////////////////////////////////////////////////////////////
             //  Compute freefly camera                                        //
             //  return : True if the freefly camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            virtual bool compute(float ratio, float frametime);
+            virtual bool compute(float ratio);
 
             ////////////////////////////////////////////////////////////////////
             //  Compute freefly camera from another freefly camera            //
             //  return : True if the freefly camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            virtual bool compute(float ratio, FreeFlyCam& freeFlyCam);
+            bool compute(float ratio, FreeFlyCam& freeFlyCam);
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set freefly camera speed                                      //
+            //  Set freefly camera bounding position                          //
             ////////////////////////////////////////////////////////////////////
-            inline void setSpeed(float speed)
+            inline void setBoundingPosition(const Vector3i& boundingPosition)
             {
-                m_speed = speed;
+                m_boundingPos = boundingPosition;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set freefly camera forward key state                          //
+            //  Set freefly camera bounding position                          //
             ////////////////////////////////////////////////////////////////////
-            inline void setForward(bool forward)
+            inline void setBoundingPosition(int32_t x, int32_t y, int32_t z)
             {
-                m_forward = forward;
+                m_boundingPos.vec[0] = x;
+                m_boundingPos.vec[1] = y;
+                m_boundingPos.vec[2] = z;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set freefly camera backward key state                         //
+            //  Set freefly camera bounding X position                        //
             ////////////////////////////////////////////////////////////////////
-            inline void setBackward(bool backward)
+            inline void setBoundingX(int32_t x)
             {
-                m_backward = backward;
+                m_boundingPos.vec[0] = x;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set freefly camera leftward key state                         //
+            //  Set freefly camera bounding Y position                        //
             ////////////////////////////////////////////////////////////////////
-            inline void setLeftward(bool leftward)
+            inline void setBoundingY(int32_t y)
             {
-                m_leftward = leftward;
+                m_boundingPos.vec[1] = y;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set freefly camera rightward key state                        //
+            //  Set freefly camera bounding Z position                        //
             ////////////////////////////////////////////////////////////////////
-            inline void setRightward(bool rightward)
+            inline void setBoundingZ(int32_t z)
             {
-                m_rightward = rightward;
+                m_boundingPos.vec[2] = z;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Handle mouse move event                                       //
+            //  Set freefly camera bounding angles                            //
             ////////////////////////////////////////////////////////////////////
-            void mouseMove(float mouseDx, float mouseDy);
+            inline void setBoundingAngles(const Vector3i& boundingAngles)
+            {
+                m_boundingAngles = boundingAngles;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set freefly camera bounding angles                            //
+            ////////////////////////////////////////////////////////////////////
+            inline void setBoundingAngles(
+                int32_t angleX, int32_t angleY, int32_t angleZ)
+            {
+                m_boundingAngles.vec[0] = angleX;
+                m_boundingAngles.vec[1] = angleY;
+                m_boundingAngles.vec[2] = angleZ;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set freefly camera bounding X position                        //
+            ////////////////////////////////////////////////////////////////////
+            inline void setBoundingAngleX(int32_t angleX)
+            {
+                m_boundingAngles.vec[0] = angleX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set freefly camera bounding Y position                        //
+            ////////////////////////////////////////////////////////////////////
+            inline void setBoundingAngleY(int32_t angleY)
+            {
+                m_boundingAngles.vec[1] = angleY;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set freefly camera bounding Z position                        //
+            ////////////////////////////////////////////////////////////////////
+            inline void setBoundingAngleZ(int32_t angleZ)
+            {
+                m_boundingAngles.vec[2] = angleZ;
+            }
 
 
         private:
@@ -149,14 +202,10 @@
 
 
         private:
-            Vector3     m_cross;        // Freeflycam cross product
-
-            float       m_speed;        // Freeflycam speed
-
-            bool        m_forward;      // Forward key state
-            bool        m_backward;     // Backward key state
-            bool        m_leftward;     // Leftward key state
-            bool        m_rightward;    // Rightward key state
+            PhysicsTransform3       m_transforms;       // Camera transforms
+            Vector3i                m_boundingPos;      // Camera position
+            Vector3i                m_boundingAngles;   // Camera angles
+            Vector3                 m_cross;            // Cross product
     };
 
 

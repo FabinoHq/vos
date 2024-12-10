@@ -217,7 +217,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setAngle(int32_t rectAngle)
             {
-                angle = (rectAngle % Math::TwoPiInt);
+                angle = Math::modulo(rectAngle, Math::TwoPiInt);
             }
 
 

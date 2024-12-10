@@ -187,6 +187,7 @@ void View::destroyView()
     resetTransforms();
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute view                                                              //
 //  return : True if the view is successfully computed                        //

@@ -149,7 +149,7 @@
             ////////////////////////////////////////////////////////////////////
             inline void setAngle(int32_t circleAngle)
             {
-                angle = (circleAngle % Math::TwoPiInt);
+                angle = Math::modulo(circleAngle, Math::TwoPiInt);
             }
 
 

@@ -78,6 +78,8 @@
     #include "../../Renderer/HeightMap/SeaNearStream.h"
     #include "../../Renderer/HeightMap/SeaFarStream.h"
 
+    #include "../../Physics/Physics.h"
+
     #include "FirstPersonPlayer.h"
 
     #include <cstdint>

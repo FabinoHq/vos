@@ -45,7 +45,17 @@
     #include "System.h"
     #include "SysMutex.h"
     #include "../Math/Math.h"
+    #include "../Math/Vector2.h"
+    #include "../Math/Vector2i.h"
     #include "../Physics/Physics.h"
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysMouse default settings                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    const float SysMouseSensitivityFactor = 0.002f;
+    const float SysMouseMinAngle = -(Math::PiHalf-0.001f);
+    const float SysMouseMaxAngle = (Math::PiHalf-0.001f);
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -91,7 +101,6 @@
 
         private:
             SysMutex        m_mutex;            // Mouse mutex
-            float           m_angle;            // Mouse internal angle
 
 
         public:
@@ -101,7 +110,11 @@
             float           mouseY;             // Mouse Y position
             float           deltaX;             // Mouse X delta
             float           deltaY;             // Mouse Y delta
-            int32_t         angle;              // Mouse angle
+
+            float           target;             // Mouse target
+            int32_t         targetInt;          // Mouse int target
+            Vector2         angles;             // Mouse angles
+            Vector2i        anglesInt;          // Mouse int angles
     };
 
 

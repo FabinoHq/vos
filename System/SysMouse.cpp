@@ -54,14 +54,16 @@ SysMouse GSysMouse = SysMouse();
 ////////////////////////////////////////////////////////////////////////////////
 SysMouse::SysMouse() :
 m_mutex(),
-m_angle(0.0f),
 previousX(0),
 previousY(0),
 mouseX(0.0f),
 mouseY(0.0f),
 deltaX(0.0f),
 deltaY(0.0f),
-angle(0)
+target(0.0f),
+targetInt(0),
+angles(),
+anglesInt()
 {
 
 }
@@ -101,9 +103,23 @@ void SysMouse::update(int x, int y)
         mouseY = Math::clamp((1.0f - (y*scale*2.0f)), -1.0f, 1.0f);
     #endif // VOS_POINTERLOCK
 
-    // Compute mouse angle
+    // Lock mouse mutex
     m_mutex.lock();
-    m_angle = Math::atan(mouseX, mouseY);
+
+    // Compute mouse target
+    target = Math::atan(mouseX, mouseY);
+
+    // Compute mouse angles
+    angles.vec[0] -= (deltaX*SysMouseSensitivityFactor);
+    angles.vec[1] -= (deltaY*SysMouseSensitivityFactor);
+
+    // Clamp mouse angles
+    angles.vec[0] = Math::modulo(angles.vec[0], Math::TwoPi);
+    angles.vec[1] = Math::clamp(
+        angles.vec[1], SysMouseMinAngle, SysMouseMaxAngle
+    );
+
+    // Unlock mouse mutex
     m_mutex.unlock();
 
     // Update previous mouse position
@@ -119,6 +135,12 @@ void SysMouse::sync()
 {
     // Copy mouse internal states
     m_mutex.lock();
-    angle = static_cast<int32_t>(m_angle*RendererAngleToPhysics);
+    targetInt = static_cast<int32_t>(target * RendererAngleToPhysics);
+    anglesInt.vec[0] = static_cast<int32_t>(
+        angles.vec[0] * RendererAngleToPhysics
+    );
+    anglesInt.vec[1] = static_cast<int32_t>(
+        angles.vec[1] * RendererAngleToPhysics
+    );
     m_mutex.unlock();
 }

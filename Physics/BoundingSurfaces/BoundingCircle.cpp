@@ -72,7 +72,7 @@ BoundingCircle::BoundingCircle(const Vector2i& circlePosition,
 {
     position = circlePosition;
     radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
-    angle = (circleAngle % Math::TwoPiInt);
+    angle = Math::modulo(circleAngle, Math::TwoPiInt);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ void BoundingCircle::set(const Vector2i& circlePosition,
 {
     position = circlePosition;
     radius = Math::max(circleRadius, PhysicsMinEntityHalfSize);
-    angle = (circleAngle % Math::TwoPiInt);
+    angle = Math::modulo(circleAngle, Math::TwoPiInt);
 }
 
 

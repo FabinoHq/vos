@@ -121,9 +121,7 @@ bool FirstPerson::init()
         // Could not init freefly camera
         return false;
     }
-    m_freeflycam.setZ(1.0f);
-    m_freeflycam.setSpeed(10.0f);
-    m_freeflycam.setY(550.0f);
+    m_freeflycam.setBoundingY(550000000);
     m_freeflycam.setNearPlane(CameraDefaultNearPlane);
     m_freeflycam.setFarPlane(CameraDefaultFarPlane);
 
@@ -337,71 +335,26 @@ void FirstPerson::events(SysEvent& event)
     {
         // Key pressed
         case SYSEVENT_KEYPRESSED:
-            switch (event.key)
+            /*switch (event.key)
             {
-                case SYSEVENT_KEY_Z:
-                    m_freeflycam.setForward(true);
-                    break;
-
-                case SYSEVENT_KEY_S:
-                    m_freeflycam.setBackward(true);
-                    break;
-
-                case SYSEVENT_KEY_Q:
-                    m_freeflycam.setLeftward(true);
-                    break;
-
-                case SYSEVENT_KEY_D:
-                    m_freeflycam.setRightward(true);
-                    break;
-
-                case SYSEVENT_KEY_SPACE:
-                    break;
-
-                case SYSEVENT_KEY_LSHIFT:
-                    m_freeflycam.setSpeed(300.0f);
-                    break;
-
                 default:
                     break;
-            }
+            }*/
             break;
 
         // Key released
         case SYSEVENT_KEYRELEASED:
-            switch (event.key)
+            /*switch (event.key)
             {
-                case SYSEVENT_KEY_Z:
-                    m_freeflycam.setForward(false);
-                    break;
-
-                case SYSEVENT_KEY_S:
-                    m_freeflycam.setBackward(false);
-                    break;
-
-                case SYSEVENT_KEY_Q:
-                    m_freeflycam.setLeftward(false);
-                    break;
-
-                case SYSEVENT_KEY_D:
-                    m_freeflycam.setRightward(false);
-                    break;
-
-                case SYSEVENT_KEY_LSHIFT:
-                    m_freeflycam.setSpeed(10.0f);
-                    break;
-
                 default:
                     break;
-            }
+            }*/
             break;
 
         // Mouse moved
         case SYSEVENT_MOUSEMOVED:
         {
             // Compute mouse events
-            m_freeflycam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
-            //m_orbitalcam.mouseMove(GSysMouse.deltaX, GSysMouse.deltaY);
             break;
         }
 
@@ -409,7 +362,7 @@ void FirstPerson::events(SysEvent& event)
         case SYSEVENT_MOUSEPRESSED:
             if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
             {
-                //m_orbitalcam.mousePress();
+
             }
             break;
 
@@ -417,13 +370,12 @@ void FirstPerson::events(SysEvent& event)
         case SYSEVENT_MOUSERELEASED:
             if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
             {
-                //m_orbitalcam.mouseRelease();
+
             }
             break;
 
         // Mouse wheel
         case SYSEVENT_MOUSEWHEEL:
-            //m_orbitalcam.mouseWheel(event.mouse.wheel);
             break;
 
         default:
@@ -437,6 +389,7 @@ void FirstPerson::events(SysEvent& event)
 void FirstPerson::prephysics()
 {
     m_player.prephysics();
+    m_freeflycam.prephysics();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -445,6 +398,7 @@ void FirstPerson::prephysics()
 void FirstPerson::physics()
 {
     m_player.physics();
+    m_freeflycam.physics();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -453,6 +407,7 @@ void FirstPerson::physics()
 void FirstPerson::precompute(float physicstime)
 {
     m_player.precompute(physicstime);
+    m_freeflycam.precompute(physicstime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -498,7 +453,7 @@ void FirstPerson::compute(float frametime)
 
         // Compute cameras
         m_camera.compute(GSwapchain.ratio);
-        m_freeflycam.compute(GSwapchain.ratio, frametime);
+        m_freeflycam.compute(GSwapchain.ratio);
         m_farflycam.compute(GSwapchain.ratio, m_freeflycam);
         m_orbitalcam.compute(GSwapchain.ratio, frametime);
 

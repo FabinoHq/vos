@@ -47,12 +47,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 FreeFlyCam::FreeFlyCam() :
 Camera(),
-m_cross(),
-m_speed(1.0f),
-m_forward(false),
-m_backward(false),
-m_leftward(false),
-m_rightward(false)
+m_transforms(),
+m_boundingPos(),
+m_boundingAngles(),
+m_cross()
 {
 
 }
@@ -62,134 +60,169 @@ m_rightward(false)
 ////////////////////////////////////////////////////////////////////////////////
 FreeFlyCam::~FreeFlyCam()
 {
-    m_rightward = false;
-    m_leftward = false;
-    m_backward = false;
-    m_forward = false;
-    m_speed = 0.0f;
     m_cross.reset();
+    m_boundingAngles.reset();
+    m_boundingPos.reset();
+    m_transforms.reset();
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Precompute freefly camera physics (thread sync)                           //
+////////////////////////////////////////////////////////////////////////////////
+void FreeFlyCam::prephysics()
+{
+    // Compute prephysics transformations
+    m_transforms.prephysics(m_boundingPos, m_boundingAngles);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute freefly camera physics (threaded)                                 //
+////////////////////////////////////////////////////////////////////////////////
+void FreeFlyCam::physics()
+{
+    // Compute freefly camera angles
+    m_boundingAngles.vec[0] = GSysMouse.anglesInt.vec[1];
+    m_boundingAngles.vec[1] = GSysMouse.anglesInt.vec[0];
+
+    // Compute freefly camera target
+    Vector3i target;
+    int64_t targetX = Math::cos(m_boundingAngles.vec[0]);
+    int64_t targetZ = Math::cos(m_boundingAngles.vec[0]);
+    targetX *= Math::sin(m_boundingAngles.vec[1]);
+    targetX >>= Math::OneIntShift;
+    targetZ *= Math::cos(m_boundingAngles.vec[1]);
+    targetZ >>= Math::OneIntShift;
+    target.vec[0] = static_cast<int32_t>(targetX);
+    target.vec[1] = Math::sin(m_boundingAngles.vec[0]);
+    target.vec[2] = static_cast<int32_t>(targetZ);
+    target.normalize();
+
+    // Compute freefly camera cross product
+    Vector3i cross;
+    cross.crossUpward(target);
+
+    // Compute freefly camera speed
+    int32_t speed = (Math::OneInt >> 10);
+    int32_t crossSpeed = (Math::InvSqrtTwoInt >> 10);
+
+    // Compute keystates
+    if (GSysKeys.up && !GSysKeys.down && !GSysKeys.left && !GSysKeys.right)
+    {
+        // Move forward
+        m_boundingPos.vec[0] -= ((target.vec[0] * speed) >> 10);
+        m_boundingPos.vec[1] += ((target.vec[1] * speed) >> 10);
+        m_boundingPos.vec[2] -= ((target.vec[2] * speed) >> 10);
+    }
+    if (GSysKeys.up && GSysKeys.left && GSysKeys.right && !GSysKeys.down)
+    {
+        // Move forward
+        m_boundingPos.vec[0] -= ((target.vec[0] * speed) >> 10);
+        m_boundingPos.vec[1] += ((target.vec[1] * speed) >> 10);
+        m_boundingPos.vec[2] -= ((target.vec[2] * speed) >> 10);
+    }
+    if (GSysKeys.down && !GSysKeys.up && !GSysKeys.left && !GSysKeys.right)
+    {
+        // Move backward
+        m_boundingPos.vec[0] += ((target.vec[0] * speed) >> 10);
+        m_boundingPos.vec[1] -= ((target.vec[1] * speed) >> 10);
+        m_boundingPos.vec[2] += ((target.vec[2] * speed) >> 10);
+    }
+    if (GSysKeys.down && GSysKeys.left && GSysKeys.right && !GSysKeys.up)
+    {
+        // Move backward
+        m_boundingPos.vec[0] += ((target.vec[0] * speed) >> 10);
+        m_boundingPos.vec[1] -= ((target.vec[1] * speed) >> 10);
+        m_boundingPos.vec[2] += ((target.vec[2] * speed) >> 10);
+    }
+    if (GSysKeys.left && !GSysKeys.right && !GSysKeys.up && !GSysKeys.down)
+    {
+        // Move leftward
+        m_boundingPos.vec[0] -= ((cross.vec[0] * speed) >> 10);
+        m_boundingPos.vec[1] += ((cross.vec[1] * speed) >> 10);
+        m_boundingPos.vec[2] -= ((cross.vec[2] * speed) >> 10);
+    }
+    if (GSysKeys.left && GSysKeys.up && GSysKeys.down && !GSysKeys.right)
+    {
+        // Move leftward
+        m_boundingPos.vec[0] -= ((cross.vec[0] * speed) >> 10);
+        m_boundingPos.vec[1] += ((cross.vec[1] * speed) >> 10);
+        m_boundingPos.vec[2] -= ((cross.vec[2] * speed) >> 10);
+    }
+    if (GSysKeys.right && !GSysKeys.left && !GSysKeys.up && !GSysKeys.down)
+    {
+        // Move rightward
+        m_boundingPos.vec[0] += ((cross.vec[0] * speed) >> 10);
+        m_boundingPos.vec[1] -= ((cross.vec[1] * speed) >> 10);
+        m_boundingPos.vec[2] += ((cross.vec[2] * speed) >> 10);
+    }
+    if (GSysKeys.right && GSysKeys.up && GSysKeys.down && !GSysKeys.left)
+    {
+        // Move rightward
+        m_boundingPos.vec[0] += ((cross.vec[0] * speed) >> 10);
+        m_boundingPos.vec[1] -= ((cross.vec[1] * speed) >> 10);
+        m_boundingPos.vec[2] += ((cross.vec[2] * speed) >> 10);
+    }
+    if (GSysKeys.up && GSysKeys.left && !GSysKeys.down && !GSysKeys.right)
+    {
+        // Move forward leftward
+        m_boundingPos.vec[0] -= ((target.vec[0] * crossSpeed) >> 10);
+        m_boundingPos.vec[1] += ((target.vec[1] * crossSpeed) >> 10);
+        m_boundingPos.vec[2] -= ((target.vec[2] * crossSpeed) >> 10);
+        m_boundingPos.vec[0] -= ((cross.vec[0] * crossSpeed) >> 10);
+        m_boundingPos.vec[1] += ((cross.vec[1] * crossSpeed) >> 10);
+        m_boundingPos.vec[2] -= ((cross.vec[2] * crossSpeed) >> 10);
+    }
+    if (GSysKeys.up && GSysKeys.right && !GSysKeys.down && !GSysKeys.left)
+    {
+        // Move forward rightward
+        m_boundingPos.vec[0] -= ((target.vec[0] * crossSpeed) >> 10);
+        m_boundingPos.vec[1] += ((target.vec[1] * crossSpeed) >> 10);
+        m_boundingPos.vec[2] -= ((target.vec[2] * crossSpeed) >> 10);
+        m_boundingPos.vec[0] += ((cross.vec[0] * crossSpeed) >> 10);
+        m_boundingPos.vec[1] -= ((cross.vec[1] * crossSpeed) >> 10);
+        m_boundingPos.vec[2] += ((cross.vec[2] * crossSpeed) >> 10);
+    }
+    if (GSysKeys.down && GSysKeys.left && !GSysKeys.up && !GSysKeys.right)
+    {
+        // Move backward leftward
+        m_boundingPos.vec[0] += ((target.vec[0] * crossSpeed) >> 10);
+        m_boundingPos.vec[1] -= ((target.vec[1] * crossSpeed) >> 10);
+        m_boundingPos.vec[2] += ((target.vec[2] * crossSpeed) >> 10);
+        m_boundingPos.vec[0] -= ((cross.vec[0] * crossSpeed) >> 10);
+        m_boundingPos.vec[1] += ((cross.vec[1] * crossSpeed) >> 10);
+        m_boundingPos.vec[2] -= ((cross.vec[2] * crossSpeed) >> 10);
+    }
+    if (GSysKeys.down && GSysKeys.right && !GSysKeys.left && !GSysKeys.up)
+    {
+        // Move backward rightward
+        m_boundingPos.vec[0] += ((target.vec[0] * crossSpeed) >> 10);
+        m_boundingPos.vec[1] -= ((target.vec[1] * crossSpeed) >> 10);
+        m_boundingPos.vec[2] += ((target.vec[2] * crossSpeed) >> 10);
+        m_boundingPos.vec[0] += ((cross.vec[0] * crossSpeed) >> 10);
+        m_boundingPos.vec[1] -= ((cross.vec[1] * crossSpeed) >> 10);
+        m_boundingPos.vec[2] += ((cross.vec[2] * crossSpeed) >> 10);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Precompute freefly camera renderer interpolations                         //
+////////////////////////////////////////////////////////////////////////////////
+void FreeFlyCam::precompute(float physicstime)
+{
+    // Precompute transformations
+    precomputeTransforms(m_transforms, physicstime);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute freefly camera                                                    //
 //  return : True if the freefly camera is successfully computed              //
 ////////////////////////////////////////////////////////////////////////////////
-bool FreeFlyCam::compute(float ratio, float frametime)
+bool FreeFlyCam::compute(float ratio)
 {
-    // Compute freefly camera speed
-    float speed = m_speed*frametime;
-    float crossSpeed = speed*Math::InvSqrtTwo;
-
-    // Compute freefly camera target
-    m_target.vec[0] = Math::cos(m_angles.vec[0]);
-    m_target.vec[0] *= Math::sin(m_angles.vec[1]);
-    m_target.vec[1] = Math::sin(m_angles.vec[0]);
-    m_target.vec[2] = Math::cos(m_angles.vec[0]);
-    m_target.vec[2] *= Math::cos(m_angles.vec[1]);
-    m_target.normalize();
-
-    // Compute freefly camera cross product
-    m_cross.crossProduct(m_target, m_upward);
-    m_cross.normalize();
-
-    // Compute keystates
-    if (m_forward && !m_backward && !m_leftward && !m_rightward)
-    {
-        // Move forward
-        m_position.vec[0] -= m_target.vec[0]*speed;
-        m_position.vec[1] += m_target.vec[1]*speed;
-        m_position.vec[2] -= m_target.vec[2]*speed;
-    }
-    if (m_forward && m_leftward && m_rightward && !m_backward)
-    {
-        // Move forward
-        m_position.vec[0] -= m_target.vec[0]*speed;
-        m_position.vec[1] += m_target.vec[1]*speed;
-        m_position.vec[2] -= m_target.vec[2]*speed;
-    }
-    if (m_backward && !m_forward && !m_leftward && !m_rightward)
-    {
-        // Move backward
-        m_position.vec[0] += m_target.vec[0]*speed;
-        m_position.vec[1] -= m_target.vec[1]*speed;
-        m_position.vec[2] += m_target.vec[2]*speed;
-    }
-    if (m_backward && m_leftward && m_rightward && !m_forward)
-    {
-        // Move backward
-        m_position.vec[0] += m_target.vec[0]*speed;
-        m_position.vec[1] -= m_target.vec[1]*speed;
-        m_position.vec[2] += m_target.vec[2]*speed;
-    }
-    if (m_leftward && !m_rightward && !m_forward && !m_backward)
-    {
-        // Move leftward
-        m_position.vec[0] -= m_cross.vec[0]*speed;
-        m_position.vec[1] += m_cross.vec[1]*speed;
-        m_position.vec[2] -= m_cross.vec[2]*speed;
-    }
-    if (m_leftward && m_forward && m_backward && !m_rightward)
-    {
-        // Move leftward
-        m_position.vec[0] -= m_cross.vec[0]*speed;
-        m_position.vec[1] += m_cross.vec[1]*speed;
-        m_position.vec[2] -= m_cross.vec[2]*speed;
-    }
-    if (m_rightward && !m_leftward && !m_forward && !m_backward)
-    {
-        // Move rightward
-        m_position.vec[0] += m_cross.vec[0]*speed;
-        m_position.vec[1] -= m_cross.vec[1]*speed;
-        m_position.vec[2] += m_cross.vec[2]*speed;
-    }
-    if (m_rightward && m_forward && m_backward && !m_leftward)
-    {
-        // Move rightward
-        m_position.vec[0] += m_cross.vec[0]*speed;
-        m_position.vec[1] -= m_cross.vec[1]*speed;
-        m_position.vec[2] += m_cross.vec[2]*speed;
-    }
-    if (m_forward && m_leftward && !m_backward && !m_rightward)
-    {
-        // Move forward leftward
-        m_position.vec[0] -= m_target.vec[0]*crossSpeed;
-        m_position.vec[1] += m_target.vec[1]*crossSpeed;
-        m_position.vec[2] -= m_target.vec[2]*crossSpeed;
-        m_position.vec[0] -= m_cross.vec[0]*crossSpeed;
-        m_position.vec[1] += m_cross.vec[1]*crossSpeed;
-        m_position.vec[2] -= m_cross.vec[2]*crossSpeed;
-    }
-    if (m_forward && m_rightward && !m_backward && !m_leftward)
-    {
-        // Move forward rightward
-        m_position.vec[0] -= m_target.vec[0]*crossSpeed;
-        m_position.vec[1] += m_target.vec[1]*crossSpeed;
-        m_position.vec[2] -= m_target.vec[2]*crossSpeed;
-        m_position.vec[0] += m_cross.vec[0]*crossSpeed;
-        m_position.vec[1] -= m_cross.vec[1]*crossSpeed;
-        m_position.vec[2] += m_cross.vec[2]*crossSpeed;
-    }
-    if (m_backward && m_leftward && !m_forward && !m_rightward)
-    {
-        // Move backward leftward
-        m_position.vec[0] += m_target.vec[0]*crossSpeed;
-        m_position.vec[1] -= m_target.vec[1]*crossSpeed;
-        m_position.vec[2] += m_target.vec[2]*crossSpeed;
-        m_position.vec[0] -= m_cross.vec[0]*crossSpeed;
-        m_position.vec[1] += m_cross.vec[1]*crossSpeed;
-        m_position.vec[2] -= m_cross.vec[2]*crossSpeed;
-    }
-    if (m_backward && m_rightward && !m_leftward && !m_forward)
-    {
-        // Move backward rightward
-        m_position.vec[0] += m_target.vec[0]*crossSpeed;
-        m_position.vec[1] -= m_target.vec[1]*crossSpeed;
-        m_position.vec[2] += m_target.vec[2]*crossSpeed;
-        m_position.vec[0] += m_cross.vec[0]*crossSpeed;
-        m_position.vec[1] -= m_cross.vec[1]*crossSpeed;
-        m_position.vec[2] += m_cross.vec[2]*crossSpeed;
-    }
+    // Compute freefly camera angles
+    m_angles.vec[1] = GSysMouse.angles.vec[0];
+    m_angles.vec[0] = GSysMouse.angles.vec[1];
 
     // Compute projection matrix
     m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
@@ -285,25 +318,4 @@ bool FreeFlyCam::compute(float ratio, FreeFlyCam& freeFlyCam)
 
     // Freefly camera successfully computed
     return true;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Handle mouse move event                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void FreeFlyCam::mouseMove(float mouseDx, float mouseDy)
-{
-    // Set freefly camera angles
-    m_angles.vec[1] -= mouseDx*FreeflyCameraMouseFactor;
-    m_angles.vec[0] -= mouseDy*FreeflyCameraMouseFactor;
-
-    // Clamp X freefly camera angle
-    if (m_angles.vec[0] <= FreeflyCameraMinAngle)
-    {
-        m_angles.vec[0] = FreeflyCameraMinAngle;
-    }
-    if (m_angles.vec[0] >= FreeflyCameraMaxAngle)
-    {
-        m_angles.vec[0] = FreeflyCameraMaxAngle;
-    }
 }
