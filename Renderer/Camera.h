@@ -207,7 +207,7 @@
             Matrix4x4           m_projviewMatrix;   // Projview matrix
 
             Vector3             m_target;           // Camera target vector
-            Vector3             m_upward;           // Camera upward vector
+            Vector3             m_cross;            // Camera cross vector
             float               m_fovy;             // Camera fovy
             float               m_nearPlane;        // Camera near plane
             float               m_farPlane;         // Camera far plane

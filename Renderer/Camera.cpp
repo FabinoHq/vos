@@ -50,7 +50,7 @@ Transform3(),
 m_projMatrix(),
 m_projviewMatrix(),
 m_target(0.0f, 0.0f, 0.0f),
-m_upward(0.0f, 0.0f, 0.0f),
+m_cross(0.0f, 0.0f, 0.0f),
 m_fovy(0.0f),
 m_nearPlane(0.0f),
 m_farPlane(0.0f)
@@ -69,7 +69,7 @@ Camera::~Camera()
     m_farPlane = 0.0f;
     m_nearPlane = 0.0f;
     m_fovy = 0.0f;
-    m_upward.reset();
+    m_cross.reset();
     m_target.reset();
     m_projviewMatrix.reset();
     m_projMatrix.reset();
@@ -92,8 +92,8 @@ bool Camera::init()
     // Reset camera target vector
     m_target.reset();
 
-    // Reset camera upward vector
-    m_upward.set(0.0f, 1.0f, 0.0f);
+    // Reset camera cross vector
+    m_cross.reset();
 
     // Reset camera fovy
     m_fovy = CameraDefaultFovy;
@@ -197,9 +197,8 @@ void Camera::destroyCamera()
     m_farPlane = 0.0f;
     m_nearPlane = 0.0f;
     m_fovy = 0.0f;
-    m_upward.reset();
+    m_cross.reset();
     m_target.reset();
-    m_angles.reset();
     m_projviewMatrix.reset();
     m_projMatrix.reset();
 
@@ -219,13 +218,16 @@ void Camera::destroyCamera()
 ////////////////////////////////////////////////////////////////////////////////
 bool Camera::compute(float ratio)
 {
-    // Compute camera target
+    // Compute camera target vector
     m_target.vec[0] = Math::cos(m_angles.vec[0]);
     m_target.vec[0] *= Math::sin(m_angles.vec[1]);
     m_target.vec[1] = Math::sin(m_angles.vec[0]);
     m_target.vec[2] = Math::cos(m_angles.vec[0]);
     m_target.vec[2] *= Math::cos(m_angles.vec[1]);
     m_target.normalize();
+
+    // Compute camera cross vector
+    m_cross.crossUpward(m_target);
 
     // Compute projection matrix
     m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);

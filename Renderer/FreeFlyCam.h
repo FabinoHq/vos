@@ -47,7 +47,6 @@
     #include "../System/SysMouse.h"
     #include "../System/SysKeys.h"
     #include "../Math/Math.h"
-    #include "../Math/Vector3.h"
     #include "../Math/Vector3i.h"
     #include "../Math/Matrix4x4.h"
     #include "../Physics/Physics.h"
@@ -205,7 +204,8 @@
             PhysicsTransform3       m_transforms;       // Camera transforms
             Vector3i                m_boundingPos;      // Camera position
             Vector3i                m_boundingAngles;   // Camera angles
-            Vector3                 m_cross;            // Cross product
+            Vector3i                m_targetInt;        // Camera target
+            Vector3i                m_crossInt;         // Camera cross
     };
 
 
