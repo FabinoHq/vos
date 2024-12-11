@@ -59,6 +59,7 @@
     ////////////////////////////////////////////////////////////////////////////
     const double PhysicsTickRate = 100.0;
     const double PhysicsTickTime = (1.0 / PhysicsTickRate);
+    const double PhysicsRunSleepTime = 0.001;
     const double PhysicsIdleSleepTime = 0.01;
     const double PhysicsErrorSleepTime = 0.1;
     const double PhysicsWaitSleepTime = 0.02;

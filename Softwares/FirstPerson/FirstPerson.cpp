@@ -335,43 +335,22 @@ void FirstPerson::events(SysEvent& event)
     {
         // Key pressed
         case SYSEVENT_KEYPRESSED:
-            /*switch (event.key)
-            {
-                default:
-                    break;
-            }*/
             break;
 
         // Key released
         case SYSEVENT_KEYRELEASED:
-            /*switch (event.key)
-            {
-                default:
-                    break;
-            }*/
             break;
 
         // Mouse moved
         case SYSEVENT_MOUSEMOVED:
-        {
-            // Compute mouse events
             break;
-        }
 
         // Mouse button pressed
         case SYSEVENT_MOUSEPRESSED:
-            if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
-            {
-
-            }
             break;
 
         // Mouse button released
         case SYSEVENT_MOUSERELEASED:
-            if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
-            {
-
-            }
             break;
 
         // Mouse wheel

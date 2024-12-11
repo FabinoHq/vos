@@ -47,7 +47,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 Vos::Vos() :
 m_running(false),
-m_clock()
+m_clock(),
+m_frameClock(),
+m_clockTime(0.0)
 {
 
 }
@@ -193,34 +195,32 @@ bool Vos::launch()
 ////////////////////////////////////////////////////////////////////////////////
 void Vos::run()
 {
-    // Framerate
-    const float maxFramerate = 300.0f;
+    // Reset clocks
+    m_clock.reset();
+    m_frameClock.reset();
+    m_clockTime = 0.0;
 
     // Run VOS
-    m_clock.reset();
     m_running = true;
     while (m_running)
     {
-        // Compute frametime
-        float frametime = m_clock.getAndResetF();
-        float framelimit = frametime;
+        // Update clock time
+        m_clockTime += m_clock.getAndReset();
 
-        // Framerate limiter
-        if (framelimit <= (1.0f/maxFramerate))
+        // Check renderer tick
+        if (m_clockTime < RendererTickTime)
         {
             // Release some CPU
-            float remainingTime = ((1.0f/maxFramerate) - framelimit);
-            if (remainingTime >= 0.01f)
-            {
-                SysSleep(0.001);
-            }
+            SysSleep(RendererRunSleepTime);
+            continue;
+        }
 
-            // Stall to match target framerate
-            framelimit += m_clock.getElapsedTimeF();
-            while (framelimit <= (1.0f/maxFramerate))
-            {
-                framelimit = (m_clock.getElapsedTimeF()-framelimit);
-            }
+        // Reset renderer clock time
+        m_clockTime -= RendererTickTime;
+        if (m_clockTime >= RendererTickTime)
+        {
+            // Renderer is overloaded
+            m_clockTime = 0.0;
         }
 
         // Get main window event
@@ -256,7 +256,22 @@ void Vos::run()
 
                 // Mouse moved
                 case SYSEVENT_MOUSEMOVED:
-                    GSysMouse.update(event.mouse.x, event.mouse.y);
+                    GSysMouse.move(event.mouse.x, event.mouse.y);
+                    break;
+
+                // Mouse button pressed
+                case SYSEVENT_MOUSEPRESSED:
+                    GSysMouse.pressed(event.mouse.button);
+                    break;
+
+                // Mouse button released
+                case SYSEVENT_MOUSERELEASED:
+                    GSysMouse.released(event.mouse.button);
+                    break;
+
+                // Mouse wheel
+                case SYSEVENT_MOUSEWHEEL:
+                    GSysMouse.mouseWheel(event.mouse.wheel);
                     break;
 
                 default:
@@ -273,13 +288,10 @@ void Vos::run()
         GPhysics.endPrecompute();
 
         // Compute logic
-        GSoftwares.compute(frametime);
+        GSoftwares.compute(m_frameClock.getAndResetF());
 
         // Render frame
         GSoftwares.render();
-
-        // Release some CPU
-        SysYield();
     }
 
     // Wait for renderer device idle state

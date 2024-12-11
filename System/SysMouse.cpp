@@ -54,16 +54,19 @@ SysMouse GSysMouse = SysMouse();
 ////////////////////////////////////////////////////////////////////////////////
 SysMouse::SysMouse() :
 m_mutex(),
-previousX(0),
-previousY(0),
+m_previousX(0),
+m_previousY(0),
 mouseX(0.0f),
 mouseY(0.0f),
 deltaX(0.0f),
 deltaY(0.0f),
+wheel(0),
+left(false),
+right(false),
 target(0.0f),
-targetInt(0),
+physicsTarget(0),
 angles(),
-anglesInt()
+physicsAngles()
 {
 
 }
@@ -73,14 +76,26 @@ anglesInt()
 ////////////////////////////////////////////////////////////////////////////////
 SysMouse::~SysMouse()
 {
-
+    physicsAngles.reset();
+    angles.reset();
+    physicsTarget = 0;
+    target = 0.0f;
+    right = false;
+    left = false;
+    wheel = 0;
+    deltaY = 0.0f;
+    deltaX = 0.0f;
+    mouseY = 0.0f;
+    mouseX = 0.0f;
+    m_previousY = 0;
+    m_previousX = 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update mouse position                                                     //
+//  Mouse move event                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void SysMouse::update(int x, int y)
+void SysMouse::move(int x, int y)
 {
     // Get renderer scale and ratio
     float scale = GSwapchain.getScale();
@@ -97,8 +112,8 @@ void SysMouse::update(int x, int y)
         mouseY = Math::clamp(mouseY, -1.0f, 1.0f);
     #else
         // OS absolute mouse position
-        deltaX = ((x-previousX)*1.0f);
-        deltaY = ((y-previousY)*1.0f);
+        deltaX = ((x-m_previousX)*1.0f);
+        deltaY = ((y-m_previousY)*1.0f);
         mouseX = Math::clamp((-ratio + (x*scale*2.0f)), -ratio, ratio);
         mouseY = Math::clamp((1.0f - (y*scale*2.0f)), -1.0f, 1.0f);
     #endif // VOS_POINTERLOCK
@@ -123,8 +138,54 @@ void SysMouse::update(int x, int y)
     m_mutex.unlock();
 
     // Update previous mouse position
-    previousX = x;
-    previousY = y;
+    m_previousX = x;
+    m_previousY = y;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Mouse button pressed event                                                //
+////////////////////////////////////////////////////////////////////////////////
+void SysMouse::pressed(const SysEventMouseButton& button)
+{
+    // Set mouse button pressed state
+    switch (button)
+    {
+        case SYSEVENT_MOUSE_LEFT:
+            left = true;
+            break;
+        case SYSEVENT_MOUSE_RIGHT:
+            right = true;
+            break;
+        default:
+            break;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Mouse button released event                                               //
+////////////////////////////////////////////////////////////////////////////////
+void SysMouse::released(const SysEventMouseButton& button)
+{
+    // Set mouse button released state
+    switch (button)
+    {
+        case SYSEVENT_MOUSE_LEFT:
+            left = false;
+            break;
+        case SYSEVENT_MOUSE_RIGHT:
+            right = false;
+            break;
+        default:
+            break;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Mouse wheel event                                                         //
+////////////////////////////////////////////////////////////////////////////////
+void SysMouse::mouseWheel(int mouseWheel)
+{
+    wheel = mouseWheel;
 }
 
 
@@ -133,14 +194,18 @@ void SysMouse::update(int x, int y)
 ////////////////////////////////////////////////////////////////////////////////
 void SysMouse::sync()
 {
-    // Copy mouse internal states
+    // Lock mouse mutex
     m_mutex.lock();
-    targetInt = static_cast<int32_t>(target * RendererAngleToPhysics);
-    anglesInt.vec[0] = static_cast<int32_t>(
+
+    // Copy mouse internal states to physics states
+    physicsTarget = static_cast<int32_t>(target * RendererAngleToPhysics);
+    physicsAngles.vec[0] = static_cast<int32_t>(
         angles.vec[0] * RendererAngleToPhysics
     );
-    anglesInt.vec[1] = static_cast<int32_t>(
+    physicsAngles.vec[1] = static_cast<int32_t>(
         angles.vec[1] * RendererAngleToPhysics
     );
+
+    // Unlock mouse mutex
     m_mutex.unlock();
 }

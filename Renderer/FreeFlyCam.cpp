@@ -84,8 +84,8 @@ void FreeFlyCam::prephysics()
 void FreeFlyCam::physics()
 {
     // Compute freefly camera angles
-    m_boundingAngles.vec[0] = GSysMouse.anglesInt.vec[1];
-    m_boundingAngles.vec[1] = GSysMouse.anglesInt.vec[0];
+    m_boundingAngles.vec[0] = GSysMouse.physicsAngles.vec[1];
+    m_boundingAngles.vec[1] = GSysMouse.physicsAngles.vec[0];
 
     // Compute freefly camera target
     m_targetInt.vec[0] = static_cast<int32_t>(

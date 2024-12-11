@@ -76,9 +76,24 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Update mouse position                                         //
+            //  Mouse move event                                              //
             ////////////////////////////////////////////////////////////////////
-            void update(int x, int y);
+            void move(int x, int y);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Mouse button pressed event                                    //
+            ////////////////////////////////////////////////////////////////////
+            void pressed(const SysEventMouseButton& button);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Mouse button released event                                   //
+            ////////////////////////////////////////////////////////////////////
+            void released(const SysEventMouseButton& button);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Mouse wheel event                                             //
+            ////////////////////////////////////////////////////////////////////
+            void mouseWheel(int mouseWheel);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -101,20 +116,23 @@
 
         private:
             SysMutex        m_mutex;            // Mouse mutex
+            int             m_previousX;        // Previous mouse X position
+            int             m_previousY;        // Previous mouse Y position
 
 
         public:
-            int             previousX;          // Previous mouse X position
-            int             previousY;          // Previous mouse Y position
             float           mouseX;             // Mouse X position
             float           mouseY;             // Mouse Y position
             float           deltaX;             // Mouse X delta
             float           deltaY;             // Mouse Y delta
+            int             wheel;              // Mouse wheel
+            bool            left;               // Mouse left button
+            bool            right;              // Mouse right button
 
             float           target;             // Mouse target
-            int32_t         targetInt;          // Mouse int target
+            int32_t         physicsTarget;      // Mouse physics target
             Vector2         angles;             // Mouse angles
-            Vector2i        anglesInt;          // Mouse int angles
+            Vector2i        physicsAngles;      // Mouse physics angles
     };
 
 

@@ -106,6 +106,8 @@
         private:
             bool            m_running;          // VOS running state
             SysClock        m_clock;            // VOS clock
+            SysClock        m_frameClock;       // VOS frame clock
+            double          m_clockTime;        // VOS clock time
     };
 
 

@@ -247,6 +247,7 @@ void Physics::run()
         if (m_clockTime >= PhysicsTickTime)
         {
             // Physics solver is overloaded
+            m_clockTime = 0.0;
         }
 
         // Compute physics tick
@@ -271,5 +272,5 @@ void Physics::run()
     }
 
     // Release some CPU
-    SysYield();
+    SysSleep(PhysicsRunSleepTime);
 }
