@@ -45,7 +45,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  FirstPersonPlayer default constructor                                     //
 ////////////////////////////////////////////////////////////////////////////////
-FirstPersonPlayer::FirstPersonPlayer()
+FirstPersonPlayer::FirstPersonPlayer() :
+Transform3(),
+m_transforms(),
+m_boundingPos(),
+m_boundingAngles(),
+m_physicsTarget(),
+m_physicsCross()
 {
 
 }
@@ -55,7 +61,11 @@ FirstPersonPlayer::FirstPersonPlayer()
 ////////////////////////////////////////////////////////////////////////////////
 FirstPersonPlayer::~FirstPersonPlayer()
 {
-
+    m_physicsCross.reset();
+    m_physicsTarget.reset();
+    m_boundingAngles.reset();
+    m_boundingPos.reset();
+    m_transforms.reset();
 }
 
 
@@ -65,6 +75,13 @@ FirstPersonPlayer::~FirstPersonPlayer()
 ////////////////////////////////////////////////////////////////////////////////
 bool FirstPersonPlayer::init()
 {
+    // Reset first person player
+    m_transforms.reset();
+    m_boundingPos.reset();
+    m_boundingAngles.reset();
+    m_physicsTarget.reset();
+    m_physicsCross.reset();
+
     // First person player is ready
     return true;
 }
@@ -75,7 +92,8 @@ bool FirstPersonPlayer::init()
 ////////////////////////////////////////////////////////////////////////////////
 void FirstPersonPlayer::prephysics()
 {
-    
+    // Compute prephysics transformations
+    m_transforms.prephysics(m_boundingPos, m_boundingAngles);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +101,50 @@ void FirstPersonPlayer::prephysics()
 ////////////////////////////////////////////////////////////////////////////////
 void FirstPersonPlayer::physics()
 {
+    // Compute player angles
+    m_boundingAngles.vec[0] = GSysMouse.physicsAngles.vec[1];
+    m_boundingAngles.vec[1] = GSysMouse.physicsAngles.vec[0];
 
+    // Compute player target
+    m_physicsTarget.vec[0] = static_cast<int32_t>(
+        (static_cast<int64_t>(Math::cos(m_boundingAngles.vec[0])) *
+        static_cast<int64_t>(Math::sin(m_boundingAngles.vec[1]))) >>
+        Math::OneIntShift
+    );
+    m_physicsTarget.vec[1] = Math::sin(m_boundingAngles.vec[0]);
+    m_physicsTarget.vec[2] = static_cast<int32_t>(
+        (static_cast<int64_t>(Math::cos(m_boundingAngles.vec[0])) *
+        static_cast<int64_t>(Math::cos(m_boundingAngles.vec[1]))) >>
+        Math::OneIntShift
+    );
+    m_physicsTarget.normalize();
+
+    // Compute player cross vector
+    m_physicsCross.crossUpward(m_physicsTarget);
+    m_physicsCross.normalize();
+
+    // Compute player position
+    m_boundingPos.vec[0] += static_cast<int32_t>(
+        ((static_cast<int64_t>(m_physicsCross.vec[0]) *
+        static_cast<int64_t>(GSysKeys.axis.vec[0])) -
+        (static_cast<int64_t>(m_physicsTarget.vec[0]) *
+        static_cast<int64_t>(GSysKeys.axis.vec[1]))) >>
+        (GSysKeys.shift ? 18 : 22)
+    );
+    m_boundingPos.vec[1] += static_cast<int32_t>(
+        ((static_cast<int64_t>(m_physicsTarget.vec[1]) *
+        static_cast<int64_t>(GSysKeys.axis.vec[1])) -
+        (static_cast<int64_t>(m_physicsCross.vec[1]) *
+        static_cast<int64_t>(GSysKeys.axis.vec[0]))) >>
+        (GSysKeys.shift ? 18 : 22)
+    );
+    m_boundingPos.vec[2] += static_cast<int32_t>(
+        ((static_cast<int64_t>(m_physicsCross.vec[2]) *
+        static_cast<int64_t>(GSysKeys.axis.vec[0])) -
+        (static_cast<int64_t>(m_physicsTarget.vec[2]) *
+        static_cast<int64_t>(GSysKeys.axis.vec[1]))) >>
+        (GSysKeys.shift ? 18 : 22)
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +152,8 @@ void FirstPersonPlayer::physics()
 ////////////////////////////////////////////////////////////////////////////////
 void FirstPersonPlayer::precompute(float physicstime)
 {
-
+    // Precompute transformations
+    precomputeTransforms(m_transforms, physicstime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -43,10 +43,18 @@
 #define VOS_RENDERER_ORBITALCAM_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysEvent.h"
+    #include "../System/SysMouse.h"
+    #include "../System/SysKeys.h"
+
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
     #include "../Math/Vector3i.h"
     #include "../Math/Matrix4x4.h"
+
+    #include "../Physics/Physics.h"
+    #include "../Physics/PhysicsTransform3.h"
+
     #include "Camera.h"
 
     #include <cstdint>
