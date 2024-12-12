@@ -47,11 +47,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 OrbitalCam::OrbitalCam() :
 Camera(),
-m_distance(1.0f),
-m_speed(1.0f),
-m_mousePressed(false),
-m_forward(false),
-m_backward(false)
+m_transforms(),
+m_boundingPos(),
+m_boundingAngles(),
+m_physicsTarget(),
+m_distance(1)
 {
 
 }
@@ -61,48 +61,63 @@ m_backward(false)
 ////////////////////////////////////////////////////////////////////////////////
 OrbitalCam::~OrbitalCam()
 {
-    m_backward = false;
-    m_forward = false;
-    m_mousePressed = false;
-    m_speed = 0.0f;
-    m_distance = 0.0f;
+    m_distance = 0;
+    m_physicsTarget.reset();
+    m_boundingAngles.reset();
+    m_boundingPos.reset();
+    m_transforms.reset();
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  Precompute orbital camera physics (thread sync)                           //
+////////////////////////////////////////////////////////////////////////////////
+void OrbitalCam::prephysics()
+{
+    // Compute prephysics transformations
+    m_transforms.prephysics(m_boundingPos, m_boundingAngles);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute orbital camera physics (threaded)                                 //
+////////////////////////////////////////////////////////////////////////////////
+void OrbitalCam::physics()
+{
+    // Compute orbital camera angles
+    m_boundingAngles.vec[0] = GSysMouse.physicsAngles.vec[1];
+    m_boundingAngles.vec[1] = GSysMouse.physicsAngles.vec[0];
+
+    // Compute orbital camera position
+    m_boundingPos.vec[0] = static_cast<int32_t>(
+        (static_cast<int64_t>(Math::cos(m_boundingAngles.vec[0])) *
+        static_cast<int64_t>(Math::sin(m_boundingAngles.vec[1]))) >>
+        Math::OneIntShift
+    );
+    m_boundingPos.vec[1] = Math::sin(-m_boundingAngles.vec[0]);
+    m_boundingPos.vec[2] = static_cast<int32_t>(
+        (static_cast<int64_t>(Math::cos(m_boundingAngles.vec[0])) *
+        static_cast<int64_t>(Math::cos(m_boundingAngles.vec[1]))) >>
+        Math::OneIntShift
+    );
+    m_boundingPos *= m_distance;
+    m_boundingPos += m_physicsTarget;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Precompute orbital camera renderer interpolations                         //
+////////////////////////////////////////////////////////////////////////////////
+void OrbitalCam::precompute(float physicstime)
+{
+    // Precompute transformations
+    precomputeTransforms(m_transforms, physicstime);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute orbital camera                                                    //
 //  return : True if the orbital camera is successfully computed              //
 ////////////////////////////////////////////////////////////////////////////////
-bool OrbitalCam::compute(float ratio, float frametime)
+bool OrbitalCam::compute(float ratio)
 {
-    // Compute orbital camera speed
-    float speed = m_speed*frametime;
-
-    // Compute move states
-    if (m_forward)
-    {
-        // Move forward
-        m_distance -= speed;
-        m_distance = Math::max(m_distance, OrbitalCameraMinDistance);
-        m_forward = false;
-    }
-    if (m_backward)
-    {
-        // Move backward
-        m_distance += speed;
-        m_distance = Math::min(m_distance, OrbitalCameraMaxDistance);
-        m_backward = false;
-    }
-
-    // Compute camera position
-    m_position.vec[0] = Math::cos(m_angles.vec[0]);
-    m_position.vec[0] *= Math::sin(m_angles.vec[1]);
-    m_position.vec[1] = Math::sin(-m_angles.vec[0]);
-    m_position.vec[2] = Math::cos(m_angles.vec[0]);
-    m_position.vec[2] *= Math::cos(m_angles.vec[1]);
-    m_position *= m_distance;
-    m_position += m_target;
-
     // Compute projection matrix
     m_projMatrix.setPerspective(m_fovy, ratio, m_nearPlane, m_farPlane);
 
@@ -203,7 +218,7 @@ bool OrbitalCam::compute(float ratio, OrbitalCam& orbitalCam)
 ////////////////////////////////////////////////////////////////////////////////
 //  Set orbital camera distance from target                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void OrbitalCam::setDistance(float distance)
+void OrbitalCam::setDistance(int32_t distance)
 {
     m_distance = Math::clamp(
         distance, OrbitalCameraMinDistance, OrbitalCameraMaxDistance
@@ -213,61 +228,17 @@ void OrbitalCam::setDistance(float distance)
 ////////////////////////////////////////////////////////////////////////////////
 //  Set orbital camera target                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void OrbitalCam::setTarget(const Vector3& target)
+void OrbitalCam::setTarget(const Vector3i& target)
 {
-    m_target.vec[0] = target.vec[0];
-    m_target.vec[1] = target.vec[1];
-    m_target.vec[2] = target.vec[2];
+    m_physicsTarget = target;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Set orbital camera target                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void OrbitalCam::setTarget(float targetX, float targetY, float targetZ)
+void OrbitalCam::setTarget(int32_t targetX, int32_t targetY, int32_t targetZ)
 {
-    m_target.vec[0] = targetX;
-    m_target.vec[1] = targetY;
-    m_target.vec[2] = targetZ;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Handle mouse move event                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void OrbitalCam::mouseMove(float mouseDx, float mouseDy)
-{
-    // Set orbital camera angles
-    if (m_mousePressed)
-    {
-        m_angles.vec[1] -= mouseDx*OrbitalCameraMouseFactor;
-        m_angles.vec[0] -= mouseDy*OrbitalCameraMouseFactor;
-    }
-
-    // Clamp X orbital camera angle
-    if (m_angles.vec[0] <= OrbitalCameraMinAngle)
-    {
-        m_angles.vec[0] = OrbitalCameraMinAngle;
-    }
-    if (m_angles.vec[0] >= OrbitalCameraMaxAngle)
-    {
-        m_angles.vec[0] = OrbitalCameraMaxAngle;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Handle mouse wheel event                                                  //
-////////////////////////////////////////////////////////////////////////////////
-void OrbitalCam::mouseWheel(int mouseWheel)
-{
-    if (mouseWheel > 0)
-    {
-        // Mouse wheel up
-        m_forward = true;
-        m_backward = false;
-    }
-    else if (mouseWheel < 0)
-    {
-        // Mouse wheel down
-        m_backward = true;
-        m_forward = false;
-    }
+    m_physicsTarget.vec[0] = targetX;
+    m_physicsTarget.vec[1] = targetY;
+    m_physicsTarget.vec[2] = targetZ;
 }

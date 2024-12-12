@@ -201,11 +201,11 @@
 
 
         private:
-            PhysicsTransform3       m_transforms;       // Camera transforms
-            Vector3i                m_boundingPos;      // Camera position
-            Vector3i                m_boundingAngles;   // Camera angles
-            Vector3i                m_targetInt;        // Camera target
-            Vector3i                m_crossInt;         // Camera cross
+            PhysicsTransform3       m_transforms;       // FreeFlyCam transforms
+            Vector3i                m_boundingPos;      // FreeFlyCam position
+            Vector3i                m_boundingAngles;   // FreeFlyCam angles
+            Vector3i                m_physicsTarget;    // FreeFlyCam target
+            Vector3i                m_physicsCross;     // FreeFlyCam cross
     };
 
 

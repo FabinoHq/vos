@@ -45,6 +45,7 @@
     #include "../System/System.h"
     #include "../Math/Math.h"
     #include "../Math/Vector3.h"
+    #include "../Math/Vector3i.h"
     #include "../Math/Matrix4x4.h"
     #include "Camera.h"
 
@@ -58,8 +59,8 @@
     const float OrbitalCameraMouseFactor = 0.004f;
     const float OrbitalCameraMinAngle = -(Math::PiHalf-0.001f);
     const float OrbitalCameraMaxAngle = (Math::PiHalf-0.001f);
-    const float OrbitalCameraMinDistance = 0.0f;
-    const float OrbitalCameraMaxDistance = 10.0f;
+    const int32_t OrbitalCameraMinDistance = 0;
+    const int32_t OrbitalCameraMaxDistance = 50000;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -80,10 +81,25 @@
 
 
             ////////////////////////////////////////////////////////////////////
+            //  Precompute orbital camera physics (thread sync)               //
+            ////////////////////////////////////////////////////////////////////
+            void prephysics();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Compute orbital camera physics (threaded)                     //
+            ////////////////////////////////////////////////////////////////////
+            void physics();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Precompute orbital camera renderer interpolations             //
+            ////////////////////////////////////////////////////////////////////
+            void precompute(float physicstime);
+
+            ////////////////////////////////////////////////////////////////////
             //  Compute orbital camera                                        //
             //  return : True if the orbital camera is successfully computed  //
             ////////////////////////////////////////////////////////////////////
-            virtual bool compute(float ratio, float frametime);
+            virtual bool compute(float ratio);
 
             ////////////////////////////////////////////////////////////////////
             //  Compute orbital camera from another orbital camera            //
@@ -95,51 +111,17 @@
             ////////////////////////////////////////////////////////////////////
             //  Set orbital camera target                                     //
             ////////////////////////////////////////////////////////////////////
-            void setTarget(const Vector3& target);
+            void setTarget(const Vector3i& target);
 
             ////////////////////////////////////////////////////////////////////
             //  Set orbital camera target                                     //
             ////////////////////////////////////////////////////////////////////
-            void setTarget(float targetX, float targetY, float targetZ);
+            void setTarget(int32_t targetX, int32_t targetY, int32_t targetZ);
 
             ////////////////////////////////////////////////////////////////////
             //  Set orbital camera distance from target                       //
             ////////////////////////////////////////////////////////////////////
-            void setDistance(float distance);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Set orbital camera speed                                      //
-            ////////////////////////////////////////////////////////////////////
-            inline void setSpeed(float speed)
-            {
-                m_speed = speed;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Handle mouse move event                                       //
-            ////////////////////////////////////////////////////////////////////
-            void mouseMove(float mouseDx, float mouseDy);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Handle mouse press event                                      //
-            ////////////////////////////////////////////////////////////////////
-            inline void mousePress()
-            {
-                m_mousePressed = true;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Handle mouse release event                                    //
-            ////////////////////////////////////////////////////////////////////
-            inline void mouseRelease()
-            {
-                m_mousePressed = false;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Handle mouse wheel event                                      //
-            ////////////////////////////////////////////////////////////////////
-            void mouseWheel(int mouseWheel);
+            void setDistance(int32_t distance);
 
 
         private:
@@ -155,12 +137,11 @@
 
 
         private:
-            float       m_distance;     // Orbitalcam distance from target
-            float       m_speed;        // Orbitalcam speed
-
-            bool        m_mousePressed; // Orbitalcam mouse pressed state
-            bool        m_forward;      // Orbitalcam forward state
-            bool        m_backward;     // Orbitalcam backward state
+            PhysicsTransform3       m_transforms;       // Orbitalcam transforms
+            Vector3i                m_boundingPos;      // Orbitalcam position
+            Vector3i                m_boundingAngles;   // Orbitalcam angles
+            Vector3i                m_physicsTarget;    // Orbitalcam target
+            int32_t                 m_distance;         // Orbitalcam distance
     };
 
 

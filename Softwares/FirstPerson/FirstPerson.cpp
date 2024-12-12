@@ -113,7 +113,6 @@ bool FirstPerson::init()
         // Could not init camera
         return false;
     }
-    m_camera.setZ(1.0f);
 
     // Init freefly camera
     if (!m_freeflycam.init())
@@ -135,17 +134,14 @@ bool FirstPerson::init()
     m_farflycam.setNearPlane(CameraDistanceNearPlane);
     m_farflycam.setFarPlane(CameraDistanceFarPlane);
 
-
     // Init orbital camera
     if (!m_orbitalcam.init())
     {
         // Could not init orbital camera
         return false;
     }
-    m_orbitalcam.setZ(1.0f);
-    m_orbitalcam.setTarget(0.0f, 0.0f, 0.0f);
-    m_orbitalcam.setDistance(2.0f);
-    m_orbitalcam.setSpeed(50.0f);
+    m_orbitalcam.setTarget(0, 0, 0);
+    m_orbitalcam.setDistance(20);
 
 
     // Init skybox
@@ -377,7 +373,8 @@ void FirstPerson::events(SysEvent& event)
 void FirstPerson::prephysics()
 {
     m_player.prephysics();
-    m_freeflycam.prephysics();
+    //m_freeflycam.prephysics();
+    m_orbitalcam.prephysics();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -386,7 +383,8 @@ void FirstPerson::prephysics()
 void FirstPerson::physics()
 {
     m_player.physics();
-    m_freeflycam.physics();
+    //m_freeflycam.physics();
+    m_orbitalcam.physics();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -395,7 +393,8 @@ void FirstPerson::physics()
 void FirstPerson::precompute(float physicstime)
 {
     m_player.precompute(physicstime);
-    m_freeflycam.precompute(physicstime);
+    //m_freeflycam.precompute(physicstime);
+    m_orbitalcam.precompute(physicstime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -443,7 +442,7 @@ void FirstPerson::compute(float frametime)
         m_camera.compute(GSwapchain.ratio);
         m_freeflycam.compute(GSwapchain.ratio);
         m_farflycam.compute(GSwapchain.ratio, m_freeflycam);
-        m_orbitalcam.compute(GSwapchain.ratio, frametime);
+        m_orbitalcam.compute(GSwapchain.ratio);
 
         // End uniforms upload
         GUniformchain.endUpload();
@@ -462,9 +461,9 @@ void FirstPerson::compute(float frametime)
     );
 
     // Rotate test static mesh
-    m_staticMesh.rotateX(0.035f*frametime);
+    /*m_staticMesh.rotateX(0.035f*frametime);
     m_staticMesh.rotateY(0.1f*frametime);
-    m_staticMesh.rotateZ(0.075f*frametime);
+    m_staticMesh.rotateZ(0.075f*frametime);*/
 
     /*// Memory dump
     static int memDump = 0;
@@ -499,10 +498,10 @@ void FirstPerson::render()
     GWorldLight.bind();
 
     // Set freefly camera
-    m_freeflycam.bind();
+    //m_freeflycam.bind();
 
     // Set orbital camera
-    //m_orbitalcam.bind();
+    m_orbitalcam.bind();
 
     // Render skybox
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_SKYBOX);
@@ -515,12 +514,12 @@ void FirstPerson::render()
     // Render procedural skybox
     m_skyproc.bindPipeline();
     GRenderer.bindVertexBuffer(MESHES_SKYBOX);
-    m_skyproc.setPosition(m_freeflycam.getPosition());
-    //m_skyproc.setPosition(m_orbitalcam.getPosition());
+    //m_skyproc.setPosition(m_freeflycam.getPosition());
+    m_skyproc.setPosition(m_orbitalcam.getPosition());
     m_skyproc.render();
 
     // Render heightfar stream
-    m_farflycam.bind();
+    /*m_farflycam.bind();
     GRenderer.bindPipeline(RENDERER_PIPELINE_HEIGHTFAR);
     m_heightFarStream.render();
 
@@ -545,15 +544,15 @@ void FirstPerson::render()
     GRenderer.bindVertexBuffer(MESHES_SEANEAR);
     m_seaNearStream.render(
         m_heightMapStream.getChunkX(), m_heightMapStream.getChunkY()
-    );
+    );*/
 
     // Render static mesh
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
     m_staticMesh.bindVertexBuffer();
     m_staticMesh.bindTexture();
-    m_staticMesh.setPosition(0.0f, 700.0f, 0.0f);
+    m_staticMesh.setPosition(0.0f, 0.0f, 0.0f);
     m_staticMesh.setScale(10.0f);
-    m_staticMesh.render();*/
+    m_staticMesh.render();
 
     // Render cuboid shape
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_STATICPROC);

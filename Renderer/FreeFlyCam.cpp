@@ -50,8 +50,8 @@ Camera(),
 m_transforms(),
 m_boundingPos(),
 m_boundingAngles(),
-m_targetInt(),
-m_crossInt()
+m_physicsTarget(),
+m_physicsCross()
 {
 
 }
@@ -61,8 +61,8 @@ m_crossInt()
 ////////////////////////////////////////////////////////////////////////////////
 FreeFlyCam::~FreeFlyCam()
 {
-    m_crossInt.reset();
-    m_targetInt.reset();
+    m_physicsCross.reset();
+    m_physicsTarget.reset();
     m_boundingAngles.reset();
     m_boundingPos.reset();
     m_transforms.reset();
@@ -88,42 +88,42 @@ void FreeFlyCam::physics()
     m_boundingAngles.vec[1] = GSysMouse.physicsAngles.vec[0];
 
     // Compute freefly camera target
-    m_targetInt.vec[0] = static_cast<int32_t>(
+    m_physicsTarget.vec[0] = static_cast<int32_t>(
         (static_cast<int64_t>(Math::cos(m_boundingAngles.vec[0])) *
         static_cast<int64_t>(Math::sin(m_boundingAngles.vec[1]))) >>
         Math::OneIntShift
     );
-    m_targetInt.vec[1] = Math::sin(m_boundingAngles.vec[0]);
-    m_targetInt.vec[2] = static_cast<int32_t>(
+    m_physicsTarget.vec[1] = Math::sin(m_boundingAngles.vec[0]);
+    m_physicsTarget.vec[2] = static_cast<int32_t>(
         (static_cast<int64_t>(Math::cos(m_boundingAngles.vec[0])) *
         static_cast<int64_t>(Math::cos(m_boundingAngles.vec[1]))) >>
         Math::OneIntShift
     );
-    m_targetInt.normalize();
+    m_physicsTarget.normalize();
 
     // Compute freefly camera cross vector
-    m_crossInt.crossUpward(m_targetInt);
-    m_crossInt.normalize();
+    m_physicsCross.crossUpward(m_physicsTarget);
+    m_physicsCross.normalize();
 
     // Compute freefly camera position
     m_boundingPos.vec[0] += static_cast<int32_t>(
-        ((static_cast<int64_t>(m_crossInt.vec[0]) *
+        ((static_cast<int64_t>(m_physicsCross.vec[0]) *
         static_cast<int64_t>(GSysKeys.axis.vec[0])) -
-        (static_cast<int64_t>(m_targetInt.vec[0]) *
+        (static_cast<int64_t>(m_physicsTarget.vec[0]) *
         static_cast<int64_t>(GSysKeys.axis.vec[1]))) >>
         (GSysKeys.shift ? 18 : 22)
     );
     m_boundingPos.vec[1] += static_cast<int32_t>(
-        ((static_cast<int64_t>(m_targetInt.vec[1]) *
+        ((static_cast<int64_t>(m_physicsTarget.vec[1]) *
         static_cast<int64_t>(GSysKeys.axis.vec[1])) -
-        (static_cast<int64_t>(m_crossInt.vec[1]) *
+        (static_cast<int64_t>(m_physicsCross.vec[1]) *
         static_cast<int64_t>(GSysKeys.axis.vec[0]))) >>
         (GSysKeys.shift ? 18 : 22)
     );
     m_boundingPos.vec[2] += static_cast<int32_t>(
-        ((static_cast<int64_t>(m_crossInt.vec[2]) *
+        ((static_cast<int64_t>(m_physicsCross.vec[2]) *
         static_cast<int64_t>(GSysKeys.axis.vec[0])) -
-        (static_cast<int64_t>(m_targetInt.vec[2]) *
+        (static_cast<int64_t>(m_physicsTarget.vec[2]) *
         static_cast<int64_t>(GSysKeys.axis.vec[1]))) >>
         (GSysKeys.shift ? 18 : 22)
     );
