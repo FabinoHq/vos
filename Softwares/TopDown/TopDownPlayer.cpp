@@ -46,6 +46,7 @@
 //  TopDownPlayer default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
 TopDownPlayer::TopDownPlayer() :
+Transform2(),
 m_transforms(),
 m_speed(),
 m_bounding(),
@@ -57,7 +58,7 @@ m_ellipse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  TopDownPlayer destructor                                                  //
+//  TopDownPlayer virtual destructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 TopDownPlayer::~TopDownPlayer()
 {
@@ -179,8 +180,7 @@ void TopDownPlayer::physics()
 void TopDownPlayer::precompute(float physicstime)
 {
     // Precompute transformations
-    m_rectangle.precomputeTransforms(m_transforms, physicstime);
-    //m_ellipse.precomputeTransforms(m_transforms, physicstime);
+    precomputeTransforms(m_transforms, physicstime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,6 +190,7 @@ void TopDownPlayer::render()
 {
     // Render rectangle shape
     GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectangle.setPosition(m_position);
     m_rectangle.render();
     // Render ellipse shape
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);

@@ -50,6 +50,7 @@
 
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
+    #include "../../Math/Transform2.h"
 
     #include "../../Renderer/Renderer.h"
     #include "../../Renderer/Shapes/RectangleShape.h"
@@ -69,7 +70,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  TopDownPlayer class definition                                        //
     ////////////////////////////////////////////////////////////////////////////
-    class TopDownPlayer
+    class TopDownPlayer : public Transform2
     {
         public:
             ////////////////////////////////////////////////////////////////////
@@ -78,9 +79,9 @@
             TopDownPlayer();
 
             ////////////////////////////////////////////////////////////////////
-            //  TopDownPlayer destructor                                      //
+            //  TopDownPlayer virtual destructor                              //
             ////////////////////////////////////////////////////////////////////
-            ~TopDownPlayer();
+            virtual ~TopDownPlayer();
 
 
             ////////////////////////////////////////////////////////////////////
@@ -88,31 +89,6 @@
             //  return : True if top down player is ready, false otherwise    //
             ////////////////////////////////////////////////////////////////////
             bool init();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get player position                                           //
-            ////////////////////////////////////////////////////////////////////
-            inline Vector2 getPosition()
-            {
-                return m_rectangle.getPosition();
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get player X position                                         //
-            ////////////////////////////////////////////////////////////////////
-            inline float getX()
-            {
-                return m_rectangle.getX();
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get player Y position                                         //
-            ////////////////////////////////////////////////////////////////////
-            inline float getY()
-            {
-                return m_rectangle.getY();
-            }
 
 
             ////////////////////////////////////////////////////////////////////

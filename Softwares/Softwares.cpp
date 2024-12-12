@@ -72,18 +72,18 @@ Softwares::~Softwares()
 bool Softwares::init()
 {
     // Init top down game
-    /*if (!GTopDown.init())
+    if (!GTopDown.init())
     {
         // Could not init top down game
         return false;
-    }*/
+    }
 
     // Init first person game
-    if (!GFirstPerson.init())
+    /*if (!GFirstPerson.init())
     {
         // Could not init first person game
         return false;
-    }
+    }*/
 
     // Softwares are ready
     return true;
@@ -95,8 +95,8 @@ bool Softwares::init()
 void Softwares::destroy()
 {
     // Destroy softwares
-    //GTopDown.destroy();
-    GFirstPerson.destroy();
+    GTopDown.destroy();
+    //GFirstPerson.destroy();
 }
 
 
@@ -106,8 +106,8 @@ void Softwares::destroy()
 void Softwares::events(SysEvent& event)
 {
     // Dispatch events to softwares
-    //GTopDown.events(event);
-    GFirstPerson.events(event);
+    GTopDown.events(event);
+    //GFirstPerson.events(event);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -116,8 +116,8 @@ void Softwares::events(SysEvent& event)
 void Softwares::prephysics()
 {
     // Precompute softwares physics
-    //GTopDown.prephysics();
-    GFirstPerson.prephysics();
+    GTopDown.prephysics();
+    //GFirstPerson.prephysics();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,8 +126,8 @@ void Softwares::prephysics()
 void Softwares::physics()
 {
     // Compute softwares physics
-    //GTopDown.physics();
-    GFirstPerson.physics();
+    GTopDown.physics();
+    //GFirstPerson.physics();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,8 +136,8 @@ void Softwares::physics()
 void Softwares::precompute(float physicstime)
 {
     // Precompute softwares
-    //GTopDown.precompute(physicstime);
-    GFirstPerson.precompute(physicstime);
+    GTopDown.precompute(physicstime);
+    //GFirstPerson.precompute(physicstime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,8 +146,8 @@ void Softwares::precompute(float physicstime)
 void Softwares::compute(float frametime)
 {
     // Compute softwares logic
-    //GTopDown.compute(frametime);
-    GFirstPerson.compute(frametime);
+    GTopDown.compute(frametime);
+    //GFirstPerson.compute(frametime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,6 +156,6 @@ void Softwares::compute(float frametime)
 void Softwares::render()
 {
     // Render softwares
-    //GTopDown.render();
-    GFirstPerson.render();
+    GTopDown.render();
+    //GFirstPerson.render();
 }

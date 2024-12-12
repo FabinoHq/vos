@@ -69,9 +69,9 @@
             FirstPersonPlayer();
 
             ////////////////////////////////////////////////////////////////////
-            //  FirstPersonPlayer destructor                                  //
+            //  FirstPersonPlayer virtual destructor                          //
             ////////////////////////////////////////////////////////////////////
-            ~FirstPersonPlayer();
+            virtual ~FirstPersonPlayer();
 
 
             ////////////////////////////////////////////////////////////////////
