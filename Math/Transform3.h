@@ -541,7 +541,7 @@
                 m_position.linearInterp(
                     transforms.prevPos, transforms.pos, physicstime
                 );
-                m_angles.linearInterp(
+                m_angles.angleLinearInterp(
                     transforms.prevAngles, transforms.angles, physicstime
                 );
             }

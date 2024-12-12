@@ -123,7 +123,6 @@ void TopDownPlayer::prephysics()
 {
     // Compute prephysics transformations
     m_transforms.prephysics(m_bounding.position, 0);
-    //m_transforms.prephysics(m_bounding.position, m_bounding.angle);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

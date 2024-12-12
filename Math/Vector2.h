@@ -262,6 +262,16 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Angle linear interpolation                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline void angleLinearInterp(
+                const Vector2& v1, const Vector2& v2, float t)
+            {
+                vec[0] = Math::angleLinearInterp(v1.vec[0], v2.vec[0], t);
+                vec[1] = Math::angleLinearInterp(v1.vec[1], v2.vec[1], t);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Cubic interpolation                                           //
             ////////////////////////////////////////////////////////////////////
             inline void cubicInterp(

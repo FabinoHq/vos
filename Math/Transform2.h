@@ -458,7 +458,7 @@
                 m_position.linearInterp(
                     transforms.prevPos, transforms.pos, physicstime
                 );
-                m_angle = Math::linearInterp(
+                m_angle = Math::angleLinearInterp(
                     transforms.prevAngle, transforms.angle, physicstime
                 );
             }

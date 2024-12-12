@@ -740,6 +740,24 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //  Angle linear interpolation                                        //
+        //  return : Interpolated angle value                                 //
+        ////////////////////////////////////////////////////////////////////////
+        inline float angleLinearInterp(float x, float y, float t)
+        {
+            if ((y-x) < -Math::Pi) { return (x + t*((y+Math::TwoPi)-x)); }
+            if ((y-x) > Math::Pi) { return (x + t*((y-Math::TwoPi)-x)); }
+            return (x + t*(y-x));
+        }
+
+        inline double angleLinearInterp(double x, double y, double t)
+        {
+            if ((y-x) < -Math::Pi) { return (x + t*((y+Math::TwoPi)-x)); }
+            if ((y-x) > Math::Pi) { return (x + t*((y-Math::TwoPi)-x)); }
+            return (x + t*(y-x));
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Cubic interpolation                                               //
         //  return : Interpolated value                                       //
         ////////////////////////////////////////////////////////////////////////
