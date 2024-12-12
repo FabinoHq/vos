@@ -162,7 +162,7 @@ float Physics::startPrecompute()
     while (m_clockTime >= PhysicsTickTime)
     {
         m_mutex.unlock();
-        SysYield();
+        SysSleep(PhysicsPrecomputeSleepTime);
         m_mutex.lock();
         m_clockTime += m_clock.getAndReset();
     }

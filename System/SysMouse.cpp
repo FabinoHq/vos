@@ -56,6 +56,7 @@ SysMouse::SysMouse() :
 m_mutex(),
 m_previousX(0),
 m_previousY(0),
+tracking(false),
 mouseX(0.0f),
 mouseY(0.0f),
 deltaX(0.0f),
@@ -87,6 +88,7 @@ SysMouse::~SysMouse()
     deltaX = 0.0f;
     mouseY = 0.0f;
     mouseX = 0.0f;
+    tracking = false;
     m_previousY = 0;
     m_previousX = 0;
 }
@@ -125,8 +127,11 @@ void SysMouse::move(int x, int y)
     target = Math::atan(mouseX, mouseY);
 
     // Compute mouse angles
-    angles.vec[0] -= (deltaX*SysMouseSensitivityFactor);
-    angles.vec[1] -= (deltaY*SysMouseSensitivityFactor);
+    if (tracking)
+    {
+        angles.vec[0] -= (deltaX*SysMouseSensitivityFactor);
+        angles.vec[1] -= (deltaY*SysMouseSensitivityFactor);
+    }
 
     // Clamp mouse angles
     angles.vec[0] = Math::modulo(angles.vec[0], Math::TwoPi);

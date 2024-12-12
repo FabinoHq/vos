@@ -57,11 +57,13 @@ m_up(false),
 m_down(false),
 m_left(false),
 m_right(false),
+m_shift(false),
 axis(),
 up(false),
 down(false),
 left(false),
-right(false)
+right(false),
+shift(false)
 {
 
 }
@@ -92,6 +94,8 @@ void SysKeys::pressed(const SysEventKey& key)
         case SYSEVENT_KEY_S: m_down = true; break;
         case SYSEVENT_KEY_Q: m_left = true; break;
         case SYSEVENT_KEY_D: m_right = true; break;
+        case SYSEVENT_KEY_LSHIFT: m_shift = true; break;
+        case SYSEVENT_KEY_RSHIFT: m_shift = true; break;
         default: break;
     }
     m_mutex.unlock();
@@ -114,6 +118,8 @@ void SysKeys::released(const SysEventKey& key)
         case SYSEVENT_KEY_S: m_down = false; break;
         case SYSEVENT_KEY_Q: m_left = false; break;
         case SYSEVENT_KEY_D: m_right = false; break;
+        case SYSEVENT_KEY_LSHIFT: m_shift = false; break;
+        case SYSEVENT_KEY_RSHIFT: m_shift = false; break;
         default: break;
     }
     m_mutex.unlock();
@@ -131,6 +137,7 @@ void SysKeys::sync()
     down = m_down;
     left = m_left;
     right = m_right;
+    shift = m_shift;
     m_mutex.unlock();
 
     // Compute input axis

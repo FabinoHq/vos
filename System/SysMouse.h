@@ -121,6 +121,7 @@
 
 
         public:
+            bool            tracking;           // Mouse tracking
             float           mouseX;             // Mouse X position
             float           mouseY;             // Mouse Y position
             float           deltaX;             // Mouse X delta

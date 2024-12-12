@@ -111,21 +111,21 @@ void FreeFlyCam::physics()
         static_cast<int64_t>(GSysKeys.axis.vec[0])) -
         (static_cast<int64_t>(m_targetInt.vec[0]) *
         static_cast<int64_t>(GSysKeys.axis.vec[1]))) >>
-        Math::OneIntShift
+        (GSysKeys.shift ? 18 : 22)
     );
     m_boundingPos.vec[1] += static_cast<int32_t>(
         ((static_cast<int64_t>(m_targetInt.vec[1]) *
         static_cast<int64_t>(GSysKeys.axis.vec[1])) -
         (static_cast<int64_t>(m_crossInt.vec[1]) *
         static_cast<int64_t>(GSysKeys.axis.vec[0]))) >>
-        Math::OneIntShift
+        (GSysKeys.shift ? 18 : 22)
     );
     m_boundingPos.vec[2] += static_cast<int32_t>(
         ((static_cast<int64_t>(m_crossInt.vec[2]) *
         static_cast<int64_t>(GSysKeys.axis.vec[0])) -
         (static_cast<int64_t>(m_targetInt.vec[2]) *
         static_cast<int64_t>(GSysKeys.axis.vec[1]))) >>
-        Math::OneIntShift
+        (GSysKeys.shift ? 18 : 22)
     );
 }
 

@@ -107,6 +107,7 @@
             bool            m_down;             // Internal key down
             bool            m_left;             // Internal key left
             bool            m_right;            // Internal key right
+            bool            m_shift;            // Internal key shift
 
 
         public:
@@ -115,6 +116,7 @@
             bool            down;               // Key down
             bool            left;               // Key left
             bool            right;              // Key right
+            bool            shift;              // Key shift
     };
 
 

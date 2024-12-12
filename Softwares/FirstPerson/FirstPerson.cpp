@@ -288,6 +288,9 @@ bool FirstPerson::init()
         return false;
     }
 
+    // Set mouse tracking
+    GSysMouse.tracking = true;
+
 
     // First person game is ready
     return true;
@@ -335,6 +338,12 @@ void FirstPerson::events(SysEvent& event)
     {
         // Key pressed
         case SYSEVENT_KEYPRESSED:
+            if (event.key == SYSEVENT_KEY_TAB)
+            {
+                GSysMouse.tracking = !GSysMouse.tracking;
+                GSysMouse.mouseX = 0.0f;
+                GSysMouse.mouseY = 0.0f;
+            }
             break;
 
         // Key released
@@ -611,10 +620,13 @@ void FirstPerson::render()
     m_pxText.render();
 
     // Render cursor
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_cursor.setPosition(GSysMouse.mouseX, GSysMouse.mouseY);
-    m_cursor.bindTexture();
-    m_cursor.render();*/
+    if (!GSysMouse.tracking)
+    {
+        GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+        m_cursor.setPosition(GSysMouse.mouseX, GSysMouse.mouseY);
+        m_cursor.bindTexture();
+        m_cursor.render();
+    }
 
     // End rendering
     GRenderer.endRenderPass();
