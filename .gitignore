@@ -318,6 +318,8 @@
 !Resources/TextureLoader.cpp
 !Resources/MeshLoader.h
 !Resources/MeshLoader.cpp
+!Resources/MatrixColLoader.h
+!Resources/MatrixColLoader.cpp
 !Resources/HeightMapLoader.h
 !Resources/HeightMapLoader.cpp
 !Resources/HeightFarLoader.h

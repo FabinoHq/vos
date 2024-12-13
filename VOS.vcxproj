@@ -269,6 +269,7 @@
     <ClCompile Include="Renderer\WorldLight.cpp" />
     <ClCompile Include="Resources\HeightFarLoader.cpp" />
     <ClCompile Include="Resources\HeightMapLoader.cpp" />
+    <ClCompile Include="Resources\MatrixColLoader.cpp" />
     <ClCompile Include="Resources\MeshLoader.cpp" />
     <ClCompile Include="Resources\Resources.cpp" />
     <ClCompile Include="Resources\TextureLoader.cpp" />
@@ -396,6 +397,7 @@
     <ClInclude Include="Renderer\WorldLight.h" />
     <ClInclude Include="Resources\HeightFarLoader.h" />
     <ClInclude Include="Resources\HeightMapLoader.h" />
+    <ClInclude Include="Resources\MatrixColLoader.h" />
     <ClInclude Include="Resources\MeshLoader.h" />
     <ClInclude Include="Resources\Resources.h" />
     <ClInclude Include="Resources\TextureLoader.h" />

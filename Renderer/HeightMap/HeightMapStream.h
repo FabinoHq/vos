@@ -82,8 +82,8 @@
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Reload heightmap stream                                       //
-            //  return : True if the heightmap stream is reloading            //
+            //  Get heightmap stream ready state                              //
+            //  return : True if the heightmap stream is ready                //
             ////////////////////////////////////////////////////////////////////
             inline bool isReady()
             {

@@ -46,6 +46,7 @@
     #include "../System/SysMessage.h"
     #include "TextureLoader.h"
     #include "MeshLoader.h"
+    #include "MatrixColLoader.h"
     #include "HeightMapLoader.h"
     #include "HeightFarLoader.h"
 
@@ -118,6 +119,7 @@
         public:
             TextureLoader       textures;       // Texture loader
             MeshLoader          meshes;         // Mesh loader
+            MatrixColLoader     matrixcols;     // MatrixCol loader
             HeightMapLoader     heightmaps;     // HeightMap loader
             HeightFarLoader     heightfars;     // HeightFar loader
     };

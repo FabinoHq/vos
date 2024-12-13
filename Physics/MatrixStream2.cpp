@@ -52,7 +52,7 @@ MatrixStream2 GMatrixStream2 = MatrixStream2();
 //  MatrixStream2 default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
 MatrixStream2::MatrixStream2() :
-m_matrix()
+m_chunks()
 {
 
 }
@@ -71,10 +71,13 @@ MatrixStream2::~MatrixStream2()
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixStream2::init()
 {
-    // Create matrix chunk
-    if (!m_matrix.init())
+    // Init matrices chunks
+    for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
     {
-        return false;
+        if (!m_chunks[i].init())
+        {
+            return false;
+        }
     }
 
     // Matrix stream successfully created

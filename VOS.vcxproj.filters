@@ -317,6 +317,9 @@
     <ClCompile Include="Softwares\FirstPerson\FirstPersonPlayer.cpp">
       <Filter>Softwares\FirstPerson</Filter>
     </ClCompile>
+    <ClCompile Include="Resources\MatrixColLoader.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -727,6 +730,9 @@
     </ClInclude>
     <ClInclude Include="Softwares\FirstPerson\FirstPersonPlayer.h">
       <Filter>Softwares\FirstPerson</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\MatrixColLoader.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

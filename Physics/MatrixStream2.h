@@ -44,6 +44,9 @@
 
     #include "../System/System.h"
     #include "../Math/Math.h"
+    #include "../Resources/Resources.h"
+    #include "../Resources/MatrixColLoader.h"
+
     #include "Physics.h"
     #include "MatrixChunk2.h"
 
@@ -70,13 +73,72 @@
             ////////////////////////////////////////////////////////////////////
             bool init();
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get matrix stream ready state                                 //
+            //  return : True if the matrix stream is ready                   //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isReady()
+            {
+                return (GResources.matrixcols.getState() ==
+                    MATRIXCOLLOADER_STATE_IDLE);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Reload matrix stream                                          //
+            //  return : True if the matrix stream is reloading               //
+            ////////////////////////////////////////////////////////////////////
+            inline bool reload(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.matrixcols.reload(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.matrixcols.getChunkX();
+                    m_chunkY = GResources.matrixcols.getChunkY();
+                    return true;
+                }
+                return false;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Update matrix stream                                          //
+            //  return : True if the matrix stream is updated                 //
+            ////////////////////////////////////////////////////////////////////
+            inline bool update(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.matrixcols.update(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.matrixcols.getChunkX();
+                    m_chunkY = GResources.matrixcols.getChunkY();
+                    return true;
+                }
+                return false;
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Get matrix element at given coordinates                       //
             ////////////////////////////////////////////////////////////////////
             inline int8_t get(int32_t x, int32_t y) const
             {
-                return m_matrix.get(x, y);
+                return m_chunks[0].get(x, y);
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get matrixcol chunk X                                         //
+            //  return : matrixcol chunk X                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkX() const
+            {
+                return m_chunkX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get matrixcol chunk Y                                         //
+            //  return : matrixcol chunk Y                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkY() const
+            {
+                return m_chunkY;
             }
 
 
@@ -93,7 +155,9 @@
 
 
         private:
-            MatrixChunk2        m_matrix;       // Matrix chunk
+            MatrixChunk2    m_chunks[MATRIXCOL_ASSETSCOUNT];// Matrices chunks
+            int32_t         m_chunkX;                       // Chunk X
+            int32_t         m_chunkY;                       // Chunk Y
     };
 
 

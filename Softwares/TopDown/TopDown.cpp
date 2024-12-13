@@ -220,6 +220,24 @@ bool TopDown::init()
         return false;
     }
 
+    // Load spawn matrix chunks
+    GMatrixStream2.reload(0, 0);
+
+    // Wait for spawn chunks to be loaded
+    bool spawnLoaded = false;
+    while (!spawnLoaded)
+    {
+        if (GMatrixStream2.isReady())
+        {
+            spawnLoaded = true;
+        }
+        else
+        {
+            // Release some CPU while loading
+            SysSleep(ResourcesWaitSleepTime);
+        }
+    }
+
     // Init player
     if (!m_player.init())
     {
@@ -386,6 +404,9 @@ void TopDown::prephysics()
 ////////////////////////////////////////////////////////////////////////////////
 void TopDown::physics()
 {
+    // Update matrix stream
+    GMatrixStream2.update(0, 0);
+
     // Compute player physics
     m_player.physics();
 }

@@ -93,6 +93,7 @@ VOS: main.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
+	Resources/MatrixColLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
@@ -145,6 +146,7 @@ VOS: main.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
+	Resources/MatrixColLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
@@ -427,6 +429,10 @@ Resources/TextureLoader.o: Resources/TextureLoader.cpp
 
 Resources/MeshLoader.o: Resources/MeshLoader.cpp
 	$(CC) -o Resources/MeshLoader.o -c Resources/MeshLoader.cpp $(CFLAGS)
+
+Resources/MatrixColLoader.o: Resources/MatrixColLoader.cpp
+	$(CC) -o Resources/MatrixColLoader.o -c \
+	Resources/MatrixColLoader.cpp $(CFLAGS)
 
 Resources/HeightMapLoader.o: Resources/HeightMapLoader.cpp
 	$(CC) -o Resources/HeightMapLoader.o -c \
