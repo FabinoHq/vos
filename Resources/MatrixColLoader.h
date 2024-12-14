@@ -50,6 +50,7 @@
     #include <sstream>
     #include <fstream>
     #include <cstdint>
+    #include <cstring>
     #include <new>
 
     #include "../Physics/MatrixChunk2.h"
@@ -61,15 +62,16 @@
     const uint32_t MatrixColLoaderSyncTicks = 3;
     const double MatrixColLoaderIdleSleepTime = 0.01;
     const double MatrixColLoaderErrorSleepTime = 0.1;
+    const char MatrixColLoaderVMCCFilePath[] = "World/vmcc/";
 
 
     ////////////////////////////////////////////////////////////////////////////
     //  MatrixCol stream assets definitions                                   //
     ////////////////////////////////////////////////////////////////////////////
-    #define MATRIXCOL_STREAMWIDTH 9
-    #define MATRIXCOL_STREAMHEIGHT 9
-    #define MATRIXCOL_STREAMHALFWIDTH 4
-    #define MATRIXCOL_STREAMHALFHEIGHT 4
+    #define MATRIXCOL_STREAMWIDTH 7
+    #define MATRIXCOL_STREAMHEIGHT 7
+    #define MATRIXCOL_STREAMHALFWIDTH 3
+    #define MATRIXCOL_STREAMHALFHEIGHT 3
     #define MATRIXCOL_ASSETSCOUNT (MATRIXCOL_STREAMWIDTH*MATRIXCOL_STREAMHEIGHT)
 
 

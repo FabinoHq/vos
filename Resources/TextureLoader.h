@@ -57,6 +57,7 @@
     #include "../Images/PNGFile.h"
 
     #include <cstdint>
+    #include <cstring>
     #include <new>
 
 

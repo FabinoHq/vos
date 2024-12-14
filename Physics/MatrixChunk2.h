@@ -52,8 +52,8 @@
     ////////////////////////////////////////////////////////////////////////////
     //  MatrixChunk2 settings                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    const int32_t MatrixChunk2Width = 10;
-    const int32_t MatrixChunk2Height = 10;
+    const int32_t MatrixChunk2Width = 20;
+    const int32_t MatrixChunk2Height = 20;
     const int32_t MatrixChunk2Size = (MatrixChunk2Width*MatrixChunk2Height);
     const int32_t MatrixChunk2ElemHalfWidth = 50000;
     const int32_t MatrixChunk2ElemHalfHeight = 50000;
@@ -89,7 +89,7 @@
             ////////////////////////////////////////////////////////////////////
             inline int8_t get(int32_t x, int32_t y) const
             {
-                return m_matrix[
+                return matrix[
                     (Math::clamp(y, 0, (MatrixChunk2Height-1))*
                     MatrixChunk2Width)+Math::clamp(x, 0, (MatrixChunk2Width-1))
                 ];
@@ -109,7 +109,7 @@
 
 
         public:
-            int8_t*     m_matrix;       // Matrix chunk representation
+            int8_t*     matrix;     // Matrix chunk representation
     };
 
 

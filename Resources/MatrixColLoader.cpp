@@ -405,6 +405,9 @@ bool MatrixColLoader::loadMatrixCols()
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixColLoader::generateFlatChunk(MatrixColChunkData& chunkData)
 {
+    // Generate flat matrixcol chunk
+    memset(chunkData.chunk->matrix, 0, sizeof(int8_t)*MatrixChunk2Size);
+
     // Matrixcol chunk successfully generated
     return true;
 }
@@ -415,6 +418,9 @@ bool MatrixColLoader::generateFlatChunk(MatrixColChunkData& chunkData)
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixColLoader::updateFlatChunk(MatrixColChunkData& chunkData)
 {
+    // Update flat matrixcol chunk
+    memset(chunkData.chunk->matrix, 0, sizeof(int8_t)*MatrixChunk2Size);
+
     // Matrixcol chunk successfully updated
     return true;
 }
@@ -426,6 +432,34 @@ bool MatrixColLoader::updateFlatChunk(MatrixColChunkData& chunkData)
 bool MatrixColLoader::updateChunk(MatrixColChunkData& chunkData,
     int32_t chunkX, int32_t chunkY)
 {
+    // Set VMCC file path
+    std::ostringstream filepath;
+    filepath << MatrixColLoaderVMCCFilePath;
+    filepath << chunkX << '_' << chunkY << ".vmcc";
+
+    // Load matrixcol data from file
+    std::ifstream file;
+    file.open(filepath.str().c_str(), std::ios::in);
+    if (!file.is_open())
+    {
+        // Could not load heightmap data file
+        return false;
+    }
+
+    // Read matrixcol elements
+    int elem = 0;
+    for (int j = (MatrixChunk2Height-1); j >= 0; --j)
+    {
+        for (int i = 0; i < MatrixChunk2Width; ++i)
+        {
+            file >> elem;
+            chunkData.chunk->matrix[(j*MatrixChunk2Width)+i] = elem;
+        }
+    }
+
+    // Close VMCC file
+    file.close();
+
     // Matrixcol chunk successfully updated
     return true;
 }

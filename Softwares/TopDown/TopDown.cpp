@@ -650,9 +650,9 @@ void TopDown::render()
     );
     m_sprite.setAngle(0.0f);
 
-    for (int k = 3; k < MATRIXCOL_STREAMWIDTH-3; ++k)
+    for (int k = 2; k < MATRIXCOL_STREAMWIDTH-2; ++k)
     {
-        for (int l = 3; l < MATRIXCOL_STREAMHEIGHT-3; ++l)
+        for (int l = 2; l < MATRIXCOL_STREAMHEIGHT-2; ++l)
         {
             // Render test matrix chunk
             float positionX = (MatrixChunk2ElemHalfWidth*PhysicsToRenderer);
