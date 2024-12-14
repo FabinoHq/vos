@@ -169,13 +169,18 @@ bool MatrixColLoader::init()
     m_matrixcols = new(std::nothrow) MatrixChunk2[MATRIXCOL_ASSETSCOUNT];
     if (!m_matrixcols)
     {
-        // Could not allocate m_matrixcols chunks
+        // Could not allocate matrixcols chunks
         return false;
     }
 
     // Set default chunks pointers
     for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
     {
+        if (!m_matrixcols[i].init())
+        {
+            // Could not init matrixcol chunk
+            return false;
+        }
         m_chunks[i].chunk = &m_matrixcols[i];
         m_chunksptrs[i] = &m_chunks[i];
     }
@@ -275,6 +280,7 @@ bool MatrixColLoader::update(int32_t chunkX, int32_t chunkY)
     if (m_sync > 0)
     {
         // Matrixcol loader is still in sync state
+        sync();
         return false;
     }
 
@@ -299,6 +305,7 @@ bool MatrixColLoader::update(int32_t chunkX, int32_t chunkY)
     }
 
     // Matrixcols pointers are up to date
+    sync();
     return false;
 }
 

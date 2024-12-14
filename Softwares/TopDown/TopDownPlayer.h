@@ -112,6 +112,31 @@
             void render();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get player bounding position                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2i getBoundingPosition()
+            {
+                return m_bounding.position;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player bounding X position                                //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getBoundingX()
+            {
+                return m_bounding.position.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player bounding Y position                                //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getBoundingY()
+            {
+                return m_bounding.position.vec[1];
+            }
+
+
         private:
             ////////////////////////////////////////////////////////////////////
             //  TopDownPlayer private copy constructor : Not copyable         //

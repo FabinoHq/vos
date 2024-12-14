@@ -119,7 +119,21 @@
             ////////////////////////////////////////////////////////////////////
             inline int8_t get(int32_t x, int32_t y) const
             {
-                return m_chunks[0].get(x, y);
+                int32_t chunkX = (
+                    MATRIXCOL_STREAMHALFWIDTH +
+                    Math::divide(x, MatrixChunk2Width) -
+                    m_chunkX
+                );
+                int32_t chunkY = (
+                    MATRIXCOL_STREAMHALFHEIGHT +
+                    Math::divide(y, MatrixChunk2Height) -
+                    m_chunkY
+                );
+                return (GResources.matrixcols.matrixcol(
+                    (chunkY*MATRIXCOL_STREAMWIDTH)+chunkX).get(
+                    Math::modulo(x, MatrixChunk2Width),
+                    Math::modulo(y, MatrixChunk2Height))
+                );
             }
 
 
@@ -155,9 +169,8 @@
 
 
         private:
-            MatrixChunk2    m_chunks[MATRIXCOL_ASSETSCOUNT];// Matrices chunks
-            int32_t         m_chunkX;                       // Chunk X
-            int32_t         m_chunkY;                       // Chunk Y
+            int32_t             m_chunkX;           // Chunk X
+            int32_t             m_chunkY;           // Chunk Y
     };
 
 

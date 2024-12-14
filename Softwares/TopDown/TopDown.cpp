@@ -404,11 +404,19 @@ void TopDown::prephysics()
 ////////////////////////////////////////////////////////////////////////////////
 void TopDown::physics()
 {
-    // Update matrix stream
-    GMatrixStream2.update(0, 0);
-
     // Compute player physics
     m_player.physics();
+
+    // Update matrix stream
+    int32_t posI = Math::divide(
+        m_player.getBoundingX(), MatrixChunk2ElemWidth
+    );
+    int32_t posJ = Math::divide(
+        m_player.getBoundingY(), MatrixChunk2ElemHeight
+    );
+    int32_t chunkI = Math::divide(posI, MatrixChunk2Width);
+    int32_t chunkJ = Math::divide(posJ, MatrixChunk2Height);
+    GMatrixStream2.update(chunkI, chunkJ);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -632,7 +640,7 @@ void TopDown::render()
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
 
-    // Render matrix chunk
+    // Render test matrix chunks
     GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_sprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_sprite.setOrigin(0.0f, 0.0f);
@@ -642,22 +650,54 @@ void TopDown::render()
     );
     m_sprite.setAngle(0.0f);
 
-    float positionX = (MatrixChunk2ElemHalfWidth*PhysicsToRenderer);
-    float positionY = (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
-    for (int i = 0; i < MatrixChunk2Width; ++i)
+    for (int k = 3; k < MATRIXCOL_STREAMWIDTH-3; ++k)
     {
-        for (int j = 0; j < MatrixChunk2Height; ++j)
+        for (int l = 3; l < MATRIXCOL_STREAMHEIGHT-3; ++l)
         {
-            if (GMatrixStream2.get(i, j) != 0)
+            // Render test matrix chunk
+            float positionX = (MatrixChunk2ElemHalfWidth*PhysicsToRenderer);
+            float positionY = (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
+            positionX -= (
+                (MATRIXCOL_STREAMHALFWIDTH*MatrixChunk2Width*
+                MatrixChunk2ElemWidth)*PhysicsToRenderer
+            );
+            positionY -= (
+                (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height*
+                MatrixChunk2ElemHeight)*PhysicsToRenderer
+            );
+            positionX += (((GMatrixStream2.getChunkX()+k)*
+                MatrixChunk2Width*MatrixChunk2ElemWidth)*PhysicsToRenderer
+            );
+            positionY += (((GMatrixStream2.getChunkY()+l)*
+                MatrixChunk2Height*MatrixChunk2ElemHeight)*PhysicsToRenderer
+            );
+            for (int i = 0; i < MatrixChunk2Width; ++i)
             {
-                m_sprite.setPosition(positionX, positionY);
-                m_sprite.bindTexture();
-                m_sprite.render();
+                for (int j = 0; j < MatrixChunk2Height; ++j)
+                {
+                    if (GMatrixStream2.get(
+                        ((GMatrixStream2.getChunkX()+k)*MatrixChunk2Width)-
+                        (MATRIXCOL_STREAMHALFWIDTH*MatrixChunk2Width)+i,
+                        ((GMatrixStream2.getChunkY()+l)*MatrixChunk2Height)-
+                        (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height)+j) != 0)
+                    {
+                        m_sprite.setPosition(positionX, positionY);
+                        m_sprite.bindTexture();
+                        m_sprite.render();
+                    }
+                    positionY += (MatrixChunk2ElemHeight*PhysicsToRenderer);
+                }
+                positionY = (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
+                positionY -= (
+                    (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height*
+                    MatrixChunk2ElemHeight)*PhysicsToRenderer
+                );
+                positionY += (((GMatrixStream2.getChunkY()+l)*
+                    MatrixChunk2Height*MatrixChunk2ElemHeight)*PhysicsToRenderer
+                );
+                positionX += (MatrixChunk2ElemWidth*PhysicsToRenderer);
             }
-            positionY += (MatrixChunk2ElemHeight*PhysicsToRenderer);
         }
-        positionY = (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
-        positionX += (MatrixChunk2ElemWidth*PhysicsToRenderer);
     }
 
 
