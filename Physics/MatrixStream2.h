@@ -126,8 +126,7 @@
                     MATRIXCOL_STREAMHALFHEIGHT +
                     Math::divide(y, MatrixChunk2Height)
                 );
-                return (GResources.matrixcols.matrixcol(
-                    (chunkY*MATRIXCOL_STREAMWIDTH)+chunkX).get(
+                return (GResources.matrixcols.matrixcol(chunkX, chunkY).get(
                     Math::modulo(x, MatrixChunk2Width),
                     Math::modulo(y, MatrixChunk2Height))
                 );

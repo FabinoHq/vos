@@ -46,14 +46,16 @@
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
 
+    #include "../Math/Math.h"
+    #include "../Physics/Physics.h"
+    #include "../Physics/MatrixChunk2.h"
+
     #include <string>
     #include <sstream>
     #include <fstream>
     #include <cstdint>
     #include <cstring>
     #include <new>
-
-    #include "../Physics/MatrixChunk2.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -159,11 +161,11 @@
             //  Get matrixcol chunk                                           //
             //  return : matrixcol chunk                                      //
             ////////////////////////////////////////////////////////////////////
-            inline MatrixChunk2& matrixcol(uint32_t matrixcol)
+            inline MatrixChunk2& matrixcol(int32_t chunkX, int32_t chunkY)
             {
-                return (*m_chunksptrs[
-                    Math::clamp(matrixcol, 0u, (MATRIXCOL_ASSETSCOUNT-1u))
-                ]->chunk);
+                return (*m_chunksptrs[Math::clamp(static_cast<uint32_t>(
+                    (chunkY*MATRIXCOL_STREAMWIDTH)+chunkX),
+                    0u, (MATRIXCOL_ASSETSCOUNT-1u))]->chunk);
             }
 
             ////////////////////////////////////////////////////////////////////

@@ -44,9 +44,11 @@
 
     #include "../../System/System.h"
     #include "../../System/SysMessage.h"
-    #include "../../Math/Math.h"
+
     #include "Vulkan.h"
     #include "VulkanQueue.h"
+
+    #include "../../Math/Math.h"
 
     #include <cstddef>
     #include <cstdint>

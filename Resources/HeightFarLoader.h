@@ -45,20 +45,22 @@
     #include "../System/System.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
+
     #include "../Renderer/Vulkan/Vulkan.h"
     #include "../Renderer/Vulkan/Swapchain.h"
     #include "../Renderer/Vulkan/VulkanMemory.h"
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
+    #include "../Renderer/HeightMap/HeightFarChunk.h"
+
+    #include "../Math/Math.h"
 
     #include <string>
     #include <sstream>
     #include <fstream>
     #include <cstdint>
     #include <new>
-
-    #include "../Renderer/HeightMap/HeightFarChunk.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -183,20 +185,22 @@
             //  Get heightfar vertex buffer                                   //
             //  return : heightfar vertex buffer                              //
             ////////////////////////////////////////////////////////////////////
-            inline VertexBuffer& heightfar(uint32_t heightfar)
+            inline VertexBuffer& heightfar(int32_t chunkX, int32_t chunkY)
             {
-                return (*m_chunksptrs[
-                    Math::clamp(heightfar, 0u, (HEIGHTFAR_ASSETSCOUNT-1u))
-                ]->heightfar);
+                return (*m_chunksptrs[Math::clamp(static_cast<uint32_t>(
+                    (chunkY*HEIGHTFAR_STREAMWIDTH)+chunkX),
+                    0u, (HEIGHTFAR_ASSETSCOUNT-1u))]->heightfar);
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Get heightfar flags                                           //
             //  return : heightfar flags                                      //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getFlags(uint32_t heightfar)
+            inline int32_t getFlags(int32_t chunkX, int32_t chunkY)
             {
-                return (m_chunksptrs[heightfar]->flags);
+                return (m_chunksptrs[Math::clamp(static_cast<uint32_t>(
+                    (chunkY*HEIGHTFAR_STREAMWIDTH)+chunkX),
+                    0u, (HEIGHTFAR_ASSETSCOUNT-1u))]->flags);
             }
 
             ////////////////////////////////////////////////////////////////////

@@ -86,8 +86,8 @@ void SeaFarStream::render(int32_t chunkX, int32_t chunkY)
     {
         for (int j = 1; j < HEIGHTFAR_STREAMHEIGHT-1; ++j)
         {
-            if (GResources.heightfars.getFlags(
-                (j*HEIGHTFAR_STREAMWIDTH)+i) & HEIGHTFAR_FLAGS_RENDERSEA)
+            if (GResources.heightfars.getFlags(i, j) &
+                HEIGHTFAR_FLAGS_RENDERSEA)
             {
                 m_seaFarChunk.setPosition(
                     -(HEIGHTFAR_STREAMHALFWIDTH*SeaFarChunkXStride)+

@@ -44,15 +44,18 @@
 
     #include "../../System/System.h"
     #include "../../System/SysCursor.h"
+
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/Swapchain.h"
     #include "../Vulkan/GraphicsLayout.h"
     #include "../Vulkan/Texture.h"
+
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
     #include "../../Math/Vector4.h"
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
+
     #include "GUICursor.h"
 
 

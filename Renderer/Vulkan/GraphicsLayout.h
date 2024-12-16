@@ -44,11 +44,13 @@
 
     #include "../../System/System.h"
     #include "../../System/SysMessage.h"
+
     #include "Vulkan.h"
     #include "Swapchain.h"
     #include "VulkanBuffer.h"
     #include "VertexBuffer.h"
     #include "Shader.h"
+
     #include "../../Math/Math.h"
     #include "../../Math/Matrix4x4.h"
 

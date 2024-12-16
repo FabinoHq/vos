@@ -43,10 +43,12 @@
 #define VOS_RENDERER_VIEW_HEADER
 
     #include "../System/System.h"
+
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/UniformBuffer.h"
+
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"

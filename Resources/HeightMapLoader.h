@@ -45,20 +45,22 @@
     #include "../System/System.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
+
     #include "../Renderer/Vulkan/Vulkan.h"
     #include "../Renderer/Vulkan/Swapchain.h"
     #include "../Renderer/Vulkan/VulkanMemory.h"
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
+    #include "../Renderer/HeightMap/HeightMapChunk.h"
+
+    #include "../Math/Math.h"
 
     #include <string>
     #include <sstream>
     #include <fstream>
     #include <cstdint>
     #include <new>
-
-    #include "../Renderer/HeightMap/HeightMapChunk.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -183,20 +185,22 @@
             //  Get heightmap vertex buffer                                   //
             //  return : heightmap vertex buffer                              //
             ////////////////////////////////////////////////////////////////////
-            inline VertexBuffer& heightmap(uint32_t heightmap)
+            inline VertexBuffer& heightmap(int32_t chunkX, int32_t chunkY)
             {
-                return (*m_chunksptrs[
-                    Math::clamp(heightmap, 0u, (HEIGHTMAP_ASSETSCOUNT-1u))
-                ]->heightmap);
+                return (*m_chunksptrs[Math::clamp(static_cast<uint32_t>(
+                    (chunkY*HEIGHTMAP_STREAMWIDTH)+chunkX),
+                    0u, (HEIGHTMAP_ASSETSCOUNT-1u))]->heightmap);
             }
 
             ////////////////////////////////////////////////////////////////////
             //  Get heightmap flags                                           //
             //  return : heightmap flags                                      //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getFlags(uint32_t heightmap)
+            inline int32_t getFlags(int32_t chunkX, int32_t chunkY)
             {
-                return (m_chunksptrs[heightmap]->flags);
+                return (m_chunksptrs[Math::clamp(static_cast<uint32_t>(
+                    (chunkY*HEIGHTMAP_STREAMWIDTH)+chunkX),
+                    0u, (HEIGHTMAP_ASSETSCOUNT-1u))]->flags);
             }
 
             ////////////////////////////////////////////////////////////////////

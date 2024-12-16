@@ -70,7 +70,7 @@ bool HeightFarStream::init()
 {
     // Init heightfar chunk
     if (!m_heightFarChunk.init(
-        GResources.heightfars.heightfar(0),
+        GResources.heightfars.heightfar(0, 0),
         GResources.textures.array(TEXTURE_ARRAY1)))
     {
         // Could not init heightfar chunk
@@ -91,12 +91,12 @@ void HeightFarStream::render()
 
     // Render heightfar chunks
     m_heightFarChunk.bindTextureArray();
-    for (int i = 1; i < HEIGHTFAR_STREAMWIDTH-1; ++i)
+    for (int32_t i = 1; i < HEIGHTFAR_STREAMWIDTH-1; ++i)
     {
-        for (int j = 1; j < HEIGHTFAR_STREAMHEIGHT-1; ++j)
+        for (int32_t j = 1; j < HEIGHTFAR_STREAMHEIGHT-1; ++j)
         {
             m_heightFarChunk.setVertexBuffer(
-                GResources.heightfars.heightfar((j*HEIGHTFAR_STREAMWIDTH)+i)
+                GResources.heightfars.heightfar(i, j)
             );
             m_heightFarChunk.setPosition(
                 -(HEIGHTFAR_STREAMHALFWIDTH*HeightFarChunkXStride)+

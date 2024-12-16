@@ -45,20 +45,22 @@
     #include "../System/System.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
+
     #include "../Renderer/Vulkan/Vulkan.h"
     #include "../Renderer/Vulkan/Swapchain.h"
     #include "../Renderer/Vulkan/VulkanMemory.h"
     #include "../Renderer/Vulkan/VulkanQueue.h"
     #include "../Renderer/Vulkan/VulkanBuffer.h"
     #include "../Renderer/Vulkan/VertexBuffer.h"
+    #include "../Renderer/TileMap/TileMapChunk.h"
+
+    #include "../Math/Math.h"
 
     #include <string>
     #include <sstream>
     #include <fstream>
     #include <cstdint>
     #include <new>
-
-    #include "../Renderer/TileMap/TileMapChunk.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -172,11 +174,11 @@
             //  Get tilemap chunk                                             //
             //  return : tilemap chunk                                        //
             ////////////////////////////////////////////////////////////////////
-            inline TileMapChunk& tilemap(uint32_t tilemap)
+            inline TileMapChunk& tilemap(int32_t chunkX, int32_t chunkY)
             {
-                return (*m_chunksptrs[
-                    Math::clamp(tilemap, 0u, (TILEMAP_ASSETSCOUNT-1u))
-                ]->tilemap);
+                return (*m_chunksptrs[Math::clamp(static_cast<uint32_t>(
+                    (chunkY*TILEMAP_STREAMWIDTH)+chunkX),
+                    0u, (TILEMAP_ASSETSCOUNT-1u))]->tilemap);
             }
 
             ////////////////////////////////////////////////////////////////////

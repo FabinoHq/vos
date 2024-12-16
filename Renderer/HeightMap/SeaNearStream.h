@@ -43,6 +43,7 @@
 #define VOS_RENDERER_HEIGHTMAP_SEANEARSTREAM_HEADER
 
     #include "../../System/System.h"
+
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/VertexBuffer.h"
 

@@ -43,10 +43,12 @@
 #define VOS_RENDERER_GUI_GUIBUTTON_HEADER
 
     #include "../../System/System.h"
+
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/Swapchain.h"
     #include "../Vulkan/GraphicsLayout.h"
     #include "../Vulkan/Texture.h"
+
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
     #include "../../Math/Vector4.h"

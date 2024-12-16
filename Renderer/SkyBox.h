@@ -43,11 +43,13 @@
 #define VOS_RENDERER_SKYBOX_HEADER
 
     #include "../System/System.h"
+
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/Swapchain.h"
     #include "Vulkan/GraphicsLayout.h"
     #include "Vulkan/VertexBuffer.h"
     #include "Vulkan/CubeMap.h"
+
     #include "../Math/Math.h"
     #include "../Math/Vector4.h"
     #include "../Math/Matrix4x4.h"

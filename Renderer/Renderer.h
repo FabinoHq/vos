@@ -47,6 +47,7 @@
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"
     #include "../System/SysSettings.h"
+
     #include "Vulkan/Vulkan.h"
     #include "Vulkan/VulkanMemory.h"
     #include "Vulkan/VulkanQueue.h"
@@ -69,6 +70,7 @@
     #include "OrbitalCam.h"
     #include "Sprite.h"
     #include "WorldLight.h"
+
     #include "../Math/Math.h"
     #include "../Math/Vector2.h"
     #include "../Math/Matrix4x4.h"

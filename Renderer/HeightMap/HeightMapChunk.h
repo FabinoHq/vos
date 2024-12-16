@@ -43,6 +43,7 @@
 #define VOS_RENDERER_HEIGHTMAP_HEIGHTMAPCHUNK_HEADER
 
     #include "../../System/System.h"
+
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/Swapchain.h"
     #include "../Vulkan/GraphicsLayout.h"

@@ -44,13 +44,15 @@
 
     #include "../../System/System.h"
     #include "../../System/SysSettings.h"
-    #include "../../Math/Math.h"
+
     #include "Vulkan.h"
     #include "VulkanMemory.h"
     #include "Swapchain.h"
     #include "GraphicsLayout.h"
     #include "VulkanBuffer.h"
     #include "Texture.h"
+
+    #include "../../Math/Math.h"
 
     #include <cstdint>
 
