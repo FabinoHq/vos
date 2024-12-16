@@ -233,29 +233,26 @@
             bool updateChunk(TileMapChunkData& chunkData,
                 int32_t chunkX, int32_t chunkY);
 
+
             ////////////////////////////////////////////////////////////////////
             //  Swap tilemaps pointers towards top                            //
-            //  return : True if tilemaps pointers are swapped                //
             ////////////////////////////////////////////////////////////////////
-            bool swapTop();
+            void swapTop();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap tilemaps pointers towards bottom                         //
-            //  return : True if tilemaps pointers are swapped                //
             ////////////////////////////////////////////////////////////////////
-            bool swapBottom();
+            void swapBottom();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap tilemaps pointers towards left                           //
-            //  return : True if tilemaps pointers are swapped                //
             ////////////////////////////////////////////////////////////////////
-            bool swapLeft();
+            void swapLeft();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap tilemaps pointers towards right                          //
-            //  return : True if tilemaps pointers are swapped                //
             ////////////////////////////////////////////////////////////////////
-            bool swapRight();
+            void swapRight();
 
 
         private:

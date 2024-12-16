@@ -246,14 +246,14 @@ bool TileMapLoader::isReady()
 ////////////////////////////////////////////////////////////////////////////////
 bool TileMapLoader::reload(int32_t chunkX, int32_t chunkY)
 {
-    // Check current loading state
+    // Check current state
     TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
     if (state != TILEMAPLOADER_STATE_IDLE)
     {
-        // Tilemap loader is still in loading state
+        // Tilemap loader is still in loading or sync state
         return false;
     }
 
@@ -290,31 +290,43 @@ bool TileMapLoader::reload(int32_t chunkX, int32_t chunkY)
 ////////////////////////////////////////////////////////////////////////////////
 bool TileMapLoader::update(int32_t chunkX, int32_t chunkY)
 {
-    // Synchronize swap with renderer
-    if (m_sync > 0)
+    // Check current state
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != TILEMAPLOADER_STATE_IDLE)
     {
-        // Tilemap loader is still in sync state
+        // Tilemap loader is still in loading or sync state
         return false;
     }
 
     // Check Y chunk position
     if (chunkY < m_chunkY)
     {
-        return swapTop();
+        // Top swap
+        swapTop();
+        return true;
     }
     if (chunkY > m_chunkY)
     {
-        return swapBottom();
+        // Bottom swap
+        swapBottom();
+        return true;
     }
 
     // Check X chunk position
     if (chunkX < m_chunkX)
     {
-        return swapLeft();
+        // Left swap
+        swapLeft();
+        return true;
     }
     if (chunkX > m_chunkX)
     {
-        return swapRight();
+        // Right swap
+        swapRight();
+        return true;
     }
 
     // Tilemaps pointers are up to date
@@ -481,23 +493,12 @@ bool TileMapLoader::updateChunk(TileMapChunkData& chunkData,
     return true;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap tilemaps pointers towards top                                        //
-//  return : True if tilemaps pointers are swapped                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool TileMapLoader::swapTop()
+void TileMapLoader::swapTop()
 {
-    // Check current loading state
-    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != TILEMAPLOADER_STATE_IDLE)
-    {
-        // Tilemap loader is still in loading state
-        return false;
-    }
-
     // Copy bottom row into tmp
     TileMapChunkData* tmp[TILEMAP_STREAMWIDTH];
     for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
@@ -539,26 +540,13 @@ bool TileMapLoader::swapTop()
     m_stateMutex.lock();
     m_state = TILEMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap tilemaps pointers towards bottom                                     //
-//  return : True if tilemaps pointers are swapped                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool TileMapLoader::swapBottom()
+void TileMapLoader::swapBottom()
 {
-    // Check current loading state
-    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != TILEMAPLOADER_STATE_IDLE)
-    {
-        // Tilemap loader is still in loading state
-        return false;
-    }
-
     // Copy top row into tmp
     TileMapChunkData* tmp[TILEMAP_STREAMWIDTH];
     for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
@@ -605,26 +593,13 @@ bool TileMapLoader::swapBottom()
     m_stateMutex.lock();
     m_state = TILEMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap tilemaps pointers towards left                                       //
-//  return : True if tilemaps pointers are swapped                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool TileMapLoader::swapLeft()
+void TileMapLoader::swapLeft()
 {
-    // Check current loading state
-    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != TILEMAPLOADER_STATE_IDLE)
-    {
-        // Tilemap loader is still in loading state
-        return false;
-    }
-
     // Copy right row into tmp
     TileMapChunkData* tmp[TILEMAP_STREAMHEIGHT];
     for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
@@ -668,26 +643,13 @@ bool TileMapLoader::swapLeft()
     m_stateMutex.lock();
     m_state = TILEMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap tilemaps pointers towards right                                      //
-//  return : True if tilemaps pointers are swapped                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool TileMapLoader::swapRight()
+void TileMapLoader::swapRight()
 {
-    // Check current loading state
-    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != TILEMAPLOADER_STATE_IDLE)
-    {
-        // Tilemap loader is still in loading state
-        return false;
-    }
-
     // Copy left row into tmp
     TileMapChunkData* tmp[TILEMAP_STREAMHEIGHT];
     for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
@@ -734,5 +696,4 @@ bool TileMapLoader::swapRight()
     m_stateMutex.lock();
     m_state = TILEMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }

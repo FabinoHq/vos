@@ -219,29 +219,26 @@
             bool updateChunk(MatrixColChunkData& chunkData,
                 int32_t chunkX, int32_t chunkY);
 
+
             ////////////////////////////////////////////////////////////////////
             //  Swap matrixcols pointers towards top                          //
-            //  return : True if matrixcols pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            bool swapTop();
+            void swapTop();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap matrixcols pointers towards bottom                       //
-            //  return : True if matrixcols pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            bool swapBottom();
+            void swapBottom();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap matrixcols pointers towards left                         //
-            //  return : True if matrixcols pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            bool swapLeft();
+            void swapLeft();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap matrixcols pointers towards right                        //
-            //  return : True if matrixcols pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            bool swapRight();
+            void swapRight();
 
 
         private:

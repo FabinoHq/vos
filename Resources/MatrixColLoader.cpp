@@ -236,7 +236,7 @@ bool MatrixColLoader::isReady()
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixColLoader::reload(int32_t chunkX, int32_t chunkY)
 {
-    // Check current loading state
+    // Check current state
     MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
@@ -277,24 +277,43 @@ bool MatrixColLoader::reload(int32_t chunkX, int32_t chunkY)
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixColLoader::update(int32_t chunkX, int32_t chunkY)
 {
+    // Check current state
+    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != MATRIXCOLLOADER_STATE_IDLE)
+    {
+        // Matrixcol loader is still in loading state
+        return false;
+    }
+
     // Check Y chunk position
     if (chunkY < m_chunkY)
     {
-        return swapTop();
+        // Top swap
+        swapTop();
+        return true;
     }
     if (chunkY > m_chunkY)
     {
-        return swapBottom();
+        // Bottom swap
+        swapBottom();
+        return true;
     }
 
     // Check X chunk position
     if (chunkX < m_chunkX)
     {
-        return swapLeft();
+        // Left swap
+        swapLeft();
+        return true;
     }
     if (chunkX > m_chunkX)
     {
-        return swapRight();
+        // Right swap
+        swapRight();
+        return true;
     }
 
     // Matrixcols pointers are up to date
@@ -437,23 +456,12 @@ bool MatrixColLoader::updateChunk(MatrixColChunkData& chunkData,
     return true;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap matrixcols pointers towards top                                      //
-//  return : True if matrixcols pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::swapTop()
+void MatrixColLoader::swapTop()
 {
-    // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
-    {
-        // Matrixcol loader is still in loading state
-        return false;
-    }
-
     // Copy bottom row into tmp
     MatrixColChunkData* tmp[MATRIXCOL_STREAMWIDTH];
     for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
@@ -494,26 +502,13 @@ bool MatrixColLoader::swapTop()
     m_stateMutex.lock();
     m_state = MATRIXCOLLOADER_STATE_LOAD;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap matrixcols pointers towards bottom                                   //
-//  return : True if matrixcols pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::swapBottom()
+void MatrixColLoader::swapBottom()
 {
-    // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
-    {
-        // Matrixcol loader is still in loading state
-        return false;
-    }
-
     // Copy top row into tmp
     MatrixColChunkData* tmp[MATRIXCOL_STREAMWIDTH];
     for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
@@ -559,26 +554,13 @@ bool MatrixColLoader::swapBottom()
     m_stateMutex.lock();
     m_state = MATRIXCOLLOADER_STATE_LOAD;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap matrixcols pointers towards left                                     //
-//  return : True if matrixcols pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::swapLeft()
+void MatrixColLoader::swapLeft()
 {
-    // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
-    {
-        // Matrixcol loader is still in loading state
-        return false;
-    }
-
     // Copy right row into tmp
     MatrixColChunkData* tmp[MATRIXCOL_STREAMHEIGHT];
     for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
@@ -621,26 +603,13 @@ bool MatrixColLoader::swapLeft()
     m_stateMutex.lock();
     m_state = MATRIXCOLLOADER_STATE_LOAD;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap matrixcols pointers towards right                                    //
-//  return : True if matrixcols pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::swapRight()
+void MatrixColLoader::swapRight()
 {
-    // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
-    {
-        // Matrixcol loader is still in loading state
-        return false;
-    }
-
     // Copy left row into tmp
     MatrixColChunkData* tmp[MATRIXCOL_STREAMHEIGHT];
     for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
@@ -686,5 +655,4 @@ bool MatrixColLoader::swapRight()
     m_stateMutex.lock();
     m_state = MATRIXCOLLOADER_STATE_LOAD;
     m_stateMutex.unlock();
-    return true;
 }

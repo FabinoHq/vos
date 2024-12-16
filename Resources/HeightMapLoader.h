@@ -264,29 +264,26 @@
             bool updateChunk(HeightMapChunkData& chunkData,
                 int32_t chunkX, int32_t chunkY);
 
+
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards top                          //
-            //  return : True if heightmaps pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            bool swapTop();
+            void swapTop();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards bottom                       //
-            //  return : True if heightmaps pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            bool swapBottom();
+            void swapBottom();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards left                         //
-            //  return : True if heightmaps pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            bool swapLeft();
+            void swapLeft();
 
             ////////////////////////////////////////////////////////////////////
             //  Swap heightmaps pointers towards right                        //
-            //  return : True if heightmaps pointers are swapped              //
             ////////////////////////////////////////////////////////////////////
-            bool swapRight();
+            void swapRight();
 
 
         private:

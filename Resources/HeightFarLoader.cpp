@@ -337,14 +337,14 @@ bool HeightFarLoader::isReady()
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightFarLoader::reload(int32_t chunkX, int32_t chunkY)
 {
-    // Check current loading state
+    // Check current state
     HeightFarLoaderState state = HEIGHTFARLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
     if (state != HEIGHTFARLOADER_STATE_IDLE)
     {
-        // Heightfar loader is still in loading state
+        // Heightfar loader is still in loading or sync state
         return false;
     }
 
@@ -381,31 +381,43 @@ bool HeightFarLoader::reload(int32_t chunkX, int32_t chunkY)
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightFarLoader::update(int32_t chunkX, int32_t chunkY)
 {
-    // Synchronize swap with renderer
-    if (m_sync > 0)
+    // Check current state
+    HeightFarLoaderState state = HEIGHTFARLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTFARLOADER_STATE_IDLE)
     {
-        // Heightfar loader is still in sync state
+        // Heightfar loader is still in loading or sync state
         return false;
     }
 
     // Check Y chunk position
     if (chunkY < m_chunkY)
     {
-        return swapTop();
+        // Top swap
+        swapTop();
+        return true;
     }
     if (chunkY > m_chunkY)
     {
-        return swapBottom();
+        // Bottom swap
+        swapBottom();
+        return true;
     }
 
     // Check X chunk position
     if (chunkX < m_chunkX)
     {
-        return swapLeft();
+        // Left swap
+        swapLeft();
+        return true;
     }
     if (chunkX > m_chunkX)
     {
-        return swapRight();
+        // Right swap
+        swapRight();
+        return true;
     }
 
     // Heightfars pointers are up to date
@@ -1102,23 +1114,12 @@ bool HeightFarLoader::updateChunk(HeightFarChunkData& chunkData,
     return true;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightfars pointers towards top                                      //
-//  return : True if heightfars pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightFarLoader::swapTop()
+void HeightFarLoader::swapTop()
 {
-    // Check current loading state
-    HeightFarLoaderState state = HEIGHTFARLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTFARLOADER_STATE_IDLE)
-    {
-        // Heightfar loader is still in loading state
-        return false;
-    }
-
     // Copy bottom row into tmp
     HeightFarChunkData* tmp[HEIGHTFAR_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
@@ -1160,26 +1161,13 @@ bool HeightFarLoader::swapTop()
     m_stateMutex.lock();
     m_state = HEIGHTFARLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightfars pointers towards bottom                                   //
-//  return : True if heightfars pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightFarLoader::swapBottom()
+void HeightFarLoader::swapBottom()
 {
-    // Check current loading state
-    HeightFarLoaderState state = HEIGHTFARLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTFARLOADER_STATE_IDLE)
-    {
-        // Heightfar loader is still in loading state
-        return false;
-    }
-
     // Copy top row into tmp
     HeightFarChunkData* tmp[HEIGHTFAR_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTFAR_STREAMWIDTH; ++i)
@@ -1226,26 +1214,13 @@ bool HeightFarLoader::swapBottom()
     m_stateMutex.lock();
     m_state = HEIGHTFARLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightfars pointers towards left                                     //
-//  return : True if heightfars pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightFarLoader::swapLeft()
+void HeightFarLoader::swapLeft()
 {
-    // Check current loading state
-    HeightFarLoaderState state = HEIGHTFARLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTFARLOADER_STATE_IDLE)
-    {
-        // Heightfar loader is still in loading state
-        return false;
-    }
-
     // Copy right row into tmp
     HeightFarChunkData* tmp[HEIGHTFAR_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTFAR_STREAMHEIGHT; ++j)
@@ -1289,26 +1264,13 @@ bool HeightFarLoader::swapLeft()
     m_stateMutex.lock();
     m_state = HEIGHTFARLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightfars pointers towards right                                    //
-//  return : True if heightfars pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightFarLoader::swapRight()
+void HeightFarLoader::swapRight()
 {
-    // Check current loading state
-    HeightFarLoaderState state = HEIGHTFARLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTFARLOADER_STATE_IDLE)
-    {
-        // Heightfar loader is still in loading state
-        return false;
-    }
-
     // Copy left row into tmp
     HeightFarChunkData* tmp[HEIGHTFAR_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTFAR_STREAMHEIGHT; ++j)
@@ -1355,5 +1317,4 @@ bool HeightFarLoader::swapRight()
     m_stateMutex.lock();
     m_state = HEIGHTFARLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }

@@ -337,14 +337,14 @@ bool HeightMapLoader::isReady()
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::reload(int32_t chunkX, int32_t chunkY)
 {
-    // Check current loading state
+    // Check current state
     HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
     if (state != HEIGHTMAPLOADER_STATE_IDLE)
     {
-        // Heightmap loader is still in loading state
+        // Heightmap loader is still in loading or sync state
         return false;
     }
 
@@ -381,31 +381,43 @@ bool HeightMapLoader::reload(int32_t chunkX, int32_t chunkY)
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::update(int32_t chunkX, int32_t chunkY)
 {
-    // Synchronize swap with renderer
-    if (m_sync > 0)
+    // Check current state
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    if (state != HEIGHTMAPLOADER_STATE_IDLE)
     {
-        // Heightmap loader is still in sync state
+        // Heightmap loader is still in loading or sync state
         return false;
     }
 
     // Check Y chunk position
     if (chunkY < m_chunkY)
     {
-        return swapTop();
+        // Top swap
+        swapTop();
+        return true;
     }
     if (chunkY > m_chunkY)
     {
-        return swapBottom();
+        // Bottom swap
+        swapBottom();
+        return true;
     }
 
     // Check X chunk position
     if (chunkX < m_chunkX)
     {
-        return swapLeft();
+        // Left swap
+        swapLeft();
+        return true;
     }
     if (chunkX > m_chunkX)
     {
-        return swapRight();
+        // Right swap
+        swapRight();
+        return true;
     }
 
     // Heightmaps pointers are up to date
@@ -1102,23 +1114,12 @@ bool HeightMapLoader::updateChunk(HeightMapChunkData& chunkData,
     return true;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightmaps pointers towards top                                      //
-//  return : True if heightmaps pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::swapTop()
+void HeightMapLoader::swapTop()
 {
-    // Check current loading state
-    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTMAPLOADER_STATE_IDLE)
-    {
-        // Heightmap loader is still in loading state
-        return false;
-    }
-
     // Copy bottom row into tmp
     HeightMapChunkData* tmp[HEIGHTMAP_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
@@ -1160,26 +1161,13 @@ bool HeightMapLoader::swapTop()
     m_stateMutex.lock();
     m_state = HEIGHTMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightmaps pointers towards bottom                                   //
-//  return : True if heightmaps pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::swapBottom()
+void HeightMapLoader::swapBottom()
 {
-    // Check current loading state
-    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTMAPLOADER_STATE_IDLE)
-    {
-        // Heightmap loader is still in loading state
-        return false;
-    }
-
     // Copy top row into tmp
     HeightMapChunkData* tmp[HEIGHTMAP_STREAMWIDTH];
     for (uint32_t i = 0; i < HEIGHTMAP_STREAMWIDTH; ++i)
@@ -1226,26 +1214,13 @@ bool HeightMapLoader::swapBottom()
     m_stateMutex.lock();
     m_state = HEIGHTMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightmaps pointers towards left                                     //
-//  return : True if heightmaps pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::swapLeft()
+void HeightMapLoader::swapLeft()
 {
-    // Check current loading state
-    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTMAPLOADER_STATE_IDLE)
-    {
-        // Heightmap loader is still in loading state
-        return false;
-    }
-
     // Copy right row into tmp
     HeightMapChunkData* tmp[HEIGHTMAP_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
@@ -1289,26 +1264,13 @@ bool HeightMapLoader::swapLeft()
     m_stateMutex.lock();
     m_state = HEIGHTMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Swap heightmaps pointers towards right                                    //
-//  return : True if heightmaps pointers are swapped                          //
 ////////////////////////////////////////////////////////////////////////////////
-bool HeightMapLoader::swapRight()
+void HeightMapLoader::swapRight()
 {
-    // Check current loading state
-    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
-    m_stateMutex.lock();
-    state = m_state;
-    m_stateMutex.unlock();
-    if (state != HEIGHTMAPLOADER_STATE_IDLE)
-    {
-        // Heightmap loader is still in loading state
-        return false;
-    }
-
     // Copy left row into tmp
     HeightMapChunkData* tmp[HEIGHTMAP_STREAMHEIGHT];
     for (uint32_t j = 0; j < HEIGHTMAP_STREAMHEIGHT; ++j)
@@ -1355,5 +1317,4 @@ bool HeightMapLoader::swapRight()
     m_stateMutex.lock();
     m_state = HEIGHTMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
-    return true;
 }
