@@ -118,6 +118,11 @@
             void prephysics();
 
             ////////////////////////////////////////////////////////////////////
+            //  Compute top down game warp                                    //
+            ////////////////////////////////////////////////////////////////////
+            void warp(Vector2i& offset);
+
+            ////////////////////////////////////////////////////////////////////
             //  Compute top down game physics (threaded)                      //
             ////////////////////////////////////////////////////////////////////
             void physics();
@@ -175,6 +180,8 @@
             BoundingRect        m_boundingRect2;        // Bounding rect 2
             Collision2          m_collide;              // Collision
 
+            int32_t             m_chunkX;               // Chunk X
+            int32_t             m_chunkY;               // Chunk Y
             TileMapStream       m_tilemap;              // Tilemap
             TopDownPlayer       m_player;               // Player
 

@@ -94,7 +94,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Precompute top down player physics (thread sync)              //
             ////////////////////////////////////////////////////////////////////
-            void prephysics();
+            void prephysics(const Vector2i& offset);
 
             ////////////////////////////////////////////////////////////////////
             //  Compute top down player physics (threaded)                    //
@@ -110,6 +110,41 @@
             //  Render top down player                                        //
             ////////////////////////////////////////////////////////////////////
             void render();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Top down player right warp                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline bool rightWarp()
+            {
+                return (m_bounding.position.vec[0] >
+                    (MatrixChunk2ElemWidth*MatrixChunk2Width));
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Top down player left warp                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline bool leftWarp()
+            {
+                return (m_bounding.position.vec[0] < 0);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Top down player top warp                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline bool topWarp()
+            {
+                return (m_bounding.position.vec[1] >
+                    (MatrixChunk2ElemHeight*MatrixChunk2Height));
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Top down player bottom warp                                   //
+            ////////////////////////////////////////////////////////////////////
+            inline bool bottomWarp()
+            {
+                return (m_bounding.position.vec[1] < 0);
+            }
 
 
         private:
@@ -131,10 +166,6 @@
 
             RectangleShape          m_rectangle;        // Rectangle shape
             EllipseShape            m_ellipse;          // Ellipse shape
-
-        public:
-            int32_t                 m_chunkX;           // Chunk X
-            int32_t                 m_chunkY;           // Chunk Y
     };
 
 

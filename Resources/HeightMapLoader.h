@@ -69,6 +69,7 @@
     const uint64_t HeightMapFenceTimeout = 100000000000;
     const uint32_t HeightMapLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
     const double HeightMapLoaderIdleSleepTime = 0.01;
+    const double HeightMapLoaderSyncSleepTime = 0.001;
     const double HeightMapLoaderErrorSleepTime = 0.1;
     const float HeightMapLoaderDefaultFlatY = 10.0f;
     const char HeightMapLoaderVHMPFilePath[] = "World/vhmp/";

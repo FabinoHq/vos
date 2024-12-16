@@ -126,6 +126,7 @@ void TileMapLoader::process()
 
         case TILEMAPLOADER_STATE_SYNC:
             // TileMap loader in sync state
+            SysSleep(TileMapLoaderSyncSleepTime);
             break;
 
         case TILEMAPLOADER_STATE_LOAD:

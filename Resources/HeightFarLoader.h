@@ -69,6 +69,7 @@
     const uint64_t HeightFarFenceTimeout = 100000000000;
     const uint32_t HeightFarLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
     const double HeightFarLoaderIdleSleepTime = 0.01;
+    const double HeightFarLoaderSyncSleepTime = 0.001;
     const double HeightFarLoaderErrorSleepTime = 0.1;
     const float HeightFarLoaderDefaultFlatY = 10.0f;
     const char HeightFarLoaderVHMPFilePath[] = "World/vhmf/";

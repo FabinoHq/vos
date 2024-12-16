@@ -71,6 +71,8 @@ m_boundingAlignRect2(),
 m_boundingRect(),
 m_boundingRect2(),
 m_collide(),
+m_chunkX(0),
+m_chunkY(0),
 m_tilemap(),
 m_player(),
 m_spaceReleased(false)
@@ -213,6 +215,10 @@ bool TopDown::init()
     m_boundingRect2.setPosition(200000, 0);
     m_boundingRect2.setSize(80000, 70000);
     m_boundingRect2.setAngle(1000000);
+
+    // Reset chunk X and Y
+    m_chunkX = 0;
+    m_chunkY = 0;
 
     // Init matrix stream
     if (!GMatrixStream2.init())
@@ -406,9 +412,47 @@ void TopDown::events(SysEvent& event)
 ////////////////////////////////////////////////////////////////////////////////
 void TopDown::prephysics()
 {
+    // Update chunk position
+    Vector2i offset = Vector2i(0, 0);
+    warp(offset);
+
     // Precompute player physics
-    m_player.prephysics();
-    m_tilemap.update(m_player.m_chunkX, m_player.m_chunkY);
+    m_player.prephysics(offset);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Compute top down game warp                                                //
+////////////////////////////////////////////////////////////////////////////////
+void TopDown::warp(Vector2i& offset)
+{
+    if (m_player.rightWarp())
+    {
+        // Right warp
+        offset.vec[0] = -(MatrixChunk2ElemWidth*MatrixChunk2Width);
+        ++m_chunkX;
+    }
+    if (m_player.leftWarp())
+    {
+        // Left warp
+        offset.vec[0] = (MatrixChunk2ElemWidth*MatrixChunk2Width);
+        --m_chunkX;
+    }
+    if (m_player.topWarp())
+    {
+        // Top warp
+        offset.vec[1] = -(MatrixChunk2ElemHeight*MatrixChunk2Height);
+        ++m_chunkY;
+    }
+    if (m_player.bottomWarp())
+    {
+        // Bottom warp
+        offset.vec[1] = (MatrixChunk2ElemHeight*MatrixChunk2Height);
+        --m_chunkY;
+    }
+
+    // Update matrix and tilemap chunk
+    GMatrixStream2.update(m_chunkX, m_chunkY);
+    m_tilemap.update(m_chunkX, m_chunkY);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -418,16 +462,6 @@ void TopDown::physics()
 {
     // Compute player physics
     m_player.physics();
-
-    // Update matrix stream
-    /*int32_t posI = Math::divide(
-        m_player.getBoundingX(), MatrixChunk2ElemWidth
-    );
-    int32_t posJ = Math::divide(
-        m_player.getBoundingY(), MatrixChunk2ElemHeight
-    );
-    int32_t chunkI = Math::divide(posI, MatrixChunk2Width);
-    int32_t chunkJ = Math::divide(posJ, MatrixChunk2Height);*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////

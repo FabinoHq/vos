@@ -142,6 +142,7 @@ void HeightMapLoader::process()
 
         case HEIGHTMAPLOADER_STATE_SYNC:
             // HeightMap loader in sync state
+            SysSleep(HeightMapLoaderSyncSleepTime);
             break;
 
         case HEIGHTMAPLOADER_STATE_LOAD:

@@ -69,6 +69,7 @@
     const uint64_t TileMapFenceTimeout = 100000000000;
     const uint32_t TileMapLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
     const double TileMapLoaderIdleSleepTime = 0.01;
+    const double TileMapLoaderSyncSleepTime = 0.001;
     const double TileMapLoaderErrorSleepTime = 0.1;
     const char TileMapLoaderVTMPFilePath[] = "World/vtmp/";
 

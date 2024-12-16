@@ -142,6 +142,7 @@ void HeightFarLoader::process()
 
         case HEIGHTFARLOADER_STATE_SYNC:
             // HeightFar loader in sync state
+            SysSleep(HeightFarLoaderSyncSleepTime);
             break;
 
         case HEIGHTFARLOADER_STATE_LOAD:
