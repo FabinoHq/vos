@@ -82,6 +82,7 @@ VOS: main.o \
 	Renderer/Vulkan/Shader.o \
 	Renderer/Vulkan/Texture.o Renderer/Vulkan/TextureArray.o \
 	Renderer/Vulkan/CubeMap.o \
+	Renderer/TileMap/TileMapChunk.o Renderer/TileMap/TileMapStream.o \
 	Renderer/HeightMap/HeightMapChunk.o Renderer/HeightMap/HeightFarChunk.o \
 	Renderer/HeightMap/HeightMapStream.o Renderer/HeightMap/HeightFarStream.o \
 	Renderer/HeightMap/SeaNearChunk.o Renderer/HeightMap/SeaFarChunk.o \
@@ -93,7 +94,7 @@ VOS: main.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
-	Resources/MatrixColLoader.o \
+	Resources/MatrixColLoader.o Resources/TileMapLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
@@ -135,6 +136,7 @@ VOS: main.o \
 	Renderer/Vulkan/Shader.o \
 	Renderer/Vulkan/Texture.o Renderer/Vulkan/TextureArray.o \
 	Renderer/Vulkan/CubeMap.o \
+	Renderer/TileMap/TileMapChunk.o Renderer/TileMap/TileMapStream.o \
 	Renderer/HeightMap/HeightMapChunk.o Renderer/HeightMap/HeightFarChunk.o \
 	Renderer/HeightMap/HeightMapStream.o Renderer/HeightMap/HeightFarStream.o \
 	Renderer/HeightMap/SeaNearChunk.o Renderer/HeightMap/SeaFarChunk.o \
@@ -146,7 +148,7 @@ VOS: main.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
-	Resources/MatrixColLoader.o \
+	Resources/MatrixColLoader.o Resources/TileMapLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
@@ -354,6 +356,15 @@ Renderer/Renderer.o: Renderer/Renderer.cpp
 	$(CC) -o Renderer/Renderer.o -c Renderer/Renderer.cpp $(CFLAGS)
 
 
+Renderer/TileMap/TileMapChunk.o: Renderer/TileMap/TileMapChunk.cpp
+	$(CC) -o Renderer/TileMap/TileMapChunk.o -c \
+	Renderer/TileMap/TileMapChunk.cpp $(CFLAGS)
+
+Renderer/TileMap/TileMapStream.o: Renderer/TileMap/TileMapStream.cpp
+	$(CC) -o Renderer/TileMap/TileMapStream.o -c \
+	Renderer/TileMap/TileMapStream.cpp $(CFLAGS)
+
+
 Renderer/HeightMap/HeightMapChunk.o: Renderer/HeightMap/HeightMapChunk.cpp
 	$(CC) -o Renderer/HeightMap/HeightMapChunk.o -c \
 	Renderer/HeightMap/HeightMapChunk.cpp $(CFLAGS)
@@ -434,6 +445,9 @@ Resources/MatrixColLoader.o: Resources/MatrixColLoader.cpp
 	$(CC) -o Resources/MatrixColLoader.o -c \
 	Resources/MatrixColLoader.cpp $(CFLAGS)
 
+Resources/TileMapLoader.o: Resources/TileMapLoader.cpp
+	$(CC) -o Resources/TileMapLoader.o -c Resources/TileMapLoader.cpp $(CFLAGS)
+
 Resources/HeightMapLoader.o: Resources/HeightMapLoader.cpp
 	$(CC) -o Resources/HeightMapLoader.o -c \
 	Resources/HeightMapLoader.cpp $(CFLAGS)
@@ -475,6 +489,7 @@ clean:
 	rm -rf Physics/BoundingSurfaces/*.o
 	rm -rf Renderer/*.o
 	rm -rf Renderer/Vulkan/*.o
+	rm -rf Renderer/TileMap/*.o
 	rm -rf Renderer/HeightMap/*.o
 	rm -rf Renderer/Shapes/*.o
 	rm -rf Renderer/GUI/*.o

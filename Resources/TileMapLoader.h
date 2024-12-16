@@ -37,10 +37,10 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Resources/HeightFarLoader.h : HeightFar loading management             //
+//     Resources/TileMapLoader.h : TileMap loading management                 //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RESOURCES_HEIGHTFARLOADER_HEADER
-#define VOS_RESOURCES_HEIGHTFARLOADER_HEADER
+#ifndef VOS_RESOURCES_TILEMAPLOADER_HEADER
+#define VOS_RESOURCES_TILEMAPLOADER_HEADER
 
     #include "../System/System.h"
     #include "../System/SysThread.h"
@@ -58,150 +58,130 @@
     #include <cstdint>
     #include <new>
 
-    #include "../Renderer/HeightMap/HeightFarChunk.h"
+    #include "../Renderer/TileMap/TileMapChunk.h"
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightFarLoader settings                                              //
+    //  TileMapLoader settings                                                //
     ////////////////////////////////////////////////////////////////////////////
-    const uint64_t HeightFarFenceTimeout = 100000000000;
-    const uint32_t HeightFarLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
-    const double HeightFarLoaderIdleSleepTime = 0.01;
-    const double HeightFarLoaderErrorSleepTime = 0.1;
-    const float HeightFarLoaderDefaultFlatY = 10.0f;
-    const char HeightFarLoaderVHMPFilePath[] = "World/vhmf/";
+    const uint64_t TileMapFenceTimeout = 100000000000;
+    const uint32_t TileMapLoaderSyncFrames = (RendererMaxSwapchainFrames+3);
+    const double TileMapLoaderIdleSleepTime = 0.01;
+    const double TileMapLoaderErrorSleepTime = 0.1;
+    const char TileMapLoaderVTMPFilePath[] = "World/vtmp/";
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightFar flags enumeration                                           //
+    //  TileMap stream assets definitions                                     //
     ////////////////////////////////////////////////////////////////////////////
-    enum HeightFarFlags
+    #define TILEMAP_STREAMWIDTH 9
+    #define TILEMAP_STREAMHEIGHT 9
+    #define TILEMAP_STREAMHALFWIDTH 4
+    #define TILEMAP_STREAMHALFHEIGHT 4
+    #define TILEMAP_ASSETSCOUNT (TILEMAP_STREAMWIDTH*TILEMAP_STREAMHEIGHT)
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  TileMapLoaderState enumeration                                        //
+    ////////////////////////////////////////////////////////////////////////////
+    enum TileMapLoaderState
     {
-        HEIGHTFAR_FLAGS_NONE = 0x00,
-        HEIGHTFAR_FLAGS_RENDERSEA = 0x01
+        TILEMAPLOADER_STATE_NONE = 0,
+        TILEMAPLOADER_STATE_INIT = 1,
+
+        TILEMAPLOADER_STATE_IDLE = 2,
+        TILEMAPLOADER_STATE_SYNC = 3,
+        TILEMAPLOADER_STATE_LOAD = 4,
+
+        TILEMAPLOADER_STATE_ERROR = 5
     };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightFar stream assets definitions                                   //
+    //  TileMapChunkData structure                                            //
     ////////////////////////////////////////////////////////////////////////////
-    #define HEIGHTFAR_STREAMWIDTH 9
-    #define HEIGHTFAR_STREAMHEIGHT 9
-    #define HEIGHTFAR_STREAMHALFWIDTH 4
-    #define HEIGHTFAR_STREAMHALFHEIGHT 4
-    #define HEIGHTFAR_ASSETSCOUNT (HEIGHTFAR_STREAMWIDTH*HEIGHTFAR_STREAMHEIGHT)
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  HeightFarLoaderState enumeration                                      //
-    ////////////////////////////////////////////////////////////////////////////
-    enum HeightFarLoaderState
-    {
-        HEIGHTFARLOADER_STATE_NONE = 0,
-        HEIGHTFARLOADER_STATE_INIT = 1,
-
-        HEIGHTFARLOADER_STATE_IDLE = 2,
-        HEIGHTFARLOADER_STATE_SYNC = 3,
-        HEIGHTFARLOADER_STATE_LOAD = 4,
-
-        HEIGHTFARLOADER_STATE_ERROR = 5
-    };
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  HeightFarpChunkData structure                                         //
-    ////////////////////////////////////////////////////////////////////////////
-    struct HeightFarChunkData
+    struct TileMapChunkData
     {
         bool loading;
         int32_t chunkX;
         int32_t chunkY;
         int32_t flags;
-        VertexBuffer* heightfar;
+        TileMapChunk* tilemap;
     };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  HeightFarLoader class definition                                      //
+    //  TileMapLoader class definition                                        //
     ////////////////////////////////////////////////////////////////////////////
-    class HeightFarLoader : public SysThread
+    class TileMapLoader : public SysThread
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarLoader default constructor                           //
+            //  TileMapLoader default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            HeightFarLoader();
+            TileMapLoader();
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarLoader virtual destructor                            //
+            //  TileMapLoader virtual destructor                              //
             ////////////////////////////////////////////////////////////////////
-            virtual ~HeightFarLoader();
+            virtual ~TileMapLoader();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarLoader thread process                                //
+            //  TileMapLoader thread process                                  //
             ////////////////////////////////////////////////////////////////////
             virtual void process();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init HeightFarLoader                                          //
-            //  return : True if heightfar loader is ready                    //
+            //  Init TileMapLoader                                            //
+            //  return : True if tilemap loader is ready                      //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightfar loader state                                    //
-            //  return : Current heightfar loader state                       //
+            //  Get tilemap loader state                                      //
+            //  return : Current tilemap loader state                         //
             ////////////////////////////////////////////////////////////////////
-            HeightFarLoaderState getState();
+            TileMapLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightfar loader ready state                              //
-            //  return : True if heightfar loader is ready, false otherwise   //
+            //  Get tilemap loader ready state                                //
+            //  return : True if tilemap loader is ready, false otherwise     //
             ////////////////////////////////////////////////////////////////////
             bool isReady();
 
             ////////////////////////////////////////////////////////////////////
-            //  Reload heightfars pointers based on current chunk position    //
-            //  return : True if heightfars pointers are reloaded             //
+            //  Reload tilemaps pointers based on current chunk position      //
+            //  return : True if tilemaps pointers are reloaded               //
             ////////////////////////////////////////////////////////////////////
             bool reload(int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update heightfars pointers based on current chunk position    //
-            //  return : True if heightfars pointers are updated              //
+            //  Update tilemaps pointers based on current chunk position      //
+            //  return : True if tilemaps pointers are updated                //
             ////////////////////////////////////////////////////////////////////
             bool update(int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Synchronize heightfars pointers with renderer                 //
+            //  Synchronize tilemaps pointers with renderer                   //
             ////////////////////////////////////////////////////////////////////
             void sync();
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightfar vertex buffer                                   //
-            //  return : heightfar vertex buffer                              //
+            //  Get tilemap chunk                                             //
+            //  return : tilemap chunk                                        //
             ////////////////////////////////////////////////////////////////////
-            inline VertexBuffer& heightfar(uint32_t heightfar)
+            inline TileMapChunk& tilemap(uint32_t tilemap)
             {
                 return (*m_chunksptrs[
-                    Math::clamp(heightfar, 0u, (HEIGHTFAR_ASSETSCOUNT-1u))
-                ]->heightfar);
+                    Math::clamp(tilemap, 0u, (TILEMAP_ASSETSCOUNT-1u))
+                ]->tilemap);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightfar flags                                           //
-            //  return : heightfar flags                                      //
-            ////////////////////////////////////////////////////////////////////
-            inline int32_t getFlags(uint32_t heightfar)
-            {
-                return (m_chunksptrs[heightfar]->flags);
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get heightfar chunk X                                         //
-            //  return : heightfar chunk X                                    //
+            //  Get tilemap chunk X                                           //
+            //  return : tilemap chunk X                                      //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getChunkX() const
             {
@@ -209,8 +189,8 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get heightfar chunk Y                                         //
-            //  return : heightfar chunk Y                                    //
+            //  Get tilemap chunk Y                                           //
+            //  return : tilemap chunk Y                                      //
             ////////////////////////////////////////////////////////////////////
             inline int32_t getChunkY() const
             {
@@ -218,105 +198,88 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy heightfar loader                                      //
+            //  Destroy tilemap loader                                        //
             ////////////////////////////////////////////////////////////////////
-            void destroyHeightFarLoader();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Upload vertex buffer to graphics memory                       //
-            //  return : True if vertex buffer is successfully uploaded       //
-            ////////////////////////////////////////////////////////////////////
-            bool uploadVertexBuffer(VertexBuffer& vertexBuffer,
-                const float* vertices, const uint16_t* indices,
-                uint32_t verticesCount, uint32_t indicesCount);
+            void destroyTileMapLoader();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Load heightfars assets                                        //
-            //  return : True if heightfars assets are loaded                 //
+            //  Load tilemaps assets                                          //
+            //  return : True if tilemaps assets are loaded                   //
             ////////////////////////////////////////////////////////////////////
-            bool loadHeightFars();
+            bool loadTileMaps();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Generate flat heightfar chunk                                 //
-            //  return : True if the heightfar chunk is generated             //
+            //  Generate flat tilemap chunk                                   //
+            //  return : True if the tilemap chunk is generated               //
             ////////////////////////////////////////////////////////////////////
-            bool generateFlatChunk(HeightFarChunkData& chunkData);
+            bool generateFlatChunk(TileMapChunkData& chunkData);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update flat heightfar chunk                                   //
-            //  return : True if the heightfar chunk is updated               //
+            //  Update flat tilemap chunk                                     //
+            //  return : True if the tilemap chunk is updated                 //
             ////////////////////////////////////////////////////////////////////
-            bool updateFlatChunk(HeightFarChunkData& chunkData);
+            bool updateFlatChunk(TileMapChunkData& chunkData);
 
             ////////////////////////////////////////////////////////////////////
-            //  Update heightfar chunk                                        //
-            //  return : True if the heightfar chunk is updated               //
+            //  Update tilemap chunk                                          //
+            //  return : True if the tilemap chunk is updated                 //
             ////////////////////////////////////////////////////////////////////
-            bool updateChunk(HeightFarChunkData& chunkData,
+            bool updateChunk(TileMapChunkData& chunkData,
                 int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Swap heightfars pointers towards top                          //
-            //  return : True if heightfars pointers are swapped              //
+            //  Swap tilemaps pointers towards top                            //
+            //  return : True if tilemaps pointers are swapped                //
             ////////////////////////////////////////////////////////////////////
             bool swapTop();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swap heightfars pointers towards bottom                       //
-            //  return : True if heightfars pointers are swapped              //
+            //  Swap tilemaps pointers towards bottom                         //
+            //  return : True if tilemaps pointers are swapped                //
             ////////////////////////////////////////////////////////////////////
             bool swapBottom();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swap heightfars pointers towards left                         //
-            //  return : True if heightfars pointers are swapped              //
+            //  Swap tilemaps pointers towards left                           //
+            //  return : True if tilemaps pointers are swapped                //
             ////////////////////////////////////////////////////////////////////
             bool swapLeft();
 
             ////////////////////////////////////////////////////////////////////
-            //  Swap heightfars pointers towards right                        //
-            //  return : True if heightfars pointers are swapped              //
+            //  Swap tilemaps pointers towards right                          //
+            //  return : True if tilemaps pointers are swapped                //
             ////////////////////////////////////////////////////////////////////
             bool swapRight();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarLoader private copy constructor : Not copyable       //
+            //  TileMapLoader private copy constructor : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            HeightFarLoader(const HeightFarLoader&) = delete;
+            TileMapLoader(const TileMapLoader&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  HeightFarLoader private copy operator : Not copyable          //
+            //  TileMapLoader private copy operator : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            HeightFarLoader& operator=(const HeightFarLoader&) = delete;
+            TileMapLoader& operator=(const TileMapLoader&) = delete;
 
 
         private:
-            HeightFarLoaderState    m_state;            // HeightFarLoader state
+            TileMapLoaderState      m_state;            // TileMapLoader state
             SysMutex                m_stateMutex;       // State mutex
 
-            VulkanQueue             m_transferQueue;    // Transfer queue
-            VkCommandPool           m_commandPool;      // Command pool
-            VkCommandBuffer         m_commandBuffer;    // Command buffer
-            VulkanBuffer            m_stagingBuffer;    // Staging buffer
-            VkFence                 m_fence;            // Staging fence
             uint32_t                m_sync;             // Renderer sync
 
-            VertexBuffer*           m_heightfars;       // Heightfars meshes
-            HeightFarChunkData      m_chunks[HEIGHTFAR_ASSETSCOUNT];
-            HeightFarChunkData*     m_chunksptrs[HEIGHTFAR_ASSETSCOUNT];
+            TileMapChunk*           m_tilemaps;         // Tilemaps chunks
+            TileMapChunkData        m_chunks[TILEMAP_ASSETSCOUNT];
+            TileMapChunkData*       m_chunksptrs[TILEMAP_ASSETSCOUNT];
 
-            float*                  m_vertices;         // Chunk vertices
-            uint16_t*               m_indices;          // Chunk indices
-
-            int32_t                 m_chunkX;           // Heightfar chunk X
-            int32_t                 m_chunkY;           // Heightfar chunk Y
+            int32_t                 m_chunkX;           // Tilemap chunk X
+            int32_t                 m_chunkY;           // Tilemap chunk Y
     };
 
 
-#endif // VOS_RESOURCES_HEIGHTFARLOADER_HEADER
+#endif // VOS_RESOURCES_TILEMAPLOADER_HEADER

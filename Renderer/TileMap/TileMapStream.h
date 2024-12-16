@@ -37,100 +37,130 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Resources/Resources.h : Resources management                           //
+//     Renderer/TileMap/TileMapStream.h : TileMap stream renderer             //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RESOURCES_RESOURCES_HEADER
-#define VOS_RESOURCES_RESOURCES_HEADER
+#ifndef VOS_RENDERER_TILEMAP_TILEMAPSTREAM_HEADER
+#define VOS_RENDERER_TILEMAP_TILEMAPSTREAM_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysMessage.h"
-    #include "TextureLoader.h"
-    #include "MeshLoader.h"
-    #include "MatrixColLoader.h"
-    #include "TileMapLoader.h"
-    #include "HeightMapLoader.h"
-    #include "HeightFarLoader.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/VertexBuffer.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
+    #include "../../Resources/Resources.h"
+    #include "../../Resources/TileMapLoader.h"
+
+    #include "TileMapChunk.h"
+
+    #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Resources settings                                                    //
+    //  TileMapStream class definition                                        //
     ////////////////////////////////////////////////////////////////////////////
-    const double ResourcesWaitSleepTime = 0.02;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Resources class definition                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Resources
+    class TileMapStream
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Resources default constructor                                 //
+            //  TileMapStream default constructor                             //
             ////////////////////////////////////////////////////////////////////
-            Resources();
+            TileMapStream();
 
             ////////////////////////////////////////////////////////////////////
-            //  Resources destructor                                          //
+            //  TileMapStream destructor                                      //
             ////////////////////////////////////////////////////////////////////
-            ~Resources();
+            ~TileMapStream();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init resources loaders                                        //
-            //  return : True if resources loaders are ready                  //
+            //  Init tilemap stream                                           //
+            //  return : True if the tilemap stream is successfully created   //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Preload resources assets                                      //
-            //  return : True if resources assets are successfully preloaded  //
+            //  Get tilemap stream ready state                                //
+            //  return : True if the tilemap stream is ready                  //
             ////////////////////////////////////////////////////////////////////
-            bool preload();
+            inline bool isReady()
+            {
+                return (GResources.tilemaps.isReady());
+            }
 
             ////////////////////////////////////////////////////////////////////
-            //  Start loading resources assets                                //
-            //  return : True if resources assets are loading                 //
+            //  Reload tilemap stream                                         //
+            //  return : True if the tilemap stream is reloading              //
             ////////////////////////////////////////////////////////////////////
-            bool startLoading();
+            inline bool reload(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.tilemaps.reload(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.tilemaps.getChunkX();
+                    m_chunkY = GResources.tilemaps.getChunkY();
+                    return true;
+                }
+                return false;
+            }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get resources loading status                                  //
-            //  return : True if resources assets are loaded, false otherwise //
+            //  Update tilemap stream                                         //
+            //  return : True if the tilemap stream is updated                //
             ////////////////////////////////////////////////////////////////////
-            bool isLoadingDone();
+            inline bool update(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.tilemaps.update(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.tilemaps.getChunkX();
+                    m_chunkY = GResources.tilemaps.getChunkY();
+                    return true;
+                }
+                return false;
+            }
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy resources                                             //
+            //  Render tilemap stream                                         //
             ////////////////////////////////////////////////////////////////////
-            void destroyResources();
+            void render();
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get tilemap chunk X                                           //
+            //  return : Tilemap chunk X                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkX() const
+            {
+                return m_chunkX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get tilemap chunk Y                                           //
+            //  return : Tilemap chunk Y                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkY() const
+            {
+                return m_chunkY;
+            }
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Resources private copy constructor : Not copyable             //
+            //  TileMapStream private copy constructor : Not copyable         //
             ////////////////////////////////////////////////////////////////////
-            Resources(const Resources&) = delete;
+            TileMapStream(const TileMapStream&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Resources private copy operator : Not copyable                //
+            //  TileMapStream private copy operator : Not copyable            //
             ////////////////////////////////////////////////////////////////////
-            Resources& operator=(const Resources&) = delete;
+            TileMapStream& operator=(const TileMapStream&) = delete;
 
 
-        public:
-            TextureLoader       textures;       // Texture loader
-            MeshLoader          meshes;         // Mesh loader
-            MatrixColLoader     matrixcols;     // MatrixCol loader
-            TileMapLoader       tilemaps;       // TileMap loader
-            HeightMapLoader     heightmaps;     // HeightMap loader
-            HeightFarLoader     heightfars;     // HeightFar loader
+        private:
+            TileMapChunk        m_tileMapChunk;     // TileMap chunk
+            int32_t             m_chunkX;           // Chunk X
+            int32_t             m_chunkY;           // Chunk Y
     };
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Resources global instance                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    extern Resources GResources;
-
-
-#endif // VOS_RESOURCES_RESOURCES_HEADER
+#endif // VOS_RENDERER_TILEMAP_TILEMAPSTREAM_HEADER

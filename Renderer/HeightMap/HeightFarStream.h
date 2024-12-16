@@ -87,8 +87,7 @@
             ////////////////////////////////////////////////////////////////////
             inline bool isReady()
             {
-                return (GResources.heightfars.getState() ==
-                    HEIGHTFARLOADER_STATE_IDLE);
+                return (GResources.heightfars.isReady());
             }
 
             ////////////////////////////////////////////////////////////////////

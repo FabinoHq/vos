@@ -54,6 +54,8 @@ Resources GResources = Resources();
 Resources::Resources() :
 textures(),
 meshes(),
+matrixcols(),
+tilemaps(),
 heightmaps(),
 heightfars()
 {
@@ -84,6 +86,9 @@ bool Resources::init()
     // Start matrixcol loader thread
     matrixcols.start();
 
+    // Start tilemap loader thread
+    tilemaps.start();
+
     // Start heightmap loader thread
     heightmaps.start();
 
@@ -98,6 +103,7 @@ bool Resources::init()
         TextureLoaderState textureState = textures.getState();
         MeshLoaderState meshState = meshes.getState();
         MatrixColLoaderState matrixcolState = matrixcols.getState();
+        TileMapLoaderState tilemapState = tilemaps.getState();
         HeightMapLoaderState heightmapState = heightmaps.getState();
         HeightFarLoaderState heightfarState = heightfars.getState();
 
@@ -128,11 +134,20 @@ bool Resources::init()
             return false;
         }
 
+        // Check tilemaps loader state
+        if (tilemapState == TILEMAPLOADER_STATE_ERROR)
+        {
+            // Mesh loader error
+            SysMessage::box() << "[0x4003] Could not init tilemaps loader\n";
+            SysMessage::box() << "Please check your resources files";
+            return false;
+        }
+
         // Check heightmaps loader state
         if (heightmapState == HEIGHTMAPLOADER_STATE_ERROR)
         {
             // Mesh loader error
-            SysMessage::box() << "[0x4003] Could not init heightmaps loader\n";
+            SysMessage::box() << "[0x4004] Could not init heightmaps loader\n";
             SysMessage::box() << "Please check your resources files";
             return false;
         }
@@ -141,7 +156,7 @@ bool Resources::init()
         if (heightfarState == HEIGHTFARLOADER_STATE_ERROR)
         {
             // Mesh loader error
-            SysMessage::box() << "[0x4004] Could not init heightfars loader\n";
+            SysMessage::box() << "[0x4005] Could not init heightfars loader\n";
             SysMessage::box() << "Please check your resources files";
             return false;
         }
@@ -190,7 +205,7 @@ bool Resources::preload()
         if (textureState == TEXTURELOADER_STATE_ERROR)
         {
             // Texture loader error
-            SysMessage::box() << "[0x4005] Could not preload textures\n";
+            SysMessage::box() << "[0x4006] Could not preload textures\n";
             SysMessage::box() << "Please check your resources files";
             return false;
         }
@@ -199,7 +214,7 @@ bool Resources::preload()
         if (meshState == MESHLOADER_STATE_ERROR)
         {
             // Texture loader error
-            SysMessage::box() << "[0x4006] Could not preload meshes\n";
+            SysMessage::box() << "[0x4007] Could not preload meshes\n";
             SysMessage::box() << "Please check your resources files";
             return false;
         }
@@ -232,7 +247,7 @@ bool Resources::startLoading()
     if (!textures.startLoading())
     {
         // Could not start textures loading
-        SysMessage::box() << "[0x4007] Could not start textures loader\n";
+        SysMessage::box() << "[0x4008] Could not start textures loader\n";
         SysMessage::box() << "Please check your resources files";
         return false;
     }
@@ -241,7 +256,7 @@ bool Resources::startLoading()
     if (!meshes.startLoading())
     {
         // Could not start meshes loading
-        SysMessage::box() << "[0x4008] Could not start meshes loader\n";
+        SysMessage::box() << "[0x4009] Could not start meshes loader\n";
         SysMessage::box() << "Please check your resources files";
         return false;
     }
@@ -283,6 +298,9 @@ void Resources::destroyResources()
     // Stop heightmap loader thread
     heightmaps.stop();
 
+    // Stop tilemap loader thread
+    tilemaps.stop();
+
     // Stop matrixcol loader thread
     matrixcols.stop();
 
@@ -297,6 +315,9 @@ void Resources::destroyResources()
 
     // Destroy heightmap loader
     heightmaps.destroyHeightMapLoader();
+
+    // Destroy tilemap loader
+    tilemaps.destroyTileMapLoader();
 
     // Destroy matrixcol loader
     matrixcols.destroyMatrixColLoader();

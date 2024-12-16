@@ -185,7 +185,9 @@
             ////////////////////////////////////////////////////////////////////
             inline VertexBuffer& heightmap(uint32_t heightmap)
             {
-                return (*m_chunksptrs[heightmap]->heightmap);
+                return (*m_chunksptrs[
+                    Math::clamp(heightmap, 0u, (HEIGHTMAP_ASSETSCOUNT-1u))
+                ]->heightmap);
             }
 
             ////////////////////////////////////////////////////////////////////

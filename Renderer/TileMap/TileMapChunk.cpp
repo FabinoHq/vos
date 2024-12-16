@@ -37,24 +37,25 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/MatrixChunk2.cpp : 2D Matrix chunk physics management          //
+//     Renderer/TileMap/TileMapChunk.cpp : TileMap chunk renderer             //
 ////////////////////////////////////////////////////////////////////////////////
-#include "MatrixChunk2.h"
+#include "TileMapChunk.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  MatrixChunk2 default constructor                                          //
+//  TileMapChunk default constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
-MatrixChunk2::MatrixChunk2() :
+TileMapChunk::TileMapChunk() :
+Transform2(),
 matrix(0)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  MatrixChunk2 destructor                                                   //
+//  TileMapChunk virtual destructor                                           //
 ////////////////////////////////////////////////////////////////////////////////
-MatrixChunk2::~MatrixChunk2()
+TileMapChunk::~TileMapChunk()
 {
     if (matrix) { delete[] matrix; }
     matrix = 0;
@@ -62,24 +63,38 @@ MatrixChunk2::~MatrixChunk2()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init matrix chunk                                                         //
+//  Init tilemap chunk                                                        //
+//  return : True if the tilemap chunk is successfully created                //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixChunk2::init()
+bool TileMapChunk::init()
 {
-    // Create matrix
-    matrix = new(std::nothrow) int8_t[MatrixChunk2Size];
-    if (!matrix) { return false; }
-    memset(matrix, 0, sizeof(int8_t)*MatrixChunk2Size);
+    // Reset tilemap chunk transformations
+    resetTransforms();
 
-    // Matrix chunk successfully created
+    // Create matrix
+    matrix = new(std::nothrow) int32_t[TileMapChunkSize];
+    if (!matrix) { return false; }
+    memset(matrix, 0, sizeof(int32_t)*TileMapChunkSize);
+
+    // Tilemap chunk successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy matrix chunk                                                      //
+//  Destroy tilemap chunk                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void MatrixChunk2::destroyMatrix()
+void TileMapChunk::destroyTileMap()
 {
     if (matrix) { delete[] matrix; }
     matrix = 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Render tilemap chunk                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void TileMapChunk::render()
+{
+    // Compute tilemap chunk transformations
+    computeTransforms();
 }

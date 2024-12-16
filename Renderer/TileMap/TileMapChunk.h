@@ -37,100 +37,84 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Resources/Resources.h : Resources management                           //
+//     Renderer/TileMap/TileMapChunk.h : TileMap chunk renderer               //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RESOURCES_RESOURCES_HEADER
-#define VOS_RESOURCES_RESOURCES_HEADER
+#ifndef VOS_RENDERER_TILEMAP_TILEMAPCHUNK_HEADER
+#define VOS_RENDERER_TILEMAP_TILEMAPCHUNK_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysMessage.h"
-    #include "TextureLoader.h"
-    #include "MeshLoader.h"
-    #include "MatrixColLoader.h"
-    #include "TileMapLoader.h"
-    #include "HeightMapLoader.h"
-    #include "HeightFarLoader.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform2.h"
+
+    #include "../../Physics/MatrixChunk2.h"
+
+    #include <cstdint>
+    #include <cstring>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Resources settings                                                    //
+    //  TileMapChunk settings                                                 //
     ////////////////////////////////////////////////////////////////////////////
-    const double ResourcesWaitSleepTime = 0.02;
+    const int32_t TileMapChunkWidth = MatrixChunk2Width;
+    const int32_t TileMapChunkHeight = MatrixChunk2Height;
+    const int32_t TileMapChunkSize = (TileMapChunkWidth*TileMapChunkHeight);
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Resources class definition                                            //
+    //  TileMapChunk class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
-    class Resources
+    class TileMapChunk : public Transform2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Resources default constructor                                 //
+            //  TileMapChunk default constructor                              //
             ////////////////////////////////////////////////////////////////////
-            Resources();
+            TileMapChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  Resources destructor                                          //
+            //  TileMapChunk virtual destructor                               //
             ////////////////////////////////////////////////////////////////////
-            ~Resources();
+            virtual ~TileMapChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init resources loaders                                        //
-            //  return : True if resources loaders are ready                  //
+            //  Init tilemap chunk                                            //
+            //  return : True if the tilemap chunk is successfully created    //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Preload resources assets                                      //
-            //  return : True if resources assets are successfully preloaded  //
+            //  Destroy tilemap chunk                                         //
             ////////////////////////////////////////////////////////////////////
-            bool preload();
+            void destroyTileMap();
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Start loading resources assets                                //
-            //  return : True if resources assets are loading                 //
+            //  Render tilemap chunk                                          //
             ////////////////////////////////////////////////////////////////////
-            bool startLoading();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get resources loading status                                  //
-            //  return : True if resources assets are loaded, false otherwise //
-            ////////////////////////////////////////////////////////////////////
-            bool isLoadingDone();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy resources                                             //
-            ////////////////////////////////////////////////////////////////////
-            void destroyResources();
+            void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Resources private copy constructor : Not copyable             //
+            //  TileMapChunk private copy constructor : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            Resources(const Resources&) = delete;
+            TileMapChunk(const TileMapChunk&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Resources private copy operator : Not copyable                //
+            //  TileMapChunk private copy operator : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            Resources& operator=(const Resources&) = delete;
+            TileMapChunk& operator=(const TileMapChunk&) = delete;
 
 
-        public:
-            TextureLoader       textures;       // Texture loader
-            MeshLoader          meshes;         // Mesh loader
-            MatrixColLoader     matrixcols;     // MatrixCol loader
-            TileMapLoader       tilemaps;       // TileMap loader
-            HeightMapLoader     heightmaps;     // HeightMap loader
-            HeightFarLoader     heightfars;     // HeightFar loader
+        private:
+            int32_t*    matrix;     // Tilemap chunk representation
     };
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Resources global instance                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    extern Resources GResources;
-
-
-#endif // VOS_RESOURCES_RESOURCES_HEADER
+#endif // VOS_RENDERER_TILEMAP_TILEMAPCHUNK_HEADER

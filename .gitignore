@@ -222,6 +222,13 @@
 !Renderer/Vulkan/CubeMap.h
 !Renderer/Vulkan/CubeMap.cpp
 
+# TileMap
+!Renderer/TileMap/
+!Renderer/TileMap/TileMapChunk.h
+!Renderer/TileMap/TileMapChunk.cpp
+!Renderer/TileMap/TileMapStream.h
+!Renderer/TileMap/TileMapStream.cpp
+
 # HeightMap
 !Renderer/HeightMap/
 !Renderer/HeightMap/HeightMapChunk.h
@@ -320,6 +327,8 @@
 !Resources/MeshLoader.cpp
 !Resources/MatrixColLoader.h
 !Resources/MatrixColLoader.cpp
+!Resources/TileMapLoader.h
+!Resources/TileMapLoader.cpp
 !Resources/HeightMapLoader.h
 !Resources/HeightMapLoader.cpp
 !Resources/HeightFarLoader.h

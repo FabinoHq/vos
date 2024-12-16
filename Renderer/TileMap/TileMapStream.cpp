@@ -37,49 +37,55 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Physics/MatrixChunk2.cpp : 2D Matrix chunk physics management          //
+//     Renderer/TileMap/TileMapStream.cpp : TileMap stream renderer           //
 ////////////////////////////////////////////////////////////////////////////////
-#include "MatrixChunk2.h"
+#include "TileMapStream.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  MatrixChunk2 default constructor                                          //
+//  TileMapStream default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-MatrixChunk2::MatrixChunk2() :
-matrix(0)
+TileMapStream::TileMapStream() :
+m_tileMapChunk(),
+m_chunkX(0),
+m_chunkY(0)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  MatrixChunk2 destructor                                                   //
+//  TileMapStream destructor                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-MatrixChunk2::~MatrixChunk2()
+TileMapStream::~TileMapStream()
 {
-    if (matrix) { delete[] matrix; }
-    matrix = 0;
+
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init matrix chunk                                                         //
+//  Init tilemap stream                                                       //
+//  return : True if the tilemap stream is successfully created               //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixChunk2::init()
+bool TileMapStream::init()
 {
-    // Create matrix
-    matrix = new(std::nothrow) int8_t[MatrixChunk2Size];
-    if (!matrix) { return false; }
-    memset(matrix, 0, sizeof(int8_t)*MatrixChunk2Size);
+    // Init tilemap chunk
+    if (!m_tileMapChunk.init())
+    {
+        // Could not init tilemap chunk
+        return false;
+    }
 
-    // Matrix chunk successfully created
+    // Tilemap stream successfully created
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy matrix chunk                                                      //
+//  Render tilemap stream                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void MatrixChunk2::destroyMatrix()
+void TileMapStream::render()
 {
-    if (matrix) { delete[] matrix; }
-    matrix = 0;
+    // Synchronize tilemap stream with renderer
+    GResources.tilemaps.sync();
+
+    // Render tilemap chunks
 }

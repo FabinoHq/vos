@@ -79,8 +79,7 @@
             ////////////////////////////////////////////////////////////////////
             inline bool isReady()
             {
-                return (GResources.matrixcols.getState() ==
-                    MATRIXCOLLOADER_STATE_IDLE);
+                return (GResources.matrixcols.isReady());
             }
 
             ////////////////////////////////////////////////////////////////////

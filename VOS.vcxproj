@@ -248,6 +248,8 @@
     <ClCompile Include="Renderer\SkyProc.cpp" />
     <ClCompile Include="Renderer\Sprite.cpp" />
     <ClCompile Include="Renderer\StaticMesh.cpp" />
+    <ClCompile Include="Renderer\TileMap\TileMapChunk.cpp" />
+    <ClCompile Include="Renderer\TileMap\TileMapStream.cpp" />
     <ClCompile Include="Renderer\View.cpp" />
     <ClCompile Include="Renderer\Vulkan\Backchain.cpp" />
     <ClCompile Include="Renderer\Vulkan\ComputeLayout.cpp" />
@@ -273,6 +275,7 @@
     <ClCompile Include="Resources\MeshLoader.cpp" />
     <ClCompile Include="Resources\Resources.cpp" />
     <ClCompile Include="Resources\TextureLoader.cpp" />
+    <ClCompile Include="Resources\TileMapLoader.cpp" />
     <ClCompile Include="Softwares\FirstPerson\FirstPerson.cpp" />
     <ClCompile Include="Softwares\FirstPerson\FirstPersonPlayer.cpp" />
     <ClCompile Include="Softwares\Softwares.cpp" />
@@ -376,6 +379,8 @@
     <ClInclude Include="Renderer\SkyProc.h" />
     <ClInclude Include="Renderer\Sprite.h" />
     <ClInclude Include="Renderer\StaticMesh.h" />
+    <ClInclude Include="Renderer\TileMap\TileMapChunk.h" />
+    <ClInclude Include="Renderer\TileMap\TileMapStream.h" />
     <ClInclude Include="Renderer\View.h" />
     <ClInclude Include="Renderer\Vulkan\Backchain.h" />
     <ClInclude Include="Renderer\Vulkan\ComputeLayout.h" />
@@ -401,6 +406,7 @@
     <ClInclude Include="Resources\MeshLoader.h" />
     <ClInclude Include="Resources\Resources.h" />
     <ClInclude Include="Resources\TextureLoader.h" />
+    <ClInclude Include="Resources\TileMapLoader.h" />
     <ClInclude Include="Softwares\FirstPerson\FirstPerson.h" />
     <ClInclude Include="Softwares\FirstPerson\FirstPersonPlayer.h" />
     <ClInclude Include="Softwares\Softwares.h" />

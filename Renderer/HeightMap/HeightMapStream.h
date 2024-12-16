@@ -87,8 +87,7 @@
             ////////////////////////////////////////////////////////////////////
             inline bool isReady()
             {
-                return (GResources.heightmaps.getState() ==
-                    HEIGHTMAPLOADER_STATE_IDLE);
+                return (GResources.heightmaps.isReady());
             }
 
             ////////////////////////////////////////////////////////////////////

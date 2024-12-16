@@ -37,116 +37,122 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Resources/MatrixColLoader.cpp : MatrixCol loading management           //
+//     Resources/TileMapLoader.cpp : TileMap loading management               //
 ////////////////////////////////////////////////////////////////////////////////
-#include "MatrixColLoader.h"
+#include "TileMapLoader.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  MatrixColLoader default constructor                                       //
+//  TileMapLoader default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
-MatrixColLoader::MatrixColLoader() :
-m_state(MATRIXCOLLOADER_STATE_NONE),
+TileMapLoader::TileMapLoader() :
+m_state(TILEMAPLOADER_STATE_NONE),
 m_stateMutex(),
-m_matrixcols(0),
+m_sync(0),
+m_tilemaps(0),
 m_chunkX(0),
 m_chunkY(0)
 {
-    for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
+    for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
     {
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
-        m_chunks[i].chunk = 0;
+        m_chunks[i].tilemap = 0;
         m_chunksptrs[i] = 0;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  MatrixColLoader virtual destructor                                        //
+//  TileMapLoader virtual destructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
-MatrixColLoader::~MatrixColLoader()
+TileMapLoader::~TileMapLoader()
 {
     m_chunkY = 0;
     m_chunkX = 0;
-    for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
+    for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
     {
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
-        m_chunks[i].chunk = 0;
+        m_chunks[i].tilemap = 0;
         m_chunksptrs[i] = 0;
     }
-    m_matrixcols = 0;
-    m_state = MATRIXCOLLOADER_STATE_NONE;
+    m_tilemaps = 0;
+    m_sync = 0;
+    m_state = TILEMAPLOADER_STATE_NONE;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  MatrixColLoader thread process                                            //
+//  TileMapLoader thread process                                              //
 ////////////////////////////////////////////////////////////////////////////////
-void MatrixColLoader::process()
+void TileMapLoader::process()
 {
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
 
     switch (state)
     {
-        case MATRIXCOLLOADER_STATE_NONE:
+        case TILEMAPLOADER_STATE_NONE:
             // Boot to init state
             m_stateMutex.lock();
-            m_state = MATRIXCOLLOADER_STATE_INIT;
+            m_state = TILEMAPLOADER_STATE_INIT;
             m_stateMutex.unlock();
             break;
 
-        case MATRIXCOLLOADER_STATE_INIT:
-            // Init matrixcol loader
+        case TILEMAPLOADER_STATE_INIT:
+            // Init tilemap loader
             if (init())
             {
                 m_stateMutex.lock();
-                m_state = MATRIXCOLLOADER_STATE_IDLE;
+                m_state = TILEMAPLOADER_STATE_IDLE;
                 m_stateMutex.unlock();
             }
             else
             {
                 m_stateMutex.lock();
-                m_state = MATRIXCOLLOADER_STATE_ERROR;
+                m_state = TILEMAPLOADER_STATE_ERROR;
                 m_stateMutex.unlock();
             }
             break;
 
-        case MATRIXCOLLOADER_STATE_IDLE:
-            // MatrixCol loader in idle state
-            SysSleep(MatrixColLoaderIdleSleepTime);
+        case TILEMAPLOADER_STATE_IDLE:
+            // TileMap loader in idle state
+            SysSleep(TileMapLoaderIdleSleepTime);
             break;
 
-        case MATRIXCOLLOADER_STATE_LOAD:
-            // Load matrixcols assets
-            if (loadMatrixCols())
+        case TILEMAPLOADER_STATE_SYNC:
+            // TileMap loader in sync state
+            break;
+
+        case TILEMAPLOADER_STATE_LOAD:
+            // Load tilemaps assets
+            if (loadTileMaps())
             {
                 m_stateMutex.lock();
-                m_state = MATRIXCOLLOADER_STATE_IDLE;
+                m_state = TILEMAPLOADER_STATE_IDLE;
                 m_stateMutex.unlock();
             }
             else
             {
                 m_stateMutex.lock();
-                m_state = MATRIXCOLLOADER_STATE_ERROR;
+                m_state = TILEMAPLOADER_STATE_ERROR;
                 m_stateMutex.unlock();
             }
             break;
 
-        case MATRIXCOLLOADER_STATE_ERROR:
-            // MatrixCol loader error
-            SysSleep(MatrixColLoaderErrorSleepTime);
+        case TILEMAPLOADER_STATE_ERROR:
+            // TileMap loader error
+            SysSleep(TileMapLoaderErrorSleepTime);
             break;
 
         default:
             // Invalid state
             m_stateMutex.lock();
-            m_state = MATRIXCOLLOADER_STATE_ERROR;
+            m_state = TILEMAPLOADER_STATE_ERROR;
             m_stateMutex.unlock();
             break;
     }
@@ -154,63 +160,61 @@ void MatrixColLoader::process()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init MatrixColLoader                                                      //
-//  return : True if matrixcol loader is ready                                //
+//  Init TileMapLoader                                                        //
+//  return : True if tilemap loader is ready                                  //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::init()
+bool TileMapLoader::init()
 {
-    // Allocate matrixcols chunks
-    m_matrixcols = new(std::nothrow) MatrixChunk2[MATRIXCOL_ASSETSCOUNT];
-    if (!m_matrixcols)
+    // Allocate tilemaps vertex buffers
+    m_tilemaps = new(std::nothrow) TileMapChunk[TILEMAP_ASSETSCOUNT];
+    if (!m_tilemaps)
     {
-        // Could not allocate matrixcols chunks
+        // Could not allocate tilemaps vertex buffers
         return false;
     }
 
     // Set default chunks pointers
-    for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
+    for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
     {
-        if (!m_matrixcols[i].init())
-        {
-            // Could not init matrixcol chunk
-            return false;
-        }
-        m_chunks[i].chunk = &m_matrixcols[i];
+        m_chunks[i].tilemap = &m_tilemaps[i];
         m_chunksptrs[i] = &m_chunks[i];
     }
 
-    // Create default matrixcol
+    // Create default tilemap
     int32_t cnt = 0;
-    for (int32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    for (int32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
     {
-        for (int32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+        for (int32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
         {
             if (generateFlatChunk(m_chunks[cnt]))
             {
                 m_chunks[cnt].loading = false;
-                m_chunks[cnt].chunkX = (m_chunkX-MATRIXCOL_STREAMHALFWIDTH)+i;
-                m_chunks[cnt].chunkY = (m_chunkY-MATRIXCOL_STREAMHALFHEIGHT)+j;
+                m_chunks[cnt].chunkX = (m_chunkX-TILEMAP_STREAMHALFWIDTH)+i;
+                m_chunks[cnt].chunkY = (m_chunkY-TILEMAP_STREAMHALFHEIGHT)+j;
             }
             else
             {
-                // Could not create default matrixcol
+                // Could not create default tilemap
                 return false;
             }
             ++cnt;
         }
     }
 
-    // Matrixcol loader ready
+    // Reset renderer sync
+    m_sync = 0;
+
+    // Tilemap loader ready
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get matrixcol loader state                                                //
-//  return : Current matrixcol loader state                                   //
+//  Get tilemap loader state                                                  //
+//  return : Current tilemap loader state                                     //
 ////////////////////////////////////////////////////////////////////////////////
-MatrixColLoaderState MatrixColLoader::getState()
+TileMapLoaderState TileMapLoader::getState()
 {
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
@@ -218,32 +222,32 @@ MatrixColLoaderState MatrixColLoader::getState()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get matrixcol loader ready state                                          //
-//  return : True if matrixcol loader is ready, false otherwise               //
+//  Get tilemap loader ready state                                            //
+//  return : True if tilemap loader is ready, false otherwise                 //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::isReady()
+bool TileMapLoader::isReady()
 {
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
-    return (state == MATRIXCOLLOADER_STATE_IDLE);
+    return (state == TILEMAPLOADER_STATE_IDLE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Reload matrixcols pointers based on current chunk position                //
-//  return : True if matrixcols pointers are reloaded                         //
+//  Reload tilemaps pointers based on current chunk position                  //
+//  return : True if tilemaps pointers are reloaded                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::reload(int32_t chunkX, int32_t chunkY)
+bool TileMapLoader::reload(int32_t chunkX, int32_t chunkY)
 {
     // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
+    if (state != TILEMAPLOADER_STATE_IDLE)
     {
-        // Matrixcol loader is still in loading state
+        // Tilemap loader is still in loading state
         return false;
     }
 
@@ -253,30 +257,40 @@ bool MatrixColLoader::reload(int32_t chunkX, int32_t chunkY)
 
     // Set chunks loading states
     int32_t cnt = 0;
-    for (int32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    for (int32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
     {
-        for (int32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+        for (int32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
         {
             m_chunks[cnt].loading = true;
-            m_chunks[cnt].chunkX = (m_chunkX-MATRIXCOL_STREAMHALFWIDTH)+i;
-            m_chunks[cnt].chunkY = (m_chunkY-MATRIXCOL_STREAMHALFHEIGHT)+j;
+            m_chunks[cnt].chunkX = (m_chunkX-TILEMAP_STREAMHALFWIDTH)+i;
+            m_chunks[cnt].chunkY = (m_chunkY-TILEMAP_STREAMHALFHEIGHT)+j;
             ++cnt;
         }
     }
 
+    // Reset renderer sync
+    m_sync = 0;
+
     // Load new chunks
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_LOAD;
+    m_state = TILEMAPLOADER_STATE_LOAD;
     m_stateMutex.unlock();
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update matrixcols pointers based on current chunk position                //
-//  return : True if matrixcols pointers are updated                          //
+//  Update tilemaps pointers based on current chunk position                  //
+//  return : True if tilemaps pointers are updated                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::update(int32_t chunkX, int32_t chunkY)
+bool TileMapLoader::update(int32_t chunkX, int32_t chunkY)
 {
+    // Synchronize swap with renderer
+    if (m_sync > 0)
+    {
+        // Tilemap loader is still in sync state
+        return false;
+    }
+
     // Check Y chunk position
     if (chunkY < m_chunkY)
     {
@@ -297,51 +311,75 @@ bool MatrixColLoader::update(int32_t chunkX, int32_t chunkY)
         return swapRight();
     }
 
-    // Matrixcols pointers are up to date
+    // Tilemaps pointers are up to date
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy matrixcol loader                                                  //
+//  Synchronize tilemaps pointers with renderer                               //
 ////////////////////////////////////////////////////////////////////////////////
-void MatrixColLoader::destroyMatrixColLoader()
+void TileMapLoader::sync()
+{
+    // Synchronize swap with renderer
+    if (m_sync > 0)
+    {
+        // Wait for current swapchain frames to be rendered
+        ++m_sync;
+        if (m_sync > TileMapLoaderSyncFrames)
+        {
+            // Load new chunks
+            m_sync = 0;
+            m_stateMutex.lock();
+            m_state = TILEMAPLOADER_STATE_LOAD;
+            m_stateMutex.unlock();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy tilemap loader                                                    //
+////////////////////////////////////////////////////////////////////////////////
+void TileMapLoader::destroyTileMapLoader()
 {
     // Reset chunk position
     m_chunkY = 0;
     m_chunkX = 0;
 
-    // Reset matrixcols pointers
-    for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
+    // Reset tilemaps pointers
+    for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
     {
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
-        m_chunks[i].chunk = 0;
+        m_chunks[i].tilemap = 0;
         m_chunksptrs[i] = 0;
     }
 
-    // Destroy matrixcols chunks
-    for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
+    // Destroy tilemaps chunks
+    for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
     {
-        m_matrixcols[i].destroyMatrix();
+        m_tilemaps[i].destroyTileMap();
     }
-    if (m_matrixcols) { delete[] m_matrixcols; }
-    m_matrixcols = 0;
+    if (m_tilemaps) { delete[] m_tilemaps; }
+    m_tilemaps = 0;
+
+    // Reset renderer sync
+    m_sync = 0;
 
     // Reset state
-    m_state = MATRIXCOLLOADER_STATE_NONE;
+    m_state = TILEMAPLOADER_STATE_NONE;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Load matrixcols assets                                                    //
-//  return : True if matrixcols assets are loaded                             //
+//  Load tilemaps assets                                                      //
+//  return : True if tilemaps assets are loaded                               //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::loadMatrixCols()
+bool TileMapLoader::loadTileMaps()
 {
-    for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
+    for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
     {
-        // Matrixcol needs update
+        // Tilemap needs update
         if (m_chunks[i].loading)
         {
             // Update chunk from file
@@ -359,333 +397,301 @@ bool MatrixColLoader::loadMatrixCols()
                 }
                 else
                 {
-                    // Could not update matrixcol
+                    // Could not update tilemap
                     return false;
                 }
             }
         }
     }
 
-    // Matrixcols assets are successfully loaded
+    // Tilemaps assets are successfully loaded
     return true;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Generate flat matrixcol chunk                                             //
-//  return : True if the matrixcol chunk is generated                         //
+//  Generate flat tilemap chunk                                               //
+//  return : True if the tilemap chunk is generated                           //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::generateFlatChunk(MatrixColChunkData& chunkData)
+bool TileMapLoader::generateFlatChunk(TileMapChunkData& chunkData)
 {
-    // Generate flat matrixcol chunk
-    memset(chunkData.chunk->matrix, 0, sizeof(int8_t)*MatrixChunk2Size);
-
-    // Matrixcol chunk successfully generated
+    // Tilemap chunk successfully generated
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update flat matrixcol chunk                                               //
-//  return : True if the matrixcol chunk is updated                           //
+//  Update flat tilemap chunk                                                 //
+//  return : True if the tilemap chunk is updated                             //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::updateFlatChunk(MatrixColChunkData& chunkData)
+bool TileMapLoader::updateFlatChunk(TileMapChunkData& chunkData)
 {
-    // Update flat matrixcol chunk
-    memset(chunkData.chunk->matrix, 0, sizeof(int8_t)*MatrixChunk2Size);
-
-    // Matrixcol chunk successfully updated
+    // Tilemap chunk successfully updated
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update matrixcol chunk                                                    //
-//  return : True if the matrixcol chunk is updated                           //
+//  Update tilemap chunk                                                      //
+//  return : True if the tilemap chunk is updated                             //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::updateChunk(MatrixColChunkData& chunkData,
+bool TileMapLoader::updateChunk(TileMapChunkData& chunkData,
     int32_t chunkX, int32_t chunkY)
 {
-    // Set VMCC file path
-    std::ostringstream filepath;
-    filepath << MatrixColLoaderVMCCFilePath;
-    filepath << chunkX << '_' << chunkY << ".vmcc";
-
-    // Load matrixcol data from file
-    std::ifstream file;
-    file.open(filepath.str().c_str(), std::ios::in);
-    if (!file.is_open())
-    {
-        // Could not load heightmap data file
-        return false;
-    }
-
-    // Read matrixcol elements
-    int elem = 0;
-    for (int j = (MatrixChunk2Height-1); j >= 0; --j)
-    {
-        for (int i = 0; i < MatrixChunk2Width; ++i)
-        {
-            file >> elem;
-            chunkData.chunk->matrix[
-                (j*MatrixChunk2Width)+i
-            ] = static_cast<int8_t>(elem);
-        }
-    }
-
-    // Close VMCC file
-    file.close();
-
-    // Matrixcol chunk successfully updated
+    // Tilemap chunk successfully updated
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Swap matrixcols pointers towards top                                      //
-//  return : True if matrixcols pointers are swapped                          //
+//  Swap tilemaps pointers towards top                                        //
+//  return : True if tilemaps pointers are swapped                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::swapTop()
+bool TileMapLoader::swapTop()
 {
     // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
+    if (state != TILEMAPLOADER_STATE_IDLE)
     {
-        // Matrixcol loader is still in loading state
+        // Tilemap loader is still in loading state
         return false;
     }
 
     // Copy bottom row into tmp
-    MatrixColChunkData* tmp[MATRIXCOL_STREAMWIDTH];
-    for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+    TileMapChunkData* tmp[TILEMAP_STREAMWIDTH];
+    for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
     {
         tmp[i] = m_chunksptrs[
-            ((MATRIXCOL_STREAMHEIGHT-1)*MATRIXCOL_STREAMWIDTH)+i
+            ((TILEMAP_STREAMHEIGHT-1)*TILEMAP_STREAMWIDTH)+i
         ];
     }
 
     // Swap pointers towards top
-    for (uint32_t j = (MATRIXCOL_STREAMHEIGHT-1); j > 0; --j)
+    for (uint32_t j = (TILEMAP_STREAMHEIGHT-1); j > 0; --j)
     {
-        for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+        for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
         {
-            m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)+i] =
-                m_chunksptrs[((j-1)*MATRIXCOL_STREAMWIDTH)+i];
+            m_chunksptrs[(j*TILEMAP_STREAMWIDTH)+i] =
+                m_chunksptrs[((j-1)*TILEMAP_STREAMWIDTH)+i];
         }
     }
 
     // Copy tmp into top row
-    for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+    for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
     {
         m_chunksptrs[i] = tmp[i];
     }
 
     // Set new chunks loading states
-    for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+    for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
     {
         m_chunks[i].loading = true;
-        m_chunks[i].chunkX = (m_chunkX-MATRIXCOL_STREAMHALFWIDTH)+i;
-        m_chunks[i].chunkY = (m_chunkY-MATRIXCOL_STREAMHALFHEIGHT-1);
+        m_chunks[i].chunkX = (m_chunkX-TILEMAP_STREAMHALFWIDTH)+i;
+        m_chunks[i].chunkY = (m_chunkY-TILEMAP_STREAMHALFHEIGHT-1);
     }
 
     // Move chunkY
     --m_chunkY;
 
-    // Load new chunks
+    // Synchronize swap with renderer
+    m_sync = 1;
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_LOAD;
+    m_state = TILEMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Swap matrixcols pointers towards bottom                                   //
-//  return : True if matrixcols pointers are swapped                          //
+//  Swap tilemaps pointers towards bottom                                     //
+//  return : True if tilemaps pointers are swapped                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::swapBottom()
+bool TileMapLoader::swapBottom()
 {
     // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
+    if (state != TILEMAPLOADER_STATE_IDLE)
     {
-        // Matrixcol loader is still in loading state
+        // Tilemap loader is still in loading state
         return false;
     }
 
     // Copy top row into tmp
-    MatrixColChunkData* tmp[MATRIXCOL_STREAMWIDTH];
-    for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+    TileMapChunkData* tmp[TILEMAP_STREAMWIDTH];
+    for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
     {
         tmp[i] = m_chunksptrs[i];
     }
 
     // Swap pointers towards bottom
-    for (uint32_t j = 1; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    for (uint32_t j = 1; j < TILEMAP_STREAMHEIGHT; ++j)
     {
-        for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+        for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
         {
-            m_chunksptrs[((j-1)*MATRIXCOL_STREAMWIDTH)+i] =
-                m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)+i];
+            m_chunksptrs[((j-1)*TILEMAP_STREAMWIDTH)+i] =
+                m_chunksptrs[(j*TILEMAP_STREAMWIDTH)+i];
         }
     }
 
     // Copy tmp into bottom row
-    for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+    for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
     {
-        m_chunksptrs[((MATRIXCOL_STREAMHEIGHT-1)*MATRIXCOL_STREAMWIDTH)+i] =
+        m_chunksptrs[((TILEMAP_STREAMHEIGHT-1)*TILEMAP_STREAMWIDTH)+i] =
             tmp[i];
     }
 
     // Set new chunks loading states
-    for (uint32_t i = 0; i < MATRIXCOL_STREAMWIDTH; ++i)
+    for (uint32_t i = 0; i < TILEMAP_STREAMWIDTH; ++i)
     {
         m_chunks[
-            ((MATRIXCOL_STREAMHEIGHT-1)*MATRIXCOL_STREAMWIDTH)+i
+            ((TILEMAP_STREAMHEIGHT-1)*TILEMAP_STREAMWIDTH)+i
         ].loading = true;
         m_chunks[
-            ((MATRIXCOL_STREAMHEIGHT-1)*MATRIXCOL_STREAMWIDTH)+i
-        ].chunkX = (m_chunkX-MATRIXCOL_STREAMHALFWIDTH)+i;
+            ((TILEMAP_STREAMHEIGHT-1)*TILEMAP_STREAMWIDTH)+i
+        ].chunkX = (m_chunkX-TILEMAP_STREAMHALFWIDTH)+i;
         m_chunks[
-            ((MATRIXCOL_STREAMHEIGHT-1)*MATRIXCOL_STREAMWIDTH)+i
-        ].chunkY = (m_chunkY+MATRIXCOL_STREAMHALFHEIGHT+1);
+            ((TILEMAP_STREAMHEIGHT-1)*TILEMAP_STREAMWIDTH)+i
+        ].chunkY = (m_chunkY+TILEMAP_STREAMHALFHEIGHT+1);
     }
 
     // Move chunkY
     ++m_chunkY;
 
-    // Load new chunks
+    // Synchronize swap with renderer
+    m_sync = 1;
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_LOAD;
+    m_state = TILEMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Swap matrixcols pointers towards left                                     //
-//  return : True if matrixcols pointers are swapped                          //
+//  Swap tilemaps pointers towards left                                       //
+//  return : True if tilemaps pointers are swapped                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::swapLeft()
+bool TileMapLoader::swapLeft()
 {
     // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
+    if (state != TILEMAPLOADER_STATE_IDLE)
     {
-        // Matrixcol loader is still in loading state
+        // Tilemap loader is still in loading state
         return false;
     }
 
     // Copy right row into tmp
-    MatrixColChunkData* tmp[MATRIXCOL_STREAMHEIGHT];
-    for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    TileMapChunkData* tmp[TILEMAP_STREAMHEIGHT];
+    for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
     {
         tmp[j] = m_chunksptrs[
-            (j*MATRIXCOL_STREAMWIDTH)+(MATRIXCOL_STREAMWIDTH-1)
+            (j*TILEMAP_STREAMWIDTH)+(TILEMAP_STREAMWIDTH-1)
         ];
     }
 
     // Swap pointers towards left
-    for (uint32_t i = (MATRIXCOL_STREAMWIDTH-1); i > 0; --i)
+    for (uint32_t i = (TILEMAP_STREAMWIDTH-1); i > 0; --i)
     {
-        for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+        for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
         {
-            m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)+i] =
-                m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)+(i-1)];
+            m_chunksptrs[(j*TILEMAP_STREAMWIDTH)+i] =
+                m_chunksptrs[(j*TILEMAP_STREAMWIDTH)+(i-1)];
         }
     }
 
     // Copy tmp into left row
-    for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
     {
-        m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)] = tmp[j];
+        m_chunksptrs[(j*TILEMAP_STREAMWIDTH)] = tmp[j];
     }
 
     // Set new chunks loading states
-    for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
     {
-        m_chunks[(j*MATRIXCOL_STREAMWIDTH)].loading = true;
-        m_chunks[(j*MATRIXCOL_STREAMWIDTH)].chunkX =
-            (m_chunkX-MATRIXCOL_STREAMHALFWIDTH-1);
-        m_chunks[(j*MATRIXCOL_STREAMWIDTH)].chunkY =
-            (m_chunkY-MATRIXCOL_STREAMHALFHEIGHT)+j;
+        m_chunks[(j*TILEMAP_STREAMWIDTH)].loading = true;
+        m_chunks[(j*TILEMAP_STREAMWIDTH)].chunkX =
+            (m_chunkX-TILEMAP_STREAMHALFWIDTH-1);
+        m_chunks[(j*TILEMAP_STREAMWIDTH)].chunkY =
+            (m_chunkY-TILEMAP_STREAMHALFHEIGHT)+j;
     }
 
     // Move chunkX
     --m_chunkX;
 
-    // Load new chunks
+    // Synchronize swap with renderer
+    m_sync = 1;
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_LOAD;
+    m_state = TILEMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Swap matrixcols pointers towards right                                    //
-//  return : True if matrixcols pointers are swapped                          //
+//  Swap tilemaps pointers towards right                                      //
+//  return : True if tilemaps pointers are swapped                            //
 ////////////////////////////////////////////////////////////////////////////////
-bool MatrixColLoader::swapRight()
+bool TileMapLoader::swapRight()
 {
     // Check current loading state
-    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    TileMapLoaderState state = TILEMAPLOADER_STATE_NONE;
     m_stateMutex.lock();
     state = m_state;
     m_stateMutex.unlock();
-    if (state != MATRIXCOLLOADER_STATE_IDLE)
+    if (state != TILEMAPLOADER_STATE_IDLE)
     {
-        // Matrixcol loader is still in loading state
+        // Tilemap loader is still in loading state
         return false;
     }
 
     // Copy left row into tmp
-    MatrixColChunkData* tmp[MATRIXCOL_STREAMHEIGHT];
-    for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    TileMapChunkData* tmp[TILEMAP_STREAMHEIGHT];
+    for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
     {
-        tmp[j] = m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)];
+        tmp[j] = m_chunksptrs[(j*TILEMAP_STREAMWIDTH)];
     }
 
     // Swap pointers towards right
-    for (uint32_t i = 1; i < MATRIXCOL_STREAMWIDTH; ++i)
+    for (uint32_t i = 1; i < TILEMAP_STREAMWIDTH; ++i)
     {
-        for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+        for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
         {
-            m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)+(i-1)] =
-                m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)+i];
+            m_chunksptrs[(j*TILEMAP_STREAMWIDTH)+(i-1)] =
+                m_chunksptrs[(j*TILEMAP_STREAMWIDTH)+i];
         }
     }
 
     // Copy tmp into right row
-    for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
     {
-        m_chunksptrs[(j*MATRIXCOL_STREAMWIDTH)+(MATRIXCOL_STREAMWIDTH-1)] =
+        m_chunksptrs[(j*TILEMAP_STREAMWIDTH)+(TILEMAP_STREAMWIDTH-1)] =
             tmp[j];
     }
 
     // Set new chunks loading states
-    for (uint32_t j = 0; j < MATRIXCOL_STREAMHEIGHT; ++j)
+    for (uint32_t j = 0; j < TILEMAP_STREAMHEIGHT; ++j)
     {
         m_chunks[
-            (j*MATRIXCOL_STREAMWIDTH)+(MATRIXCOL_STREAMWIDTH-1)
+            (j*TILEMAP_STREAMWIDTH)+(TILEMAP_STREAMWIDTH-1)
         ].loading = true;
         m_chunks[
-            (j*MATRIXCOL_STREAMWIDTH)+(MATRIXCOL_STREAMWIDTH-1)
-        ].chunkX = (m_chunkX+MATRIXCOL_STREAMHALFWIDTH+1);
+            (j*TILEMAP_STREAMWIDTH)+(TILEMAP_STREAMWIDTH-1)
+        ].chunkX = (m_chunkX+TILEMAP_STREAMHALFWIDTH+1);
         m_chunks[
-            (j*MATRIXCOL_STREAMWIDTH)+(MATRIXCOL_STREAMWIDTH-1)
-        ].chunkY = (m_chunkY-MATRIXCOL_STREAMHALFHEIGHT)+j;
+            (j*TILEMAP_STREAMWIDTH)+(TILEMAP_STREAMWIDTH-1)
+        ].chunkY = (m_chunkY-TILEMAP_STREAMHALFHEIGHT)+j;
     }
 
     // Move chunkX
     ++m_chunkX;
 
-    // Load new chunks
+    // Synchronize swap with renderer
+    m_sync = 1;
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_LOAD;
+    m_state = TILEMAPLOADER_STATE_SYNC;
     m_stateMutex.unlock();
     return true;
 }
