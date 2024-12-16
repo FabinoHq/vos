@@ -66,7 +66,7 @@ MatrixChunk2::~MatrixChunk2()
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixChunk2::init()
 {
-    // Create matrix
+    // Init matrix chunk
     matrix = new(std::nothrow) int8_t[MatrixChunk2Size];
     if (!matrix) { return false; }
     memset(matrix, 0, sizeof(int8_t)*MatrixChunk2Size);

@@ -132,6 +132,7 @@
             RectangleShape          m_rectangle;        // Rectangle shape
             EllipseShape            m_ellipse;          // Ellipse shape
 
+        public:
             int32_t                 m_chunkX;           // Chunk X
             int32_t                 m_chunkY;           // Chunk Y
     };

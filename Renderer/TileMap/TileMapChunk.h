@@ -46,12 +46,16 @@
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/Swapchain.h"
     #include "../Vulkan/GraphicsLayout.h"
+
     #include "../../Math/Math.h"
     #include "../../Math/Vector2.h"
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform2.h"
 
+    #include "../../Physics/Physics.h"
     #include "../../Physics/MatrixChunk2.h"
+
+    #include "../Sprite.h"
 
     #include <cstdint>
     #include <cstring>
@@ -63,6 +67,14 @@
     const int32_t TileMapChunkWidth = MatrixChunk2Width;
     const int32_t TileMapChunkHeight = MatrixChunk2Height;
     const int32_t TileMapChunkSize = (TileMapChunkWidth*TileMapChunkHeight);
+    const float TileMapElemHalfWidth =
+        (MatrixChunk2ElemHalfWidth*PhysicsToRenderer);
+    const float TileMapElemHalfHeight =
+        (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
+    const float TileMapElemWidth = (MatrixChunk2ElemWidth*PhysicsToRenderer);
+    const float TileMapElemHeight = (MatrixChunk2ElemHeight*PhysicsToRenderer);
+    const float TileMapChunkXStride = (TileMapChunkWidth*TileMapElemWidth);
+    const float TileMapChunkYStride = (TileMapChunkHeight*TileMapElemHeight);
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -97,7 +109,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Render tilemap chunk                                          //
             ////////////////////////////////////////////////////////////////////
-            void render();
+            void render(Sprite& sprite);
 
 
         private:
@@ -112,7 +124,7 @@
             TileMapChunk& operator=(const TileMapChunk&) = delete;
 
 
-        private:
+        public:
             int32_t*    matrix;     // Tilemap chunk representation
     };
 

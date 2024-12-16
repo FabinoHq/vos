@@ -71,6 +71,7 @@ m_boundingAlignRect2(),
 m_boundingRect(),
 m_boundingRect2(),
 m_collide(),
+m_tilemap(),
 m_player(),
 m_spaceReleased(false)
 {
@@ -216,18 +217,28 @@ bool TopDown::init()
     // Init matrix stream
     if (!GMatrixStream2.init())
     {
-        // Could not init matrix chunk
+        // Could not init matrix stream
+        return false;
+    }
+
+    // Init tilemap stream
+    if (!m_tilemap.init())
+    {
+        // Could not init tilemap stream
         return false;
     }
 
     // Load spawn matrix chunks
     GMatrixStream2.reload(0, 0);
 
+    // Load spawn tilemap chunks
+    m_tilemap.reload(0, 0);
+
     // Wait for spawn chunks to be loaded
     bool spawnLoaded = false;
     while (!spawnLoaded)
     {
-        if (GMatrixStream2.isReady())
+        if (GMatrixStream2.isReady() && m_tilemap.isReady())
         {
             spawnLoaded = true;
         }
@@ -397,6 +408,7 @@ void TopDown::prephysics()
 {
     // Precompute player physics
     m_player.prephysics();
+    m_tilemap.update(m_player.m_chunkX, m_player.m_chunkY);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -639,65 +651,13 @@ void TopDown::render()
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
 
-    // Render test matrix chunks
+    // Render tilemap chunks
     GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_sprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_sprite.setOrigin(0.0f, 0.0f);
-    m_sprite.setSize(
-        (MatrixChunk2ElemWidth*PhysicsToRenderer)+0.00001f,
-        (MatrixChunk2ElemHeight*PhysicsToRenderer)+0.00001f
-    );
+    m_sprite.setSize(TileMapElemWidth+0.00001f, TileMapElemHeight+0.00001f);
     m_sprite.setAngle(0.0f);
-
-    for (int k = 2; k < MATRIXCOL_STREAMWIDTH-2; ++k)
-    {
-        for (int l = 2; l < MATRIXCOL_STREAMHEIGHT-2; ++l)
-        {
-            // Render test matrix chunk
-            float positionX = (MatrixChunk2ElemHalfWidth*PhysicsToRenderer);
-            float positionY = (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
-            positionX -= (
-                (MATRIXCOL_STREAMHALFWIDTH*MatrixChunk2Width*
-                MatrixChunk2ElemWidth)*PhysicsToRenderer
-            );
-            positionY -= (
-                (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height*
-                MatrixChunk2ElemHeight)*PhysicsToRenderer
-            );
-            positionX += ((k*MatrixChunk2Width*MatrixChunk2ElemWidth)*
-                PhysicsToRenderer
-            );
-            positionY += ((l*MatrixChunk2Height*MatrixChunk2ElemHeight)*
-                PhysicsToRenderer
-            );
-            for (int i = 0; i < MatrixChunk2Width; ++i)
-            {
-                for (int j = 0; j < MatrixChunk2Height; ++j)
-                {
-                    if (GMatrixStream2.get(
-                        (k*MatrixChunk2Width)-
-                        (MATRIXCOL_STREAMHALFWIDTH*MatrixChunk2Width)+i,
-                        (l*MatrixChunk2Height)-
-                        (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height)+j) != 0)
-                    {
-                        m_sprite.setPosition(positionX, positionY);
-                        m_sprite.bindTexture();
-                        m_sprite.render();
-                    }
-                    positionY += (MatrixChunk2ElemHeight*PhysicsToRenderer);
-                }
-                positionY = (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
-                positionY -= (
-                    (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height*
-                    MatrixChunk2ElemHeight)*PhysicsToRenderer
-                );
-                positionY += ((l*MatrixChunk2Height*MatrixChunk2ElemHeight)*
-                    PhysicsToRenderer
-                );
-                positionX += (MatrixChunk2ElemWidth*PhysicsToRenderer);
-            }
-        }
-    }
+    m_tilemap.render(m_sprite);
 
 
     // Render bounding circle

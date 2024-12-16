@@ -71,7 +71,7 @@ bool TileMapChunk::init()
     // Reset tilemap chunk transformations
     resetTransforms();
 
-    // Create matrix
+    // Init matrix chunk
     matrix = new(std::nothrow) int32_t[TileMapChunkSize];
     if (!matrix) { return false; }
     memset(matrix, 0, sizeof(int32_t)*TileMapChunkSize);
@@ -93,8 +93,26 @@ void TileMapChunk::destroyTileMap()
 ////////////////////////////////////////////////////////////////////////////////
 //  Render tilemap chunk                                                      //
 ////////////////////////////////////////////////////////////////////////////////
-void TileMapChunk::render()
+void TileMapChunk::render(Sprite& sprite)
 {
-    // Compute tilemap chunk transformations
-    computeTransforms();
+    // Render tilemap chunk
+    for (int i = 0; i < TileMapChunkWidth; ++i)
+    {
+        for (int j = 0; j < TileMapChunkHeight; ++j)
+        {
+            // Get current tilemap element
+            if (matrix[(j*TileMapChunkWidth)+i] != 0)
+            {
+                // Render tilemap element
+                sprite.setPosition(
+                    (TileMapElemHalfWidth+m_position.vec[0])+
+                    (i*TileMapElemWidth),
+                    (TileMapElemHalfHeight+m_position.vec[1])+
+                    (j*TileMapElemHeight)
+                );
+                sprite.bindTexture();
+                sprite.render();
+            }
+        }
+    }
 }

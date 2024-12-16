@@ -64,6 +64,8 @@
     #include "../../Renderer/Shapes/RectangleShape.h"
     #include "../../Renderer/Shapes/EllipseShape.h"
 
+    #include "../../Renderer/TileMap/TileMapStream.h"
+
     #include "../../Physics/Physics.h"
     #include "../../Physics/Collision2.h"
     #include "../../Physics/MatrixStream2.h"
@@ -173,6 +175,7 @@
             BoundingRect        m_boundingRect2;        // Bounding rect 2
             Collision2          m_collide;              // Collision
 
+            TileMapStream       m_tilemap;              // Tilemap
             TopDownPlayer       m_player;               // Player
 
             bool                m_spaceReleased;        // Space released event

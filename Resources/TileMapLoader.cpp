@@ -165,17 +165,22 @@ void TileMapLoader::process()
 ////////////////////////////////////////////////////////////////////////////////
 bool TileMapLoader::init()
 {
-    // Allocate tilemaps vertex buffers
+    // Allocate tilemaps chunks
     m_tilemaps = new(std::nothrow) TileMapChunk[TILEMAP_ASSETSCOUNT];
     if (!m_tilemaps)
     {
-        // Could not allocate tilemaps vertex buffers
+        // Could not allocate tilemaps chunks
         return false;
     }
 
     // Set default chunks pointers
     for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
     {
+        if (!m_tilemaps[i].init())
+        {
+            // Could not init tilemap chunk
+            return false;
+        }
         m_chunks[i].tilemap = &m_tilemaps[i];
         m_chunksptrs[i] = &m_chunks[i];
     }
@@ -415,6 +420,9 @@ bool TileMapLoader::loadTileMaps()
 ////////////////////////////////////////////////////////////////////////////////
 bool TileMapLoader::generateFlatChunk(TileMapChunkData& chunkData)
 {
+    // Generate flat tilemap chunk
+    memset(chunkData.tilemap->matrix, 0, sizeof(int32_t)*TileMapChunkSize);
+
     // Tilemap chunk successfully generated
     return true;
 }
@@ -425,6 +433,9 @@ bool TileMapLoader::generateFlatChunk(TileMapChunkData& chunkData)
 ////////////////////////////////////////////////////////////////////////////////
 bool TileMapLoader::updateFlatChunk(TileMapChunkData& chunkData)
 {
+    // Update flat tilemap chunk
+    memset(chunkData.tilemap->matrix, 0, sizeof(int32_t)*TileMapChunkSize);
+
     // Tilemap chunk successfully updated
     return true;
 }
@@ -436,6 +447,35 @@ bool TileMapLoader::updateFlatChunk(TileMapChunkData& chunkData)
 bool TileMapLoader::updateChunk(TileMapChunkData& chunkData,
     int32_t chunkX, int32_t chunkY)
 {
+    // Set VTMP file path
+    std::ostringstream filepath;
+    filepath << TileMapLoaderVTMPFilePath;
+    filepath << chunkX << '_' << chunkY << ".vtmp";
+
+    // Load tilemap data from file
+    std::ifstream file;
+    file.open(filepath.str().c_str(), std::ios::in);
+    if (!file.is_open())
+    {
+        // Could not load tilemap data file
+        return false;
+    }
+
+    // Read tilemap elements
+    int elem = 0;
+    for (int j = (TileMapChunkHeight-1); j >= 0; --j)
+    {
+        for (int i = 0; i < TileMapChunkWidth; ++i)
+        {
+            file >> elem;
+            chunkData.tilemap->matrix[(j*TileMapChunkWidth)+i] =
+                static_cast<int8_t>(elem);
+        }
+    }
+
+    // Close VTMP file
+    file.close();
+
     // Tilemap chunk successfully updated
     return true;
 }

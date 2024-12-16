@@ -46,7 +46,6 @@
 //  TileMapStream default constructor                                         //
 ////////////////////////////////////////////////////////////////////////////////
 TileMapStream::TileMapStream() :
-m_tileMapChunk(),
 m_chunkX(0),
 m_chunkY(0)
 {
@@ -68,24 +67,33 @@ TileMapStream::~TileMapStream()
 ////////////////////////////////////////////////////////////////////////////////
 bool TileMapStream::init()
 {
-    // Init tilemap chunk
-    if (!m_tileMapChunk.init())
-    {
-        // Could not init tilemap chunk
-        return false;
-    }
-
     // Tilemap stream successfully created
     return true;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Render tilemap stream                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void TileMapStream::render()
+void TileMapStream::render(Sprite& sprite)
 {
     // Synchronize tilemap stream with renderer
     GResources.tilemaps.sync();
 
     // Render tilemap chunks
+    for (int i = 1; i < (TILEMAP_STREAMWIDTH-1); ++i)
+    {
+        for (int j = 1; j < (TILEMAP_STREAMHEIGHT-1); ++j)
+        {
+            GResources.tilemaps.tilemap((j*TILEMAP_STREAMWIDTH)+i).setPosition(
+                -(TILEMAP_STREAMHALFWIDTH*TileMapChunkXStride)+
+                (i*TileMapChunkXStride),
+                -(TILEMAP_STREAMHALFHEIGHT*TileMapChunkYStride)+
+                (j*TileMapChunkYStride)
+            );
+            GResources.tilemaps.tilemap(
+                (j*TILEMAP_STREAMWIDTH)+i
+            ).render(sprite);
+        }
+    }
 }

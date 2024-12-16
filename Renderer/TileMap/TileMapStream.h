@@ -45,13 +45,16 @@
     #include "../../System/System.h"
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/VertexBuffer.h"
+
     #include "../../Math/Math.h"
     #include "../../Math/Vector3.h"
     #include "../../Math/Matrix4x4.h"
     #include "../../Math/Transform3.h"
+
     #include "../../Resources/Resources.h"
     #include "../../Resources/TileMapLoader.h"
 
+    #include "../Sprite.h"
     #include "TileMapChunk.h"
 
     #include <cstdint>
@@ -79,6 +82,7 @@
             //  return : True if the tilemap stream is successfully created   //
             ////////////////////////////////////////////////////////////////////
             bool init();
+
 
             ////////////////////////////////////////////////////////////////////
             //  Get tilemap stream ready state                                //
@@ -122,7 +126,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Render tilemap stream                                         //
             ////////////////////////////////////////////////////////////////////
-            void render();
+            void render(Sprite& sprite);
 
 
             ////////////////////////////////////////////////////////////////////
@@ -157,7 +161,6 @@
 
 
         private:
-            TileMapChunk        m_tileMapChunk;     // TileMap chunk
             int32_t             m_chunkX;           // Chunk X
             int32_t             m_chunkY;           // Chunk Y
     };

@@ -414,7 +414,7 @@ bool MatrixColLoader::updateChunk(MatrixColChunkData& chunkData,
     file.open(filepath.str().c_str(), std::ios::in);
     if (!file.is_open())
     {
-        // Could not load heightmap data file
+        // Could not load matrixcol data file
         return false;
     }
 
@@ -425,9 +425,8 @@ bool MatrixColLoader::updateChunk(MatrixColChunkData& chunkData,
         for (int i = 0; i < MatrixChunk2Width; ++i)
         {
             file >> elem;
-            chunkData.chunk->matrix[
-                (j*MatrixChunk2Width)+i
-            ] = static_cast<int8_t>(elem);
+            chunkData.chunk->matrix[(j*MatrixChunk2Width)+i] =
+                static_cast<int8_t>(elem);
         }
     }
 
