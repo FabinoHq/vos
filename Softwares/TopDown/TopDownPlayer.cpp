@@ -51,7 +51,9 @@ m_transforms(),
 m_speed(),
 m_bounding(),
 m_rectangle(),
-m_ellipse()
+m_ellipse(),
+m_chunkX(0),
+m_chunkY(0)
 {
     m_transforms.reset();
     m_speed.reset();
@@ -111,6 +113,10 @@ bool TopDownPlayer::init()
         (m_bounding.radius*PhysicsToRenderer*2.05f)
     );*/
 
+    // Reset chunk X and Y
+    m_chunkX = 0;
+    m_chunkY = 0;
+
     // Top down player is ready
     return true;
 }
@@ -121,8 +127,40 @@ bool TopDownPlayer::init()
 ////////////////////////////////////////////////////////////////////////////////
 void TopDownPlayer::prephysics()
 {
+    // Update chunk position
+    Vector2i offset = Vector2i(0, 0);
+    if (m_bounding.position.vec[0] >
+        (MatrixChunk2ElemWidth*MatrixChunk2Width))
+    {
+        // Right warp
+        ++m_chunkX;
+        offset.vec[0] = -(MatrixChunk2ElemWidth*MatrixChunk2Width);
+    }
+    if (m_bounding.position.vec[0] < 0)
+    {
+        // Left warp
+        --m_chunkX;
+        offset.vec[0] = (MatrixChunk2ElemWidth*MatrixChunk2Width);
+    }
+    if (m_bounding.position.vec[1] >
+        (MatrixChunk2ElemHeight*MatrixChunk2Height))
+    {
+        // Top warp
+        ++m_chunkY;
+        offset.vec[1] = -(MatrixChunk2ElemHeight*MatrixChunk2Height);
+    }
+    if (m_bounding.position.vec[1] < 0)
+    {
+        // Bottom warp
+        --m_chunkY;
+        offset.vec[1] = (MatrixChunk2ElemHeight*MatrixChunk2Height);
+    }
+    m_bounding.position += offset;
+    GMatrixStream2.update(m_chunkX, m_chunkY);
+
     // Compute prephysics transformations
     m_transforms.prephysics(m_bounding.position, 0);
+    m_transforms.offsetPrevPos(offset);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

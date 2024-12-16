@@ -318,6 +318,19 @@ HeightFarLoaderState HeightFarLoader::getState()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get heightfar loader ready state                                          //
+//  return : True if heightfar loader is ready, false otherwise               //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightFarLoader::isReady()
+{
+    HeightFarLoaderState state = HEIGHTFARLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    return (state == HEIGHTFARLOADER_STATE_IDLE);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Reload heightfars pointers based on current chunk position                //
 //  return : True if heightfars pointers are reloaded                         //
 ////////////////////////////////////////////////////////////////////////////////

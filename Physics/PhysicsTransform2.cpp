@@ -92,3 +92,12 @@ void PhysicsTransform2::prephysics(
     pos.vec[1] = (physicsPos.vec[1]*PhysicsToRenderer);
     angle = (physicsAngle*PhysicsAngleToRenderer);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//  Offset previous transforms position                                       //
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsTransform2::offsetPrevPos(const Vector2i& offset)
+{
+    prevPos.vec[0] += (offset.vec[0]*PhysicsToRenderer);
+    prevPos.vec[1] += (offset.vec[1]*PhysicsToRenderer);
+}

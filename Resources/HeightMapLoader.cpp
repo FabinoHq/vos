@@ -318,6 +318,19 @@ HeightMapLoaderState HeightMapLoader::getState()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get heightmap loader ready state                                          //
+//  return : True if heightmap loader is ready, false otherwise               //
+////////////////////////////////////////////////////////////////////////////////
+bool HeightMapLoader::isReady()
+{
+    HeightMapLoaderState state = HEIGHTMAPLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    return (state == HEIGHTMAPLOADER_STATE_IDLE);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Reload heightmaps pointers based on current chunk position                //
 //  return : True if heightmaps pointers are reloaded                         //
 ////////////////////////////////////////////////////////////////////////////////

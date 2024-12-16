@@ -79,6 +79,11 @@
             void prephysics(
                 const Vector3i& physicsPos, const Vector3i& physicsAngles);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Offset previous transforms position                           //
+            ////////////////////////////////////////////////////////////////////
+            void offsetPrevPos(const Vector3i& offset);
+
 
         private:
             ////////////////////////////////////////////////////////////////////

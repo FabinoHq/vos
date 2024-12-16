@@ -59,7 +59,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  MatrixColLoader settings                                              //
     ////////////////////////////////////////////////////////////////////////////
-    const uint32_t MatrixColLoaderSyncTicks = 3;
+    const uint32_t MatrixColLoaderSyncTicks = 200;
     const double MatrixColLoaderIdleSleepTime = 0.01;
     const double MatrixColLoaderErrorSleepTime = 0.1;
     const char MatrixColLoaderVMCCFilePath[] = "World/vmcc/";
@@ -84,10 +84,9 @@
         MATRIXCOLLOADER_STATE_INIT = 1,
 
         MATRIXCOLLOADER_STATE_IDLE = 2,
-        MATRIXCOLLOADER_STATE_SYNC = 3,
-        MATRIXCOLLOADER_STATE_LOAD = 4,
+        MATRIXCOLLOADER_STATE_LOAD = 3,
 
-        MATRIXCOLLOADER_STATE_ERROR = 5
+        MATRIXCOLLOADER_STATE_ERROR = 4
     };
 
 
@@ -139,6 +138,12 @@
             MatrixColLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
+            //  Get matrixcol loader ready state                              //
+            //  return : True if matrixcol loader is ready, false otherwise   //
+            ////////////////////////////////////////////////////////////////////
+            bool isReady();
+
+            ////////////////////////////////////////////////////////////////////
             //  Reload matrixcols pointers based on current chunk position    //
             //  return : True if matrixcols pointers are reloaded             //
             ////////////////////////////////////////////////////////////////////
@@ -151,17 +156,14 @@
             bool update(int32_t chunkX, int32_t chunkY);
 
             ////////////////////////////////////////////////////////////////////
-            //  Synchronize matrixcols pointers with physics                  //
-            ////////////////////////////////////////////////////////////////////
-            void sync();
-
-            ////////////////////////////////////////////////////////////////////
             //  Get matrixcol chunk                                           //
             //  return : matrixcol chunk                                      //
             ////////////////////////////////////////////////////////////////////
             inline MatrixChunk2& matrixcol(uint32_t matrixcol)
             {
-                return (*m_chunksptrs[matrixcol]->chunk);
+                return (*m_chunksptrs[
+                    Math::clamp(matrixcol, 0u, (MATRIXCOL_ASSETSCOUNT-1u))
+                ]->chunk);
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -255,8 +257,6 @@
         private:
             MatrixColLoaderState    m_state;            // MatrixColLoader state
             SysMutex                m_stateMutex;       // State mutex
-
-            uint32_t                m_sync;             // Physics sync
 
             MatrixChunk2*           m_matrixcols;       // Matrixcols chunks
             MatrixColChunkData      m_chunks[MATRIXCOL_ASSETSCOUNT];

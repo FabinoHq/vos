@@ -408,15 +408,14 @@ void TopDown::physics()
     m_player.physics();
 
     // Update matrix stream
-    int32_t posI = Math::divide(
+    /*int32_t posI = Math::divide(
         m_player.getBoundingX(), MatrixChunk2ElemWidth
     );
     int32_t posJ = Math::divide(
         m_player.getBoundingY(), MatrixChunk2ElemHeight
     );
     int32_t chunkI = Math::divide(posI, MatrixChunk2Width);
-    int32_t chunkJ = Math::divide(posJ, MatrixChunk2Height);
-    GMatrixStream2.update(chunkI, chunkJ);
+    int32_t chunkJ = Math::divide(posJ, MatrixChunk2Height);*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -665,20 +664,20 @@ void TopDown::render()
                 (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height*
                 MatrixChunk2ElemHeight)*PhysicsToRenderer
             );
-            positionX += (((GMatrixStream2.getChunkX()+k)*
-                MatrixChunk2Width*MatrixChunk2ElemWidth)*PhysicsToRenderer
+            positionX += ((k*MatrixChunk2Width*MatrixChunk2ElemWidth)*
+                PhysicsToRenderer
             );
-            positionY += (((GMatrixStream2.getChunkY()+l)*
-                MatrixChunk2Height*MatrixChunk2ElemHeight)*PhysicsToRenderer
+            positionY += ((l*MatrixChunk2Height*MatrixChunk2ElemHeight)*
+                PhysicsToRenderer
             );
             for (int i = 0; i < MatrixChunk2Width; ++i)
             {
                 for (int j = 0; j < MatrixChunk2Height; ++j)
                 {
                     if (GMatrixStream2.get(
-                        ((GMatrixStream2.getChunkX()+k)*MatrixChunk2Width)-
+                        (k*MatrixChunk2Width)-
                         (MATRIXCOL_STREAMHALFWIDTH*MatrixChunk2Width)+i,
-                        ((GMatrixStream2.getChunkY()+l)*MatrixChunk2Height)-
+                        (l*MatrixChunk2Height)-
                         (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height)+j) != 0)
                     {
                         m_sprite.setPosition(positionX, positionY);
@@ -692,8 +691,8 @@ void TopDown::render()
                     (MATRIXCOL_STREAMHALFHEIGHT*MatrixChunk2Height*
                     MatrixChunk2ElemHeight)*PhysicsToRenderer
                 );
-                positionY += (((GMatrixStream2.getChunkY()+l)*
-                    MatrixChunk2Height*MatrixChunk2ElemHeight)*PhysicsToRenderer
+                positionY += ((l*MatrixChunk2Height*MatrixChunk2ElemHeight)*
+                    PhysicsToRenderer
                 );
                 positionX += (MatrixChunk2ElemWidth*PhysicsToRenderer);
             }

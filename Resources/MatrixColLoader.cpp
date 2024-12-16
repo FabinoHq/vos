@@ -48,7 +48,6 @@
 MatrixColLoader::MatrixColLoader() :
 m_state(MATRIXCOLLOADER_STATE_NONE),
 m_stateMutex(),
-m_sync(0),
 m_matrixcols(0),
 m_chunkX(0),
 m_chunkY(0)
@@ -79,7 +78,6 @@ MatrixColLoader::~MatrixColLoader()
         m_chunksptrs[i] = 0;
     }
     m_matrixcols = 0;
-    m_sync = 0;
     m_state = MATRIXCOLLOADER_STATE_NONE;
 }
 
@@ -122,10 +120,6 @@ void MatrixColLoader::process()
         case MATRIXCOLLOADER_STATE_IDLE:
             // MatrixCol loader in idle state
             SysSleep(MatrixColLoaderIdleSleepTime);
-            break;
-
-        case MATRIXCOLLOADER_STATE_SYNC:
-            // MatrixCol loader in sync state
             break;
 
         case MATRIXCOLLOADER_STATE_LOAD:
@@ -206,9 +200,6 @@ bool MatrixColLoader::init()
         }
     }
 
-    // Reset physics sync
-    m_sync = 0;
-
     // Matrixcol loader ready
     return true;
 }
@@ -224,6 +215,19 @@ MatrixColLoaderState MatrixColLoader::getState()
     state = m_state;
     m_stateMutex.unlock();
     return state;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get matrixcol loader ready state                                          //
+//  return : True if matrixcol loader is ready, false otherwise               //
+////////////////////////////////////////////////////////////////////////////////
+bool MatrixColLoader::isReady()
+{
+    MatrixColLoaderState state = MATRIXCOLLOADER_STATE_NONE;
+    m_stateMutex.lock();
+    state = m_state;
+    m_stateMutex.unlock();
+    return (state == MATRIXCOLLOADER_STATE_IDLE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -260,9 +264,6 @@ bool MatrixColLoader::reload(int32_t chunkX, int32_t chunkY)
         }
     }
 
-    // Reset physics sync
-    m_sync = 0;
-
     // Load new chunks
     m_stateMutex.lock();
     m_state = MATRIXCOLLOADER_STATE_LOAD;
@@ -276,14 +277,6 @@ bool MatrixColLoader::reload(int32_t chunkX, int32_t chunkY)
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixColLoader::update(int32_t chunkX, int32_t chunkY)
 {
-    // Synchronize swap with physics
-    if (m_sync > 0)
-    {
-        // Matrixcol loader is still in sync state
-        sync();
-        return false;
-    }
-
     // Check Y chunk position
     if (chunkY < m_chunkY)
     {
@@ -305,29 +298,7 @@ bool MatrixColLoader::update(int32_t chunkX, int32_t chunkY)
     }
 
     // Matrixcols pointers are up to date
-    sync();
     return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Synchronize matrixcols pointers with physics                              //
-////////////////////////////////////////////////////////////////////////////////
-void MatrixColLoader::sync()
-{
-    // Synchronize swap with physics
-    if (m_sync > 0)
-    {
-        // Wait for current ticks to be solved
-        ++m_sync;
-        if (m_sync > MatrixColLoaderSyncTicks)
-        {
-            // Load new chunks
-            m_sync = 0;
-            m_stateMutex.lock();
-            m_state = MATRIXCOLLOADER_STATE_LOAD;
-            m_stateMutex.unlock();
-        }
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -352,9 +323,6 @@ void MatrixColLoader::destroyMatrixColLoader()
     // Destroy matrixcols chunks
     if (m_matrixcols) { delete[] m_matrixcols; }
     m_matrixcols = 0;
-
-    // Reset physics sync
-    m_sync = 0;
 
     // Reset state
     m_state = MATRIXCOLLOADER_STATE_NONE;
@@ -453,7 +421,9 @@ bool MatrixColLoader::updateChunk(MatrixColChunkData& chunkData,
         for (int i = 0; i < MatrixChunk2Width; ++i)
         {
             file >> elem;
-            chunkData.chunk->matrix[(j*MatrixChunk2Width)+i] = elem;
+            chunkData.chunk->matrix[
+                (j*MatrixChunk2Width)+i
+            ] = static_cast<int8_t>(elem);
         }
     }
 
@@ -517,10 +487,9 @@ bool MatrixColLoader::swapTop()
     // Move chunkY
     --m_chunkY;
 
-    // Synchronize swap with physics
-    m_sync = 1;
+    // Load new chunks
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_SYNC;
+    m_state = MATRIXCOLLOADER_STATE_LOAD;
     m_stateMutex.unlock();
     return true;
 }
@@ -583,10 +552,9 @@ bool MatrixColLoader::swapBottom()
     // Move chunkY
     ++m_chunkY;
 
-    // Synchronize swap with physics
-    m_sync = 1;
+    // Load new chunks
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_SYNC;
+    m_state = MATRIXCOLLOADER_STATE_LOAD;
     m_stateMutex.unlock();
     return true;
 }
@@ -646,10 +614,9 @@ bool MatrixColLoader::swapLeft()
     // Move chunkX
     --m_chunkX;
 
-    // Synchronize swap with physics
-    m_sync = 1;
+    // Load new chunks
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_SYNC;
+    m_state = MATRIXCOLLOADER_STATE_LOAD;
     m_stateMutex.unlock();
     return true;
 }
@@ -712,10 +679,9 @@ bool MatrixColLoader::swapRight()
     // Move chunkX
     ++m_chunkX;
 
-    // Synchronize swap with physics
-    m_sync = 1;
+    // Load new chunks
     m_stateMutex.lock();
-    m_state = MATRIXCOLLOADER_STATE_SYNC;
+    m_state = MATRIXCOLLOADER_STATE_LOAD;
     m_stateMutex.unlock();
     return true;
 }

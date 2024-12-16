@@ -95,3 +95,13 @@ void PhysicsTransform3::prephysics(
     angles.vec[1] = (physicsAngles.vec[1]*PhysicsAngleToRenderer);
     angles.vec[2] = (physicsAngles.vec[2]*PhysicsAngleToRenderer);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//  Offset previous transforms position                                       //
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsTransform3::offsetPrevPos(const Vector3i& offset)
+{
+    prevPos.vec[0] += (offset.vec[0]*PhysicsToRenderer);
+    prevPos.vec[1] += (offset.vec[1]*PhysicsToRenderer);
+    prevPos.vec[2] += (offset.vec[2]*PhysicsToRenderer);
+}

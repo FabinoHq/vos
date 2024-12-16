@@ -157,6 +157,12 @@
             HeightMapLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
+            //  Get heightmap loader ready state                              //
+            //  return : True if heightmap loader is ready, false otherwise   //
+            ////////////////////////////////////////////////////////////////////
+            bool isReady();
+
+            ////////////////////////////////////////////////////////////////////
             //  Reload heightmaps pointers based on current chunk position    //
             //  return : True if heightmaps pointers are reloaded             //
             ////////////////////////////////////////////////////////////////////

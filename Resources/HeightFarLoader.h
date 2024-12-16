@@ -157,6 +157,12 @@
             HeightFarLoaderState getState();
 
             ////////////////////////////////////////////////////////////////////
+            //  Get heightfar loader ready state                              //
+            //  return : True if heightfar loader is ready, false otherwise   //
+            ////////////////////////////////////////////////////////////////////
+            bool isReady();
+
+            ////////////////////////////////////////////////////////////////////
             //  Reload heightfars pointers based on current chunk position    //
             //  return : True if heightfars pointers are reloaded             //
             ////////////////////////////////////////////////////////////////////

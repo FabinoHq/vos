@@ -121,13 +121,11 @@
             {
                 int32_t chunkX = (
                     MATRIXCOL_STREAMHALFWIDTH +
-                    Math::divide(x, MatrixChunk2Width) -
-                    m_chunkX
+                    Math::divide(x, MatrixChunk2Width)
                 );
                 int32_t chunkY = (
                     MATRIXCOL_STREAMHALFHEIGHT +
-                    Math::divide(y, MatrixChunk2Height) -
-                    m_chunkY
+                    Math::divide(y, MatrixChunk2Height)
                 );
                 return (GResources.matrixcols.matrixcol(
                     (chunkY*MATRIXCOL_STREAMWIDTH)+chunkX).get(
