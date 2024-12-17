@@ -86,8 +86,7 @@ void SeaNearStream::render(int32_t chunkX, int32_t chunkY)
     {
         for (int j = 1; j < HEIGHTMAP_STREAMHEIGHT-1; ++j)
         {
-            if (GResources.heightmaps.getFlags(i, j) &
-                HEIGHTMAP_FLAGS_RENDERSEA)
+            if (GResources.heightmaps.getFlags(i, j) & HEIGHTMAP_FLAGS_WATER)
             {
                 m_seaNearChunk.setPosition(
                     -(HEIGHTMAP_STREAMHALFWIDTH*SeaNearChunkXStride)+

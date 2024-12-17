@@ -81,7 +81,7 @@
     enum HeightMapFlags
     {
         HEIGHTMAP_FLAGS_NONE = 0x00,
-        HEIGHTMAP_FLAGS_RENDERSEA = 0x01
+        HEIGHTMAP_FLAGS_WATER = 0x01
     };
 
 

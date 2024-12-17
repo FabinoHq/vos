@@ -865,7 +865,7 @@ bool HeightFarLoader::loadHeightFars()
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightFarLoader::generateFlatChunk(HeightFarChunkData& chunkData)
 {
-    // Generate vertices data
+    // Flat heightfar chunk
     float texCoordIncX = HeightFarChunkTexcoordsWidth /
         (HeightFarChunkWidth * 1.0f);
     float texCoordIncY = HeightFarChunkTexcoordsHeight /
@@ -878,7 +878,7 @@ bool HeightFarLoader::generateFlatChunk(HeightFarChunkData& chunkData)
     uint32_t iIndex = 0;
     uint16_t iOffset = 0;
 
-    // Flat heightfar chunk
+    // Generate vertices data
     for (uint32_t j = 0; j <= HeightFarChunkHeight; ++j)
     {
         vertX = 0.0f;
@@ -947,7 +947,7 @@ bool HeightFarLoader::generateFlatChunk(HeightFarChunkData& chunkData)
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightFarLoader::updateFlatChunk(HeightFarChunkData& chunkData)
 {
-    // Generate vertices data
+    // Flat heightfar chunk
     float texCoordIncX = HeightFarChunkTexcoordsWidth /
         (HeightFarChunkWidth * 1.0f);
     float texCoordIncY = HeightFarChunkTexcoordsHeight /
@@ -960,7 +960,7 @@ bool HeightFarLoader::updateFlatChunk(HeightFarChunkData& chunkData)
     uint32_t iIndex = 0;
     uint16_t iOffset = 0;
 
-    // Flat heightfar chunk
+    // Generate vertices data
     for (uint32_t j = 0; j <= HeightFarChunkHeight; ++j)
     {
         vertX = 0.0f;

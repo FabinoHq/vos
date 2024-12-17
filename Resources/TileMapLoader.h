@@ -75,6 +75,17 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  TileMap flags enumeration                                             //
+    ////////////////////////////////////////////////////////////////////////////
+    enum TileMapFlags
+    {
+        TILEMAP_FLAGS_NONE = 0x00,
+        TILEMAP_FLAGS_EMPTY = 0x01,
+        TILEMAP_FLAGS_WATER = 0x02
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  TileMap stream assets definitions                                     //
     ////////////////////////////////////////////////////////////////////////////
     #define TILEMAP_STREAMWIDTH 7
@@ -180,6 +191,17 @@
                 return (*m_chunksptrs[Math::clamp(static_cast<uint32_t>(
                     (chunkY*TILEMAP_STREAMWIDTH)+chunkX),
                     0u, (TILEMAP_ASSETSCOUNT-1u))]->tilemap);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get tilemap flags                                             //
+            //  return : tilemap flags                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getFlags(int32_t chunkX, int32_t chunkY)
+            {
+                return (m_chunksptrs[Math::clamp(static_cast<uint32_t>(
+                    (chunkY*TILEMAP_STREAMWIDTH)+chunkX),
+                    0u, (TILEMAP_ASSETSCOUNT-1u))]->flags);
             }
 
             ////////////////////////////////////////////////////////////////////

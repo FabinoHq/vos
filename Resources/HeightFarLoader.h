@@ -81,7 +81,7 @@
     enum HeightFarFlags
     {
         HEIGHTFAR_FLAGS_NONE = 0x00,
-        HEIGHTFAR_FLAGS_RENDERSEA = 0x01
+        HEIGHTFAR_FLAGS_WATER = 0x01
     };
 
 

@@ -58,6 +58,7 @@ m_chunkY(0)
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
+        m_chunks[i].flags = TILEMAP_FLAGS_NONE;
         m_chunks[i].tilemap = 0;
         m_chunksptrs[i] = 0;
     }
@@ -75,6 +76,7 @@ TileMapLoader::~TileMapLoader()
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
+        m_chunks[i].flags = TILEMAP_FLAGS_NONE;
         m_chunks[i].tilemap = 0;
         m_chunksptrs[i] = 0;
     }
@@ -369,6 +371,7 @@ void TileMapLoader::destroyTileMapLoader()
         m_chunks[i].loading = false;
         m_chunks[i].chunkX = 0;
         m_chunks[i].chunkY = 0;
+        m_chunks[i].flags = TILEMAP_FLAGS_NONE;
         m_chunks[i].tilemap = 0;
         m_chunksptrs[i] = 0;
     }
@@ -436,6 +439,9 @@ bool TileMapLoader::generateFlatChunk(TileMapChunkData& chunkData)
     // Generate flat tilemap chunk
     memset(chunkData.tilemap->matrix, 0, sizeof(int32_t)*TileMapChunkSize);
 
+    // Set tilemap chunk flags
+    chunkData.flags = TILEMAP_FLAGS_EMPTY;
+
     // Tilemap chunk successfully generated
     return true;
 }
@@ -448,6 +454,9 @@ bool TileMapLoader::updateFlatChunk(TileMapChunkData& chunkData)
 {
     // Update flat tilemap chunk
     memset(chunkData.tilemap->matrix, 0, sizeof(int32_t)*TileMapChunkSize);
+
+    // Set tilemap chunk flags
+    chunkData.flags = TILEMAP_FLAGS_EMPTY;
 
     // Tilemap chunk successfully updated
     return true;
@@ -485,6 +494,9 @@ bool TileMapLoader::updateChunk(TileMapChunkData& chunkData,
                 static_cast<int8_t>(elem);
         }
     }
+
+    // Set tilemap chunk flags
+    chunkData.flags = TILEMAP_FLAGS_NONE;
 
     // Close VTMP file
     file.close();

@@ -865,7 +865,7 @@ bool HeightMapLoader::loadHeightMaps()
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::generateFlatChunk(HeightMapChunkData& chunkData)
 {
-    // Generate vertices data
+    // Flat heightmap chunk
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
         (HeightMapChunkWidth * 1.0f);
     float texCoordIncY = HeightMapChunkTexcoordsHeight /
@@ -878,7 +878,7 @@ bool HeightMapLoader::generateFlatChunk(HeightMapChunkData& chunkData)
     uint32_t iIndex = 0;
     uint16_t iOffset = 0;
 
-    // Flat heightmap chunk
+    // Generate vertices data
     for (uint32_t j = 0; j <= HeightMapChunkHeight; ++j)
     {
         vertX = 0.0f;
@@ -947,7 +947,7 @@ bool HeightMapLoader::generateFlatChunk(HeightMapChunkData& chunkData)
 ////////////////////////////////////////////////////////////////////////////////
 bool HeightMapLoader::updateFlatChunk(HeightMapChunkData& chunkData)
 {
-    // Generate vertices data
+    // Flat heightmap chunk
     float texCoordIncX = HeightMapChunkTexcoordsWidth /
         (HeightMapChunkWidth * 1.0f);
     float texCoordIncY = HeightMapChunkTexcoordsHeight /
@@ -960,7 +960,7 @@ bool HeightMapLoader::updateFlatChunk(HeightMapChunkData& chunkData)
     uint32_t iIndex = 0;
     uint16_t iOffset = 0;
 
-    // Flat heightmap chunk
+    // Generate vertices data
     for (uint32_t j = 0; j <= HeightMapChunkHeight; ++j)
     {
         vertX = 0.0f;
