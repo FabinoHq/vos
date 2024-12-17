@@ -59,6 +59,16 @@
     const int32_t MatrixChunk2ElemHalfHeight = 50000;
     const int32_t MatrixChunk2ElemWidth = (MatrixChunk2ElemHalfWidth*2);
     const int32_t MatrixChunk2ElemHeight = (MatrixChunk2ElemHalfHeight*2);
+    const int32_t MatrixChunk2XStride =
+        (MatrixChunk2Width*MatrixChunk2ElemWidth);
+    const int32_t MatrixChunk2YStride =
+        (MatrixChunk2Height*MatrixChunk2ElemHeight);
+    const int32_t MatrixChunk2TopWarp =
+        (MatrixChunk2YStride + (MatrixChunk2YStride >> 3));
+    const int32_t MatrixChunk2BottomWarp = -(MatrixChunk2YStride >> 3);
+    const int32_t MatrixChunk2LeftWarp = -(MatrixChunk2XStride >> 3);
+    const int32_t MatrixChunk2RightWarp =
+        (MatrixChunk2XStride + (MatrixChunk2XStride >> 3));
 
 
     ////////////////////////////////////////////////////////////////////////////

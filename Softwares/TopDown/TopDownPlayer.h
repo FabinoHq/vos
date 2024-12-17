@@ -121,37 +121,35 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Top down player top warp                                      //
+            //  Check if top down player needs top warp                       //
             ////////////////////////////////////////////////////////////////////
             inline bool topWarp()
             {
-                return (m_bounding.position.vec[1] >
-                    (MatrixChunk2ElemHeight*MatrixChunk2Height));
+                return (m_bounding.position.vec[1] > MatrixChunk2TopWarp);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Top down player bottom warp                                   //
+            //  Check if top down player needs bottom warp                    //
             ////////////////////////////////////////////////////////////////////
             inline bool bottomWarp()
             {
-                return (m_bounding.position.vec[1] < 0);
+                return (m_bounding.position.vec[1] < MatrixChunk2BottomWarp);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Top down player left warp                                     //
+            //  Check if top down player needs left warp                      //
             ////////////////////////////////////////////////////////////////////
             inline bool leftWarp()
             {
-                return (m_bounding.position.vec[0] < 0);
+                return (m_bounding.position.vec[0] < MatrixChunk2LeftWarp);
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Top down player right warp                                    //
+            //  Check if top down player needs right warp                     //
             ////////////////////////////////////////////////////////////////////
             inline bool rightWarp()
             {
-                return (m_bounding.position.vec[0] >
-                    (MatrixChunk2ElemWidth*MatrixChunk2Width));
+                return (m_bounding.position.vec[0] > MatrixChunk2RightWarp);
             }
 
 

@@ -120,7 +120,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Compute top down game warp                                    //
             ////////////////////////////////////////////////////////////////////
-            void warp(Vector2i& warpOffset);
+            Vector2i warp();
 
             ////////////////////////////////////////////////////////////////////
             //  Compute top down game physics (threaded)                      //
@@ -180,6 +180,7 @@
             BoundingRect        m_boundingRect2;        // Bounding rect 2
             Collision2          m_collide;              // Collision
 
+            bool                m_chunkWarp;            // Chunk warp
             int32_t             m_chunkX;               // Chunk X
             int32_t             m_chunkY;               // Chunk Y
             TileMapStream       m_tilemap;              // Tilemap

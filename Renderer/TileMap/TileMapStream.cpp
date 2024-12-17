@@ -85,13 +85,14 @@ void TileMapStream::render(Sprite& sprite)
     {
         for (int j = 1; j < (TILEMAP_STREAMHEIGHT-1); ++j)
         {
-            GResources.tilemaps.tilemap(i, j).setPosition(
+            TileMapChunk& tilemap = GResources.tilemaps.tilemap(i, j);
+            tilemap.setPosition(
                 -(TILEMAP_STREAMHALFWIDTH*TileMapChunkXStride)+
                 (i*TileMapChunkXStride),
                 -(TILEMAP_STREAMHALFHEIGHT*TileMapChunkYStride)+
                 (j*TileMapChunkYStride)
             );
-            GResources.tilemaps.tilemap(i, j).render(sprite);
+            tilemap.render(sprite);
         }
     }
 }

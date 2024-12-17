@@ -259,8 +259,16 @@ bool FirstPerson::init()
     }
 
     // Load spawn heightmap chunks
-    m_heightMapStream.reload(0, 0);
-    m_heightFarStream.reload(0, 0);
+    while (!m_heightMapStream.reload(0, 0))
+    {
+        // Release some CPU
+        SysSleep(ResourcesWaitSleepTime);
+    }
+    while (!m_heightFarStream.reload(0, 0))
+    {
+        // Release some CPU
+        SysSleep(ResourcesWaitSleepTime);
+    }
 
     // Wait for spawn chunks to be loaded
     bool spawnLoaded = false;

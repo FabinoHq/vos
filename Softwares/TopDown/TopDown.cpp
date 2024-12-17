@@ -71,6 +71,7 @@ m_boundingAlignRect2(),
 m_boundingRect(),
 m_boundingRect2(),
 m_collide(),
+m_chunkWarp(false),
 m_chunkX(0),
 m_chunkY(0),
 m_tilemap(),
@@ -217,6 +218,7 @@ bool TopDown::init()
     m_boundingRect2.setAngle(1000000);
 
     // Reset chunk X and Y
+    m_chunkWarp = false;
     m_chunkX = 0;
     m_chunkY = 0;
 
@@ -235,10 +237,18 @@ bool TopDown::init()
     }
 
     // Load spawn matrix chunks
-    GMatrixStream2.reload(0, 0);
+    while (!GMatrixStream2.reload(0, 0))
+    {
+        // Release some CPU
+        SysSleep(ResourcesWaitSleepTime);
+    }
 
     // Load spawn tilemap chunks
-    m_tilemap.reload(0, 0);
+    while (!m_tilemap.reload(0, 0))
+    {
+        // Release some CPU
+        SysSleep(ResourcesWaitSleepTime);
+    }
 
     // Wait for spawn chunks to be loaded
     bool spawnLoaded = false;
@@ -412,9 +422,8 @@ void TopDown::events(SysEvent& event)
 ////////////////////////////////////////////////////////////////////////////////
 void TopDown::prephysics()
 {
-    // Update chunk position
-    Vector2i warpOffset = Vector2i(0, 0);
-    warp(warpOffset);
+    // Compute game warp
+    Vector2i warpOffset = warp();
 
     // Precompute player physics
     m_player.prephysics(warpOffset);
@@ -423,45 +432,44 @@ void TopDown::prephysics()
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute top down game warp                                                //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDown::warp(Vector2i& warpOffset)
+Vector2i TopDown::warp()
 {
-    if (m_player.needWarp())
+    Vector2i warpOffset = Vector2i(0, 0);
+    if (!m_chunkWarp && m_player.needWarp())
     {
         if (GMatrixStream2.isReady() && m_tilemap.isReady())
         {
             if (m_player.topWarp())
             {
                 // Top warp
-                warpOffset.vec[1] =
-                    -(MatrixChunk2ElemHeight*MatrixChunk2Height);
+                warpOffset.vec[1] = -MatrixChunk2XStride;
                 ++m_chunkY;
             }
             else if (m_player.bottomWarp())
             {
                 // Bottom warp
-                warpOffset.vec[1] =
-                    (MatrixChunk2ElemHeight*MatrixChunk2Height);
+                warpOffset.vec[1] = MatrixChunk2XStride;
                 --m_chunkY;
             }
             else if (m_player.leftWarp())
             {
                 // Left warp
-                warpOffset.vec[0] =
-                    (MatrixChunk2ElemWidth*MatrixChunk2Width);
+                warpOffset.vec[0] = MatrixChunk2YStride;
                 --m_chunkX;
             }
             else if (m_player.rightWarp())
             {
                 // Right warp
-                warpOffset.vec[0] =
-                    -(MatrixChunk2ElemWidth*MatrixChunk2Width);
+                warpOffset.vec[0] = -MatrixChunk2YStride;
                 ++m_chunkX;
             }
 
             // Update matrix stream
             GMatrixStream2.update(m_chunkX, m_chunkY);
+            m_chunkWarp = true;
         }
     }
+    return warpOffset;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -479,7 +487,11 @@ void TopDown::physics()
 void TopDown::precompute(float physicstime)
 {
     // Update tilemap stream
-    m_tilemap.update(m_chunkX, m_chunkY);
+    if (m_chunkWarp)
+    {
+        m_tilemap.update(m_chunkX, m_chunkY);
+        m_chunkWarp = false;
+    }
 
     // Precompute player
     m_player.precompute(physicstime);
