@@ -413,46 +413,55 @@ void TopDown::events(SysEvent& event)
 void TopDown::prephysics()
 {
     // Update chunk position
-    Vector2i offset = Vector2i(0, 0);
-    warp(offset);
+    Vector2i warpOffset = Vector2i(0, 0);
+    warp(warpOffset);
 
     // Precompute player physics
-    m_player.prephysics(offset);
+    m_player.prephysics(warpOffset);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Compute top down game warp                                                //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDown::warp(Vector2i& offset)
+void TopDown::warp(Vector2i& warpOffset)
 {
-    if (m_player.rightWarp())
+    if (m_player.needWarp())
     {
-        // Right warp
-        offset.vec[0] = -(MatrixChunk2ElemWidth*MatrixChunk2Width);
-        ++m_chunkX;
-    }
-    if (m_player.leftWarp())
-    {
-        // Left warp
-        offset.vec[0] = (MatrixChunk2ElemWidth*MatrixChunk2Width);
-        --m_chunkX;
-    }
-    if (m_player.topWarp())
-    {
-        // Top warp
-        offset.vec[1] = -(MatrixChunk2ElemHeight*MatrixChunk2Height);
-        ++m_chunkY;
-    }
-    if (m_player.bottomWarp())
-    {
-        // Bottom warp
-        offset.vec[1] = (MatrixChunk2ElemHeight*MatrixChunk2Height);
-        --m_chunkY;
-    }
+        if (GMatrixStream2.isReady() && m_tilemap.isReady())
+        {
+            if (m_player.topWarp())
+            {
+                // Top warp
+                warpOffset.vec[1] =
+                    -(MatrixChunk2ElemHeight*MatrixChunk2Height);
+                ++m_chunkY;
+            }
+            else if (m_player.bottomWarp())
+            {
+                // Bottom warp
+                warpOffset.vec[1] =
+                    (MatrixChunk2ElemHeight*MatrixChunk2Height);
+                --m_chunkY;
+            }
+            else if (m_player.leftWarp())
+            {
+                // Left warp
+                warpOffset.vec[0] =
+                    (MatrixChunk2ElemWidth*MatrixChunk2Width);
+                --m_chunkX;
+            }
+            else if (m_player.rightWarp())
+            {
+                // Right warp
+                warpOffset.vec[0] =
+                    -(MatrixChunk2ElemWidth*MatrixChunk2Width);
+                ++m_chunkX;
+            }
 
-    // Update matrix and tilemap chunk
-    GMatrixStream2.update(m_chunkX, m_chunkY);
-    m_tilemap.update(m_chunkX, m_chunkY);
+            // Update matrix stream
+            GMatrixStream2.update(m_chunkX, m_chunkY);
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -469,6 +478,9 @@ void TopDown::physics()
 ////////////////////////////////////////////////////////////////////////////////
 void TopDown::precompute(float physicstime)
 {
+    // Update tilemap stream
+    m_tilemap.update(m_chunkX, m_chunkY);
+
     // Precompute player
     m_player.precompute(physicstime);
 }

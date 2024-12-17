@@ -94,7 +94,7 @@
             ////////////////////////////////////////////////////////////////////
             //  Precompute top down player physics (thread sync)              //
             ////////////////////////////////////////////////////////////////////
-            void prephysics(const Vector2i& offset);
+            void prephysics(const Vector2i& warpOffset);
 
             ////////////////////////////////////////////////////////////////////
             //  Compute top down player physics (threaded)                    //
@@ -113,20 +113,11 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Top down player right warp                                    //
+            //  Check if top down player needs warp                           //
             ////////////////////////////////////////////////////////////////////
-            inline bool rightWarp()
+            inline bool needWarp()
             {
-                return (m_bounding.position.vec[0] >
-                    (MatrixChunk2ElemWidth*MatrixChunk2Width));
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Top down player left warp                                     //
-            ////////////////////////////////////////////////////////////////////
-            inline bool leftWarp()
-            {
-                return (m_bounding.position.vec[0] < 0);
+                return (topWarp() || bottomWarp() || leftWarp() || rightWarp());
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -144,6 +135,23 @@
             inline bool bottomWarp()
             {
                 return (m_bounding.position.vec[1] < 0);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Top down player left warp                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline bool leftWarp()
+            {
+                return (m_bounding.position.vec[0] < 0);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Top down player right warp                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline bool rightWarp()
+            {
+                return (m_bounding.position.vec[0] >
+                    (MatrixChunk2ElemWidth*MatrixChunk2Width));
             }
 
 

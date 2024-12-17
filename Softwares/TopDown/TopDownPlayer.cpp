@@ -119,12 +119,12 @@ bool TopDownPlayer::init()
 ////////////////////////////////////////////////////////////////////////////////
 //  Precompute top down player physics (thread sync)                          //
 ////////////////////////////////////////////////////////////////////////////////
-void TopDownPlayer::prephysics(const Vector2i& offset)
+void TopDownPlayer::prephysics(const Vector2i& warpOffset)
 {
     // Compute prephysics transformations
-    m_bounding.position += offset;
+    m_bounding.position += warpOffset;
     m_transforms.prephysics(m_bounding.position, 0);
-    m_transforms.offsetPrevPos(offset);
+    m_transforms.offsetPrevPos(warpOffset);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
