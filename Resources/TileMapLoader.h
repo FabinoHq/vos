@@ -77,10 +77,10 @@
     ////////////////////////////////////////////////////////////////////////////
     //  TileMap stream assets definitions                                     //
     ////////////////////////////////////////////////////////////////////////////
-    #define TILEMAP_STREAMWIDTH 9
-    #define TILEMAP_STREAMHEIGHT 9
-    #define TILEMAP_STREAMHALFWIDTH 4
-    #define TILEMAP_STREAMHALFHEIGHT 4
+    #define TILEMAP_STREAMWIDTH 7
+    #define TILEMAP_STREAMHEIGHT 7
+    #define TILEMAP_STREAMHALFWIDTH 3
+    #define TILEMAP_STREAMHALFHEIGHT 3
     #define TILEMAP_ASSETSCOUNT (TILEMAP_STREAMWIDTH*TILEMAP_STREAMHEIGHT)
 
 
