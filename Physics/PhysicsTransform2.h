@@ -79,9 +79,20 @@
             void prephysics(const Vector2i& physicsPos, int32_t physicsAngle);
 
             ////////////////////////////////////////////////////////////////////
+            //  Precompute physics isometric transforms (thread sync)         //
+            ////////////////////////////////////////////////////////////////////
+            void prephysicsIso(
+                const Vector2i& physicsPos, int32_t physicsAngle);
+
+            ////////////////////////////////////////////////////////////////////
             //  Offset previous transforms position                           //
             ////////////////////////////////////////////////////////////////////
             void offsetPrevPos(const Vector2i& offset);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Offset previous isometric transforms position                 //
+            ////////////////////////////////////////////////////////////////////
+            void offsetPrevPosIso(const Vector2i& offset);
 
 
         private:

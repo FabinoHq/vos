@@ -94,10 +94,39 @@ void PhysicsTransform2::prephysics(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Precompute physics isometric transforms (thread sync)                     //
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsTransform2::prephysicsIso(
+    const Vector2i& physicsPos, int32_t physicsAngle)
+{
+    // Store previous physics transformations
+    prevPos = pos;
+    prevAngle = angle;
+
+    // Convert physics transformations to isometric renderer
+    pos.vec[0] = ((physicsPos.vec[0]+physicsPos.vec[1])*PhysicsToRenderer);
+    pos.vec[1] = (
+        ((physicsPos.vec[1]>>1)-(physicsPos.vec[0]>>1))*PhysicsToRenderer
+    );
+    angle = (physicsAngle*PhysicsAngleToRenderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Offset previous transforms position                                       //
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsTransform2::offsetPrevPos(const Vector2i& offset)
 {
     prevPos.vec[0] += (offset.vec[0]*PhysicsToRenderer);
     prevPos.vec[1] += (offset.vec[1]*PhysicsToRenderer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Offset previous isometric transforms position                             //
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsTransform2::offsetPrevPosIso(const Vector2i& offset)
+{
+    prevPos.vec[0] += ((offset.vec[0]+offset.vec[1])*PhysicsToRenderer);
+    prevPos.vec[1] += (
+        ((offset.vec[1]>>1)-(offset.vec[0]>>1))*PhysicsToRenderer
+    );
 }

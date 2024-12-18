@@ -108,8 +108,8 @@ void IsometricPlayer::prephysics(const Vector2i& warpOffset)
 {
     // Compute prephysics transformations
     m_bounding.position += warpOffset;
-    m_transforms.prephysics(m_bounding.position, 0);
-    m_transforms.offsetPrevPos(warpOffset);
+    m_transforms.prephysicsIso(m_bounding.position, 0);
+    m_transforms.offsetPrevPosIso(warpOffset);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,15 +140,17 @@ void IsometricPlayer::physics()
     }
 
     // Clamp speed
-    if (m_speed.length() >= (Math::OneInt * 12))
+    if (m_speed.length() >= (Math::OneInt * 8))
     {
         m_speed.normalize();
-        m_speed *= 12;
+        m_speed *= 8;
     }
 
     // Compute isometric player collisions
     Vector2i offset = Vector2i(
-        (m_speed.vec[0] >> PhysicsSpeedToPositionShift),
+        (m_speed.vec[0] >> PhysicsSpeedToPositionShift)-
+        (m_speed.vec[1] >> PhysicsSpeedToPositionShift),
+        (m_speed.vec[0] >> PhysicsSpeedToPositionShift)+
         (m_speed.vec[1] >> PhysicsSpeedToPositionShift)
     );
     Collision2 collision((m_bounding.position + offset), offset);

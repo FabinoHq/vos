@@ -101,7 +101,7 @@ bool Isometric::init()
 
 
     // Init sprite
-    if (!m_sprite.init(GResources.textures.high(TEXTURE_TILE), 1.0f, 1.0f))
+    if (!m_sprite.init(GResources.textures.high(TEXTURE_ISOTILE), 2.0f, 1.0f))
     {
         // Could not init sprite
         return false;
@@ -418,8 +418,9 @@ void Isometric::compute(float frametime)
 
 
     // Update view position
-    m_view.setPosition(m_player.getPosition());
-    
+    //m_view.setScale(0.25f);
+    m_view.setPosition(m_player.getPosition()/*/4.0f*/);
+
 
     // Start uniforms upload
     if (GUniformchain.startUpload())

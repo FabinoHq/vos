@@ -106,9 +106,9 @@ void IsoMapChunk::render(Sprite& sprite)
                 // Render isomap element
                 sprite.setPosition(
                     (IsoMapElemHalfWidth+m_position.vec[0])+
-                    (i*IsoMapElemWidth),
-                    (IsoMapElemHalfHeight+m_position.vec[1])+
-                    (j*IsoMapElemHeight)
+                    (i*IsoMapElemHalfWidth)+(j*IsoMapElemHalfWidth),
+                    m_position.vec[1]+
+                    (j*IsoMapElemHalfHeight)-(i*IsoMapElemHalfHeight)
                 );
                 sprite.bindTexture();
                 sprite.render();

@@ -68,13 +68,13 @@
     const int32_t IsoMapChunkHeight = MatrixChunk2Height;
     const int32_t IsoMapChunkSize = (IsoMapChunkWidth*IsoMapChunkHeight);
     const float IsoMapElemHalfWidth =
-        (MatrixChunk2ElemHalfWidth*PhysicsToRenderer);
+        ((MatrixChunk2ElemHalfWidth*2)*PhysicsToRenderer);
     const float IsoMapElemHalfHeight =
         (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
-    const float IsoMapElemWidth = (MatrixChunk2ElemWidth*PhysicsToRenderer);
+    const float IsoMapElemWidth = ((MatrixChunk2ElemWidth*2)*PhysicsToRenderer);
     const float IsoMapElemHeight = (MatrixChunk2ElemHeight*PhysicsToRenderer);
-    const float IsoMapChunkXStride = (IsoMapChunkWidth*IsoMapElemWidth);
-    const float IsoMapChunkYStride = (IsoMapChunkHeight*IsoMapElemHeight);
+    const float IsoMapChunkXStride = (IsoMapChunkWidth*IsoMapElemHalfWidth);
+    const float IsoMapChunkYStride = (IsoMapChunkHeight*IsoMapElemHalfHeight);
 
 
     ////////////////////////////////////////////////////////////////////////////

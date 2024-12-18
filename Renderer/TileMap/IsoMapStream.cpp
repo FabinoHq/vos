@@ -89,10 +89,9 @@ void IsoMapStream::render(Sprite& sprite)
             {
                 IsoMapChunk& isomap = GResources.isomaps.isomap(i, j);
                 isomap.setPosition(
-                    -(ISOMAP_STREAMHALFWIDTH*IsoMapChunkXStride)+
-                    (i*IsoMapChunkXStride),
-                    -(ISOMAP_STREAMHALFHEIGHT*IsoMapChunkYStride)+
-                    (j*IsoMapChunkYStride)
+                    -(TILEMAP_STREAMHALFWIDTH*(TileMapChunkXStride*2.0f))+
+                    (i*IsoMapChunkXStride)+(j*IsoMapChunkXStride),
+                    (j*IsoMapChunkYStride)-(i*IsoMapChunkYStride)
                 );
                 isomap.render(sprite);
             }
