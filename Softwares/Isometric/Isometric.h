@@ -61,7 +61,7 @@
     #include "../../Renderer/Shapes/RectangleShape.h"
     #include "../../Renderer/Shapes/EllipseShape.h"
 
-    #include "../../Renderer/TileMap/TileMapStream.h"
+    #include "../../Renderer/TileMap/IsoMapStream.h"
 
     #include "IsometricPlayer.h"
 
@@ -162,7 +162,7 @@
             bool                m_chunkWarp;            // Chunk warp
             int32_t             m_chunkX;               // Chunk X
             int32_t             m_chunkY;               // Chunk Y
-            TileMapStream       m_tilemap;              // Tilemap
+            IsoMapStream        m_isomap;               // Isomap
             IsometricPlayer     m_player;               // Player
     };
 

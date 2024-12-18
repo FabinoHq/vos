@@ -228,6 +228,10 @@
 !Renderer/TileMap/TileMapChunk.cpp
 !Renderer/TileMap/TileMapStream.h
 !Renderer/TileMap/TileMapStream.cpp
+!Renderer/TileMap/IsoMapChunk.h
+!Renderer/TileMap/IsoMapChunk.cpp
+!Renderer/TileMap/IsoMapStream.h
+!Renderer/TileMap/IsoMapStream.cpp
 
 # HeightMap
 !Renderer/HeightMap/
@@ -329,6 +333,8 @@
 !Resources/MatrixColLoader.cpp
 !Resources/TileMapLoader.h
 !Resources/TileMapLoader.cpp
+!Resources/IsoMapLoader.h
+!Resources/IsoMapLoader.cpp
 !Resources/HeightMapLoader.h
 !Resources/HeightMapLoader.cpp
 !Resources/HeightFarLoader.h

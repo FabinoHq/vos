@@ -341,6 +341,15 @@
     <ClCompile Include="Softwares\Isometric\IsometricPlayer.cpp">
       <Filter>Softwares\Isometric</Filter>
     </ClCompile>
+    <ClCompile Include="Resources\IsoMapLoader.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\TileMap\IsoMapChunk.cpp">
+      <Filter>Renderer\TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\TileMap\IsoMapStream.cpp">
+      <Filter>Renderer\TileMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -769,6 +778,15 @@
     </ClInclude>
     <ClInclude Include="Softwares\Isometric\IsometricPlayer.h">
       <Filter>Softwares\Isometric</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\IsoMapLoader.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\TileMap\IsoMapChunk.h">
+      <Filter>Renderer\TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\TileMap\IsoMapStream.h">
+      <Filter>Renderer\TileMap</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -64,7 +64,7 @@ m_pxText(),
 m_chunkWarp(false),
 m_chunkX(0),
 m_chunkY(0),
-m_tilemap(),
+m_isomap(),
 m_player()
 {
 
@@ -166,10 +166,10 @@ bool Isometric::init()
         return false;
     }
 
-    // Init tilemap stream
-    if (!m_tilemap.init())
+    // Init isomap stream
+    if (!m_isomap.init())
     {
-        // Could not init tilemap stream
+        // Could not init isomap stream
         return false;
     }
 
@@ -180,8 +180,8 @@ bool Isometric::init()
         SysSleep(ResourcesWaitSleepTime);
     }
 
-    // Load spawn tilemap chunks
-    while (!m_tilemap.reload(0, 0))
+    // Load spawn isomap chunks
+    while (!m_isomap.reload(0, 0))
     {
         // Release some CPU
         SysSleep(ResourcesWaitSleepTime);
@@ -191,7 +191,7 @@ bool Isometric::init()
     bool spawnLoaded = false;
     while (!spawnLoaded)
     {
-        if (GMatrixStream2.isReady() && m_tilemap.isReady())
+        if (GMatrixStream2.isReady() && m_isomap.isReady())
         {
             spawnLoaded = true;
         }
@@ -333,7 +333,7 @@ Vector2i Isometric::warp()
     Vector2i warpOffset = Vector2i(0, 0);
     if (!m_chunkWarp && m_player.needWarp())
     {
-        if (GMatrixStream2.isReady() && m_tilemap.isReady())
+        if (GMatrixStream2.isReady() && m_isomap.isReady())
         {
             if (m_player.topWarp())
             {
@@ -382,10 +382,10 @@ void Isometric::physics()
 ////////////////////////////////////////////////////////////////////////////////
 void Isometric::precompute(float physicstime)
 {
-    // Update tilemap stream
+    // Update isomap stream
     if (m_chunkWarp)
     {
-        m_tilemap.update(m_chunkX, m_chunkY);
+        m_isomap.update(m_chunkX, m_chunkY);
         m_chunkWarp = false;
     }
 
@@ -470,13 +470,13 @@ void Isometric::render()
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
 
-    // Render tilemap chunks
+    // Render isomap chunks
     GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_sprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_sprite.setOrigin(0.0f, 0.0f);
-    m_sprite.setSize(TileMapElemWidth+0.00001f, TileMapElemHeight+0.00001f);
+    m_sprite.setSize(IsoMapElemWidth+0.00001f, IsoMapElemHeight+0.00001f);
     m_sprite.setAngle(0.0f);
-    m_tilemap.render(m_sprite);
+    m_isomap.render(m_sprite);
 
     // Render player
     m_player.render();

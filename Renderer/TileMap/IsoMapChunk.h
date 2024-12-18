@@ -37,102 +37,96 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Resources/Resources.h : Resources management                           //
+//     Renderer/IsoMap/IsoMapChunk.h : IsoMap chunk renderer                  //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RESOURCES_RESOURCES_HEADER
-#define VOS_RESOURCES_RESOURCES_HEADER
+#ifndef VOS_RENDERER_ISOMAP_ISOMAPCHUNK_HEADER
+#define VOS_RENDERER_ISOMAP_ISOMAPCHUNK_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysMessage.h"
-    #include "TextureLoader.h"
-    #include "MeshLoader.h"
-    #include "MatrixColLoader.h"
-    #include "TileMapLoader.h"
-    #include "IsoMapLoader.h"
-    #include "HeightMapLoader.h"
-    #include "HeightFarLoader.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/Swapchain.h"
+    #include "../Vulkan/GraphicsLayout.h"
+
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform2.h"
+
+    #include "../../Physics/Physics.h"
+    #include "../../Physics/MatrixChunk2.h"
+
+    #include "../Sprite.h"
+
+    #include <cstdint>
+    #include <cstring>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Resources settings                                                    //
+    //  IsoMapChunk settings                                                  //
     ////////////////////////////////////////////////////////////////////////////
-    const double ResourcesWaitSleepTime = 0.02;
+    const int32_t IsoMapChunkWidth = MatrixChunk2Width;
+    const int32_t IsoMapChunkHeight = MatrixChunk2Height;
+    const int32_t IsoMapChunkSize = (IsoMapChunkWidth*IsoMapChunkHeight);
+    const float IsoMapElemHalfWidth =
+        (MatrixChunk2ElemHalfWidth*PhysicsToRenderer);
+    const float IsoMapElemHalfHeight =
+        (MatrixChunk2ElemHalfHeight*PhysicsToRenderer);
+    const float IsoMapElemWidth = (MatrixChunk2ElemWidth*PhysicsToRenderer);
+    const float IsoMapElemHeight = (MatrixChunk2ElemHeight*PhysicsToRenderer);
+    const float IsoMapChunkXStride = (IsoMapChunkWidth*IsoMapElemWidth);
+    const float IsoMapChunkYStride = (IsoMapChunkHeight*IsoMapElemHeight);
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Resources class definition                                            //
+    //  IsoMapChunk class definition                                          //
     ////////////////////////////////////////////////////////////////////////////
-    class Resources
+    class IsoMapChunk : public Transform2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Resources default constructor                                 //
+            //  IsoMapChunk default constructor                               //
             ////////////////////////////////////////////////////////////////////
-            Resources();
+            IsoMapChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  Resources destructor                                          //
+            //  IsoMapChunk virtual destructor                                //
             ////////////////////////////////////////////////////////////////////
-            ~Resources();
+            virtual ~IsoMapChunk();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init resources loaders                                        //
-            //  return : True if resources loaders are ready                  //
+            //  Init isomap chunk                                             //
+            //  return : True if the isomap chunk is successfully created     //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Preload resources assets                                      //
-            //  return : True if resources assets are successfully preloaded  //
+            //  Destroy isomap chunk                                          //
             ////////////////////////////////////////////////////////////////////
-            bool preload();
+            void destroyIsoMap();
+
 
             ////////////////////////////////////////////////////////////////////
-            //  Start loading resources assets                                //
-            //  return : True if resources assets are loading                 //
+            //  Render isomap chunk                                           //
             ////////////////////////////////////////////////////////////////////
-            bool startLoading();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Get resources loading status                                  //
-            //  return : True if resources assets are loaded, false otherwise //
-            ////////////////////////////////////////////////////////////////////
-            bool isLoadingDone();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy resources                                             //
-            ////////////////////////////////////////////////////////////////////
-            void destroyResources();
+            void render(Sprite& sprite);
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Resources private copy constructor : Not copyable             //
+            //  IsoMapChunk private copy constructor : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            Resources(const Resources&) = delete;
+            IsoMapChunk(const IsoMapChunk&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Resources private copy operator : Not copyable                //
+            //  IsoMapChunk private copy operator : Not copyable              //
             ////////////////////////////////////////////////////////////////////
-            Resources& operator=(const Resources&) = delete;
+            IsoMapChunk& operator=(const IsoMapChunk&) = delete;
 
 
         public:
-            TextureLoader       textures;       // Texture loader
-            MeshLoader          meshes;         // Mesh loader
-            MatrixColLoader     matrixcols;     // MatrixCol loader
-            TileMapLoader       tilemaps;       // TileMap loader
-            IsoMapLoader        isomaps;        // IsoMap loader
-            HeightMapLoader     heightmaps;     // HeightMap loader
-            HeightFarLoader     heightfars;     // HeightFar loader
+            int32_t*    matrix;     // Isomap chunk representation
     };
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Resources global instance                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    extern Resources GResources;
-
-
-#endif // VOS_RESOURCES_RESOURCES_HEADER
+#endif // VOS_RENDERER_ISOMAP_ISOMAPCHUNK_HEADER

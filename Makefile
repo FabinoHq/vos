@@ -83,6 +83,7 @@ VOS: main.o \
 	Renderer/Vulkan/Texture.o Renderer/Vulkan/TextureArray.o \
 	Renderer/Vulkan/CubeMap.o \
 	Renderer/TileMap/TileMapChunk.o Renderer/TileMap/TileMapStream.o \
+	Renderer/TileMap/IsoMapChunk.o Renderer/TileMap/IsoMapStream.o \
 	Renderer/HeightMap/HeightMapChunk.o Renderer/HeightMap/HeightFarChunk.o \
 	Renderer/HeightMap/HeightMapStream.o Renderer/HeightMap/HeightFarStream.o \
 	Renderer/HeightMap/SeaNearChunk.o Renderer/HeightMap/SeaFarChunk.o \
@@ -94,7 +95,8 @@ VOS: main.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
-	Resources/MatrixColLoader.o Resources/TileMapLoader.o \
+	Resources/MatrixColLoader.o \
+	Resources/TileMapLoader.o Resources/IsoMapLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
@@ -138,6 +140,7 @@ VOS: main.o \
 	Renderer/Vulkan/Texture.o Renderer/Vulkan/TextureArray.o \
 	Renderer/Vulkan/CubeMap.o \
 	Renderer/TileMap/TileMapChunk.o Renderer/TileMap/TileMapStream.o \
+	Renderer/TileMap/IsoMapChunk.o Renderer/TileMap/IsoMapStream.o \
 	Renderer/HeightMap/HeightMapChunk.o Renderer/HeightMap/HeightFarChunk.o \
 	Renderer/HeightMap/HeightMapStream.o Renderer/HeightMap/HeightFarStream.o \
 	Renderer/HeightMap/SeaNearChunk.o Renderer/HeightMap/SeaFarChunk.o \
@@ -149,7 +152,8 @@ VOS: main.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
 	Renderer/GUI/GUIProgressBar.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
-	Resources/MatrixColLoader.o Resources/TileMapLoader.o \
+	Resources/MatrixColLoader.o \
+	Resources/TileMapLoader.o Resources/IsoMapLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
@@ -366,6 +370,14 @@ Renderer/TileMap/TileMapStream.o: Renderer/TileMap/TileMapStream.cpp
 	$(CC) -o Renderer/TileMap/TileMapStream.o -c \
 	Renderer/TileMap/TileMapStream.cpp $(CFLAGS)
 
+Renderer/TileMap/IsoMapChunk.o: Renderer/TileMap/IsoMapChunk.cpp
+	$(CC) -o Renderer/TileMap/IsoMapChunk.o -c \
+	Renderer/TileMap/IsoMapChunk.cpp $(CFLAGS)
+
+Renderer/TileMap/IsoMapStream.o: Renderer/TileMap/IsoMapStream.cpp
+	$(CC) -o Renderer/TileMap/IsoMapStream.o -c \
+	Renderer/TileMap/IsoMapStream.cpp $(CFLAGS)
+
 
 Renderer/HeightMap/HeightMapChunk.o: Renderer/HeightMap/HeightMapChunk.cpp
 	$(CC) -o Renderer/HeightMap/HeightMapChunk.o -c \
@@ -449,6 +461,9 @@ Resources/MatrixColLoader.o: Resources/MatrixColLoader.cpp
 
 Resources/TileMapLoader.o: Resources/TileMapLoader.cpp
 	$(CC) -o Resources/TileMapLoader.o -c Resources/TileMapLoader.cpp $(CFLAGS)
+
+Resources/IsoMapLoader.o: Resources/IsoMapLoader.cpp
+	$(CC) -o Resources/IsoMapLoader.o -c Resources/IsoMapLoader.cpp $(CFLAGS)
 
 Resources/HeightMapLoader.o: Resources/HeightMapLoader.cpp
 	$(CC) -o Resources/HeightMapLoader.o -c \

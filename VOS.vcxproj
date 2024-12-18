@@ -248,6 +248,8 @@
     <ClCompile Include="Renderer\SkyProc.cpp" />
     <ClCompile Include="Renderer\Sprite.cpp" />
     <ClCompile Include="Renderer\StaticMesh.cpp" />
+    <ClCompile Include="Renderer\TileMap\IsoMapChunk.cpp" />
+    <ClCompile Include="Renderer\TileMap\IsoMapStream.cpp" />
     <ClCompile Include="Renderer\TileMap\TileMapChunk.cpp" />
     <ClCompile Include="Renderer\TileMap\TileMapStream.cpp" />
     <ClCompile Include="Renderer\View.cpp" />
@@ -271,6 +273,7 @@
     <ClCompile Include="Renderer\WorldLight.cpp" />
     <ClCompile Include="Resources\HeightFarLoader.cpp" />
     <ClCompile Include="Resources\HeightMapLoader.cpp" />
+    <ClCompile Include="Resources\IsoMapLoader.cpp" />
     <ClCompile Include="Resources\MatrixColLoader.cpp" />
     <ClCompile Include="Resources\MeshLoader.cpp" />
     <ClCompile Include="Resources\Resources.cpp" />
@@ -381,6 +384,8 @@
     <ClInclude Include="Renderer\SkyProc.h" />
     <ClInclude Include="Renderer\Sprite.h" />
     <ClInclude Include="Renderer\StaticMesh.h" />
+    <ClInclude Include="Renderer\TileMap\IsoMapChunk.h" />
+    <ClInclude Include="Renderer\TileMap\IsoMapStream.h" />
     <ClInclude Include="Renderer\TileMap\TileMapChunk.h" />
     <ClInclude Include="Renderer\TileMap\TileMapStream.h" />
     <ClInclude Include="Renderer\View.h" />
@@ -404,6 +409,7 @@
     <ClInclude Include="Renderer\WorldLight.h" />
     <ClInclude Include="Resources\HeightFarLoader.h" />
     <ClInclude Include="Resources\HeightMapLoader.h" />
+    <ClInclude Include="Resources\IsoMapLoader.h" />
     <ClInclude Include="Resources\MatrixColLoader.h" />
     <ClInclude Include="Resources\MeshLoader.h" />
     <ClInclude Include="Resources\Resources.h" />

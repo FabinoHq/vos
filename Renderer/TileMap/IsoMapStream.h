@@ -37,102 +37,133 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Resources/Resources.h : Resources management                           //
+//     Renderer/IsoMap/IsoMapStream.h : IsoMap stream renderer                //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RESOURCES_RESOURCES_HEADER
-#define VOS_RESOURCES_RESOURCES_HEADER
+#ifndef VOS_RENDERER_ISOMAP_ISOMAPSTREAM_HEADER
+#define VOS_RENDERER_ISOMAP_ISOMAPSTREAM_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysMessage.h"
-    #include "TextureLoader.h"
-    #include "MeshLoader.h"
-    #include "MatrixColLoader.h"
-    #include "TileMapLoader.h"
-    #include "IsoMapLoader.h"
-    #include "HeightMapLoader.h"
-    #include "HeightFarLoader.h"
+    #include "../../System/System.h"
+    #include "../Vulkan/Vulkan.h"
+    #include "../Vulkan/VertexBuffer.h"
+
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector3.h"
+    #include "../../Math/Matrix4x4.h"
+    #include "../../Math/Transform3.h"
+
+    #include "../../Resources/Resources.h"
+    #include "../../Resources/IsoMapLoader.h"
+
+    #include "../Sprite.h"
+    #include "IsoMapChunk.h"
+
+    #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Resources settings                                                    //
+    //  IsoMapStream class definition                                         //
     ////////////////////////////////////////////////////////////////////////////
-    const double ResourcesWaitSleepTime = 0.02;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Resources class definition                                            //
-    ////////////////////////////////////////////////////////////////////////////
-    class Resources
+    class IsoMapStream
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Resources default constructor                                 //
+            //  IsoMapStream default constructor                              //
             ////////////////////////////////////////////////////////////////////
-            Resources();
+            IsoMapStream();
 
             ////////////////////////////////////////////////////////////////////
-            //  Resources destructor                                          //
+            //  IsoMapStream destructor                                       //
             ////////////////////////////////////////////////////////////////////
-            ~Resources();
+            ~IsoMapStream();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init resources loaders                                        //
-            //  return : True if resources loaders are ready                  //
+            //  Init isomap stream                                            //
+            //  return : True if the isomap stream is successfully created    //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
-            ////////////////////////////////////////////////////////////////////
-            //  Preload resources assets                                      //
-            //  return : True if resources assets are successfully preloaded  //
-            ////////////////////////////////////////////////////////////////////
-            bool preload();
 
             ////////////////////////////////////////////////////////////////////
-            //  Start loading resources assets                                //
-            //  return : True if resources assets are loading                 //
+            //  Get isomap stream ready state                                 //
+            //  return : True if the isomap stream is ready                   //
             ////////////////////////////////////////////////////////////////////
-            bool startLoading();
+            inline bool isReady()
+            {
+                return (GResources.isomaps.isReady());
+            }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get resources loading status                                  //
-            //  return : True if resources assets are loaded, false otherwise //
+            //  Reload isomap stream                                          //
+            //  return : True if the isomap stream is reloading               //
             ////////////////////////////////////////////////////////////////////
-            bool isLoadingDone();
+            inline bool reload(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.isomaps.reload(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.isomaps.getChunkX();
+                    m_chunkY = GResources.isomaps.getChunkY();
+                    return true;
+                }
+                return false;
+            }
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy resources                                             //
+            //  Update isomap stream                                          //
+            //  return : True if the isomap stream is updated                 //
             ////////////////////////////////////////////////////////////////////
-            void destroyResources();
+            inline bool update(int32_t chunkX, int32_t chunkY)
+            {
+                if (GResources.isomaps.update(chunkX, chunkY))
+                {
+                    m_chunkX = GResources.isomaps.getChunkX();
+                    m_chunkY = GResources.isomaps.getChunkY();
+                    return true;
+                }
+                return false;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Render isomap stream                                          //
+            ////////////////////////////////////////////////////////////////////
+            void render(Sprite& sprite);
+
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get isomap chunk X                                            //
+            //  return : Isomap chunk X                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkX() const
+            {
+                return m_chunkX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get isomap chunk Y                                            //
+            //  return : Isomap chunk Y                                       //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getChunkY() const
+            {
+                return m_chunkY;
+            }
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Resources private copy constructor : Not copyable             //
+            //  IsoMapStream private copy constructor : Not copyable          //
             ////////////////////////////////////////////////////////////////////
-            Resources(const Resources&) = delete;
+            IsoMapStream(const IsoMapStream&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Resources private copy operator : Not copyable                //
+            //  IsoMapStream private copy operator : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            Resources& operator=(const Resources&) = delete;
+            IsoMapStream& operator=(const IsoMapStream&) = delete;
 
 
-        public:
-            TextureLoader       textures;       // Texture loader
-            MeshLoader          meshes;         // Mesh loader
-            MatrixColLoader     matrixcols;     // MatrixCol loader
-            TileMapLoader       tilemaps;       // TileMap loader
-            IsoMapLoader        isomaps;        // IsoMap loader
-            HeightMapLoader     heightmaps;     // HeightMap loader
-            HeightFarLoader     heightfars;     // HeightFar loader
+        private:
+            int32_t             m_chunkX;           // Chunk X
+            int32_t             m_chunkY;           // Chunk Y
     };
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Resources global instance                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    extern Resources GResources;
-
-
-#endif // VOS_RESOURCES_RESOURCES_HEADER
+#endif // VOS_RENDERER_ISOMAP_ISOMAPSTREAM_HEADER
