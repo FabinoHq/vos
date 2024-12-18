@@ -40,6 +40,7 @@
 //     Renderer/IsoMap/IsoMapChunk.cpp : IsoMap chunk renderer                //
 ////////////////////////////////////////////////////////////////////////////////
 #include "IsoMapChunk.h"
+#include "../../Resources/Resources.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,10 +99,11 @@ void IsoMapChunk::render(Sprite& sprite)
     // Render isomap chunk
     for (int i = 0; i < IsoMapChunkWidth; ++i)
     {
-        for (int j = 0; j < IsoMapChunkHeight; ++j)
+        for (int j = (IsoMapChunkHeight-1); j >= 0; --j)
         {
             // Get current isomap element
-            if (matrix[(j*IsoMapChunkWidth)+i] != 0)
+            int32_t elem = matrix[(j*IsoMapChunkWidth)+i];
+            if (elem != 0)
             {
                 // Render isomap element
                 sprite.setPosition(
@@ -110,6 +112,21 @@ void IsoMapChunk::render(Sprite& sprite)
                     m_position.vec[1]+
                     (j*IsoMapElemHalfHeight)-(i*IsoMapElemHalfHeight)
                 );
+                if (elem == 2)
+                {
+                    sprite.setHeight((IsoMapElemHeight*1.5f)+0.00001f);
+                    sprite.moveY(IsoMapElemHeight*0.25f);
+                    sprite.setTexture(
+                        GResources.textures.high(TEXTURE_ISOTILE2)
+                    );
+                }
+                else
+                {
+                    sprite.setHeight(IsoMapElemHeight+0.00001f);
+                    sprite.setTexture(
+                        GResources.textures.high(TEXTURE_ISOTILE)
+                    );
+                }
                 sprite.bindTexture();
                 sprite.render();
             }

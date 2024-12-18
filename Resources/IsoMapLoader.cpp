@@ -471,8 +471,8 @@ bool IsoMapLoader::updateChunk(IsoMapChunkData& chunkData,
 {
     // Set VTMP file path
     std::ostringstream filepath;
-    filepath << IsoMapLoaderVTMPFilePath;
-    filepath << chunkX << '_' << chunkY << ".vtmp";
+    filepath << IsoMapLoaderVIMPFilePath;
+    filepath << chunkX << '_' << chunkY << ".vimp";
 
     // Load isomap data from file
     std::ifstream file;

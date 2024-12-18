@@ -83,7 +83,7 @@ void IsoMapStream::render(Sprite& sprite)
     // Render isomap chunks
     for (int i = 1; i < (ISOMAP_STREAMWIDTH-1); ++i)
     {
-        for (int j = 1; j < (ISOMAP_STREAMHEIGHT-1); ++j)
+        for (int j = (ISOMAP_STREAMHEIGHT-2); j > 0; --j)
         {
             if (GResources.isomaps.getFlags(i, j) != ISOMAP_FLAGS_EMPTY)
             {

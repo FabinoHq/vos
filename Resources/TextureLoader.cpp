@@ -1578,6 +1578,21 @@ bool TextureLoader::preloadTextures()
     }
     pngfile.destroyImage();
 
+    // Load isotile2 texture
+    if (!pngfile.loadImage("Textures/isotile2.png"))
+    {
+        return false;
+    }
+    if (!m_texturesHigh[TEXTURE_ISOTILE2].createTexture(
+        VULKAN_MEMORY_TEXTURES,
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
+        true, true, TEXTUREMODE_REPEAT))
+    {
+        // Could not load isotile2 texture
+        return false;
+    }
+    pngfile.destroyImage();
+
 
     // Load texture array
     unsigned int texArrayLayers = 4;

@@ -121,8 +121,9 @@
         TEXTURE_TEST = 0,
         TEXTURE_TILE = 1,
         TEXTURE_ISOTILE = 2,
+        TEXTURE_ISOTILE2 = 3,
 
-        TEXTURE_ASSETSCOUNT = 3
+        TEXTURE_ASSETSCOUNT = 4
     };
 
     ////////////////////////////////////////////////////////////////////////////

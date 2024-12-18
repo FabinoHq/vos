@@ -71,7 +71,7 @@
     const double IsoMapLoaderIdleSleepTime = 0.01;
     const double IsoMapLoaderSyncSleepTime = 0.001;
     const double IsoMapLoaderErrorSleepTime = 0.1;
-    const char IsoMapLoaderVTMPFilePath[] = "World/vtmp/";
+    const char IsoMapLoaderVIMPFilePath[] = "World/vimp/";
 
 
     ////////////////////////////////////////////////////////////////////////////
