@@ -357,6 +357,11 @@
 !Softwares/TopDown/TopDown.cpp
 !Softwares/TopDown/TopDownPlayer.h
 !Softwares/TopDown/TopDownPlayer.cpp
+!Softwares/Isometric/
+!Softwares/Isometric/Isometric.h
+!Softwares/Isometric/Isometric.cpp
+!Softwares/Isometric/IsometricPlayer.h
+!Softwares/Isometric/IsometricPlayer.cpp
 !Softwares/FirstPerson/
 !Softwares/FirstPerson/FirstPerson.h
 !Softwares/FirstPerson/FirstPerson.cpp

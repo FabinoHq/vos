@@ -278,6 +278,8 @@
     <ClCompile Include="Resources\TileMapLoader.cpp" />
     <ClCompile Include="Softwares\FirstPerson\FirstPerson.cpp" />
     <ClCompile Include="Softwares\FirstPerson\FirstPersonPlayer.cpp" />
+    <ClCompile Include="Softwares\Isometric\Isometric.cpp" />
+    <ClCompile Include="Softwares\Isometric\IsometricPlayer.cpp" />
     <ClCompile Include="Softwares\Softwares.cpp" />
     <ClCompile Include="Softwares\TopDown\TopDown.cpp" />
     <ClCompile Include="Softwares\TopDown\TopDownPlayer.cpp" />
@@ -409,6 +411,8 @@
     <ClInclude Include="Resources\TileMapLoader.h" />
     <ClInclude Include="Softwares\FirstPerson\FirstPerson.h" />
     <ClInclude Include="Softwares\FirstPerson\FirstPersonPlayer.h" />
+    <ClInclude Include="Softwares\Isometric\Isometric.h" />
+    <ClInclude Include="Softwares\Isometric\IsometricPlayer.h" />
     <ClInclude Include="Softwares\Softwares.h" />
     <ClInclude Include="Softwares\TopDown\TopDown.h" />
     <ClInclude Include="Softwares\TopDown\TopDownPlayer.h" />

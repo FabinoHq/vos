@@ -98,6 +98,7 @@ VOS: main.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
+	Softwares/Isometric/Isometric.o Softwares/Isometric/IsometricPlayer.o \
 	Softwares/FirstPerson/FirstPerson.o \
 	Softwares/FirstPerson/FirstPersonPlayer.o
 
@@ -152,6 +153,7 @@ VOS: main.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
 	Softwares/Softwares.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
+	Softwares/Isometric/Isometric.o Softwares/Isometric/IsometricPlayer.o \
 	Softwares/FirstPerson/FirstPerson.o \
 	Softwares/FirstPerson/FirstPersonPlayer.o \
 	main.o $(LDFLAGS)
@@ -468,6 +470,14 @@ Softwares/TopDown/TopDownPlayer.o: Softwares/TopDown/TopDownPlayer.cpp
 	$(CC) -o Softwares/TopDown/TopDownPlayer.o -c \
 	Softwares/TopDown/TopDownPlayer.cpp $(CFLAGS)
 
+Softwares/Isometric/Isometric.o: Softwares/Isometric/Isometric.cpp
+	$(CC) -o Softwares/Isometric/Isometric.o -c \
+	Softwares/Isometric/Isometric.cpp $(CFLAGS)
+
+Softwares/Isometric/IsometricPlayer.o: Softwares/Isometric/IsometricPlayer.cpp
+	$(CC) -o Softwares/Isometric/IsometricPlayer.o -c \
+	Softwares/Isometric/IsometricPlayer.cpp $(CFLAGS)
+
 Softwares/FirstPerson/FirstPerson.o: Softwares/FirstPerson/FirstPerson.cpp
 	$(CC) -o Softwares/FirstPerson/FirstPerson.o -c \
 	Softwares/FirstPerson/FirstPerson.cpp $(CFLAGS)
@@ -495,8 +505,9 @@ clean:
 	rm -rf Renderer/GUI/*.o
 	rm -rf Resources/*.o
 	rm -rf Softwares/*.o
-	rm -rf Softwares/FirstPerson/*.o
 	rm -rf Softwares/TopDown/*.o
+	rm -rf Softwares/Isometric/*.o
+	rm -rf Softwares/FirstPerson/*.o
 
 mrproper: clean
 	rm -rf VOS

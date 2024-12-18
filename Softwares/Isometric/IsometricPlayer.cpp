@@ -37,139 +37,145 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/Softwares.cpp : Softwares management                         //
+//     Softwares/Isometric/IsometricPlayer.cpp : Isometric player management  //
 ////////////////////////////////////////////////////////////////////////////////
-#include "Softwares.h"
+#include "IsometricPlayer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Softwares global instance                                                 //
+//  IsometricPlayer default constructor                                       //
 ////////////////////////////////////////////////////////////////////////////////
-Softwares GSoftwares = Softwares();
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Softwares default constructor                                             //
-////////////////////////////////////////////////////////////////////////////////
-Softwares::Softwares()
+IsometricPlayer::IsometricPlayer() :
+Transform2(),
+m_transforms(),
+m_speed(),
+m_bounding(),
+m_rectangle()
 {
-
+    m_transforms.reset();
+    m_speed.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Softwares destructor                                                      //
+//  IsometricPlayer virtual destructor                                        //
 ////////////////////////////////////////////////////////////////////////////////
-Softwares::~Softwares()
+IsometricPlayer::~IsometricPlayer()
 {
-
+    m_speed.reset();
+    m_transforms.reset();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init Softwares                                                            //
-//  return : True if softwares are ready, false otherwise                     //
+//  Init isometric player                                                     //
+//  return : True if isometric player is ready, false otherwise               //
 ////////////////////////////////////////////////////////////////////////////////
-bool Softwares::init()
+bool IsometricPlayer::init()
 {
-    // Init top down game
-    /*if (!GTopDown.init())
-    {
-        // Could not init top down game
-        return false;
-    }*/
+    // Reset player transformations
+    m_transforms.reset();
 
-    // Init isometric game
-    if (!GIsometric.init())
+    // Reset player speed
+    m_speed.reset();
+
+    // Init bounding aligned rectangle
+    m_bounding.setPosition(0, 0);
+    m_bounding.setHalfSize(40000, 40000);
+
+    // Init rectangle shape
+    if (!m_rectangle.init(0.2f, 0.2f))
     {
-        // Could not init isometric game
+        // Could not init rectangle shape
         return false;
     }
+    m_rectangle.setSmooth(0.05f);
+    m_rectangle.setColor(0.0f, 0.8f, 0.2f, 0.8f);
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setSize(
+        (m_bounding.halfSize.vec[0]*PhysicsToRenderer*2.05f),
+        (m_bounding.halfSize.vec[1]*PhysicsToRenderer*2.05f)
+    );
 
-    // Init first person game
-    /*if (!GFirstPerson.init())
-    {
-        // Could not init first person game
-        return false;
-    }*/
-
-    // Softwares are ready
+    // Isometric player is ready
     return true;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy softwares                                                         //
-////////////////////////////////////////////////////////////////////////////////
-void Softwares::destroy()
-{
-    // Destroy softwares
-    //GTopDown.destroy();
-    GIsometric.destroy();
-    //GFirstPerson.destroy();
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Compute softwares events                                                  //
+//  Precompute isometric player physics (thread sync)                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Softwares::events(SysEvent& event)
+void IsometricPlayer::prephysics(const Vector2i& warpOffset)
 {
-    // Dispatch events to softwares
-    //GTopDown.events(event);
-    GIsometric.events(event);
-    //GFirstPerson.events(event);
+    // Compute prephysics transformations
+    m_bounding.position += warpOffset;
+    m_transforms.prephysics(m_bounding.position, 0);
+    m_transforms.offsetPrevPos(warpOffset);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Precompute softwares physics (thread sync)                                //
+//  Compute isometric player physics (threaded)                               //
 ////////////////////////////////////////////////////////////////////////////////
-void Softwares::prephysics()
+void IsometricPlayer::physics()
 {
-    // Precompute softwares physics
-    //GTopDown.prephysics();
-    GIsometric.prephysics();
-    //GFirstPerson.prephysics();
+    // Compute isometric player speed
+    if (GSysKeys.axis.vec[0] != 0)
+    {
+        // Accelerate X
+        m_speed.vec[0] += (GSysKeys.axis.vec[0] * 4);
+    }
+    else
+    {
+        // Decelerate X
+        m_speed.moveXTowards(0, Math::OneInt);
+    }
+    if (GSysKeys.axis.vec[1] != 0)
+    {
+        // Accelerate Y
+        m_speed.vec[1] += (GSysKeys.axis.vec[1] * 4);
+    }
+    else
+    {
+        // Decelerate Y
+        m_speed.moveYTowards(0, Math::OneInt);
+    }
+
+    // Clamp speed
+    if (m_speed.length() >= (Math::OneInt * 12))
+    {
+        m_speed.normalize();
+        m_speed *= 12;
+    }
+
+    // Compute isometric player collisions
+    Vector2i offset = Vector2i(
+        (m_speed.vec[0] >> PhysicsSpeedToPositionShift),
+        (m_speed.vec[1] >> PhysicsSpeedToPositionShift)
+    );
+    Collision2 collision((m_bounding.position + offset), offset);
+
+    // Compute isometric player matrix collisions
+    m_bounding.moveMatrix2(offset, collision);
+
+    // Update isometric player position
+    m_bounding.position = collision.position;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Compute softwares physics (threaded)                                      //
+//  Precompute isometric player renderer interpolations                       //
 ////////////////////////////////////////////////////////////////////////////////
-void Softwares::physics()
+void IsometricPlayer::precompute(float physicstime)
 {
-    // Compute softwares physics
-    //GTopDown.physics();
-    GIsometric.physics();
-    //GFirstPerson.physics();
+    // Precompute transformations
+    precomputeTransforms(m_transforms, physicstime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Precompute softwares renderer interpolations                              //
+//  Render isometric player                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void Softwares::precompute(float physicstime)
+void IsometricPlayer::render()
 {
-    // Precompute softwares
-    //GTopDown.precompute(physicstime);
-    GIsometric.precompute(physicstime);
-    //GFirstPerson.precompute(physicstime);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Compute softwares logic                                                   //
-////////////////////////////////////////////////////////////////////////////////
-void Softwares::compute(float frametime)
-{
-    // Compute softwares logic
-    //GTopDown.compute(frametime);
-    GIsometric.compute(frametime);
-    //GFirstPerson.compute(frametime);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Render softwares                                                          //
-////////////////////////////////////////////////////////////////////////////////
-void Softwares::render()
-{
-    // Render softwares
-    //GTopDown.render();
-    GIsometric.render();
-    //GFirstPerson.render();
+    // Render rectangle shape
+    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectangle.setPosition(m_position);
+    m_rectangle.render();
 }

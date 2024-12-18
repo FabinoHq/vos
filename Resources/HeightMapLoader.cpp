@@ -521,7 +521,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     const float* vertices, const uint16_t* indices,
     uint32_t verticesCount, uint32_t indicesCount)
 {
-    // Reset mesh upload memory
+    // Reset heightmap upload memory
     GVulkanMemory.resetMemory(VULKAN_MEMORY_HEIGHTMAPUPLOAD);
 
     // Create vertices staging buffer
@@ -670,7 +670,7 @@ bool HeightMapLoader::uploadVertexBuffer(VertexBuffer& vertexBuffer,
     m_stagingBuffer.destroyBuffer();
 
 
-    // Reset mesh upload memory
+    // Reset heightmap upload memory
     GVulkanMemory.resetMemory(VULKAN_MEMORY_HEIGHTMAPUPLOAD);
 
     // Create indices staging buffer

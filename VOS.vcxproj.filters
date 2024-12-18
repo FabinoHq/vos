@@ -64,6 +64,9 @@
     <Filter Include="Renderer\TileMap">
       <UniqueIdentifier>{d7ff516c-7d55-4bd6-814c-eca8d61e234e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Softwares\Isometric">
+      <UniqueIdentifier>{e149cf7d-4a3b-43f8-aafd-d9d2fdfb2423}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -331,6 +334,12 @@
     </ClCompile>
     <ClCompile Include="Renderer\TileMap\TileMapStream.cpp">
       <Filter>Renderer\TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Softwares\Isometric\Isometric.cpp">
+      <Filter>Softwares\Isometric</Filter>
+    </ClCompile>
+    <ClCompile Include="Softwares\Isometric\IsometricPlayer.cpp">
+      <Filter>Softwares\Isometric</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -754,6 +763,12 @@
     </ClInclude>
     <ClInclude Include="Renderer\TileMap\TileMapStream.h">
       <Filter>Renderer\TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\Isometric\Isometric.h">
+      <Filter>Softwares\Isometric</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\Isometric\IsometricPlayer.h">
+      <Filter>Softwares\Isometric</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
