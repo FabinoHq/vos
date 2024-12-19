@@ -212,9 +212,10 @@ bool BoundingAlignRect::collideAlignRect(
 
     // Collision detected
     collision.offset = (currentAlignRect.position - position);
-    collision.position = currentAlignRect.position;
-    collision.normal = (collision.position - boundingAlignRect.position);
-    collision.normal.normalize();
+    collision.offset.clampAbs(offset);
+    collision.position = (position + collision.offset);
+    /*collision.normal = (collision.position - boundingAlignRect.position);
+    collision.normal.normalize();*/
     collision.length = collision.offset.squaredLength();
     collision.collide = true;
     return collision.collide;
@@ -369,9 +370,10 @@ bool BoundingAlignRect::collideCircle(const BoundingCircle& boundingCircle,
 
     // Collision detected
     collision.offset = (currentAlignRect.position - position);
-    collision.position = currentAlignRect.position;
-    collision.normal = (collision.position - boundingCircle.position);
-    collision.normal.normalize();
+    collision.offset.clampAbs(offset);
+    collision.position = (position + collision.offset);
+    /*collision.normal = (collision.position - boundingCircle.position);
+    collision.normal.normalize();*/
     collision.length = collision.offset.squaredLength();
     collision.collide = true;
     return collision.collide;
@@ -540,7 +542,8 @@ bool BoundingAlignRect::collideMatrix2(
 
     // Collision detected
     collision.offset = (currentAlignRect.position - position);
-    collision.position = currentAlignRect.position;
+    collision.offset.clampAbs(offset);
+    collision.position = (position + collision.offset);
     /*collision.normal = (collision.position - boundingAlignRect.position);
     collision.normal.normalize();*/
     collision.length = collision.offset.squaredLength();

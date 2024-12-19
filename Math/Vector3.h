@@ -198,6 +198,92 @@
             }
 
             ////////////////////////////////////////////////////////////////////
+            //  Set vector absolute value                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void abs()
+            {
+                vec[0] = Math::abs(vec[0]);
+                vec[1] = Math::abs(vec[1]);
+                vec[2] = Math::abs(vec[2]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get vector minimum value                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline float min()
+            {
+                return Math::min(vec[0], Math::min(vec[1], vec[2]));
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set vector minimum value between itself and min value         //
+            ////////////////////////////////////////////////////////////////////
+            inline void min(float min)
+            {
+                vec[0] = Math::min(vec[0], min);
+                vec[1] = Math::min(vec[1], min);
+                vec[2] = Math::min(vec[2], min);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set vector minimum value between itself and min vector        //
+            ////////////////////////////////////////////////////////////////////
+            inline void min(const Vector3& min)
+            {
+                vec[0] = Math::min(vec[0], min.vec[0]);
+                vec[1] = Math::min(vec[1], min.vec[1]);
+                vec[2] = Math::min(vec[2], min.vec[2]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set vector minimum value between itself and min X Y Z         //
+            ////////////////////////////////////////////////////////////////////
+            inline void min(float minX, float minY, float minZ)
+            {
+                vec[0] = Math::min(vec[0], minX);
+                vec[1] = Math::min(vec[1], minY);
+                vec[2] = Math::min(vec[2], minZ);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get vector maximum value                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline float max()
+            {
+                return Math::max(vec[0], Math::max(vec[1], vec[2]));
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set vector maximum value between itself and max value         //
+            ////////////////////////////////////////////////////////////////////
+            inline void max(float max)
+            {
+                vec[0] = Math::max(vec[0], max);
+                vec[1] = Math::max(vec[1], max);
+                vec[2] = Math::max(vec[2], max);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set vector maximum value between itself and max vector        //
+            ////////////////////////////////////////////////////////////////////
+            inline void max(const Vector3& max)
+            {
+                vec[0] = Math::max(vec[0], max.vec[0]);
+                vec[1] = Math::max(vec[1], max.vec[1]);
+                vec[2] = Math::max(vec[2], max.vec[2]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set vector maximum value between itself and max X Y           //
+            ////////////////////////////////////////////////////////////////////
+            inline void max(float maxX, float maxY, float maxZ)
+            {
+                vec[0] = Math::max(vec[0], maxX);
+                vec[1] = Math::max(vec[1], maxY);
+                vec[2] = Math::max(vec[2], maxZ);
+            }
+
+            ////////////////////////////////////////////////////////////////////
             //  Clamp vector between min and max                              //
             ////////////////////////////////////////////////////////////////////
             inline void clamp(float min, float max)
@@ -226,6 +312,36 @@
                 vec[0] = Math::clamp(vec[0], minX, maxX);
                 vec[1] = Math::clamp(vec[1], minY, maxY);
                 vec[2] = Math::clamp(vec[2], minZ, maxZ);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Clamp vector by absolute max value                            //
+            ////////////////////////////////////////////////////////////////////
+            inline void clampAbs(float max)
+            {
+                vec[0] = Math::clampAbs(vec[0], max);
+                vec[1] = Math::clampAbs(vec[1], max);
+                vec[2] = Math::clampAbs(vec[2], max);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Clamp vector by absolute max vector                           //
+            ////////////////////////////////////////////////////////////////////
+            inline void clampAbs(const Vector3& max)
+            {
+                vec[0] = Math::clampAbs(vec[0], max.vec[0]);
+                vec[1] = Math::clampAbs(vec[1], max.vec[1]);
+                vec[2] = Math::clampAbs(vec[2], max.vec[2]);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Clamp vector by absolute max X Y Z components                 //
+            ////////////////////////////////////////////////////////////////////
+            inline void clampAbs(float maxX, float maxY, float maxZ)
+            {
+                vec[0] = Math::clampAbs(vec[0], maxX);
+                vec[1] = Math::clampAbs(vec[1], maxY);
+                vec[2] = Math::clampAbs(vec[2], maxZ);
             }
 
             ////////////////////////////////////////////////////////////////////

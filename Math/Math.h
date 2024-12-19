@@ -397,6 +397,34 @@
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //  Clamp x value between -abs(max) and +abs(max)                     //
+        //  return : Clamped value between -abs(max) and +abs(max)            //
+        ////////////////////////////////////////////////////////////////////////
+        inline int32_t clampAbs(int32_t x, int32_t max)
+        {
+            max = Math::abs(max);
+            return ((x < max) ? ((x > -max) ? x : -max) : max);
+        }
+
+        inline int64_t clampAbs(int64_t x, int64_t max)
+        {
+            max = Math::abs(max);
+            return ((x < max) ? ((x > -max) ? x : -max) : max);
+        }
+
+        inline float clampAbs(float x, float max)
+        {
+            max = Math::abs(max);
+            return SysFloatClamp(x, -max, max);
+        }
+
+        inline double clampAbs(double x, double max)
+        {
+            max = Math::abs(max);
+            return SysDoubleClamp(x, -max, max);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
         //  Modulo                                                            //
         //  return : Modulo (x % n)                                           //
         ////////////////////////////////////////////////////////////////////////
