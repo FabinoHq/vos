@@ -418,8 +418,7 @@ void Isometric::compute(float frametime)
 
 
     // Update view position
-    //m_view.setScale(0.25f);
-    m_view.setPosition(m_player.getPosition()/*/4.0f*/);
+    m_view.setPosition(m_player.getX(), m_player.getY()+0.08f);
 
 
     // Start uniforms upload

@@ -53,7 +53,9 @@
     #include "../../Math/Transform2.h"
 
     #include "../../Renderer/Renderer.h"
-    #include "../../Renderer/Shapes/RectangleShape.h"
+    #include "../../Renderer/Sprite.h"
+
+    #include "../../Resources/Resources.h"
 
     #include "../../Physics/Physics.h"
     #include "../../Physics/PhysicsTransform2.h"
@@ -169,7 +171,7 @@
             Vector2i                m_speed;            // Player speed
             BoundingAlignRect       m_bounding;         // Bounding align rect
 
-            RectangleShape          m_rectangle;        // Rectangle shape
+            Sprite                  m_sprite;           // Player sprite
     };
 
 

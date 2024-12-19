@@ -119,11 +119,12 @@
     enum TexturesAssets
     {
         TEXTURE_TEST = 0,
-        TEXTURE_TILE = 1,
-        TEXTURE_ISOTILE = 2,
-        TEXTURE_ISOTILE2 = 3,
+        TEXTURE_PLAYER = 1,
+        TEXTURE_TILE = 2,
+        TEXTURE_ISOTILE = 3,
+        TEXTURE_ISOTILE2 = 4,
 
-        TEXTURE_ASSETSCOUNT = 4
+        TEXTURE_ASSETSCOUNT = 5
     };
 
     ////////////////////////////////////////////////////////////////////////////

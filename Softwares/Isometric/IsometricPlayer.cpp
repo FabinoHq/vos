@@ -50,7 +50,7 @@ Transform2(),
 m_transforms(),
 m_speed(),
 m_bounding(),
-m_rectangle()
+m_sprite()
 {
     m_transforms.reset();
     m_speed.reset();
@@ -80,21 +80,15 @@ bool IsometricPlayer::init()
 
     // Init bounding aligned rectangle
     m_bounding.setPosition(0, 0);
-    m_bounding.setHalfSize(40000, 40000);
+    m_bounding.setHalfSize(32000, 32000);
 
     // Init rectangle shape
-    if (!m_rectangle.init(0.2f, 0.2f))
+    if (!m_sprite.init(GResources.textures.high(TEXTURE_PLAYER), 0.075f, 0.15f))
     {
-        // Could not init rectangle shape
+        // Could not init sprite
         return false;
     }
-    m_rectangle.setSmooth(0.05f);
-    m_rectangle.setColor(0.0f, 0.8f, 0.2f, 0.8f);
-    m_rectangle.setOrigin(0.0f, 0.0f);
-    m_rectangle.setSize(
-        (m_bounding.halfSize.vec[0]*PhysicsToRenderer*2.05f),
-        (m_bounding.halfSize.vec[1]*PhysicsToRenderer*2.05f)
-    );
+    m_sprite.setOrigin(0.0f, -0.055f);
 
     // Isometric player is ready
     return true;
@@ -177,7 +171,8 @@ void IsometricPlayer::precompute(float physicstime)
 void IsometricPlayer::render()
 {
     // Render rectangle shape
-    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
-    m_rectangle.setPosition(m_position);
-    m_rectangle.render();
+    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_sprite.setPosition(m_position);
+    m_sprite.bindTexture();
+    m_sprite.render();
 }

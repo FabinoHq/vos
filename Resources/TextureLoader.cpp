@@ -1548,6 +1548,21 @@ bool TextureLoader::preloadTextures()
     }
     pngfile.destroyImage();
 
+    // Load player texture
+    if (!pngfile.loadImage("Textures/player.png"))
+    {
+        return false;
+    }
+    if (!m_texturesHigh[TEXTURE_PLAYER].createTexture(
+        VULKAN_MEMORY_TEXTURES,
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
+        true, true, TEXTUREMODE_CLAMP))
+    {
+        // Could not load player texture
+        return false;
+    }
+    pngfile.destroyImage();
+
     // Load tile texture
     if (!pngfile.loadImage("Textures/tile.png"))
     {
