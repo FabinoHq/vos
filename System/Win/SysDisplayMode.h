@@ -44,12 +44,6 @@
 
     #include "../System.h"
 
-    #undef UNICODE
-    #define UNICODE
-    #undef _WINSOCKAPI_
-    #define _WINSOCKAPI_
-    #undef NOMINMAX
-    #define NOMINMAX
     #include <windows.h>
 
 

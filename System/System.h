@@ -48,6 +48,14 @@
     ////////////////////////////////////////////////////////////////////////////
     #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW32__)
         #define VOS_WINDOWS
+
+        #undef UNICODE
+        #define UNICODE
+        #undef _WINSOCKAPI_
+        #define _WINSOCKAPI_
+        #undef NOMINMAX
+        #define NOMINMAX
+
     #endif // Windows
 
     #if defined(__APPLE__)
