@@ -472,11 +472,14 @@ void HeightFarLoader::destroyHeightFarLoader()
     }
 
     // Destroy heightfars vertex buffers
-    for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
+    if (m_heightfars)
     {
-        m_heightfars[i].destroyBuffer();
+        for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
+        {
+            m_heightfars[i].destroyBuffer();
+        }
+        delete[] m_heightfars;
     }
-    if (m_heightfars) { delete[] m_heightfars; }
     m_heightfars = 0;
 
     // Reset renderer sync

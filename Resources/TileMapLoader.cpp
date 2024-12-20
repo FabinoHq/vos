@@ -377,11 +377,14 @@ void TileMapLoader::destroyTileMapLoader()
     }
 
     // Destroy tilemaps chunks
-    for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
+    if (m_tilemaps)
     {
-        m_tilemaps[i].destroyTileMap();
+        for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
+        {
+            m_tilemaps[i].destroyTileMap();
+        }
+        delete[] m_tilemaps;
     }
-    if (m_tilemaps) { delete[] m_tilemaps; }
     m_tilemaps = 0;
 
     // Reset renderer sync

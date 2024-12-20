@@ -377,11 +377,14 @@ void IsoMapLoader::destroyIsoMapLoader()
     }
 
     // Destroy isomaps chunks
-    for (int i = 0; i < ISOMAP_ASSETSCOUNT; ++i)
+    if (m_isomaps)
     {
-        m_isomaps[i].destroyIsoMap();
+        for (int i = 0; i < ISOMAP_ASSETSCOUNT; ++i)
+        {
+            m_isomaps[i].destroyIsoMap();
+        }
+        delete[] m_isomaps;
     }
-    if (m_isomaps) { delete[] m_isomaps; }
     m_isomaps = 0;
 
     // Reset renderer sync

@@ -339,35 +339,47 @@ TextureLoaderState TextureLoader::getState()
 void TextureLoader::destroyTextureLoader()
 {
     // Destroy cubemaps textures
-    for (int i = 0; i < TEXTURE_CUBEMAPCOUNT; ++i)
+    if (m_cubemaps)
     {
-        m_cubemaps[i].destroyCubeMap();
+        for (int i = 0; i < TEXTURE_CUBEMAPCOUNT; ++i)
+        {
+            m_cubemaps[i].destroyCubeMap();
+        }
+        delete[] m_cubemaps;
     }
-    if (m_cubemaps) { delete[] m_cubemaps; }
     m_cubemaps = 0;
 
     // Destroy textures arrays
-    for (int i = 0; i < TEXTURE_ARRAYSCOUNT; ++i)
+    if (m_texturesArrays)
     {
-        m_texturesArrays[i].destroyTextureArray();
+        for (int i = 0; i < TEXTURE_ARRAYSCOUNT; ++i)
+        {
+            m_texturesArrays[i].destroyTextureArray();
+        }
+        delete[] m_texturesArrays;
     }
-    if (m_texturesArrays) { delete[] m_texturesArrays; }
     m_texturesArrays = 0;
 
     // Destroy high textures
-    for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
+    if (m_texturesHigh)
     {
-        m_texturesHigh[i].destroyTexture();
+        for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
+        {
+            m_texturesHigh[i].destroyTexture();
+        }
+        delete[] m_texturesHigh;
     }
-    if (m_texturesHigh) { delete[] m_texturesHigh; }
     m_texturesHigh = 0;
 
     // Destroy GUI textures
-    for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
+    if (m_texturesGUI)
     {
-        m_texturesGUI[i].destroyTexture();
+        for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
+        {
+            m_texturesGUI[i].destroyTexture();
+        }
+        delete[] m_texturesGUI;
     }
-    if (m_texturesGUI) { delete[] m_texturesGUI; }
     m_texturesGUI = 0;
 
     // Destroy staging fence

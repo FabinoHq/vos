@@ -472,11 +472,14 @@ void HeightMapLoader::destroyHeightMapLoader()
     }
 
     // Destroy heightmaps vertex buffers
-    for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
+    if (m_heightmaps)
     {
-        m_heightmaps[i].destroyBuffer();
+        for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
+        {
+            m_heightmaps[i].destroyBuffer();
+        }
+        delete[] m_heightmaps;
     }
-    if (m_heightmaps) { delete[] m_heightmaps; }
     m_heightmaps = 0;
 
     // Reset renderer sync

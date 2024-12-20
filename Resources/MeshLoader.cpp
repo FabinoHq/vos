@@ -345,11 +345,14 @@ void MeshLoader::destroyMeshLoader()
     m_vertices = 0;
 
     // Destroy meshes vertex buffers
-    for (int i = 0; i < MESHES_ASSETSCOUNT; ++i)
+    if (m_meshes)
     {
-        m_meshes[i].destroyBuffer();
+        for (int i = 0; i < MESHES_ASSETSCOUNT; ++i)
+        {
+            m_meshes[i].destroyBuffer();
+        }
+        delete[] m_meshes;
     }
-    if (m_meshes) { delete[] m_meshes; }
     m_meshes = 0;
 
     // Destroy staging fence

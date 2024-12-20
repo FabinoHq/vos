@@ -340,11 +340,14 @@ void MatrixColLoader::destroyMatrixColLoader()
     }
 
     // Destroy matrixcols chunks
-    for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
+    if (m_matrixcols)
     {
-        m_matrixcols[i].destroyMatrix();
+        for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
+        {
+            m_matrixcols[i].destroyMatrix();
+        }
+        delete[] m_matrixcols;
     }
-    if (m_matrixcols) { delete[] m_matrixcols; }
     m_matrixcols = 0;
 
     // Reset state
