@@ -788,5 +788,8 @@
     <ClInclude Include="Renderer\TileMap\IsoMapStream.h">
       <Filter>Renderer\TileMap</Filter>
     </ClInclude>
+    <ClInclude Include="Math\MultiInt.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
