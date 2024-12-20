@@ -113,8 +113,8 @@ bool Swapchain::createSwapchain()
     if (!GPhysicalDevice)
     {
         // Invalid physical device
-        SysMessage::box() << "[0x3028] Invalid physical device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3028] Invalid physical device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -122,8 +122,8 @@ bool Swapchain::createSwapchain()
     if (!GVulkanDevice)
     {
         // Invalid device
-        SysMessage::box() << "[0x3029] Invalid device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3029] Invalid device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -131,8 +131,8 @@ bool Swapchain::createSwapchain()
     if (!GVulkanSurface)
     {
         // Invalid surface
-        SysMessage::box() << "[0x302A] Invalid surface\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x302A] Invalid surface\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -147,8 +147,8 @@ bool Swapchain::createSwapchain()
     if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
     {
         // Could not get the device ready
-        SysMessage::box() << "[0x302B] Could not get the device ready\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x302B] Could not get the device ready\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -165,8 +165,8 @@ bool Swapchain::createSwapchain()
         GPhysicalDevice, GVulkanSurface, &surfaceCapabilities) != VK_SUCCESS)
     {
         // Could not get device surface capabilities
-        SysMessage::box() << "[0x302C] Could not get surface capabilities\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x302C] Could not get surface capabilities\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -176,15 +176,15 @@ bool Swapchain::createSwapchain()
         GPhysicalDevice, GVulkanSurface, &formatsCnt, 0) != VK_SUCCESS)
     {
         // Could not get surface formats count
-        SysMessage::box() << "[0x302D] Could not get surface formats count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x302D] Could not get surface formats count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (formatsCnt <= 0)
     {
         // No surface formats found
-        SysMessage::box() << "[0x302E] No surface formats found\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x302E] No surface formats found\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -193,8 +193,8 @@ bool Swapchain::createSwapchain()
         GVulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
     {
         // Could not get surface formats
-        SysMessage::box() << "[0x302F] Could not get surface formats\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x302F] Could not get surface formats\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -204,15 +204,15 @@ bool Swapchain::createSwapchain()
         GPhysicalDevice, GVulkanSurface, &presentModesCnt, 0) != VK_SUCCESS)
     {
         // Could not get present modes count
-        SysMessage::box() << "[0x3030] Could not get present modes count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3030] Could not get present modes count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (presentModesCnt <= 0)
     {
         // No present modes found
-        SysMessage::box() << "[0x3031] No present modes found\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3031] No present modes found\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
@@ -220,8 +220,8 @@ bool Swapchain::createSwapchain()
         GVulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
     {
         // Could not get present modes
-        SysMessage::box() << "[0x3032] Could not get present modes\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3032] Could not get present modes\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -238,8 +238,8 @@ bool Swapchain::createSwapchain()
     if (imagesCount <= 0)
     {
         // Invalid swapchain images count
-        SysMessage::box() << "[0x3033] Invalid swapchain images count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3033] Invalid swapchain images count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -250,8 +250,8 @@ bool Swapchain::createSwapchain()
     if (surfaceFormats.size() <= 0)
     {
         // Invalid surface formats count
-        SysMessage::box() << "[0x3034] Invalid surface formats count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3034] Invalid surface formats count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -299,8 +299,8 @@ bool Swapchain::createSwapchain()
     if ((swapchainExtent.width <= 0) || (swapchainExtent.height <= 0))
     {
         // Invalid swapchain extents
-        SysMessage::box() << "[0x3035] Invalid swapchain extents\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3035] Invalid swapchain extents\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -310,8 +310,8 @@ bool Swapchain::createSwapchain()
         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT))
     {
         // Color attachment flag is not supported
-        SysMessage::box() << "[0x3036] Color attachment is not supported\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3036] Color attachment is not supported\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -359,8 +359,8 @@ bool Swapchain::createSwapchain()
             else
             {
                 // No present mode is supported
-                SysMessage::box() << "[0x3037] No present mode supported\n";
-                SysMessage::box() << "Please update your graphics drivers";
+                GSysMessage << "[0x3037] No present mode supported\n";
+                GSysMessage << "Please update your graphics drivers";
                 return false;
             }
         }
@@ -394,8 +394,8 @@ bool Swapchain::createSwapchain()
         &swapchainInfos, 0, &handle) != VK_SUCCESS)
     {
         // Could not create swapchain
-        SysMessage::box() << "[0x3038] Could not create swapchain\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3038] Could not create swapchain\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -415,8 +415,8 @@ bool Swapchain::createSwapchain()
         handle, &swapchainFramesCount, 0) != VK_SUCCESS)
     {
         // Could not get swapchain frames count
-        SysMessage::box() << "[0x3039] Could not get swapchain frames count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3039] Could not get swapchain frames count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -424,15 +424,15 @@ bool Swapchain::createSwapchain()
     if (swapchainFramesCount <= 0)
     {
         // Invalid swapchain frames count
-        SysMessage::box() << "[0x303A] Invalid swapchain frames count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x303A] Invalid swapchain frames count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (swapchainFramesCount > RendererMaxSwapchainFrames)
     {
         // Invalid swapchain frames count
-        SysMessage::box() << "[0x303B] Invalid swapchain frames count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x303B] Invalid swapchain frames count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -442,8 +442,8 @@ bool Swapchain::createSwapchain()
         handle, &swapchainFramesCount, swapchainImages) != VK_SUCCESS)
     {
         // Could not get swapchain images count
-        SysMessage::box() << "[0x303C] Could not get swapchain images count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x303C] Could not get swapchain images count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -495,15 +495,15 @@ bool Swapchain::createSwapchain()
             &imageView, 0, &views[i]) != VK_SUCCESS)
         {
             // Could not create image view
-            SysMessage::box() << "[0x303D] Could not create image view\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x303D] Could not create image view\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
         if (!images[i])
         {
             // Invalid image view
-            SysMessage::box() << "[0x303E] Invalid image view\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x303E] Invalid image view\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }
@@ -576,15 +576,15 @@ bool Swapchain::createSwapchain()
         &renderPassInfo, 0, &renderPass) != VK_SUCCESS)
     {
         // Could not create render pass
-        SysMessage::box() << "[0x303F] Could not create render pass\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x303F] Could not create render pass\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (!renderPass)
     {
         // Invalid render pass
-        SysMessage::box() << "[0x3040] Invalid render pass\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3040] Invalid render pass\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -613,15 +613,15 @@ bool Swapchain::createSwapchain()
             &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
         {
             // Could not create framebuffer
-            SysMessage::box() << "[0x3041] Could not create framebuffer\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3041] Could not create framebuffer\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
         if (!framebuffers[i])
         {
             // Invalid framebuffer
-            SysMessage::box() << "[0x3042] Invalid framebuffer\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3042] Invalid framebuffer\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }
@@ -639,8 +639,8 @@ bool Swapchain::createSwapchain()
             &semaphoreInfo, 0, &renderReady[i]) != VK_SUCCESS)
         {
             // Could not create render ready semaphore
-            SysMessage::box() << "[0x3043] Could not create ready semaphore\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3043] Could not create ready semaphore\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
 
@@ -649,8 +649,8 @@ bool Swapchain::createSwapchain()
             &semaphoreInfo, 0, &renderDone[i]) != VK_SUCCESS)
         {
             // Could not create render finished semaphore
-            SysMessage::box() << "[0x3044] Could not create finish semaphore\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3044] Could not create finish semaphore\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }
@@ -668,15 +668,15 @@ bool Swapchain::createSwapchain()
             &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
         {
             // Could not create fence
-            SysMessage::box() << "[0x3045] Could not create fence\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3045] Could not create fence\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
         if (!fences[i])
         {
             // Invalid fence
-            SysMessage::box() << "[0x3046] Invalid fence\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3046] Invalid fence\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }
@@ -695,15 +695,15 @@ bool Swapchain::createSwapchain()
             &commandPoolInfo, 0, &commandPools[i]) != VK_SUCCESS)
         {
             // Could not create commands pool
-            SysMessage::box() << "[0x3047] Could not create commands pool\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3047] Could not create commands pool\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
         if (!commandPools[i])
         {
             // Invalid commands pool
-            SysMessage::box() << "[0x3048] Invalid commands pool\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3048] Invalid commands pool\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }
@@ -725,15 +725,15 @@ bool Swapchain::createSwapchain()
             &commandBufferInfo, &commandBuffers[i]) != VK_SUCCESS)
         {
             // Could not allocate command buffers
-            SysMessage::box() << "[0x3049] Could not allocate command buffer\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3049] Could not allocate command buffer\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
         if (!commandBuffers[i])
         {
             // Invalid commands buffer
-            SysMessage::box() << "[0x304A] Invalid commands buffer\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x304A] Invalid commands buffer\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }
@@ -742,8 +742,8 @@ bool Swapchain::createSwapchain()
     if (vkDeviceWaitIdle(GVulkanDevice) != VK_SUCCESS)
     {
         // Could not get the device ready
-        SysMessage::box() << "[0x304B] Could not get the device ready\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x304B] Could not get the device ready\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 

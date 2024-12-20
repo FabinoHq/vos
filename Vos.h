@@ -55,6 +55,7 @@
 
     #include "Renderer/Renderer.h"
     #include "Resources/Resources.h"
+    #include "Physics/Physics.h"
     #include "Softwares/Softwares.h"
 
     #include <cstddef>

@@ -97,8 +97,8 @@ bool SysWindow::create()
     if (!m_display)
     {
         // Unable to open the display
-        SysMessage::box() << "[0x2101] Unable to open the system display\n";
-        SysMessage::box() << "System display must be openable";
+        GSysMessage << "[0x2101] Unable to open the system display\n";
+        GSysMessage << "System display must be openable";
         return false;
     }
 
@@ -121,8 +121,8 @@ bool SysWindow::create()
     if (!m_handle)
     {
         // Unable to create the system window
-        SysMessage::box() << "[0x2102] Unable create the system window\n";
-        SysMessage::box() << "System window must be creatable";
+        GSysMessage << "[0x2102] Unable create the system window\n";
+        GSysMessage << "System window must be creatable";
         return false;
     }
 

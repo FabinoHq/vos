@@ -340,24 +340,7 @@
 !Resources/HeightFarLoader.h
 !Resources/HeightFarLoader.cpp
 
-# Textures files
-!Textures/
-!textures/testsprite.png
-!textures/testbutton.png
-!textures/player.png
-!textures/tile.png
-!textures/tile2.png
-!textures/tile3.png
-!textures/tile4.png
-!textures/isotile.png
-!textures/isotile2.png
-!textures/cubemaptest.png
-
-# Models files
-!Models/
-!models/testmodel.vmsh
-
-# Softwares files
+# Softwares
 !Softwares/
 !Softwares/Softwares.h
 !Softwares/Softwares.cpp
@@ -376,3 +359,20 @@
 !Softwares/FirstPerson/FirstPerson.cpp
 !Softwares/FirstPerson/FirstPersonPlayer.h
 !Softwares/FirstPerson/FirstPersonPlayer.cpp
+
+# Textures files
+!Textures/
+!textures/testsprite.png
+!textures/testbutton.png
+!textures/player.png
+!textures/tile.png
+!textures/tile2.png
+!textures/tile3.png
+!textures/tile4.png
+!textures/isotile.png
+!textures/isotile2.png
+!textures/cubemaptest.png
+
+# Models files
+!Models/
+!models/testmodel.vmsh

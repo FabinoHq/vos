@@ -96,8 +96,8 @@ bool Renderer::init()
     if (!GSysWindow.isValid())
     {
         // Invalid SysWindow
-        SysMessage::box() << "[0x3001] Invalid system window\n";
-        SysMessage::box() << "System window must be valid";
+        GSysMessage << "[0x3001] Invalid system window\n";
+        GSysMessage << "System window must be valid";
         return false;
     }
 
@@ -105,8 +105,8 @@ bool Renderer::init()
     if (!LoadVulkanLibrary())
     {
         // Could not load Vulkan library
-        SysMessage::box() << "[0x3002] Could not load Vulkan library\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3002] Could not load Vulkan library\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -114,8 +114,8 @@ bool Renderer::init()
     if (!LoadVulkanGetInstance())
     {
         // Could not load Vulkan GetInstance function
-        SysMessage::box() << "[0x3003] Could not load Vulkan GetInstance\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3003] Could not load Vulkan GetInstance\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -123,8 +123,8 @@ bool Renderer::init()
     if (!LoadVulkanGlobalFunctions())
     {
         // Could not load Vulkan global functions
-        SysMessage::box() << "[0x3004] Could not load global functions\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3004] Could not load global functions\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -139,8 +139,8 @@ bool Renderer::init()
     if (!LoadVulkanCreateSystemSurface())
     {
         // Could not load Vulkan CreateSystemSurface function
-        SysMessage::box() << "[0x300B] Could not load CreateSystemSurface\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x300B] Could not load CreateSystemSurface\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -148,8 +148,8 @@ bool Renderer::init()
     if (!CreateVulkanSystemSurface())
     {
         // Could not create Vulkan SystemSurface
-        SysMessage::box() << "[0x300C] Could not create Vulkan SystemSurface\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x300C] Could not create Vulkan SystemSurface\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -157,8 +157,8 @@ bool Renderer::init()
     if (!LoadVulkanInstanceFunctions())
     {
         // Could not load Vulkan instance functions
-        SysMessage::box() << "[0x300D] Could not load instance functions\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x300D] Could not load instance functions\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -173,8 +173,8 @@ bool Renderer::init()
     if (!LoadVulkanDeviceFunctions())
     {
         // Could not load Vulkan device functions
-        SysMessage::box() << "[0x301B] Could not load device functions\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x301B] Could not load device functions\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -202,8 +202,8 @@ bool Renderer::init()
     if (!GGraphicsLayout.createLayout())
     {
         // Could not create graphics layout
-        SysMessage::box() << "[0x3052] Could not create graphics layout\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3052] Could not create graphics layout\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -211,8 +211,8 @@ bool Renderer::init()
     if (!GComputeLayout.createLayout())
     {
         // Could not create compute layout
-        SysMessage::box() << "[0x3052] Could not create compute layout\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3052] Could not create compute layout\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -235,8 +235,8 @@ bool Renderer::init()
     if (!GWorldLight.init())
     {
         // Could not init world light
-        SysMessage::box() << "[0x3053] Could not init world light\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3053] Could not init world light\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -318,8 +318,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create default pipeline
-        SysMessage::box() << "[0x3053] Could not create default pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3053] Could not create default pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -335,8 +335,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create ninepatch pipeline
-        SysMessage::box() << "[0x3054] Could not create ninepatch pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3054] Could not create ninepatch pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -352,8 +352,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create rectangle pipeline
-        SysMessage::box() << "[0x3055] Could not create rectangle pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3055] Could not create rectangle pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -369,8 +369,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create ellipse pipeline
-        SysMessage::box() << "[0x3056] Could not create ellipse pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3056] Could not create ellipse pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -386,8 +386,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create pixel text pipeline
-        SysMessage::box() << "[0x3057] Could not create pixel text pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3057] Could not create pixel text pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -403,8 +403,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create button pipeline
-        SysMessage::box() << "[0x3058] Could not create button pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3058] Could not create button pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -420,8 +420,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create toggle button pipeline
-        SysMessage::box() << "[0x3058] Could not create toggle btn pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3058] Could not create toggle btn pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -437,8 +437,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create progress bar pipeline
-        SysMessage::box() << "[0x3058] Could not create progressbar pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3058] Could not create progressbar pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -455,8 +455,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create skybox pipeline
-        SysMessage::box() << "[0x3059] Could not create skybox pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3059] Could not create skybox pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -472,8 +472,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create static proc pipeline
-        SysMessage::box() << "[0x3057] Could not create static proc pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3057] Could not create static proc pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -489,8 +489,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create static mesh pipeline
-        SysMessage::box() << "[0x305A] Could not create static mesh pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x305A] Could not create static mesh pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -506,8 +506,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create heightmap pipeline
-        SysMessage::box() << "[0x305B] Could not create heightmap pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x305B] Could not create heightmap pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -523,8 +523,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create heightmap pipeline
-        SysMessage::box() << "[0x305C] Could not create heightfar pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x305C] Could not create heightfar pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -540,8 +540,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create sea near pipeline
-        SysMessage::box() << "[0x305D] Could not create seanear pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x305D] Could not create seanear pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -557,8 +557,8 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create sea far pipeline
-        SysMessage::box() << "[0x305E] Could not create seafar pipeline\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x305E] Could not create seafar pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1034,8 +1034,8 @@ bool Renderer::createVulkanInstance()
     if (GVulkanInstance)
     {
         // Vulkan instance already created
-        SysMessage::box() << "[0x3005] Vulkan instance already created\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3005] Vulkan instance already created\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1044,8 +1044,8 @@ bool Renderer::createVulkanInstance()
     if (vkEnumerateInstanceExtensionProperties(0, &extCount, 0) != VK_SUCCESS)
     {
         // Could not enumerate Vulkan extensions properties
-        SysMessage::box() << "[0x3006] Could not enumerate extensions\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3006] Could not enumerate extensions\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1055,8 +1055,8 @@ bool Renderer::createVulkanInstance()
         0, &extCount, extProperties.data()) != VK_SUCCESS)
     {
         // Could not get Vulkan extensions properties
-        SysMessage::box() << "[0x3007] Could not get extensions properties\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3007] Could not get extensions properties\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1083,8 +1083,8 @@ bool Renderer::createVulkanInstance()
     if (!allExtFound)
     {
         // One or more Vulkan extension is unavailable
-        SysMessage::box() << "[0x3008] Required extensions are not supported\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3008] Required extensions are not supported\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1113,15 +1113,15 @@ bool Renderer::createVulkanInstance()
     if (vkCreateInstance(&createInfos, 0, &GVulkanInstance) != VK_SUCCESS)
     {
         // Could not create Vulkan instance
-        SysMessage::box() << "[0x3009] Could not create Vulkan instance\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3009] Could not create Vulkan instance\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (!GVulkanInstance)
     {
         // Could not create Vulkan instance
-        SysMessage::box() << "[0x300A] Could not create Vulkan instance\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x300A] Could not create Vulkan instance\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1139,8 +1139,8 @@ bool Renderer::selectVulkanDevice()
     if (!GVulkanInstance)
     {
         // Invalid Vulkan instance
-        SysMessage::box() << "[0x300E] Invalid Vulkan instance\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x300E] Invalid Vulkan instance\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1148,8 +1148,8 @@ bool Renderer::selectVulkanDevice()
     if (!GVulkanSurface)
     {
         // Invalid Vulkan surface
-        SysMessage::box() << "[0x300F] Invalid Vulkan surface\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x300F] Invalid Vulkan surface\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1157,8 +1157,8 @@ bool Renderer::selectVulkanDevice()
     if (GPhysicalDevice)
     {
         // Physical device already selected
-        SysMessage::box() << "[0x3010] Physical device already selected\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3010] Physical device already selected\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1166,8 +1166,8 @@ bool Renderer::selectVulkanDevice()
     if (GVulkanDevice)
     {
         // Vulkan device already selected
-        SysMessage::box() << "[0x3011] Vulkan device already selected\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3011] Vulkan device already selected\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1177,15 +1177,15 @@ bool Renderer::selectVulkanDevice()
         GVulkanInstance, &devicesCounts, 0) != VK_SUCCESS)
     {
         // Could not enumerate physical devices
-        SysMessage::box() << "[0x3012] Could not enumerate physical devices\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3012] Could not enumerate physical devices\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (devicesCounts <= 0)
     {
         // No physical device found
-        SysMessage::box() << "[0x3013] No physical device found\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3013] No physical device found\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1195,8 +1195,8 @@ bool Renderer::selectVulkanDevice()
         GVulkanInstance, &devicesCounts, physicalDevices.data()) != VK_SUCCESS)
     {
         // Could not get physical devices list
-        SysMessage::box() << "[0x3014] Could not get physical devices list\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3014] Could not get physical devices list\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1408,8 +1408,8 @@ bool Renderer::selectVulkanDevice()
     if (!deviceFound)
     {
         // Could not find a device with graphics, surface, and transfer queues
-        SysMessage::box() << "[0x3017] Could not find a suitable device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3017] Could not find a suitable device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1418,8 +1418,8 @@ bool Renderer::selectVulkanDevice()
     if (!GPhysicalDevice)
     {
         // Invalid physical device
-        SysMessage::box() << "[0x3018] Invalid physical device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3018] Invalid physical device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -1527,15 +1527,15 @@ bool Renderer::selectVulkanDevice()
         GPhysicalDevice, &deviceInfos, 0, &GVulkanDevice) != VK_SUCCESS)
     {
         // Could not create Vulkan device
-        SysMessage::box() << "[0x3019] Could not create Vulkan device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3019] Could not create Vulkan device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (!GVulkanDevice)
     {
         // Invalid Vulkan device
-        SysMessage::box() << "[0x301A] Invalid Vulkan device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x301A] Invalid Vulkan device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 

@@ -116,8 +116,8 @@ bool Resources::init()
         if (textureState == TEXTURELOADER_STATE_ERROR)
         {
             // Texture loader error
-            SysMessage::box() << "[0x4000] Could not init textures loader\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4000] Could not init textures loader\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
@@ -125,8 +125,8 @@ bool Resources::init()
         if (meshState == MESHLOADER_STATE_ERROR)
         {
             // Mesh loader error
-            SysMessage::box() << "[0x4001] Could not init meshes loader\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4001] Could not init meshes loader\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
@@ -134,8 +134,8 @@ bool Resources::init()
         if (matrixcolState == MATRIXCOLLOADER_STATE_ERROR)
         {
             // Mesh loader error
-            SysMessage::box() << "[0x4002] Could not init matrixcols loader\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4002] Could not init matrixcols loader\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
@@ -143,8 +143,8 @@ bool Resources::init()
         if (tilemapState == TILEMAPLOADER_STATE_ERROR)
         {
             // Mesh loader error
-            SysMessage::box() << "[0x4003] Could not init tilemaps loader\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4003] Could not init tilemaps loader\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
@@ -152,8 +152,8 @@ bool Resources::init()
         if (isomapState == ISOMAPLOADER_STATE_ERROR)
         {
             // Mesh loader error
-            SysMessage::box() << "[0x4004] Could not init isomaps loader\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4004] Could not init isomaps loader\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
@@ -161,8 +161,8 @@ bool Resources::init()
         if (heightmapState == HEIGHTMAPLOADER_STATE_ERROR)
         {
             // Mesh loader error
-            SysMessage::box() << "[0x4005] Could not init heightmaps loader\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4005] Could not init heightmaps loader\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
@@ -170,14 +170,17 @@ bool Resources::init()
         if (heightfarState == HEIGHTFARLOADER_STATE_ERROR)
         {
             // Mesh loader error
-            SysMessage::box() << "[0x4006] Could not init heightfars loader\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4006] Could not init heightfars loader\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
         // Check resources init state
         if ((textureState == TEXTURELOADER_STATE_IDLE) &&
             (meshState == MESHLOADER_STATE_IDLE) &&
+            (matrixcolState == MATRIXCOLLOADER_STATE_IDLE) &&
+            (tilemapState == TILEMAPLOADER_STATE_IDLE) &&
+            (isomapState == ISOMAPLOADER_STATE_IDLE) &&
             (heightmapState == HEIGHTMAPLOADER_STATE_IDLE) &&
             (heightfarState == HEIGHTFARLOADER_STATE_IDLE))
         {
@@ -219,8 +222,8 @@ bool Resources::preload()
         if (textureState == TEXTURELOADER_STATE_ERROR)
         {
             // Texture loader error
-            SysMessage::box() << "[0x4007] Could not preload textures\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4007] Could not preload textures\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
@@ -228,8 +231,8 @@ bool Resources::preload()
         if (meshState == MESHLOADER_STATE_ERROR)
         {
             // Texture loader error
-            SysMessage::box() << "[0x4008] Could not preload meshes\n";
-            SysMessage::box() << "Please check your resources files";
+            GSysMessage << "[0x4008] Could not preload meshes\n";
+            GSysMessage << "Please check your resources files";
             return false;
         }
 
@@ -261,8 +264,8 @@ bool Resources::startLoading()
     if (!textures.startLoading())
     {
         // Could not start textures loading
-        SysMessage::box() << "[0x4009] Could not start textures loader\n";
-        SysMessage::box() << "Please check your resources files";
+        GSysMessage << "[0x4009] Could not start textures loader\n";
+        GSysMessage << "Please check your resources files";
         return false;
     }
 
@@ -270,8 +273,8 @@ bool Resources::startLoading()
     if (!meshes.startLoading())
     {
         // Could not start meshes loading
-        SysMessage::box() << "[0x400A] Could not start meshes loader\n";
-        SysMessage::box() << "Please check your resources files";
+        GSysMessage << "[0x400A] Could not start meshes loader\n";
+        GSysMessage << "Please check your resources files";
         return false;
     }
 

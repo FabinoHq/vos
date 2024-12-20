@@ -110,15 +110,15 @@ bool GraphicsLayout::createLayout()
         &worldlightPoolInfo, 0, &worldlightDescPool) != VK_SUCCESS)
     {
         // Could not create world light uniforms descriptor pool
-        SysMessage::box() << "[0x304C] Could not create worldlight desc pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x304C] Could not create worldlight desc pool\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (!worldlightDescPool)
     {
         // Invalid world light uniforms descriptor pool
-        SysMessage::box() << "[0x304D] Invalid worldlight descriptor pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x304D] Invalid worldlight descriptor pool\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -141,15 +141,15 @@ bool GraphicsLayout::createLayout()
         &uniformsPoolInfo, 0, &uniformsDescPool) != VK_SUCCESS)
     {
         // Could not create matrices uniforms descriptor pool
-        SysMessage::box() << "[0x304C] Could not create uniforms desc pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x304C] Could not create uniforms desc pool\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (!uniformsDescPool)
     {
         // Invalid matrices uniforms descriptor pool
-        SysMessage::box() << "[0x304D] Invalid uniforms descriptor pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x304D] Invalid uniforms descriptor pool\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -172,15 +172,15 @@ bool GraphicsLayout::createLayout()
         &texturesPoolInfo, 0, &texturesDescPool) != VK_SUCCESS)
     {
         // Could not create textures descriptor pool
-        SysMessage::box() << "[0x304E] Could not create textures desc pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x304E] Could not create textures desc pool\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
     if (!texturesDescPool)
     {
         // Invalid textures descriptor pool
-        SysMessage::box() << "[0x304F] Invalid textures descriptor pool\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x304F] Invalid textures descriptor pool\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -188,8 +188,8 @@ bool GraphicsLayout::createLayout()
     if (!createDescriptorSetLayouts())
     {
         // Could not create descriptor set layouts
-        SysMessage::box() << "[0x3050] Could not create descriptor layouts\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3050] Could not create descriptor layouts\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -197,8 +197,8 @@ bool GraphicsLayout::createLayout()
     if (!createPipelineLayout())
     {
         // Could not create pipeline layout
-        SysMessage::box() << "[0x3051] Could not create pipeline layout\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3051] Could not create pipeline layout\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 

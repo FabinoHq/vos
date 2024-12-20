@@ -86,8 +86,8 @@ bool VulkanMemory::init()
     if (!GPhysicalDevice)
     {
         // Invalid physical device
-        SysMessage::box() << "[0x3101] Invalid physical device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3101] Invalid physical device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -114,8 +114,8 @@ bool VulkanMemory::init()
             deviceProperties.limits.minMemoryMapAlignment) != 0)
         {
             // Invalid memory alignment
-            SysMessage::box() << "[0x3102] Invalid memory alignment\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3102] Invalid memory alignment\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }
@@ -125,8 +125,8 @@ bool VulkanMemory::init()
             deviceProperties.limits.nonCoherentAtomSize) != 0)
         {
             // Invalid memory alignment
-            SysMessage::box() << "[0x3103] Invalid memory alignment\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3103] Invalid memory alignment\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }
@@ -135,8 +135,8 @@ bool VulkanMemory::init()
     if (m_maxAllocationCount < VULKAN_MEMORY_POOLSCOUNT)
     {
         // Invalid maximum allocation count
-        SysMessage::box() << "[0x3104] Invalid maximum allocation count\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3104] Invalid maximum allocation count\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -162,8 +162,8 @@ bool VulkanMemory::init()
     if (physicalMemoryProperties.memoryTypeCount <= 0)
     {
         // No physical memory type
-        SysMessage::box() << "[0x3105] No physical memory types\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3105] No physical memory types\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -208,8 +208,8 @@ bool VulkanMemory::init()
     if (!deviceMemoryFound || !hostMemoryFound)
     {
         // Could not find all memory types
-        SysMessage::box() << "[0x3106] Could not find all memory types\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3106] Could not find all memory types\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -222,8 +222,8 @@ bool VulkanMemory::init()
         if (VulkanMemoryArray[i].pool != i)
         {
             // Invalid memory pool index
-            SysMessage::box() << "[0x3107] Invalid memory pool index\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x3107] Invalid memory pool index\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
 
@@ -242,8 +242,8 @@ bool VulkanMemory::init()
     if (physicalMemoryProperties.memoryHeaps[m_deviceMemoryHeap].size <
         deviceTotalMemory)
     {
-        SysMessage::box() << "[0x3108] Not enough graphics memory available\n";
-        SysMessage::box() << "You need at least 4GB of graphics memory";
+        GSysMessage << "[0x3108] Not enough graphics memory available\n";
+        GSysMessage << "You need at least 4GB of graphics memory";
         return false;
     }
 
@@ -251,8 +251,8 @@ bool VulkanMemory::init()
     if (physicalMemoryProperties.memoryHeaps[m_hostMemoryHeap].size <
         hostTotalMemory)
     {
-        SysMessage::box() << "[0x3109] Not enough graphics memory available\n";
-        SysMessage::box() << "You need at least 4GB of graphics memory";
+        GSysMessage << "[0x3109] Not enough graphics memory available\n";
+        GSysMessage << "You need at least 4GB of graphics memory";
         return false;
     }
 
@@ -274,8 +274,8 @@ bool VulkanMemory::init()
         else
         {
             // Invalid memory pool type
-            SysMessage::box() << "[0x310A] Invalid memory pool type\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x310A] Invalid memory pool type\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
 
@@ -290,8 +290,8 @@ bool VulkanMemory::init()
             &allocateInfo, 0, &m_memory[i]) != VK_SUCCESS)
         {
             // Could not allocate device memory pool
-            SysMessage::box() << "[0x310B] Could not allocate memory pool\n";
-            SysMessage::box() << "Please update your graphics drivers";
+            GSysMessage << "[0x310B] Could not allocate memory pool\n";
+            GSysMessage << "Please update your graphics drivers";
             return false;
         }
     }

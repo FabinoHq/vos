@@ -61,18 +61,17 @@
     ////////////////////////////////////////////////////////////////////////////
     class SysMessage
     {
-        private:
+        public:
             ////////////////////////////////////////////////////////////////////
-            //  SysMessage private constructor                                //
+            //  SysMessage default constructor                                //
             ////////////////////////////////////////////////////////////////////
             SysMessage();
 
-        public:
             ////////////////////////////////////////////////////////////////////
-            //  Get the system message global singleton instance              //
-            //  return : SysMessage singleton instance                        //
+            //  SysMessage destructor                                         //
             ////////////////////////////////////////////////////////////////////
-            static SysMessage& box();
+            ~SysMessage();
+
 
             ////////////////////////////////////////////////////////////////////
             //  Display the system message                                    //
@@ -111,6 +110,12 @@
             bool                    m_display;  // Display the system message
             std::wostringstream     m_message;  // Message to display
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  SysMessage global instance                                            //
+    ////////////////////////////////////////////////////////////////////////////
+    extern SysMessage GSysMessage;
 
 
 #endif // VOS_SYSTEM_WIN_SYSMESSAGE_HEADER

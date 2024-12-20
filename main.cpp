@@ -53,12 +53,12 @@ int main()
     if (!vos.launch())
     {
         // VOS error occured
-        SysMessage::box().display();
+        GSysMessage.display();
         return 1;
     }
 
     // Display system message if any
-    SysMessage::box().display();
+    GSysMessage.display();
 
     // Program successfully executed
     return 0;

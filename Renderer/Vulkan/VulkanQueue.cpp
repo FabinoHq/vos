@@ -82,8 +82,8 @@ bool VulkanQueue::getVulkanQueue(VulkanQueuePool queuePool)
     if (!GVulkanDevice)
     {
         // Invalid Vulkan device
-        SysMessage::box() << "[0x301C] Invalid Vulkan device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x301C] Invalid Vulkan device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -92,8 +92,8 @@ bool VulkanQueue::getVulkanQueue(VulkanQueuePool queuePool)
     if (!handle)
     {
         // Invalid queue handle
-        SysMessage::box() << "[0x301D] Invalid graphics queue handle\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x301D] Invalid graphics queue handle\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -115,8 +115,8 @@ bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice)
     if (!GVulkanSurface)
     {
         // Invalid Vulkan surface
-        SysMessage::box() << "[0x3015] Invalid Vulkan surface\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3015] Invalid Vulkan surface\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 
@@ -124,8 +124,8 @@ bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice)
     if (!physicalDevice)
     {
         // Invalid physical device
-        SysMessage::box() << "[0x3016] Invalid physical device\n";
-        SysMessage::box() << "Please update your graphics drivers";
+        GSysMessage << "[0x3016] Invalid physical device\n";
+        GSysMessage << "Please update your graphics drivers";
         return false;
     }
 

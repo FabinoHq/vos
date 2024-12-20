@@ -297,6 +297,9 @@ void Vos::run()
     // Wait for renderer device idle state
     if (GRenderer.waitDeviceIdle())
     {
+        // Stop physics solver thread
+        GPhysics.stop();
+
         // Destroy softwares
         GSoftwares.destroy();
 
