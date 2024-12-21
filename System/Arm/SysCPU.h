@@ -37,134 +37,103 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     System/Win/SysCPU.h : System CPU management for Windows                //
+//     System/Arm/SysCPU.h : System CPU management for ARM                    //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SYSTEM_WIN_SYSCPU_HEADER
-#define VOS_SYSTEM_WIN_SYSCPU_HEADER
+#ifndef VOS_SYSTEM_ARM_SYSCPU_HEADER
+#define VOS_SYSTEM_ARM_SYSCPU_HEADER
 
     #include "../System.h"
 
     #include <cstddef>
     #include <cstdint>
-    #include <cstdlib>
-    #include <intrin.h>
+    #include <arm_neon.h>
 
 
     ////////////////////////////////////////////////////////////////////////////
     //  Swap 2 bytes unsigned integer endianness                              //
     //  return : Swapped 2 bytes unsigned integer                             //
     ////////////////////////////////////////////////////////////////////////////
-    #define SysByteSwap16 _byteswap_ushort
+    #define SysByteSwap16 __builtin_bswap16
 
     ////////////////////////////////////////////////////////////////////////////
     //  Swap 4 bytes unsigned integer endianness                              //
     //  return : Swapped 4 bytes unsigned integer                             //
     ////////////////////////////////////////////////////////////////////////////
-    #define SysByteSwap32 _byteswap_ulong
+    #define SysByteSwap32 __builtin_bswap32
 
     ////////////////////////////////////////////////////////////////////////////
     //  Swap 8 bytes unsigned integer endianness                              //
     //  return : Swapped 8 bytes unsigned integer                             //
     ////////////////////////////////////////////////////////////////////////////
-    #define SysByteSwap64 _byteswap_uint64
+    #define SysByteSwap64 __builtin_bswap64
 
 
     ////////////////////////////////////////////////////////////////////////////
     //  Compute 32 bits scan forward                                          //
     //  return : Computed 32 bits scan forward                                //
     ////////////////////////////////////////////////////////////////////////////
-    inline uint32_t SysBitScanForward32(uint32_t bits)
-    {
-        unsigned long index;
-        _BitScanForward(&index, bits);
-        return index;
-    }
+    #define SysBitScanForward32(bits) (__builtin_ctz(bits))
 
     ////////////////////////////////////////////////////////////////////////////
     //  Compute 32 bits scan reverse                                          //
     //  return : Computed 32 bits scan reverse                                //
     ////////////////////////////////////////////////////////////////////////////
-    inline uint32_t SysBitScanReverse32(uint32_t bits)
-    {
-        unsigned long index;
-        _BitScanReverse(&index, bits);
-        return index;
-    }
+    #define SysBitScanReverse32(bits) (0x1F - __builtin_clz(bits))
 
     ////////////////////////////////////////////////////////////////////////////
     //  Compute 64 bits scan forward                                          //
     //  return : Computed 64 bits scan forward                                //
     ////////////////////////////////////////////////////////////////////////////
-    inline uint32_t SysBitScanForward64(uint64_t bits)
-    {
-        unsigned long index;
-        _BitScanForward64(&index, bits);
-        return index;
-    }
+    #define SysBitScanForward64(bits) (__builtin_ctzll(bits))
 
     ////////////////////////////////////////////////////////////////////////////
     //  Compute 64 bits scan reverse                                          //
     //  return : Computed 64 bits scan reverse                                //
     ////////////////////////////////////////////////////////////////////////////
-    inline uint32_t SysBitScanReverse64(uint64_t bits)
-    {
-        unsigned long index;
-        _BitScanReverse64(&index, bits);
-        return index;
-    }
+    #define SysBitScanReverse64(bits) (0x3F - __builtin_clzll(bits))
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SSE Branchless float minimum                                          //
+    //  NEON Branchless float minimum                                         //
     //  return : Minimum value between x and y                                //
     ////////////////////////////////////////////////////////////////////////////
     inline float SysFloatMin(float x, float y)
     {
-        _mm_store_ss(&x, _mm_min_ss(_mm_set_ss(x), _mm_set_ss(y)));
-        return x;
+        return ((x < y) ? x : y);
     }
 
     inline double SysDoubleMin(double x, double y)
     {
-        _mm_store_sd(&x, _mm_min_sd(_mm_set_sd(x), _mm_set_sd(y)));
-        return x;
+        return ((x < y) ? x : y);
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SSE Branchless float maximum                                          //
+    //  NEON Branchless float maximum                                         //
     //  return : Maximum value between x and y                                //
     ////////////////////////////////////////////////////////////////////////////
     inline float SysFloatMax(float x, float y)
     {
-        _mm_store_ss(&x, _mm_max_ss(_mm_set_ss(x), _mm_set_ss(y)));
-        return x;
+        return ((x > y) ? x : y);
     }
 
     inline double SysDoubleMax(double x, double y)
     {
-        _mm_store_sd(&x, _mm_max_sd(_mm_set_sd(x), _mm_set_sd(y)));
-        return x;
+        return ((x > y) ? x : y);
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    //  SSE Branchless float clamping                                         //
+    //  NEON Branchless float clamping                                        //
     //  return : Value clamped between min and max                            //
     ////////////////////////////////////////////////////////////////////////////
     inline float SysFloatClamp(float x, float min, float max)
     {
-        _mm_store_ss(&x, _mm_min_ss(_mm_max_ss(
-            _mm_set_ss(x), _mm_set_ss(min)), _mm_set_ss(max))
-        );
-        return x;
+        return ((x < max) ? ((x > min) ? x : min) : max);
     }
 
     inline double SysDoubleClamp(double x, double min, double max)
     {
-        _mm_store_sd(&x, _mm_min_sd(_mm_max_sd(
-            _mm_set_sd(x), _mm_set_sd(min)), _mm_set_sd(max))
-        );
-        return x;
+        return ((x < max) ? ((x > min) ? x : min) : max);
     }
 
 
-#endif // VOS_SYSTEM_WIN_SYSCPU_HEADER
+#endif // VOS_SYSTEM_ARM_SYSCPU_HEADER

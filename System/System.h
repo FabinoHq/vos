@@ -55,7 +55,6 @@
         #define _WINSOCKAPI_
         #undef NOMINMAX
         #define NOMINMAX
-
     #endif // Windows
 
     #if defined(__APPLE__)
@@ -66,13 +65,23 @@
         #define VOS_LINUX
     #endif // Linux
 
+    ////////////////////////////////////////////////////////////////////////////
+    //  CPU configuration                                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    #if defined(__x86_64__) || defined(_WIN64) || defined(__i386__)
+        #define VOS_X64
+    #endif
+    #if defined(__aarch64__) || defined(_M_ARM64) || defined(__arm__) || \
+        defined(__ARM_ARCH)
+        #define VOS_ARM
+    #endif
 
     ////////////////////////////////////////////////////////////////////////////
     //  64bits or 32bits configuration                                        //
     ////////////////////////////////////////////////////////////////////////////
     #if defined(__x86_64__) || defined(_WIN64) || defined(__LP64__) || \
         defined(__ia64) || defined(_M_X64) || defined(_M_IA64) || \
-        defined(__aarch64__) || defined(__powerpc64__)
+        defined(__aarch64__) || defined(_M_ARM64) || defined(__powerpc64__)
         #define VOS_64BITS
     #else
         #define VOS_32BITS
