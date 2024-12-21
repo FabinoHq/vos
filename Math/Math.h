@@ -93,6 +93,18 @@
         const int32_t SqrtTwoInt = 1482910;
         const int32_t InvSqrtTwoInt = 741455;
 
+        // 8bits powers of ten
+        const int8_t MaxPowersOfTen8 = 3;
+        const int8_t PowersOfTen8[MaxPowersOfTen8] = {
+            1, 10, 100
+        };
+
+        // 16bits powers of ten
+        const int16_t MaxPowersOfTen16 = 5;
+        const int16_t PowersOfTen16[MaxPowersOfTen16] = {
+            1, 10, 100, 1000, 10000
+        };
+
         // 32bits powers of ten
         const int32_t MaxPowersOfTen32 = 10;
         const int32_t PowersOfTen32[MaxPowersOfTen32] = {
@@ -110,11 +122,32 @@
             1000000000000000000ll
         };
 
+        // 64bits unsigned powers of ten
+        const uint64_t MaxPowersOfTen64u = 20;
+        const uint64_t PowersOfTen64u[MaxPowersOfTen64u] = {
+            1ull, 10ull, 100ull, 1000ull, 10000ull, 100000ull, 1000000ull,
+            10000000ull, 100000000ull, 1000000000ull, 10000000000ull,
+            100000000000ull, 1000000000000ull, 10000000000000ull,
+            100000000000000ull, 1000000000000000ull, 10000000000000000ull,
+            100000000000000000ull, 1000000000000000000ull,
+            10000000000000000000ull
+        };
+
 
         ////////////////////////////////////////////////////////////////////////
         //  Get number sign (-1 or +1)                                        //
         //  return : Sign of the number (-1 or +1)                            //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t sign(int8_t x)
+        {
+            return ((x >= 0) ? 1 : -1);
+        }
+
+        inline int16_t sign(int16_t x)
+        {
+            return ((x >= 0) ? 1 : -1);
+        }
+
         inline int32_t sign(int32_t x)
         {
             return ((x >= 0) ? 1 : -1);
@@ -122,7 +155,7 @@
 
         inline int64_t sign(int64_t x)
         {
-            return ((x >= 0) ? 1 : -1);
+            return ((x >= 0ll) ? 1ll : -1ll);
         }
 
         inline float sign(float x)
@@ -139,6 +172,16 @@
         //  Get number sign with zero (-1, 0, or +1)                          //
         //  return : Sign of the number with zero (-1, 0, or +1)              //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t signum(int8_t x)
+        {
+            return ((x > 0) - (x < 0));
+        }
+
+        inline int16_t signum(int16_t x)
+        {
+            return ((x > 0) - (x < 0));
+        }
+
         inline int32_t signum(int32_t x)
         {
             return ((x > 0) - (x < 0));
@@ -146,7 +189,7 @@
 
         inline int64_t signum(int64_t x)
         {
-            return ((x > 0) - (x < 0));
+            return ((x > 0ll) - (x < 0ll));
         }
 
         inline float signum(float x)
@@ -163,6 +206,16 @@
         //  Get number positive boolean (0 or +1)                             //
         //  return : Positive boolean of the number (0 or +1)                 //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t positive(int8_t x)
+        {
+            return ((x >= 0) ? 1 : 0);
+        }
+
+        inline int16_t positive(int16_t x)
+        {
+            return ((x >= 0) ? 1 : 0);
+        }
+
         inline int32_t positive(int32_t x)
         {
             return ((x >= 0) ? 1 : 0);
@@ -170,7 +223,7 @@
 
         inline int64_t positive(int64_t x)
         {
-            return ((x >= 0) ? 1 : 0);
+            return ((x >= 0ll) ? 1ll : 0ll);
         }
 
         inline float positive(float x)
@@ -187,6 +240,16 @@
         //  Get number negative boolean (0 or +1)                             //
         //  return : Negative boolean of the number (0 or +1)                 //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t negative(int8_t x)
+        {
+            return ((x >= 0) ? 0 : 1);
+        }
+
+        inline int16_t negative(int16_t x)
+        {
+            return ((x >= 0) ? 0 : 1);
+        }
+
         inline int32_t negative(int32_t x)
         {
             return ((x >= 0) ? 0 : 1);
@@ -194,7 +257,7 @@
 
         inline int64_t negative(int64_t x)
         {
-            return ((x >= 0) ? 0 : 1);
+            return ((x >= 0ll) ? 0ll : 1ll);
         }
 
         inline float negative(float x)
@@ -212,6 +275,16 @@
         //  param x : Value to get absolute of                                //
         //  return : Absolute value of x                                      //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t abs(int8_t x)
+        {
+            return ((x >= 0) ? x : -x);
+        }
+
+        inline int16_t abs(int16_t x)
+        {
+            return ((x >= 0) ? x : -x);
+        }
+
         inline int32_t abs(int32_t x)
         {
             return ((x >= 0) ? x : -x);
@@ -219,7 +292,7 @@
 
         inline int64_t abs(int64_t x)
         {
-            return ((x >= 0) ? x : -x);
+            return ((x >= 0ll) ? x : -x);
         }
 
         inline float abs(float x)
@@ -298,6 +371,26 @@
         //  Get the minimum value between x and y                             //
         //  return : Minimum value between x and y                            //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t min(int8_t x, int8_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
+        inline uint8_t min(uint8_t x, uint8_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
+        inline int16_t min(int16_t x, int16_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
+        inline uint16_t min(uint16_t x, uint16_t y)
+        {
+            return ((x < y) ? x : y);
+        }
+
         inline int32_t min(int32_t x, int32_t y)
         {
             return ((x < y) ? x : y);
@@ -332,6 +425,26 @@
         //  Get the maximum value between x and y                             //
         //  return : Maximum value between x and y                            //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t max(int8_t x, int8_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
+        inline uint8_t max(uint8_t x, uint8_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
+        inline int16_t max(int16_t x, int16_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
+        inline uint16_t max(uint16_t x, uint16_t y)
+        {
+            return ((x > y) ? x : y);
+        }
+
         inline int32_t max(int32_t x, int32_t y)
         {
             return ((x > y) ? x : y);
@@ -366,6 +479,26 @@
         //  Clamp x value between min and max                                 //
         //  return : Clamped value between min and max                        //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t clamp(int8_t x, int8_t min, int8_t max)
+        {
+            return ((x < max) ? ((x > min) ? x : min) : max);
+        }
+
+        inline uint8_t clamp(uint8_t x, uint8_t min, uint8_t max)
+        {
+            return ((x < max) ? ((x > min) ? x : min) : max);
+        }
+
+        inline int16_t clamp(int16_t x, int16_t min, int16_t max)
+        {
+            return ((x < max) ? ((x > min) ? x : min) : max);
+        }
+
+        inline uint16_t clamp(uint16_t x, uint16_t min, uint16_t max)
+        {
+            return ((x < max) ? ((x > min) ? x : min) : max);
+        }
+
         inline int32_t clamp(int32_t x, int32_t min, int32_t max)
         {
             return ((x < max) ? ((x > min) ? x : min) : max);
@@ -400,6 +533,18 @@
         //  Clamp x value between -abs(max) and +abs(max)                     //
         //  return : Clamped value between -abs(max) and +abs(max)            //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t clampAbs(int8_t x, int8_t max)
+        {
+            max = Math::abs(max);
+            return ((x < max) ? ((x > -max) ? x : -max) : max);
+        }
+
+        inline int16_t clampAbs(int16_t x, int16_t max)
+        {
+            max = Math::abs(max);
+            return ((x < max) ? ((x > -max) ? x : -max) : max);
+        }
+
         inline int32_t clampAbs(int32_t x, int32_t max)
         {
             max = Math::abs(max);
@@ -428,6 +573,16 @@
         //  Modulo                                                            //
         //  return : Modulo (x % n)                                           //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t modulo(int8_t x, int8_t n)
+        {
+            return ((x%n)+n)%n;
+        }
+
+        inline int16_t modulo(int16_t x, int16_t n)
+        {
+            return ((x%n)+n)%n;
+        }
+
         inline int32_t modulo(int32_t x, int32_t n)
         {
             return ((x%n)+n)%n;
@@ -454,6 +609,20 @@
         //  param n : Right operand                                           //
         //  return : Division (x / n)                                         //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t divide(int8_t x, int8_t n)
+        {
+            if (n == 0) return 0;
+            if (x < 0) { x -= (n-1); }
+            return (x/n);
+        }
+
+        inline int16_t divide(int16_t x, int16_t n)
+        {
+            if (n == 0) return 0;
+            if (x < 0) { x -= (n-1); }
+            return (x/n);
+        }
+
         inline int32_t divide(int32_t x, int32_t n)
         {
             if (n == 0) return 0;
@@ -463,8 +632,8 @@
 
         inline int64_t divide(int64_t x, int64_t n)
         {
-            if (n == 0) return 0;
-            if (x < 0) { x -= (n-1); }
+            if (n == 0ll) return 0ll;
+            if (x < 0ll) { x -= (n-1ll); }
             return (x/n);
         }
 
@@ -487,6 +656,16 @@
         //  param x : Number to get square root of                            //
         //  return : Square root (sqrt(x))                                    //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t sqrt(int8_t x)
+        {
+            return (static_cast<int8_t>(std::sqrt(x)));
+        }
+
+        inline int16_t sqrt(int16_t x)
+        {
+            return (static_cast<int16_t>(std::sqrt(x)));
+        }
+
         inline int32_t sqrt(int32_t x)
         {
             return (static_cast<int32_t>(std::sqrt(x)));
@@ -512,6 +691,44 @@
         //  param x : Integer to get binary logarithm of                      //
         //  return : Integer binary logarithm (log2(x))                       //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t log2(int8_t x)
+        {
+            int8_t result = 0;
+            if (x >= 0x10) { result += 4; x >>= 4; }
+            if (x >= 0x4) { result += 2; x >>= 2; }
+            if (x >= 0x2) { result += 1; x >>= 1; }
+            return result;
+        }
+
+        inline int8_t log2(uint8_t x)
+        {
+            int8_t result = 0;
+            if (x >= 0x10) { result += 4; x >>= 4; }
+            if (x >= 0x4) { result += 2; x >>= 2; }
+            if (x >= 0x2) { result += 1; x >>= 1; }
+            return result;
+        }
+
+        inline int8_t log2(int16_t x)
+        {
+            int8_t result = 0;
+            if (x >= 0x100) { result += 8; x >>= 8; }
+            if (x >= 0x10) { result += 4; x >>= 4; }
+            if (x >= 0x4) { result += 2; x >>= 2; }
+            if (x >= 0x2) { result += 1; x >>= 1; }
+            return result;
+        }
+
+        inline int8_t log2(uint16_t x)
+        {
+            int8_t result = 0;
+            if (x >= 0x100) { result += 8; x >>= 8; }
+            if (x >= 0x10) { result += 4; x >>= 4; }
+            if (x >= 0x4) { result += 2; x >>= 2; }
+            if (x >= 0x2) { result += 1; x >>= 1; }
+            return result;
+        }
+
         inline int8_t log2(int32_t x)
         {
             int8_t result = 0;
@@ -537,24 +754,24 @@
         inline int8_t log2(int64_t x)
         {
             int8_t result = 0;
-            if (x >= 0x100000000) { result += 32; x >>= 32; }
-            if (x >= 0x10000) { result += 16; x >>= 16; }
-            if (x >= 0x100) { result += 8; x >>= 8; }
-            if (x >= 0x10) { result += 4; x >>= 4; }
-            if (x >= 0x4) { result += 2; x >>= 2; }
-            if (x >= 0x2) { result += 1; x >>= 1; }
+            if (x >= 0x100000000ll) { result += 32; x >>= 32; }
+            if (x >= 0x10000ll) { result += 16; x >>= 16; }
+            if (x >= 0x100ll) { result += 8; x >>= 8; }
+            if (x >= 0x10ll) { result += 4; x >>= 4; }
+            if (x >= 0x4ll) { result += 2; x >>= 2; }
+            if (x >= 0x2ll) { result += 1; x >>= 1; }
             return result;
         }
 
         inline int8_t log2(uint64_t x)
         {
             int8_t result = 0;
-            if (x >= 0x100000000) { result += 32; x >>= 32; }
-            if (x >= 0x10000) { result += 16; x >>= 16; }
-            if (x >= 0x100) { result += 8; x >>= 8; }
-            if (x >= 0x10) { result += 4; x >>= 4; }
-            if (x >= 0x4) { result += 2; x >>= 2; }
-            if (x >= 0x2) { result += 1; x >>= 1; }
+            if (x >= 0x100000000ll) { result += 32; x >>= 32; }
+            if (x >= 0x10000ll) { result += 16; x >>= 16; }
+            if (x >= 0x100ll) { result += 8; x >>= 8; }
+            if (x >= 0x10ll) { result += 4; x >>= 4; }
+            if (x >= 0x4ll) { result += 2; x >>= 2; }
+            if (x >= 0x2ll) { result += 1; x >>= 1; }
             return result;
         }
 
@@ -563,6 +780,26 @@
         //  param x : Integer to get base 10 logarithm of                     //
         //  return : Integer base 10 logarithm (log10(x))                     //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t log10(int8_t x)
+        {
+            return static_cast<int8_t>(std::log10(x*1.0));
+        }
+
+        inline int8_t log10(uint8_t x)
+        {
+            return static_cast<int8_t>(std::log10(x*1.0));
+        }
+
+        inline int8_t log10(int16_t x)
+        {
+            return static_cast<int8_t>(std::log10(x*1.0));
+        }
+
+        inline int8_t log10(uint16_t x)
+        {
+            return static_cast<int8_t>(std::log10(x*1.0));
+        }
+
         inline int8_t log10(int32_t x)
         {
             return static_cast<int8_t>(std::log10(x*1.0));
@@ -588,14 +825,60 @@
         //  param x : Power of ten exponent                                   //
         //  return : Integer power of ten (10 ^ x)                            //
         ////////////////////////////////////////////////////////////////////////
+        inline int8_t power10(int8_t x)
+        {
+            return PowersOfTen8[
+                Math::clamp(x, int8_t(0), int8_t(MaxPowersOfTen8-1))
+            ];
+        }
+
+        inline uint8_t power10(uint8_t x)
+        {
+            return PowersOfTen8[
+                Math::clamp(x, uint8_t(0), uint8_t(MaxPowersOfTen8-1))
+            ];
+        }
+
+        inline int16_t power10(int16_t x)
+        {
+            return PowersOfTen16[
+                Math::clamp(x, int16_t(0), int16_t(MaxPowersOfTen16-1))
+            ];
+        }
+
+        inline uint16_t power10(uint16_t x)
+        {
+            return PowersOfTen16[
+                Math::clamp(x, uint16_t(0), uint16_t(MaxPowersOfTen16-1))
+            ];
+        }
+
         inline int32_t power10(int32_t x)
         {
-            return PowersOfTen32[Math::clamp(x, 0, (MaxPowersOfTen32-1))];
+            return PowersOfTen32[
+                Math::clamp(x, int32_t(0), int32_t(MaxPowersOfTen32-1))
+            ];
+        }
+
+        inline uint32_t power10(uint32_t x)
+        {
+            return PowersOfTen32[
+                Math::clamp(x, uint32_t(0), uint32_t(MaxPowersOfTen32-1))
+            ];
         }
 
         inline int64_t power10(int64_t x)
         {
-            return PowersOfTen64[Math::clamp(x, 0ll, (MaxPowersOfTen64-1ll))];
+            return PowersOfTen64[
+                Math::clamp(x, int64_t(0), int64_t(MaxPowersOfTen64-1))
+            ];
+        }
+
+        inline uint64_t power10(uint64_t x)
+        {
+            return PowersOfTen64u[
+                Math::clamp(x, uint64_t(0), uint64_t(MaxPowersOfTen64u-1))
+            ];
         }
 
         ////////////////////////////////////////////////////////////////////////
