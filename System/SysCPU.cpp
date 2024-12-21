@@ -40,6 +40,7 @@
 //     System/SysCPU.cpp : System CPU management                              //
 ////////////////////////////////////////////////////////////////////////////////
 #include "SysCPU.h"
+#include "SysMessage.h"
 #include "../Math/Math.h"
 #include "../Math/Vector2.h"
 #include "../Math/Vector3.h"

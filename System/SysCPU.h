@@ -43,7 +43,6 @@
 #define VOS_SYSTEM_SYSCPU_HEADER
 
     #include "System.h"
-    #include "SysMessage.h"
 
     #include <cstddef>
     #include <cstdint>
@@ -58,7 +57,12 @@
     #endif // VOS_WINDOWS
 
     #ifdef VOS_LINUX
-        #include "Lin/SysCPU.h"
+        #ifdef VOS_X64
+            #include "Lin/SysCPU.h"
+        #endif
+        #ifdef VOS_ARM
+            #include "Arm/SysCPU.h"
+        #endif
     #endif // VOS_LINUX
 
 
