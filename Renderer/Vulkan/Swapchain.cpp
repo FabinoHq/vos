@@ -227,6 +227,9 @@ bool Swapchain::createSwapchain()
 
 
     // Set swapchain images count
+    surfaceCapabilities.maxImageCount = Math::max(
+        surfaceCapabilities.minImageCount, surfaceCapabilities.maxImageCount
+    );
     uint32_t imagesCount = Math::clamp(RendererMaxSwapchainFrames,
         surfaceCapabilities.minImageCount, surfaceCapabilities.maxImageCount
     );
@@ -857,6 +860,9 @@ bool Swapchain::resizeSwapchain()
 
 
     // Set swapchain images count
+    surfaceCapabilities.maxImageCount = Math::max(
+        surfaceCapabilities.minImageCount, surfaceCapabilities.maxImageCount
+    );
     uint32_t imagesCount = Math::clamp(RendererMaxSwapchainFrames,
         surfaceCapabilities.minImageCount, surfaceCapabilities.maxImageCount
     );
