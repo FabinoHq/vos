@@ -65,7 +65,8 @@ m_chunkWarp(false),
 m_chunkX(0),
 m_chunkY(0),
 m_isomap(),
-m_player()
+m_player(),
+m_zoom(1.0f)
 {
 
 }
@@ -209,6 +210,9 @@ bool Isometric::init()
         return false;
     }
 
+    // Reset zoom
+    m_zoom = 1.0f;
+
 
     // Isometric game is ready
     return true;
@@ -306,6 +310,14 @@ void Isometric::events(SysEvent& event)
 
         // Mouse wheel
         case SYSEVENT_MOUSEWHEEL:
+            if (event.mouse.wheel < 0)
+            {
+                m_zoom = Math::max(0.2f, m_zoom-0.02f);
+            }
+            else if (event.mouse.wheel > 0)
+            {
+                m_zoom = Math::min(1.0f, m_zoom+0.02f);
+            }
             break;
 
         default:
@@ -418,7 +430,10 @@ void Isometric::compute(float frametime)
 
 
     // Update view position
-    m_view.setPosition(m_player.getX(), m_player.getY()+0.08f);
+    //m_view.setSize(0.9f, 1.0f);
+    //m_view.setPosition(m_player.getX()*0.9f, m_player.getY()+0.08f);
+    m_view.setSize(m_zoom, m_zoom);
+    m_view.setPosition(m_player.getX()*m_zoom, (m_player.getY()+0.08f)*m_zoom);
 
 
     // Start uniforms upload

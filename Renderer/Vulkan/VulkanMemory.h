@@ -120,13 +120,13 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  VulkanMemoryArray : Memory pools type and size                        //
+    //  VulkanMemoryArray : Memory pools types and sizes                      //
     ////////////////////////////////////////////////////////////////////////////
     const VulkanMemoryList VulkanMemoryArray[VULKAN_MEMORY_POOLSCOUNT] =
     {
         VULKAN_MEMORY_BACKCHAIN, VULKAN_MEMORY_DEVICE, 0x20000000,
         VULKAN_MEMORY_BACKRENDERER, VULKAN_MEMORY_DEVICE, 0x20000000,
-        
+
         VULKAN_MEMORY_UNIFORMUPLOAD, VULKAN_MEMORY_HOST, 0x100000,
         VULKAN_MEMORY_TEXTUREUPLOAD, VULKAN_MEMORY_HOST, 0x8000000,
         VULKAN_MEMORY_MESHUPLOAD, VULKAN_MEMORY_HOST, 0x10000000,

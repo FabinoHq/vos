@@ -164,6 +164,8 @@
             int32_t             m_chunkY;               // Chunk Y
             IsoMapStream        m_isomap;               // Isomap
             IsometricPlayer     m_player;               // Player
+
+            float               m_zoom;                 // Zoom
     };
 
 

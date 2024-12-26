@@ -974,7 +974,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
         }
         memcpy((char*)&pngIDATChunkHeader, buffer, PNGFileChunkHeaderSize);
         buffer += PNGFileChunkHeaderSize;
-        
+
         pngIDATChunkHeader.length = SysByteSwap32(
             pngIDATChunkHeader.length
         );
@@ -1943,7 +1943,7 @@ bool PNGFile::decodePNG8bits(unsigned char* data,
                 for (size_t i = 1; i < scanlineSize; ++i)
                 {
                     // RGB channels
-                    unsigned char greyscale = 
+                    unsigned char greyscale =
                         (data[inIndex++] += data[prevIndex++]);
                     m_image[outIndex++] = greyscale;
                     m_image[outIndex++] = greyscale;

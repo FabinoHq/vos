@@ -374,7 +374,7 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
     if (((zlibHeader >> 8) & 0x000F) != 0x0008) return false;
     // CINFO
     if ((zlibHeader >> 12) > 0x0007) return false;
-    // FDICT     
+    // FDICT
     if ((zlibHeader >> 5) & 0x0001) return false;
 
     // Decompress deflate data

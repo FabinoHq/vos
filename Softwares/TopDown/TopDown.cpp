@@ -642,7 +642,7 @@ void TopDown::compute(float frametime)
 
     // Update view position
     m_view.setPosition(m_player.getPosition());
-    
+
 
     // Start uniforms upload
     if (GUniformchain.startUpload())

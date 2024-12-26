@@ -161,5 +161,5 @@ void FirstPersonPlayer::precompute(float physicstime)
 ////////////////////////////////////////////////////////////////////////////////
 void FirstPersonPlayer::render()
 {
-    
+
 }

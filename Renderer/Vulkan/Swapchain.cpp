@@ -475,7 +475,7 @@ bool Swapchain::createSwapchain()
     subresource.levelCount = 1;
     subresource.baseArrayLayer = 0;
     subresource.layerCount = 1;
-    
+
     VkImageViewCreateInfo imageView;
     imageView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     imageView.pNext = 0;

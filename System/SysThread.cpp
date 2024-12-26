@@ -46,7 +46,7 @@
 //  SysThread default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
 SysThread::SysThread() :
-m_thread(0),
+m_thread(),
 m_mutex(),
 m_running(false),
 m_standby(false)
@@ -64,40 +64,17 @@ SysThread::~SysThread()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Start the thread                                                          //
-////////////////////////////////////////////////////////////////////////////////
-bool SysThread::start()
-{
-    // Stop eventual running thread
-    stop();
-
-    // Start the thread
-    m_thread = new(std::nothrow) std::thread(&SysThread::run, this);
-    if (!m_thread) return false;
-
-    // Thread successfully started
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 //  Stop the thread                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 void SysThread::stop()
 {
-    if (m_thread)
-    {
-        // Request thread stop
-        m_mutex.lock();
-        m_running = false;
-        m_mutex.unlock();
+    // Request thread stop
+    m_mutex.lock();
+    m_running = false;
+    m_mutex.unlock();
 
-        // Wait for the thread to stop
-        m_thread->join();
-
-        // Clear thread memory
-        delete m_thread;
-        m_thread = 0;
-    }
+    // Wait for the thread to stop
+    m_thread.join();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

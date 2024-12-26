@@ -63,7 +63,14 @@ m_hostMemoryHeap(0),
 m_maxAllocationCount(0),
 m_memoryAlignment(0)
 {
-
+    // Reset memory arrays
+    for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
+    {
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_index[i] = 0;
+        m_usage[i] = 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,8 +78,20 @@ m_memoryAlignment(0)
 ////////////////////////////////////////////////////////////////////////////////
 VulkanMemory::~VulkanMemory()
 {
+    // Reset memory arrays
+    for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
+    {
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_index[i] = 0;
+        m_usage[i] = 0;
+    }
     m_memoryAlignment = 0;
     m_maxAllocationCount = 0;
+    m_hostMemoryHeap = 0;
+    m_hostMemoryIndex = 0;
+    m_deviceMemoryHeap = 0;
+    m_deviceMemoryIndex = 0;
 }
 
 
@@ -274,7 +293,7 @@ bool VulkanMemory::init()
         else
         {
             // Invalid memory pool type
-            GSysMessage << "[0x310A] Invalid memory pool type\n";
+            GSysMessage << "[0x310A] Invalid graphics memory pool type\n";
             GSysMessage << "Please update your graphics drivers";
             return false;
         }
@@ -290,7 +309,7 @@ bool VulkanMemory::init()
             &allocateInfo, 0, &m_memory[i]) != VK_SUCCESS)
         {
             // Could not allocate device memory pool
-            GSysMessage << "[0x310B] Could not allocate memory pool\n";
+            GSysMessage << "[0x310B] Could not allocate graphics memory pool\n";
             GSysMessage << "Please update your graphics drivers";
             return false;
         }
@@ -305,19 +324,29 @@ bool VulkanMemory::init()
 ////////////////////////////////////////////////////////////////////////////////
 void VulkanMemory::destroyVulkanMemory()
 {
+    // Free memory arrays
     if (GVulkanDevice)
     {
         for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
         {
-            if (m_memory[i])
-            {
-                vkFreeMemory(GVulkanDevice, m_memory[i], 0);
-            }
+            if (m_memory[i]) { vkFreeMemory(GVulkanDevice, m_memory[i], 0); }
         }
     }
 
+    // Reset memory arrays
+    for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
+    {
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_index[i] = 0;
+        m_usage[i] = 0;
+    }
     m_memoryAlignment = 0;
     m_maxAllocationCount = 0;
+    m_hostMemoryHeap = 0;
+    m_hostMemoryIndex = 0;
+    m_deviceMemoryHeap = 0;
+    m_deviceMemoryIndex = 0;
 }
 
 
@@ -376,28 +405,30 @@ bool VulkanMemory::allocateBackchainImage(VkImage& image,
 
     // Adjust memory size according to alignment
     VkDeviceSize sizeOffset = (size % alignment);
-    if (sizeOffset != 0)
-    {
-        size += (alignment - sizeOffset);
-    }
+    if (sizeOffset != 0) { size += (alignment - sizeOffset); }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_offset[memoryPool] % alignment);
-    if (startOffset != 0)
+    VkDeviceSize offset = m_offset[memoryPool];
+    VkDeviceSize startOffset = (offset % alignment);
+    if (startOffset != 0) { offset += (alignment - startOffset); }
+
+    // Check remaining memory in pool
+    if ((offset + size) > VulkanMemoryArray[memoryPool].size)
     {
-        m_offset[memoryPool] += (alignment - startOffset);
+        // Not enough remaining memory in pool
+        return false;
     }
 
     // Bind image memory
     if (vkBindImageMemory(GVulkanDevice, image,
-        m_memory[memoryPool], m_offset[memoryPool]) != VK_SUCCESS)
+        m_memory[memoryPool], offset) != VK_SUCCESS)
     {
         // Could not bind image memory
         return false;
     }
 
     // Update current memory offset
-    m_offset[memoryPool] += size;
+    m_offset[memoryPool] = (offset + size);
 
     // Update current memory usage
     if (m_offset[memoryPool] >= m_usage[memoryPool])
@@ -467,21 +498,23 @@ bool VulkanMemory::allocateBufferMemory(VulkanBuffer& buffer,
 
     // Adjust memory size according to alignment
     VkDeviceSize sizeOffset = (size % alignment);
-    if (sizeOffset != 0)
-    {
-        size += (alignment - sizeOffset);
-    }
+    if (sizeOffset != 0) { size += (alignment - sizeOffset); }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_offset[memoryPool] % alignment);
-    if (startOffset != 0)
+    VkDeviceSize offset = m_offset[memoryPool];
+    VkDeviceSize startOffset = (offset % alignment);
+    if (startOffset != 0) { offset += (alignment - startOffset); }
+
+    // Check remaining memory in pool
+    if ((offset + size) > VulkanMemoryArray[memoryPool].size)
     {
-        m_offset[memoryPool] += (alignment - startOffset);
+        // Not enough remaining memory in pool
+        return false;
     }
 
     // Set buffer memory size and offset
     buffer.memorySize = size;
-    buffer.memoryOffset = m_offset[memoryPool];
+    buffer.memoryOffset = offset;
 
     // Bind buffer memory
     if (vkBindBufferMemory(GVulkanDevice, buffer.handle,
@@ -492,7 +525,7 @@ bool VulkanMemory::allocateBufferMemory(VulkanBuffer& buffer,
     }
 
     // Update current memory offset
-    m_offset[memoryPool] += size;
+    m_offset[memoryPool] = (offset + size);
 
     // Update current memory usage
     if (m_offset[memoryPool] >= m_usage[memoryPool])
@@ -632,28 +665,29 @@ bool VulkanMemory::allocateTextureMemory(Texture& texture,
 
     // Adjust memory size according to alignment
     VkDeviceSize sizeOffset = (size % alignment);
-    if (sizeOffset != 0)
-    {
-        size += (alignment - sizeOffset);
-    }
+    if (sizeOffset != 0) { size += (alignment - sizeOffset); }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_offset[memoryPool] % alignment);
-    if (startOffset != 0)
+    VkDeviceSize offset = m_offset[memoryPool];
+    VkDeviceSize startOffset = (offset % alignment);
+    if (startOffset != 0) { offset += (alignment - startOffset); }
+
+    // Check remaining memory in pool
+    if ((offset + size) > VulkanMemoryArray[memoryPool].size)
     {
-        m_offset[memoryPool] += (alignment - startOffset);
+        // Not enough remaining memory in pool
+        return false;
     }
 
     // Bind texture memory
-    if (!texture.bindTextureMemory(
-        m_memory[memoryPool], size, m_offset[memoryPool]))
+    if (!texture.bindTextureMemory(m_memory[memoryPool], size, offset))
     {
         // Could not bind texture memory
         return false;
     }
 
     // Update current memory offset
-    m_offset[memoryPool] += size;
+    m_offset[memoryPool] = (offset + size);
 
     // Update current memory usage
     if (m_offset[memoryPool] >= m_usage[memoryPool])
@@ -727,28 +761,30 @@ bool VulkanMemory::allocateTextureArrayMemory(TextureArray& textureArray,
 
     // Adjust memory size according to alignment
     VkDeviceSize sizeOffset = (size % alignment);
-    if (sizeOffset != 0)
-    {
-        size += (alignment - sizeOffset);
-    }
+    if (sizeOffset != 0) { size += (alignment - sizeOffset); }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_offset[memoryPool] % alignment);
-    if (startOffset != 0)
+    VkDeviceSize offset = m_offset[memoryPool];
+    VkDeviceSize startOffset = (offset % alignment);
+    if (startOffset != 0) { offset += (alignment - startOffset); }
+
+    // Check remaining memory in pool
+    if ((offset + size) > VulkanMemoryArray[memoryPool].size)
     {
-        m_offset[memoryPool] += (alignment - startOffset);
+        // Not enough remaining memory in pool
+        return false;
     }
 
     // Bind texture array memory
     if (!textureArray.bindTextureArrayMemory(
-        m_memory[memoryPool], size, m_offset[memoryPool]))
+        m_memory[memoryPool], size, offset))
     {
         // Could not bind texture array memory
         return false;
     }
 
     // Update current memory offset
-    m_offset[memoryPool] += size;
+    m_offset[memoryPool] = (offset + size);
 
     // Update current memory usage
     if (m_offset[memoryPool] >= m_usage[memoryPool])
@@ -822,28 +858,29 @@ bool VulkanMemory::allocateCubeMapMemory(CubeMap& cubemap,
 
     // Adjust memory size according to alignment
     VkDeviceSize sizeOffset = (size % alignment);
-    if (sizeOffset != 0)
-    {
-        size += (alignment - sizeOffset);
-    }
+    if (sizeOffset != 0) { size += (alignment - sizeOffset); }
 
     // Adjust memory start offset according to alignment
-    VkDeviceSize startOffset = (m_offset[memoryPool] % alignment);
-    if (startOffset != 0)
+    VkDeviceSize offset = m_offset[memoryPool];
+    VkDeviceSize startOffset = (offset % alignment);
+    if (startOffset != 0) { offset += (alignment - startOffset); }
+
+    // Check remaining memory in pool
+    if ((offset + size) > VulkanMemoryArray[memoryPool].size)
     {
-        m_offset[memoryPool] += (alignment - startOffset);
+        // Not enough remaining memory in pool
+        return false;
     }
 
     // Bind cubemap memory
-    if (!cubemap.bindCubeMapMemory(
-        m_memory[memoryPool], size, m_offset[memoryPool]))
+    if (!cubemap.bindCubeMapMemory(m_memory[memoryPool], size, offset))
     {
         // Could not bind cubemap memory
         return false;
     }
 
     // Update current memory offset
-    m_offset[memoryPool] += size;
+    m_offset[memoryPool] = (offset + size);
 
     // Update current memory usage
     if (m_offset[memoryPool] >= m_usage[memoryPool])
