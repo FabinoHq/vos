@@ -68,13 +68,16 @@ SysThread::~SysThread()
 ////////////////////////////////////////////////////////////////////////////////
 void SysThread::stop()
 {
-    // Request thread stop
-    m_mutex.lock();
-    m_running = false;
-    m_mutex.unlock();
+    if (m_thread.joinable())
+    {
+        // Request thread stop
+        m_mutex.lock();
+        m_running = false;
+        m_mutex.unlock();
 
-    // Wait for the thread to stop
-    m_thread.join();
+        // Wait for the thread to stop
+        m_thread.join();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
