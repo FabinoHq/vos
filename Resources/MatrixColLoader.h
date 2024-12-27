@@ -43,6 +43,7 @@
 #define VOS_RESOURCES_MATRIXCOLLOADER_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysMemory.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
 
@@ -55,7 +56,6 @@
     #include <fstream>
     #include <cstdint>
     #include <cstring>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -49,7 +49,7 @@ all: VOS
 
 VOS: main.o \
 	Vos.o \
-	System/SysThread.o System/SysClock.o System/SysCPU.o \
+	System/SysThread.o System/SysClock.o System/SysCPU.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
@@ -106,7 +106,7 @@ VOS: main.o \
 
 	$(CC) -o VOS \
 	Vos.o \
-	System/SysThread.o System/SysClock.o System/SysCPU.o \
+	System/SysThread.o System/SysClock.o System/SysCPU.o System/SysMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
@@ -178,6 +178,9 @@ System/SysClock.o: System/SysClock.cpp
 
 System/SysCPU.o: System/SysCPU.cpp
 	$(CC) -o System/SysCPU.o -c System/SysCPU.cpp $(CFLAGS)
+
+System/SysMemory.o: System/SysMemory.cpp
+	$(CC) -o System/SysMemory.o -c System/SysMemory.cpp $(CFLAGS)
 
 System/Lin/SysMessage.o: System/Lin/SysMessage.cpp
 	$(CC) -o System/Lin/SysMessage.o -c System/Lin/SysMessage.cpp $(CFLAGS)

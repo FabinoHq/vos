@@ -43,13 +43,13 @@
 #define VOS_IMAGES_BMPFILE_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysMemory.h"
 
     #include <cstddef>
     #include <cstdint>
     #include <cstring>
     #include <string>
     #include <fstream>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -65,11 +65,8 @@ m_indices(0)
 ////////////////////////////////////////////////////////////////////////////////
 MeshLoader::~MeshLoader()
 {
-    if (m_indices) { delete[] m_indices; }
     m_indices = 0;
-    if (m_vertices) { delete[] m_vertices; }
     m_vertices = 0;
-    if (m_meshes) { delete[] m_meshes; }
     m_meshes = 0;
     m_fence = 0;
     m_commandBuffer = 0;
@@ -251,15 +248,25 @@ bool MeshLoader::init()
     }
 
     // Allocate meshes vertex buffers
-    m_meshes = new(std::nothrow) VertexBuffer[MESHES_ASSETSCOUNT];
+    m_meshes = GSysMemory.alloc<VertexBuffer>(
+        MESHES_ASSETSCOUNT, SYSMEMORY_MESHES
+    );
     if (!m_meshes)
     {
         // Could not allocate meshes vertex buffers
         return false;
     }
 
+    // Init meshes vertex buffers
+    for (int i = 0; i < MESHES_ASSETSCOUNT; ++i)
+    {
+        m_meshes[i].init();
+    }
+
     // Allocate mesh vertices
-    m_vertices = new(std::nothrow) float[MeshLoaderMaxVerticesCount];
+    m_vertices = GSysMemory.alloc<float>(
+        MeshLoaderMaxVerticesCount, SYSMEMORY_MESHES
+    );
     if (!m_vertices)
     {
         // Could not allocate mesh vertices
@@ -267,7 +274,9 @@ bool MeshLoader::init()
     }
 
     // Allocate mesh indices
-    m_indices = new(std::nothrow) uint16_t[MeshLoaderMaxIndicesCount];
+    m_indices = GSysMemory.alloc<uint16_t>(
+        MeshLoaderMaxIndicesCount, SYSMEMORY_MESHES
+    );
     if (!m_indices)
     {
         // Could not allocate mesh indices
@@ -338,10 +347,8 @@ MeshLoaderState MeshLoader::getState()
 ////////////////////////////////////////////////////////////////////////////////
 void MeshLoader::destroyMeshLoader()
 {
-    // Delete indices and vertices
-    if (m_indices) { delete[] m_indices; }
+    // Reset indices and vertices
     m_indices = 0;
-    if (m_vertices) { delete[] m_vertices; }
     m_vertices = 0;
 
     // Destroy meshes vertex buffers
@@ -351,7 +358,6 @@ void MeshLoader::destroyMeshLoader()
         {
             m_meshes[i].destroyBuffer();
         }
-        delete[] m_meshes;
     }
     m_meshes = 0;
 

@@ -160,7 +160,9 @@ void MatrixColLoader::process()
 bool MatrixColLoader::init()
 {
     // Allocate matrixcols chunks
-    m_matrixcols = new(std::nothrow) MatrixChunk2[MATRIXCOL_ASSETSCOUNT];
+    m_matrixcols = GSysMemory.alloc<MatrixChunk2>(
+        MATRIXCOL_ASSETSCOUNT, SYSMEMORY_MATRICES
+    );
     if (!m_matrixcols)
     {
         // Could not allocate matrixcols chunks
@@ -337,16 +339,6 @@ void MatrixColLoader::destroyMatrixColLoader()
         m_chunks[i].chunkY = 0;
         m_chunks[i].chunk = 0;
         m_chunksptrs[i] = 0;
-    }
-
-    // Destroy matrixcols chunks
-    if (m_matrixcols)
-    {
-        for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)
-        {
-            m_matrixcols[i].destroyMatrix();
-        }
-        delete[] m_matrixcols;
     }
     m_matrixcols = 0;
 

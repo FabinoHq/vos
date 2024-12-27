@@ -102,8 +102,13 @@ void SeaFarChunk::render()
 ////////////////////////////////////////////////////////////////////////////////
 bool SeaFarChunk::generateSeaFarChunk(VertexBuffer& vertexBuffer)
 {
+    // Reset sea fars system memory
+    GSysMemory.resetMemory(SYSMEMORY_SEAFARS);
+
     // Allocate sea far vertices
-    float* vertices = new(std::nothrow) float[SeaFarChunkVerticesCount];
+    float* vertices = GSysMemory.alloc<float>(
+        SeaFarChunkVerticesCount, SYSMEMORY_SEAFARS
+    );
     if (!vertices)
     {
         // Could not allocate sea far vertices
@@ -111,11 +116,12 @@ bool SeaFarChunk::generateSeaFarChunk(VertexBuffer& vertexBuffer)
     }
 
     // Allocate sea far indices
-    uint16_t* indices = new(std::nothrow) uint16_t[SeaFarChunkIndicesCount];
+    uint16_t* indices = GSysMemory.alloc<uint16_t>(
+        SeaFarChunkIndicesCount, SYSMEMORY_SEAFARS
+    );
     if (!indices)
     {
         // Could not allocate sea far indices
-        if (vertices) { delete[] vertices; }
         return false;
     }
 
@@ -185,14 +191,8 @@ bool SeaFarChunk::generateSeaFarChunk(VertexBuffer& vertexBuffer)
         SeaFarChunkVerticesCount, SeaFarChunkIndicesCount))
     {
         // Could not create vertex buffer
-        if (indices) { delete[] indices; }
-        if (vertices) { delete[] vertices; }
         return false;
     }
-
-    // Delete indices and vertices data
-    if (indices) { delete[] indices; }
-    if (vertices) { delete[] vertices; }
 
     // Sea far chunk successfully generated
     return true;

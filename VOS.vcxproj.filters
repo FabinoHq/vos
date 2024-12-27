@@ -350,6 +350,9 @@
     <ClCompile Include="Renderer\TileMap\IsoMapStream.cpp">
       <Filter>Renderer\TileMap</Filter>
     </ClCompile>
+    <ClCompile Include="System\SysMemory.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -790,6 +793,9 @@
     </ClInclude>
     <ClInclude Include="Math\MultiInt.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysMemory.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

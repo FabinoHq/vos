@@ -43,6 +43,7 @@
 #define VOS_RESOURCES_MESHLOADER_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysMemory.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
     #include "../Renderer/Vulkan/Vulkan.h"
@@ -55,7 +56,6 @@
 
     #include <fstream>
     #include <cstdint>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

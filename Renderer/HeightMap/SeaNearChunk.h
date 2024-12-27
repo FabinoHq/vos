@@ -43,6 +43,7 @@
 #define VOS_RENDERER_HEIGHTMAP_SEANEARCHUNK_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysMemory.h"
 
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/Swapchain.h"

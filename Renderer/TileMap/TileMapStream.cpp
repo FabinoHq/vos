@@ -67,6 +67,9 @@ TileMapStream::~TileMapStream()
 ////////////////////////////////////////////////////////////////////////////////
 bool TileMapStream::init()
 {
+    m_chunkX = 0;
+    m_chunkY = 0;
+
     // Tilemap stream successfully created
     return true;
 }

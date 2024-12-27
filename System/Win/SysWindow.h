@@ -43,6 +43,7 @@
 #define VOS_SYSTEM_WIN_SYSWINDOW_HEADER
 
     #include "../System.h"
+    #include "../SysMemory.h"
     #include "../SysMessage.h"
     #include "SysDisplayMode.h"
     #include "../SysEvent.h"

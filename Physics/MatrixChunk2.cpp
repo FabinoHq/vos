@@ -56,7 +56,6 @@ matrix(0)
 ////////////////////////////////////////////////////////////////////////////////
 MatrixChunk2::~MatrixChunk2()
 {
-    if (matrix) { delete[] matrix; }
     matrix = 0;
 }
 
@@ -66,20 +65,14 @@ MatrixChunk2::~MatrixChunk2()
 ////////////////////////////////////////////////////////////////////////////////
 bool MatrixChunk2::init()
 {
+    // Reset matrix chunk
+    matrix = 0;
+
     // Init matrix chunk
-    matrix = new(std::nothrow) int8_t[MatrixChunk2Size];
+    matrix = GSysMemory.alloc<int8_t>(MatrixChunk2Size, SYSMEMORY_MATRICES);
     if (!matrix) { return false; }
     memset(matrix, 0, sizeof(int8_t)*MatrixChunk2Size);
 
     // Matrix chunk successfully created
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy matrix chunk                                                      //
-////////////////////////////////////////////////////////////////////////////////
-void MatrixChunk2::destroyMatrix()
-{
-    if (matrix) { delete[] matrix; }
-    matrix = 0;
 }

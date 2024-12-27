@@ -59,10 +59,6 @@ m_height(0)
 ////////////////////////////////////////////////////////////////////////////////
 BMPFile::~BMPFile()
 {
-    if (m_image)
-    {
-        delete[] m_image;
-    }
     m_height = 0;
     m_width = 0;
     m_image = 0;
@@ -77,6 +73,9 @@ BMPFile::~BMPFile()
 bool BMPFile::setImage(uint32_t width, uint32_t height,
     const unsigned char* image)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Check image loaded state
     if (m_loaded)
     {
@@ -95,7 +94,7 @@ bool BMPFile::setImage(uint32_t width, uint32_t height,
 
     // Allocate image data
     size_t imageSize = (width*height*4);
-    m_image = new(std::nothrow) unsigned char[imageSize];
+    m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
     if (!m_image) return false;
 
     // Copy image data
@@ -282,10 +281,6 @@ bool BMPFile::saveImage(const std::string& filepath, BMPFileImageFormat format)
 ////////////////////////////////////////////////////////////////////////////////
 void BMPFile::destroyImage()
 {
-    if (m_image)
-    {
-        delete[] m_image;
-    }
     m_height = 0;
     m_width = 0;
     m_image = 0;
@@ -437,12 +432,15 @@ bool BMPFile::saveBMPImage(const std::string& filepath,
 bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
     uint32_t width, uint32_t height)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Load BMP raw image data
     size_t rawDataSize = width*height*3;
     unsigned char* rawData = 0;
 
     // Allocate raw image data
-    rawData = new(std::nothrow) unsigned char[rawDataSize];
+    rawData = GSysMemory.alloc<unsigned char>(rawDataSize, SYSMEMORY_IMAGES);
     if (!rawData) return false;
 
     // Read BMP raw image data
@@ -452,7 +450,7 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 
     // Allocate image data
     size_t imageSize = (width*height*4);
-    m_image = new(std::nothrow) unsigned char[imageSize];
+    m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
     if (!m_image) return false;
 
     // Convert 24bits BMP image data
@@ -470,12 +468,6 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
         }
     }
 
-    // Destroy raw image data
-    if (rawData)
-    {
-        delete[] rawData;
-    }
-
     // BMP file image data is successfully loaded
     return true;
 }
@@ -487,6 +479,9 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize,
     uint32_t width, uint32_t height, const unsigned char* image)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Check image data size
     size_t rawDataSize = width*height*3;
     if (imageSize != rawDataSize)
@@ -505,7 +500,9 @@ bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize,
     }
 
     // Allocate raw image data
-    unsigned char* rawData = new(std::nothrow) unsigned char[imageSize];
+    unsigned char* rawData = GSysMemory.alloc<unsigned char>(
+        imageSize, SYSMEMORY_IMAGES
+    );
     if (!rawData) return false;
 
     // Convert 24bits BMP image data
@@ -530,12 +527,6 @@ bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize,
         return false;
     }
 
-    // Destroy raw image data
-    if (rawData)
-    {
-        delete[] rawData;
-    }
-
     // BMP file image data is successfully saved
     return true;
 }
@@ -547,12 +538,15 @@ bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize,
 bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
     uint32_t width, uint32_t height)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Load BMP raw image data
     size_t rawDataSize = width*height*2;
     unsigned char* rawData = 0;
 
     // Allocate raw image data
-    rawData = new(std::nothrow) unsigned char[rawDataSize];
+    rawData = GSysMemory.alloc<unsigned char>(rawDataSize, SYSMEMORY_IMAGES);
     if (!rawData) return false;
 
     // Read BMP raw image data
@@ -566,7 +560,7 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 
     // Allocate image data
     size_t imageSize = (width*height*4);
-    m_image = new(std::nothrow) unsigned char[imageSize];
+    m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
     if (!m_image) return false;
 
     // Convert 16bits BMP image data
@@ -592,12 +586,6 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
         }
     }
 
-    // Destroy raw image data
-    if (rawData)
-    {
-        delete[] rawData;
-    }
-
     // BMP file image data is successfully loaded
     return true;
 }
@@ -609,6 +597,9 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize,
     uint32_t width, uint32_t height, const unsigned char* image)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Check image data size
     size_t rawDataSize = width*height*2;
     if (imageSize != rawDataSize)
@@ -627,7 +618,9 @@ bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize,
     }
 
     // Allocate raw image data
-    uint16_t* rawData = new(std::nothrow) uint16_t[imageSize/2];
+    uint16_t* rawData = GSysMemory.alloc<uint16_t>(
+        (imageSize/2), SYSMEMORY_IMAGES
+    );
     if (!rawData) return false;
 
     // Convert 16bits BMP image data
@@ -650,12 +643,6 @@ bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize,
     {
         // Could not write 16bits BMP image data
         return false;
-    }
-
-    // Destroy raw image data
-    if (rawData)
-    {
-        delete[] rawData;
     }
 
     // BMP file image data is successfully saved

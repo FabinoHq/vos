@@ -43,6 +43,7 @@
 #define VOS_RESOURCES_HEIGHTFARLOADER_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysMemory.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
 
@@ -60,7 +61,6 @@
     #include <sstream>
     #include <fstream>
     #include <cstdint>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

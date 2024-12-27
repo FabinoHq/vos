@@ -169,7 +169,9 @@ void IsoMapLoader::process()
 bool IsoMapLoader::init()
 {
     // Allocate isomaps chunks
-    m_isomaps = new(std::nothrow) IsoMapChunk[ISOMAP_ASSETSCOUNT];
+    m_isomaps = GSysMemory.alloc<IsoMapChunk>(
+        ISOMAP_ASSETSCOUNT, SYSMEMORY_ISOMAPS
+    );
     if (!m_isomaps)
     {
         // Could not allocate isomaps chunks
@@ -374,16 +376,6 @@ void IsoMapLoader::destroyIsoMapLoader()
         m_chunks[i].flags = ISOMAP_FLAGS_NONE;
         m_chunks[i].isomap = 0;
         m_chunksptrs[i] = 0;
-    }
-
-    // Destroy isomaps chunks
-    if (m_isomaps)
-    {
-        for (int i = 0; i < ISOMAP_ASSETSCOUNT; ++i)
-        {
-            m_isomaps[i].destroyIsoMap();
-        }
-        delete[] m_isomaps;
     }
     m_isomaps = 0;
 

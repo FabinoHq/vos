@@ -60,7 +60,6 @@
     #include <sstream>
     #include <fstream>
     #include <cstdint>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

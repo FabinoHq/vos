@@ -78,9 +78,7 @@ HeightMapLoader::~HeightMapLoader()
 {
     m_chunkY = 0;
     m_chunkX = 0;
-    if (m_indices) { delete[] m_indices; }
     m_indices = 0;
-    if (m_vertices) { delete[] m_vertices; }
     m_vertices = 0;
     for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
     {
@@ -247,7 +245,9 @@ bool HeightMapLoader::init()
     }
 
     // Allocate heightmaps vertex buffers
-    m_heightmaps = new(std::nothrow) VertexBuffer[HEIGHTMAP_ASSETSCOUNT];
+    m_heightmaps = GSysMemory.alloc<VertexBuffer>(
+        HEIGHTMAP_ASSETSCOUNT, SYSMEMORY_HEIGHTMAPS
+    );
     if (!m_heightmaps)
     {
         // Could not allocate heightmaps vertex buffers
@@ -257,12 +257,15 @@ bool HeightMapLoader::init()
     // Set default chunks pointers
     for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
     {
+        m_heightmaps[i].init();
         m_chunks[i].heightmap = &m_heightmaps[i];
         m_chunksptrs[i] = &m_chunks[i];
     }
 
     // Allocate chunk vertices
-    m_vertices = new(std::nothrow) float[HeightMapChunkVerticesCount];
+    m_vertices = GSysMemory.alloc<float>(
+        HeightMapChunkVerticesCount, SYSMEMORY_HEIGHTMAPS
+    );
     if (!m_vertices)
     {
         // Could not allocate chunk vertices
@@ -270,7 +273,9 @@ bool HeightMapLoader::init()
     }
 
     // Allocate chunk indices
-    m_indices = new(std::nothrow) uint16_t[HeightMapChunkIndicesCount];
+    m_indices = GSysMemory.alloc<uint16_t>(
+        HeightMapChunkIndicesCount, SYSMEMORY_HEIGHTMAPS
+    );
     if (!m_indices)
     {
         // Could not allocate chunk indices
@@ -454,10 +459,8 @@ void HeightMapLoader::destroyHeightMapLoader()
     m_chunkY = 0;
     m_chunkX = 0;
 
-    // Delete indices and vertices
-    if (m_indices) { delete[] m_indices; }
+    // Reset indices and vertices
     m_indices = 0;
-    if (m_vertices) { delete[] m_vertices; }
     m_vertices = 0;
 
     // Reset heightmaps pointers
@@ -478,7 +481,6 @@ void HeightMapLoader::destroyHeightMapLoader()
         {
             m_heightmaps[i].destroyBuffer();
         }
-        delete[] m_heightmaps;
     }
     m_heightmaps = 0;
 

@@ -169,7 +169,9 @@ void TileMapLoader::process()
 bool TileMapLoader::init()
 {
     // Allocate tilemaps chunks
-    m_tilemaps = new(std::nothrow) TileMapChunk[TILEMAP_ASSETSCOUNT];
+    m_tilemaps = GSysMemory.alloc<TileMapChunk>(
+        TILEMAP_ASSETSCOUNT, SYSMEMORY_TILEMAPS
+    );
     if (!m_tilemaps)
     {
         // Could not allocate tilemaps chunks
@@ -374,16 +376,6 @@ void TileMapLoader::destroyTileMapLoader()
         m_chunks[i].flags = TILEMAP_FLAGS_NONE;
         m_chunks[i].tilemap = 0;
         m_chunksptrs[i] = 0;
-    }
-
-    // Destroy tilemaps chunks
-    if (m_tilemaps)
-    {
-        for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)
-        {
-            m_tilemaps[i].destroyTileMap();
-        }
-        delete[] m_tilemaps;
     }
     m_tilemaps = 0;
 

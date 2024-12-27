@@ -43,6 +43,7 @@
 #define VOS_RESOURCES_TEXTURELOADER_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysMemory.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
     #include "../Renderer/Vulkan/Vulkan.h"
@@ -58,7 +59,6 @@
 
     #include <cstdint>
     #include <cstring>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

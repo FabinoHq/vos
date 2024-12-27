@@ -81,6 +81,24 @@ Texture::~Texture()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Init texture                                                              //
+////////////////////////////////////////////////////////////////////////////////
+void Texture::init()
+{
+    m_handle = 0;
+    m_sampler = 0;
+    m_view = 0;
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_descriptorSets[i] = 0;
+    }
+    m_memorySize = 0;
+    m_memoryOffset = 0;
+    m_width = 0;
+    m_height = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Create texture                                                            //
 //  return : True if texture is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////

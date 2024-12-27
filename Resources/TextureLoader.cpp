@@ -243,35 +243,67 @@ bool TextureLoader::init()
     }
 
     // Allocate GUI textures
-    m_texturesGUI = new(std::nothrow) Texture[TEXTURE_GUICOUNT];
+    m_texturesGUI = GSysMemory.alloc<Texture>(
+        TEXTURE_GUICOUNT, SYSMEMORY_TEXTURES
+    );
     if (!m_texturesGUI)
     {
         // Could not allocate GUI textures
         return false;
     }
 
+    // Init GUI textures
+    for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
+    {
+        m_texturesGUI[i].init();
+    }
+
     // Allocate high textures
-    m_texturesHigh = new(std::nothrow) Texture[TEXTURE_ASSETSCOUNT];
+    m_texturesHigh = GSysMemory.alloc<Texture>(
+        TEXTURE_ASSETSCOUNT, SYSMEMORY_TEXTURES
+    );
     if (!m_texturesHigh)
     {
         // Could not allocate high textures
         return false;
     }
 
+    // Init high textures
+    for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
+    {
+        m_texturesHigh[i].init();
+    }
+
     // Allocate textures arrays
-    m_texturesArrays = new(std::nothrow) TextureArray[TEXTURE_ARRAYSCOUNT];
+    m_texturesArrays = GSysMemory.alloc<TextureArray>(
+        TEXTURE_ARRAYSCOUNT, SYSMEMORY_TEXTURES
+    );
     if (!m_texturesArrays)
     {
         // Could not allocate textures arrays
         return false;
     }
 
+    // Init textures arrays
+    for (int i = 0; i < TEXTURE_ARRAYSCOUNT; ++i)
+    {
+        m_texturesArrays[i].init();
+    }
+
     // Allocate cubemaps assets
-    m_cubemaps = new(std::nothrow) CubeMap[TEXTURE_CUBEMAPCOUNT];
+    m_cubemaps = GSysMemory.alloc<CubeMap>(
+        TEXTURE_CUBEMAPCOUNT, SYSMEMORY_TEXTURES
+    );
     if (!m_cubemaps)
     {
         // Could not allocate textures assets
         return false;
+    }
+
+    // Init cubemaps assets
+    for (int i = 0; i < TEXTURE_CUBEMAPCOUNT; ++i)
+    {
+        m_cubemaps[i].init();
     }
 
     // Texture loader ready
@@ -345,7 +377,6 @@ void TextureLoader::destroyTextureLoader()
         {
             m_cubemaps[i].destroyCubeMap();
         }
-        delete[] m_cubemaps;
     }
     m_cubemaps = 0;
 
@@ -356,7 +387,6 @@ void TextureLoader::destroyTextureLoader()
         {
             m_texturesArrays[i].destroyTextureArray();
         }
-        delete[] m_texturesArrays;
     }
     m_texturesArrays = 0;
 
@@ -367,7 +397,6 @@ void TextureLoader::destroyTextureLoader()
         {
             m_texturesHigh[i].destroyTexture();
         }
-        delete[] m_texturesHigh;
     }
     m_texturesHigh = 0;
 
@@ -378,7 +407,6 @@ void TextureLoader::destroyTextureLoader()
         {
             m_texturesGUI[i].destroyTexture();
         }
-        delete[] m_texturesGUI;
     }
     m_texturesGUI = 0;
 
@@ -1625,43 +1653,39 @@ bool TextureLoader::preloadTextures()
     unsigned int texArrayLayers = 4;
     PNGFile texArray1;
     if (!texArray1.loadImage("Textures/tile.png")) return false;
-    PNGFile texArray2;
-    if (!texArray2.loadImage("Textures/tile2.png")) return false;
-    PNGFile texArray3;
-    if (!texArray3.loadImage("Textures/tile3.png")) return false;
-    PNGFile texArray4;
-    if (!texArray4.loadImage("Textures/tile4.png")) return false;
 
     // Allocate texture array data
     unsigned int texArrayWidth = texArray1.getWidth();
     unsigned int texArrayHeight = texArray1.getHeight();
-    unsigned char* texArrayData = new(std::nothrow)
-        unsigned char[texArrayWidth*texArrayHeight*4*texArrayLayers];
+    unsigned char* texArrayData = GSysMemory.alloc<unsigned char>(
+        (texArrayWidth*texArrayHeight*4*texArrayLayers), SYSMEMORY_TEXTURES
+    );
     if (!texArrayData) return false;
-
-    // Copy texture array data
     memcpy(
         &texArrayData[texArrayWidth*texArrayHeight*4*0],
         texArray1.getImage(), texArrayWidth*texArrayHeight*4
     );
+
+    PNGFile texArray2;
+    if (!texArray2.loadImage("Textures/tile2.png")) return false;
     memcpy(
         &texArrayData[texArrayWidth*texArrayHeight*4*1],
         texArray2.getImage(), texArrayWidth*texArrayHeight*4
     );
+
+    PNGFile texArray3;
+    if (!texArray3.loadImage("Textures/tile3.png")) return false;
     memcpy(
         &texArrayData[texArrayWidth*texArrayHeight*4*2],
         texArray3.getImage(), texArrayWidth*texArrayHeight*4
     );
+
+    PNGFile texArray4;
+    if (!texArray4.loadImage("Textures/tile4.png")) return false;
     memcpy(
         &texArrayData[texArrayWidth*texArrayHeight*4*3],
         texArray4.getImage(), texArrayWidth*texArrayHeight*4
     );
-
-    // Destroy array textures
-    texArray1.destroyImage();
-    texArray2.destroyImage();
-    texArray3.destroyImage();
-    texArray4.destroyImage();
 
     // Create texture array
     if (!m_texturesArrays[TEXTURE_ARRAY1].createTextureArray(
@@ -1677,57 +1701,53 @@ bool TextureLoader::preloadTextures()
     // Load cubemap textures
     PNGFile cubeMapRight;
     if (!cubeMapRight.loadImage("Textures/cubemaptest.png")) return false;
-    PNGFile cubeMapLeft;
-    if (!cubeMapLeft.loadImage("Textures/cubemaptest.png")) return false;
-    PNGFile cubeMapTop;
-    if (!cubeMapTop.loadImage("Textures/cubemaptest.png")) return false;
-    PNGFile cubeMapBottom;
-    if (!cubeMapBottom.loadImage("Textures/cubemaptest.png")) return false;
-    PNGFile cubeMapFront;
-    if (!cubeMapFront.loadImage("Textures/cubemaptest.png")) return false;
-    PNGFile cubeMapBack;
-    if (!cubeMapBack.loadImage("Textures/cubemaptest.png")) return false;
 
     // Allocate cubemap data
-    unsigned int cubemapWidth = cubeMapFront.getWidth();
-    unsigned int cubemapHeight = cubeMapFront.getHeight();
-    unsigned char* cubemapData = new(std::nothrow)
-        unsigned char[cubemapWidth*cubemapHeight*4*6];
+    unsigned int cubemapWidth = cubeMapRight.getWidth();
+    unsigned int cubemapHeight = cubeMapRight.getHeight();
+    unsigned char* cubemapData = GSysMemory.alloc<unsigned char>(
+        (cubemapWidth*cubemapHeight*4*6), SYSMEMORY_TEXTURES
+    );
     if (!cubemapData) return false;
-
-    // Copy cubemap data
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*0],
         cubeMapRight.getImage(), cubemapWidth*cubemapHeight*4
     );
+
+    PNGFile cubeMapLeft;
+    if (!cubeMapLeft.loadImage("Textures/cubemaptest.png")) return false;
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*1],
         cubeMapLeft.getImage(), cubemapWidth*cubemapHeight*4
     );
+
+    PNGFile cubeMapTop;
+    if (!cubeMapTop.loadImage("Textures/cubemaptest.png")) return false;
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*2],
         cubeMapTop.getImage(), cubemapWidth*cubemapHeight*4
     );
+
+    PNGFile cubeMapBottom;
+    if (!cubeMapBottom.loadImage("Textures/cubemaptest.png")) return false;
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*3],
         cubeMapBottom.getImage(), cubemapWidth*cubemapHeight*4
     );
+
+    PNGFile cubeMapFront;
+    if (!cubeMapFront.loadImage("Textures/cubemaptest.png")) return false;
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*4],
         cubeMapFront.getImage(), cubemapWidth*cubemapHeight*4
     );
+
+    PNGFile cubeMapBack;
+    if (!cubeMapBack.loadImage("Textures/cubemaptest.png")) return false;
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*5],
         cubeMapBack.getImage(), cubemapWidth*cubemapHeight*4
     );
-
-    // Destroy cubemap textures
-    cubeMapRight.destroyImage();
-    cubeMapLeft.destroyImage();
-    cubeMapTop.destroyImage();
-    cubeMapBottom.destroyImage();
-    cubeMapFront.destroyImage();
-    cubeMapBack.destroyImage();
 
     // Create cubemap texture
     if (!m_cubemaps[TEXTURE_CUBEMAPTEST].createCubeMap(

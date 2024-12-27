@@ -59,10 +59,6 @@ m_height(0)
 ////////////////////////////////////////////////////////////////////////////////
 PNGFile::~PNGFile()
 {
-    if (m_image)
-    {
-        delete[] m_image;
-    }
     m_image = 0;
     m_height = 0;
     m_width = 0;
@@ -77,6 +73,9 @@ PNGFile::~PNGFile()
 bool PNGFile::setImage(uint32_t width, uint32_t height,
     const unsigned char* image)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Check image data
     if (!image)
     {
@@ -102,7 +101,7 @@ bool PNGFile::setImage(uint32_t width, uint32_t height,
 
     // Allocate image data
     size_t imageSize = (width*height*4);
-    m_image = new(std::nothrow) unsigned char[imageSize];
+    m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
     if (!m_image) return false;
 
     // Copy image data
@@ -470,10 +469,6 @@ bool PNGFile::saveImage(const std::string& filepath, PNGFileColorType colorType)
 ////////////////////////////////////////////////////////////////////////////////
 void PNGFile::destroyImage()
 {
-    if (m_image)
-    {
-        delete[] m_image;
-    }
     m_image = 0;
     m_height = 0;
     m_width = 0;
@@ -627,6 +622,9 @@ bool PNGFile::savePNGImage(const std::string& filepath,
 bool PNGFile::loadPNGData(std::ifstream& pngFile,
     PNGFileIHDRChunk& pngIHDRChunk)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Set pixel depth
     uint32_t pixelDepth = 0;
     switch (pngIHDRChunk.colorType)
@@ -686,8 +684,9 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     }
 
     // Allocate raw image data
-    unsigned char* rawData = new(std::nothrow)
-        unsigned char[pngIDATChunksLength];
+    unsigned char* rawData = GSysMemory.alloc<unsigned char>(
+        pngIDATChunksLength, SYSMEMORY_IMAGES
+    );
     if (!rawData)
     {
         // Could not allocate raw image data
@@ -707,7 +706,6 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
         if (!pngFile)
         {
             // Could not read PNG file chunk header
-            if (rawData) { delete[] rawData; }
             return false;
         }
         pngIDATChunkHeader.length = SysByteSwap32(pngIDATChunkHeader.length);
@@ -728,7 +726,6 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             if (!pngFile)
             {
                 // Could not read PNG raw image data
-                if (rawData) { delete[] rawData; }
                 return false;
             }
 
@@ -738,7 +735,6 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             if (!pngFile)
             {
                 // Could not read PNG file IDAT chunk CRC
-                if (rawData) { delete[] rawData; }
                 return false;
             }
             pngIDATChunkCRC = SysByteSwap32(pngIDATChunkCRC);
@@ -756,7 +752,6 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
             if ((checkIDATChunkCRC^SysCRC32Final) != pngIDATChunkCRC)
             {
                 // Invalid PNG file IDAT chunk CRC
-                if (rawData) { delete[] rawData; }
                 return false;
             }
 
@@ -769,11 +764,12 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     // Allocate decompressed data
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
-    unsigned char* pngData = new(std::nothrow) unsigned char[pngDataSize];
+    unsigned char* pngData = GSysMemory.alloc<unsigned char>(
+        pngDataSize, SYSMEMORY_IMAGES
+    );
     if (!pngData)
     {
         // Could not allocate decompressed data
-        if (rawData) { delete[] rawData; }
         return false;
     }
 
@@ -782,19 +778,15 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
         rawData, pngIDATChunksLength, pngData, &pngDataSize))
     {
         // Could not decompress deflate data
-        if (pngData) { delete[] pngData; }
-        if (rawData) { delete[] rawData; }
         return false;
     }
 
     // Allocate 32bits RGBA internal image data
     size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
-    m_image = new(std::nothrow) unsigned char[imageSize];
+    m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
     if (!m_image)
     {
         // Could not allocate internal image data
-        if (pngData) { delete[] pngData; }
-        if (rawData) { delete[] rawData; }
         return false;
     }
 
@@ -807,9 +799,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 8 bits greyscale PNG
-                if (pngData) { delete[] pngData; }
-                if (rawData) { delete[] rawData; }
-                if (m_image) { delete[] m_image; m_image = 0; }
+                m_image = 0;
                 return false;
             }
             break;
@@ -819,9 +809,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 24 bits RGB PNG
-                if (pngData) { delete[] pngData; }
-                if (rawData) { delete[] rawData; }
-                if (m_image) { delete[] m_image; m_image = 0; }
+                m_image = 0;
                 return false;
             }
             break;
@@ -834,9 +822,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 16 bits greyscale-alpha PNG
-                if (pngData) { delete[] pngData; }
-                if (rawData) { delete[] rawData; }
-                if (m_image) { delete[] m_image; m_image = 0; }
+                m_image = 0;
                 return false;
             }
             break;
@@ -846,30 +832,14 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 32 bits RGBA PNG
-                if (pngData) { delete[] pngData; }
-                if (rawData) { delete[] rawData; }
-                if (m_image) { delete[] m_image; m_image = 0; }
+                m_image = 0;
                 return false;
             }
             break;
         default:
             // Unsupported PNG file color type
-            if (pngData) { delete[] pngData; }
-            if (rawData) { delete[] rawData; }
-            if (m_image) { delete[] m_image; m_image = 0; }
+            m_image = 0;
             return false;
-    }
-
-    // Destroy decompressed data
-    if (pngData)
-    {
-        delete[] pngData;
-    }
-
-    // Destroy raw image data
-    if (rawData)
-    {
-        delete[] rawData;
     }
 
     // Set image size
@@ -887,6 +857,9 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
 bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
     PNGFileIHDRChunk& pngIHDRChunk)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Set pixel depth
     uint32_t pixelDepth = 0;
     switch (pngIHDRChunk.colorType)
@@ -950,8 +923,9 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
     }
 
     // Allocate raw image data
-    unsigned char* rawData = new(std::nothrow)
-        unsigned char[pngIDATChunksLength];
+    unsigned char* rawData = GSysMemory.alloc<unsigned char>(
+        pngIDATChunksLength, SYSMEMORY_IMAGES
+    );
     if (!rawData)
     {
         // Could not allocate raw image data
@@ -969,7 +943,6 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
         if ((buffer+PNGFileChunkHeaderSize) >= bufferEnd)
         {
             // Could not read PNG file chunk header
-            if (rawData) { delete[] rawData; }
             return false;
         }
         memcpy((char*)&pngIDATChunkHeader, buffer, PNGFileChunkHeaderSize);
@@ -992,7 +965,6 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
             if ((buffer+pngIDATChunkHeader.length) >= bufferEnd)
             {
                 // Could not read PNG raw image data
-                if (rawData) { delete[] rawData; }
                 return false;
             }
             memcpy(
@@ -1006,7 +978,6 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
             if ((buffer+PNGFileChunkCRCSize) >= bufferEnd)
             {
                 // Could not read PNG file IDAT chunk CRC
-                if (rawData) { delete[] rawData; }
                 return false;
             }
             memcpy((char*)&pngIDATChunkCRC, buffer, PNGFileChunkCRCSize);
@@ -1026,7 +997,6 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
             if ((checkIDATChunkCRC^SysCRC32Final) != pngIDATChunkCRC)
             {
                 // Invalid PNG file IDAT chunk CRC
-                if (rawData) { delete[] rawData; }
                 return false;
             }
 
@@ -1039,11 +1009,12 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
     // Allocate decompressed data
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
-    unsigned char* pngData = new(std::nothrow) unsigned char[pngDataSize];
+    unsigned char* pngData = GSysMemory.alloc<unsigned char>(
+        pngDataSize, SYSMEMORY_IMAGES
+    );
     if (!pngData)
     {
         // Could not allocate decompressed data
-        if (rawData) { delete[] rawData; }
         return false;
     }
 
@@ -1052,19 +1023,15 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
         rawData, pngIDATChunksLength, pngData, &pngDataSize))
     {
         // Could not decompress deflate data
-        if (pngData) { delete[] pngData; }
-        if (rawData) { delete[] rawData; }
         return false;
     }
 
     // Allocate 32bits RGBA internal image data
     size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
-    m_image = new(std::nothrow) unsigned char[imageSize];
+    m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
     if (!m_image)
     {
         // Could not allocate internal image data
-        if (pngData) { delete[] pngData; }
-        if (rawData) { delete[] rawData; }
         return false;
     }
 
@@ -1077,9 +1044,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 8 bits greyscale PNG
-                if (pngData) { delete[] pngData; }
-                if (rawData) { delete[] rawData; }
-                if (m_image) { delete[] m_image; m_image = 0; }
+                m_image = 0;
                 return false;
             }
             break;
@@ -1089,9 +1054,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 24 bits RGB PNG
-                if (pngData) { delete[] pngData; }
-                if (rawData) { delete[] rawData; }
-                if (m_image) { delete[] m_image; m_image = 0; }
+                m_image = 0;
                 return false;
             }
             break;
@@ -1104,9 +1067,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 16 bits greyscale-alpha PNG
-                if (pngData) { delete[] pngData; }
-                if (rawData) { delete[] rawData; }
-                if (m_image) { delete[] m_image; m_image = 0; }
+                m_image = 0;
                 return false;
             }
             break;
@@ -1116,30 +1077,14 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height))
             {
                 // Could not decode 32 bits RGBA PNG
-                if (pngData) { delete[] pngData; }
-                if (rawData) { delete[] rawData; }
-                if (m_image) { delete[] m_image; m_image = 0; }
+                m_image = 0;
                 return false;
             }
             break;
         default:
             // Unsupported PNG file color type
-            if (pngData) { delete[] pngData; }
-            if (rawData) { delete[] rawData; }
-            if (m_image) { delete[] m_image; m_image = 0; }
+            m_image = 0;
             return false;
-    }
-
-    // Destroy decompressed data
-    if (pngData)
-    {
-        delete[] pngData;
-    }
-
-    // Destroy raw image data
-    if (rawData)
-    {
-        delete[] rawData;
     }
 
     // Set image size
@@ -1157,6 +1102,9 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
 bool PNGFile::savePNGData(std::ofstream& pngFile,
     PNGFileIHDRChunk& pngIHDRChunk, const unsigned char* image)
 {
+    // Reset images memory
+    GSysMemory.resetMemory(SYSMEMORY_IMAGES);
+
     // Check image data
     if (!image)
     {
@@ -1191,7 +1139,9 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     // Allocate PNG data
     size_t pngDataSize =
         (pngIHDRChunk.width*pngIHDRChunk.height*pixelDepth)+pngIHDRChunk.height;
-    unsigned char* pngData = new(std::nothrow) unsigned char[pngDataSize];
+    unsigned char* pngData = GSysMemory.alloc<unsigned char>(
+        pngDataSize, SYSMEMORY_IMAGES
+    );
     if (!pngData)
     {
         // Could not allocate PNG data
@@ -1207,7 +1157,6 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
             {
                 // Could not encode 8 bits greyscale PNG
-                if (pngData) { delete[] pngData; }
                 return false;
             }
             break;
@@ -1217,7 +1166,6 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
             {
                 // Could not encode 24 bits RGB PNG
-                if (pngData) { delete[] pngData; }
                 return false;
             }
             break;
@@ -1230,7 +1178,6 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
             {
                 // Could not encode 16 bits greyscale-alpha PNG
-                if (pngData) { delete[] pngData; }
                 return false;
             }
             break;
@@ -1240,13 +1187,11 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
                 pngData, pngIHDRChunk.width, pngIHDRChunk.height, image))
             {
                 // Could not encode 32 bits RGBA PNG
-                if (pngData) { delete[] pngData; }
                 return false;
             }
             break;
         default:
             // Unsupported PNG file color type
-            if (pngData) { delete[] pngData; }
             return false;
     }
 
@@ -1254,12 +1199,12 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     size_t compressedDataSize = ZLibComputeDeflateCompressSize(pngDataSize);
 
     // Allocate compressed data
-    unsigned char* compressedData = new(std::nothrow)
-        unsigned char[compressedDataSize];
+    unsigned char* compressedData = GSysMemory.alloc<unsigned char>(
+        compressedDataSize, SYSMEMORY_IMAGES
+    );
     if (!compressedData)
     {
         // Could not allocate compressed data
-        if (pngData) { delete[] pngData; }
         return false;
     }
 
@@ -1268,8 +1213,6 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
         pngData, pngDataSize, compressedData, &compressedDataSize))
     {
         // Could not compress deflate data
-        if (compressedData) { delete[] compressedData; }
-        if (pngData) { delete[] pngData; }
         return false;
     }
 
@@ -1284,8 +1227,6 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     if (!pngFile)
     {
         // Could not write PNG file chunk header
-        if (compressedData) { delete[] compressedData; }
-        if (pngData) { delete[] pngData; }
         return false;
     }
 
@@ -1294,8 +1235,6 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     if (!pngFile)
     {
         // Could not write PNG file IDAT chunk
-        if (compressedData) { delete[] compressedData; }
-        if (pngData) { delete[] pngData; }
         return false;
     }
 
@@ -1315,18 +1254,6 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     {
         // Could not write PNG file IDAT chunk CRC
         return false;
-    }
-
-    // Destroy compressed data
-    if (compressedData)
-    {
-        delete[] compressedData;
-    }
-
-    // Destroy png data
-    if (pngData)
-    {
-        delete[] pngData;
     }
 
     // PNG file image data is successfully saved

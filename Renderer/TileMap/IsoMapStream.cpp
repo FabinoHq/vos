@@ -67,6 +67,9 @@ IsoMapStream::~IsoMapStream()
 ////////////////////////////////////////////////////////////////////////////////
 bool IsoMapStream::init()
 {
+    m_chunkX = 0;
+    m_chunkY = 0;
+
     // Isomap stream successfully created
     return true;
 }

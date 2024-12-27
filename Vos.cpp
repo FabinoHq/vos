@@ -76,6 +76,13 @@ bool Vos::launch()
         return false;
     }
 
+    // Init system memory
+    if (!GSysMemory.init())
+    {
+        // Unable to init system memory
+        return false;
+    }
+
     // Create VOS global window
     if (!GSysWindow.create())
     {
@@ -312,4 +319,7 @@ void Vos::run()
 
     // Close VOS
     GSysWindow.close();
+
+    // Destroy system memory
+    GSysMemory.destroySysMemory();
 }

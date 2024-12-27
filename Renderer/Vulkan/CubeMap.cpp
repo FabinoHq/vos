@@ -81,6 +81,24 @@ CubeMap::~CubeMap()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Init cubemap                                                              //
+////////////////////////////////////////////////////////////////////////////////
+void CubeMap::init()
+{
+    m_handle = 0;
+    m_sampler = 0;
+    m_view = 0;
+    for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
+    {
+        m_descriptorSets[i] = 0;
+    }
+    m_memorySize = 0;
+    m_memoryOffset = 0;
+    m_width = 0;
+    m_height = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //  Create cubemap                                                            //
 //  return : True if cubemap is successfully created                          //
 ////////////////////////////////////////////////////////////////////////////////

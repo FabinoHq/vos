@@ -189,7 +189,9 @@ bool SysWindow::create()
     m_lastMouseRight = (mask & Button3Mask);
 
     // Allocate system cursors
-    m_cursors = new(std::nothrow) Cursor[SYSCURSOR_CURSORSCOUNT];
+    m_cursors = GSysMemory.alloc<Cursor>(
+        SYSCURSOR_CURSORSCOUNT, SYSMEMORY_WINDOW
+    );
     if (!m_cursors)
     {
         // Could not allocate system cursors
@@ -270,7 +272,6 @@ void SysWindow::close()
             {
                 if (m_cursors[i]) { XFreeCursor(m_display, m_cursors[i]); }
             }
-            delete[] m_cursors;
         }
         m_cursors = 0;
 

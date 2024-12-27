@@ -43,6 +43,7 @@
 #define VOS_RENDERER_RENDERER_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysMemory.h"
     #include "../System/SysMessage.h"
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"

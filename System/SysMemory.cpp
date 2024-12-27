@@ -37,77 +37,93 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Renderer/Vulkan/VulkanBuffer.h : Vulkan buffer management              //
+//     System/SysMemory.cpp : System memory management                        //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_RENDERER_VULKAN_VULKANBUFFER_HEADER
-#define VOS_RENDERER_VULKAN_VULKANBUFFER_HEADER
-
-    #include "../../System/System.h"
-    #include "Vulkan.h"
-    #include "VulkanMemory.h"
-
-    #include <cstdint>
+#include "SysMemory.h"
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  VulkanBuffer class definition                                         //
-    ////////////////////////////////////////////////////////////////////////////
-    class VulkanBuffer
+////////////////////////////////////////////////////////////////////////////////
+//  SysMemory global instance                                                 //
+////////////////////////////////////////////////////////////////////////////////
+SysMemory GSysMemory = SysMemory();
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  SysMemory default constructor                                             //
+////////////////////////////////////////////////////////////////////////////////
+SysMemory::SysMemory()
+{
+    // Reset memory arrays
+    for (int i = 0; i < SYSMEMORY_POOLSCOUNT; ++i)
     {
-        public:
-            ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer default constructor                              //
-            ////////////////////////////////////////////////////////////////////
-            VulkanBuffer();
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_usage[i] = 0;
+    }
+}
 
-            ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer destructor                                       //
-            ////////////////////////////////////////////////////////////////////
-            ~VulkanBuffer();
-
-
-            ////////////////////////////////////////////////////////////////////
-            //  Init Vulkan buffer                                            //
-            ////////////////////////////////////////////////////////////////////
-            inline void init()
-            {
-                handle = 0;
-                size = 0;
-                memorySize = 0;
-                memoryOffset = 0;
-            }
-
-            ////////////////////////////////////////////////////////////////////
-            //  Create Vulkan buffer                                          //
-            //  return : True if Vulkan buffer is successfully created        //
-            ////////////////////////////////////////////////////////////////////
-            bool createBuffer(VkBufferUsageFlags usage,
-                VulkanMemoryPool memoryPool, uint32_t bufferSize);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy Vulkan buffer                                         //
-            ////////////////////////////////////////////////////////////////////
-            void destroyBuffer();
-
-        private:
-            ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer private copy constructor : Not copyable          //
-            ////////////////////////////////////////////////////////////////////
-            VulkanBuffer(const VulkanBuffer&) = delete;
-
-            ////////////////////////////////////////////////////////////////////
-            //  VulkanBuffer private copy operator : Not copyable             //
-            ////////////////////////////////////////////////////////////////////
-            VulkanBuffer& operator=(const VulkanBuffer&) = delete;
+////////////////////////////////////////////////////////////////////////////////
+//  SysMemory destructor                                                      //
+////////////////////////////////////////////////////////////////////////////////
+SysMemory::~SysMemory()
+{
+    // Free memory arrays
+    for (int i = 0; i < SYSMEMORY_POOLSCOUNT; ++i)
+    {
+        if (m_memory[i]) { std::free(m_memory[i]); }
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_usage[i] = 0;
+    }
+}
 
 
-        public:
-            VkBuffer        handle;         // Buffer handle
-            uint32_t        size;           // Buffer size
+////////////////////////////////////////////////////////////////////////////////
+//  Init system memory                                                        //
+//  return : True if system memory is ready                                   //
+////////////////////////////////////////////////////////////////////////////////
+bool SysMemory::init()
+{
+    // Reset memory arrays
+    for (int i = 0; i < SYSMEMORY_POOLSCOUNT; ++i)
+    {
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_usage[i] = 0;
+    }
 
-            VkDeviceSize    memorySize;     // Memory size
-            VkDeviceSize    memoryOffset;   // Memory offset
-    };
+    // Allocate memory pools
+    for (int i = 0; i < SYSMEMORY_POOLSCOUNT; ++i)
+    {
+        // Check memory pool size
+        if (SysMemoryArray[i].size <= 0) { continue; }
 
+        // Allocate system memory
+        m_memory[i] = std::malloc(SysMemoryArray[i].size);
+        if (!m_memory[i])
+        {
+            // Could not allocate system memory pool
+            GSysMessage << "[0x1000] Could not allocate system memory pool\n";
+            GSysMessage << "Please check your system memory";
+            return false;
+        }
+    }
 
-#endif // VOS_RENDERER_VULKAN_VULKANBUFFER_HEADER
+    // System memory is ready
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Destroy system memory                                                     //
+////////////////////////////////////////////////////////////////////////////////
+void SysMemory::destroySysMemory()
+{
+    // Free memory arrays
+    for (int i = 0; i < SYSMEMORY_POOLSCOUNT; ++i)
+    {
+        if (m_memory[i]) { std::free(m_memory[i]); }
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_usage[i] = 0;
+    }
+}

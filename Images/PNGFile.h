@@ -44,6 +44,7 @@
 
     #include "../System/System.h"
     #include "../System/SysCPU.h"
+    #include "../System/SysMemory.h"
     #include "../System/SysCRC.h"
     #include "../Compress/ZLib.h"
     #include "../Math/Math.h"
@@ -53,7 +54,6 @@
     #include <cstring>
     #include <string>
     #include <fstream>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

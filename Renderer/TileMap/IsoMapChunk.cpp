@@ -58,7 +58,6 @@ matrix(0)
 ////////////////////////////////////////////////////////////////////////////////
 IsoMapChunk::~IsoMapChunk()
 {
-    if (matrix) { delete[] matrix; }
     matrix = 0;
 }
 
@@ -69,25 +68,19 @@ IsoMapChunk::~IsoMapChunk()
 ////////////////////////////////////////////////////////////////////////////////
 bool IsoMapChunk::init()
 {
+    // Reset matrix chunk
+    matrix = 0;
+
     // Reset isomap chunk transformations
     resetTransforms();
 
     // Init matrix chunk
-    matrix = new(std::nothrow) int32_t[IsoMapChunkSize];
+    matrix = GSysMemory.alloc<int32_t>(IsoMapChunkSize, SYSMEMORY_ISOMAPS);
     if (!matrix) { return false; }
     memset(matrix, 0, sizeof(int32_t)*IsoMapChunkSize);
 
     // Isomap chunk successfully created
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy isomap chunk                                                      //
-////////////////////////////////////////////////////////////////////////////////
-void IsoMapChunk::destroyIsoMap()
-{
-    if (matrix) { delete[] matrix; }
-    matrix = 0;
 }
 
 

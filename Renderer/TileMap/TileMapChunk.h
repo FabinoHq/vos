@@ -43,6 +43,7 @@
 #define VOS_RENDERER_TILEMAP_TILEMAPCHUNK_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysMemory.h"
     #include "../Vulkan/Vulkan.h"
     #include "../Vulkan/Swapchain.h"
     #include "../Vulkan/GraphicsLayout.h"
@@ -99,11 +100,6 @@
             //  return : True if the tilemap chunk is successfully created    //
             ////////////////////////////////////////////////////////////////////
             bool init();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy tilemap chunk                                         //
-            ////////////////////////////////////////////////////////////////////
-            void destroyTileMap();
 
 
             ////////////////////////////////////////////////////////////////////

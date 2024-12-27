@@ -61,7 +61,7 @@ Shader::~Shader()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Create Shader                                                             //
+//  Create shader                                                             //
 //  return : True if Shader is successfully created                           //
 ////////////////////////////////////////////////////////////////////////////////
 bool Shader::createShader(const uint32_t* source, const size_t size)
@@ -105,7 +105,7 @@ bool Shader::createShader(const uint32_t* source, const size_t size)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy Shader                                                            //
+//  Destroy shader                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 void Shader::destroyShader()
 {

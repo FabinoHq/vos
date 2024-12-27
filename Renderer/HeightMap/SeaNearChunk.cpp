@@ -102,8 +102,13 @@ void SeaNearChunk::render()
 ////////////////////////////////////////////////////////////////////////////////
 bool SeaNearChunk::generateSeaNearChunk(VertexBuffer& vertexBuffer)
 {
+    // Reset sea nears system memory
+    GSysMemory.resetMemory(SYSMEMORY_SEANEARS);
+
     // Allocate sea near vertices
-    float* vertices = new(std::nothrow) float[SeaNearChunkVerticesCount];
+    float* vertices = GSysMemory.alloc<float>(
+        SeaNearChunkVerticesCount, SYSMEMORY_SEANEARS
+    );
     if (!vertices)
     {
         // Could not allocate sea near vertices
@@ -111,11 +116,12 @@ bool SeaNearChunk::generateSeaNearChunk(VertexBuffer& vertexBuffer)
     }
 
     // Allocate sea near indices
-    uint16_t* indices = new(std::nothrow) uint16_t[SeaNearChunkIndicesCount];
+    uint16_t* indices = GSysMemory.alloc<uint16_t>(
+        SeaNearChunkIndicesCount, SYSMEMORY_SEANEARS
+    );
     if (!indices)
     {
         // Could not allocate sea near indices
-        if (vertices) { delete[] vertices; }
         return false;
     }
 
@@ -185,14 +191,8 @@ bool SeaNearChunk::generateSeaNearChunk(VertexBuffer& vertexBuffer)
         SeaNearChunkVerticesCount, SeaNearChunkIndicesCount))
     {
         // Could not create vertex buffer
-        if (indices) { delete[] indices; }
-        if (vertices) { delete[] vertices; }
         return false;
     }
-
-    // Delete indices and vertices data
-    if (indices) { delete[] indices; }
-    if (vertices) { delete[] vertices; }
 
     // Sea near chunk successfully generated
     return true;

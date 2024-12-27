@@ -78,9 +78,7 @@ HeightFarLoader::~HeightFarLoader()
 {
     m_chunkY = 0;
     m_chunkX = 0;
-    if (m_indices) { delete[] m_indices; }
     m_indices = 0;
-    if (m_vertices) { delete[] m_vertices; }
     m_vertices = 0;
     for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
     {
@@ -247,7 +245,9 @@ bool HeightFarLoader::init()
     }
 
     // Allocate heightfars vertex buffers
-    m_heightfars = new(std::nothrow) VertexBuffer[HEIGHTFAR_ASSETSCOUNT];
+    m_heightfars = GSysMemory.alloc<VertexBuffer>(
+        HEIGHTFAR_ASSETSCOUNT, SYSMEMORY_HEIGHTFARS
+    );
     if (!m_heightfars)
     {
         // Could not allocate heightfars vertex buffers
@@ -257,12 +257,15 @@ bool HeightFarLoader::init()
     // Set default chunks pointers
     for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
     {
+        m_heightfars[i].init();
         m_chunks[i].heightfar = &m_heightfars[i];
         m_chunksptrs[i] = &m_chunks[i];
     }
 
     // Allocate chunk vertices
-    m_vertices = new(std::nothrow) float[HeightFarChunkVerticesCount];
+    m_vertices = GSysMemory.alloc<float>(
+        HeightFarChunkVerticesCount, SYSMEMORY_HEIGHTFARS
+    );
     if (!m_vertices)
     {
         // Could not allocate chunk vertices
@@ -270,7 +273,9 @@ bool HeightFarLoader::init()
     }
 
     // Allocate chunk indices
-    m_indices = new(std::nothrow) uint16_t[HeightFarChunkIndicesCount];
+    m_indices = GSysMemory.alloc<uint16_t>(
+        HeightFarChunkIndicesCount, SYSMEMORY_HEIGHTFARS
+    );
     if (!m_indices)
     {
         // Could not allocate chunk indices
@@ -454,10 +459,8 @@ void HeightFarLoader::destroyHeightFarLoader()
     m_chunkY = 0;
     m_chunkX = 0;
 
-    // Delete indices and vertices
-    if (m_indices) { delete[] m_indices; }
+    // Reset indices and vertices
     m_indices = 0;
-    if (m_vertices) { delete[] m_vertices; }
     m_vertices = 0;
 
     // Reset heightfars pointers
@@ -478,7 +481,6 @@ void HeightFarLoader::destroyHeightFarLoader()
         {
             m_heightfars[i].destroyBuffer();
         }
-        delete[] m_heightfars;
     }
     m_heightfars = 0;
 

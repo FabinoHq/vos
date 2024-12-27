@@ -43,6 +43,7 @@
 #define VOS_PHYSICS_MATRIXCHUNK2_HEADER
 
     #include "../System/System.h"
+    #include "../System/SysMemory.h"
     #include "../Math/Math.h"
     #include "Physics.h"
 
@@ -93,11 +94,6 @@
             //  Init matrix chunk                                             //
             ////////////////////////////////////////////////////////////////////
             bool init();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy matrix chunk                                          //
-            ////////////////////////////////////////////////////////////////////
-            void destroyMatrix();
 
 
             ////////////////////////////////////////////////////////////////////

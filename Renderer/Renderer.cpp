@@ -283,11 +283,19 @@ bool Renderer::initPipelines()
     }
 
     // Allocate pipelines
-    pipelines = new(std::nothrow) Pipeline[RENDERER_PIPELINE_PIPELINESCOUNT];
+    pipelines = GSysMemory.alloc<Pipeline>(
+        RENDERER_PIPELINE_PIPELINESCOUNT, SYSMEMORY_RENDERER
+    );
     if (!pipelines)
     {
         // Could not allocate pipelines
         return false;
+    }
+
+    // Init pipelines
+    for (int i = 0; i < RENDERER_PIPELINE_PIPELINESCOUNT; ++i)
+    {
+        pipelines[i].init();
     }
 
 
@@ -965,7 +973,6 @@ void Renderer::destroyRenderer()
         {
             pipelines[i].destroyPipeline();
         }
-        delete[] pipelines;
     }
     pipelines = 0;
 

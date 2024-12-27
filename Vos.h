@@ -43,11 +43,12 @@
 #define VOS_VOS_HEADER
 
     #include "System/System.h"
+    #include "System/SysCPU.h"
+    #include "System/SysMemory.h"
     #include "System/SysEvent.h"
     #include "System/SysMouse.h"
     #include "System/SysKeys.h"
     #include "System/SysMessage.h"
-    #include "System/SysCPU.h"
     #include "System/SysWindow.h"
     #include "System/SysClock.h"
     #include "System/SysSleep.h"
@@ -60,7 +61,6 @@
 
     #include <cstddef>
     #include <cstdint>
-    #include <new>
 
 
     ////////////////////////////////////////////////////////////////////////////

@@ -57,7 +57,6 @@ matrix(0)
 ////////////////////////////////////////////////////////////////////////////////
 TileMapChunk::~TileMapChunk()
 {
-    if (matrix) { delete[] matrix; }
     matrix = 0;
 }
 
@@ -68,25 +67,19 @@ TileMapChunk::~TileMapChunk()
 ////////////////////////////////////////////////////////////////////////////////
 bool TileMapChunk::init()
 {
+    // Reset matrix chunk
+    matrix = 0;
+
     // Reset tilemap chunk transformations
     resetTransforms();
 
     // Init matrix chunk
-    matrix = new(std::nothrow) int32_t[TileMapChunkSize];
+    matrix = GSysMemory.alloc<int32_t>(TileMapChunkSize, SYSMEMORY_TILEMAPS);
     if (!matrix) { return false; }
     memset(matrix, 0, sizeof(int32_t)*TileMapChunkSize);
 
     // Tilemap chunk successfully created
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Destroy tilemap chunk                                                     //
-////////////////////////////////////////////////////////////////////////////////
-void TileMapChunk::destroyTileMap()
-{
-    if (matrix) { delete[] matrix; }
-    matrix = 0;
 }
 
 

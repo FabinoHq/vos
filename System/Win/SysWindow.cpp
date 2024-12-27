@@ -93,7 +93,9 @@ bool SysWindow::create()
     }
 
     // Allocate system cursors
-    m_cursors = new(std::nothrow) HCURSOR[SYSCURSOR_CURSORSCOUNT];
+    m_cursors = GSysMemory.alloc<HCURSOR>(
+        SYSCURSOR_CURSORSCOUNT, SYSMEMORY_WINDOW
+    );
     if (!m_cursors)
     {
         // Could not allocate system cursors
@@ -245,7 +247,6 @@ void SysWindow::close()
         {
             if (m_cursors[i]) { /*DestroyCursor(m_cursors[i]);*/ }
         }
-        delete[] m_cursors;
     }
     m_cursors = 0;
 }

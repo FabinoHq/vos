@@ -289,6 +289,7 @@
     <ClCompile Include="System\SysClock.cpp" />
     <ClCompile Include="System\SysCPU.cpp" />
     <ClCompile Include="System\SysKeys.cpp" />
+    <ClCompile Include="System\SysMemory.cpp" />
     <ClCompile Include="System\SysMouse.cpp" />
     <ClCompile Include="System\SysSettings.cpp" />
     <ClCompile Include="System\SysThread.cpp" />
@@ -430,6 +431,7 @@
     <ClInclude Include="System\SysDisplayMode.h" />
     <ClInclude Include="System\SysEvent.h" />
     <ClInclude Include="System\SysKeys.h" />
+    <ClInclude Include="System\SysMemory.h" />
     <ClInclude Include="System\SysMessage.h" />
     <ClInclude Include="System\SysMouse.h" />
     <ClInclude Include="System\SysMutex.h" />
