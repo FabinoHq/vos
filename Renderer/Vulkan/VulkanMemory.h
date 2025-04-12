@@ -136,8 +136,8 @@
         VULKAN_MEMORY_UNIFORMS, VULKAN_MEMORY_DEVICE, 0x4000,
         VULKAN_MEMORY_TEXTURES, VULKAN_MEMORY_DEVICE, 0x4000000,
         VULKAN_MEMORY_MESHES, VULKAN_MEMORY_DEVICE, 0x100000,
-        VULKAN_MEMORY_HEIGHTMAPS, VULKAN_MEMORY_DEVICE, 0x5000000,
-        VULKAN_MEMORY_HEIGHTFARS, VULKAN_MEMORY_DEVICE, 0x5000000
+        VULKAN_MEMORY_HEIGHTMAPS, VULKAN_MEMORY_DEVICE, 0x4000000,
+        VULKAN_MEMORY_HEIGHTFARS, VULKAN_MEMORY_DEVICE, 0x4000000
     };
 
 
@@ -228,7 +228,7 @@
             ////////////////////////////////////////////////////////////////////
             /*void dumpMemory()
             {
-                std::cout << "Memory dump\n";
+                std::cout << "Vulkan memory dump\n";
                 for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
                 {
                     std::cout << std::hex << m_usage[i] << " ( ";

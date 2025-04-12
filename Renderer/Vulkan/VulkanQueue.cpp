@@ -141,11 +141,25 @@ bool VulkanQueue::getDeviceQueues(VkPhysicalDevice& physicalDevice)
     }
 
     // Get device queue families list
-    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-    std::vector<VkBool32> queueSurfaceSupport(queueFamilyCount);
+    VkQueueFamilyProperties* queueFamilies =
+        GSysMemory.alloc<VkQueueFamilyProperties>(
+            queueFamilyCount, SYSMEMORY_RENDERER
+        );
+    if (!queueFamilies) { return false; }
+    for (uint32_t i = 0; i < queueFamilyCount; ++i)
+    {
+        queueFamilies[i] = VkQueueFamilyProperties();
+    }
+    VkBool32* queueSurfaceSupport =
+        GSysMemory.alloc<VkBool32>(queueFamilyCount, SYSMEMORY_RENDERER);
+    if (!queueSurfaceSupport) { return false; }
+    for (uint32_t i = 0; i < queueFamilyCount; ++i)
+    {
+        queueSurfaceSupport[i] = VkBool32();
+    }
 
     vkGetPhysicalDeviceQueueFamilyProperties(
-        physicalDevice, &queueFamilyCount, queueFamilies.data()
+        physicalDevice, &queueFamilyCount, queueFamilies
     );
     for (uint32_t i = 0; i < queueFamilyCount; ++i)
     {

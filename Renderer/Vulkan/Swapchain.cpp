@@ -188,9 +188,15 @@ bool Swapchain::createSwapchain()
         return false;
     }
 
-    std::vector<VkSurfaceFormatKHR> surfaceFormats(formatsCnt);
+    VkSurfaceFormatKHR* surfaceFormats =
+        GSysMemory.alloc<VkSurfaceFormatKHR>(formatsCnt, SYSMEMORY_RENDERER);
+    if (!surfaceFormats) { return false; }
+    for (uint32_t i = 0; i < formatsCnt; ++i)
+    {
+        surfaceFormats[i] = VkSurfaceFormatKHR();
+    }
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(GPhysicalDevice,
-        GVulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
+        GVulkanSurface, &formatsCnt, surfaceFormats) != VK_SUCCESS)
     {
         // Could not get surface formats
         GSysMessage << "[0x302F] Could not get surface formats\n";
@@ -215,9 +221,15 @@ bool Swapchain::createSwapchain()
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
-    std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
+    VkPresentModeKHR* presentModes =
+        GSysMemory.alloc<VkPresentModeKHR>(presentModesCnt, SYSMEMORY_RENDERER);
+    if (!presentModes) { return false; }
+    for (uint32_t i = 0; i < presentModesCnt; ++i)
+    {
+        presentModes[i] = VkPresentModeKHR();
+    }
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(GPhysicalDevice,
-        GVulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
+        GVulkanSurface, &presentModesCnt, presentModes) != VK_SUCCESS)
     {
         // Could not get present modes
         GSysMessage << "[0x3032] Could not get present modes\n";
@@ -250,7 +262,7 @@ bool Swapchain::createSwapchain()
     VkSurfaceFormatKHR surfaceFormat;
     surfaceFormat.format = VK_FORMAT_UNDEFINED;
     surfaceFormat.colorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-    if (surfaceFormats.size() <= 0)
+    if (formatsCnt <= 0)
     {
         // Invalid surface formats count
         GSysMessage << "[0x3034] Invalid surface formats count\n";
@@ -267,7 +279,7 @@ bool Swapchain::createSwapchain()
     else
     {
         bool formatFound = false;
-        for (size_t i = 0; i < surfaceFormats.size(); ++i)
+        for (size_t i = 0; i < formatsCnt; ++i)
         {
             if (surfaceFormats[i].format == VK_FORMAT_R8G8B8A8_UNORM)
             {
@@ -332,7 +344,7 @@ bool Swapchain::createSwapchain()
     bool immediateModeFound = false;
     bool mailboxModeFound = false;
     bool fifoModeFound = false;
-    for (size_t i = 0; i < presentModes.size(); ++i)
+    for (size_t i = 0; i < presentModesCnt; ++i)
     {
         if (presentModes[i] == VK_PRESENT_MODE_IMMEDIATE_KHR)
         {
@@ -829,9 +841,15 @@ bool Swapchain::resizeSwapchain()
         return false;
     }
 
-    std::vector<VkSurfaceFormatKHR> surfaceFormats(formatsCnt);
+    VkSurfaceFormatKHR* surfaceFormats =
+        GSysMemory.alloc<VkSurfaceFormatKHR>(formatsCnt, SYSMEMORY_RENDERER);
+    if (!surfaceFormats) { return false; }
+    for (uint32_t i = 0; i < formatsCnt; ++i)
+    {
+        surfaceFormats[i] = VkSurfaceFormatKHR();
+    }
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(GPhysicalDevice,
-        GVulkanSurface, &formatsCnt, surfaceFormats.data()) != VK_SUCCESS)
+        GVulkanSurface, &formatsCnt, surfaceFormats) != VK_SUCCESS)
     {
         // Could not get surface formats
         return false;
@@ -850,9 +868,15 @@ bool Swapchain::resizeSwapchain()
         // No present modes found
         return false;
     }
-    std::vector<VkPresentModeKHR> presentModes(presentModesCnt);
+    VkPresentModeKHR* presentModes =
+        GSysMemory.alloc<VkPresentModeKHR>(presentModesCnt, SYSMEMORY_RENDERER);
+    if (!presentModes) { return false; }
+    for (uint32_t i = 0; i < presentModesCnt; ++i)
+    {
+        presentModes[i] = VkPresentModeKHR();
+    }
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(GPhysicalDevice,
-        GVulkanSurface, &presentModesCnt, presentModes.data()) != VK_SUCCESS)
+        GVulkanSurface, &presentModesCnt, presentModes) != VK_SUCCESS)
     {
         // Could not get present modes
         return false;
@@ -881,7 +905,7 @@ bool Swapchain::resizeSwapchain()
     VkSurfaceFormatKHR surfaceFormat;
     surfaceFormat.format = VK_FORMAT_UNDEFINED;
     surfaceFormat.colorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-    if (surfaceFormats.size() <= 0)
+    if (formatsCnt <= 0)
     {
         // Invalid surface formats count
         return false;
@@ -896,7 +920,7 @@ bool Swapchain::resizeSwapchain()
     else
     {
         bool formatFound = false;
-        for (size_t i = 0; i < surfaceFormats.size(); ++i)
+        for (size_t i = 0; i < formatsCnt; ++i)
         {
             if (surfaceFormats[i].format == VK_FORMAT_R8G8B8A8_UNORM)
             {
@@ -967,7 +991,7 @@ bool Swapchain::resizeSwapchain()
     bool immediateModeFound = false;
     bool mailboxModeFound = false;
     bool fifoModeFound = false;
-    for (size_t i = 0; i < presentModes.size(); ++i)
+    for (size_t i = 0; i < presentModesCnt; ++i)
     {
         if (presentModes[i] == VK_PRESENT_MODE_IMMEDIATE_KHR)
         {

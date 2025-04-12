@@ -1057,9 +1057,15 @@ bool Renderer::createVulkanInstance()
     }
 
     // Get Vulkan extensions properties
-    std::vector<VkExtensionProperties> extProperties(extCount);
+    VkExtensionProperties* extProperties =
+        GSysMemory.alloc<VkExtensionProperties>(extCount, SYSMEMORY_RENDERER);
+    if (!extProperties) { return false; }
+    for (uint32_t i = 0; i < extCount; ++i)
+    {
+        extProperties[i] = VkExtensionProperties();
+    }
     if (vkEnumerateInstanceExtensionProperties(
-        0, &extCount, extProperties.data()) != VK_SUCCESS)
+        0, &extCount, extProperties) != VK_SUCCESS)
     {
         // Could not get Vulkan extensions properties
         GSysMessage << "[0x3007] Could not get extensions properties\n";
@@ -1072,7 +1078,7 @@ bool Renderer::createVulkanInstance()
     for (size_t i = 0; i < VulkanExtensionsSize; ++i)
     {
         bool extFound = false;
-        for (size_t j = 0; j < extProperties.size(); ++j)
+        for (size_t j = 0; j < extCount; ++j)
         {
             if (strcmp(VulkanExtensions[i],
                 extProperties[j].extensionName) == 0)
@@ -1197,9 +1203,15 @@ bool Renderer::selectVulkanDevice()
     }
 
     // Get physical devices list
-    std::vector<VkPhysicalDevice> physicalDevices(devicesCounts);
+    VkPhysicalDevice* physicalDevices =
+        GSysMemory.alloc<VkPhysicalDevice>(devicesCounts, SYSMEMORY_RENDERER);
+    if (!physicalDevices) { return false; }
+    for (uint32_t i = 0; i < devicesCounts; ++i)
+    {
+        physicalDevices[i] = VkPhysicalDevice();
+    }
     if (vkEnumeratePhysicalDevices(
-        GVulkanInstance, &devicesCounts, physicalDevices.data()) != VK_SUCCESS)
+        GVulkanInstance, &devicesCounts, physicalDevices) != VK_SUCCESS)
     {
         // Could not get physical devices list
         GSysMessage << "[0x3014] Could not get physical devices list\n";
@@ -1224,9 +1236,17 @@ bool Renderer::selectVulkanDevice()
         }
 
         // Get device extensions list
-        std::vector<VkExtensionProperties> extProperties(extCount);
+        VkExtensionProperties* extProperties =
+            GSysMemory.alloc<VkExtensionProperties>(
+                extCount, SYSMEMORY_RENDERER
+            );
+        if (!extProperties) { return false; }
+        for (uint32_t j = 0; j < extCount; ++j)
+        {
+            extProperties[j] = VkExtensionProperties();
+        }
         if (vkEnumerateDeviceExtensionProperties(physicalDevices[i], 0,
-            &extCount, extProperties.data()) != VK_SUCCESS)
+            &extCount, extProperties) != VK_SUCCESS)
         {
             // Could not get extensions properties list
             continue;
@@ -1237,7 +1257,7 @@ bool Renderer::selectVulkanDevice()
         for (size_t j = 0; j < VulkanDeviceExtensionsSize; ++j)
         {
             bool extFound = false;
-            for (size_t k = 0; k < extProperties.size(); ++k)
+            for (size_t k = 0; k < extCount; ++k)
             {
                 if (strcmp(VulkanDeviceExtensions[j],
                     extProperties[k].extensionName) == 0)

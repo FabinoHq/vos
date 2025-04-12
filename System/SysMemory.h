@@ -97,18 +97,18 @@
     const SysMemoryList SysMemoryArray[SYSMEMORY_POOLSCOUNT] =
     {
         SYSMEMORY_WINDOW, 0x1000,
-        SYSMEMORY_RENDERER, 0x8000,
+        SYSMEMORY_RENDERER, 0x100000,
         SYSMEMORY_IMAGES, 0x1000000,
         SYSMEMORY_TEXTURES, 0x2000000,
         SYSMEMORY_MESHES, 0x800000,
 
         SYSMEMORY_MATRICES, 0x8000,
-        SYSMEMORY_TILEMAPS, 0x20000,
-        SYSMEMORY_ISOMAPS, 0x20000,
-        SYSMEMORY_HEIGHTMAPS, 0x100000,
-        SYSMEMORY_HEIGHTFARS, 0x100000,
-        SYSMEMORY_SEANEARS, 0x40000,
-        SYSMEMORY_SEAFARS, 0x40000
+        SYSMEMORY_TILEMAPS, 0x1D000,
+        SYSMEMORY_ISOMAPS, 0x1D000,
+        SYSMEMORY_HEIGHTMAPS, 0xD0000,
+        SYSMEMORY_HEIGHTFARS, 0xD0000,
+        SYSMEMORY_SEANEARS, 0x32000,
+        SYSMEMORY_SEAFARS, 0x32000
     };
 
 
@@ -201,7 +201,7 @@
             ////////////////////////////////////////////////////////////////////
             /*void dumpMemory()
             {
-                std::cout << "Memory dump\n";
+                std::cout << "System memory dump\n";
                 for (int i = 0; i < SYSMEMORY_POOLSCOUNT; ++i)
                 {
                     std::cout << std::hex << m_usage[i] << " ( ";

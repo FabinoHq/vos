@@ -304,6 +304,12 @@ void Vos::run()
     // Wait for renderer device idle state
     if (GRenderer.waitDeviceIdle())
     {
+        // Dump system memory
+        //GSysMemory.dumpMemory();
+
+        // Dump Vulkan memory
+        //GVulkanMemory.dumpMemory();
+
         // Stop physics solver thread
         GPhysics.stop();
 

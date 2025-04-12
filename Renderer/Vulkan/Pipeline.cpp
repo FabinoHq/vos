@@ -139,15 +139,31 @@ bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
     }
 
     // Shader stages
-    std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+    VkPipelineShaderStageCreateInfo* shaderStages =
+        GSysMemory.alloc<VkPipelineShaderStageCreateInfo>(
+            RendererShaderStagesCount, SYSMEMORY_RENDERER
+        );
+    if (!shaderStages) { return false; }
+    for (uint32_t i = 0; i < RendererShaderStagesCount; ++i)
+    {
+        shaderStages[i] = VkPipelineShaderStageCreateInfo();
+    }
     setShaderStages(shaderStages);
 
     // Vertex attributes
     VkVertexInputBindingDescription vertexBinding;
-    std::vector<VkVertexInputAttributeDescription> vertexAttributes;
-    setVertexInputs(
-        vertexBinding, vertexAttributes, VERTEX_INPUTS_DEFAULT
-    );
+    VkVertexInputAttributeDescription* vertexAttributes =
+        GSysMemory.alloc<VkVertexInputAttributeDescription>(
+            RendererMaxVertexAttribsCount, SYSMEMORY_RENDERER
+        );
+    if (!vertexAttributes) { return false; }
+    for (uint32_t i = 0; i < RendererMaxVertexAttribsCount; ++i)
+    {
+        vertexAttributes[i] = VkVertexInputAttributeDescription();
+    }
+    uint32_t vertexAttribsCount = 0;
+    setVertexInputs(vertexBinding, vertexAttributes,
+        vertexAttribsCount, VERTEX_INPUTS_DEFAULT);
 
     // Vertex input
     VkPipelineVertexInputStateCreateInfo vertexInput;
@@ -157,10 +173,8 @@ bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
     vertexInput.flags = 0;
     vertexInput.vertexBindingDescriptionCount = 1;
     vertexInput.pVertexBindingDescriptions = &vertexBinding;
-    vertexInput.vertexAttributeDescriptionCount = static_cast<uint32_t>(
-        vertexAttributes.size()
-    );
-    vertexInput.pVertexAttributeDescriptions = vertexAttributes.data();
+    vertexInput.vertexAttributeDescriptionCount = vertexAttribsCount;
+    vertexInput.pVertexAttributeDescriptions = vertexAttributes;
 
     // Input assembly
     VkPipelineInputAssemblyStateCreateInfo inputAssembly;
@@ -300,8 +314,8 @@ bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.pNext = 0;
     pipelineInfo.flags = 0;
-    pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
-    pipelineInfo.pStages = shaderStages.data();
+    pipelineInfo.stageCount = RendererShaderStagesCount;
+    pipelineInfo.pStages = shaderStages;
     pipelineInfo.pVertexInputState = &vertexInput;
     pipelineInfo.pInputAssemblyState = &inputAssembly;
     pipelineInfo.pTessellationState = 0;
@@ -363,15 +377,31 @@ bool Pipeline::createPipeline(
     }
 
     // Shader stages
-    std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+    VkPipelineShaderStageCreateInfo* shaderStages =
+        GSysMemory.alloc<VkPipelineShaderStageCreateInfo>(
+            RendererShaderStagesCount, SYSMEMORY_RENDERER
+        );
+    if (!shaderStages) { return false; }
+    for (uint32_t i = 0; i < RendererShaderStagesCount; ++i)
+    {
+        shaderStages[i] = VkPipelineShaderStageCreateInfo();
+    }
     setShaderStages(shaderStages);
 
     // Vertex attributes
     VkVertexInputBindingDescription vertexBinding;
-    std::vector<VkVertexInputAttributeDescription> vertexAttributes;
-    setVertexInputs(
-        vertexBinding, vertexAttributes, vertexInputsType
-    );
+    VkVertexInputAttributeDescription* vertexAttributes =
+        GSysMemory.alloc<VkVertexInputAttributeDescription>(
+            RendererMaxVertexAttribsCount, SYSMEMORY_RENDERER
+        );
+    if (!vertexAttributes) { return false; }
+    for (uint32_t i = 0; i < RendererMaxVertexAttribsCount; ++i)
+    {
+        vertexAttributes[i] = VkVertexInputAttributeDescription();
+    }
+    uint32_t vertexAttribsCount = 0;
+    setVertexInputs(vertexBinding, vertexAttributes,
+        vertexAttribsCount, vertexInputsType);
 
     // Vertex input
     VkPipelineVertexInputStateCreateInfo vertexInput;
@@ -381,10 +411,8 @@ bool Pipeline::createPipeline(
     vertexInput.flags = 0;
     vertexInput.vertexBindingDescriptionCount = 1;
     vertexInput.pVertexBindingDescriptions = &vertexBinding;
-    vertexInput.vertexAttributeDescriptionCount = static_cast<uint32_t>(
-        vertexAttributes.size()
-    );
-    vertexInput.pVertexAttributeDescriptions = vertexAttributes.data();
+    vertexInput.vertexAttributeDescriptionCount = vertexAttribsCount;
+    vertexInput.pVertexAttributeDescriptions = vertexAttributes;
 
     // Input assembly
     VkPipelineInputAssemblyStateCreateInfo inputAssembly;
@@ -567,8 +595,8 @@ bool Pipeline::createPipeline(
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.pNext = 0;
     pipelineInfo.flags = 0;
-    pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
-    pipelineInfo.pStages = shaderStages.data();
+    pipelineInfo.stageCount = RendererShaderStagesCount;
+    pipelineInfo.pStages = shaderStages;
     pipelineInfo.pVertexInputState = &vertexInput;
     pipelineInfo.pInputAssemblyState = &inputAssembly;
     pipelineInfo.pTessellationState = 0;
@@ -630,11 +658,10 @@ void Pipeline::destroyPipeline()
 ////////////////////////////////////////////////////////////////////////////////
 //  Set shader stages                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Pipeline::setShaderStages(
-    std::vector<VkPipelineShaderStageCreateInfo>& shaderStages)
+void Pipeline::setShaderStages(VkPipelineShaderStageCreateInfo* shaderStages)
 {
     // Vertex shader
-    shaderStages.push_back(VkPipelineShaderStageCreateInfo());
+    shaderStages[0] = VkPipelineShaderStageCreateInfo();
     shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[0].pNext = 0;
     shaderStages[0].flags = 0;
@@ -644,7 +671,7 @@ void Pipeline::setShaderStages(
     shaderStages[0].pSpecializationInfo = 0;
 
     // Fragment shader
-    shaderStages.push_back(VkPipelineShaderStageCreateInfo());
+    shaderStages[1] = VkPipelineShaderStageCreateInfo();
     shaderStages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[1].pNext = 0;
     shaderStages[1].flags = 0;
@@ -658,8 +685,8 @@ void Pipeline::setShaderStages(
 //  Set vertex inputs                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
-    std::vector<VkVertexInputAttributeDescription>& vertexAttribs,
-    VertexInputsType vertexInputsType)
+    VkVertexInputAttributeDescription* vertexAttribs,
+    uint32_t& vertexAttribsCount, VertexInputsType vertexInputsType)
 {
     // Input binding
     vertexBinding.binding = 0;
@@ -670,18 +697,21 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
     {
         case VERTEX_INPUTS_DEFAULT:
         {
+            // Vertex attribs count
+            vertexAttribsCount = 2;
+
             // Vertex binding stride
             vertexBinding.stride = sizeof(float)*5;
 
             // Position
-            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[0] = VkVertexInputAttributeDescription();
             vertexAttribs[0].location = 0;
             vertexAttribs[0].binding = vertexBinding.binding;
             vertexAttribs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
             vertexAttribs[0].offset = 0;
 
             // Texcoords
-            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[1] = VkVertexInputAttributeDescription();
             vertexAttribs[1].location = 1;
             vertexAttribs[1].binding = vertexBinding.binding;
             vertexAttribs[1].format = VK_FORMAT_R32G32_SFLOAT;
@@ -691,11 +721,14 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
 
         case VERTEX_INPUTS_CUBEMAP:
         {
+            // Vertex attribs count
+            vertexAttribsCount = 1;
+
             // Vertex binding stride
             vertexBinding.stride = sizeof(float)*3;
 
             // Position
-            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[0] = VkVertexInputAttributeDescription();
             vertexAttribs[0].location = 0;
             vertexAttribs[0].binding = vertexBinding.binding;
             vertexAttribs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
@@ -705,25 +738,28 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
 
         case VERTEX_INPUTS_STATICMESH:
         {
+            // Vertex attribs count
+            vertexAttribsCount = 3;
+
             // Vertex binding stride
             vertexBinding.stride = sizeof(float)*8;
 
             // Position
-            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[0] = VkVertexInputAttributeDescription();
             vertexAttribs[0].location = 0;
             vertexAttribs[0].binding = vertexBinding.binding;
             vertexAttribs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
             vertexAttribs[0].offset = 0;
 
             // Texcoords
-            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[1] = VkVertexInputAttributeDescription();
             vertexAttribs[1].location = 1;
             vertexAttribs[1].binding = vertexBinding.binding;
             vertexAttribs[1].format = VK_FORMAT_R32G32_SFLOAT;
             vertexAttribs[1].offset = sizeof(float)*3;
 
             // Normals
-            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[2] = VkVertexInputAttributeDescription();
             vertexAttribs[2].location = 2;
             vertexAttribs[2].binding = vertexBinding.binding;
             vertexAttribs[2].format = VK_FORMAT_R32G32B32_SFLOAT;
@@ -733,18 +769,21 @@ void Pipeline::setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
 
         default:
         {
+            // Vertex attribs count
+            vertexAttribsCount = 2;
+
             // Vertex binding stride
             vertexBinding.stride = sizeof(float)*5;
 
             // Position
-            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[0] = VkVertexInputAttributeDescription();
             vertexAttribs[0].location = 0;
             vertexAttribs[0].binding = vertexBinding.binding;
             vertexAttribs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
             vertexAttribs[0].offset = 0;
 
             // Texcoords
-            vertexAttribs.push_back(VkVertexInputAttributeDescription());
+            vertexAttribs[1] = VkVertexInputAttributeDescription();
             vertexAttribs[1].location = 1;
             vertexAttribs[1].binding = vertexBinding.binding;
             vertexAttribs[1].format = VK_FORMAT_R32G32_SFLOAT;

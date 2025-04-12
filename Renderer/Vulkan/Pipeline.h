@@ -55,6 +55,17 @@
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //  Renderer shaders stages count                                         //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t RendererShaderStagesCount = 2;
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  Renderer max vertex attribs count                                     //
+    ////////////////////////////////////////////////////////////////////////////
+    const uint32_t RendererMaxVertexAttribsCount = 3;
+
+
+    ////////////////////////////////////////////////////////////////////////////
     //  Vertex inputs types enumeration                                       //
     ////////////////////////////////////////////////////////////////////////////
     enum VertexInputsType
@@ -204,14 +215,14 @@
             ////////////////////////////////////////////////////////////////////
             //  Set shader stages                                             //
             ////////////////////////////////////////////////////////////////////
-            void setShaderStages(
-                std::vector<VkPipelineShaderStageCreateInfo>& shaderStages);
+            void setShaderStages(VkPipelineShaderStageCreateInfo* shaderStages);
 
             ////////////////////////////////////////////////////////////////////
             //  Set vertex inputs                                             //
             ////////////////////////////////////////////////////////////////////
             void setVertexInputs(VkVertexInputBindingDescription& vertexBinding,
-                std::vector<VkVertexInputAttributeDescription>& vertexAttribs,
+                VkVertexInputAttributeDescription* vertexAttribs,
+                uint32_t& vertexAttribsCount,
                 VertexInputsType vertexInputsType);
 
 
