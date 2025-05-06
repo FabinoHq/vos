@@ -611,42 +611,42 @@
         ////////////////////////////////////////////////////////////////////////
         inline int8_t divide(int8_t x, int8_t n)
         {
-            if (n == 0) return 0;
+            if (n == 0) { return 0; }
             if (x < 0) { x -= (n-1); }
             return (x/n);
         }
 
         inline int16_t divide(int16_t x, int16_t n)
         {
-            if (n == 0) return 0;
+            if (n == 0) { return 0; }
             if (x < 0) { x -= (n-1); }
             return (x/n);
         }
 
         inline int32_t divide(int32_t x, int32_t n)
         {
-            if (n == 0) return 0;
+            if (n == 0) { return 0; }
             if (x < 0) { x -= (n-1); }
             return (x/n);
         }
 
         inline int64_t divide(int64_t x, int64_t n)
         {
-            if (n == 0ll) return 0ll;
+            if (n == 0ll) { return 0ll; }
             if (x < 0ll) { x -= (n-1ll); }
             return (x/n);
         }
 
         inline int32_t divide(float x, float n)
         {
-            if (n == 0.0f) return 0;
+            if (n == 0.0f) { return 0; }
             if (x < 0.0f) { x -= (n-1.0f); }
             return (static_cast<int32_t>(x/n));
         }
 
         inline int32_t divide(double x, double n)
         {
-            if (n == 0.0) return 0;
+            if (n == 0.0) { return 0; }
             if (x < 0.0) { x -= (n-1.0); }
             return (static_cast<int32_t>(x/n));
         }

@@ -109,21 +109,13 @@ bool SeaFarChunk::generateSeaFarChunk(VertexBuffer& vertexBuffer)
     float* vertices = GSysMemory.alloc<float>(
         SeaFarChunkVerticesCount, SYSMEMORY_SEAFARS
     );
-    if (!vertices)
-    {
-        // Could not allocate sea far vertices
-        return false;
-    }
+    if (!vertices) { return false; }
 
     // Allocate sea far indices
     uint16_t* indices = GSysMemory.alloc<uint16_t>(
         SeaFarChunkIndicesCount, SYSMEMORY_SEAFARS
     );
-    if (!indices)
-    {
-        // Could not allocate sea far indices
-        return false;
-    }
+    if (!indices) { return false; }
 
     // Generate vertices data
     float texCoordIncX = SeaFarChunkTexcoordsWidth /

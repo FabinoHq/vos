@@ -102,7 +102,7 @@ bool PNGFile::setImage(uint32_t width, uint32_t height,
     // Allocate image data
     size_t imageSize = (width*height*4);
     m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
-    if (!m_image) return false;
+    if (!m_image) { return false; }
 
     // Copy image data
     memcpy(m_image, image, imageSize);
@@ -687,11 +687,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     unsigned char* rawData = GSysMemory.alloc<unsigned char>(
         pngIDATChunksLength, SYSMEMORY_IMAGES
     );
-    if (!rawData)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
+    if (!rawData) { return false; }
 
     // Reset input file stream
     pngFile.clear();
@@ -767,11 +763,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     unsigned char* pngData = GSysMemory.alloc<unsigned char>(
         pngDataSize, SYSMEMORY_IMAGES
     );
-    if (!pngData)
-    {
-        // Could not allocate decompressed data
-        return false;
-    }
+    if (!pngData) { return false; }
 
     // Decompress deflate data
     if (!ZLibDeflateDecompress(
@@ -784,11 +776,7 @@ bool PNGFile::loadPNGData(std::ifstream& pngFile,
     // Allocate 32bits RGBA internal image data
     size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
     m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
-    if (!m_image)
-    {
-        // Could not allocate internal image data
-        return false;
-    }
+    if (!m_image) { return false; }
 
     // Decode PNG image data
     switch (pngIHDRChunk.colorType)
@@ -926,11 +914,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
     unsigned char* rawData = GSysMemory.alloc<unsigned char>(
         pngIDATChunksLength, SYSMEMORY_IMAGES
     );
-    if (!rawData)
-    {
-        // Could not allocate raw image data
-        return false;
-    }
+    if (!rawData) { return false; }
 
     // Reset input file stream
     buffer = pngIDATstart;
@@ -1012,11 +996,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
     unsigned char* pngData = GSysMemory.alloc<unsigned char>(
         pngDataSize, SYSMEMORY_IMAGES
     );
-    if (!pngData)
-    {
-        // Could not allocate decompressed data
-        return false;
-    }
+    if (!pngData) { return false; }
 
     // Decompress deflate data
     if (!ZLibDeflateDecompress(
@@ -1029,11 +1009,7 @@ bool PNGFile::loadPNGData(unsigned char* buffer, unsigned char* bufferEnd,
     // Allocate 32bits RGBA internal image data
     size_t imageSize = (pngIHDRChunk.width*pngIHDRChunk.height*4);
     m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
-    if (!m_image)
-    {
-        // Could not allocate internal image data
-        return false;
-    }
+    if (!m_image) { return false; }
 
     // Decode PNG image data
     switch (pngIHDRChunk.colorType)
@@ -1142,11 +1118,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     unsigned char* pngData = GSysMemory.alloc<unsigned char>(
         pngDataSize, SYSMEMORY_IMAGES
     );
-    if (!pngData)
-    {
-        // Could not allocate PNG data
-        return false;
-    }
+    if (!pngData) { return false; }
 
     // Encode PNG image data
     switch (pngIHDRChunk.colorType)
@@ -1202,11 +1174,7 @@ bool PNGFile::savePNGData(std::ofstream& pngFile,
     unsigned char* compressedData = GSysMemory.alloc<unsigned char>(
         compressedDataSize, SYSMEMORY_IMAGES
     );
-    if (!compressedData)
-    {
-        // Could not allocate compressed data
-        return false;
-    }
+    if (!compressedData) { return false; }
 
     // Compress deflate data
     if (!ZLibDeflateCompress(

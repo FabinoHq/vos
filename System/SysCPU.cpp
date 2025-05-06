@@ -57,28 +57,28 @@
 bool SysCPUCheck()
 {
     // Check char representation
-    if (!SysCPUCheckChar()) return false;
+    if (!SysCPUCheckChar()) { return false; }
 
     // Check bool representation
-    if (!SysCPUCheckBool()) return false;
+    if (!SysCPUCheckBool()) { return false; }
 
     // Check int representation
-    if (!SysCPUCheckInt()) return false;
+    if (!SysCPUCheckInt()) { return false; }
 
     // Check float representation
-    if (!SysCPUCheckFloat()) return false;
+    if (!SysCPUCheckFloat()) { return false; }
 
     // Check double representation
-    if (!SysCPUCheckDouble()) return false;
+    if (!SysCPUCheckDouble()) { return false; }
 
     // Check CPU endianness
-    if (!SysCPUCheckEndianness()) return false;
+    if (!SysCPUCheckEndianness()) { return false; }
 
     // Check math representation
-    if (!SysCPUCheckMaths()) return false;
+    if (!SysCPUCheckMaths()) { return false; }
 
     // Check images representation
-    if (!SysCPUCheckImages()) return false;
+    if (!SysCPUCheckImages()) { return false; }
 
     // System CPU is ready
     return true;

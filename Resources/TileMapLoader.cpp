@@ -172,11 +172,7 @@ bool TileMapLoader::init()
     m_tilemaps = GSysMemory.alloc<TileMapChunk>(
         TILEMAP_ASSETSCOUNT, SYSMEMORY_TILEMAPS
     );
-    if (!m_tilemaps)
-    {
-        // Could not allocate tilemaps chunks
-        return false;
-    }
+    if (!m_tilemaps) { return false; }
 
     // Set default chunks pointers
     for (int i = 0; i < TILEMAP_ASSETSCOUNT; ++i)

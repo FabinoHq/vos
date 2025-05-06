@@ -163,11 +163,7 @@ bool MatrixColLoader::init()
     m_matrixcols = GSysMemory.alloc<MatrixChunk2>(
         MATRIXCOL_ASSETSCOUNT, SYSMEMORY_MATRICES
     );
-    if (!m_matrixcols)
-    {
-        // Could not allocate matrixcols chunks
-        return false;
-    }
+    if (!m_matrixcols) { return false; }
 
     // Set default chunks pointers
     for (int i = 0; i < MATRIXCOL_ASSETSCOUNT; ++i)

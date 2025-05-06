@@ -95,7 +95,7 @@ bool BMPFile::setImage(uint32_t width, uint32_t height,
     // Allocate image data
     size_t imageSize = (width*height*4);
     m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
-    if (!m_image) return false;
+    if (!m_image) { return false; }
 
     // Copy image data
     memcpy(m_image, image, imageSize);
@@ -441,17 +441,17 @@ bool BMPFile::loadBMP24Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 
     // Allocate raw image data
     rawData = GSysMemory.alloc<unsigned char>(rawDataSize, SYSMEMORY_IMAGES);
-    if (!rawData) return false;
+    if (!rawData) { return false; }
 
     // Read BMP raw image data
     bmpFile.seekg(dataOffset);
     bmpFile.read((char*)rawData, rawDataSize);
-    if (!bmpFile) return false;
+    if (!bmpFile) { return false; }
 
     // Allocate image data
     size_t imageSize = (width*height*4);
     m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
-    if (!m_image) return false;
+    if (!m_image) { return false; }
 
     // Convert 24bits BMP image data
     for (uint32_t i = 0; i < width; ++i)
@@ -503,7 +503,7 @@ bool BMPFile::saveBMP24Bits(std::ofstream& bmpFile, uint32_t imageSize,
     unsigned char* rawData = GSysMemory.alloc<unsigned char>(
         imageSize, SYSMEMORY_IMAGES
     );
-    if (!rawData) return false;
+    if (!rawData) { return false; }
 
     // Convert 24bits BMP image data
     for (uint32_t i = 0; i < width; ++i)
@@ -547,7 +547,7 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
 
     // Allocate raw image data
     rawData = GSysMemory.alloc<unsigned char>(rawDataSize, SYSMEMORY_IMAGES);
-    if (!rawData) return false;
+    if (!rawData) { return false; }
 
     // Read BMP raw image data
     bmpFile.seekg(dataOffset);
@@ -561,7 +561,7 @@ bool BMPFile::loadBMP16Bits(std::ifstream& bmpFile, uint32_t dataOffset,
     // Allocate image data
     size_t imageSize = (width*height*4);
     m_image = GSysMemory.alloc<unsigned char>(imageSize, SYSMEMORY_IMAGES);
-    if (!m_image) return false;
+    if (!m_image) { return false; }
 
     // Convert 16bits BMP image data
     for (uint32_t i = 0; i < width; ++i)
@@ -621,7 +621,7 @@ bool BMPFile::saveBMP16Bits(std::ofstream& bmpFile, uint32_t imageSize,
     uint16_t* rawData = GSysMemory.alloc<uint16_t>(
         (imageSize/2), SYSMEMORY_IMAGES
     );
-    if (!rawData) return false;
+    if (!rawData) { return false; }
 
     // Convert 16bits BMP image data
     for (uint32_t i = 0; i < width; ++i)

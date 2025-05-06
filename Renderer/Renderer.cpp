@@ -286,11 +286,7 @@ bool Renderer::initPipelines()
     pipelines = GSysMemory.alloc<Pipeline>(
         RENDERER_PIPELINE_PIPELINESCOUNT, SYSMEMORY_RENDERER
     );
-    if (!pipelines)
-    {
-        // Could not allocate pipelines
-        return false;
-    }
+    if (!pipelines) { return false; }
 
     // Init pipelines
     for (int i = 0; i < RENDERER_PIPELINE_PIPELINESCOUNT; ++i)

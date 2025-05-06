@@ -118,7 +118,7 @@ bool ZLibDeflateCompress(unsigned char in[], size_t inSize,
         }
 
         // Check output buffer size
-        if ((outIndex + 5) > *outSize) return false;
+        if ((outIndex + 5) > *outSize) { return false; }
 
         // Write final block state
         out[outIndex] = 0;
@@ -141,8 +141,8 @@ bool ZLibDeflateCompress(unsigned char in[], size_t inSize,
         out[outIndex++] = ((nBlockSize >> 8) & 0xFF);
 
         // Check buffers sizes
-        if ((inIndex + blockSize) > inSize) return false;
-        if ((outIndex + blockSize) > *outSize) return false;
+        if ((inIndex + blockSize) > inSize) { return false; }
+        if ((outIndex + blockSize) > *outSize) { return false; }
 
         // Copy uncompressed block
         memcpy(&out[outIndex], &in[inIndex], blockSize);
@@ -151,7 +151,7 @@ bool ZLibDeflateCompress(unsigned char in[], size_t inSize,
     }
 
     // Write Adler32 CRC
-    if ((outIndex + 4) > *outSize) return false;
+    if ((outIndex + 4) > *outSize) { return false; }
     uint32_t zlibAdler32 = SysAdler32(in, inSize);
     out[outIndex++] = ((zlibAdler32 >> 24) & 0xFF);
     out[outIndex++] = ((zlibAdler32 >> 16) & 0xFF);
@@ -369,13 +369,13 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
     uint16_t zlibHeader = (in[inIndex++] << 8);
     zlibHeader |= in[inIndex++];
     // FCHECK
-    if ((zlibHeader % 31) != 0) return false;
+    if ((zlibHeader % 31) != 0) { return false; }
     // CM
-    if (((zlibHeader >> 8) & 0x000F) != 0x0008) return false;
+    if (((zlibHeader >> 8) & 0x000F) != 0x0008) { return false; }
     // CINFO
-    if ((zlibHeader >> 12) > 0x0007) return false;
+    if ((zlibHeader >> 12) > 0x0007) { return false; }
     // FDICT
-    if ((zlibHeader >> 5) & 0x0001) return false;
+    if ((zlibHeader >> 5) & 0x0001) { return false; }
 
     // Decompress deflate data
     while (!decompressed)
@@ -417,7 +417,7 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
             bitsLeft = 0;
 
             // Check input buffer size
-            if ((inIndex + 4) > endIndex) return false;
+            if ((inIndex + 4) > endIndex) { return false; }
 
             // Read block size
             uint16_t blockSize = in[inIndex++];
@@ -426,11 +426,11 @@ bool ZLibDeflateDecompress(unsigned char in[], size_t inSize,
             nBlockSize |= (in[inIndex++] << 8);
 
             // Check block size
-            if (blockSize != ((uint16_t)~nBlockSize)) return false;
+            if (blockSize != ((uint16_t)~nBlockSize)) { return false; }
 
             // Check buffers sizes
-            if ((inIndex + blockSize) > endIndex) return false;
-            if ((outIndex + blockSize) > *outSize) return false;
+            if ((inIndex + blockSize) > endIndex) { return false; }
+            if ((outIndex + blockSize) > *outSize) { return false; }
 
             // Copy uncompressed block
             memcpy(&out[outIndex], &in[inIndex], blockSize);

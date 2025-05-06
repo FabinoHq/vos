@@ -246,11 +246,7 @@ bool TextureLoader::init()
     m_texturesGUI = GSysMemory.alloc<Texture>(
         TEXTURE_GUICOUNT, SYSMEMORY_TEXTURES
     );
-    if (!m_texturesGUI)
-    {
-        // Could not allocate GUI textures
-        return false;
-    }
+    if (!m_texturesGUI) { return false; }
 
     // Init GUI textures
     for (int i = 0; i < TEXTURE_GUICOUNT; ++i)
@@ -262,11 +258,7 @@ bool TextureLoader::init()
     m_texturesHigh = GSysMemory.alloc<Texture>(
         TEXTURE_ASSETSCOUNT, SYSMEMORY_TEXTURES
     );
-    if (!m_texturesHigh)
-    {
-        // Could not allocate high textures
-        return false;
-    }
+    if (!m_texturesHigh) { return false; }
 
     // Init high textures
     for (int i = 0; i < TEXTURE_ASSETSCOUNT; ++i)
@@ -278,11 +270,7 @@ bool TextureLoader::init()
     m_texturesArrays = GSysMemory.alloc<TextureArray>(
         TEXTURE_ARRAYSCOUNT, SYSMEMORY_TEXTURES
     );
-    if (!m_texturesArrays)
-    {
-        // Could not allocate textures arrays
-        return false;
-    }
+    if (!m_texturesArrays) { return false; }
 
     // Init textures arrays
     for (int i = 0; i < TEXTURE_ARRAYSCOUNT; ++i)
@@ -294,11 +282,7 @@ bool TextureLoader::init()
     m_cubemaps = GSysMemory.alloc<CubeMap>(
         TEXTURE_CUBEMAPCOUNT, SYSMEMORY_TEXTURES
     );
-    if (!m_cubemaps)
-    {
-        // Could not allocate textures assets
-        return false;
-    }
+    if (!m_cubemaps) { return false; }
 
     // Init cubemaps assets
     for (int i = 0; i < TEXTURE_CUBEMAPCOUNT; ++i)
@@ -1652,7 +1636,7 @@ bool TextureLoader::preloadTextures()
     // Load texture array
     unsigned int texArrayLayers = 4;
     PNGFile texArray1;
-    if (!texArray1.loadImage("Textures/tile.png")) return false;
+    if (!texArray1.loadImage("Textures/tile.png")) { return false; }
 
     // Allocate texture array data
     unsigned int texArrayWidth = texArray1.getWidth();
@@ -1660,28 +1644,28 @@ bool TextureLoader::preloadTextures()
     unsigned char* texArrayData = GSysMemory.alloc<unsigned char>(
         (texArrayWidth*texArrayHeight*4*texArrayLayers), SYSMEMORY_TEXTURES
     );
-    if (!texArrayData) return false;
+    if (!texArrayData) { return false; }
     memcpy(
         &texArrayData[texArrayWidth*texArrayHeight*4*0],
         texArray1.getImage(), texArrayWidth*texArrayHeight*4
     );
 
     PNGFile texArray2;
-    if (!texArray2.loadImage("Textures/tile2.png")) return false;
+    if (!texArray2.loadImage("Textures/tile2.png")) { return false; }
     memcpy(
         &texArrayData[texArrayWidth*texArrayHeight*4*1],
         texArray2.getImage(), texArrayWidth*texArrayHeight*4
     );
 
     PNGFile texArray3;
-    if (!texArray3.loadImage("Textures/tile3.png")) return false;
+    if (!texArray3.loadImage("Textures/tile3.png")) { return false; }
     memcpy(
         &texArrayData[texArrayWidth*texArrayHeight*4*2],
         texArray3.getImage(), texArrayWidth*texArrayHeight*4
     );
 
     PNGFile texArray4;
-    if (!texArray4.loadImage("Textures/tile4.png")) return false;
+    if (!texArray4.loadImage("Textures/tile4.png")) { return false; }
     memcpy(
         &texArrayData[texArrayWidth*texArrayHeight*4*3],
         texArray4.getImage(), texArrayWidth*texArrayHeight*4
@@ -1700,7 +1684,7 @@ bool TextureLoader::preloadTextures()
 
     // Load cubemap textures
     PNGFile cubeMapRight;
-    if (!cubeMapRight.loadImage("Textures/cubemaptest.png")) return false;
+    if (!cubeMapRight.loadImage("Textures/cubemaptest.png")) { return false; }
 
     // Allocate cubemap data
     unsigned int cubemapWidth = cubeMapRight.getWidth();
@@ -1708,42 +1692,42 @@ bool TextureLoader::preloadTextures()
     unsigned char* cubemapData = GSysMemory.alloc<unsigned char>(
         (cubemapWidth*cubemapHeight*4*6), SYSMEMORY_TEXTURES
     );
-    if (!cubemapData) return false;
+    if (!cubemapData) { return false; }
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*0],
         cubeMapRight.getImage(), cubemapWidth*cubemapHeight*4
     );
 
     PNGFile cubeMapLeft;
-    if (!cubeMapLeft.loadImage("Textures/cubemaptest.png")) return false;
+    if (!cubeMapLeft.loadImage("Textures/cubemaptest.png")) { return false; }
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*1],
         cubeMapLeft.getImage(), cubemapWidth*cubemapHeight*4
     );
 
     PNGFile cubeMapTop;
-    if (!cubeMapTop.loadImage("Textures/cubemaptest.png")) return false;
+    if (!cubeMapTop.loadImage("Textures/cubemaptest.png")) { return false; }
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*2],
         cubeMapTop.getImage(), cubemapWidth*cubemapHeight*4
     );
 
     PNGFile cubeMapBottom;
-    if (!cubeMapBottom.loadImage("Textures/cubemaptest.png")) return false;
+    if (!cubeMapBottom.loadImage("Textures/cubemaptest.png")) { return false; }
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*3],
         cubeMapBottom.getImage(), cubemapWidth*cubemapHeight*4
     );
 
     PNGFile cubeMapFront;
-    if (!cubeMapFront.loadImage("Textures/cubemaptest.png")) return false;
+    if (!cubeMapFront.loadImage("Textures/cubemaptest.png")) { return false; }
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*4],
         cubeMapFront.getImage(), cubemapWidth*cubemapHeight*4
     );
 
     PNGFile cubeMapBack;
-    if (!cubeMapBack.loadImage("Textures/cubemaptest.png")) return false;
+    if (!cubeMapBack.loadImage("Textures/cubemaptest.png")) { return false; }
     memcpy(
         &cubemapData[cubemapWidth*cubemapHeight*4*5],
         cubeMapBack.getImage(), cubemapWidth*cubemapHeight*4

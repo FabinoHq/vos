@@ -96,11 +96,7 @@ bool SysWindow::create()
     m_cursors = GSysMemory.alloc<HCURSOR>(
         SYSCURSOR_CURSORSCOUNT, SYSMEMORY_WINDOW
     );
-    if (!m_cursors)
-    {
-        // Could not allocate system cursors
-        return false;
-    }
+    if (!m_cursors) { return false; }
 
     // Load system cursors
     for (int i = 0; i < SYSCURSOR_CURSORSCOUNT; ++i) { m_cursors[i] = 0; }

@@ -172,11 +172,7 @@ bool IsoMapLoader::init()
     m_isomaps = GSysMemory.alloc<IsoMapChunk>(
         ISOMAP_ASSETSCOUNT, SYSMEMORY_ISOMAPS
     );
-    if (!m_isomaps)
-    {
-        // Could not allocate isomaps chunks
-        return false;
-    }
+    if (!m_isomaps) { return false; }
 
     // Set default chunks pointers
     for (int i = 0; i < ISOMAP_ASSETSCOUNT; ++i)

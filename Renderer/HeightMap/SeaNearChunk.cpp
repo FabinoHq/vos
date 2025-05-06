@@ -109,21 +109,13 @@ bool SeaNearChunk::generateSeaNearChunk(VertexBuffer& vertexBuffer)
     float* vertices = GSysMemory.alloc<float>(
         SeaNearChunkVerticesCount, SYSMEMORY_SEANEARS
     );
-    if (!vertices)
-    {
-        // Could not allocate sea near vertices
-        return false;
-    }
+    if (!vertices) { return false; }
 
     // Allocate sea near indices
     uint16_t* indices = GSysMemory.alloc<uint16_t>(
         SeaNearChunkIndicesCount, SYSMEMORY_SEANEARS
     );
-    if (!indices)
-    {
-        // Could not allocate sea near indices
-        return false;
-    }
+    if (!indices) { return false; }
 
     // Generate vertices data
     float texCoordIncX = SeaNearChunkTexcoordsWidth /

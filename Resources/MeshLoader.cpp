@@ -251,11 +251,7 @@ bool MeshLoader::init()
     m_meshes = GSysMemory.alloc<VertexBuffer>(
         MESHES_ASSETSCOUNT, SYSMEMORY_MESHES
     );
-    if (!m_meshes)
-    {
-        // Could not allocate meshes vertex buffers
-        return false;
-    }
+    if (!m_meshes) { return false; }
 
     // Init meshes vertex buffers
     for (int i = 0; i < MESHES_ASSETSCOUNT; ++i)
@@ -267,21 +263,13 @@ bool MeshLoader::init()
     m_vertices = GSysMemory.alloc<float>(
         MeshLoaderMaxVerticesCount, SYSMEMORY_MESHES
     );
-    if (!m_vertices)
-    {
-        // Could not allocate mesh vertices
-        return false;
-    }
+    if (!m_vertices) { return false; }
 
     // Allocate mesh indices
     m_indices = GSysMemory.alloc<uint16_t>(
         MeshLoaderMaxIndicesCount, SYSMEMORY_MESHES
     );
-    if (!m_indices)
-    {
-        // Could not allocate mesh indices
-        return false;
-    }
+    if (!m_indices) { return false; }
 
     // Mesh loader ready
     return true;

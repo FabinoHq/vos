@@ -248,11 +248,7 @@ bool HeightFarLoader::init()
     m_heightfars = GSysMemory.alloc<VertexBuffer>(
         HEIGHTFAR_ASSETSCOUNT, SYSMEMORY_HEIGHTFARS
     );
-    if (!m_heightfars)
-    {
-        // Could not allocate heightfars vertex buffers
-        return false;
-    }
+    if (!m_heightfars) { return false; }
 
     // Set default chunks pointers
     for (int i = 0; i < HEIGHTFAR_ASSETSCOUNT; ++i)
@@ -266,21 +262,13 @@ bool HeightFarLoader::init()
     m_vertices = GSysMemory.alloc<float>(
         HeightFarChunkVerticesCount, SYSMEMORY_HEIGHTFARS
     );
-    if (!m_vertices)
-    {
-        // Could not allocate chunk vertices
-        return false;
-    }
+    if (!m_vertices) { return false; }
 
     // Allocate chunk indices
     m_indices = GSysMemory.alloc<uint16_t>(
         HeightFarChunkIndicesCount, SYSMEMORY_HEIGHTFARS
     );
-    if (!m_indices)
-    {
-        // Could not allocate chunk indices
-        return false;
-    }
+    if (!m_indices) { return false; }
 
     // Create default heightfar
     int32_t cnt = 0;

@@ -248,11 +248,7 @@ bool HeightMapLoader::init()
     m_heightmaps = GSysMemory.alloc<VertexBuffer>(
         HEIGHTMAP_ASSETSCOUNT, SYSMEMORY_HEIGHTMAPS
     );
-    if (!m_heightmaps)
-    {
-        // Could not allocate heightmaps vertex buffers
-        return false;
-    }
+    if (!m_heightmaps) { return false; }
 
     // Set default chunks pointers
     for (int i = 0; i < HEIGHTMAP_ASSETSCOUNT; ++i)
@@ -266,21 +262,13 @@ bool HeightMapLoader::init()
     m_vertices = GSysMemory.alloc<float>(
         HeightMapChunkVerticesCount, SYSMEMORY_HEIGHTMAPS
     );
-    if (!m_vertices)
-    {
-        // Could not allocate chunk vertices
-        return false;
-    }
+    if (!m_vertices) { return false; }
 
     // Allocate chunk indices
     m_indices = GSysMemory.alloc<uint16_t>(
         HeightMapChunkIndicesCount, SYSMEMORY_HEIGHTMAPS
     );
-    if (!m_indices)
-    {
-        // Could not allocate chunk indices
-        return false;
-    }
+    if (!m_indices) { return false; }
 
     // Create default heightmap
     int32_t cnt = 0;
