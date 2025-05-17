@@ -186,19 +186,26 @@ bool VulkanMemory::init()
         return false;
     }
 
+    // Select device and host memory
     bool deviceMemoryFound = false;
     bool hostMemoryFound = false;
+    VkDeviceSize deviceMemorySize = 0;
+    VkDeviceSize hostMemorySize = 0;
     for (uint32_t i = 0; i < physicalMemoryProperties.memoryTypeCount; ++i)
     {
         // Device local memory type
         if (physicalMemoryProperties.memoryTypes[i].propertyFlags &
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
         {
-            if (!deviceMemoryFound)
+            if (physicalMemoryProperties.memoryHeaps[
+                physicalMemoryProperties.memoryTypes[i].heapIndex].size >
+                deviceMemorySize)
             {
                 m_deviceMemoryIndex = i;
                 m_deviceMemoryHeap =
                     (physicalMemoryProperties.memoryTypes[i].heapIndex);
+                deviceMemorySize = physicalMemoryProperties.memoryHeaps[
+                    m_deviceMemoryHeap].size;
                 deviceMemoryFound = true;
             }
         }
@@ -207,19 +214,17 @@ bool VulkanMemory::init()
         if (physicalMemoryProperties.memoryTypes[i].propertyFlags &
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
         {
-            if (!hostMemoryFound)
+            if (physicalMemoryProperties.memoryHeaps[
+                physicalMemoryProperties.memoryTypes[i].heapIndex].size >
+                hostMemorySize)
             {
                 m_hostMemoryIndex = i;
                 m_hostMemoryHeap =
                     (physicalMemoryProperties.memoryTypes[i].heapIndex);
+                hostMemorySize = physicalMemoryProperties.memoryHeaps[
+                    m_hostMemoryHeap].size;
                 hostMemoryFound = true;
             }
-        }
-
-        // All memory types found
-        if (deviceMemoryFound && hostMemoryFound)
-        {
-            break;
         }
     }
 
