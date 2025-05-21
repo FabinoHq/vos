@@ -353,6 +353,9 @@
     <ClCompile Include="System\SysMemory.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="System\SysVkMemory.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -795,6 +798,9 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="System\SysMemory.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SysVkMemory.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>

@@ -36,6 +36,8 @@
 !System/SysCPU.cpp
 !System/SysMemory.h
 !System/SysMemory.cpp
+!System/SysVkMemory.h
+!System/SysVkMemory.cpp
 !System/SysCRC.h
 !System/SysSleep.h
 !System/SysThread.h

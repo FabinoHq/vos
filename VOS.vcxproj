@@ -293,6 +293,7 @@
     <ClCompile Include="System\SysMouse.cpp" />
     <ClCompile Include="System\SysSettings.cpp" />
     <ClCompile Include="System\SysThread.cpp" />
+    <ClCompile Include="System\SysVkMemory.cpp" />
     <ClCompile Include="System\Win\SysDisplayMode.cpp" />
     <ClCompile Include="System\Win\SysMessage.cpp" />
     <ClCompile Include="System\Win\SysVulkan.cpp" />
@@ -440,6 +441,7 @@
     <ClInclude Include="System\SysSleep.h" />
     <ClInclude Include="System\System.h" />
     <ClInclude Include="System\SysThread.h" />
+    <ClInclude Include="System\SysVkMemory.h" />
     <ClInclude Include="System\SysWindow.h" />
     <ClInclude Include="System\SysVulkan.h" />
     <ClInclude Include="System\Win\SysCPU.h" />

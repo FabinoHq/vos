@@ -45,6 +45,7 @@
     #include "System/System.h"
     #include "System/SysCPU.h"
     #include "System/SysMemory.h"
+    #include "System/SysVkMemory.h"
     #include "System/SysEvent.h"
     #include "System/SysMouse.h"
     #include "System/SysKeys.h"

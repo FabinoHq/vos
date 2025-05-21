@@ -83,6 +83,13 @@ bool Vos::launch()
         return false;
     }
 
+    // Init system vulkan memory
+    if (!GSysVkMemory.init())
+    {
+        // Unable to init system vulkan memory
+        return false;
+    }
+
     // Create VOS global window
     if (!GSysWindow.create())
     {
@@ -307,6 +314,9 @@ void Vos::run()
         // Dump system memory
         //GSysMemory.dumpMemory();
 
+        // Dump system vulkan memory
+        //GSysVkMemory.dumpMemory();
+
         // Dump Vulkan memory
         //GVulkanMemory.dumpMemory();
 
@@ -325,6 +335,9 @@ void Vos::run()
 
     // Close VOS
     GSysWindow.close();
+
+    // Destroy system vulkan memory
+    GSysVkMemory.destroySysVkMemory();
 
     // Destroy system memory
     GSysMemory.destroySysMemory();

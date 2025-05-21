@@ -49,7 +49,8 @@ all: VOS
 
 VOS: main.o \
 	Vos.o \
-	System/SysThread.o System/SysClock.o System/SysCPU.o System/SysMemory.o \
+	System/SysThread.o System/SysClock.o System/SysCPU.o \
+	System/SysMemory.o System/SysVkMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
@@ -106,7 +107,8 @@ VOS: main.o \
 
 	$(CC) -o VOS \
 	Vos.o \
-	System/SysThread.o System/SysClock.o System/SysCPU.o System/SysMemory.o \
+	System/SysThread.o System/SysClock.o System/SysCPU.o \
+	System/SysMemory.o System/SysVkMemory.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
@@ -181,6 +183,9 @@ System/SysCPU.o: System/SysCPU.cpp
 
 System/SysMemory.o: System/SysMemory.cpp
 	$(CC) -o System/SysMemory.o -c System/SysMemory.cpp $(CFLAGS)
+
+System/SysVkMemory.o: System/SysVkMemory.cpp
+	$(CC) -o System/SysVkMemory.o -c System/SysVkMemory.cpp $(CFLAGS)
 
 System/Lin/SysMessage.o: System/Lin/SysMessage.cpp
 	$(CC) -o System/Lin/SysMessage.o -c System/Lin/SysMessage.cpp $(CFLAGS)
