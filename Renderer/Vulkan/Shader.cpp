@@ -88,8 +88,8 @@ bool Shader::createShader(const uint32_t* source, const size_t size)
     shaderInfo.codeSize = size;
     shaderInfo.pCode = source;
 
-    if (vkCreateShaderModule(GVulkanDevice,
-        &shaderInfo, 0, &handle) != VK_SUCCESS)
+    if (vkCreateShaderModule(GVulkanDevice, &shaderInfo,
+        SYSVKMEMORY_SHADER_ALLOC, &handle) != VK_SUCCESS)
     {
         // Could not create shader
         return false;
@@ -119,7 +119,7 @@ void Shader::destroyShader()
     // Destroy shader
     if (handle)
     {
-        vkDestroyShaderModule(GVulkanDevice, handle, 0);
+        vkDestroyShaderModule(GVulkanDevice, handle, SYSVKMEMORY_SHADER_ALLOC);
     }
     handle = 0;
 }

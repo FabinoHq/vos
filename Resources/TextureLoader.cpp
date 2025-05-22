@@ -193,8 +193,8 @@ bool TextureLoader::init()
     commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = m_graphicsQueue.family;
 
-    if (vkCreateCommandPool(GVulkanDevice,
-        &commandPoolInfo, 0, &m_commandPool) != VK_SUCCESS)
+    if (vkCreateCommandPool(GVulkanDevice, &commandPoolInfo,
+        SYSVKMEMORY_COMMANDPOOL_ALLOC, &m_commandPool) != VK_SUCCESS)
     {
         // Could not create commands pool
         return false;
@@ -231,7 +231,8 @@ bool TextureLoader::init()
     fenceInfo.pNext = 0;
     fenceInfo.flags = 0;
 
-    if (vkCreateFence(GVulkanDevice, &fenceInfo, 0, &m_fence) != VK_SUCCESS)
+    if (vkCreateFence(GVulkanDevice, &fenceInfo,
+        SYSVKMEMORY_FENCE_ALLOC, &m_fence) != VK_SUCCESS)
     {
         // Could not create staging fence
         return false;
@@ -397,7 +398,7 @@ void TextureLoader::destroyTextureLoader()
     // Destroy staging fence
     if (m_fence)
     {
-        vkDestroyFence(GVulkanDevice, m_fence, 0);
+        vkDestroyFence(GVulkanDevice, m_fence, SYSVKMEMORY_FENCE_ALLOC);
     }
     m_fence = 0;
 
@@ -414,7 +415,9 @@ void TextureLoader::destroyTextureLoader()
     // Destroy command pool
     if (m_commandPool)
     {
-        vkDestroyCommandPool(GVulkanDevice, m_commandPool, 0);
+        vkDestroyCommandPool(
+            GVulkanDevice, m_commandPool, SYSVKMEMORY_COMMANDPOOL_ALLOC
+        );
     }
     m_commandPool = 0;
 }

@@ -155,8 +155,8 @@ bool CreateVulkanSystemSurface()
     surfaceInfo.hinstance = GSysWindow.getInstance();
     surfaceInfo.hwnd = GSysWindow.getHandle();
 
-    if (vkCreateWin32SurfaceKHR(GVulkanInstance,
-        &surfaceInfo, 0, &GVulkanSurface) != VK_SUCCESS)
+    if (vkCreateWin32SurfaceKHR(GVulkanInstance, &surfaceInfo,
+        SYSVKMEMORY_SURFACE_ALLOC, &GVulkanSurface) != VK_SUCCESS)
     {
         return false;
     }

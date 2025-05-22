@@ -106,8 +106,8 @@ bool GraphicsLayout::createLayout()
     worldlightPoolInfo.poolSizeCount = 1;
     worldlightPoolInfo.pPoolSizes = &worldlightPoolSize;
 
-    if (vkCreateDescriptorPool(GVulkanDevice,
-        &worldlightPoolInfo, 0, &worldlightDescPool) != VK_SUCCESS)
+    if (vkCreateDescriptorPool(GVulkanDevice, &worldlightPoolInfo,
+        SYSVKMEMORY_DESCRIPTORPOOL_ALLOC, &worldlightDescPool) != VK_SUCCESS)
     {
         // Could not create world light uniforms descriptor pool
         GSysMessage << "[0x304C] Could not create worldlight desc pool\n";
@@ -137,8 +137,8 @@ bool GraphicsLayout::createLayout()
     uniformsPoolInfo.poolSizeCount = 1;
     uniformsPoolInfo.pPoolSizes = &uniformsPoolSize;
 
-    if (vkCreateDescriptorPool(GVulkanDevice,
-        &uniformsPoolInfo, 0, &uniformsDescPool) != VK_SUCCESS)
+    if (vkCreateDescriptorPool(GVulkanDevice, &uniformsPoolInfo,
+        SYSVKMEMORY_DESCRIPTORPOOL_ALLOC, &uniformsDescPool) != VK_SUCCESS)
     {
         // Could not create matrices uniforms descriptor pool
         GSysMessage << "[0x304C] Could not create uniforms desc pool\n";
@@ -168,8 +168,8 @@ bool GraphicsLayout::createLayout()
     texturesPoolInfo.poolSizeCount = 1;
     texturesPoolInfo.pPoolSizes = &texturesPoolSize;
 
-    if (vkCreateDescriptorPool(GVulkanDevice,
-        &texturesPoolInfo, 0, &texturesDescPool) != VK_SUCCESS)
+    if (vkCreateDescriptorPool(GVulkanDevice, &texturesPoolInfo,
+        SYSVKMEMORY_DESCRIPTORPOOL_ALLOC, &texturesDescPool) != VK_SUCCESS)
     {
         // Could not create textures descriptor pool
         GSysMessage << "[0x304E] Could not create textures desc pool\n";
@@ -270,8 +270,8 @@ bool GraphicsLayout::createDescriptorSetLayouts()
     for (uint32_t i = 0; i < DESC_SETS_COUNT; ++i)
     {
         // Create descriptor set layout
-        if (vkCreateDescriptorSetLayout(GVulkanDevice,
-            &descriptorSetInfo[i], 0, &descSetLayouts[i]) != VK_SUCCESS)
+        if (vkCreateDescriptorSetLayout(GVulkanDevice, &descriptorSetInfo[i],
+            SYSVKMEMORY_DESCRIPTORSET_ALLOC, &descSetLayouts[i]) != VK_SUCCESS)
         {
             // Could not create descriptor set layout
             return false;
@@ -351,8 +351,8 @@ bool GraphicsLayout::createPipelineLayout()
     pipelineInfo.pushConstantRangeCount = PUSH_CONSTANT_COUNT;
     pipelineInfo.pPushConstantRanges = pushConstantRange;
 
-    if (vkCreatePipelineLayout(GVulkanDevice,
-        &pipelineInfo, 0, &handle) != VK_SUCCESS)
+    if (vkCreatePipelineLayout(GVulkanDevice, &pipelineInfo,
+        SYSVKMEMORY_PIPELINE_ALLOC, &handle) != VK_SUCCESS)
     {
         // Could not create pipeline layout
         return false;
@@ -384,7 +384,10 @@ void GraphicsLayout::destroyLayout()
     {
         if (descSetLayouts[i])
         {
-            vkDestroyDescriptorSetLayout(GVulkanDevice, descSetLayouts[i], 0);
+            vkDestroyDescriptorSetLayout(
+                GVulkanDevice, descSetLayouts[i],
+                SYSVKMEMORY_DESCRIPTORSET_ALLOC
+            );
         }
         descSetLayouts[i] = 0;
     }
@@ -398,28 +401,36 @@ void GraphicsLayout::destroyLayout()
     // Destroy pipeline layout
     if (handle)
     {
-        vkDestroyPipelineLayout(GVulkanDevice, handle, 0);
+        vkDestroyPipelineLayout(
+            GVulkanDevice, handle, SYSVKMEMORY_PIPELINE_ALLOC
+        );
     }
     handle = 0;
 
     // Destroy textures descriptor pool
     if (texturesDescPool)
     {
-        vkDestroyDescriptorPool(GVulkanDevice, texturesDescPool, 0);
+        vkDestroyDescriptorPool(
+            GVulkanDevice, texturesDescPool, SYSVKMEMORY_DESCRIPTORPOOL_ALLOC
+        );
     }
     texturesDescPool = 0;
 
     // Destroy uniforms descriptor pool
     if (uniformsDescPool)
     {
-        vkDestroyDescriptorPool(GVulkanDevice, uniformsDescPool, 0);
+        vkDestroyDescriptorPool(
+            GVulkanDevice, uniformsDescPool, SYSVKMEMORY_DESCRIPTORPOOL_ALLOC
+        );
     }
     uniformsDescPool = 0;
 
     // Destroy worldlight descriptor pool
     if (worldlightDescPool)
     {
-        vkDestroyDescriptorPool(GVulkanDevice, worldlightDescPool, 0);
+        vkDestroyDescriptorPool(
+            GVulkanDevice, worldlightDescPool, SYSVKMEMORY_DESCRIPTORPOOL_ALLOC
+        );
     }
     worldlightDescPool = 0;
 }

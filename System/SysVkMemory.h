@@ -55,22 +55,54 @@
     ////////////////////////////////////////////////////////////////////////////
     //  SysVkMemory custom allocators usage (0 : default, 1 : custom)         //
     ////////////////////////////////////////////////////////////////////////////
-    #define SYSVKMEMORY_CUSTOM 0
+    #define SYSVKMEMORY_CUSTOM_ALLOCATORS 0
 
     ////////////////////////////////////////////////////////////////////////////
     //  SysVkMemory allocators                                                //
     ////////////////////////////////////////////////////////////////////////////
-    #if (SYSVKMEMORY_CUSTOM == 1)
+    #if (SYSVKMEMORY_CUSTOM_ALLOCATORS == 1)
 
+        #define SYSVKMEMORY_INSTANCE_ALLOC 0
+        #define SYSVKMEMORY_DEVICE_ALLOC 0
+        #define SYSVKMEMORY_SURFACE_ALLOC 0
+        #define SYSVKMEMORY_SWAPCHAIN_ALLOC 0
+        #define SYSVKMEMORY_RENDERPASS_ALLOC 0
+        #define SYSVKMEMORY_FRAMEBUFFER_ALLOC 0
+        #define SYSVKMEMORY_SHADER_ALLOC 0
+        #define SYSVKMEMORY_PIPELINE_ALLOC 0
         #define SYSVKMEMORY_SAMPLER_ALLOC 0
-        #define SYSVKMEMORY_SAMPLER_FREE 0
+        #define SYSVKMEMORY_DESCRIPTORSET_ALLOC 0
+        #define SYSVKMEMORY_DESCRIPTORPOOL_ALLOC 0
+        #define SYSVKMEMORY_BUFFER_ALLOC 0
+        #define SYSVKMEMORY_IMAGE_ALLOC 0
+        #define SYSVKMEMORY_IMAGEVIEW_ALLOC 0
+        #define SYSVKMEMORY_FENCE_ALLOC 0
+        #define SYSVKMEMORY_SEMAPHORE_ALLOC 0
+        #define SYSVKMEMORY_COMMANDPOOL_ALLOC 0
+        #define SYSVKMEMORY_VULKAN_ALLOC 0
 
     #else
 
+        #define SYSVKMEMORY_INSTANCE_ALLOC 0
+        #define SYSVKMEMORY_DEVICE_ALLOC 0
+        #define SYSVKMEMORY_SURFACE_ALLOC 0
+        #define SYSVKMEMORY_SWAPCHAIN_ALLOC 0
+        #define SYSVKMEMORY_RENDERPASS_ALLOC 0
+        #define SYSVKMEMORY_FRAMEBUFFER_ALLOC 0
+        #define SYSVKMEMORY_SHADER_ALLOC 0
+        #define SYSVKMEMORY_PIPELINE_ALLOC 0
         #define SYSVKMEMORY_SAMPLER_ALLOC 0
-        #define SYSVKMEMORY_SAMPLER_FREE 0
+        #define SYSVKMEMORY_DESCRIPTORSET_ALLOC 0
+        #define SYSVKMEMORY_DESCRIPTORPOOL_ALLOC 0
+        #define SYSVKMEMORY_BUFFER_ALLOC 0
+        #define SYSVKMEMORY_IMAGE_ALLOC 0
+        #define SYSVKMEMORY_IMAGEVIEW_ALLOC 0
+        #define SYSVKMEMORY_FENCE_ALLOC 0
+        #define SYSVKMEMORY_SEMAPHORE_ALLOC 0
+        #define SYSVKMEMORY_COMMANDPOOL_ALLOC 0
+        #define SYSVKMEMORY_VULKAN_ALLOC 0
 
-    #endif // SYSVKMEMORY_CUSTOM
+    #endif // SYSVKMEMORY_CUSTOM_ALLOCATORS
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -84,7 +116,7 @@
     ////////////////////////////////////////////////////////////////////////////
     enum SysVkMemoryPool
     {
-        SYSVKMEMORY_SAMPLER = 0,
+        SYSVKMEMORY_GLOBAL = 0,
 
         SYSVKMEMORY_POOLSCOUNT = 1
     };
@@ -151,7 +183,7 @@
             ////////////////////////////////////////////////////////////////////
             /*void dumpMemory()
             {
-                #if (SYSVKMEMORY_CUSTOM == 1)
+                #if (SYSVKMEMORY_CUSTOM_ALLOCATORS == 1)
                     std::cout << "System vulkan memory dump\n";
                     for (int i = 0; i < SYSVKMEMORY_POOLSCOUNT; ++i)
                     {
@@ -162,7 +194,7 @@
                         std::cout << " % )\n";
                     }
                     std::cout << '\n';
-                #endif // SYSVKMEMORY_CUSTOM
+                #endif // SYSVKMEMORY_CUSTOM_ALLOCATORS
             }*/
 
 

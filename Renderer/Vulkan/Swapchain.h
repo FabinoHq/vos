@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_SWAPCHAIN_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysVkMemory.h"
     #include "../../System/SysMessage.h"
 
     #include "Vulkan.h"

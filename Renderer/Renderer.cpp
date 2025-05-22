@@ -72,7 +72,7 @@ Renderer::~Renderer()
     // Destroy Vulkan instance
     if (GVulkanInstance)
     {
-        vkDestroyInstance(GVulkanInstance, 0);
+        vkDestroyInstance(GVulkanInstance, SYSVKMEMORY_INSTANCE_ALLOC);
     }
     GVulkanInstance = 0;
 
@@ -993,14 +993,16 @@ void Renderer::destroyRenderer()
     // Destroy Vulkan device
     if (GVulkanDevice)
     {
-        vkDestroyDevice(GVulkanDevice, 0);
+        vkDestroyDevice(GVulkanDevice, SYSVKMEMORY_DEVICE_ALLOC);
     }
     GVulkanDevice = 0;
 
     // Destroy Vulkan surface
     if (GVulkanInstance && GVulkanSurface)
     {
-        vkDestroySurfaceKHR(GVulkanInstance, GVulkanSurface, 0);
+        vkDestroySurfaceKHR(
+            GVulkanInstance, GVulkanSurface, SYSVKMEMORY_SURFACE_ALLOC
+        );
     }
     GVulkanSurface = 0;
 }
@@ -1119,7 +1121,8 @@ bool Renderer::createVulkanInstance()
     createInfos.ppEnabledExtensionNames = VulkanExtensions;
 
     // Create Vulkan instance
-    if (vkCreateInstance(&createInfos, 0, &GVulkanInstance) != VK_SUCCESS)
+    if (vkCreateInstance(&createInfos,
+        SYSVKMEMORY_INSTANCE_ALLOC, &GVulkanInstance) != VK_SUCCESS)
     {
         // Could not create Vulkan instance
         GSysMessage << "[0x3009] Could not create Vulkan instance\n";
@@ -1546,8 +1549,8 @@ bool Renderer::selectVulkanDevice()
     deviceInfos.ppEnabledExtensionNames = VulkanDeviceExtensions;
     deviceInfos.pEnabledFeatures = &enableDeviceFeatures;
 
-    if (vkCreateDevice(
-        GPhysicalDevice, &deviceInfos, 0, &GVulkanDevice) != VK_SUCCESS)
+    if (vkCreateDevice(GPhysicalDevice, &deviceInfos,
+        SYSVKMEMORY_DEVICE_ALLOC, &GVulkanDevice) != VK_SUCCESS)
     {
         // Could not create Vulkan device
         GSysMessage << "[0x3019] Could not create Vulkan device\n";

@@ -155,8 +155,8 @@ bool CreateVulkanSystemSurface()
     surfaceInfo.dpy = GSysWindow.getDisplay();
     surfaceInfo.window = GSysWindow.getHandle();
 
-    if (vkCreateXlibSurfaceKHR(GVulkanInstance,
-        &surfaceInfo, 0, &GVulkanSurface) != VK_SUCCESS)
+    if (vkCreateXlibSurfaceKHR(GVulkanInstance, &surfaceInfo,
+        SYSVKMEMORY_SURFACE_ALLOC, &GVulkanSurface) != VK_SUCCESS)
     {
         return false;
     }

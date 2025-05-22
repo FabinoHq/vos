@@ -142,8 +142,8 @@ bool BackRenderer::init(VulkanMemoryPool memoryPool,
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Create image sampler
-        if (vkCreateSampler(GVulkanDevice,
-            &samplerInfo, 0, &samplers[i]) != VK_SUCCESS)
+        if (vkCreateSampler(GVulkanDevice, &samplerInfo,
+            SYSVKMEMORY_SAMPLER_ALLOC, &samplers[i]) != VK_SUCCESS)
         {
             // Could not create image sampler
             return false;
@@ -344,7 +344,9 @@ void BackRenderer::destroyBackRenderer()
     {
         if (samplers[i])
         {
-            vkDestroySampler(GVulkanDevice, samplers[i], 0);
+            vkDestroySampler(
+                GVulkanDevice, samplers[i], SYSVKMEMORY_SAMPLER_ALLOC
+            );
         }
         samplers[i] = 0;
     }

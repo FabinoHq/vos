@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_PIPELINE_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysVkMemory.h"
     #include "Vulkan.h"
     #include "Swapchain.h"
     #include "GraphicsLayout.h"

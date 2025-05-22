@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_TEXTUREARRAY_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysVkMemory.h"
     #include "../../System/SysSettings.h"
 
     #include "Vulkan.h"

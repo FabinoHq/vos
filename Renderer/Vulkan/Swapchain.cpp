@@ -405,8 +405,8 @@ bool Swapchain::createSwapchain()
     swapchainInfos.clipped = VK_TRUE;
     swapchainInfos.oldSwapchain = oldSwapchain;
 
-    if (vkCreateSwapchainKHR(GVulkanDevice,
-        &swapchainInfos, 0, &handle) != VK_SUCCESS)
+    if (vkCreateSwapchainKHR(GVulkanDevice, &swapchainInfos,
+        SYSVKMEMORY_SWAPCHAIN_ALLOC, &handle) != VK_SUCCESS)
     {
         // Could not create swapchain
         GSysMessage << "[0x3038] Could not create swapchain\n";
@@ -417,7 +417,9 @@ bool Swapchain::createSwapchain()
     // Destroy old swapchain
     if (oldSwapchain)
     {
-        vkDestroySwapchainKHR(GVulkanDevice, oldSwapchain, 0);
+        vkDestroySwapchainKHR(
+            GVulkanDevice, oldSwapchain, SYSVKMEMORY_SWAPCHAIN_ALLOC
+        );
     }
     oldSwapchain = 0;
 
@@ -506,8 +508,8 @@ bool Swapchain::createSwapchain()
         // Create image view
         imageView.image = images[i];
 
-        if (vkCreateImageView(GVulkanDevice,
-            &imageView, 0, &views[i]) != VK_SUCCESS)
+        if (vkCreateImageView(GVulkanDevice, &imageView,
+            SYSVKMEMORY_IMAGEVIEW_ALLOC, &views[i]) != VK_SUCCESS)
         {
             // Could not create image view
             GSysMessage << "[0x303D] Could not create image view\n";
@@ -587,8 +589,8 @@ bool Swapchain::createSwapchain()
     renderPassInfo.dependencyCount = 2;
     renderPassInfo.pDependencies = subpassDependencies;
 
-    if (vkCreateRenderPass(GVulkanDevice,
-        &renderPassInfo, 0, &renderPass) != VK_SUCCESS)
+    if (vkCreateRenderPass(GVulkanDevice, &renderPassInfo,
+        SYSVKMEMORY_RENDERPASS_ALLOC, &renderPass) != VK_SUCCESS)
     {
         // Could not create render pass
         GSysMessage << "[0x303F] Could not create render pass\n";
@@ -624,8 +626,8 @@ bool Swapchain::createSwapchain()
         imageViews[0] = views[i];
         framebufferInfo.pAttachments = imageViews;
 
-        if (vkCreateFramebuffer(GVulkanDevice,
-            &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        if (vkCreateFramebuffer(GVulkanDevice, &framebufferInfo,
+            SYSVKMEMORY_FRAMEBUFFER_ALLOC, &framebuffers[i]) != VK_SUCCESS)
         {
             // Could not create framebuffer
             GSysMessage << "[0x3041] Could not create framebuffer\n";
@@ -650,8 +652,8 @@ bool Swapchain::createSwapchain()
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Create render ready semaphore
-        if (vkCreateSemaphore(GVulkanDevice,
-            &semaphoreInfo, 0, &renderReady[i]) != VK_SUCCESS)
+        if (vkCreateSemaphore(GVulkanDevice, &semaphoreInfo,
+            SYSVKMEMORY_SEMAPHORE_ALLOC, &renderReady[i]) != VK_SUCCESS)
         {
             // Could not create render ready semaphore
             GSysMessage << "[0x3043] Could not create ready semaphore\n";
@@ -660,8 +662,8 @@ bool Swapchain::createSwapchain()
         }
 
         // Create render finished semaphore
-        if (vkCreateSemaphore(GVulkanDevice,
-            &semaphoreInfo, 0, &renderDone[i]) != VK_SUCCESS)
+        if (vkCreateSemaphore(GVulkanDevice, &semaphoreInfo,
+            SYSVKMEMORY_SEMAPHORE_ALLOC, &renderDone[i]) != VK_SUCCESS)
         {
             // Could not create render finished semaphore
             GSysMessage << "[0x3044] Could not create finish semaphore\n";
@@ -679,8 +681,8 @@ bool Swapchain::createSwapchain()
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Create fence
-        if (vkCreateFence(GVulkanDevice,
-            &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
+        if (vkCreateFence(GVulkanDevice, &fenceInfo,
+            SYSVKMEMORY_FENCE_ALLOC, &fences[i]) != VK_SUCCESS)
         {
             // Could not create fence
             GSysMessage << "[0x3045] Could not create fence\n";
@@ -706,8 +708,8 @@ bool Swapchain::createSwapchain()
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Create command pool
-        if (vkCreateCommandPool(GVulkanDevice,
-            &commandPoolInfo, 0, &commandPools[i]) != VK_SUCCESS)
+        if (vkCreateCommandPool(GVulkanDevice, &commandPoolInfo,
+            SYSVKMEMORY_COMMANDPOOL_ALLOC, &commandPools[i]) != VK_SUCCESS)
         {
             // Could not create commands pool
             GSysMessage << "[0x3047] Could not create commands pool\n";
@@ -799,21 +801,25 @@ bool Swapchain::resizeSwapchain()
         // Destroy fences
         if (fences[i])
         {
-            vkDestroyFence(GVulkanDevice, fences[i], 0);
+            vkDestroyFence(GVulkanDevice, fences[i], SYSVKMEMORY_FENCE_ALLOC);
         }
         fences[i] = 0;
 
         // Destroy framebuffers
         if (framebuffers[i])
         {
-            vkDestroyFramebuffer(GVulkanDevice, framebuffers[i], 0);
+            vkDestroyFramebuffer(
+                GVulkanDevice, framebuffers[i], SYSVKMEMORY_FRAMEBUFFER_ALLOC
+            );
         }
         framebuffers[i] = 0;
 
         // Destroy swapchain images views
         if (views[i])
         {
-            vkDestroyImageView(GVulkanDevice, views[i], 0);
+            vkDestroyImageView(
+                GVulkanDevice, views[i], SYSVKMEMORY_IMAGEVIEW_ALLOC
+            );
         }
         views[i] = 0;
     }
@@ -1050,8 +1056,8 @@ bool Swapchain::resizeSwapchain()
     swapchainInfos.clipped = VK_TRUE;
     swapchainInfos.oldSwapchain = oldSwapchain;
 
-    if (vkCreateSwapchainKHR(GVulkanDevice,
-        &swapchainInfos, 0, &handle) != VK_SUCCESS)
+    if (vkCreateSwapchainKHR(GVulkanDevice, &swapchainInfos,
+        SYSVKMEMORY_SWAPCHAIN_ALLOC, &handle) != VK_SUCCESS)
     {
         // Could not create swapchain
         return false;
@@ -1060,7 +1066,9 @@ bool Swapchain::resizeSwapchain()
     // Destroy old swapchain
     if (oldSwapchain)
     {
-        vkDestroySwapchainKHR(GVulkanDevice, oldSwapchain, 0);
+        vkDestroySwapchainKHR(
+            GVulkanDevice, oldSwapchain, SYSVKMEMORY_SWAPCHAIN_ALLOC
+        );
     }
 
     // Set swapchain format
@@ -1141,8 +1149,8 @@ bool Swapchain::resizeSwapchain()
         // Recreate image view
         imageView.image = images[i];
 
-        if (vkCreateImageView(GVulkanDevice,
-            &imageView, 0, &views[i]) != VK_SUCCESS)
+        if (vkCreateImageView(GVulkanDevice, &imageView,
+            SYSVKMEMORY_IMAGEVIEW_ALLOC, &views[i]) != VK_SUCCESS)
         {
             // Could not recreate swapchain image view
             return false;
@@ -1175,8 +1183,8 @@ bool Swapchain::resizeSwapchain()
         imageViews[0] = views[i];
         framebufferInfo.pAttachments = imageViews;
 
-        if (vkCreateFramebuffer(GVulkanDevice,
-            &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        if (vkCreateFramebuffer(GVulkanDevice, &framebufferInfo,
+            SYSVKMEMORY_FRAMEBUFFER_ALLOC, &framebuffers[i]) != VK_SUCCESS)
         {
             // Could not recreate framebuffer
             return false;
@@ -1197,8 +1205,8 @@ bool Swapchain::resizeSwapchain()
     for (uint32_t i = 0; i < frames; ++i)
     {
         // Recreate fence
-        if (vkCreateFence(GVulkanDevice,
-            &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
+        if (vkCreateFence(GVulkanDevice, &fenceInfo,
+            SYSVKMEMORY_FENCE_ALLOC, &fences[i]) != VK_SUCCESS)
         {
             // Could not recreate fence
             return false;
@@ -1232,7 +1240,9 @@ void Swapchain::destroySwapchain()
     // Destroy render pass
     if (renderPass)
     {
-        vkDestroyRenderPass(GVulkanDevice, renderPass, 0);
+        vkDestroyRenderPass(
+            GVulkanDevice, renderPass, SYSVKMEMORY_RENDERPASS_ALLOC
+        );
     }
     renderPass = 0;
 
@@ -1249,7 +1259,9 @@ void Swapchain::destroySwapchain()
             }
 
             // Destroy commands pool
-            vkDestroyCommandPool(GVulkanDevice, commandPools[i], 0);
+            vkDestroyCommandPool(
+                GVulkanDevice, commandPools[i], SYSVKMEMORY_COMMANDPOOL_ALLOC
+            );
         }
         commandBuffers[i] = 0;
         commandPools[i] = 0;
@@ -1257,34 +1269,42 @@ void Swapchain::destroySwapchain()
         // Destroy fences
         if (fences[i])
         {
-            vkDestroyFence(GVulkanDevice, fences[i], 0);
+            vkDestroyFence(GVulkanDevice, fences[i], SYSVKMEMORY_FENCE_ALLOC);
         }
         fences[i] = 0;
 
         // Destroy semaphores
         if (renderDone[i])
         {
-            vkDestroySemaphore(GVulkanDevice, renderDone[i], 0);
+            vkDestroySemaphore(
+                GVulkanDevice, renderDone[i], SYSVKMEMORY_SEMAPHORE_ALLOC
+            );
         }
         renderDone[i] = 0;
 
         if (renderReady[i])
         {
-            vkDestroySemaphore(GVulkanDevice, renderReady[i], 0);
+            vkDestroySemaphore(
+                GVulkanDevice, renderReady[i], SYSVKMEMORY_SEMAPHORE_ALLOC
+            );
         }
         renderReady[i] = 0;
 
         // Destroy framebuffers
         if (framebuffers[i])
         {
-            vkDestroyFramebuffer(GVulkanDevice, framebuffers[i], 0);
+            vkDestroyFramebuffer(
+                GVulkanDevice, framebuffers[i], SYSVKMEMORY_FRAMEBUFFER_ALLOC
+            );
         }
         framebuffers[i] = 0;
 
         // Destroy swapchain images views
         if (views[i])
         {
-            vkDestroyImageView(GVulkanDevice, views[i], 0);
+            vkDestroyImageView(
+                GVulkanDevice, views[i], SYSVKMEMORY_IMAGEVIEW_ALLOC
+            );
         }
         views[i]= 0;
         images[i] = 0;
@@ -1293,7 +1313,9 @@ void Swapchain::destroySwapchain()
     // Destroy swapchain
     if (handle)
     {
-        vkDestroySwapchainKHR(GVulkanDevice, handle, 0);
+        vkDestroySwapchainKHR(
+            GVulkanDevice, handle, SYSVKMEMORY_SWAPCHAIN_ALLOC
+        );
     }
     handle = 0;
 

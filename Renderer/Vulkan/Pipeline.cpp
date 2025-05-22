@@ -331,8 +331,8 @@ bool Pipeline::createCompositingPipeline(AlphaBlendingMode blendingMode)
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
 
-    if (vkCreateGraphicsPipelines(GVulkanDevice,
-        0, 1, &pipelineInfo, 0, &m_pipeline) != VK_SUCCESS)
+    if (vkCreateGraphicsPipelines(GVulkanDevice, 0, 1, &pipelineInfo,
+        SYSVKMEMORY_PIPELINE_ALLOC, &m_pipeline) != VK_SUCCESS)
     {
         // Could not create pipeline
         return false;
@@ -612,8 +612,8 @@ bool Pipeline::createPipeline(
     pipelineInfo.basePipelineHandle = 0;
     pipelineInfo.basePipelineIndex = -1;
 
-    if (vkCreateGraphicsPipelines(GVulkanDevice,
-        0, 1, &pipelineInfo, 0, &m_pipeline) != VK_SUCCESS)
+    if (vkCreateGraphicsPipelines(GVulkanDevice, 0, 1, &pipelineInfo,
+        SYSVKMEMORY_PIPELINE_ALLOC, &m_pipeline) != VK_SUCCESS)
     {
         // Could not create pipeline
         return false;
@@ -643,7 +643,9 @@ void Pipeline::destroyPipeline()
     // Destroy pipeline
     if (m_pipeline)
     {
-        vkDestroyPipeline(GVulkanDevice, m_pipeline, 0);
+        vkDestroyPipeline(
+            GVulkanDevice, m_pipeline, SYSVKMEMORY_PIPELINE_ALLOC
+        );
     }
     m_pipeline = 0;
 

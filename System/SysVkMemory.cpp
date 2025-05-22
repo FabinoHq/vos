@@ -84,19 +84,19 @@ SysVkMemory::~SysVkMemory()
 ////////////////////////////////////////////////////////////////////////////////
 bool SysVkMemory::init()
 {
-    #if (SYSVKMEMORY_CUSTOM == 1)
-        // Reset memory arrays
-        for (int i = 0; i < SYSVKMEMORY_POOLSCOUNT; ++i)
-        {
-            m_memory[i] = 0;
-            m_offset[i] = 0;
-            m_usage[i] = 0;
-        }
+    // Reset vulkan memory arrays
+    for (int i = 0; i < SYSVKMEMORY_POOLSCOUNT; ++i)
+    {
+        m_memory[i] = 0;
+        m_offset[i] = 0;
+        m_usage[i] = 0;
+    }
 
-        // Allocate memory pools
+    #if (SYSVKMEMORY_CUSTOM_ALLOCATORS == 1)
+        // Allocate vulkan memory pools
         for (int i = 0; i < SYSVKMEMORY_POOLSCOUNT; ++i)
         {
-            // Check memory pool size
+            // Check vulkan memory pool size
             if (SysVkMemoryArray[i].size <= 0) { continue; }
 
             // Allocate system vulkan memory
@@ -110,7 +110,7 @@ bool SysVkMemory::init()
                 return false;
             }
         }
-    #endif // SYSVKMEMORY_CUSTOM
+    #endif // SYSVKMEMORY_CUSTOM_ALLOCATORS
 
     // System vulkan memory is ready
     return true;
@@ -121,7 +121,7 @@ bool SysVkMemory::init()
 ////////////////////////////////////////////////////////////////////////////////
 void SysVkMemory::destroySysVkMemory()
 {
-    // Free memory arrays
+    // Free vulkan memory arrays
     for (int i = 0; i < SYSVKMEMORY_POOLSCOUNT; ++i)
     {
         if (m_memory[i]) { std::free(m_memory[i]); }

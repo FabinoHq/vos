@@ -43,6 +43,7 @@
 #define VOS_RENDERER_VULKAN_SHADER_HEADER
 
     #include "../../System/System.h"
+    #include "../../System/SysVkMemory.h"
     #include "Vulkan.h"
 
     #include <cstddef>

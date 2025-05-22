@@ -310,8 +310,8 @@ bool VulkanMemory::init()
         allocateInfo.allocationSize = VulkanMemoryArray[i].size;
         allocateInfo.memoryTypeIndex = m_index[i];
 
-        if (vkAllocateMemory(GVulkanDevice,
-            &allocateInfo, 0, &m_memory[i]) != VK_SUCCESS)
+        if (vkAllocateMemory(GVulkanDevice, &allocateInfo,
+            SYSVKMEMORY_VULKAN_ALLOC, &m_memory[i]) != VK_SUCCESS)
         {
             // Could not allocate device memory pool
             GSysMessage << "[0x310B] Could not allocate graphics memory pool\n";
@@ -334,7 +334,12 @@ void VulkanMemory::destroyVulkanMemory()
     {
         for (int i = 0; i < VULKAN_MEMORY_POOLSCOUNT; ++i)
         {
-            if (m_memory[i]) { vkFreeMemory(GVulkanDevice, m_memory[i], 0); }
+            if (m_memory[i])
+            {
+                vkFreeMemory(
+                    GVulkanDevice, m_memory[i], SYSVKMEMORY_VULKAN_ALLOC
+                );
+            }
         }
     }
 

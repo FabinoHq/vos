@@ -44,6 +44,7 @@
 
     #include "../System/System.h"
     #include "../System/SysMemory.h"
+    #include "../System/SysVkMemory.h"
     #include "../System/SysThread.h"
     #include "../System/SysMutex.h"
     #include "../Renderer/Vulkan/Vulkan.h"

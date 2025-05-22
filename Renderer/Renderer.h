@@ -44,6 +44,7 @@
 
     #include "../System/System.h"
     #include "../System/SysMemory.h"
+    #include "../System/SysVkMemory.h"
     #include "../System/SysMessage.h"
     #include "../System/SysWindow.h"
     #include "../System/SysVulkan.h"

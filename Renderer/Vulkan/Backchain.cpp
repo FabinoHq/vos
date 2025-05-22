@@ -128,8 +128,8 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
             imageInfo.pQueueFamilyIndices = 0;
             imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-            if (vkCreateImage(
-                GVulkanDevice, &imageInfo, 0, &msaaImages[i]) != VK_SUCCESS)
+            if (vkCreateImage(GVulkanDevice, &imageInfo,
+                SYSVKMEMORY_IMAGE_ALLOC, &msaaImages[i]) != VK_SUCCESS)
             {
                 // Could not create image
                 return false;
@@ -188,8 +188,8 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         imageInfo.pQueueFamilyIndices = 0;
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-        if (vkCreateImage(
-            GVulkanDevice, &imageInfo, 0, &images[i]) != VK_SUCCESS)
+        if (vkCreateImage(GVulkanDevice, &imageInfo,
+            SYSVKMEMORY_IMAGE_ALLOC, &images[i]) != VK_SUCCESS)
         {
             // Could not create image
             return false;
@@ -246,8 +246,8 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         imageInfo.pQueueFamilyIndices = 0;
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-        if (vkCreateImage(GVulkanDevice,
-            &imageInfo, 0, &depthImages[i]) != VK_SUCCESS)
+        if (vkCreateImage(GVulkanDevice, &imageInfo,
+            SYSVKMEMORY_IMAGE_ALLOC, &depthImages[i]) != VK_SUCCESS)
         {
             // Could not create depth image
             return false;
@@ -292,8 +292,8 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
             imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
             imageView.subresourceRange = msaaSubresource;
 
-            if (vkCreateImageView(GVulkanDevice,
-                &imageView, 0, &msaaViews[i]) != VK_SUCCESS)
+            if (vkCreateImageView(GVulkanDevice, &imageView,
+                SYSVKMEMORY_IMAGEVIEW_ALLOC, &msaaViews[i]) != VK_SUCCESS)
             {
                 // Could not create msaa image view
                 return false;
@@ -330,8 +330,8 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         imageView.subresourceRange = subresource;
 
-        if (vkCreateImageView(GVulkanDevice,
-            &imageView, 0, &views[i]) != VK_SUCCESS)
+        if (vkCreateImageView(GVulkanDevice, &imageView,
+            SYSVKMEMORY_IMAGEVIEW_ALLOC, &views[i]) != VK_SUCCESS)
         {
             // Could not create image view
             return false;
@@ -367,8 +367,8 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         depthImageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         depthImageView.subresourceRange = depthSubresource;
 
-        if (vkCreateImageView(GVulkanDevice,
-            &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
+        if (vkCreateImageView(GVulkanDevice, &depthImageView,
+            SYSVKMEMORY_IMAGEVIEW_ALLOC, &depthViews[i]) != VK_SUCCESS)
         {
             // Could not create depth image view
             return false;
@@ -542,8 +542,8 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
     renderPassInfo.dependencyCount = 3;
     renderPassInfo.pDependencies = subpassDependencies;
 
-    if (vkCreateRenderPass(GVulkanDevice,
-        &renderPassInfo, 0, &renderPass) != VK_SUCCESS)
+    if (vkCreateRenderPass(GVulkanDevice, &renderPassInfo,
+        SYSVKMEMORY_RENDERPASS_ALLOC, &renderPass) != VK_SUCCESS)
     {
         // Could not create render pass
         return false;
@@ -577,8 +577,8 @@ bool Backchain::createBackchain(VulkanMemoryPool memoryPool,
         framebufferInfo.height = height;
         framebufferInfo.layers = 1;
 
-        if (vkCreateFramebuffer(GVulkanDevice,
-            &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        if (vkCreateFramebuffer(GVulkanDevice, &framebufferInfo,
+            SYSVKMEMORY_FRAMEBUFFER_ALLOC, &framebuffers[i]) != VK_SUCCESS)
         {
             // Could not create framebuffer
             return false;
@@ -635,49 +635,61 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         // Destroy framebuffers
         if (framebuffers[i])
         {
-            vkDestroyFramebuffer(GVulkanDevice, framebuffers[i], 0);
+            vkDestroyFramebuffer(
+                GVulkanDevice, framebuffers[i], SYSVKMEMORY_FRAMEBUFFER_ALLOC
+            );
         }
         framebuffers[i] = 0;
 
         // Destroy backchain depth images views
         if (depthViews[i])
         {
-            vkDestroyImageView(GVulkanDevice, depthViews[i], 0);
+            vkDestroyImageView(
+                GVulkanDevice, depthViews[i], SYSVKMEMORY_IMAGEVIEW_ALLOC
+            );
         }
         depthViews[i] = 0;
 
         // Destroy backchain images views
         if (views[i])
         {
-            vkDestroyImageView(GVulkanDevice, views[i], 0);
+            vkDestroyImageView(
+                GVulkanDevice, views[i], SYSVKMEMORY_IMAGEVIEW_ALLOC
+            );
         }
         views[i]= 0;
 
         // Destroy backchain msaa images views
         if (msaaViews[i])
         {
-            vkDestroyImageView(GVulkanDevice, msaaViews[i], 0);
+            vkDestroyImageView(
+                GVulkanDevice, msaaViews[i], SYSVKMEMORY_IMAGEVIEW_ALLOC
+            );
         }
         msaaViews[i]= 0;
 
         // Destroy backchain depth images
         if (depthImages[i])
         {
-            vkDestroyImage(GVulkanDevice, depthImages[i], 0);
+            vkDestroyImage(
+                GVulkanDevice, depthImages[i], SYSVKMEMORY_IMAGE_ALLOC
+            );
         }
         depthImages[i] = 0;
 
         // Destroy backchain images
         if (images[i])
         {
-            vkDestroyImage(GVulkanDevice, images[i], 0);
+            vkDestroyImage(GVulkanDevice, images[i], SYSVKMEMORY_IMAGE_ALLOC);
         }
         images[i] = 0;
 
         // Destroy backchain msaa images
         if (msaaImages[i])
         {
-            vkDestroyImage(GVulkanDevice, msaaImages[i], 0);
+            vkDestroyImage(
+                GVulkanDevice, msaaImages[i], SYSVKMEMORY_IMAGE_ALLOC
+            );
         }
         msaaImages[i] = 0;
     }
@@ -707,8 +719,8 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
             imageInfo.pQueueFamilyIndices = 0;
             imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-            if (vkCreateImage(
-                GVulkanDevice, &imageInfo, 0, &msaaImages[i]) != VK_SUCCESS)
+            if (vkCreateImage(GVulkanDevice, &imageInfo,
+                SYSVKMEMORY_IMAGE_ALLOC, &msaaImages[i]) != VK_SUCCESS)
             {
                 // Could not recreate image
                 return false;
@@ -767,8 +779,8 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         imageInfo.pQueueFamilyIndices = 0;
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-        if (vkCreateImage(GVulkanDevice,
-            &imageInfo, 0, &images[i]) != VK_SUCCESS)
+        if (vkCreateImage(GVulkanDevice, &imageInfo,
+            SYSVKMEMORY_IMAGE_ALLOC, &images[i]) != VK_SUCCESS)
         {
             // Could not recreate image
             return false;
@@ -825,8 +837,8 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         imageInfo.pQueueFamilyIndices = 0;
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-        if (vkCreateImage(GVulkanDevice,
-            &imageInfo, 0, &depthImages[i]) != VK_SUCCESS)
+        if (vkCreateImage(GVulkanDevice, &imageInfo,
+            SYSVKMEMORY_IMAGE_ALLOC, &depthImages[i]) != VK_SUCCESS)
         {
             // Could not create depth image
             return false;
@@ -871,8 +883,8 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
             imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
             imageView.subresourceRange = msaaSubresource;
 
-            if (vkCreateImageView(GVulkanDevice,
-                &imageView, 0, &msaaViews[i]) != VK_SUCCESS)
+            if (vkCreateImageView(GVulkanDevice, &imageView,
+                SYSVKMEMORY_IMAGEVIEW_ALLOC, &msaaViews[i]) != VK_SUCCESS)
             {
                 // Could not recreate image view
                 return false;
@@ -909,8 +921,8 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         imageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         imageView.subresourceRange = subresource;
 
-        if (vkCreateImageView(GVulkanDevice,
-            &imageView, 0, &views[i]) != VK_SUCCESS)
+        if (vkCreateImageView(GVulkanDevice, &imageView,
+            SYSVKMEMORY_IMAGEVIEW_ALLOC, &views[i]) != VK_SUCCESS)
         {
             // Could not recreate image view
             return false;
@@ -946,8 +958,8 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         depthImageView.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         depthImageView.subresourceRange = depthSubresource;
 
-        if (vkCreateImageView(GVulkanDevice,
-            &depthImageView, 0, &depthViews[i]) != VK_SUCCESS)
+        if (vkCreateImageView(GVulkanDevice, &depthImageView,
+            SYSVKMEMORY_IMAGEVIEW_ALLOC, &depthViews[i]) != VK_SUCCESS)
         {
             // Could not recreate depth image view
             return false;
@@ -982,8 +994,8 @@ bool Backchain::resizeBackchain(VulkanMemoryPool memoryPool,
         framebufferInfo.height = height;
         framebufferInfo.layers = 1;
 
-        if (vkCreateFramebuffer(GVulkanDevice,
-            &framebufferInfo, 0, &framebuffers[i]) != VK_SUCCESS)
+        if (vkCreateFramebuffer(GVulkanDevice, &framebufferInfo,
+            SYSVKMEMORY_FRAMEBUFFER_ALLOC, &framebuffers[i]) != VK_SUCCESS)
         {
             // Could not recreate framebuffer
             return false;
@@ -1025,7 +1037,9 @@ void Backchain::destroyBackchain()
     // Destroy render pass
     if (renderPass)
     {
-        vkDestroyRenderPass(GVulkanDevice, renderPass, 0);
+        vkDestroyRenderPass(
+            GVulkanDevice, renderPass, SYSVKMEMORY_RENDERPASS_ALLOC
+        );
     }
     renderPass = 0;
 
@@ -1034,49 +1048,61 @@ void Backchain::destroyBackchain()
         // Destroy framebuffers
         if (framebuffers[i])
         {
-            vkDestroyFramebuffer(GVulkanDevice, framebuffers[i], 0);
+            vkDestroyFramebuffer(
+                GVulkanDevice, framebuffers[i], SYSVKMEMORY_FRAMEBUFFER_ALLOC
+            );
         }
         framebuffers[i] = 0;
 
         // Destroy backchain depth images views
         if (depthViews[i])
         {
-            vkDestroyImageView(GVulkanDevice, depthViews[i], 0);
+            vkDestroyImageView(
+                GVulkanDevice, depthViews[i], SYSVKMEMORY_IMAGEVIEW_ALLOC
+            );
         }
         depthViews[i] = 0;
 
         // Destroy backchain images views
         if (views[i])
         {
-            vkDestroyImageView(GVulkanDevice, views[i], 0);
+            vkDestroyImageView(
+                GVulkanDevice, views[i], SYSVKMEMORY_IMAGEVIEW_ALLOC
+            );
         }
         views[i]= 0;
 
         // Destroy backchain msaa images views
         if (msaaViews[i])
         {
-            vkDestroyImageView(GVulkanDevice, msaaViews[i], 0);
+            vkDestroyImageView(
+                GVulkanDevice, msaaViews[i], SYSVKMEMORY_IMAGEVIEW_ALLOC
+            );
         }
         msaaViews[i]= 0;
 
         // Destroy backchain depth images
         if (depthImages[i])
         {
-            vkDestroyImage(GVulkanDevice, depthImages[i], 0);
+            vkDestroyImage(
+                GVulkanDevice, depthImages[i], SYSVKMEMORY_IMAGE_ALLOC
+            );
         }
         depthImages[i] = 0;
 
         // Destroy backchain images
         if (images[i])
         {
-            vkDestroyImage(GVulkanDevice, images[i], 0);
+            vkDestroyImage(GVulkanDevice, images[i], SYSVKMEMORY_IMAGE_ALLOC);
         }
         images[i] = 0;
 
         // Destroy backchain msaa images
         if (msaaImages[i])
         {
-            vkDestroyImage(GVulkanDevice, msaaImages[i], 0);
+            vkDestroyImage(
+                GVulkanDevice, msaaImages[i], SYSVKMEMORY_IMAGE_ALLOC
+            );
         }
         msaaImages[i] = 0;
     }

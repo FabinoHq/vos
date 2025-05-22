@@ -101,8 +101,8 @@ bool ComputeLayout::createPipelineLayout()
     pipelineInfo.pushConstantRangeCount = 0;
     pipelineInfo.pPushConstantRanges = 0;
 
-    if (vkCreatePipelineLayout(GVulkanDevice,
-        &pipelineInfo, 0, &handle) != VK_SUCCESS)
+    if (vkCreatePipelineLayout(GVulkanDevice, &pipelineInfo,
+        SYSVKMEMORY_PIPELINE_ALLOC, &handle) != VK_SUCCESS)
     {
         // Could not create pipeline layout
         return false;
@@ -132,7 +132,9 @@ void ComputeLayout::destroyLayout()
     // Destroy pipeline layout
     if (handle)
     {
-        vkDestroyPipelineLayout(GVulkanDevice, handle, 0);
+        vkDestroyPipelineLayout(
+            GVulkanDevice, handle, SYSVKMEMORY_PIPELINE_ALLOC
+        );
     }
     handle = 0;
 }

@@ -149,8 +149,8 @@ bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
     imageInfo.pQueueFamilyIndices = 0;
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    if (vkCreateImage(GVulkanDevice,
-        &imageInfo, 0, &m_handle) != VK_SUCCESS)
+    if (vkCreateImage(GVulkanDevice, &imageInfo,
+        SYSVKMEMORY_IMAGE_ALLOC, &m_handle) != VK_SUCCESS)
     {
         // Could not create image
         return false;
@@ -217,8 +217,8 @@ bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
     samplerInfo.borderColor = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-    if (vkCreateSampler(GVulkanDevice,
-        &samplerInfo, 0, &m_sampler) != VK_SUCCESS)
+    if (vkCreateSampler(GVulkanDevice, &samplerInfo,
+        SYSVKMEMORY_SAMPLER_ALLOC, &m_sampler) != VK_SUCCESS)
     {
         // Could not create image sampler
         return false;
@@ -247,8 +247,8 @@ bool CubeMap::createCubeMap(VulkanMemoryPool memoryPool,
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 6;
 
-    if (vkCreateImageView(GVulkanDevice,
-        &viewInfo, 0, &m_view) != VK_SUCCESS)
+    if (vkCreateImageView(GVulkanDevice, &viewInfo,
+        SYSVKMEMORY_IMAGEVIEW_ALLOC, &m_view) != VK_SUCCESS)
     {
         // Could not create image view
         return false;
@@ -331,21 +331,21 @@ void CubeMap::destroyCubeMap()
     // Destroy image view
     if (m_view)
     {
-        vkDestroyImageView(GVulkanDevice, m_view, 0);
+        vkDestroyImageView(GVulkanDevice, m_view, SYSVKMEMORY_IMAGEVIEW_ALLOC);
     }
     m_view = 0;
 
     // Destroy image sampler
     if (m_sampler)
     {
-        vkDestroySampler(GVulkanDevice, m_sampler, 0);
+        vkDestroySampler(GVulkanDevice, m_sampler, SYSVKMEMORY_SAMPLER_ALLOC);
     }
     m_sampler = 0;
 
     // Destroy image
     if (m_handle)
     {
-        vkDestroyImage(GVulkanDevice, m_handle, 0);
+        vkDestroyImage(GVulkanDevice, m_handle, SYSVKMEMORY_IMAGE_ALLOC);
     }
     m_handle = 0;
 

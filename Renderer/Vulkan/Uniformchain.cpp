@@ -100,8 +100,8 @@ bool Uniformchain::createUniformchain()
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Create uniforms ready semaphore
-        if (vkCreateSemaphore(GVulkanDevice,
-            &semaphoreInfo, 0, &uniformsReady[i]) != VK_SUCCESS)
+        if (vkCreateSemaphore(GVulkanDevice, &semaphoreInfo,
+            SYSVKMEMORY_SEMAPHORE_ALLOC, &uniformsReady[i]) != VK_SUCCESS)
         {
             // Could not create uniforms ready semaphore
             return false;
@@ -117,8 +117,8 @@ bool Uniformchain::createUniformchain()
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Create fence
-        if (vkCreateFence(GVulkanDevice,
-            &fenceInfo, 0, &fences[i]) != VK_SUCCESS)
+        if (vkCreateFence(GVulkanDevice, &fenceInfo,
+            SYSVKMEMORY_FENCE_ALLOC, &fences[i]) != VK_SUCCESS)
         {
             // Could not create fence
             return false;
@@ -140,8 +140,8 @@ bool Uniformchain::createUniformchain()
     for (uint32_t i = 0; i < RendererMaxSwapchainFrames; ++i)
     {
         // Create command pool
-        if (vkCreateCommandPool(GVulkanDevice,
-            &commandPoolInfo, 0, &commandPools[i]) != VK_SUCCESS)
+        if (vkCreateCommandPool(GVulkanDevice, &commandPoolInfo,
+            SYSVKMEMORY_COMMANDPOOL_ALLOC, &commandPools[i]) != VK_SUCCESS)
         {
             // Could not create commands pool
             return false;
@@ -201,7 +201,9 @@ void Uniformchain::destroyUniformchain()
             }
 
             // Destroy commands pool
-            vkDestroyCommandPool(GVulkanDevice, commandPools[i], 0);
+            vkDestroyCommandPool(
+                GVulkanDevice, commandPools[i], SYSVKMEMORY_COMMANDPOOL_ALLOC
+            );
         }
         commandBuffers[i] = 0;
         commandPools[i] = 0;
@@ -209,14 +211,16 @@ void Uniformchain::destroyUniformchain()
         // Destroy fences
         if (fences[i])
         {
-            vkDestroyFence(GVulkanDevice, fences[i], 0);
+            vkDestroyFence(GVulkanDevice, fences[i], SYSVKMEMORY_FENCE_ALLOC);
         }
         fences[i] = 0;
 
         // Destroy semaphores
         if (uniformsReady[i])
         {
-            vkDestroySemaphore(GVulkanDevice, uniformsReady[i], 0);
+            vkDestroySemaphore(
+                GVulkanDevice, uniformsReady[i], SYSVKMEMORY_SEMAPHORE_ALLOC
+            );
         }
         uniformsReady[i] = 0;
     }

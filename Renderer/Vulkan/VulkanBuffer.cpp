@@ -98,7 +98,8 @@ bool VulkanBuffer::createBuffer(VkBufferUsageFlags usage,
     bufferInfo.queueFamilyIndexCount = 0;
     bufferInfo.pQueueFamilyIndices = 0;
 
-    if (vkCreateBuffer(GVulkanDevice, &bufferInfo, 0, &handle) != VK_SUCCESS)
+    if (vkCreateBuffer(GVulkanDevice, &bufferInfo,
+        SYSVKMEMORY_BUFFER_ALLOC, &handle) != VK_SUCCESS)
     {
         // Could not create buffer
         return false;
@@ -138,7 +139,7 @@ void VulkanBuffer::destroyBuffer()
     // Destroy buffer
     if (handle)
     {
-        vkDestroyBuffer(GVulkanDevice, handle, 0);
+        vkDestroyBuffer(GVulkanDevice, handle, SYSVKMEMORY_BUFFER_ALLOC);
     }
     handle = 0;
 

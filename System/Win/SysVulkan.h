@@ -43,6 +43,7 @@
 #define VOS_SYSTEM_WIN_SYSVULKAN_HEADER
 
     #include "../System.h"
+    #include "../SysVkMemory.h"
     #include "../SysWindow.h"
 
     #include <cstddef>
