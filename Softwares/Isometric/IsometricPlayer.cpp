@@ -50,6 +50,8 @@ Transform2(),
 m_transforms(),
 m_speed(),
 m_bounding(),
+m_matrixX(0),
+m_matrixY(0),
 m_sprite()
 {
     m_transforms.reset();
@@ -61,6 +63,8 @@ m_sprite()
 ////////////////////////////////////////////////////////////////////////////////
 IsometricPlayer::~IsometricPlayer()
 {
+    m_matrixY = 0;
+    m_matrixX = 0;
     m_speed.reset();
     m_transforms.reset();
 }
@@ -81,6 +85,10 @@ bool IsometricPlayer::init()
     // Init bounding aligned rectangle
     m_bounding.setPosition(0, 0);
     m_bounding.setHalfSize(32000, 32000);
+
+    // Reset player matrix position
+    m_matrixX = 0;
+    m_matrixY = 0;
 
     // Init rectangle shape
     if (!m_sprite.init(GResources.textures.high(TEXTURE_PLAYER), 0.075f, 0.15f))
@@ -163,6 +171,8 @@ void IsometricPlayer::precompute(float physicstime)
 {
     // Precompute transformations
     precomputeTransforms(m_transforms, physicstime);
+    m_matrixX = ((getX()/IsoMapElemWidth) - (getY()/IsoMapElemHeight));
+    m_matrixY = ((getY()/IsoMapElemHeight) + (getX()/IsoMapElemWidth));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

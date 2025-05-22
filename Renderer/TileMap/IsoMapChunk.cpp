@@ -47,14 +47,13 @@
 //  IsoMapChunk default constructor                                           //
 ////////////////////////////////////////////////////////////////////////////////
 IsoMapChunk::IsoMapChunk() :
-Transform2(),
 matrix(0)
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  IsoMapChunk virtual destructor                                            //
+//  IsoMapChunk destructor                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 IsoMapChunk::~IsoMapChunk()
 {
@@ -71,9 +70,6 @@ bool IsoMapChunk::init()
     // Reset matrix chunk
     matrix = 0;
 
-    // Reset isomap chunk transformations
-    resetTransforms();
-
     // Init matrix chunk
     matrix = GSysMemory.alloc<int32_t>(IsoMapChunkSize, SYSMEMORY_ISOMAPS);
     if (!matrix) { return false; }
@@ -85,44 +81,14 @@ bool IsoMapChunk::init()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render isomap chunk                                                       //
+//  Get isomap chunk element                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void IsoMapChunk::render(Sprite& sprite)
+int32_t IsoMapChunk::getElem(int32_t i, int32_t j)
 {
-    // Render isomap chunk
-    for (int i = 0; i < IsoMapChunkWidth; ++i)
+    if ((i >= 0) && (i < IsoMapChunkWidth) &&
+        (j >= 0) && (j < IsoMapChunkHeight))
     {
-        for (int j = (IsoMapChunkHeight-1); j >= 0; --j)
-        {
-            // Get current isomap element
-            int32_t elem = matrix[(j*IsoMapChunkWidth)+i];
-            if (elem != 0)
-            {
-                // Render isomap element
-                sprite.setPosition(
-                    (IsoMapElemHalfWidth+m_position.vec[0])+
-                    (i*IsoMapElemHalfWidth)+(j*IsoMapElemHalfWidth),
-                    m_position.vec[1]+
-                    (j*IsoMapElemHalfHeight)-(i*IsoMapElemHalfHeight)
-                );
-                if (elem == 2)
-                {
-                    sprite.setHeight((IsoMapElemHeight*1.5f)+0.00001f);
-                    sprite.moveY(IsoMapElemHeight*0.25f);
-                    sprite.setTexture(
-                        GResources.textures.high(TEXTURE_ISOTILE2)
-                    );
-                }
-                else
-                {
-                    sprite.setHeight(IsoMapElemHeight+0.00001f);
-                    sprite.setTexture(
-                        GResources.textures.high(TEXTURE_ISOTILE)
-                    );
-                }
-                sprite.bindTexture();
-                sprite.render();
-            }
-        }
+        return matrix[(j*IsoMapChunkWidth)+i];
     }
+    return 0;
 }

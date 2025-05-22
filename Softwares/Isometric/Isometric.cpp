@@ -491,7 +491,42 @@ void Isometric::render()
     m_sprite.setOrigin(0.0f, 0.0f);
     m_sprite.setSize(IsoMapElemWidth+0.00001f, IsoMapElemHeight+0.00001f);
     m_sprite.setAngle(0.0f);
-    m_isomap.render(m_sprite);
+
+    GResources.isomaps.sync();
+    for (int32_t i = (m_player.getMatrixX()-IsoMapStreamElemHalfWidth);
+        i < (m_player.getMatrixX()+IsoMapStreamElemHalfWidth); ++i)
+    {
+        for (int32_t j = (m_player.getMatrixY()+(IsoMapStreamElemHalfHeight-1));
+            j >= (m_player.getMatrixY()-IsoMapStreamElemHalfHeight); --j)
+        {
+            int32_t elem = m_isomap.getElem(i, j);
+            if (elem > 0)
+            {
+                m_sprite.setPosition(
+                    (IsoMapElemHalfWidth)+
+                    (i*IsoMapElemHalfWidth)+(j*IsoMapElemHalfWidth),
+                    (j*IsoMapElemHalfHeight)-(i*IsoMapElemHalfHeight)
+                );
+                if (elem == 2)
+                {
+                    m_sprite.setHeight((IsoMapElemHeight*1.5f)+0.00001f);
+                    m_sprite.moveY(IsoMapElemHeight*0.25f);
+                    m_sprite.setTexture(
+                        GResources.textures.high(TEXTURE_ISOTILE2)
+                    );
+                }
+                else
+                {
+                    m_sprite.setHeight(IsoMapElemHeight+0.00001f);
+                    m_sprite.setTexture(
+                        GResources.textures.high(TEXTURE_ISOTILE)
+                    );
+                }
+                m_sprite.bindTexture();
+                m_sprite.render();
+            }
+        }
+    }
 
     // Render player
     m_player.render();

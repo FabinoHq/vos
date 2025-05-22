@@ -47,9 +47,6 @@
     #include "../Vulkan/VertexBuffer.h"
 
     #include "../../Math/Math.h"
-    #include "../../Math/Vector3.h"
-    #include "../../Math/Matrix4x4.h"
-    #include "../../Math/Transform3.h"
 
     #include "../../Resources/Resources.h"
     #include "../../Resources/IsoMapLoader.h"
@@ -58,6 +55,13 @@
     #include "IsoMapChunk.h"
 
     #include <cstdint>
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //  IsoMapStream settings                                                 //
+    ////////////////////////////////////////////////////////////////////////////
+    const int32_t IsoMapStreamElemHalfWidth = 24;
+    const int32_t IsoMapStreamElemHalfHeight = 24;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -124,9 +128,9 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Render isomap stream                                          //
+            //  Get isomap stream element                                     //
             ////////////////////////////////////////////////////////////////////
-            void render(Sprite& sprite);
+            int32_t getElem(int32_t i, int32_t j);
 
 
             ////////////////////////////////////////////////////////////////////

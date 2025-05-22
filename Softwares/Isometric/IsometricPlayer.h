@@ -153,6 +153,22 @@
                 return (m_bounding.position.vec[0] > MatrixChunk2RightWarp);
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get player matrix x position                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getMatrixX()
+            {
+                return m_matrixX;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player matrix y position                                  //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getMatrixY()
+            {
+                return m_matrixY;
+            }
+
 
         private:
             ////////////////////////////////////////////////////////////////////
@@ -170,6 +186,8 @@
             PhysicsTransform2       m_transforms;       // Player transforms
             Vector2i                m_speed;            // Player speed
             BoundingAlignRect       m_bounding;         // Bounding align rect
+            int32_t                 m_matrixX;          // Player matrix x pos
+            int32_t                 m_matrixY;          // Player matrix y pos
 
             Sprite                  m_sprite;           // Player sprite
     };

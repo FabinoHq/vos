@@ -76,28 +76,15 @@ bool IsoMapStream::init()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render isomap stream                                                      //
+//  Get isomap stream element                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-void IsoMapStream::render(Sprite& sprite)
+int32_t IsoMapStream::getElem(int32_t i, int32_t j)
 {
-    // Synchronize isomap stream with renderer
-    GResources.isomaps.sync();
-
-    // Render isomap chunks
-    for (int i = 1; i < (ISOMAP_STREAMWIDTH-1); ++i)
-    {
-        for (int j = (ISOMAP_STREAMHEIGHT-2); j > 0; --j)
-        {
-            if (GResources.isomaps.getFlags(i, j) != ISOMAP_FLAGS_EMPTY)
-            {
-                IsoMapChunk& isomap = GResources.isomaps.isomap(i, j);
-                isomap.setPosition(
-                    -(TILEMAP_STREAMHALFWIDTH*(TileMapChunkXStride*2.0f))+
-                    (i*IsoMapChunkXStride)+(j*IsoMapChunkXStride),
-                    (j*IsoMapChunkYStride)-(i*IsoMapChunkYStride)
-                );
-                isomap.render(sprite);
-            }
-        }
-    }
+    return (GResources.isomaps.isomap(
+        ISOMAP_STREAMHALFWIDTH+Math::divide(i, IsoMapChunkWidth),
+        ISOMAP_STREAMHALFHEIGHT+Math::divide(j, IsoMapChunkHeight)
+        ).getElem(
+        Math::modulo(i, IsoMapChunkWidth),
+        Math::modulo(j, IsoMapChunkHeight))
+    );
 }

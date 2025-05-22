@@ -49,9 +49,6 @@
     #include "../Vulkan/GraphicsLayout.h"
 
     #include "../../Math/Math.h"
-    #include "../../Math/Vector2.h"
-    #include "../../Math/Matrix4x4.h"
-    #include "../../Math/Transform2.h"
 
     #include "../../Physics/Physics.h"
     #include "../../Physics/MatrixChunk2.h"
@@ -81,7 +78,7 @@
     ////////////////////////////////////////////////////////////////////////////
     //  IsoMapChunk class definition                                          //
     ////////////////////////////////////////////////////////////////////////////
-    class IsoMapChunk : public Transform2
+    class IsoMapChunk
     {
         public:
             ////////////////////////////////////////////////////////////////////
@@ -90,9 +87,9 @@
             IsoMapChunk();
 
             ////////////////////////////////////////////////////////////////////
-            //  IsoMapChunk virtual destructor                                //
+            //  IsoMapChunk destructor                                        //
             ////////////////////////////////////////////////////////////////////
-            virtual ~IsoMapChunk();
+            ~IsoMapChunk();
 
 
             ////////////////////////////////////////////////////////////////////
@@ -103,9 +100,9 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Render isomap chunk                                           //
+            //  Get isomap chunk element                                      //
             ////////////////////////////////////////////////////////////////////
-            void render(Sprite& sprite);
+            int32_t getElem(int32_t i, int32_t j);
 
 
         private:
