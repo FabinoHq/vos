@@ -194,6 +194,7 @@
             PhysicsTransform2       m_transforms;       // Player transforms
             Vector2i                m_speed;            // Player speed
             BoundingAlignRect       m_bounding;         // Bounding align rect
+            Vector2i                m_physicsTile;      // Player physics tile
             Vector2i                m_tilePos;          // Player tile position
 
             Sprite                  m_sprite;           // Player sprite

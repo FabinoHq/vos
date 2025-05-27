@@ -50,11 +50,13 @@ Transform2(),
 m_transforms(),
 m_speed(),
 m_bounding(),
+m_physicsTile(),
 m_tilePos(),
 m_sprite()
 {
     m_transforms.reset();
     m_speed.reset();
+    m_physicsTile.reset();
     m_tilePos.reset();
 }
 
@@ -64,6 +66,7 @@ m_sprite()
 IsometricPlayer::~IsometricPlayer()
 {
     m_tilePos.reset();
+    m_physicsTile.reset();
     m_speed.reset();
     m_transforms.reset();
 }
@@ -86,6 +89,7 @@ bool IsometricPlayer::init()
     m_bounding.setHalfSize(32000, 32000);
 
     // Reset player tile position
+    m_physicsTile.reset();
     m_tilePos.reset();
 
     // Init rectangle shape
@@ -110,6 +114,14 @@ void IsometricPlayer::prephysics(const Vector2i& warpOffset)
     m_bounding.position += warpOffset;
     m_transforms.prephysicsIso(m_bounding.position, 0);
     m_transforms.offsetPrevPosIso(warpOffset);
+
+    // Compute physics tile position
+    m_physicsTile.vec[0] = Math::divide(
+        m_bounding.position.vec[0], MatrixChunk2ElemWidth
+    );
+    m_physicsTile.vec[1] = Math::divide(
+        m_bounding.position.vec[1], MatrixChunk2ElemHeight
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -170,13 +182,8 @@ void IsometricPlayer::precompute(float physicstime)
     // Precompute transformations
     precomputeTransforms(m_transforms, physicstime);
 
-    // Compute player tile position
-    m_tilePos.vec[0] = Math::divide(
-        m_bounding.position.vec[0], MatrixChunk2ElemWidth
-    );
-    m_tilePos.vec[1] = Math::divide(
-        m_bounding.position.vec[1], MatrixChunk2ElemHeight
-    );
+    // Set player tile position
+    m_tilePos = m_physicsTile;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
