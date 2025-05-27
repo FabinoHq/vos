@@ -47,6 +47,8 @@
     #include "../../System/SysMouse.h"
     #include "../../System/SysKeys.h"
 
+    #include "../../Math/Math.h"
+
     #include "../../Renderer/Renderer.h"
     #include "../../Renderer/BackRenderer.h"
     #include "../../Renderer/View.h"

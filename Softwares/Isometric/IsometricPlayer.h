@@ -154,19 +154,27 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get player matrix x position                                  //
+            //  Get player tile position                                      //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getMatrixX()
+            inline Vector2i getTilePos()
             {
-                return m_matrixX;
+                return m_tilePos;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get player matrix y position                                  //
+            //  Get player tile x position                                    //
             ////////////////////////////////////////////////////////////////////
-            inline int32_t getMatrixY()
+            inline int32_t getTileX()
             {
-                return m_matrixY;
+                return m_tilePos.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player tile y position                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getTileY()
+            {
+                return m_tilePos.vec[1];
             }
 
 
@@ -186,8 +194,7 @@
             PhysicsTransform2       m_transforms;       // Player transforms
             Vector2i                m_speed;            // Player speed
             BoundingAlignRect       m_bounding;         // Bounding align rect
-            int32_t                 m_matrixX;          // Player matrix x pos
-            int32_t                 m_matrixY;          // Player matrix y pos
+            Vector2i                m_tilePos;          // Player tile position
 
             Sprite                  m_sprite;           // Player sprite
     };

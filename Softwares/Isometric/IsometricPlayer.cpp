@@ -50,12 +50,12 @@ Transform2(),
 m_transforms(),
 m_speed(),
 m_bounding(),
-m_matrixX(0),
-m_matrixY(0),
+m_tilePos(),
 m_sprite()
 {
     m_transforms.reset();
     m_speed.reset();
+    m_tilePos.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,8 +63,7 @@ m_sprite()
 ////////////////////////////////////////////////////////////////////////////////
 IsometricPlayer::~IsometricPlayer()
 {
-    m_matrixY = 0;
-    m_matrixX = 0;
+    m_tilePos.reset();
     m_speed.reset();
     m_transforms.reset();
 }
@@ -86,9 +85,8 @@ bool IsometricPlayer::init()
     m_bounding.setPosition(0, 0);
     m_bounding.setHalfSize(32000, 32000);
 
-    // Reset player matrix position
-    m_matrixX = 0;
-    m_matrixY = 0;
+    // Reset player tile position
+    m_tilePos.reset();
 
     // Init rectangle shape
     if (!m_sprite.init(GResources.textures.high(TEXTURE_PLAYER), 0.075f, 0.15f))
@@ -171,8 +169,14 @@ void IsometricPlayer::precompute(float physicstime)
 {
     // Precompute transformations
     precomputeTransforms(m_transforms, physicstime);
-    m_matrixX = ((getX()/IsoMapElemWidth) - (getY()/IsoMapElemHeight));
-    m_matrixY = ((getY()/IsoMapElemHeight) + (getX()/IsoMapElemWidth));
+
+    // Compute player tile position
+    m_tilePos.vec[0] = Math::divide(
+        m_bounding.position.vec[0], MatrixChunk2ElemWidth
+    );
+    m_tilePos.vec[1] = Math::divide(
+        m_bounding.position.vec[1], MatrixChunk2ElemHeight
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

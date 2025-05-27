@@ -493,11 +493,11 @@ void Isometric::render()
     m_sprite.setAngle(0.0f);
 
     GResources.isomaps.sync();
-    for (int32_t i = (m_player.getMatrixX()-IsoMapStreamElemHalfWidth);
-        i < (m_player.getMatrixX()+IsoMapStreamElemHalfWidth); ++i)
+    for (int32_t i = (m_player.getTileX()-IsoMapStreamElemHalfWidth);
+        i < (m_player.getTileX()+IsoMapStreamElemHalfWidth); ++i)
     {
-        for (int32_t j = (m_player.getMatrixY()+(IsoMapStreamElemHalfHeight-1));
-            j >= (m_player.getMatrixY()-IsoMapStreamElemHalfHeight); --j)
+        for (int32_t j = (m_player.getTileY()+(IsoMapStreamElemHalfHeight-1));
+            j >= (m_player.getTileY()-IsoMapStreamElemHalfHeight); --j)
         {
             int32_t elem = m_isomap.getElem(i, j);
             if (elem > 0)
