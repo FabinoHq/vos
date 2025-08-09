@@ -153,7 +153,7 @@ bool Interface::init()
 
     // Init test button
     if (!m_button.init(
-        GResources.textures.gui(TEXTURE_TESTBUTTON), 0.12f, 0.06f, false))
+        GResources.textures.gui(TEXTURE_TESTBUTTON), 0.24f, 0.06f, false))
     {
         // Could not init test button
         return false;
