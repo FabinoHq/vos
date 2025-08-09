@@ -55,11 +55,7 @@
 
     #include "../../Resources/Resources.h"
     #include "../../Renderer/GUI/GUICursor.h"
-    #include "../../Renderer/GUI/GUIWindow.h"
     #include "../../Renderer/GUI/GUIPxText.h"
-    #include "../../Renderer/GUI/GUIButton.h"
-    #include "../../Renderer/GUI/GUIToggleButton.h"
-    #include "../../Renderer/GUI/GUIProgressBar.h"
 
     #include "../../Renderer/Shapes/RectangleShape.h"
     #include "../../Renderer/Shapes/EllipseShape.h"
@@ -166,11 +162,7 @@
             EllipseShape        m_ellipse;              // Ellipse shape
 
             GUICursor           m_cursor;               // GUI Cursor
-            GUIWindow           m_guiWindow;            // GUI Window
             GUIPxText           m_pxText;               // GUI pixel text
-            GUIButton           m_button;               // GUI button
-            GUIToggleButton     m_toggleButton;         // GUI toggle button
-            GUIProgressBar      m_progressBar;          // GUI progress bar
 
             BoundingCircle      m_boundingCircle;       // Bounding circle
             BoundingCircle      m_boundingCircle2;      // Bounding circle 2

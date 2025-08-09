@@ -50,6 +50,7 @@
     #include "../Renderer/Renderer.h"
     #include "../Physics/Physics.h"
 
+    #include "Interface/Interface.h"
     #include "TopDown/TopDown.h"
     #include "Isometric/Isometric.h"
     #include "FirstPerson/FirstPerson.h"

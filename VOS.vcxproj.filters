@@ -67,6 +67,9 @@
     <Filter Include="Softwares\Isometric">
       <UniqueIdentifier>{e149cf7d-4a3b-43f8-aafd-d9d2fdfb2423}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Softwares\Interface">
+      <UniqueIdentifier>{94b17d4d-2172-4c57-a156-6ff36910f2b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -355,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="System\SysVkMemory.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Softwares\Interface\Interface.cpp">
+      <Filter>Softwares\Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -802,6 +808,9 @@
     </ClInclude>
     <ClInclude Include="System\SysVkMemory.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\Interface\Interface.h">
+      <Filter>Softwares\Interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

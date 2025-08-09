@@ -37,21 +37,21 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/Isometric/Isometric.cpp : Isometric class management         //
+//     Softwares/Interface/Interface.cpp : Interface class management         //
 ////////////////////////////////////////////////////////////////////////////////
-#include "Isometric.h"
+#include "Interface.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Isometric global instance                                                 //
+//  Interface global instance                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-Isometric GIsometric = Isometric();
+Interface GInterface = Interface();
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Isometric default constructor                                             //
+//  Interface default constructor                                             //
 ////////////////////////////////////////////////////////////////////////////////
-Isometric::Isometric() :
+Interface::Interface() :
 m_backRenderer(),
 m_view(),
 m_sprite(),
@@ -59,31 +59,29 @@ m_procSprite(),
 m_rectangle(),
 m_ellipse(),
 m_cursor(),
+m_guiWindow(),
 m_pxText(),
-m_chunkWarp(false),
-m_chunkX(0),
-m_chunkY(0),
-m_isomap(),
-m_player(),
-m_zoom(1.0f)
+m_button(),
+m_toggleButton(),
+m_progressBar()
 {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Isometric destructor                                                      //
+//  Interface destructor                                                       //
 ////////////////////////////////////////////////////////////////////////////////
-Isometric::~Isometric()
+Interface::~Interface()
 {
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Init isometric game                                                       //
-//  return : True if isometric game is ready, false otherwise                 //
+//  Init interface                                                            //
+//  return : True if interface is ready, false otherwise                      //
 ////////////////////////////////////////////////////////////////////////////////
-bool Isometric::init()
+bool Interface::init()
 {
     // Init back renderer
     if (!m_backRenderer.init(VULKAN_MEMORY_BACKRENDERER, 256, 256, false))
@@ -101,7 +99,7 @@ bool Isometric::init()
 
 
     // Init sprite
-    if (!m_sprite.init(GResources.textures.high(TEXTURE_ISOTILE), 2.0f, 1.0f))
+    if (!m_sprite.init(GResources.textures.high(TEXTURE_TILE), 1.0f, 1.0f))
     {
         // Could not init sprite
         return false;
@@ -136,6 +134,14 @@ bool Isometric::init()
         return false;
     }
 
+    // Init GUI window
+    if (!m_guiWindow.init(
+        GResources.textures.gui(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
+    {
+        // Could not init GUI window
+        return false;
+    }
+
     // Init test pixel text
     if (!m_pxText.init(GResources.textures.gui(TEXTURE_PIXELFONT), 0.04f))
     {
@@ -145,74 +151,39 @@ bool Isometric::init()
     m_pxText.setSmooth(0.2f);
     m_pxText.setText("FPS : 0");
 
-
-    // Reset chunk X and Y
-    m_chunkWarp = false;
-    m_chunkX = 0;
-    m_chunkY = 0;
-
-    // Init matrix stream
-    if (!GMatrixStream2.init())
+    // Init test button
+    if (!m_button.init(
+        GResources.textures.gui(TEXTURE_TESTBUTTON), 0.12f, 0.06f, false))
     {
-        // Could not init matrix stream
+        // Could not init test button
         return false;
     }
 
-    // Init isomap stream
-    if (!m_isomap.init())
+    // Init toggle button
+    if (!m_toggleButton.init(
+        GResources.textures.gui(TEXTURE_TOGGLEBUTTON), 0.08f, 0.08f, false))
     {
-        // Could not init isomap stream
+        // Could not init toggle button
         return false;
     }
 
-    // Load spawn matrix chunks
-    while (!GMatrixStream2.reload(0, 0))
+    // Init progress bar
+    if (!m_progressBar.init(
+        GResources.textures.gui(TEXTURE_PROGRESSBAR), 0.5f, 0.06f, 15.0f))
     {
-        // Release some CPU
-        SysSleep(ResourcesWaitSleepTime);
-    }
-
-    // Load spawn isomap chunks
-    while (!m_isomap.reload(0, 0))
-    {
-        // Release some CPU
-        SysSleep(ResourcesWaitSleepTime);
-    }
-
-    // Wait for spawn chunks to be loaded
-    bool spawnLoaded = false;
-    while (!spawnLoaded)
-    {
-        if (GMatrixStream2.isReady() && m_isomap.isReady())
-        {
-            spawnLoaded = true;
-        }
-        else
-        {
-            // Release some CPU while loading
-            SysSleep(ResourcesWaitSleepTime);
-        }
-    }
-
-    // Init player
-    if (!m_player.init())
-    {
-        // Could not init player
+        // Could not init progress bar
         return false;
     }
 
-    // Reset zoom
-    m_zoom = 1.0f;
 
-
-    // Isometric game is ready
+    // Interface is ready
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Destroy isometric game                                                    //
+//  Destroy interface                                                         //
 ////////////////////////////////////////////////////////////////////////////////
-void Isometric::destroy()
+void Interface::destroy()
 {
     // Destroy procedural sprite
     m_procSprite.destroyProcSprite();
@@ -226,9 +197,9 @@ void Isometric::destroy()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Compute isometric game events                                             //
+//  Compute interface events                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void Isometric::events(SysEvent& event)
+void Interface::events(SysEvent& event)
 {
     // Process event
     switch (event.type)
@@ -282,6 +253,9 @@ void Isometric::events(SysEvent& event)
                 case SYSEVENT_KEY_LSHIFT:
                     break;
 
+                case SYSEVENT_KEY_R:
+                    break;
+
                 default:
                     break;
             }
@@ -289,26 +263,52 @@ void Isometric::events(SysEvent& event)
 
         // Mouse moved
         case SYSEVENT_MOUSEMOVED:
+        {
+            // Compute mouse events
+            m_guiWindow.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+            m_button.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+            m_toggleButton.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+
+            #if (VOS_POINTERLOCK == 1)
+                // GUI cursor
+                m_cursor.setCursor(
+                    m_guiWindow.updateCursor(GSysMouse.mouseX, GSysMouse.mouseY)
+                );
+            #else
+                // System cursor
+                GSysWindow.setCursor(
+                    m_guiWindow.updateCursor(GSysMouse.mouseX, GSysMouse.mouseY)
+                );
+            #endif // VOS_POINTERLOCK*/
             break;
+        }
 
         // Mouse button pressed
         case SYSEVENT_MOUSEPRESSED:
+            if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
+            {
+                m_guiWindow.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_toggleButton.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+            }
             break;
 
         // Mouse button released
         case SYSEVENT_MOUSERELEASED:
+            if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
+            {
+                m_guiWindow.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_button.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
+                if (m_toggleButton.mouseRelease(
+                    GSysMouse.mouseX, GSysMouse.mouseY))
+                {
+                    m_toggleButton.toggle();
+                }
+            }
             break;
 
         // Mouse wheel
         case SYSEVENT_MOUSEWHEEL:
-            if (event.mouse.wheel < 0)
-            {
-                m_zoom = Math::max(0.2f, m_zoom-0.02f);
-            }
-            else if (event.mouse.wheel > 0)
-            {
-                m_zoom = Math::min(1.0f, m_zoom+0.02f);
-            }
             break;
 
         default:
@@ -317,89 +317,9 @@ void Isometric::events(SysEvent& event)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Precompute isometric game physics (thread sync)                           //
+//  Compute interface logic                                                   //
 ////////////////////////////////////////////////////////////////////////////////
-void Isometric::prephysics()
-{
-    // Compute game warp
-    Vector2i warpOffset = warp();
-
-    // Precompute player physics
-    m_player.prephysics(warpOffset);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Compute isometric game warp                                               //
-////////////////////////////////////////////////////////////////////////////////
-Vector2i Isometric::warp()
-{
-    Vector2i warpOffset = Vector2i(0, 0);
-    if (!m_chunkWarp && m_player.needWarp())
-    {
-        if (GMatrixStream2.isReady() && m_isomap.isReady())
-        {
-            if (m_player.topWarp())
-            {
-                // Top warp
-                warpOffset.vec[1] = -MatrixChunk2XStride;
-                ++m_chunkY;
-            }
-            else if (m_player.bottomWarp())
-            {
-                // Bottom warp
-                warpOffset.vec[1] = MatrixChunk2XStride;
-                --m_chunkY;
-            }
-            else if (m_player.leftWarp())
-            {
-                // Left warp
-                warpOffset.vec[0] = MatrixChunk2YStride;
-                --m_chunkX;
-            }
-            else if (m_player.rightWarp())
-            {
-                // Right warp
-                warpOffset.vec[0] = -MatrixChunk2YStride;
-                ++m_chunkX;
-            }
-
-            // Update matrix stream
-            GMatrixStream2.update(m_chunkX, m_chunkY);
-            m_chunkWarp = true;
-        }
-    }
-    return warpOffset;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Compute isometric game physics (threaded)                                 //
-////////////////////////////////////////////////////////////////////////////////
-void Isometric::physics()
-{
-    // Compute player physics
-    m_player.physics();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Precompute isometric game renderer interpolations                         //
-////////////////////////////////////////////////////////////////////////////////
-void Isometric::precompute(float physicstime)
-{
-    // Update isomap stream
-    if (m_chunkWarp)
-    {
-        m_isomap.update(m_chunkX, m_chunkY);
-        m_chunkWarp = false;
-    }
-
-    // Precompute player
-    m_player.precompute(physicstime);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//  Compute isometric game logic                                              //
-////////////////////////////////////////////////////////////////////////////////
-void Isometric::compute(float frametime)
+void Interface::compute(float frametime)
 {
     // Framerate
     static std::ostringstream framestr;
@@ -419,13 +339,33 @@ void Isometric::compute(float frametime)
     }
     m_pxText.setText(framestr.str());
 
+    // Compute button
+    m_button.setPosition(m_guiWindow.getX(), m_guiWindow.getY()+0.2f);
+
+    // Compute toggle button
+    m_toggleButton.setPosition(m_guiWindow.getX(), m_guiWindow.getY());
+
+    // Compute progress bar
+    static float valAcc = 0.0f;
+    valAcc += frametime*0.5f;
+    if (valAcc >= Math::TwoPi)
+    {
+        valAcc -= Math::TwoPi;
+    }
+    m_progressBar.setValue((Math::sin(valAcc)*0.5f)+0.5f);
+    if (m_progressBar.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
+    {
+        m_progressBar.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+    else
+    {
+        m_progressBar.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+    m_progressBar.setPosition(m_guiWindow.getX(), m_guiWindow.getY()-0.2f);
+
 
     // Update view position
-    //m_view.setSize(0.9f, 1.0f);
-    //m_view.setPosition(m_player.getX()*0.9f, m_player.getY()+0.08f);
-    m_view.setSize(m_zoom, m_zoom);
-    m_view.setPosition(m_player.getX()*m_zoom, (m_player.getY()+0.08f)*m_zoom);
-
+    m_view.setPosition(0.0f, 0.0f);
 
     // Start uniforms upload
     if (GUniformchain.startUpload())
@@ -452,9 +392,9 @@ void Isometric::compute(float frametime)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Render isometric game                                                     //
+//  Render interface                                                          //
 ////////////////////////////////////////////////////////////////////////////////
-void Isometric::render()
+void Interface::render()
 {
     // Start frame rendering
     if (!GRenderer.startFrame())
@@ -466,62 +406,24 @@ void Isometric::render()
     //float scale = GSwapchain.getScale();
     float ratio = GSwapchain.getRatio();
 
+    // Back rendering
+    /*if (m_backRenderer.startRenderPass())
+    {
+        // Set back renderer view
+        m_backRenderer.bindDefaultView();
+
+        // Render sprite
+        GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+        GRenderer.bindVertexBuffer(MESHES_DEFAULT);
+        m_sprite.bindTexture();
+        m_sprite.render();
+
+        // End back rendering
+        m_backRenderer.endRenderPass();
+    }*/
+
     // Start rendering
     GRenderer.startRenderPass();
-
-    // Set 2D view
-    m_view.bind();
-
-    // Bind default vertex buffer
-    GRenderer.bindVertexBuffer(MESHES_DEFAULT);
-
-
-    // Render isomap chunks
-    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_sprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    m_sprite.setOrigin(0.0f, 0.0f);
-    m_sprite.setSize(IsoMapElemWidth+0.00001f, IsoMapElemHeight+0.00001f);
-    m_sprite.setAngle(0.0f);
-
-    GResources.isomaps.sync();
-    for (int32_t i = (m_player.getTileX()-IsoMapStreamElemHalfWidth);
-        i < (m_player.getTileX()+IsoMapStreamElemHalfWidth); ++i)
-    {
-        for (int32_t j = (m_player.getTileY()+(IsoMapStreamElemHalfHeight-1));
-            j >= (m_player.getTileY()-IsoMapStreamElemHalfHeight); --j)
-        {
-            int32_t elem = m_isomap.getElem(i, j);
-            if (elem > 0)
-            {
-                m_sprite.setPosition(
-                    (IsoMapElemHalfWidth)+
-                    (i*IsoMapElemHalfWidth)+(j*IsoMapElemHalfWidth),
-                    (j*IsoMapElemHalfHeight)-(i*IsoMapElemHalfHeight)
-                );
-                if (elem == 2)
-                {
-                    m_sprite.setHeight((IsoMapElemHeight*1.5f)+0.00001f);
-                    m_sprite.moveY(IsoMapElemHeight*0.25f);
-                    m_sprite.setTexture(
-                        GResources.textures.high(TEXTURE_ISOTILE2)
-                    );
-                }
-                else
-                {
-                    m_sprite.setHeight(IsoMapElemHeight+0.00001f);
-                    m_sprite.setTexture(
-                        GResources.textures.high(TEXTURE_ISOTILE)
-                    );
-                }
-                m_sprite.bindTexture();
-                m_sprite.render();
-            }
-        }
-    }
-
-    // Render player
-    m_player.render();
-
 
     // Set default screen view
     GMainRenderer.bindDefaultView();
@@ -529,40 +431,52 @@ void Isometric::render()
     // Bind default vertex buffer
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
+    // Render back rendered frame
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_backRenderer.bind();
+    m_sprite.render();*/
+
+    // Render sprite
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_sprite.bindTexture();
+    m_sprite.render();*/
+
+    // Render procedural sprite
+    /*m_procSprite.bindPipeline();
+    m_procSprite.render();*/
+
+    // Render rectangle
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectangle.render();*/
+
+    // Render ellipse
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    m_ellipse.render();*/
+
+    // Render window
+    GRenderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
+    m_guiWindow.bindTexture();
+    m_guiWindow.render();
+
+    // Render button
+    GRenderer.bindPipeline(RENDERER_PIPELINE_BUTTON);
+    m_button.bindTexture();
+    m_button.render();
+
+    // Render toggle button
+    GRenderer.bindPipeline(RENDERER_PIPELINE_TOGGLEBUTTON);
+    m_toggleButton.bindTexture();
+    m_toggleButton.render();
+
+    // Render progress bar
+    GRenderer.bindPipeline(RENDERER_PIPELINE_PROGRESSBAR);
+    m_progressBar.bindTexture();
+    m_progressBar.render();
+
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
     m_pxText.bindTexture();
     m_pxText.setPosition(-ratio+0.01f, 1.0f-(m_pxText.getHeight()*0.7f));
-    if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
-    {
-        m_pxText.setColor(0.0f, 0.0f, 1.0f, 1.0f);
-    }
-    else
-    {
-        m_pxText.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    }
-    m_pxText.render();
-
-    // Render pixel text (view position)
-    std::ostringstream camerastr;
-    camerastr << "X : " << m_player.getX() << " | Y : " << m_player.getY();
-    m_pxText.setText(camerastr.str());
-    m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
-    if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
-    {
-        m_pxText.setColor(0.0f, 0.0f, 1.0f, 1.0f);
-    }
-    else
-    {
-        m_pxText.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    }
-    m_pxText.render();
-
-    // Render pixel text (physics current ticks)
-    std::ostringstream physicstr;
-    physicstr << "Ticks : " << GPhysics.getTick();
-    m_pxText.setText(physicstr.str());
-    m_pxText.setPosition(-ratio+0.01f, 0.92f-(m_pxText.getHeight()*0.7f));
     if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
     {
         m_pxText.setColor(0.0f, 0.0f, 1.0f, 1.0f);

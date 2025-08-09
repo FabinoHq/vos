@@ -37,17 +37,15 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/Isometric/Isometric.h : Isometric class management           //
+//     Softwares/Interface/Interface.h : Interface class management           //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SOFTWARES_ISOMETRIC_ISOMETRIC_HEADER
-#define VOS_SOFTWARES_ISOMETRIC_ISOMETRIC_HEADER
+#ifndef VOS_SOFTWARES_INTERFACE_INTERFACE_HEADER
+#define VOS_SOFTWARES_INTERFACE_INTERFACE_HEADER
 
     #include "../../System/System.h"
     #include "../../System/SysEvent.h"
     #include "../../System/SysMouse.h"
     #include "../../System/SysKeys.h"
-
-    #include "../../Math/Math.h"
 
     #include "../../Renderer/Renderer.h"
     #include "../../Renderer/BackRenderer.h"
@@ -57,93 +55,73 @@
 
     #include "../../Resources/Resources.h"
     #include "../../Renderer/GUI/GUICursor.h"
+    #include "../../Renderer/GUI/GUIWindow.h"
     #include "../../Renderer/GUI/GUIPxText.h"
+    #include "../../Renderer/GUI/GUIButton.h"
+    #include "../../Renderer/GUI/GUIToggleButton.h"
+    #include "../../Renderer/GUI/GUIProgressBar.h"
 
     #include "../../Renderer/Shapes/RectangleShape.h"
     #include "../../Renderer/Shapes/EllipseShape.h"
-
-    #include "../../Renderer/TileMap/IsoMapStream.h"
-
-    #include "IsometricPlayer.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Isometric main class definition                                       //
+    //  Interface main class definition                                       //
     ////////////////////////////////////////////////////////////////////////////
-    class Isometric
+    class Interface
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Isometric default constructor                                 //
+            //  Interface default constructor                                 //
             ////////////////////////////////////////////////////////////////////
-            Isometric();
+            Interface();
 
             ////////////////////////////////////////////////////////////////////
-            //  Isometric destructor                                          //
+            //  Interface destructor                                          //
             ////////////////////////////////////////////////////////////////////
-            ~Isometric();
+            ~Interface();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init isometric game                                           //
-            //  return : True if isometric game is ready, false otherwise     //
+            //  Init interface                                                //
+            //  return : True if interface is ready, false otherwise          //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy isometric game                                        //
+            //  Destroy interface                                             //
             ////////////////////////////////////////////////////////////////////
             void destroy();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute isometric game events                                 //
+            //  Compute interface events                                      //
             ////////////////////////////////////////////////////////////////////
             void events(SysEvent& event);
 
             ////////////////////////////////////////////////////////////////////
-            //  Precompute isometric game physics (thread sync)               //
-            ////////////////////////////////////////////////////////////////////
-            void prephysics();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute isometric game warp                                   //
-            ////////////////////////////////////////////////////////////////////
-            Vector2i warp();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute isometric game physics (threaded)                     //
-            ////////////////////////////////////////////////////////////////////
-            void physics();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Precompute isometric game renderer interpolations             //
-            ////////////////////////////////////////////////////////////////////
-            void precompute(float physicstime);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute isometric game logic                                  //
+            //  Compute interface logic                                       //
             ////////////////////////////////////////////////////////////////////
             void compute(float frametime);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render isometric game                                         //
+            //  Render interface                                              //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Isometric private copy constructor : Not copyable             //
+            //  Interface private copy constructor : Not copyable             //
             ////////////////////////////////////////////////////////////////////
-            Isometric(const Isometric&) = delete;
+            Interface(const Interface&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Isometric private copy operator : Not copyable                //
+            //  Interface private copy operator : Not copyable                //
             ////////////////////////////////////////////////////////////////////
-            Isometric& operator=(const Isometric&) = delete;
+            Interface& operator=(const Interface&) = delete;
 
 
         private:
@@ -157,22 +135,18 @@
             EllipseShape        m_ellipse;              // Ellipse shape
 
             GUICursor           m_cursor;               // GUI Cursor
+            GUIWindow           m_guiWindow;            // GUI Window
             GUIPxText           m_pxText;               // GUI pixel text
-
-            bool                m_chunkWarp;            // Chunk warp
-            int32_t             m_chunkX;               // Chunk X
-            int32_t             m_chunkY;               // Chunk Y
-            IsoMapStream        m_isomap;               // Isomap
-            IsometricPlayer     m_player;               // Player
-
-            float               m_zoom;                 // Zoom
+            GUIButton           m_button;               // GUI button
+            GUIToggleButton     m_toggleButton;         // GUI toggle button
+            GUIProgressBar      m_progressBar;          // GUI progress bar
     };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Isometric global instance                                             //
+    //  Interface global instance                                             //
     ////////////////////////////////////////////////////////////////////////////
-    extern Isometric GIsometric;
+    extern Interface GInterface;
 
 
-#endif // VOS_SOFTWARES_ISOMETRIC_ISOMETRIC_HEADER
+#endif // VOS_SOFTWARES_INTERFACE_INTERFACE_HEADER

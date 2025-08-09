@@ -349,6 +349,9 @@
 !Softwares/
 !Softwares/Softwares.h
 !Softwares/Softwares.cpp
+!Softwares/Interface/
+!Softwares/Interface/Interface.h
+!Softwares/Interface/Interface.cpp
 !Softwares/TopDown/
 !Softwares/TopDown/TopDown.h
 !Softwares/TopDown/TopDown.cpp

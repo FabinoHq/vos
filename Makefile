@@ -99,7 +99,7 @@ VOS: main.o \
 	Resources/MatrixColLoader.o \
 	Resources/TileMapLoader.o Resources/IsoMapLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
-	Softwares/Softwares.o \
+	Softwares/Softwares.o Softwares/Interface/Interface.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
 	Softwares/Isometric/Isometric.o Softwares/Isometric/IsometricPlayer.o \
 	Softwares/FirstPerson/FirstPerson.o \
@@ -157,7 +157,7 @@ VOS: main.o \
 	Resources/MatrixColLoader.o \
 	Resources/TileMapLoader.o Resources/IsoMapLoader.o \
 	Resources/HeightMapLoader.o Resources/HeightFarLoader.o \
-	Softwares/Softwares.o \
+	Softwares/Softwares.o Softwares/Interface/Interface.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
 	Softwares/Isometric/Isometric.o Softwares/Isometric/IsometricPlayer.o \
 	Softwares/FirstPerson/FirstPerson.o \
@@ -485,6 +485,10 @@ Resources/HeightFarLoader.o: Resources/HeightFarLoader.cpp
 Softwares/Softwares.o: Softwares/Softwares.cpp
 	$(CC) -o Softwares/Softwares.o -c Softwares/Softwares.cpp $(CFLAGS)
 
+Softwares/Interface/Interface.o: Softwares/Interface/Interface.cpp
+	$(CC) -o Softwares/Interface/Interface.o -c \
+	Softwares/Interface/Interface.cpp $(CFLAGS)
+
 Softwares/TopDown/TopDown.o: Softwares/TopDown/TopDown.cpp
 	$(CC) -o Softwares/TopDown/TopDown.o -c \
 	Softwares/TopDown/TopDown.cpp $(CFLAGS)
@@ -528,6 +532,7 @@ clean:
 	rm -rf Renderer/GUI/*.o
 	rm -rf Resources/*.o
 	rm -rf Softwares/*.o
+	rm -rf Softwares/Interface/*.o
 	rm -rf Softwares/TopDown/*.o
 	rm -rf Softwares/Isometric/*.o
 	rm -rf Softwares/FirstPerson/*.o

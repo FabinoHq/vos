@@ -59,11 +59,7 @@ m_procSprite(),
 m_rectangle(),
 m_ellipse(),
 m_cursor(),
-m_guiWindow(),
 m_pxText(),
-m_button(),
-m_toggleButton(),
-m_progressBar(),
 m_boundingCircle(),
 m_boundingCircle2(),
 m_boundingAlignRect(),
@@ -147,14 +143,6 @@ bool TopDown::init()
         return false;
     }
 
-    // Init GUI window
-    if (!m_guiWindow.init(
-        GResources.textures.gui(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
-    {
-        // Could not init GUI window
-        return false;
-    }
-
     // Init test pixel text
     if (!m_pxText.init(GResources.textures.gui(TEXTURE_PIXELFONT), 0.04f))
     {
@@ -163,30 +151,6 @@ bool TopDown::init()
     }
     m_pxText.setSmooth(0.2f);
     m_pxText.setText("FPS : 0");
-
-    // Init test button
-    if (!m_button.init(
-        GResources.textures.gui(TEXTURE_TESTBUTTON), 0.12f, 0.06f, false))
-    {
-        // Could not init test button
-        return false;
-    }
-
-    // Init toggle button
-    if (!m_toggleButton.init(
-        GResources.textures.gui(TEXTURE_TOGGLEBUTTON), 0.06f, 0.06f, false))
-    {
-        // Could not init toggle button
-        return false;
-    }
-
-    // Init progress bar
-    if (!m_progressBar.init(
-        GResources.textures.gui(TEXTURE_PROGRESSBAR), 0.5f, 0.06f, 15.0f))
-    {
-        // Could not init progress bar
-        return false;
-    }
 
 
     // Init bounding circle
@@ -365,22 +329,6 @@ void TopDown::events(SysEvent& event)
         // Mouse moved
         case SYSEVENT_MOUSEMOVED:
         {
-            // Compute mouse events
-            //m_guiWindow.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
-            //m_button.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
-            //m_toggleButton.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
-
-            /*#if (VOS_POINTERLOCK == 1)
-                // GUI cursor
-                m_cursor.setCursor(
-                    m_guiWindow.updateCursor(GSysMouse.mouseX, GSysMouse.mouseY)
-                );
-            #else
-                // System cursor
-                GSysWindow.setCursor(
-                    m_guiWindow.updateCursor(GSysMouse.mouseX, GSysMouse.mouseY)
-                );
-            #endif // VOS_POINTERLOCK*/
             break;
         }
 
@@ -388,9 +336,7 @@ void TopDown::events(SysEvent& event)
         case SYSEVENT_MOUSEPRESSED:
             if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
             {
-                //m_guiWindow.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
-                //m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
-                //m_toggleButton.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+
             }
             break;
 
@@ -398,13 +344,7 @@ void TopDown::events(SysEvent& event)
         case SYSEVENT_MOUSERELEASED:
             if (event.mouse.button == SYSEVENT_MOUSE_LEFT)
             {
-                //m_guiWindow.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
-                //m_button.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
-                /*if (m_toggleButton.mouseRelease(
-                    GSysMouse.mouseX, GSysMouse.mouseY))
-                {
-                    m_toggleButton.toggle();
-                }*/
+
             }
             break;
 
@@ -520,22 +460,6 @@ void TopDown::compute(float frametime)
     }
     m_pxText.setText(framestr.str());
 
-    /*static float valAcc = 0.0f;
-    valAcc += frametime*0.5f;
-    if (valAcc >= Math::TwoPi)
-    {
-        valAcc -= Math::TwoPi;
-    }
-    m_progressBar.setValue((Math::sin(valAcc)*0.5f)+0.5f);
-
-    if (m_progressBar.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
-    {
-        m_progressBar.setColor(0.0f, 0.0f, 1.0f, 1.0f);
-    }
-    else
-    {
-        m_progressBar.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    }*/
 
     // Compute collision offset from mouse
     Vector2i collideOffset;
@@ -921,33 +845,6 @@ void TopDown::render()
     /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
     m_ellipse.render();*/
 
-    // Render window
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_NINEPATCH);
-    m_guiWindow.bindTexture();
-    if (m_guiWindow.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
-    {
-        m_guiWindow.setColor(0.0f, 0.0f, 1.0f, 1.0f);
-    }
-    else
-    {
-        m_guiWindow.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    }
-    m_guiWindow.render();*/
-
-    // Render button
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_BUTTON);
-    m_button.bindTexture();
-    m_button.render();*/
-
-    // Render toggle button
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_TOGGLEBUTTON);
-    m_toggleButton.bindTexture();
-    m_toggleButton.render();*/
-
-    // Render progress bar
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_PROGRESSBAR);
-    m_progressBar.bindTexture();
-    m_progressBar.render();*/
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
