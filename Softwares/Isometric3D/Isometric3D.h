@@ -37,108 +37,142 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/Softwares.h : Softwares management                           //
+//     Softwares/Isometric3D/Isometric3D.h : Isometric3D class management     //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SOFTWARES_SOFTWARES_HEADER
-#define VOS_SOFTWARES_SOFTWARES_HEADER
+#ifndef VOS_SOFTWARES_ISOMETRIC3D_ISOMETRIC3D_HEADER
+#define VOS_SOFTWARES_ISOMETRIC3D_ISOMETRIC3D_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysEvent.h"
-    #include "../System/SysMouse.h"
-    #include "../System/SysKeys.h"
+    #include "../../System/System.h"
+    #include "../../System/SysEvent.h"
+    #include "../../System/SysMouse.h"
+    #include "../../System/SysKeys.h"
 
-    #include "../Renderer/Renderer.h"
-    #include "../Physics/Physics.h"
+    #include "../../Math/Math.h"
 
-    #include "Interface/Interface.h"
-    #include "TopDown/TopDown.h"
-    #include "Isometric/Isometric.h"
-    #include "Isometric3D/Isometric3D.h"
-    #include "FirstPerson/FirstPerson.h"
+    #include "../../Renderer/Renderer.h"
+    #include "../../Renderer/BackRenderer.h"
+    #include "../../Renderer/View.h"
+    #include "../../Renderer/Sprite.h"
+    #include "../../Renderer/ProcSprite.h"
+
+    #include "../../Resources/Resources.h"
+    #include "../../Renderer/GUI/GUICursor.h"
+    #include "../../Renderer/GUI/GUIPxText.h"
+
+    #include "../../Renderer/Shapes/RectangleShape.h"
+    #include "../../Renderer/Shapes/EllipseShape.h"
+
+    #include "../../Renderer/TileMap/IsoMapStream.h"
+
+    #include "Isometric3DPlayer.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Softwares main class definition                                       //
+    //  Isometric3D main class definition                                     //
     ////////////////////////////////////////////////////////////////////////////
-    class Softwares
+    class Isometric3D
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Softwares default constructor                                 //
+            //  Isometric3D default constructor                               //
             ////////////////////////////////////////////////////////////////////
-            Softwares();
+            Isometric3D();
 
             ////////////////////////////////////////////////////////////////////
-            //  Softwares destructor                                          //
+            //  Isometric3D destructor                                        //
             ////////////////////////////////////////////////////////////////////
-            ~Softwares();
+            ~Isometric3D();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init softwares                                                //
-            //  return : True if softwares are ready, false otherwise         //
+            //  Init isometric 3D game                                        //
+            //  return : True if isometric 3D game is ready, false otherwise  //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
             ////////////////////////////////////////////////////////////////////
-            //  Destroy softwares                                             //
+            //  Destroy isometric 3D game                                     //
             ////////////////////////////////////////////////////////////////////
             void destroy();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares events                                      //
+            //  Compute isometric 3D game events                              //
             ////////////////////////////////////////////////////////////////////
             void events(SysEvent& event);
 
             ////////////////////////////////////////////////////////////////////
-            //  Precompute softwares physics (thread sync)                    //
+            //  Precompute isometric 3D game physics (thread sync)            //
             ////////////////////////////////////////////////////////////////////
             void prephysics();
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares physics (threaded)                          //
+            //  Compute isometric 3D game warp                                //
+            ////////////////////////////////////////////////////////////////////
+            Vector2i warp();
+
+            ////////////////////////////////////////////////////////////////////
+            //  Compute isometric 3D game physics (threaded)                  //
             ////////////////////////////////////////////////////////////////////
             void physics();
 
             ////////////////////////////////////////////////////////////////////
-            //  Precompute softwares renderer interpolations                  //
+            //  Precompute isometric 3D game renderer interpolations          //
             ////////////////////////////////////////////////////////////////////
             void precompute(float physicstime);
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares logic                                       //
+            //  Compute isometric 3D game logic                               //
             ////////////////////////////////////////////////////////////////////
             void compute(float frametime);
 
             ////////////////////////////////////////////////////////////////////
-            //  Render softwares                                              //
+            //  Render isometric 3D game                                      //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Softwares private copy constructor : Not copyable             //
+            //  Isometric3D private copy constructor : Not copyable           //
             ////////////////////////////////////////////////////////////////////
-            Softwares(const Softwares&) = delete;
+            Isometric3D(const Isometric3D&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Softwares private copy operator : Not copyable                //
+            //  Isometric3D private copy operator : Not copyable              //
             ////////////////////////////////////////////////////////////////////
-            Softwares& operator=(const Softwares&) = delete;
+            Isometric3D& operator=(const Isometric3D&) = delete;
 
 
         private:
+            BackRenderer        m_backRenderer;         // Back renderer
+
+            View                m_view;                 // View
+
+            Sprite              m_sprite;               // Sprite
+            ProcSprite          m_procSprite;           // Procedural sprite
+            RectangleShape      m_rectangle;            // Rectangle shape
+            EllipseShape        m_ellipse;              // Ellipse shape
+
+            GUICursor           m_cursor;               // GUI Cursor
+            GUIPxText           m_pxText;               // GUI pixel text
+
+            bool                m_chunkWarp;            // Chunk warp
+            int32_t             m_chunkX;               // Chunk X
+            int32_t             m_chunkY;               // Chunk Y
+            IsoMapStream        m_isomap;               // Isomap
+            Isometric3DPlayer   m_player;               // Player
+
+            float               m_zoom;                 // Zoom
     };
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Softwares global instance                                             //
+    //  Isometric3D global instance                                           //
     ////////////////////////////////////////////////////////////////////////////
-    extern Softwares GSoftwares;
+    extern Isometric3D GIsometric3D;
 
 
-#endif // VOS_SOFTWARES_SOFTWARES_HEADER
+#endif // VOS_SOFTWARES_ISOMETRIC3D_ISOMETRIC3D_HEADER

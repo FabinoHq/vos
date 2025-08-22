@@ -102,6 +102,8 @@ VOS: main.o \
 	Softwares/Softwares.o Softwares/Interface/Interface.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
 	Softwares/Isometric/Isometric.o Softwares/Isometric/IsometricPlayer.o \
+	Softwares/Isometric3D/Isometric3D.o \
+	Softwares/Isometric3D/Isometric3DPlayer.o \
 	Softwares/FirstPerson/FirstPerson.o \
 	Softwares/FirstPerson/FirstPersonPlayer.o
 
@@ -160,6 +162,8 @@ VOS: main.o \
 	Softwares/Softwares.o Softwares/Interface/Interface.o \
 	Softwares/TopDown/TopDown.o Softwares/TopDown/TopDownPlayer.o \
 	Softwares/Isometric/Isometric.o Softwares/Isometric/IsometricPlayer.o \
+	Softwares/Isometric3D/Isometric3D.o \
+	Softwares/Isometric3D/Isometric3DPlayer.o \
 	Softwares/FirstPerson/FirstPerson.o \
 	Softwares/FirstPerson/FirstPersonPlayer.o \
 	main.o $(LDFLAGS)
@@ -505,6 +509,15 @@ Softwares/Isometric/IsometricPlayer.o: Softwares/Isometric/IsometricPlayer.cpp
 	$(CC) -o Softwares/Isometric/IsometricPlayer.o -c \
 	Softwares/Isometric/IsometricPlayer.cpp $(CFLAGS)
 
+Softwares/Isometric3D/Isometric3D.o: Softwares/Isometric3D/Isometric3D.cpp
+	$(CC) -o Softwares/Isometric3D/Isometric3D.o -c \
+	Softwares/Isometric3D/Isometric3D.cpp $(CFLAGS)
+
+Softwares/Isometric3D/Isometric3DPlayer.o: \
+	Softwares/Isometric3D/Isometric3DPlayer.cpp
+	$(CC) -o Softwares/Isometric3D/Isometric3DPlayer.o -c \
+	Softwares/Isometric3D/Isometric3DPlayer.cpp $(CFLAGS)
+
 Softwares/FirstPerson/FirstPerson.o: Softwares/FirstPerson/FirstPerson.cpp
 	$(CC) -o Softwares/FirstPerson/FirstPerson.o -c \
 	Softwares/FirstPerson/FirstPerson.cpp $(CFLAGS)
@@ -535,6 +548,7 @@ clean:
 	rm -rf Softwares/Interface/*.o
 	rm -rf Softwares/TopDown/*.o
 	rm -rf Softwares/Isometric/*.o
+	rm -rf Softwares/Isometric3D/*.o
 	rm -rf Softwares/FirstPerson/*.o
 
 mrproper: clean

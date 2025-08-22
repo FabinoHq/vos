@@ -37,108 +37,168 @@
 //   For more information, please refer to <https://unlicense.org>            //
 ////////////////////////////////////////////////////////////////////////////////
 //    VOS : Virtual Operating System                                          //
-//     Softwares/Softwares.h : Softwares management                           //
+//     Softwares/Isometric3D/Isometric3DPlayer.h : Iso 3D player management   //
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef VOS_SOFTWARES_SOFTWARES_HEADER
-#define VOS_SOFTWARES_SOFTWARES_HEADER
+#ifndef VOS_SOFTWARES_ISOMETRIC3D_ISOMETRIC3DPLAYER_HEADER
+#define VOS_SOFTWARES_ISOMETRIC3D_ISOMETRIC3DPLAYER_HEADER
 
-    #include "../System/System.h"
-    #include "../System/SysEvent.h"
-    #include "../System/SysMouse.h"
-    #include "../System/SysKeys.h"
+    #include "../../System/System.h"
+    #include "../../System/SysEvent.h"
+    #include "../../System/SysMouse.h"
+    #include "../../System/SysKeys.h"
+    #include "../../System/SysMutex.h"
 
-    #include "../Renderer/Renderer.h"
-    #include "../Physics/Physics.h"
+    #include "../../Math/Math.h"
+    #include "../../Math/Vector2i.h"
+    #include "../../Math/Transform2.h"
 
-    #include "Interface/Interface.h"
-    #include "TopDown/TopDown.h"
-    #include "Isometric/Isometric.h"
-    #include "Isometric3D/Isometric3D.h"
-    #include "FirstPerson/FirstPerson.h"
+    #include "../../Renderer/Renderer.h"
+    #include "../../Renderer/Sprite.h"
+
+    #include "../../Resources/Resources.h"
+
+    #include "../../Physics/Physics.h"
+    #include "../../Physics/PhysicsTransform2.h"
+    #include "../../Physics/Collision2.h"
+    #include "../../Physics/MatrixStream2.h"
+    #include "../../Physics/BoundingSurfaces/BoundingCircle.h"
+    #include "../../Physics/BoundingSurfaces/BoundingAlignRect.h"
+    #include "../../Physics/BoundingSurfaces/BoundingRect.h"
 
     #include <cstdint>
 
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Softwares main class definition                                       //
+    //  Isometric3DPlayer class definition                                    //
     ////////////////////////////////////////////////////////////////////////////
-    class Softwares
+    class Isometric3DPlayer : public Transform2
     {
         public:
             ////////////////////////////////////////////////////////////////////
-            //  Softwares default constructor                                 //
+            //  Isometric3DPlayer default constructor                         //
             ////////////////////////////////////////////////////////////////////
-            Softwares();
+            Isometric3DPlayer();
 
             ////////////////////////////////////////////////////////////////////
-            //  Softwares destructor                                          //
+            //  Isometric3DPlayer virtual destructor                          //
             ////////////////////////////////////////////////////////////////////
-            ~Softwares();
+            virtual ~Isometric3DPlayer();
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Init softwares                                                //
-            //  return : True if softwares are ready, false otherwise         //
+            //  Init isometric 3D player                                      //
+            //  return : True if isometric 3D player is ready                 //
             ////////////////////////////////////////////////////////////////////
             bool init();
 
-            ////////////////////////////////////////////////////////////////////
-            //  Destroy softwares                                             //
-            ////////////////////////////////////////////////////////////////////
-            void destroy();
-
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares events                                      //
+            //  Precompute isometric 3D player physics (thread sync)          //
             ////////////////////////////////////////////////////////////////////
-            void events(SysEvent& event);
+            void prephysics(const Vector2i& warpOffset);
 
             ////////////////////////////////////////////////////////////////////
-            //  Precompute softwares physics (thread sync)                    //
-            ////////////////////////////////////////////////////////////////////
-            void prephysics();
-
-            ////////////////////////////////////////////////////////////////////
-            //  Compute softwares physics (threaded)                          //
+            //  Compute isometric 3D player physics (threaded)                //
             ////////////////////////////////////////////////////////////////////
             void physics();
 
             ////////////////////////////////////////////////////////////////////
-            //  Precompute softwares renderer interpolations                  //
+            //  Precompute isometric 3D player renderer interpolations        //
             ////////////////////////////////////////////////////////////////////
             void precompute(float physicstime);
 
             ////////////////////////////////////////////////////////////////////
-            //  Compute softwares logic                                       //
-            ////////////////////////////////////////////////////////////////////
-            void compute(float frametime);
-
-            ////////////////////////////////////////////////////////////////////
-            //  Render softwares                                              //
+            //  Render isometric 3D player                                    //
             ////////////////////////////////////////////////////////////////////
             void render();
 
 
+            ////////////////////////////////////////////////////////////////////
+            //  Check if isometric 3D player needs warp                       //
+            ////////////////////////////////////////////////////////////////////
+            inline bool needWarp()
+            {
+                return (topWarp() || bottomWarp() || leftWarp() || rightWarp());
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if isometric 3D player needs top warp                   //
+            ////////////////////////////////////////////////////////////////////
+            inline bool topWarp()
+            {
+                return (m_bounding.position.vec[1] > MatrixChunk2TopWarp);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if isometric 3D player needs bottom warp                //
+            ////////////////////////////////////////////////////////////////////
+            inline bool bottomWarp()
+            {
+                return (m_bounding.position.vec[1] < MatrixChunk2BottomWarp);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if isometric 3D player needs left warp                  //
+            ////////////////////////////////////////////////////////////////////
+            inline bool leftWarp()
+            {
+                return (m_bounding.position.vec[0] < MatrixChunk2LeftWarp);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Check if isometric 3D player needs right warp                 //
+            ////////////////////////////////////////////////////////////////////
+            inline bool rightWarp()
+            {
+                return (m_bounding.position.vec[0] > MatrixChunk2RightWarp);
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player tile position                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2i getTilePos()
+            {
+                return m_tilePos;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player tile x position                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getTileX()
+            {
+                return m_tilePos.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player tile y position                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getTileY()
+            {
+                return m_tilePos.vec[1];
+            }
+
+
         private:
             ////////////////////////////////////////////////////////////////////
-            //  Softwares private copy constructor : Not copyable             //
+            //  Isometric3DPlayer private copy constructor : Not copyable     //
             ////////////////////////////////////////////////////////////////////
-            Softwares(const Softwares&) = delete;
+            Isometric3DPlayer(const Isometric3DPlayer&) = delete;
 
             ////////////////////////////////////////////////////////////////////
-            //  Softwares private copy operator : Not copyable                //
+            //  Isometric3DPlayer private copy operator : Not copyable        //
             ////////////////////////////////////////////////////////////////////
-            Softwares& operator=(const Softwares&) = delete;
+            Isometric3DPlayer& operator=(const Isometric3DPlayer&) = delete;
 
 
         private:
+            PhysicsTransform2       m_transforms;       // Player transforms
+            Vector2i                m_speed;            // Player speed
+            BoundingAlignRect       m_bounding;         // Bounding align rect
+            Vector2i                m_physicsTile;      // Player physics tile
+            Vector2i                m_tilePos;          // Player tile position
+
+            Sprite                  m_sprite;           // Player sprite
     };
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //  Softwares global instance                                             //
-    ////////////////////////////////////////////////////////////////////////////
-    extern Softwares GSoftwares;
-
-
-#endif // VOS_SOFTWARES_SOFTWARES_HEADER
+#endif // VOS_SOFTWARES_ISOMETRIC3D_ISOMETRIC3DPLAYER_HEADER

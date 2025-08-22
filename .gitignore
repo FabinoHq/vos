@@ -362,6 +362,11 @@
 !Softwares/Isometric/Isometric.cpp
 !Softwares/Isometric/IsometricPlayer.h
 !Softwares/Isometric/IsometricPlayer.cpp
+!Softwares/Isometric3D/
+!Softwares/Isometric3D/Isometric3D.h
+!Softwares/Isometric3D/Isometric3D.cpp
+!Softwares/Isometric3D/Isometric3DPlayer.h
+!Softwares/Isometric3D/Isometric3DPlayer.cpp
 !Softwares/FirstPerson/
 !Softwares/FirstPerson/FirstPerson.h
 !Softwares/FirstPerson/FirstPerson.cpp

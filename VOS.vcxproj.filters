@@ -70,6 +70,9 @@
     <Filter Include="Softwares\Interface">
       <UniqueIdentifier>{94b17d4d-2172-4c57-a156-6ff36910f2b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Softwares\Isometric3D">
+      <UniqueIdentifier>{6439be9f-2aeb-45ad-bc85-882e380d76f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -361,6 +364,12 @@
     </ClCompile>
     <ClCompile Include="Softwares\Interface\Interface.cpp">
       <Filter>Softwares\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Softwares\Isometric3D\Isometric3D.cpp">
+      <Filter>Softwares\Isometric3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Softwares\Isometric3D\Isometric3DPlayer.cpp">
+      <Filter>Softwares\Isometric3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -811,6 +820,12 @@
     </ClInclude>
     <ClInclude Include="Softwares\Interface\Interface.h">
       <Filter>Softwares\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\Isometric3D\Isometric3D.h">
+      <Filter>Softwares\Isometric3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Softwares\Isometric3D\Isometric3DPlayer.h">
+      <Filter>Softwares\Isometric3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

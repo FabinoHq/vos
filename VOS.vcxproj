@@ -282,6 +282,8 @@
     <ClCompile Include="Softwares\FirstPerson\FirstPerson.cpp" />
     <ClCompile Include="Softwares\FirstPerson\FirstPersonPlayer.cpp" />
     <ClCompile Include="Softwares\Interface\Interface.cpp" />
+    <ClCompile Include="Softwares\Isometric3D\Isometric3D.cpp" />
+    <ClCompile Include="Softwares\Isometric3D\Isometric3DPlayer.cpp" />
     <ClCompile Include="Softwares\Isometric\Isometric.cpp" />
     <ClCompile Include="Softwares\Isometric\IsometricPlayer.cpp" />
     <ClCompile Include="Softwares\Softwares.cpp" />
@@ -422,6 +424,8 @@
     <ClInclude Include="Softwares\FirstPerson\FirstPerson.h" />
     <ClInclude Include="Softwares\FirstPerson\FirstPersonPlayer.h" />
     <ClInclude Include="Softwares\Interface\Interface.h" />
+    <ClInclude Include="Softwares\Isometric3D\Isometric3D.h" />
+    <ClInclude Include="Softwares\Isometric3D\Isometric3DPlayer.h" />
     <ClInclude Include="Softwares\Isometric\Isometric.h" />
     <ClInclude Include="Softwares\Isometric\IsometricPlayer.h" />
     <ClInclude Include="Softwares\Softwares.h" />
