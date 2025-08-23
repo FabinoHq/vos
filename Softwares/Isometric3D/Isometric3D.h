@@ -60,14 +60,7 @@
     #include "../../Renderer/Shapes/RectangleShape.h"
     #include "../../Renderer/Shapes/EllipseShape.h"
 
-    #include "../../Renderer/TileMap/TileMapStream.h"
-
-    #include "../../Physics/Physics.h"
-    #include "../../Physics/Collision2.h"
-    #include "../../Physics/MatrixStream2.h"
-    #include "../../Physics/BoundingSurfaces/BoundingCircle.h"
-    #include "../../Physics/BoundingSurfaces/BoundingAlignRect.h"
-    #include "../../Physics/BoundingSurfaces/BoundingRect.h"
+    #include "../../Renderer/TileMap/IsoMapStream.h"
 
     #include "Isometric3DPlayer.h"
 
@@ -167,7 +160,7 @@
             bool                m_chunkWarp;            // Chunk warp
             int32_t             m_chunkX;               // Chunk X
             int32_t             m_chunkY;               // Chunk Y
-            TileMapStream       m_tilemap;              // Tilemap
+            IsoMapStream        m_isomap;               // Isomap
             Isometric3DPlayer   m_player;               // Player
     };
 
