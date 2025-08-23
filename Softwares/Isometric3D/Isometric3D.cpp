@@ -63,9 +63,8 @@ m_pxText(),
 m_chunkWarp(false),
 m_chunkX(0),
 m_chunkY(0),
-m_isomap(),
-m_player(),
-m_zoom(1.0f)
+m_tilemap(),
+m_player()
 {
 
 }
@@ -101,7 +100,7 @@ bool Isometric3D::init()
 
 
     // Init sprite
-    if (!m_sprite.init(GResources.textures.high(TEXTURE_ISOTILE), 2.0f, 1.0f))
+    if (!m_sprite.init(GResources.textures.high(TEXTURE_TILE), 1.0f, 1.0f))
     {
         // Could not init sprite
         return false;
@@ -158,10 +157,10 @@ bool Isometric3D::init()
         return false;
     }
 
-    // Init isomap stream
-    if (!m_isomap.init())
+    // Init tilemap stream
+    if (!m_tilemap.init())
     {
-        // Could not init isomap stream
+        // Could not init tilemap stream
         return false;
     }
 
@@ -172,8 +171,8 @@ bool Isometric3D::init()
         SysSleep(ResourcesWaitSleepTime);
     }
 
-    // Load spawn isomap chunks
-    while (!m_isomap.reload(0, 0))
+    // Load spawn tilemap chunks
+    while (!m_tilemap.reload(0, 0))
     {
         // Release some CPU
         SysSleep(ResourcesWaitSleepTime);
@@ -183,7 +182,7 @@ bool Isometric3D::init()
     bool spawnLoaded = false;
     while (!spawnLoaded)
     {
-        if (GMatrixStream2.isReady() && m_isomap.isReady())
+        if (GMatrixStream2.isReady() && m_tilemap.isReady())
         {
             spawnLoaded = true;
         }
@@ -200,9 +199,6 @@ bool Isometric3D::init()
         // Could not init player
         return false;
     }
-
-    // Reset zoom
-    m_zoom = 1.0f;
 
 
     // Isometric 3D game is ready
@@ -301,14 +297,6 @@ void Isometric3D::events(SysEvent& event)
 
         // Mouse wheel
         case SYSEVENT_MOUSEWHEEL:
-            if (event.mouse.wheel < 0)
-            {
-                m_zoom = Math::max(0.2f, m_zoom-0.02f);
-            }
-            else if (event.mouse.wheel > 0)
-            {
-                m_zoom = Math::min(1.0f, m_zoom+0.02f);
-            }
             break;
 
         default:
@@ -336,7 +324,7 @@ Vector2i Isometric3D::warp()
     Vector2i warpOffset = Vector2i(0, 0);
     if (!m_chunkWarp && m_player.needWarp())
     {
-        if (GMatrixStream2.isReady() && m_isomap.isReady())
+        if (GMatrixStream2.isReady() && m_tilemap.isReady())
         {
             if (m_player.topWarp())
             {
@@ -385,10 +373,10 @@ void Isometric3D::physics()
 ////////////////////////////////////////////////////////////////////////////////
 void Isometric3D::precompute(float physicstime)
 {
-    // Update isomap stream
+    // Update tilemap stream
     if (m_chunkWarp)
     {
-        m_isomap.update(m_chunkX, m_chunkY);
+        m_tilemap.update(m_chunkX, m_chunkY);
         m_chunkWarp = false;
     }
 
@@ -421,10 +409,7 @@ void Isometric3D::compute(float frametime)
 
 
     // Update view position
-    //m_view.setSize(0.9f, 1.0f);
-    //m_view.setPosition(m_player.getX()*0.9f, m_player.getY()+0.08f);
-    m_view.setSize(m_zoom, m_zoom);
-    m_view.setPosition(m_player.getX()*m_zoom, (m_player.getY()+0.08f)*m_zoom);
+    m_view.setPosition(m_player.getPosition());
 
 
     // Start uniforms upload
@@ -476,48 +461,14 @@ void Isometric3D::render()
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
 
-    // Render isomap chunks
+    // Render tilemap chunks
     GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
     m_sprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_sprite.setOrigin(0.0f, 0.0f);
-    m_sprite.setSize(IsoMapElemWidth+0.00001f, IsoMapElemHeight+0.00001f);
+    m_sprite.setSize(TileMapElemWidth+0.00001f, TileMapElemHeight+0.00001f);
     m_sprite.setAngle(0.0f);
+    m_tilemap.render(m_sprite);
 
-    GResources.isomaps.sync();
-    for (int32_t i = (m_player.getTileX()-IsoMapStreamElemHalfWidth);
-        i < (m_player.getTileX()+IsoMapStreamElemHalfWidth); ++i)
-    {
-        for (int32_t j = (m_player.getTileY()+(IsoMapStreamElemHalfHeight-1));
-            j >= (m_player.getTileY()-IsoMapStreamElemHalfHeight); --j)
-        {
-            int32_t elem = m_isomap.getElem(i, j);
-            if (elem > 0)
-            {
-                m_sprite.setPosition(
-                    (IsoMapElemHalfWidth)+
-                    (i*IsoMapElemHalfWidth)+(j*IsoMapElemHalfWidth),
-                    (j*IsoMapElemHalfHeight)-(i*IsoMapElemHalfHeight)
-                );
-                if (elem == 2)
-                {
-                    m_sprite.setHeight((IsoMapElemHeight*1.5f)+0.00001f);
-                    m_sprite.moveY(IsoMapElemHeight*0.25f);
-                    m_sprite.setTexture(
-                        GResources.textures.high(TEXTURE_ISOTILE2)
-                    );
-                }
-                else
-                {
-                    m_sprite.setHeight(IsoMapElemHeight+0.00001f);
-                    m_sprite.setTexture(
-                        GResources.textures.high(TEXTURE_ISOTILE)
-                    );
-                }
-                m_sprite.bindTexture();
-                m_sprite.render();
-            }
-        }
-    }
 
     // Render player
     m_player.render();
@@ -528,6 +479,29 @@ void Isometric3D::render()
 
     // Bind default vertex buffer
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
+
+    // Render back rendered frame
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_backRenderer.bind();
+    m_sprite.render();*/
+
+    // Render sprite
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
+    m_sprite.bindTexture();
+    m_sprite.render();*/
+
+    // Render procedural sprite
+    /*m_procSprite.bindPipeline();
+    m_procSprite.render();*/
+
+    // Render rectangle
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectangle.render();*/
+
+    // Render ellipse
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    m_ellipse.render();*/
+
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
@@ -543,10 +517,10 @@ void Isometric3D::render()
     }
     m_pxText.render();
 
-    // Render pixel text (view position)
-    std::ostringstream camerastr;
-    camerastr << "X : " << m_player.getX() << " | Y : " << m_player.getY();
-    m_pxText.setText(camerastr.str());
+    // Render pixel text (player position)
+    std::ostringstream positionstr;
+    positionstr << "X : " << m_player.getX() << " | Y : " << m_player.getY();
+    m_pxText.setText(positionstr.str());
     m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
     if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
     {

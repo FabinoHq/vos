@@ -50,14 +50,11 @@ Transform2(),
 m_transforms(),
 m_speed(),
 m_bounding(),
-m_physicsTile(),
-m_tilePos(),
-m_sprite()
+m_rectangle(),
+m_ellipse()
 {
     m_transforms.reset();
     m_speed.reset();
-    m_physicsTile.reset();
-    m_tilePos.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,8 +62,6 @@ m_sprite()
 ////////////////////////////////////////////////////////////////////////////////
 Isometric3DPlayer::~Isometric3DPlayer()
 {
-    m_tilePos.reset();
-    m_physicsTile.reset();
     m_speed.reset();
     m_transforms.reset();
 }
@@ -86,19 +81,35 @@ bool Isometric3DPlayer::init()
 
     // Init bounding aligned rectangle
     m_bounding.setPosition(0, 0);
-    m_bounding.setHalfSize(32000, 32000);
-
-    // Reset player tile position
-    m_physicsTile.reset();
-    m_tilePos.reset();
+    m_bounding.setHalfSize(40000, 40000);
 
     // Init rectangle shape
-    if (!m_sprite.init(GResources.textures.high(TEXTURE_PLAYER), 0.075f, 0.15f))
+    if (!m_rectangle.init(0.2f, 0.2f))
     {
-        // Could not init sprite
+        // Could not init rectangle shape
         return false;
     }
-    m_sprite.setOrigin(0.0f, -0.055f);
+    m_rectangle.setSmooth(0.05f);
+    m_rectangle.setColor(0.0f, 0.8f, 0.2f, 0.8f);
+    m_rectangle.setOrigin(0.0f, 0.0f);
+    m_rectangle.setSize(
+        (m_bounding.halfSize.vec[0]*PhysicsToRenderer*2.05f),
+        (m_bounding.halfSize.vec[1]*PhysicsToRenderer*2.05f)
+    );
+
+    // Init ellipse shape
+    /*if (!m_ellipse.init(0.2f, 0.2f))
+    {
+        // Could not init ellipse shape
+        return false;
+    }
+    m_ellipse.setSmooth(0.05f);
+    m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
+    m_ellipse.setOrigin(0.0f, 0.0f);
+    m_ellipse.setSize(
+        (m_bounding.radius*PhysicsToRenderer*2.05f),
+        (m_bounding.radius*PhysicsToRenderer*2.05f)
+    );*/
 
     // Isometric 3D player is ready
     return true;
@@ -112,16 +123,8 @@ void Isometric3DPlayer::prephysics(const Vector2i& warpOffset)
 {
     // Compute prephysics transformations
     m_bounding.position += warpOffset;
-    m_transforms.prephysicsIso(m_bounding.position, 0);
-    m_transforms.offsetPrevPosIso(warpOffset);
-
-    // Compute physics tile position
-    m_physicsTile.vec[0] = Math::divide(
-        m_bounding.position.vec[0], MatrixChunk2ElemWidth
-    );
-    m_physicsTile.vec[1] = Math::divide(
-        m_bounding.position.vec[1], MatrixChunk2ElemHeight
-    );
+    m_transforms.prephysics(m_bounding.position, 0);
+    m_transforms.offsetPrevPos(warpOffset);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -152,17 +155,15 @@ void Isometric3DPlayer::physics()
     }
 
     // Clamp speed
-    if (m_speed.length() >= (Math::OneInt * 8))
+    if (m_speed.length() >= (Math::OneInt * 12))
     {
         m_speed.normalize();
-        m_speed *= 8;
+        m_speed *= 12;
     }
 
     // Compute isometric 3D player collisions
     Vector2i offset = Vector2i(
-        (m_speed.vec[0] >> PhysicsSpeedToPositionShift)-
-        (m_speed.vec[1] >> PhysicsSpeedToPositionShift),
-        (m_speed.vec[0] >> PhysicsSpeedToPositionShift)+
+        (m_speed.vec[0] >> PhysicsSpeedToPositionShift),
         (m_speed.vec[1] >> PhysicsSpeedToPositionShift)
     );
     Collision2 collision((m_bounding.position + offset), offset);
@@ -181,9 +182,6 @@ void Isometric3DPlayer::precompute(float physicstime)
 {
     // Precompute transformations
     precomputeTransforms(m_transforms, physicstime);
-
-    // Set player tile position
-    m_tilePos = m_physicsTile;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -192,8 +190,10 @@ void Isometric3DPlayer::precompute(float physicstime)
 void Isometric3DPlayer::render()
 {
     // Render rectangle shape
-    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_sprite.setPosition(m_position);
-    m_sprite.bindTexture();
-    m_sprite.render();
+    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
+    m_rectangle.setPosition(m_position);
+    m_rectangle.render();
+    // Render ellipse shape
+    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
+    m_ellipse.render();*/
 }

@@ -543,10 +543,10 @@ void Isometric::render()
     }
     m_pxText.render();
 
-    // Render pixel text (view position)
-    std::ostringstream camerastr;
-    camerastr << "X : " << m_player.getX() << " | Y : " << m_player.getY();
-    m_pxText.setText(camerastr.str());
+    // Render pixel text (player position)
+    std::ostringstream positionstr;
+    positionstr << "X : " << m_player.getX() << " | Y : " << m_player.getY();
+    m_pxText.setText(positionstr.str());
     m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
     if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
     {

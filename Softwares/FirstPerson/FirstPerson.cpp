@@ -613,11 +613,11 @@ void FirstPerson::render()
     m_pxText.render();
 
     // Render pixel text (camera position)
-    std::ostringstream camerastr;
-    camerastr << "X : " << m_freeflycam.getX() <<
+    std::ostringstream positionstr;
+    positionstr << "X : " << m_freeflycam.getX() <<
         " | Y : " << m_freeflycam.getY() <<
         " | Z : " << m_freeflycam.getZ();
-    m_pxText.setText(camerastr.str());
+    m_pxText.setText(positionstr.str());
     m_pxText.setPosition(-ratio+0.01f, 0.96f-(m_pxText.getHeight()*0.7f));
     if (m_pxText.isPicking(GSysMouse.mouseX, GSysMouse.mouseY))
     {

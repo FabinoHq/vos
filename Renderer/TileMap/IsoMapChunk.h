@@ -73,6 +73,8 @@
     const float IsoMapElemHeight = (MatrixChunk2ElemHeight*PhysicsToRenderer);
     const float IsoMapChunkXStride = (IsoMapChunkWidth*IsoMapElemHalfWidth);
     const float IsoMapChunkYStride = (IsoMapChunkHeight*IsoMapElemHalfHeight);
+    const float Iso3DMapElemWidth = (MatrixChunk2ElemWidth*PhysicsToRenderer);
+    const float Iso3DMapElemHeight = (MatrixChunk2ElemHeight*PhysicsToRenderer);
 
 
     ////////////////////////////////////////////////////////////////////////////
