@@ -50,11 +50,14 @@ Transform2(),
 m_transforms(),
 m_speed(),
 m_bounding(),
-m_rectangle(),
-m_ellipse()
+m_physicsTile(),
+m_tilePos(),
+m_rectangle()
 {
     m_transforms.reset();
     m_speed.reset();
+    m_physicsTile.reset();
+    m_tilePos.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +65,8 @@ m_ellipse()
 ////////////////////////////////////////////////////////////////////////////////
 Isometric3DPlayer::~Isometric3DPlayer()
 {
+    m_tilePos.reset();
+    m_physicsTile.reset();
     m_speed.reset();
     m_transforms.reset();
 }
@@ -83,6 +88,10 @@ bool Isometric3DPlayer::init()
     m_bounding.setPosition(0, 0);
     m_bounding.setHalfSize(40000, 40000);
 
+    // Reset player tile position
+    m_physicsTile.reset();
+    m_tilePos.reset();
+
     // Init rectangle shape
     if (!m_rectangle.init(0.2f, 0.2f))
     {
@@ -96,20 +105,6 @@ bool Isometric3DPlayer::init()
         (m_bounding.halfSize.vec[0]*PhysicsToRenderer*2.05f),
         (m_bounding.halfSize.vec[1]*PhysicsToRenderer*2.05f)
     );
-
-    // Init ellipse shape
-    /*if (!m_ellipse.init(0.2f, 0.2f))
-    {
-        // Could not init ellipse shape
-        return false;
-    }
-    m_ellipse.setSmooth(0.05f);
-    m_ellipse.setColor(0.0f, 0.8f, 0.2f, 0.8f);
-    m_ellipse.setOrigin(0.0f, 0.0f);
-    m_ellipse.setSize(
-        (m_bounding.radius*PhysicsToRenderer*2.05f),
-        (m_bounding.radius*PhysicsToRenderer*2.05f)
-    );*/
 
     // Isometric 3D player is ready
     return true;
@@ -125,6 +120,14 @@ void Isometric3DPlayer::prephysics(const Vector2i& warpOffset)
     m_bounding.position += warpOffset;
     m_transforms.prephysics(m_bounding.position, 0);
     m_transforms.offsetPrevPos(warpOffset);
+
+    // Compute physics tile position
+    m_physicsTile.vec[0] = Math::divide(
+        m_bounding.position.vec[0], MatrixChunk2ElemWidth
+    );
+    m_physicsTile.vec[1] = Math::divide(
+        m_bounding.position.vec[1], MatrixChunk2ElemHeight
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -182,6 +185,9 @@ void Isometric3DPlayer::precompute(float physicstime)
 {
     // Precompute transformations
     precomputeTransforms(m_transforms, physicstime);
+
+    // Set player tile position
+    m_tilePos = m_physicsTile;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +199,4 @@ void Isometric3DPlayer::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
     m_rectangle.setPosition(m_position);
     m_rectangle.render();
-    // Render ellipse shape
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
-    m_ellipse.render();*/
 }

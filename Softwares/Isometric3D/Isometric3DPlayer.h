@@ -54,15 +54,12 @@
 
     #include "../../Renderer/Renderer.h"
     #include "../../Renderer/Shapes/RectangleShape.h"
-    #include "../../Renderer/Shapes/EllipseShape.h"
 
     #include "../../Physics/Physics.h"
     #include "../../Physics/PhysicsTransform2.h"
     #include "../../Physics/Collision2.h"
     #include "../../Physics/MatrixStream2.h"
-    #include "../../Physics/BoundingSurfaces/BoundingCircle.h"
     #include "../../Physics/BoundingSurfaces/BoundingAlignRect.h"
-    #include "../../Physics/BoundingSurfaces/BoundingRect.h"
 
     #include <cstdint>
 
@@ -152,6 +149,30 @@
                 return (m_bounding.position.vec[0] > MatrixChunk2RightWarp);
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get player tile position                                      //
+            ////////////////////////////////////////////////////////////////////
+            inline Vector2i getTilePos()
+            {
+                return m_tilePos;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player tile x position                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getTileX()
+            {
+                return m_tilePos.vec[0];
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get player tile y position                                    //
+            ////////////////////////////////////////////////////////////////////
+            inline int32_t getTileY()
+            {
+                return m_tilePos.vec[1];
+            }
+
 
         private:
             ////////////////////////////////////////////////////////////////////
@@ -169,9 +190,10 @@
             PhysicsTransform2       m_transforms;       // Player transforms
             Vector2i                m_speed;            // Player speed
             BoundingAlignRect       m_bounding;         // Bounding align rect
+            Vector2i                m_physicsTile;      // Player physics tile
+            Vector2i                m_tilePos;          // Player tile position
 
             RectangleShape          m_rectangle;        // Rectangle shape
-            EllipseShape            m_ellipse;          // Ellipse shape
     };
 
 
