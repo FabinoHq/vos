@@ -51,8 +51,7 @@ m_transforms(),
 m_speed(),
 m_bounding(),
 m_physicsTile(),
-m_tilePos(),
-m_rectangle()
+m_tilePos()
 {
     m_transforms.reset();
     m_speed.reset();
@@ -86,25 +85,11 @@ bool Isometric3DPlayer::init()
 
     // Init bounding aligned rectangle
     m_bounding.setPosition(0, 0);
-    m_bounding.setHalfSize(40000, 40000);
+    m_bounding.setHalfSize(32000, 32000);
 
     // Reset player tile position
     m_physicsTile.reset();
     m_tilePos.reset();
-
-    // Init rectangle shape
-    if (!m_rectangle.init(0.2f, 0.2f))
-    {
-        // Could not init rectangle shape
-        return false;
-    }
-    m_rectangle.setSmooth(0.05f);
-    m_rectangle.setColor(0.0f, 0.8f, 0.2f, 0.8f);
-    m_rectangle.setOrigin(0.0f, 0.0f);
-    m_rectangle.setSize(
-        (m_bounding.halfSize.vec[0]*PhysicsToRenderer*2.05f),
-        (m_bounding.halfSize.vec[1]*PhysicsToRenderer*2.05f)
-    );
 
     // Isometric 3D player is ready
     return true;
@@ -166,7 +151,9 @@ void Isometric3DPlayer::physics()
 
     // Compute isometric 3D player collisions
     Vector2i offset = Vector2i(
-        (m_speed.vec[0] >> PhysicsSpeedToPositionShift),
+        (m_speed.vec[0] >> PhysicsSpeedToPositionShift)-
+        (m_speed.vec[1] >> PhysicsSpeedToPositionShift),
+        (m_speed.vec[0] >> PhysicsSpeedToPositionShift)+
         (m_speed.vec[1] >> PhysicsSpeedToPositionShift)
     );
     Collision2 collision((m_bounding.position + offset), offset);
@@ -195,8 +182,5 @@ void Isometric3DPlayer::precompute(float physicstime)
 ////////////////////////////////////////////////////////////////////////////////
 void Isometric3DPlayer::render()
 {
-    // Render rectangle shape
-    GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
-    m_rectangle.setPosition(m_position);
-    m_rectangle.render();
+
 }

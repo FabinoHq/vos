@@ -49,16 +49,12 @@
 
     #include "../../Renderer/Renderer.h"
     #include "../../Renderer/BackRenderer.h"
-    #include "../../Renderer/View.h"
-    #include "../../Renderer/Sprite.h"
-    #include "../../Renderer/ProcSprite.h"
+    #include "../../Renderer/Camera.h"
+    #include "../../Renderer/Plane.h"
 
     #include "../../Resources/Resources.h"
     #include "../../Renderer/GUI/GUICursor.h"
     #include "../../Renderer/GUI/GUIPxText.h"
-
-    #include "../../Renderer/Shapes/RectangleShape.h"
-    #include "../../Renderer/Shapes/EllipseShape.h"
 
     #include "../../Renderer/TileMap/IsoMapStream.h"
 
@@ -147,12 +143,9 @@
         private:
             BackRenderer        m_backRenderer;         // Back renderer
 
-            View                m_view;                 // View
+            Camera              m_camera;               // Camera
 
-            Sprite              m_sprite;               // Sprite
-            ProcSprite          m_procSprite;           // Procedural sprite
-            RectangleShape      m_rectangle;            // Rectangle shape
-            EllipseShape        m_ellipse;              // Ellipse shape
+            Plane               m_plane;                // Plane billboard
 
             GUICursor           m_cursor;               // GUI Cursor
             GUIPxText           m_pxText;               // GUI pixel text

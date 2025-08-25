@@ -62,6 +62,8 @@
     ////////////////////////////////////////////////////////////////////////////
     const int32_t IsoMapStreamElemHalfWidth = 24;
     const int32_t IsoMapStreamElemHalfHeight = 24;
+    const int32_t Iso3DMapStreamElemHalfWidth = 28;
+    const int32_t Iso3DMapStreamElemHalfHeight = 28;
 
 
     ////////////////////////////////////////////////////////////////////////////

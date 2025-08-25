@@ -53,11 +53,8 @@ Isometric3D GIsometric3D = Isometric3D();
 ////////////////////////////////////////////////////////////////////////////////
 Isometric3D::Isometric3D() :
 m_backRenderer(),
-m_view(),
-m_sprite(),
-m_procSprite(),
-m_rectangle(),
-m_ellipse(),
+m_camera(),
+m_plane(),
 m_cursor(),
 m_pxText(),
 m_chunkWarp(false),
@@ -91,41 +88,25 @@ bool Isometric3D::init()
         return false;
     }
 
-    // Init view
-    if (!m_view.init())
+    // Init camera
+    if (!m_camera.init())
     {
-        // Could not init view
+        // Could not init camera
         return false;
     }
+    m_camera.setAngles(-0.68f, Math::PiFourth, 0.0f);
+    m_camera.setFovy(0.32f);
 
 
-    // Init sprite
-    if (!m_sprite.init(GResources.textures.high(TEXTURE_TILE), 1.0f, 1.0f))
+    // Init plane billboard
+    if (!m_plane.init(GResources.textures.high(TEXTURE_TEST), 1.0f, 1.0f))
     {
-        // Could not init sprite
+        // Could not init plane billboard
         return false;
     }
-
-    // Init procedural sprite
-    if (!m_procSprite.init(1.0f, 1.0f))
-    {
-        // Could not init procedural sprite
-        return false;
-    }
-
-    // Init rectangle shape
-    if (!m_rectangle.init(1.0f, 1.0f))
-    {
-        // Could not init rectangle shape
-        return false;
-    }
-
-    // Init ellipse shape
-    if (!m_ellipse.init(1.0f, 1.0f))
-    {
-        // Could not init ellipse shape
-        return false;
-    }
+    m_plane.setBillboard(PLANE_BILLBOARD_NONE);
+    m_plane.setAngleX(-Math::PiHalf);
+    m_plane.setTarget(m_camera);
 
 
     // Init GUI cursor
@@ -200,6 +181,9 @@ bool Isometric3D::init()
         return false;
     }
 
+    // Set mouse tracking
+    GSysMouse.tracking = true;
+
 
     // Isometric 3D game is ready
     return true;
@@ -210,11 +194,8 @@ bool Isometric3D::init()
 ////////////////////////////////////////////////////////////////////////////////
 void Isometric3D::destroy()
 {
-    // Destroy procedural sprite
-    m_procSprite.destroyProcSprite();
-
-    // Destroy view
-    m_view.destroyView();
+    // Destroy camera
+    m_camera.destroyCamera();
 
     // Destroy back renderer
     m_backRenderer.destroyBackRenderer();
@@ -408,18 +389,28 @@ void Isometric3D::compute(float frametime)
     m_pxText.setText(framestr.str());
 
 
-    // Update view position
-    m_view.setPosition(m_player.getPosition());
-
-
     // Start uniforms upload
     if (GUniformchain.startUpload())
     {
+        // Compute world lights
+        /*GWorldLight.time += frametime*0.01f;
+        if (GWorldLight.time >= 1.0f)
+        {
+            GWorldLight.time -= 2.0f;
+        }*/
+        GWorldLight.time = 0.5f;
+        GWorldLight.compute(m_camera.getPosition());
+
         // Compute views
         GRenderer.computeDefaultView();
         GMainRenderer.computeDefaultView();
         m_backRenderer.computeDefaultView();
-        m_view.compute(GSwapchain.ratio);
+
+        // Compute cameras
+        m_camera.setPosition(
+            m_player.getX()+2.5f, 3.0f, -m_player.getY()+2.5f
+        );
+        m_camera.compute(GSwapchain.ratio);
 
         // End uniforms upload
         GUniformchain.endUpload();
@@ -454,43 +445,50 @@ void Isometric3D::render()
     // Start rendering
     GRenderer.startRenderPass();
 
-    // Set 2D view
-    m_view.bind();
+
+    // Bind world lights
+    GWorldLight.bind();
+
+    // Set freefly camera
+    m_camera.bind();
 
     // Bind default vertex buffer
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
 
-    // Render isomap chunks
-    GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_sprite.bindTexture();
-    m_sprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    m_sprite.setOrigin(0.0f, 0.0f);
-    m_sprite.setSize(TileMapElemWidth+0.00001f, TileMapElemHeight+0.00001f);
-    m_sprite.setAngle(0.0f);
+    // Render plane billboard
+    GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    GRenderer.bindVertexBuffer(MESHES_PLANE);
+    m_plane.setTexture(GResources.textures.high(TEXTURE_TILE));
+    m_plane.bindTexture();
+    m_plane.setSize(Iso3DMapElemWidth, Iso3DMapElemHeight, 1.0f);
 
     GResources.isomaps.sync();
-    for (int32_t i = (m_player.getTileX()-IsoMapStreamElemHalfWidth);
-        i < (m_player.getTileX()+IsoMapStreamElemHalfWidth); ++i)
+    for (int32_t i = (m_player.getTileX()-Iso3DMapStreamElemHalfWidth);
+        i < (m_player.getTileX()+Iso3DMapStreamElemHalfWidth); ++i)
     {
-        for (int32_t j = (m_player.getTileY()+(IsoMapStreamElemHalfHeight-1));
-            j >= (m_player.getTileY()-IsoMapStreamElemHalfHeight); --j)
+        for (int32_t j = (m_player.getTileY()+(Iso3DMapStreamElemHalfHeight-1));
+            j >= (m_player.getTileY()-Iso3DMapStreamElemHalfHeight); --j)
         {
             int32_t elem = m_isomap.getElem(i, j);
             if (elem == 1)
             {
-                m_sprite.setPosition(
-                    (TileMapElemHalfWidth+(i*TileMapElemWidth)),
-                    (TileMapElemHalfHeight+(j*TileMapElemHeight))
+                m_plane.setPosition(
+                    (TileMapElemHalfWidth+(i*TileMapElemWidth)), 0.0f,
+                    (TileMapElemHalfHeight-((j+1)*TileMapElemHeight))
                 );
-                m_sprite.render();
+                m_plane.render();
             }
         }
     }
 
 
-    // Render player
-    m_player.render();
+    // Render player plane
+    m_plane.setTexture(GResources.textures.high(TEXTURE_PLAYER));
+    m_plane.bindTexture();
+    m_plane.setSize(Iso3DMapElemWidth, Iso3DMapElemHeight, 1.0f);
+    m_plane.setPosition(m_player.getX(), 0.01f, -m_player.getY());
+    m_plane.render();
 
 
     // Set default screen view
@@ -498,28 +496,6 @@ void Isometric3D::render()
 
     // Bind default vertex buffer
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
-
-    // Render back rendered frame
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_backRenderer.bind();
-    m_sprite.render();*/
-
-    // Render sprite
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_DEFAULT);
-    m_sprite.bindTexture();
-    m_sprite.render();*/
-
-    // Render procedural sprite
-    /*m_procSprite.bindPipeline();
-    m_procSprite.render();*/
-
-    // Render rectangle
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_RECTANGLE);
-    m_rectangle.render();*/
-
-    // Render ellipse
-    /*GRenderer.bindPipeline(RENDERER_PIPELINE_ELLIPSE);
-    m_ellipse.render();*/
 
 
     // Render pixel text (framerate)
