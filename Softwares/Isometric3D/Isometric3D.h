@@ -51,6 +51,7 @@
     #include "../../Renderer/BackRenderer.h"
     #include "../../Renderer/Camera.h"
     #include "../../Renderer/Plane.h"
+    #include "../../Renderer/StaticMesh.h"
 
     #include "../../Resources/Resources.h"
     #include "../../Renderer/GUI/GUICursor.h"
@@ -146,6 +147,7 @@
             Camera              m_camera;               // Camera
 
             Plane               m_plane;                // Plane billboard
+            StaticMesh          m_tileMesh;             // Tile mesh
 
             GUICursor           m_cursor;               // GUI Cursor
             GUIPxText           m_pxText;               // GUI pixel text

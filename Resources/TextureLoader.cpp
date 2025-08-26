@@ -1605,6 +1605,21 @@ bool TextureLoader::preloadTextures()
     }
     pngfile.destroyImage();
 
+    // Load tile2 texture
+    if (!pngfile.loadImage("Textures/tile2.png"))
+    {
+        return false;
+    }
+    if (!m_texturesHigh[TEXTURE_TILE2].createTexture(
+        VULKAN_MEMORY_TEXTURES,
+        pngfile.getWidth(), pngfile.getHeight(), pngfile.getImage(),
+        true, true, TEXTUREMODE_REPEAT))
+    {
+        // Could not load tile2 texture
+        return false;
+    }
+    pngfile.destroyImage();
+
     // Load isotile texture
     if (!pngfile.loadImage("Textures/isotile.png"))
     {

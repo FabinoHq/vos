@@ -59,8 +59,10 @@
     const int32_t MatrixChunk2Size = (MatrixChunk2Width*MatrixChunk2Height);
     const int32_t MatrixChunk2ElemHalfWidth = 50000;
     const int32_t MatrixChunk2ElemHalfHeight = 50000;
+    const int32_t MatrixChunk2ElemHalfDepth = 50000;
     const int32_t MatrixChunk2ElemWidth = (MatrixChunk2ElemHalfWidth*2);
     const int32_t MatrixChunk2ElemHeight = (MatrixChunk2ElemHalfHeight*2);
+    const int32_t MatrixChunk2ElemDepth = (MatrixChunk2ElemHalfDepth*2);
     const int32_t MatrixChunk2XStride =
         (MatrixChunk2Width*MatrixChunk2ElemWidth);
     const int32_t MatrixChunk2YStride =

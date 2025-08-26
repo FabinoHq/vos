@@ -91,6 +91,15 @@ bool Isometric3DPlayer::init()
     m_physicsTile.reset();
     m_tilePos.reset();
 
+    // Init player mesh
+    if (!m_mesh.init(
+        GResources.meshes.mesh(MESHES_PLAYER),
+        GResources.textures.high(TEXTURE_TEST)))
+    {
+        // Could not init player mesh
+        return false;
+    }
+
     // Isometric 3D player is ready
     return true;
 }
@@ -182,5 +191,12 @@ void Isometric3DPlayer::precompute(float physicstime)
 ////////////////////////////////////////////////////////////////////////////////
 void Isometric3DPlayer::render()
 {
-
+    GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
+    m_mesh.setSize(
+        Iso3DMapElemWidth, Iso3DMapElemHeight, Iso3DMapElemDepth
+    );
+    m_mesh.setPosition(m_position.vec[0], 0.01f, -m_position.vec[1]);
+    m_mesh.bindVertexBuffer();
+    m_mesh.bindTexture();
+    m_mesh.render();
 }

@@ -55,6 +55,7 @@ Isometric3D::Isometric3D() :
 m_backRenderer(),
 m_camera(),
 m_plane(),
+m_tileMesh(),
 m_cursor(),
 m_pxText(),
 m_chunkWarp(false),
@@ -107,6 +108,15 @@ bool Isometric3D::init()
     m_plane.setBillboard(PLANE_BILLBOARD_NONE);
     m_plane.setAngleX(-Math::PiHalf);
     m_plane.setTarget(m_camera);
+
+    // Init tile mesh
+    if (!m_tileMesh.init(
+        GResources.meshes.mesh(MESHES_TILE),
+        GResources.textures.high(TEXTURE_TILE)))
+    {
+        // Could not init tile mesh
+        return false;
+    }
 
 
     // Init GUI cursor
@@ -180,9 +190,6 @@ bool Isometric3D::init()
         // Could not init player
         return false;
     }
-
-    // Set mouse tracking
-    GSysMouse.tracking = true;
 
 
     // Isometric 3D game is ready
@@ -393,12 +400,11 @@ void Isometric3D::compute(float frametime)
     if (GUniformchain.startUpload())
     {
         // Compute world lights
-        /*GWorldLight.time += frametime*0.01f;
+        GWorldLight.time += frametime*0.01f;
         if (GWorldLight.time >= 1.0f)
         {
             GWorldLight.time -= 2.0f;
-        }*/
-        GWorldLight.time = 0.5f;
+        }
         GWorldLight.compute(m_camera.getPosition());
 
         // Compute views
@@ -456,13 +462,11 @@ void Isometric3D::render()
     GRenderer.bindVertexBuffer(MESHES_DEFAULT);
 
 
-    // Render plane billboard
+    // Render world map
     GRenderer.bindPipeline(RENDERER_PIPELINE_STATICMESH);
-    GRenderer.bindVertexBuffer(MESHES_PLANE);
-    m_plane.setTexture(GResources.textures.high(TEXTURE_TILE));
-    m_plane.bindTexture();
-    m_plane.setSize(Iso3DMapElemWidth, Iso3DMapElemHeight, 1.0f);
-
+    m_tileMesh.setSize(
+        Iso3DMapElemWidth, Iso3DMapElemHeight, Iso3DMapElemDepth
+    );
     GResources.isomaps.sync();
     for (int32_t i = (m_player.getTileX()-Iso3DMapStreamElemHalfWidth);
         i < (m_player.getTileX()+Iso3DMapStreamElemHalfWidth); ++i)
@@ -471,24 +475,39 @@ void Isometric3D::render()
             j >= (m_player.getTileY()-Iso3DMapStreamElemHalfHeight); --j)
         {
             int32_t elem = m_isomap.getElem(i, j);
-            if (elem == 1)
+            if (elem > 0)
             {
-                m_plane.setPosition(
+                if (elem == 1)
+                {
+                    m_tileMesh.setVertexBuffer(
+                        GResources.meshes.mesh(MESHES_TILE)
+                    );
+                    m_tileMesh.setTexture(
+                        GResources.textures.high(TEXTURE_TILE)
+                    );
+                }
+                else if (elem == 2)
+                {
+                    m_tileMesh.setVertexBuffer(
+                        GResources.meshes.mesh(MESHES_TILE2)
+                    );
+                    m_tileMesh.setTexture(
+                        GResources.textures.high(TEXTURE_TILE2)
+                    );
+                }
+                m_tileMesh.bindVertexBuffer();
+                m_tileMesh.bindTexture();
+                m_tileMesh.setPosition(
                     (TileMapElemHalfWidth+(i*TileMapElemWidth)), 0.0f,
                     (TileMapElemHalfHeight-((j+1)*TileMapElemHeight))
                 );
-                m_plane.render();
+                m_tileMesh.render();
             }
         }
     }
 
-
-    // Render player plane
-    m_plane.setTexture(GResources.textures.high(TEXTURE_PLAYER));
-    m_plane.bindTexture();
-    m_plane.setSize(Iso3DMapElemWidth, Iso3DMapElemHeight, 1.0f);
-    m_plane.setPosition(m_player.getX(), 0.01f, -m_player.getY());
-    m_plane.render();
+    // Render player
+    m_player.render();
 
 
     // Set default screen view

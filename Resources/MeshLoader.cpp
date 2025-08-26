@@ -725,6 +725,27 @@ bool MeshLoader::preloadMeshes()
         return false;
     }
 
+    // Load tile static mesh
+    if (!loadVMSH(m_meshes[MESHES_TILE], "Models/tile.vmsh"))
+    {
+        // Could not load tile static mesh
+        return false;
+    }
+
+    // Load tile2 static mesh
+    if (!loadVMSH(m_meshes[MESHES_TILE2], "Models/tile2.vmsh"))
+    {
+        // Could not load tile2 static mesh
+        return false;
+    }
+
+    // Load player static mesh
+    if (!loadVMSH(m_meshes[MESHES_PLAYER], "Models/player.vmsh"))
+    {
+        // Could not load player static mesh
+        return false;
+    }
+
     // Meshes assets are successfully preloaded
     return true;
 }

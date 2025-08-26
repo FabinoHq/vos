@@ -389,3 +389,6 @@
 # Models files
 !Models/
 !models/testmodel.vmsh
+!models/tile.vmsh
+!models/tile2.vmsh
+!models/player.vmsh

@@ -53,6 +53,7 @@
     #include "../../Math/Transform2.h"
 
     #include "../../Renderer/Renderer.h"
+    #include "../../Renderer/StaticMesh.h"
 
     #include "../../Physics/Physics.h"
     #include "../../Physics/PhysicsTransform2.h"
@@ -191,6 +192,8 @@
             BoundingAlignRect       m_bounding;         // Bounding align rect
             Vector2i                m_physicsTile;      // Player physics tile
             Vector2i                m_tilePos;          // Player tile position
+
+            StaticMesh              m_mesh;             // Player mesh
     };
 
 

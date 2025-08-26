@@ -90,8 +90,11 @@
         MESHES_SEAFAR = 5,
 
         MESHES_TEST = 6,
+        MESHES_TILE = 7,
+        MESHES_TILE2 = 8,
+        MESHES_PLAYER = 9,
 
-        MESHES_ASSETSCOUNT = 7
+        MESHES_ASSETSCOUNT = 10
     };
 
 

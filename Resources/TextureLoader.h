@@ -122,10 +122,11 @@
         TEXTURE_TEST = 0,
         TEXTURE_PLAYER = 1,
         TEXTURE_TILE = 2,
-        TEXTURE_ISOTILE = 3,
-        TEXTURE_ISOTILE2 = 4,
+        TEXTURE_TILE2 = 3,
+        TEXTURE_ISOTILE = 4,
+        TEXTURE_ISOTILE2 = 5,
 
-        TEXTURE_ASSETSCOUNT = 5
+        TEXTURE_ASSETSCOUNT = 6
     };
 
     ////////////////////////////////////////////////////////////////////////////
