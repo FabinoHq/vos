@@ -310,6 +310,8 @@
 !Renderer/GUI/GUIToggleButton.cpp
 !Renderer/GUI/GUIProgressBar.h
 !Renderer/GUI/GUIProgressBar.cpp
+!Renderer/GUI/GUISlider.h
+!Renderer/GUI/GUISlider.cpp
 
 # Resources
 !Resources/

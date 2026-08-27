@@ -63,7 +63,8 @@ m_guiWindow(),
 m_pxText(),
 m_button(),
 m_toggleButton(),
-m_progressBar()
+m_progressBar(),
+m_slider()
 {
 
 }

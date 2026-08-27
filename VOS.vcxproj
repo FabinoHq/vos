@@ -226,6 +226,7 @@
     <ClCompile Include="Renderer\GUI\GUICursor.cpp" />
     <ClCompile Include="Renderer\GUI\GUIProgressBar.cpp" />
     <ClCompile Include="Renderer\GUI\GUIPxText.cpp" />
+    <ClCompile Include="Renderer\GUI\GUISlider.cpp" />
     <ClCompile Include="Renderer\GUI\GUIToggleButton.cpp" />
     <ClCompile Include="Renderer\GUI\GUIWindow.cpp" />
     <ClCompile Include="Renderer\HeightMap\HeightFarChunk.cpp" />
@@ -347,6 +348,7 @@
     <ClInclude Include="Renderer\GUI\GUICursor.h" />
     <ClInclude Include="Renderer\GUI\GUIProgressBar.h" />
     <ClInclude Include="Renderer\GUI\GUIPxText.h" />
+    <ClInclude Include="Renderer\GUI\GUISlider.h" />
     <ClInclude Include="Renderer\GUI\GUIToggleButton.h" />
     <ClInclude Include="Renderer\GUI\GUIWindow.h" />
     <ClInclude Include="Renderer\HeightMap\HeightFarChunk.h" />

@@ -365,6 +365,9 @@
     <ClCompile Include="Network\UDPSocket.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUISlider.cpp">
+      <Filter>Renderer\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -808,6 +811,9 @@
     </ClInclude>
     <ClInclude Include="Network\UDPSocket.h">
       <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUISlider.h">
+      <Filter>Renderer\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -60,6 +60,7 @@
     #include "../../Renderer/GUI/GUIButton.h"
     #include "../../Renderer/GUI/GUIToggleButton.h"
     #include "../../Renderer/GUI/GUIProgressBar.h"
+    #include "../../Renderer/GUI/GUISlider.h"
 
     #include "../../Renderer/Shapes/RectangleShape.h"
     #include "../../Renderer/Shapes/EllipseShape.h"
@@ -140,6 +141,7 @@
             GUIButton           m_button;               // GUI button
             GUIToggleButton     m_toggleButton;         // GUI toggle button
             GUIProgressBar      m_progressBar;          // GUI progress bar
+            GUISlider           m_slider;               // GUI slider
     };
 
 
