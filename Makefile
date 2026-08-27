@@ -54,6 +54,7 @@ VOS: main.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
+	Network/IPAddress.o Network/TCPSocket.o Network/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o \
@@ -112,6 +113,7 @@ VOS: main.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
+	Network/IPAddress.o Network/TCPSocket.o Network/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o \
@@ -208,6 +210,16 @@ System/SysKeys.o: System/SysKeys.cpp
 
 System/SysSettings.o: System/SysSettings.cpp
 	$(CC) -o System/SysSettings.o -c System/SysSettings.cpp $(CFLAGS)
+
+
+Network/IPAddress.o: Network/IPAddress.cpp
+	$(CC) -o Network/IPAddress.o -c Network/IPAddress.cpp $(CFLAGS)
+
+Network/TCPSocket.o: Network/TCPSocket.cpp
+	$(CC) -o Network/TCPSocket.o -c Network/TCPSocket.cpp $(CFLAGS)
+
+Network/UDPSocket.o: Network/UDPSocket.cpp
+	$(CC) -o Network/UDPSocket.o -c Network/UDPSocket.cpp $(CFLAGS)
 
 
 Compress/ZLib.o: Compress/ZLib.cpp
@@ -515,6 +527,7 @@ clean:
 	rm -rf *.o
 	rm -rf System/*.o
 	rm -rf System/Lin/*.o
+	rm -rf Network/*.o
 	rm -rf Compress/*.o
 	rm -rf Images/*.o
 	rm -rf Physics/*.o

@@ -206,6 +206,10 @@
     <ClCompile Include="Images\BMPFile.cpp" />
     <ClCompile Include="Images\PNGFile.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Network\IPAddress.cpp" />
+    <ClCompile Include="Network\Network.cpp" />
+    <ClCompile Include="Network\TCPSocket.cpp" />
+    <ClCompile Include="Network\UDPSocket.cpp" />
     <ClCompile Include="Physics\BoundingSurfaces\BoundingAlignRect.cpp" />
     <ClCompile Include="Physics\BoundingSurfaces\BoundingCircle.cpp" />
     <ClCompile Include="Physics\BoundingSurfaces\BoundingRect.cpp" />
@@ -323,6 +327,10 @@
     <ClInclude Include="Math\Vector3i.h" />
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Math\Vector4i.h" />
+    <ClInclude Include="Network\IPAddress.h" />
+    <ClInclude Include="Network\Network.h" />
+    <ClInclude Include="Network\TCPSocket.h" />
+    <ClInclude Include="Network\UDPSocket.h" />
     <ClInclude Include="Physics\BoundingSurfaces\BoundingAlignRect.h" />
     <ClInclude Include="Physics\BoundingSurfaces\BoundingCircle.h" />
     <ClInclude Include="Physics\BoundingSurfaces\BoundingRect.h" />

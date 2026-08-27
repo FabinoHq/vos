@@ -353,6 +353,18 @@
     <ClCompile Include="Softwares\Isometric3D\Isometric3DPlayer.cpp">
       <Filter>Softwares\Isometric3D</Filter>
     </ClCompile>
+    <ClCompile Include="Network\IPAddress.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Network.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\TCPSocket.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\UDPSocket.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -784,6 +796,18 @@
     </ClInclude>
     <ClInclude Include="Softwares\Isometric3D\Isometric3DPlayer.h">
       <Filter>Softwares\Isometric3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\IPAddress.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Network.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\TCPSocket.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\UDPSocket.h">
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

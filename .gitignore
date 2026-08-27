@@ -78,6 +78,14 @@
 
 # Network
 !Network/
+!Network/Network.h
+!Network/Network.cpp
+!Network/IPAddress.h
+!Network/IPAddress.cpp
+!Network/TCPSocket.h
+!Network/TCPSocket.cpp
+!Network/UDPSocket.h
+!Network/UDPSocket.cpp
 
 # Compress
 !Compress/
