@@ -140,6 +140,14 @@
                 m_color.vec[3] = alpha;
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set window disabled state                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void setDisabled(bool disabled)
+            {
+                m_disabled = disabled;
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Set size                                                      //
@@ -291,6 +299,14 @@
             ////////////////////////////////////////////////////////////////////
             bool isRightResizePicking(float mouseX, float mouseY);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Get window disabled state                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isDisabled()
+            {
+                return m_disabled;
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Handle window mouse move event                                //
@@ -353,6 +369,7 @@
 
             bool                m_movable;          // Window movable state
             bool                m_resizable;        // Window resizable state
+            bool                m_disabled;         // Window disabled state
 
             Vector2             m_minSize;          // Window minimum size
             Vector2             m_maxSize;          // Window maximum size

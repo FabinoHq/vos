@@ -50,6 +50,7 @@ Transform2(),
 m_texture(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_round(false),
+m_disabled(false),
 m_state(GUIBUTTON_NONE)
 {
 
@@ -61,6 +62,7 @@ m_state(GUIBUTTON_NONE)
 GUIButton::~GUIButton()
 {
     m_state = GUIBUTTON_NONE;
+    m_disabled = false;
     m_round = false;
     m_color.reset();
     m_texture = 0;
@@ -83,6 +85,9 @@ bool GUIButton::init(Texture& texture, float width, float height, bool round)
     // Reset button transformations
     resetTransforms();
 
+    // Set button size
+    setSize(width, height);
+
     // Set button texture pointer
     m_texture = &texture;
 
@@ -92,8 +97,8 @@ bool GUIButton::init(Texture& texture, float width, float height, bool round)
     // Set button round state
     m_round = round;
 
-    // Set button size
-    setSize(width, height);
+    // Reset button disabled state
+    m_disabled = false;
 
     // Reset button state
     m_state = GUIBUTTON_NONE;
@@ -183,6 +188,10 @@ bool GUIButton::isPicking(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIButton::mouseMove(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { m_state = GUIBUTTON_NONE; return false; }
+
+    // Set button state
     if (isPicking(mouseX, mouseY))
     {
         if ((m_state == GUIBUTTON_PRESSED) ||
@@ -217,6 +226,10 @@ bool GUIButton::mouseMove(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIButton::mousePress(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { m_state = GUIBUTTON_NONE; return false; }
+
+    // Set button state
     if (isPicking(mouseX, mouseY))
     {
         m_state = GUIBUTTON_PRESSEDHOVER;
@@ -234,6 +247,10 @@ bool GUIButton::mousePress(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIButton::mouseRelease(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { m_state = GUIBUTTON_NONE; return false; }
+
+    // Set button state
     if (isPicking(mouseX, mouseY))
     {
         if (m_state == GUIBUTTON_PRESSEDHOVER)
@@ -256,6 +273,9 @@ bool GUIButton::mouseRelease(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 void GUIButton::render()
 {
+    // Disabled state
+    if (m_disabled) { m_state = GUIBUTTON_NONE; }
+
     // Compute button transformations
     m_matrix.setIdentity();
     m_matrix.translate(m_position);

@@ -140,11 +140,43 @@
                 m_color.vec[3] = alpha;
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set button round state                                        //
+            ////////////////////////////////////////////////////////////////////
+            inline void setRound(bool round)
+            {
+                m_round = round;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set button disabled state                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void setDisabled(bool disabled)
+            {
+                m_disabled = disabled;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Reset button state                                            //
+            ////////////////////////////////////////////////////////////////////
+            inline void resetState()
+            {
+                m_state = GUIBUTTON_NONE;
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Get button picking state                                      //
             ////////////////////////////////////////////////////////////////////
             bool isPicking(float mouseX, float mouseY);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get button disabled state                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isDisabled()
+            {
+                return m_disabled;
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -193,6 +225,7 @@
             Texture*            m_texture;          // Button texture pointer
             Vector4             m_color;            // Button color
             bool                m_round;            // Button round state
+            bool                m_disabled;         // Button disabled state
             GUIButtonState      m_state;            // Button state
     };
 

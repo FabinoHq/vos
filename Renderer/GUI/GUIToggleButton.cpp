@@ -50,8 +50,9 @@ Transform2(),
 m_texture(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_round(false),
-m_state(GUITOGGLEBUTTON_NONE),
-m_toggle(false)
+m_toggle(false),
+m_disabled(false),
+m_state(GUITOGGLEBUTTON_NONE)
 {
 
 }
@@ -61,8 +62,9 @@ m_toggle(false)
 ////////////////////////////////////////////////////////////////////////////////
 GUIToggleButton::~GUIToggleButton()
 {
-    m_toggle = false;
     m_state = GUITOGGLEBUTTON_NONE;
+    m_disabled = false;
+    m_toggle = false;
     m_round = false;
     m_color.reset();
     m_texture = 0;
@@ -86,6 +88,9 @@ bool GUIToggleButton::init(
     // Reset toggle button transformations
     resetTransforms();
 
+    // Set toggle button size
+    setSize(width, height);
+
     // Set toggle button texture pointer
     m_texture = &texture;
 
@@ -95,14 +100,14 @@ bool GUIToggleButton::init(
     // Set toggle button round state
     m_round = round;
 
-    // Set toggle button size
-    setSize(width, height);
+    // Reset toggle state
+    m_toggle = false;
+
+    // Reset toggle button disabled state
+    m_disabled = false;
 
     // Reset toggle button state
     m_state = GUITOGGLEBUTTON_NONE;
-
-    // Reset toggle state
-    m_toggle = false;
 
     // Toggle button successfully created
     return true;
@@ -189,6 +194,10 @@ bool GUIToggleButton::isPicking(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIToggleButton::mouseMove(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { m_state = GUITOGGLEBUTTON_NONE; return false; }
+
+    // Set toggle button state
     if (isPicking(mouseX, mouseY))
     {
         if ((m_state == GUITOGGLEBUTTON_PRESSED) ||
@@ -223,6 +232,10 @@ bool GUIToggleButton::mouseMove(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIToggleButton::mousePress(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { m_state = GUITOGGLEBUTTON_NONE; return false; }
+
+    // Set toggle button state
     if (isPicking(mouseX, mouseY))
     {
         m_state = GUITOGGLEBUTTON_PRESSEDHOVER;
@@ -240,6 +253,10 @@ bool GUIToggleButton::mousePress(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIToggleButton::mouseRelease(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { m_state = GUITOGGLEBUTTON_NONE; return false; }
+
+    // Set toggle button state
     if (isPicking(mouseX, mouseY))
     {
         if (m_state == GUITOGGLEBUTTON_PRESSEDHOVER)
@@ -262,6 +279,9 @@ bool GUIToggleButton::mouseRelease(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 void GUIToggleButton::render()
 {
+    // Disabled state
+    if (m_disabled) { m_state = GUITOGGLEBUTTON_NONE; }
+
     // Compute toggle button transformations
     m_matrix.setIdentity();
     m_matrix.translate(m_position);

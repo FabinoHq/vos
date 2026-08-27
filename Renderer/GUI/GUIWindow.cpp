@@ -52,6 +52,7 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_uvFactor(1.0f),
 m_movable(true),
 m_resizable(true),
+m_disabled(false),
 m_minSize(GUIWindowDefaultMinSize),
 m_maxSize(GUIWindowDefaultMaxSize),
 m_topBarSize(GUIWindowDefaultTopBarSize),
@@ -81,6 +82,7 @@ GUIWindow::~GUIWindow()
     m_topBarSize = 0.0f;
     m_maxSize.reset();
     m_minSize.reset();
+    m_disabled = false;
     m_resizable = false;
     m_movable = false;
     m_uvFactor = 0.0f;
@@ -119,6 +121,9 @@ bool GUIWindow::init(Texture& texture,
 
     // Reset window resizable state
     m_resizable = true;
+
+    // Reset window disabled state
+    m_disabled = false;
 
     // Reset window minimum size
     m_minSize.set(GUIWindowDefaultMinSize);
@@ -273,6 +278,10 @@ bool GUIWindow::isRightResizePicking(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::mouseMove(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { return false; }
+
+    // Mouse move event
     Vector2 moveOffset(0.0f, 0.0f);
 
     if (m_grabTop && m_grabLeft)
@@ -395,6 +404,10 @@ bool GUIWindow::mouseMove(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::mousePress(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { return false; }
+
+    // Mouse press event
     if (m_resizable)
     {
         if (isTopResizePicking(mouseX, mouseY) &&
@@ -523,6 +536,10 @@ bool GUIWindow::mousePress(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIWindow::mouseRelease(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { return false; }
+
+    // Mouse release event
     m_grabWindow = false;
     m_grabTop = false;
     m_grabBottom = false;
@@ -536,6 +553,10 @@ bool GUIWindow::mouseRelease(float mouseX, float mouseY)
 ////////////////////////////////////////////////////////////////////////////////
 SysCursorType GUIWindow::updateCursor(float mouseX, float mouseY)
 {
+    // Disabled state
+    if (m_disabled) { return SYSCURSOR_DEFAULT; }
+
+    // Update current cursor
     if (m_resizable)
     {
         if (m_grabTop && m_grabLeft)

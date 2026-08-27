@@ -140,11 +140,43 @@
                 m_color.vec[3] = alpha;
             }
 
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button round state                                 //
+            ////////////////////////////////////////////////////////////////////
+            inline void setRound(bool round)
+            {
+                m_round = round;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set toggle button disabled state                              //
+            ////////////////////////////////////////////////////////////////////
+            inline void setDisabled(bool disabled)
+            {
+                m_disabled = disabled;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Reset toggle button state                                     //
+            ////////////////////////////////////////////////////////////////////
+            inline void resetState()
+            {
+                m_state = GUITOGGLEBUTTON_NONE;
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             //  Get toggle button picking state                               //
             ////////////////////////////////////////////////////////////////////
             bool isPicking(float mouseX, float mouseY);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Get toggle button disabled state                              //
+            ////////////////////////////////////////////////////////////////////
+            inline bool isDisabled()
+            {
+                return m_disabled;
+            }
 
 
             ////////////////////////////////////////////////////////////////////
@@ -218,8 +250,9 @@
             Texture*                m_texture;  // ToggleButton texture pointer
             Vector4                 m_color;    // ToggleButton color
             bool                    m_round;    // ToggleButton round state
-            GUIToggleButtonState    m_state;    // ToggleButton state
             bool                    m_toggle;   // ToggleButton toggle state
+            bool                    m_disabled; // ToggleButton disabled state
+            GUIToggleButtonState    m_state;    // ToggleButton state
     };
 
 
