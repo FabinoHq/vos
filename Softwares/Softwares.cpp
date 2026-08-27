@@ -72,11 +72,11 @@ Softwares::~Softwares()
 bool Softwares::init()
 {
     // Init interface
-    /*if (!GInterface.init())
+    if (!GInterface.init())
     {
         // Could not init interface
         return false;
-    }*/
+    }
 
     // Init top down game
     /*if (!GTopDown.init())
@@ -93,11 +93,11 @@ bool Softwares::init()
     }*/
 
     // Init isometric 3D game
-    if (!GIsometric3D.init())
+    /*if (!GIsometric3D.init())
     {
         // Could not init isometric 3D game
         return false;
-    }
+    }*/
 
     // Init first person game
     /*if (!GFirstPerson.init())
@@ -116,10 +116,10 @@ bool Softwares::init()
 void Softwares::destroy()
 {
     // Destroy softwares
-    //GInterface.destroy();
+    GInterface.destroy();
     //GTopDown.destroy();
     //GIsometric.destroy();
-    GIsometric3D.destroy();
+    //GIsometric3D.destroy();
     //GFirstPerson.destroy();
 }
 
@@ -130,10 +130,10 @@ void Softwares::destroy()
 void Softwares::events(SysEvent& event)
 {
     // Dispatch events to softwares
-    //GInterface.events(event);
+    GInterface.events(event);
     //GTopDown.events(event);
     //GIsometric.events(event);
-    GIsometric3D.events(event);
+    //GIsometric3D.events(event);
     //GFirstPerson.events(event);
 }
 
@@ -145,7 +145,7 @@ void Softwares::prephysics()
     // Precompute softwares physics
     //GTopDown.prephysics();
     //GIsometric.prephysics();
-    GIsometric3D.prephysics();
+    //GIsometric3D.prephysics();
     //GFirstPerson.prephysics();
 }
 
@@ -157,7 +157,7 @@ void Softwares::physics()
     // Compute softwares physics
     //GTopDown.physics();
     //GIsometric.physics();
-    GIsometric3D.physics();
+    //GIsometric3D.physics();
     //GFirstPerson.physics();
 }
 
@@ -169,7 +169,7 @@ void Softwares::precompute(float physicstime)
     // Precompute softwares
     //GTopDown.precompute(physicstime);
     //GIsometric.precompute(physicstime);
-    GIsometric3D.precompute(physicstime);
+    //GIsometric3D.precompute(physicstime);
     //GFirstPerson.precompute(physicstime);
 }
 
@@ -179,10 +179,10 @@ void Softwares::precompute(float physicstime)
 void Softwares::compute(float frametime)
 {
     // Compute softwares logic
-    //GInterface.compute(frametime);
+    GInterface.compute(frametime);
     //GTopDown.compute(frametime);
     //GIsometric.compute(frametime);
-    GIsometric3D.compute(frametime);
+    //GIsometric3D.compute(frametime);
     //GFirstPerson.compute(frametime);
 }
 
@@ -192,9 +192,9 @@ void Softwares::compute(float frametime)
 void Softwares::render()
 {
     // Render softwares
-    //GInterface.render();
+    GInterface.render();
     //GTopDown.render();
     //GIsometric.render();
-    GIsometric3D.render();
+    //GIsometric3D.render();
     //GFirstPerson.render();
 }

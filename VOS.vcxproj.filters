@@ -37,9 +37,6 @@
     <Filter Include="Network">
       <UniqueIdentifier>{940e2a07-6629-4f1b-a54c-3c7a94db1cfb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Network\Win">
-      <UniqueIdentifier>{c842206e-7bfa-4e6d-aa89-0e087c2a8c4e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Physics">
       <UniqueIdentifier>{2aa44072-a845-4a8f-b8d8-50a1dd97a90f}</UniqueIdentifier>
     </Filter>
@@ -166,21 +163,6 @@
     </ClCompile>
     <ClCompile Include="Renderer\SkyBox.cpp">
       <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Win\IPAddress4.cpp">
-      <Filter>Network\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Win\NetworkInit.cpp">
-      <Filter>Network\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Win\IPAddress6.cpp">
-      <Filter>Network\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Win\TCPSocket.cpp">
-      <Filter>Network\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Win\UDPSocket.cpp">
-      <Filter>Network\Win</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\OrbitalCam.cpp">
       <Filter>Renderer</Filter>
@@ -556,30 +538,6 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\StaticProc.h">
       <Filter>Renderer\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\IPAddress4.h">
-      <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Win\IPAddress4.h">
-      <Filter>Network\Win</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Win\IPAddress6.h">
-      <Filter>Network\Win</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Win\TCPSocket.h">
-      <Filter>Network\Win</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\IPAddress6.h">
-      <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\TCPSocket.h">
-      <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\UDPSocket.h">
-      <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Win\UDPSocket.h">
-      <Filter>Network\Win</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\OrbitalCam.h">
       <Filter>Renderer</Filter>

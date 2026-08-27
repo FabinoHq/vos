@@ -54,8 +54,6 @@ VOS: main.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
-	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
-	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o \
@@ -114,8 +112,6 @@ VOS: main.o \
 	System/Lin/SysMessage.o System/Lin/SysDisplayMode.o \
 	System/Lin/SysWindow.o System/Lin/SysVulkan.o \
 	System/SysMouse.o System/SysKeys.o System/SysSettings.o \
-	Network/Lin/IPAddress4.o Network/Lin/IPAddress6.o \
-	Network/Lin/TCPSocket.o Network/Lin/UDPSocket.o \
 	Compress/ZLib.o \
 	Images/BMPFile.o Images/PNGFile.o \
 	Physics/Physics.o \
@@ -212,19 +208,6 @@ System/SysKeys.o: System/SysKeys.cpp
 
 System/SysSettings.o: System/SysSettings.cpp
 	$(CC) -o System/SysSettings.o -c System/SysSettings.cpp $(CFLAGS)
-
-
-Network/Lin/IPAddress4.o: Network/Lin/IPAddress4.cpp
-	$(CC) -o Network/Lin/IPAddress4.o -c Network/Lin/IPAddress4.cpp $(CFLAGS)
-
-Network/Lin/IPAddress6.o: Network/Lin/IPAddress6.cpp
-	$(CC) -o Network/Lin/IPAddress6.o -c Network/Lin/IPAddress6.cpp $(CFLAGS)
-
-Network/Lin/TCPSocket.o: Network/Lin/TCPSocket.cpp
-	$(CC) -o Network/Lin/TCPSocket.o -c Network/Lin/TCPSocket.cpp $(CFLAGS)
-
-Network/Lin/UDPSocket.o: Network/Lin/UDPSocket.cpp
-	$(CC) -o Network/Lin/UDPSocket.o -c Network/Lin/UDPSocket.cpp $(CFLAGS)
 
 
 Compress/ZLib.o: Compress/ZLib.cpp
@@ -532,7 +515,6 @@ clean:
 	rm -rf *.o
 	rm -rf System/*.o
 	rm -rf System/Lin/*.o
-	rm -rf Network/Lin/*.o
 	rm -rf Compress/*.o
 	rm -rf Images/*.o
 	rm -rf Physics/*.o
