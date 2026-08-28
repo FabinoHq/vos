@@ -815,5 +815,11 @@
     <ClInclude Include="Renderer\GUI\GUISlider.h">
       <Filter>Renderer\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Images\Embedded\Slider.h">
+      <Filter>Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Shaders\Slider.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

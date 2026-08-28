@@ -1514,6 +1514,7 @@ bool TextureLoader::loadEmbeddedTextures()
         return false;
     }
 
+
     // Load toggle button texture
     if (!m_texturesGUI[TEXTURE_TOGGLEBUTTON].createTexture(
         VULKAN_MEMORY_TEXTURES,
@@ -1531,6 +1532,16 @@ bool TextureLoader::loadEmbeddedTextures()
         false, true, TEXTUREMODE_CLAMP))
     {
         // Could not load progress bar texture
+        return false;
+    }
+
+    // Load slider texture
+    if (!m_texturesGUI[TEXTURE_SLIDER].createTexture(
+        VULKAN_MEMORY_TEXTURES,
+        SliderImageWidth, SliderImageHeight, SliderImage,
+        false, true, TEXTUREMODE_CLAMP))
+    {
+        // Could not load slider texture
         return false;
     }
 

@@ -176,6 +176,14 @@ bool Interface::init()
         return false;
     }
 
+    // Init slider
+    if (!m_slider.init(
+        GResources.textures.gui(TEXTURE_SLIDER), 0.65f, 0.06f, 15.0f))
+    {
+        // Could not init slider
+        return false;
+    }
+
 
     // Interface is ready
     return true;
@@ -269,6 +277,7 @@ void Interface::events(SysEvent& event)
             m_guiWindow.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
             m_button.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
             m_toggleButton.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+            m_slider.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
 
             #if (VOS_POINTERLOCK == 1)
                 // GUI cursor
@@ -291,6 +300,7 @@ void Interface::events(SysEvent& event)
                 m_guiWindow.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_toggleButton.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_slider.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -305,6 +315,7 @@ void Interface::events(SysEvent& event)
                 {
                     m_toggleButton.toggle();
                 }
+                m_slider.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -363,6 +374,9 @@ void Interface::compute(float frametime)
         m_progressBar.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
     m_progressBar.setPosition(m_guiWindow.getX(), m_guiWindow.getY()-0.2f);
+
+    // Compute slider
+    m_slider.setPosition(m_guiWindow.getX(), m_guiWindow.getY()-0.4f);
 
 
     // Update view position
@@ -473,6 +487,11 @@ void Interface::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_PROGRESSBAR);
     m_progressBar.bindTexture();
     m_progressBar.render();
+
+    // Render slider
+    GRenderer.bindPipeline(RENDERER_PIPELINE_SLIDER);
+    m_slider.bindTexture();
+    m_slider.render();
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);
