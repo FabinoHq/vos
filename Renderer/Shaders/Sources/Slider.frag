@@ -82,6 +82,7 @@ void main()
         patchCoords = (i_texCoords.x*patchSize);
         if (i_texCoords.x >= 0.5) { patchCoords += (1.0-patchSize); }
     }
+    if (constants.offset.y >= 0.5) { patchCoords = i_texCoords.x; }
 
     // Compute output color
     o_color = (texture(

@@ -289,6 +289,7 @@ bool BackRenderer::startRenderPass()
     pushConstants.size[0] = 1.0f;
     pushConstants.size[1] = 1.0f;
     pushConstants.time = 0.0f;
+
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
         GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,

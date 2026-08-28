@@ -410,14 +410,124 @@ void GUISlider::render()
             pushConstants.offset[1] = 0.0f;
             break;
     }
+    pushConstants.size[0] = m_size.vec[0];
+    pushConstants.size[1] = m_size.vec[1];
+    pushConstants.time = m_uvFactor;
 
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
         GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
-        PushConstantDataOffset, PushConstantDataNoSizeTimeSize, &pushConstants
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
     );
 
     // Draw background bar triangles
+    vkCmdDrawIndexed(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        6, 1, 0, 0, 0
+    );
+
+
+    // Update model matrix
+    m_matrix.translateX((m_value*0.5f)-0.5f);
+    m_matrix.scaleX(m_value);
+
+    // Push model matrix into command buffer
+    vkCmdPushConstants(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
+    );
+
+    // Push constants into command buffer
+    switch (m_state)
+    {
+        case GUISLIDER_HOVER:
+        case GUISLIDER_PRESSED:
+        case GUISLIDER_PRESSEDHOVER:
+            pushConstants.offset[0] = 0.5f;
+            pushConstants.offset[1] = 0.25f;
+            break;
+
+        default:
+            pushConstants.offset[0] = 0.0f;
+            pushConstants.offset[1] = 0.25f;
+            break;
+    }
+    pushConstants.time = (m_uvFactor*m_value);
+
+    vkCmdPushConstants(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        PushConstantDataOffset, PushConstantDataSize, &pushConstants
+    );
+
+    // Draw slider bar triangles
+    vkCmdDrawIndexed(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        6, 1, 0, 0, 0
+    );
+
+
+    // Update model matrix
+    m_matrix.setIdentity();
+    if (m_vertical)
+    {
+        // Vertical slider
+        m_matrix.translate(
+            m_position.vec[0],
+            (m_position.vec[1]-(m_size.vec[0]*0.5f))+(m_value*m_size.vec[0])
+        );
+        m_matrix.rotateZ(Math::PiHalf);
+        m_matrix.translate(-m_origin);
+    }
+    else
+    {
+        // Horizontal slider
+        m_matrix.translate(
+            (m_position.vec[0]-(m_size.vec[0]*0.5f))+(m_value*m_size.vec[0]),
+            m_position.vec[1]
+        );
+    }
+    m_matrix.scale(m_size.vec[1], m_size.vec[1]);
+
+    // Push model matrix into command buffer
+    vkCmdPushConstants(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        GGraphicsLayout.handle, VK_SHADER_STAGE_VERTEX_BIT,
+        PushConstantMatrixOffset, PushConstantMatrixSize, m_matrix.mat
+    );
+
+    // Push constants into command buffer
+    switch (m_state)
+    {
+        case GUISLIDER_HOVER:
+            pushConstants.offset[0] = 0.5f;
+            pushConstants.offset[1] = 0.5f;
+            break;
+
+        case GUISLIDER_PRESSED:
+            pushConstants.offset[0] = 0.0f;
+            pushConstants.offset[1] = 0.75f;
+            break;
+
+        case GUISLIDER_PRESSEDHOVER:
+            pushConstants.offset[0] = 0.5f;
+            pushConstants.offset[1] = 0.75f;
+            break;
+
+        default:
+            pushConstants.offset[0] = 0.0f;
+            pushConstants.offset[1] = 0.5f;
+            break;
+    }
+
+    vkCmdPushConstants(
+        GSwapchain.commandBuffers[GSwapchain.current],
+        GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
+        PushConstantOffsetOffset, PushConstantOffsetSize, &pushConstants.offset
+    );
+
+    // Draw slider triangles
     vkCmdDrawIndexed(
         GSwapchain.commandBuffers[GSwapchain.current],
         6, 1, 0, 0, 0

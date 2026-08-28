@@ -214,6 +214,7 @@ void GUIProgressBar::render()
     // Update UV offset
     pushConstants.offset[0] = m_value;
     pushConstants.offset[1] = 0.5f;
+
     vkCmdPushConstants(
         GSwapchain.commandBuffers[GSwapchain.current],
         GGraphicsLayout.handle, VK_SHADER_STAGE_FRAGMENT_BIT,
