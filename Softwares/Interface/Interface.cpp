@@ -64,7 +64,8 @@ m_pxText(),
 m_button(),
 m_toggleButton(),
 m_progressBar(),
-m_slider()
+m_slider(),
+m_stepSlider()
 {
 
 }
@@ -137,11 +138,12 @@ bool Interface::init()
 
     // Init GUI window
     if (!m_guiWindow.init(
-        GResources.textures.gui(TEXTURE_WINDOW), 1.0f, 1.0f, 3.75f))
+        GResources.textures.gui(TEXTURE_WINDOW), 1.5f, 1.5f, 3.75f))
     {
         // Could not init GUI window
         return false;
     }
+    m_guiWindow.setMinSize(1.5f, 1.5f);
 
     // Init test pixel text
     if (!m_pxText.init(GResources.textures.gui(TEXTURE_PIXELFONT), 0.04f))
@@ -181,6 +183,14 @@ bool Interface::init()
         GResources.textures.gui(TEXTURE_SLIDER), 0.65f, 0.06f, 15.0f))
     {
         // Could not init slider
+        return false;
+    }
+
+    // Init step slider
+    if (!m_stepSlider.init(
+        GResources.textures.gui(TEXTURE_SLIDER), 0.65f, 0.06f, 15.0f))
+    {
+        // Could not init step slider
         return false;
     }
 
@@ -278,6 +288,7 @@ void Interface::events(SysEvent& event)
             m_button.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
             m_toggleButton.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
             m_slider.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+            m_stepSlider.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
 
             #if (VOS_POINTERLOCK == 1)
                 // GUI cursor
@@ -301,6 +312,7 @@ void Interface::events(SysEvent& event)
                 m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_toggleButton.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_slider.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_stepSlider.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -316,6 +328,7 @@ void Interface::events(SysEvent& event)
                     m_toggleButton.toggle();
                 }
                 m_slider.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_stepSlider.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
             }
             break;
 
@@ -352,10 +365,10 @@ void Interface::compute(float frametime)
     m_pxText.setText(framestr.str());
 
     // Compute button
-    m_button.setPosition(m_guiWindow.getX(), m_guiWindow.getY()+0.2f);
+    m_button.setPosition(m_guiWindow.getX(), m_guiWindow.getY()+0.4f);
 
     // Compute toggle button
-    m_toggleButton.setPosition(m_guiWindow.getX(), m_guiWindow.getY());
+    m_toggleButton.setPosition(m_guiWindow.getX(), m_guiWindow.getY()+0.2f);
 
     // Compute progress bar
     static float valAcc = 0.0f;
@@ -373,10 +386,13 @@ void Interface::compute(float frametime)
     {
         m_progressBar.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
-    m_progressBar.setPosition(m_guiWindow.getX(), m_guiWindow.getY()-0.2f);
+    m_progressBar.setPosition(m_guiWindow.getX(), m_guiWindow.getY()+0.0f);
 
     // Compute slider
-    m_slider.setPosition(m_guiWindow.getX(), m_guiWindow.getY()-0.4f);
+    m_slider.setPosition(m_guiWindow.getX(), m_guiWindow.getY()-0.2f);
+
+    // Compute step slider
+    m_stepSlider.setPosition(m_guiWindow.getX(), m_guiWindow.getY()-0.3f);
 
 
     // Update view position
@@ -492,6 +508,11 @@ void Interface::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_SLIDER);
     m_slider.bindTexture();
     m_slider.render();
+
+    // Render step slider
+    GRenderer.bindPipeline(RENDERER_PIPELINE_SLIDER);
+    m_stepSlider.bindTexture();
+    m_stepSlider.render();
 
     // Render pixel text (framerate)
     GRenderer.bindPipeline(RENDERER_PIPELINE_PXTEXT);

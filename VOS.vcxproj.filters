@@ -368,6 +368,9 @@
     <ClCompile Include="Renderer\GUI\GUISlider.cpp">
       <Filter>Renderer\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUIStepSlider.cpp">
+      <Filter>Renderer\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -820,6 +823,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\Shaders\Slider.h">
       <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUIStepSlider.h">
+      <Filter>Renderer\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

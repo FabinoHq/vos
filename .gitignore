@@ -315,6 +315,8 @@
 !Renderer/GUI/GUIProgressBar.cpp
 !Renderer/GUI/GUISlider.h
 !Renderer/GUI/GUISlider.cpp
+!Renderer/GUI/GUIStepSlider.h
+!Renderer/GUI/GUIStepSlider.cpp
 
 # Resources
 !Resources/
