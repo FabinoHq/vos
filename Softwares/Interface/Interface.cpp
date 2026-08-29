@@ -64,6 +64,7 @@ m_pxText(),
 m_button(),
 m_toggleButton(),
 m_progressBar(),
+m_scrollBar(),
 m_slider(),
 m_stepSlider()
 {

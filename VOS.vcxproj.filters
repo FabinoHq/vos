@@ -371,6 +371,9 @@
     <ClCompile Include="Renderer\GUI\GUIStepSlider.cpp">
       <Filter>Renderer\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUIScrollBar.cpp">
+      <Filter>Renderer\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -825,6 +828,9 @@
       <Filter>Renderer\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\GUI\GUIStepSlider.h">
+      <Filter>Renderer\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUIScrollBar.h">
       <Filter>Renderer\GUI</Filter>
     </ClInclude>
   </ItemGroup>

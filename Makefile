@@ -93,7 +93,7 @@ VOS: main.o \
 	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
-	Renderer/GUI/GUIProgressBar.o \
+	Renderer/GUI/GUIProgressBar.o Renderer/GUI/GUIScrollBar.o \
 	Renderer/GUI/GUISlider.o Renderer/GUI/GUIStepSlider.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/MatrixColLoader.o \
@@ -153,7 +153,7 @@ VOS: main.o \
 	Renderer/GUI/GUICursor.o \
 	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
-	Renderer/GUI/GUIProgressBar.o \
+	Renderer/GUI/GUIProgressBar.o Renderer/GUI/GUIScrollBar.o \
 	Renderer/GUI/GUISlider.o Renderer/GUI/GUIStepSlider.o \
 	Resources/Resources.o Resources/TextureLoader.o Resources/MeshLoader.o \
 	Resources/MatrixColLoader.o \
@@ -453,6 +453,10 @@ Renderer/GUI/GUIToggleButton.o: Renderer/GUI/GUIToggleButton.cpp
 Renderer/GUI/GUIProgressBar.o: Renderer/GUI/GUIProgressBar.cpp
 	$(CC) -o Renderer/GUI/GUIProgressBar.o -c \
 	Renderer/GUI/GUIProgressBar.cpp $(CFLAGS)
+
+Renderer/GUI/GUIScrollBar.o: Renderer/GUI/GUIScrollBar.cpp
+	$(CC) -o Renderer/GUI/GUIScrollBar.o -c \
+	Renderer/GUI/GUIScrollBar.cpp $(CFLAGS)
 
 Renderer/GUI/GUISlider.o: Renderer/GUI/GUISlider.cpp
 	$(CC) -o Renderer/GUI/GUISlider.o -c Renderer/GUI/GUISlider.cpp $(CFLAGS)
