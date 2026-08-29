@@ -193,6 +193,11 @@ bool Interface::init()
         // Could not init step slider
         return false;
     }
+    m_stepSlider.setMaxValue(10);
+    m_stepSlider.setMinValue(0);
+    m_stepSlider.setIncrements(2);
+    m_stepSlider.setCtrlIncrements(1);
+    m_stepSlider.setValue(0);
 
 
     // Interface is ready
@@ -223,63 +228,6 @@ void Interface::events(SysEvent& event)
     // Process event
     switch (event.type)
     {
-        // Key pressed
-        case SYSEVENT_KEYPRESSED:
-            switch (event.key)
-            {
-                case SYSEVENT_KEY_Z:
-                    break;
-
-                case SYSEVENT_KEY_S:
-                    break;
-
-                case SYSEVENT_KEY_Q:
-                    break;
-
-                case SYSEVENT_KEY_D:
-                    break;
-
-                case SYSEVENT_KEY_SPACE:
-                    break;
-
-                case SYSEVENT_KEY_LSHIFT:
-                    break;
-
-                default:
-                    break;
-            }
-            break;
-
-        // Key released
-        case SYSEVENT_KEYRELEASED:
-            switch (event.key)
-            {
-                case SYSEVENT_KEY_Z:
-                    break;
-
-                case SYSEVENT_KEY_S:
-                    break;
-
-                case SYSEVENT_KEY_Q:
-                    break;
-
-                case SYSEVENT_KEY_D:
-                    break;
-
-                case SYSEVENT_KEY_SPACE:
-                    break;
-
-                case SYSEVENT_KEY_LSHIFT:
-                    break;
-
-                case SYSEVENT_KEY_R:
-                    break;
-
-                default:
-                    break;
-            }
-            break;
-
         // Mouse moved
         case SYSEVENT_MOUSEMOVED:
         {
@@ -334,6 +282,38 @@ void Interface::events(SysEvent& event)
 
         // Mouse wheel
         case SYSEVENT_MOUSEWHEEL:
+            m_slider.mouseWheel(event.mouse.wheel);
+            m_stepSlider.mouseWheel(event.mouse.wheel);
+            break;
+
+        // Key pressed
+        case SYSEVENT_KEYPRESSED:
+            switch (event.key)
+            {
+                case SYSEVENT_KEY_LCTRL:
+                case SYSEVENT_KEY_RCTRL:
+                    m_slider.controlPress(true);
+                    m_stepSlider.controlPress(true);
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+
+        // Key released
+        case SYSEVENT_KEYRELEASED:
+            switch (event.key)
+            {
+                case SYSEVENT_KEY_LCTRL:
+                case SYSEVENT_KEY_RCTRL:
+                    m_slider.controlPress(false);
+                    m_stepSlider.controlPress(false);
+                    break;
+
+                default:
+                    break;
+            }
             break;
 
         default:

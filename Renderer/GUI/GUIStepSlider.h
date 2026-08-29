@@ -150,20 +150,34 @@
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set slider increments                                         //
+            //  Set step slider increments                                    //
             ////////////////////////////////////////////////////////////////////
-            inline void setIncrements(float increments)
+            inline void setIncrements(int64_t increments)
             {
-                m_increments = Math::clamp(increments, 0.0f, 1.0f);
+                m_increments = Math::clamp(
+                    increments, 0ll, Math::abs(m_maxValue-m_minValue)
+                );
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Set slider control increments                                 //
+            //  Set step slider control increments                            //
             ////////////////////////////////////////////////////////////////////
-            inline void setCtrlIncrements(float ctrlIncrements)
+            inline void setCtrlIncrements(int64_t ctrlIncrements)
             {
-                m_ctrlIncrements = Math::clamp(ctrlIncrements, 0.0f, 1.0f);
+                m_ctrlIncrements = Math::clamp(
+                    ctrlIncrements, 0ll, Math::abs(m_maxValue-m_minValue)
+                );
             }
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set step slider minimum value                                 //
+            ////////////////////////////////////////////////////////////////////
+            void setMinValue(int64_t minValue);
+
+            ////////////////////////////////////////////////////////////////////
+            //  Set step slider maximum value                                 //
+            ////////////////////////////////////////////////////////////////////
+            void setMaxValue(int64_t maxValue);
 
             ////////////////////////////////////////////////////////////////////
             //  Set slider vertical state                                     //
@@ -252,23 +266,24 @@
 
 
             ////////////////////////////////////////////////////////////////////
-            //  Set slider value                                              //
+            //  Set step slider value                                         //
             ////////////////////////////////////////////////////////////////////
-            inline void setValue(float value)
+            inline void setValue(int64_t value)
             {
-                m_value = Math::clamp(value, 0.0f, 1.0f);
+                m_stepValue = Math::clamp(value, m_minValue, m_maxValue);
+                computeStepSliderValue();
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get slider value                                              //
+            //  Get step slider value                                         //
             ////////////////////////////////////////////////////////////////////
-            inline float getValue()
+            inline int64_t getValue()
             {
-                return m_value;
+                return m_stepValue;
             }
 
             ////////////////////////////////////////////////////////////////////
-            //  Get slider value changed state                                //
+            //  Get step slider value changed state                           //
             ////////////////////////////////////////////////////////////////////
             inline bool valueChanged()
             {
@@ -297,6 +312,15 @@
             ////////////////////////////////////////////////////////////////////
             void computeSliderValue(float mouseX, float mouseY);
 
+            ////////////////////////////////////////////////////////////////////
+            //  Compute slider value from step slider value                   //
+            ////////////////////////////////////////////////////////////////////
+            inline void computeStepSliderValue()
+            {
+                m_value = (((m_stepValue*1.0f)-(m_minValue*1.0f))/
+                    (Math::abs(m_maxValue*1.0f-m_minValue*1.0f)));
+            }
+
 
         private:
             ////////////////////////////////////////////////////////////////////
@@ -314,8 +338,11 @@
             Texture*            m_texture;          // Slider texture pointer
             Vector4             m_color;            // Slider color
             float               m_uvFactor;         // Threepatch UV factor
-            float               m_increments;       // Slider increments
-            float               m_ctrlIncrements;   // Slider control increments
+            int64_t             m_increments;       // Slider increments
+            int64_t             m_ctrlIncrements;   // Slider control increments
+            int64_t             m_minValue;         // Slider min value
+            int64_t             m_maxValue;         // Slider max value
+            int64_t             m_stepValue;        // Slider step value
             float               m_value;            // Slider value
             bool                m_vertical;         // Slider vertical state
             bool                m_control;          // Control state

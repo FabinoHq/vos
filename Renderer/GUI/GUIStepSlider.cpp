@@ -50,8 +50,11 @@ Transform2(),
 m_texture(0),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_uvFactor(1.0f),
-m_increments(0.02f),
-m_ctrlIncrements(0.002f),
+m_increments(GUIStepSliderDefaultIncrements),
+m_ctrlIncrements(GUIStepSliderControlIncrements),
+m_minValue(GUIStepSliderDefaultMinValue),
+m_maxValue(GUIStepSliderDefaultMaxValue),
+m_stepValue(0),
 m_value(0.0f),
 m_vertical(false),
 m_control(false),
@@ -73,8 +76,11 @@ GUIStepSlider::~GUIStepSlider()
     m_control = false;
     m_vertical = false;
     m_value = 0.0f;
-    m_ctrlIncrements = 0.0f;
-    m_increments = 0.0f;
+    m_stepValue = 0;
+    m_maxValue = 0;
+    m_minValue = 0;
+    m_ctrlIncrements = 0;
+    m_increments = 0;
     m_uvFactor = 0.0f;
     m_color.reset();
     m_texture = 0;
@@ -95,41 +101,48 @@ bool GUIStepSlider::init(Texture& texture, float width, float height,
         return false;
     }
 
-    // Reset slider transformations
+    // Reset step slider transformations
     resetTransforms();
 
-    // Set slider size
+    // Set step slider size
     setSize(width, height);
 
     // Set slider texture pointer
     m_texture = &texture;
 
-    // Reset slider color
+    // Reset step slider color
     m_color.set(1.0f, 1.0f, 1.0f, 1.0f);
 
-    // Set slider UV factor
+    // Set step slider UV factor
     m_uvFactor = uvFactor;
 
-    // Reset slider increments
-    m_increments = 0.02f;
-    m_ctrlIncrements = 0.002f;
+    // Reset step slider increments
+    m_increments = GUIStepSliderDefaultIncrements;
+    m_ctrlIncrements = GUIStepSliderControlIncrements;
 
-    // Reset slider value
+    // Reset step slider min and max
+    m_minValue = GUIStepSliderDefaultMinValue;
+    m_maxValue = GUIStepSliderDefaultMaxValue;
+
+    // Reset step value
+    m_stepValue = 0;
+
+    // Reset step slider value
     m_value = 0.0f;
 
-    // Set slider vertical state
+    // Set step slider vertical state
     m_vertical = vertical;
 
     // Reset control state
     m_control = false;
 
-    // Reset slider value changed
+    // Reset step slider value changed
     m_valueChanged = false;
 
-    // Reset slider disabled state
+    // Reset step slider disabled state
     m_disabled = false;
 
-    // Reset slider state
+    // Reset step slider state
     m_state = GUISTEPSLIDER_NONE;
 
     // Slider successfully created
@@ -178,6 +191,37 @@ void GUIStepSlider::setColor(float red, float green, float blue, float alpha)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set step slider minimum value                                             //
+////////////////////////////////////////////////////////////////////////////////
+void GUIStepSlider::setMinValue(int64_t minValue)
+{
+    // Set minimum value
+    if (minValue >= (m_maxValue-1)) { minValue = (m_maxValue-1); }
+    m_minValue = minValue;
+
+    // Compute step value
+    if (m_stepValue <= m_minValue) { m_stepValue = m_minValue; }
+    computeStepSliderValue();
+    m_valueChanged = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Set step slider maximum value                                             //
+////////////////////////////////////////////////////////////////////////////////
+void GUIStepSlider::setMaxValue(int64_t maxValue)
+{
+    // Set maximum value
+    if (maxValue <= (m_minValue+1)) { maxValue = (m_minValue+1); }
+    m_maxValue = maxValue;
+
+    // Compute step value
+    if (m_stepValue >= m_maxValue) { m_stepValue = m_maxValue; }
+    computeStepSliderValue();
+    m_valueChanged = true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Get slider picking state                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 bool GUIStepSlider::isPicking(float mouseX, float mouseY)
@@ -219,7 +263,7 @@ bool GUIStepSlider::mouseMove(float mouseX, float mouseY)
     // Disabled state
     if (m_disabled) { m_state = GUISTEPSLIDER_NONE; return false; }
 
-    // Set slider state
+    // Set step slider state
     if (isPicking(mouseX, mouseY))
     {
         if ((m_state == GUISTEPSLIDER_PRESSED) ||
@@ -261,7 +305,7 @@ bool GUIStepSlider::mousePress(float mouseX, float mouseY)
     // Disabled state
     if (m_disabled) { m_state = GUISTEPSLIDER_NONE; return false; }
 
-    // Set slider state
+    // Set step slider state
     if (isPicking(mouseX, mouseY))
     {
         m_state = GUISTEPSLIDER_PRESSEDHOVER;
@@ -284,11 +328,12 @@ bool GUIStepSlider::mouseRelease(float mouseX, float mouseY)
     // Disabled state
     if (m_disabled) { m_state = GUISTEPSLIDER_NONE; return false; }
 
-    // Set slider state
+    // Set step slider state
     if ((m_state == GUISTEPSLIDER_PRESSED) ||
         (m_state == GUISTEPSLIDER_PRESSEDHOVER))
     {
         computeSliderValue(mouseX, mouseY);
+        computeStepSliderValue();
         if (isPicking(mouseX, mouseY))
         {
             m_state = GUISTEPSLIDER_HOVER;
@@ -343,10 +388,12 @@ void GUIStepSlider::increment()
     // Disabled state
     if (m_disabled) { return; }
 
-    // Increment slider value
-    m_value = Math::clamp(
-        m_value+(m_control?m_ctrlIncrements:m_increments), 0.0f, 1.0f
+    // Increment step slider value
+    m_stepValue = Math::clamp(
+        m_stepValue+(m_control?m_ctrlIncrements:m_increments),
+        m_minValue, m_maxValue
     );
+    computeStepSliderValue();
     m_valueChanged = true;
 }
 
@@ -358,10 +405,12 @@ void GUIStepSlider::decrement()
     // Disabled state
     if (m_disabled) { return; }
 
-    // Decrement slider value
-    m_value = Math::clamp(
-        m_value-(m_control?m_ctrlIncrements:m_increments), 0.0f, 1.0f
+    // Decrement step slider value
+    m_stepValue = Math::clamp(
+        m_stepValue-(m_control?m_ctrlIncrements:m_increments),
+        m_minValue, m_maxValue
     );
+    computeStepSliderValue();
     m_valueChanged = true;
 }
 
@@ -543,7 +592,7 @@ void GUIStepSlider::computeSliderValue(float mouseX, float mouseY)
 {
     if (m_vertical)
     {
-        // Vertical slider
+        // Vertical step slider
         if (m_size.vec[0] != 0.0f)
         {
             m_value = Math::clamp(((mouseY-(m_position.vec[1]-
@@ -552,11 +601,16 @@ void GUIStepSlider::computeSliderValue(float mouseX, float mouseY)
     }
     else
     {
-        // Horizontal slider
+        // Horizontal step slider
         if (m_size.vec[0] != 0.0f)
         {
             m_value = Math::clamp(((mouseX-(m_position.vec[0]-
                 (m_size.vec[0]*0.5f)))/m_size.vec[0]), 0.0f, 1.0f);
         }
     }
+
+    // Compute step value
+    m_stepValue = static_cast<int64_t>(Math::round(
+        (m_value*Math::abs(m_maxValue-m_minValue))+m_minValue
+    ));
 }
