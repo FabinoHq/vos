@@ -91,7 +91,8 @@ VOS: main.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUICursor.o \
-	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
+	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIPxTextBox.o \
+	Renderer/GUI/GUIWindow.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
 	Renderer/GUI/GUIProgressBar.o Renderer/GUI/GUIScrollBar.o \
 	Renderer/GUI/GUISlider.o Renderer/GUI/GUIStepSlider.o \
@@ -151,7 +152,8 @@ VOS: main.o \
 	Renderer/Shapes/RectangleShape.o Renderer/Shapes/EllipseShape.o \
 	Renderer/Shapes/CuboidShape.o \
 	Renderer/GUI/GUICursor.o \
-	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIWindow.o \
+	Renderer/GUI/GUIPxText.o Renderer/GUI/GUIPxTextBox.o \
+	Renderer/GUI/GUIWindow.o \
 	Renderer/GUI/GUIButton.o Renderer/GUI/GUIToggleButton.o \
 	Renderer/GUI/GUIProgressBar.o Renderer/GUI/GUIScrollBar.o \
 	Renderer/GUI/GUISlider.o Renderer/GUI/GUIStepSlider.o \
@@ -439,6 +441,10 @@ Renderer/GUI/GUICursor.o: Renderer/GUI/GUICursor.cpp
 
 Renderer/GUI/GUIPxText.o: Renderer/GUI/GUIPxText.cpp
 	$(CC) -o Renderer/GUI/GUIPxText.o -c Renderer/GUI/GUIPxText.cpp $(CFLAGS)
+
+Renderer/GUI/GUIPxTextBox.o: Renderer/GUI/GUIPxTextBox.cpp
+	$(CC) -o Renderer/GUI/GUIPxTextBox.o -c \
+	Renderer/GUI/GUIPxTextBox.cpp $(CFLAGS)
 
 Renderer/GUI/GUIWindow.o: Renderer/GUI/GUIWindow.cpp
 	$(CC) -o Renderer/GUI/GUIWindow.o -c Renderer/GUI/GUIWindow.cpp $(CFLAGS)

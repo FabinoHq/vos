@@ -308,6 +308,8 @@
 !Renderer/GUI/GUICursor.cpp
 !Renderer/GUI/GUIPxText.h
 !Renderer/GUI/GUIPxText.cpp
+!Renderer/GUI/GUIPxTextBox.h
+!Renderer/GUI/GUIPxTextBox.cpp
 !Renderer/GUI/GUIWindow.h
 !Renderer/GUI/GUIWindow.cpp
 !Renderer/GUI/GUIButton.h

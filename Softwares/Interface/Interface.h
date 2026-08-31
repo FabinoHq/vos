@@ -57,6 +57,7 @@
     #include "../../Renderer/GUI/GUICursor.h"
     #include "../../Renderer/GUI/GUIWindow.h"
     #include "../../Renderer/GUI/GUIPxText.h"
+    #include "../../Renderer/GUI/GUIPxTextBox.h"
     #include "../../Renderer/GUI/GUIButton.h"
     #include "../../Renderer/GUI/GUIToggleButton.h"
     #include "../../Renderer/GUI/GUIProgressBar.h"
@@ -140,6 +141,7 @@
             GUICursor           m_cursor;               // GUI Cursor
             GUIWindow           m_guiWindow;            // GUI Window
             GUIPxText           m_pxText;               // GUI pixel text
+            GUIPxTextBox        m_pxTextBox;            // GUI pixel text box
             GUIButton           m_button;               // GUI button
             GUIToggleButton     m_toggleButton;         // GUI toggle button
             GUIProgressBar      m_progressBar;          // GUI progress bar

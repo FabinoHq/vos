@@ -374,6 +374,9 @@
     <ClCompile Include="Renderer\GUI\GUIScrollBar.cpp">
       <Filter>Renderer\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\GUI\GUIPxTextBox.cpp">
+      <Filter>Renderer\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vos.h" />
@@ -838,6 +841,9 @@
     </ClInclude>
     <ClInclude Include="Images\Embedded\ScrollBar.h">
       <Filter>Images\Embedded</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GUI\GUIPxTextBox.h">
+      <Filter>Renderer\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
