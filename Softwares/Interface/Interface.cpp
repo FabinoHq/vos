@@ -179,6 +179,16 @@ bool Interface::init()
         return false;
     }
 
+    // Init scroll bar
+    if (!m_scrollBar.init(
+        GResources.textures.gui(TEXTURE_SCROLLBAR), 1.0f, 0.06f, 15.0f))
+    {
+        // Could not init scroll bar
+        return false;
+    }
+    m_scrollBar.setVertical(true);
+    m_scrollBar.setScrollSize(0.1f);
+
     // Init slider
     if (!m_slider.init(
         GResources.textures.gui(TEXTURE_SLIDER), 0.65f, 0.06f, 15.0f))
@@ -236,6 +246,7 @@ void Interface::events(SysEvent& event)
             m_guiWindow.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
             m_button.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
             m_toggleButton.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
+            m_scrollBar.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
             m_slider.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
             m_stepSlider.mouseMove(GSysMouse.mouseX, GSysMouse.mouseY);
 
@@ -260,6 +271,7 @@ void Interface::events(SysEvent& event)
                 m_guiWindow.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_button.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_toggleButton.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
+                m_scrollBar.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_slider.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_stepSlider.mousePress(GSysMouse.mouseX, GSysMouse.mouseY);
             }
@@ -276,6 +288,7 @@ void Interface::events(SysEvent& event)
                 {
                     m_toggleButton.toggle();
                 }
+                m_scrollBar.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_slider.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
                 m_stepSlider.mouseRelease(GSysMouse.mouseX, GSysMouse.mouseY);
             }
@@ -283,6 +296,7 @@ void Interface::events(SysEvent& event)
 
         // Mouse wheel
         case SYSEVENT_MOUSEWHEEL:
+            m_scrollBar.mouseWheel(event.mouse.wheel);
             m_slider.mouseWheel(event.mouse.wheel);
             m_stepSlider.mouseWheel(event.mouse.wheel);
             break;
@@ -293,6 +307,7 @@ void Interface::events(SysEvent& event)
             {
                 case SYSEVENT_KEY_LCTRL:
                 case SYSEVENT_KEY_RCTRL:
+                    m_scrollBar.controlPress(true);
                     m_slider.controlPress(true);
                     m_stepSlider.controlPress(true);
                     break;
@@ -308,6 +323,7 @@ void Interface::events(SysEvent& event)
             {
                 case SYSEVENT_KEY_LCTRL:
                 case SYSEVENT_KEY_RCTRL:
+                    m_scrollBar.controlPress(false);
                     m_slider.controlPress(false);
                     m_stepSlider.controlPress(false);
                     break;
@@ -368,6 +384,13 @@ void Interface::compute(float frametime)
         m_progressBar.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
     m_progressBar.setPosition(m_guiWindow.getX(), m_guiWindow.getY()+0.0f);
+
+    // Compute scroll bar
+    m_scrollBar.setWidth(m_guiWindow.getHeight()-0.1f);
+    m_scrollBar.setPosition(
+        m_guiWindow.getX()+(m_guiWindow.getWidth()*0.5f)-0.035f,
+        m_guiWindow.getY()-0.03f
+    );
 
     // Compute slider
     m_slider.setPosition(m_guiWindow.getX(), m_guiWindow.getY()-0.2f);
@@ -484,6 +507,11 @@ void Interface::render()
     GRenderer.bindPipeline(RENDERER_PIPELINE_PROGRESSBAR);
     m_progressBar.bindTexture();
     m_progressBar.render();
+
+    // Render scroll bar
+    GRenderer.bindPipeline(RENDERER_PIPELINE_SCROLLBAR);
+    m_scrollBar.bindTexture();
+    m_scrollBar.render();
 
     // Render slider
     GRenderer.bindPipeline(RENDERER_PIPELINE_SLIDER);

@@ -833,5 +833,11 @@
     <ClInclude Include="Renderer\GUI\GUIScrollBar.h">
       <Filter>Renderer\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Shaders\ScrollBar.h">
+      <Filter>Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Embedded\ScrollBar.h">
+      <Filter>Images\Embedded</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

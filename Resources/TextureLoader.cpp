@@ -1535,6 +1535,16 @@ bool TextureLoader::loadEmbeddedTextures()
         return false;
     }
 
+    // Load scroll bar texture
+    if (!m_texturesGUI[TEXTURE_SCROLLBAR].createTexture(
+        VULKAN_MEMORY_TEXTURES,
+        ScrollBarImageWidth, ScrollBarImageHeight, ScrollBarImage,
+        false, true, TEXTUREMODE_CLAMP))
+    {
+        // Could not load scroll bar texture
+        return false;
+    }
+
     // Load slider texture
     if (!m_texturesGUI[TEXTURE_SLIDER].createTexture(
         VULKAN_MEMORY_TEXTURES,

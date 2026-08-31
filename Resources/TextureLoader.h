@@ -74,6 +74,7 @@
     #include "../Images/Embedded/Window.h"
     #include "../Images/Embedded/ToggleButton.h"
     #include "../Images/Embedded/ProgressBar.h"
+    #include "../Images/Embedded/ScrollBar.h"
     #include "../Images/Embedded/Slider.h"
 
 
@@ -109,11 +110,12 @@
 
         TEXTURE_TOGGLEBUTTON = 7,
         TEXTURE_PROGRESSBAR = 8,
-        TEXTURE_SLIDER = 9,
+        TEXTURE_SCROLLBAR = 9,
+        TEXTURE_SLIDER = 10,
 
-        TEXTURE_TESTBUTTON = 10,
+        TEXTURE_TESTBUTTON = 11,
 
-        TEXTURE_GUICOUNT = 11
+        TEXTURE_GUICOUNT = 12
     };
 
     ////////////////////////////////////////////////////////////////////////////

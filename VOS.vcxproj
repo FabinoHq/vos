@@ -315,6 +315,7 @@
     <ClInclude Include="Images\Embedded\NWSECursor.h" />
     <ClInclude Include="Images\Embedded\ProgressBar.h" />
     <ClInclude Include="Images\Embedded\PxFont.h" />
+    <ClInclude Include="Images\Embedded\ScrollBar.h" />
     <ClInclude Include="Images\Embedded\Slider.h" />
     <ClInclude Include="Images\Embedded\ToggleButton.h" />
     <ClInclude Include="Images\Embedded\Window.h" />
@@ -378,6 +379,7 @@
     <ClInclude Include="Renderer\Shaders\ProgressBar.h" />
     <ClInclude Include="Renderer\Shaders\PxText.h" />
     <ClInclude Include="Renderer\Shaders\Rectangle.h" />
+    <ClInclude Include="Renderer\Shaders\ScrollBar.h" />
     <ClInclude Include="Renderer\Shaders\SeaFar.h" />
     <ClInclude Include="Renderer\Shaders\SeaNear.h" />
     <ClInclude Include="Renderer\Shaders\SkyBox.h" />

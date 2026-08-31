@@ -446,6 +446,23 @@ bool Renderer::initPipelines()
         return false;
     }
 
+    // Create scroll bar pipeline
+    pipelines[RENDERER_PIPELINE_SCROLLBAR].createVertexShader(
+        DefaultVertexShader, DefaultVertexShaderSize
+    );
+    pipelines[RENDERER_PIPELINE_SCROLLBAR].createFragmentShader(
+        ScrollBarFragmentShader, ScrollBarFragmentShaderSize
+    );
+    if (!pipelines[RENDERER_PIPELINE_SCROLLBAR].createPipeline(
+        VERTEX_INPUTS_DEFAULT, false, false,
+        ALPHA_BLENDING_PREMULTIPLIED))
+    {
+        // Could not create scroll bar pipeline
+        GSysMessage << "[0x305B] Could not create scrollbar pipeline\n";
+        GSysMessage << "Please update your graphics drivers";
+        return false;
+    }
+
     // Create slider pipeline
     pipelines[RENDERER_PIPELINE_SLIDER].createVertexShader(
         DefaultVertexShader, DefaultVertexShaderSize
@@ -458,7 +475,7 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create slider pipeline
-        GSysMessage << "[0x305B] Could not create slider pipeline\n";
+        GSysMessage << "[0x305C] Could not create slider pipeline\n";
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
@@ -476,7 +493,7 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create skybox pipeline
-        GSysMessage << "[0x305C] Could not create skybox pipeline\n";
+        GSysMessage << "[0x305D] Could not create skybox pipeline\n";
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
@@ -493,7 +510,7 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create static proc pipeline
-        GSysMessage << "[0x305D] Could not create static proc pipeline\n";
+        GSysMessage << "[0x305E] Could not create static proc pipeline\n";
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
@@ -510,7 +527,7 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create static mesh pipeline
-        GSysMessage << "[0x305E] Could not create static mesh pipeline\n";
+        GSysMessage << "[0x305F] Could not create static mesh pipeline\n";
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
@@ -527,7 +544,7 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create heightmap pipeline
-        GSysMessage << "[0x305F] Could not create heightmap pipeline\n";
+        GSysMessage << "[0x3060] Could not create heightmap pipeline\n";
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
@@ -544,7 +561,7 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create heightmap pipeline
-        GSysMessage << "[0x3060] Could not create heightfar pipeline\n";
+        GSysMessage << "[0x3061] Could not create heightfar pipeline\n";
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
@@ -561,7 +578,7 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create sea near pipeline
-        GSysMessage << "[0x3061] Could not create seanear pipeline\n";
+        GSysMessage << "[0x3062] Could not create seanear pipeline\n";
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
@@ -578,7 +595,7 @@ bool Renderer::initPipelines()
         ALPHA_BLENDING_PREMULTIPLIED))
     {
         // Could not create sea far pipeline
-        GSysMessage << "[0x3062] Could not create seafar pipeline\n";
+        GSysMessage << "[0x3063] Could not create seafar pipeline\n";
         GSysMessage << "Please update your graphics drivers";
         return false;
     }
