@@ -497,6 +497,7 @@ void SysWindow::processEvent(XEvent msg)
             // Keys events
             case KeyPress:
             {
+                // Key pressed
                 event.type = SYSEVENT_KEYPRESSED;
                 for (int i = 0; i < 4; ++i)
                 {
@@ -504,11 +505,25 @@ void SysWindow::processEvent(XEvent msg)
                     if (event.key != SYSEVENT_KEY_NONE) break;
                 }
                 m_events.push(event);
+
+                // ASCII text
+                XComposeStatus status;
+                char key[16] = {0};
+                if (!XLookupString(&msg.xkey, key, sizeof(key), 0, &status))
+                {
+                    break;
+                }
+                uint32_t character = static_cast<uint32_t>(key[0]);
+                if ((character < 32) || (character >= 127)) { break; }
+                event.type = SYSEVENT_TEXTENTERED;
+                event.code = character;
+                m_events.push(event);
                 break;
             }
 
             case KeyRelease:
             {
+                // Key released
                 event.type = SYSEVENT_KEYRELEASED;
                 for (int i = 0; i < 4; ++i)
                 {

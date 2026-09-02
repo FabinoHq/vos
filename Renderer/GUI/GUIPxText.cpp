@@ -141,6 +141,68 @@ void GUIPxText::setText(const std::string& text)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Set pixel text with size clamping                                         //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::setTextAndClamp(const std::string& text, float width)
+{
+    // Set text string
+    m_text = text;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Clamp current pixel text width                                            //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::clampTextWidth(float width)
+{
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Insert character into pixel text at given index                           //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::insertCharacter(size_t index, char code)
+{
+    // Insert character into string
+    m_text.insert(
+        (m_text.begin()+Math::clamp(index, 0ull, m_text.size())), code
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Append character to pixel text                                            //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::appendCharacter(char code)
+{
+    // Append character to string
+    m_text.insert(m_text.begin()+m_text.size(), code);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Erase pixel text character at given index                                 //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::eraseCharacter(size_t index)
+{
+    // Erase character from string
+    if (m_text.size() <= 0) return;
+    m_text.erase(Math::clamp(index, 0ull, m_text.size()-1ull), 1ull);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Erase pixel text selection between given indices                          //
+////////////////////////////////////////////////////////////////////////////////
+void GUIPxText::eraseSelection(size_t left, size_t right)
+{
+    // Erase selection from string
+    if (m_text.size() <= 0) return;
+    if (right <= left) return;
+    m_text.erase(
+        Math::clamp(left, 0ull, m_text.size()-1ull),
+        Math::clamp(right-left, 0ull, m_text.size())
+    );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 //  Set pixel text color                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 void GUIPxText::setColor(const Vector4& color)
@@ -175,6 +237,127 @@ bool GUIPxText::isPicking(float mouseX, float mouseY)
     {
         // Pixel text is picking
         return true;
+    }
+    return false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Convert pixel text string to integer                                      //
+////////////////////////////////////////////////////////////////////////////////
+int64_t GUIPxText::toInt()
+{
+    // Zero or minus zero
+    if (m_text.size() <= 0) { return 0; }
+    if (m_text.size() == 1) { if (m_text[0] == 45) { return 0; } }
+
+    // Convert to std::string
+    std::string str;
+    for (size_t i = 0; i < m_text.size(); ++i)
+    {
+        if ((i == 0) && (m_text[i] == 45))
+        {
+            str.push_back((char)45);
+        }
+        if ((m_text[i] >= 48) && (m_text[i] <= 57))
+        {
+            str.push_back((char)m_text[i]);
+        }
+    }
+
+    // Convert string to integer
+    return std::stoll(str);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Convert pixel text string to float                                        //
+////////////////////////////////////////////////////////////////////////////////
+float GUIPxText::toFloat()
+{
+    // Zero or minus zero
+    if (m_text.size() <= 0) { return 0.0f; }
+    if (m_text.size() == 1) { if (m_text[0] == 45) { return 0.0f; } }
+
+    // Convert to std::string
+    std::string str;
+    bool dot = false;
+    for (size_t i = 0; i < m_text.size(); ++i)
+    {
+        if ((i == 0) && (m_text[i] == 45))
+        {
+            str.push_back((char)45);
+        }
+        if ((m_text[i] == 44) || (m_text[i] == 46))
+        {
+            if (!dot) { str.push_back((char)46); dot = true; }
+        }
+        if ((m_text[i] >= 48) && (m_text[i] <= 57))
+        {
+            str.push_back((char)m_text[i]);
+        }
+    }
+
+    // Convert string to float
+    return std::stof(str);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Convert pixel text string to double                                       //
+////////////////////////////////////////////////////////////////////////////////
+double GUIPxText::toDouble()
+{
+    // Zero or minus zero
+    if (m_text.size() <= 0) { return 0.0f; }
+    if (m_text.size() == 1) { if (m_text[0] == 45) { return 0.0f; } }
+
+    // Convert to std::string
+    std::string str;
+    bool dot = false;
+    for (size_t i = 0; i < m_text.size(); ++i)
+    {
+        if ((i == 0) && (m_text[i] == 45))
+        {
+            str.push_back((char)45);
+        }
+        if ((m_text[i] == 44) || (m_text[i] == 46))
+        {
+            if (!dot) { str.push_back((char)46); dot = true; }
+        }
+        if ((m_text[i] >= 48) && (m_text[i] <= 57))
+        {
+            str.push_back((char)m_text[i]);
+        }
+    }
+
+    // Convert string to double
+    return std::stod(str);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get pixel text character position at given index                          //
+////////////////////////////////////////////////////////////////////////////////
+float GUIPxText::getCharPos(size_t index)
+{
+    return m_size.vec[0];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get pixel text next size after inserting a character                      //
+////////////////////////////////////////////////////////////////////////////////
+float GUIPxText::getNextSize(char code)
+{
+    return m_size.vec[0];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Check if pixel text contains the specified char code                      //
+////////////////////////////////////////////////////////////////////////////////
+bool GUIPxText::contains(char code)
+{
+    // Check every character for the specified char code
+    for (size_t i = 0; i < m_text.size(); ++i)
+    {
+        if (m_text[i] == code) { return true; }
     }
     return false;
 }

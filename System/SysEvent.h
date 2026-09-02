@@ -44,6 +44,8 @@
 
     #include "System.h"
 
+    #include <cstdint>
+
 
     ////////////////////////////////////////////////////////////////////////////
     //  SysEvent type enumeration                                             //
@@ -55,10 +57,11 @@
         SYSEVENT_CLOSED = 2,
         SYSEVENT_KEYPRESSED = 3,
         SYSEVENT_KEYRELEASED = 4,
-        SYSEVENT_MOUSEMOVED = 5,
-        SYSEVENT_MOUSEPRESSED = 6,
-        SYSEVENT_MOUSERELEASED = 7,
-        SYSEVENT_MOUSEWHEEL = 8
+        SYSEVENT_TEXTENTERED = 5,
+        SYSEVENT_MOUSEMOVED = 6,
+        SYSEVENT_MOUSEPRESSED = 7,
+        SYSEVENT_MOUSERELEASED = 8,
+        SYSEVENT_MOUSEWHEEL = 9
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -177,6 +180,8 @@
             SysEventKey     key;
             SysEventMouse   mouse;
         };
+
+        uint32_t        code;
     };
 
 

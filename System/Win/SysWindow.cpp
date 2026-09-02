@@ -372,6 +372,13 @@ void SysWindow::processEvent(UINT msg, WPARAM wparam, LPARAM lparam)
                 m_events.push(event);
                 break;
 
+            // Text event
+            case WM_CHAR:
+                event.code = static_cast<uint32_t>(wparam);
+                if ((event.code < 32) || (event.code == 127)) { break; }
+                event.type = SYSEVENT_TEXTENTERED;
+                break;
+
             // Mouse events
             #if (VOS_POINTERLOCK == 0)
                 case WM_MOUSEMOVE:
